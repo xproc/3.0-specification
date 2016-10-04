@@ -27,13 +27,13 @@ if [ "$TRAVIS_REPO_SLUG" == "$GIT_PUB_REPO" ]; then
         cp -Rf $HOME/pubroot/xproc11/* ./${TRAVIS_BRANCH}/${TIP}/xproc11
         cp -Rf $HOME/pubroot/steps11/* ./${TRAVIS_BRANCH}/${TIP}/steps11
 
-        git add -f .
-        git commit -m "Successful travis build $TRAVIS_BUILD_NUMBER"
-        git push -fq origin gh-pages > /dev/null
-
         if [ "$GITHUB_CNAME" != "" ]; then
             echo $GITHUB_CNAME > CNAME
         fi
+
+        git add -f .
+        git commit -m "Successful travis build $TRAVIS_BUILD_NUMBER"
+        git push -fq origin gh-pages > /dev/null
 
         echo -e "Published specification to gh-pages.\n"
     else
