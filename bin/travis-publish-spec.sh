@@ -31,6 +31,10 @@ if [ "$TRAVIS_REPO_SLUG" == "$GIT_PUB_REPO" ]; then
         git commit -m "Successful travis build $TRAVIS_BUILD_NUMBER"
         git push -fq origin gh-pages > /dev/null
 
+        if [ "$GITHUB_CNAME" != "" ]; then
+            echo $GITHUB_CNAME > CNAME
+        fi
+
         echo -e "Published specification to gh-pages.\n"
     else
         echo -e "Publication cannot be performed on pull requests.\n"
