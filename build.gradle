@@ -221,18 +221,6 @@ task steps11_xi1(dependsOn: ["setupDocBook", "legacy_make"], type: XMLCalabashTa
   pipeline "style/validate.xpl"
 }
 
-/* Get the current git log in XML */
-/*
-task gitlog(type: Exec) {
-  if (System.getProperty('os.name').toLowerCase().contains('windows')) {
-    commandLine "cmd", "/c", "perl", "bin/git-log-summary"
-  } else {
-    commandLine "bin/git-log-summary"
-  }
-  standardOutput = new FileOutputStream(new File("etc/git-log-summary.xml"))
-}
-*/
-
 /* The default task. It just depends on all the necessary pages */
 task specification(dependsOn: ["xproc11", "steps11"]) {
   /* Nothing to see here */
