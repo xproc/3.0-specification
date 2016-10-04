@@ -127,17 +127,9 @@
   <xsl:variable name="revisionflags" select="//*[@revisionflag][1]"/>
 
   <div class="head" id='spec.head'>
-    <p>
-      <a href="http://www.w3.org/">
-	<img height="48" width="72" alt="W3C"
-	     src="http://www.w3.org/Icons/w3c_home"/>
-      </a>
-    </p>
-
     <xsl:apply-templates select="db:info/db:title[1]"
 			 mode="m:titlepage-mode"/>
     <h2>
-      <xsl:text>W3C </xsl:text>
       <xsl:choose>
 	<xsl:when test="$w3c-doctype='ed'">
 	  <xsl:choose>
@@ -188,21 +180,29 @@
       <dd>
         <xsl:choose>
           <xsl:when test="$travis = 'true'">
-            <a href="https://{$travis-user}.github.io/{$travis-repo}/langspec">
+            <xsl:variable name="tip" select="if ($travis-tag = '')
+                                             then 'head'
+                                             else $travis-tag"/>
+            <a href="https://{$travis-user}.github.io/{$travis-repo}/{$travis-branch}/{$tip}/{$spec}/">
               <xsl:value-of select="concat('https://',
                                            $travis-user,
                                            '.github.io/',
-                                           $travis-repo,
-                                           '/langspec')"/>
+                                           $travis-repo, '/', $travis-branch, '/', $tip,
+                                           '/', $spec)"/>
             </a>
           </xsl:when>
           <xsl:otherwise>
-            <a href="{$thisuri}"><xsl:value-of select="$thisuri"/></a>
+            <xsl:text>Local build</xsl:text>
           </xsl:otherwise>
         </xsl:choose>
       </dd>
+
       <dt>Latest Version:</dt>
       <dd>
+        <a href="http://spec.xproc.org/master/head/{$spec}/">
+          <xsl:value-of select="concat('http://spec.xproc.org/master/head/', $spec, '/')" />
+        </a>
+<!--
 	<xsl:choose>
 	  <xsl:when test="$latest.version.uri">
 	    <a href="{$latest.version.uri}">
@@ -217,6 +217,7 @@
 	    </a>
 	  </xsl:otherwise>
 	</xsl:choose>
+-->
       </dd>
 
       <xsl:if test="db:info/db:bibliorelation[@type='replaces']">
@@ -278,22 +279,26 @@
           </a>
         </dd>
         <dd>
-          <a href="http://github.com/xproc/specification/issues">
+          <a href="http://github.com/xproc/1.1-specification/issues">
             <xsl:text>Report an issue</xsl:text>
           </a>
         </dd>
 
-        <dt>Changes:</dt>
-        <xsl:if test="$auto-diff != ''">
-          <dd>
-            <a href="diff.html">Diff against current “status quo” draft</a>
-          </dd>
+        <xsl:if test="$travis-build-number != '' or $auto-diff != ''">
+          <dt>Changes:</dt>
+          <xsl:if test="$auto-diff != ''">
+            <dd>
+              <a href="diff.html">Diff against current “status quo” draft</a>
+            </dd>
+          </xsl:if>
+          <xsl:if test="$travis-build-number != ''">
+            <dd>
+              <a href="http://github.com/{$travis-user}/{$travis-repo}/commits/{$travis-branch}">
+                <xsl:text>Commits for this specification</xsl:text>
+              </a>
+            </dd>
+          </xsl:if>
         </xsl:if>
-        <dd>
-          <a href="http://github.com/{$travis-user}/{$travis-repo}/commits/{$travis-branch}">
-            <xsl:text>Commits for this specification</xsl:text>
-          </a>
-        </dd>
       </xsl:if>
     </dl>
 

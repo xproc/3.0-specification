@@ -25,6 +25,7 @@
 
 <xsl:param name="otherprefix" select="''"/>
 <xsl:param name="othersuffix" select="''"/>
+<xsl:param name="spec" select="'???'"/>
 
 <xsl:param name="otherhref"
            select="concat($otherprefix,

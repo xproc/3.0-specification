@@ -31,6 +31,8 @@
                 select="string(/c:result/c:env[@name='TRAVIS']/@value)"/>
   <p:with-param name="travis-commit"
                 select="string(/c:result/c:env[@name='TRAVIS_COMMIT']/@value)"/>
+  <p:with-param name="travis-tag"
+                select="string(/c:result/c:env[@name='TRAVIS_TAG']/@value)"/>
   <p:with-param name="travis-build-number"
                 select="string(/c:result/c:env[@name='TRAVIS_BUILD_NUMBER']/@value)"/>
   <p:with-param name="travis-user"
@@ -45,8 +47,11 @@
                 select="substring-after(
                           /c:result/c:env[@name='TRAVIS_BRANCH']/@value,
                           '/')"/>
+  <p:with-param name="auto-diff" select="''"/>
+<!--
   <p:with-param name="auto-diff"
                 select="string((/c:result/c:env[@name='DELTA_BASE' or @name='DELTA_LOCAL'])[1]/@value)"/>
+-->
 </dbp:docbook>
 
 </p:declare-step>
