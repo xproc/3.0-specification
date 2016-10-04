@@ -1,0 +1,22 @@
+<p:pipeline xmlns:p="http://www.w3.org/ns/xproc"
+	    xmlns:ex="http://example.com/ns/example"
+	    version="1.0">
+
+<p:declare-step type="ex:dir-list">
+  <p:output port="result"/>
+  <p:option name="path"/>
+
+  <p:choose>
+    <p:when test="p:value-available('path')">
+      <p:directory-list>
+	<p:with-option name="path" select="$path"/>
+      </p:directory-list>
+    </p:when>
+    <p:otherwise>
+      <p:directory-list path="."/>
+    </p:otherwise>
+  </p:choose>
+</p:declare-step>
+    
+<ex:dir-list path=".."/>
+</p:pipeline>

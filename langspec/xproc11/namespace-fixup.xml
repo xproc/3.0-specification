@@ -1,0 +1,123 @@
+<appendix xmlns="http://docbook.org/ns/docbook"
+	  xml:id="namespace-fixup-guidance">
+<title>Guidance on Namespace Fixup (Non-Normative)</title>
+
+<para>An XProc processor may find it necessary to add missing
+namespace declarations to ensure that a document can be serialized.
+While this process is implementation defined, the purpose of this
+appendix is to provide guidance as to what an implementation might do
+to either prevent such situations or fix them as before
+serialization.</para>
+
+<para>When a namespace binding is generated, the prefix associated
+with the QName of the element or attribute in question should be used.
+From an Infoset perspective, this is accomplished by setting the
+<code>[prefix]</code> on the element or attribute. Then when an
+implementation needs to add a namespace binding, it can reuse that
+prefix if possible. If reusing the prefix is not possible, the
+implementation must generate a new prefix that is unique to the
+in-scope namespace of the element or owner element of the
+attribute.</para>
+
+<para>An implementation can avoid namespace fixup by making sure that
+the standard step library does not output documents that require
+fixup. The following list contains suggestions as to how to accomplish
+this within the steps:</para>
+
+<orderedlist>
+
+<listitem>
+<para>Any step that outputs an element in the step vocabulary namespace <uri type="xmlnamespace">http://www.w3.org/ns/xproc-step</uri> must ensure that namespace is declared.  An implementation should generate a namespace binding using the prefix “<literal>c</literal>”.</para>
+</listitem>
+
+<listitem>
+<para>When attributes are added by
+<tag>p:add-attribute</tag> or
+<tag>p:set-attributes</tag>, the step must
+ensure the namespace of the attributes added are declared. If the
+prefix used by the QName is not in the in-scope namespaces of the
+element on which the attribute was added, the step must add a
+namespace declaration of the prefix to the in-scope namespaces. If the
+prefix is amongst the in-scope namespace and is not bound to the same
+namespace name, a new prefix and namespace binding must be added. When
+a new prefix is generated, the prefix associated with the attribute
+should be changed to reflect that generated prefix value.
+</para>
+</listitem>
+
+<listitem>
+<para>When an element is renamed by
+<tag>p:rename</tag>, the step must ensure the namespace
+of the element is declared. If the prefix used by the QName is not in
+the in-scope namespaces of the element being renamed, the step must
+add a namespace declaration of the prefix to the in-scope namespaces.
+If the prefix is amongst the in-scope namespace and is not bound to
+the same namespace name, a new prefix and namespace binding must be
+added. When a new prefix is generated, the prefix associated with the
+element should be changed to reflect that generated prefix value.
+</para>
+<para>If the element does not have a namespace name and there is a
+default namespace, the default namespace must be undeclared. For each
+of the child elements, the original default namespace declaration must
+be preserved by adding a default namespace declaration unless the
+child element has a different default namespace.</para>
+</listitem>
+
+<listitem>
+<para>When an attribute is renamed by
+<tag>p:rename</tag>, the step must ensure the namespace
+of the renamed attribute is declared. If the prefix used by the QName
+is not in the in-scope namespaces of the element on which the
+attribute was added, the step must add a namespace declaration of the
+prefix to the in-scope namespaces. If the prefix is amongst the
+in-scope namespace and is not bound to the same namespace name, a new
+prefix and namespace binding must be added. When a new prefix is
+generated, the prefix associated with the attribute should be changed
+to reflect that generated prefix value.
+</para>
+</listitem>
+
+<listitem>
+<para>When an element wraps content via <tag>p:wrap</tag>, there may be in-scope
+namespaces coming from ancestor elements of the new wrapper element.  The step must ensure the
+namespace of the element is declared properly.  By default, the wrapper element will inherit the
+in-scope namespaces of the parent element if one exists.  As such, there may be a existing namespace
+declaration or default namespace.</para>
+<para>If the prefix used by the QName is not in the in-scope
+namespaces of the wrapper element, the step must add a namespace
+declaration of the prefix to the in-scope namespaces. If the prefix is
+amongst the in-scope namespace and is not bound to the same namespace
+name, a new prefix and namespace binding must be added. When a new
+prefix is generated, the prefix associated with the wrapper element
+should be changed to reflect that generated prefix value.
+</para>
+<para>If the element does not have a namespace name and there is a default namespace, the default namespace
+must be undeclared.  For each of the child elements, the original default namespace declaration must be
+preserved by adding a default namespace declaration unless the child element has a different default 
+namespace.</para>
+</listitem>
+
+<listitem>
+<para>When the wrapper element is added for <tag>p:wrap-sequence</tag> or 
+<tag>p:pack</tag>, the prefix used by the QName must be added to the
+ in-scope namespaces.</para>
+</listitem>
+
+<listitem>
+<para>When a element is removed via <tag>p:unwrap</tag>, an in-scope namespaces that 
+are declared on the element must be copied to any child element except when the child element declares 
+the same prefix or declares a new default namespace.</para>
+</listitem>
+
+<listitem>
+<para>In the output from <tag>p:xslt</tag>, if an element was generated from the xsl:element or an
+ attribute from xsl:attribute, the step must guarantee that an namespace declaration exists for the namespace name 
+ used.  Depending on the XSLT implementation, the namespace declaration for the namespace name of the
+ element or attribute may not be declared.  It may also be the case that the original prefix is available.  
+ If the original prefix is available, the step should attempt to re-use that prefix.  Otherwise, it must 
+ generate a prefix for a namespace binding and change the prefix associated the element or attribute.</para>
+</listitem>
+
+</orderedlist>
+
+</appendix>

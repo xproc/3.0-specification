@@ -1,0 +1,366 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  This schema is a customization for the XProc language specification
+  
+  Author: Norman Walsh, <ndw@nwalsh.com>
+  Release: $Id: dbspec.rnc,v 1.14 2007/12/13 13:55:19 NormanWalsh Exp $
+  
+  ======================================================================
+-->
+<grammar xmlns:p="http://www.w3.org/ns/xproc" ns="http://docbook.org/ns/docbook" xmlns:r="http://nwalsh.com/xmlns/schema-remap/" xmlns:s="http://www.ascc.net/xml/schematron" xmlns:err="http://www.w3.org/ns/xproc-error" xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax" xmlns:ctrl="http://nwalsh.com/xmlns/schema-control/" xmlns:rng="http://relaxng.org/ns/structure/1.0" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:db="http://docbook.org/ns/docbook" xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+  <include href="dbw3c.rng">
+    <start>
+      <choice>
+        <ref name="db.specification"/>
+        <ref name="db.appendix"/>
+        <ref name="db.section"/>
+      </choice>
+    </start>
+    <define name="db._any">
+      <element>
+        <anyName>
+          <except>
+            <nsName/>
+            <nsName ns="http://www.w3.org/1999/xhtml"/>
+            <nsName ns="http://www.w3.org/ns/xproc"/>
+          </except>
+        </anyName>
+        <zeroOrMore>
+          <choice>
+            <ref name="db._any.attribute"/>
+            <text/>
+            <ref name="db._any"/>
+          </choice>
+        </zeroOrMore>
+      </element>
+    </define>
+    <define name="db.revisionflag.attribute">
+      <interleave>
+        <attribute name="revisionflag">
+          <ref name="db.revisionflag.enumeration"/>
+        </attribute>
+        <attribute name="revdate">
+          <data type="date"/>
+        </attribute>
+      </interleave>
+    </define>
+  </include>
+  <define name="db.all.blocks" combine="choice">
+    <choice>
+      <ref name="spec.component"/>
+      <ref name="e.rng-pattern"/>
+      <ref name="e.rng-fragment"/>
+      <ref name="p.declare-step"/>
+      <ref name="err.error-list"/>
+    </choice>
+  </define>
+  <define name="db.all.inlines" combine="choice">
+    <choice>
+      <ref name="db.el"/>
+      <ref name="db.att"/>
+    </choice>
+  </define>
+  <define name="e.rng-pattern">
+    <element name="e:rng-pattern">
+      <optional>
+        <attribute name="xml:id"/>
+      </optional>
+      <attribute name="name"/>
+      <optional>
+        <attribute name="role"/>
+      </optional>
+      <empty/>
+    </element>
+  </define>
+  <define name="e.rng-fragment">
+    <element name="e:rng-fragment">
+      <optional>
+        <attribute name="xml:id"/>
+      </optional>
+      <attribute name="name"/>
+      <optional>
+        <attribute name="role"/>
+      </optional>
+      <oneOrMore>
+        <ref name="db._any"/>
+      </oneOrMore>
+    </element>
+  </define>
+  <!--
+    e.element-syntax =
+      element e:element-syntax {
+         attribute (* - xml:id) { text }*,
+         _any_elem_syntax*
+      }
+    
+    _any_elem_syntax =
+      element e:* {
+         attribute (* - xml:id) { text }*,
+         _any_elem_syntax*
+      }
+  -->
+  <define name="p.declare-step">
+    <element name="p:declare-step">
+      <zeroOrMore>
+        <attribute>
+          <anyName>
+            <except>
+              <name>xml:id</name>
+            </except>
+          </anyName>
+        </attribute>
+      </zeroOrMore>
+      <zeroOrMore>
+        <ref name="_any_xproc_syntax"/>
+      </zeroOrMore>
+    </element>
+  </define>
+  <define name="_any_xproc_syntax">
+    <element>
+      <nsName ns="http://www.w3.org/ns/xproc"/>
+      <zeroOrMore>
+        <attribute>
+          <anyName>
+            <except>
+              <name>xml:id</name>
+            </except>
+          </anyName>
+        </attribute>
+      </zeroOrMore>
+      <zeroOrMore>
+        <ref name="_any_xproc_syntax"/>
+      </zeroOrMore>
+    </element>
+  </define>
+  <!-- ====================================================================== -->
+  <define name="db.error">
+    <element name="db:error">
+      <optional>
+        <attribute name="class">
+          <choice>
+            <value>static</value>
+            <value>dynamic</value>
+          </choice>
+        </attribute>
+      </optional>
+      <attribute name="code"/>
+      <ref name="db.common.attributes"/>
+      <zeroOrMore>
+        <ref name="db.all.inlines"/>
+      </zeroOrMore>
+    </element>
+  </define>
+  <define name="db.error.inlines" combine="choice">
+    <ref name="db.error"/>
+  </define>
+  <!-- ====================================================================== -->
+  <define name="err.error-list">
+    <element name="err:error-list">
+      <ref name="db.common.attributes"/>
+      <zeroOrMore>
+        <ref name="err.error"/>
+      </zeroOrMore>
+    </element>
+  </define>
+  <define name="err.error">
+    <element name="err:error">
+      <optional>
+        <attribute name="class">
+          <choice>
+            <value>static</value>
+            <value>dynamic</value>
+          </choice>
+        </attribute>
+      </optional>
+      <attribute name="code"/>
+      <ref name="db.common.attributes"/>
+      <text/>
+    </element>
+  </define>
+  <!-- ====================================================================== -->
+  <define name="db.impl">
+    <element name="db:impl">
+      <ref name="db.common.attributes"/>
+      <zeroOrMore>
+        <ref name="db.all.inlines"/>
+      </zeroOrMore>
+    </element>
+  </define>
+  <define name="db.technical.inlines" combine="choice">
+    <ref name="db.impl"/>
+  </define>
+  <!-- ====================================================================== -->
+  <define name="db.port.role.attribute">
+    <attribute name="role"/>
+  </define>
+  <define name="db.port.attlist">
+    <interleave>
+      <optional>
+        <ref name="db.port.role.attribute"/>
+      </optional>
+      <ref name="db.common.attributes"/>
+      <ref name="db.common.linking.attributes"/>
+    </interleave>
+  </define>
+  <define name="db.port">
+    <element name="port">
+      <ref name="db.code.attlist"/>
+      <zeroOrMore>
+        <choice>
+          <ref name="db.programming.inlines"/>
+          <ref name="db._text"/>
+        </choice>
+      </zeroOrMore>
+    </element>
+  </define>
+  <define name="db.markup.inlines" combine="choice">
+    <ref name="db.port"/>
+  </define>
+  <!-- ====================================================================== -->
+  <div>
+    <db:refname>component</db:refname>
+    <db:refpurpose>Describes a component</db:refpurpose>
+    <define name="spec.component.role.attribute">
+      <attribute name="role"/>
+    </define>
+    <define name="spec.component.attlist">
+      <interleave>
+        <optional>
+          <ref name="spec.component.role.attribute"/>
+        </optional>
+        <ref name="db.common.attributes"/>
+        <optional>
+          <attribute name="name"/>
+        </optional>
+      </interleave>
+    </define>
+    <define name="spec.component">
+      <element name="p:component">
+        <ref name="spec.component.attlist"/>
+        <zeroOrMore>
+          <ref name="spec.parameter"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="spec.input"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="spec.output"/>
+        </zeroOrMore>
+        <optional>
+          <ref name="spec.component"/>
+        </optional>
+      </element>
+    </define>
+  </div>
+  <!-- ====================================================================== -->
+  <div>
+    <db:refname>parameter</db:refname>
+    <db:refpurpose>Describes the parameters to a component</db:refpurpose>
+    <define name="spec.parameter.role.attribute">
+      <attribute name="role"/>
+    </define>
+    <define name="spec.parameter.attlist">
+      <interleave>
+        <optional>
+          <ref name="spec.parameter.role.attribute"/>
+        </optional>
+        <ref name="db.common.attributes"/>
+        <attribute name="name"/>
+        <optional>
+          <attribute name="type"/>
+        </optional>
+        <optional>
+          <attribute name="required">
+            <choice>
+              <value>no</value>
+              <value>yes</value>
+            </choice>
+          </attribute>
+        </optional>
+      </interleave>
+    </define>
+    <define name="spec.parameter">
+      <element name="p:parameter">
+        <ref name="spec.parameter.attlist"/>
+        <empty/>
+      </element>
+    </define>
+  </div>
+  <!-- ====================================================================== -->
+  <div>
+    <db:refname>input</db:refname>
+    <db:refpurpose>Describes the input to a component</db:refpurpose>
+    <define name="spec.input.role.attribute">
+      <attribute name="role"/>
+    </define>
+    <define name="spec.input.attlist">
+      <interleave>
+        <optional>
+          <ref name="spec.input.role.attribute"/>
+        </optional>
+        <ref name="db.common.attributes"/>
+        <attribute name="name"/>
+        <attribute name="cardinality">
+          <choice>
+            <value>1</value>
+            <value>+</value>
+          </choice>
+        </attribute>
+      </interleave>
+    </define>
+    <define name="spec.input">
+      <element name="p:input">
+        <ref name="spec.input.attlist"/>
+        <empty/>
+      </element>
+    </define>
+  </div>
+  <!-- ====================================================================== -->
+  <div>
+    <db:refname>output</db:refname>
+    <db:refpurpose>Describes the output of a component</db:refpurpose>
+    <define name="spec.output.role.attribute">
+      <attribute name="role"/>
+    </define>
+    <define name="spec.output.attlist">
+      <interleave>
+        <optional>
+          <ref name="spec.output.role.attribute"/>
+        </optional>
+        <ref name="db.common.attributes"/>
+        <attribute name="name"/>
+        <attribute name="cardinality">
+          <choice>
+            <value>1</value>
+            <value>+</value>
+          </choice>
+        </attribute>
+      </interleave>
+    </define>
+    <define name="spec.output">
+      <element name="p:output">
+        <ref name="spec.output.attlist"/>
+        <empty/>
+      </element>
+    </define>
+  </div>
+  <!-- ====================================================================== -->
+  <define name="db.el">
+    <element name="db:el">
+      <r:remap>
+        <db:tag class="tag"/>
+      </r:remap>
+      <ref name="db.common.attributes"/>
+      <ref name="db._text"/>
+    </element>
+  </define>
+  <define name="db.att">
+    <element name="db:att">
+      <r:remap>
+        <db:tag class="attribute"/>
+      </r:remap>
+      <ref name="db.common.attributes"/>
+      <ref name="db._text"/>
+    </element>
+  </define>
+</grammar>

@@ -1,0 +1,14 @@
+<p:pipeline type="ex:delete-in-div"
+	    version="1.0"
+	    xmlns:p="http://www.w3.org/ns/xproc"
+	    xmlns:ex="http://example.org/ns/ex"
+	    xmlns:h="http://www.w3.org/1999/xhtml">
+<p:option name="divchild" required="true"/>
+
+<p:delete>
+  <p:with-option name="match" select="concat('h:div/',$divchild)">
+    <p:namespaces xmlns:html="http://www.w3.org/1999/xhtml"/>
+  </p:with-option>
+</p:delete>
+
+</p:pipeline>

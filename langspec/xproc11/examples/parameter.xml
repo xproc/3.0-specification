@@ -1,0 +1,18 @@
+<p:pipeline xmlns:p="http://www.w3.org/ns/xproc"
+	    version="1.0"
+	    name="main">
+
+<p:xslt>
+  <p:input port="source">
+    <p:pipe step="main" port="source"/>
+  </p:input>
+  <p:input port="stylesheet">
+    <p:document href="http://example.com/stylesheets/doc.xsl"/>
+  </p:input>
+  <p:with-param name="output-type" select="'html'"/>
+  <p:input port="parameters">
+    <p:pipe step="main" port="parameters"/>
+  </p:input>
+</p:xslt>
+
+</p:pipeline>

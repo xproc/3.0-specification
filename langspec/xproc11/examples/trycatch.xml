@@ -1,0 +1,29 @@
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
+		xmlns:c="http://www.w3.org/ns/xproc/results"
+		version="1.0">
+<p:output port="result"/>
+
+<p:try>
+  <p:group>
+    <p:http-request>
+      <p:input port="source">
+	<p:inline>
+	  <c:request method="post" href="http://example.com/form-action">
+	    <c:body content-type="application/x-www-form-urlencoded">name=W3C&amp;spec=XProc</c:body>
+	  </c:request>
+	</p:inline>
+      </p:input>
+    </p:http-request>
+  </p:group>
+  <p:catch>
+    <p:identity>
+      <p:input port="source">
+	<p:inline>
+	  <c:error>HTTP Request Failed</c:error>
+	</p:inline>
+      </p:input>
+    </p:identity>
+  </p:catch>
+</p:try>
+
+</p:declare-step>

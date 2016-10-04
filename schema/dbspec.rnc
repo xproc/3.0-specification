@@ -1,0 +1,242 @@
+# This schema is a customization for the XProc language specification
+#
+# Author: Norman Walsh, <ndw@nwalsh.com>
+# Release: $Id: dbspec.rnc,v 1.14 2007/12/13 13:55:19 NormanWalsh Exp $
+#
+# ======================================================================
+
+namespace ctrl = "http://nwalsh.com/xmlns/schema-control/"
+namespace rng  = "http://relaxng.org/ns/structure/1.0"
+namespace s = "http://www.ascc.net/xml/schematron"
+namespace db = "http://docbook.org/ns/docbook"
+namespace html = "http://www.w3.org/1999/xhtml"
+namespace p = "http://www.w3.org/ns/xproc"
+namespace e ="http://www.w3.org/1999/XSL/Spec/ElementSyntax"
+namespace err = "http://www.w3.org/ns/xproc-error"
+namespace r = "http://nwalsh.com/xmlns/schema-remap/"
+default namespace = "http://docbook.org/ns/docbook"
+
+include "dbw3c.rnc" {
+   start = db.specification | db.appendix | db.section
+   db._any = element * - (db:* | html:* | p:*) {
+      (db._any.attribute | text | db._any)*
+   }
+
+   db.revisionflag.attribute =
+      (attribute revisionflag { db.revisionflag.enumeration }
+       & attribute revdate { xsd:date })
+}
+
+db.all.blocks |=
+   spec.component
+ | e.rng-pattern
+ | e.rng-fragment
+ | p.declare-step
+ | err.error-list
+
+db.all.inlines |=
+   db.el
+ | db.att
+
+e.rng-pattern =
+   element e:rng-pattern {
+      attribute xml:id { text }?,
+      attribute name { text },
+      attribute role { text }?,
+      empty
+   }
+
+e.rng-fragment =
+   element e:rng-fragment {
+      attribute xml:id { text }?,
+      attribute name { text },
+      attribute role { text }?,
+      db._any+
+   }
+
+#e.element-syntax =
+#   element e:element-syntax {
+#      attribute (* - xml:id) { text }*,
+#      _any_elem_syntax*
+#   }
+#
+#_any_elem_syntax =
+#   element e:* {
+#      attribute (* - xml:id) { text }*,
+#      _any_elem_syntax*
+#   }
+
+p.declare-step =
+   element p:declare-step {
+      attribute (* - xml:id) { text }*,
+      _any_xproc_syntax*
+   }
+
+_any_xproc_syntax =
+   element p:* {
+      attribute (* - xml:id) { text }*,
+      _any_xproc_syntax*
+   }
+
+# ======================================================================
+
+db.error =
+   element db:error {
+      attribute class { "static" | "dynamic" }?,
+      attribute code { text },
+      db.common.attributes,
+      db.all.inlines*
+   }
+
+db.error.inlines |= db.error
+
+# ======================================================================
+
+err.error-list =
+   element err:error-list {
+      db.common.attributes,
+      (err.error*)
+   }
+
+err.error =
+   element err:error {
+      attribute class { "static" | "dynamic" }?,
+      attribute code { text },
+      db.common.attributes,
+      text
+   }
+
+# ======================================================================
+
+db.impl =
+   element db:impl {
+      db.common.attributes,
+      db.all.inlines*
+   }
+
+db.technical.inlines |= db.impl
+
+# ======================================================================
+
+db.port.role.attribute = attribute role { text }
+db.port.attlist =
+   db.port.role.attribute?
+ & db.common.attributes
+ & db.common.linking.attributes
+
+db.port =
+   element port {
+      db.code.attlist, (db.programming.inlines | db._text)*
+   }
+
+db.markup.inlines |= db.port
+
+# ======================================================================
+
+[
+   db:refname [ "component" ]
+   db:refpurpose [ "Describes a component" ]
+]
+div {
+
+   spec.component.role.attribute = attribute role { text }
+
+   spec.component.attlist =
+      spec.component.role.attribute?
+    & db.common.attributes
+    & attribute name { text }?
+
+   spec.component =
+      element p:component {
+         spec.component.attlist,
+         spec.parameter*,spec.input*,spec.output*,spec.component?
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "parameter" ]
+   db:refpurpose [ "Describes the parameters to a component" ]
+]
+div {
+
+   spec.parameter.role.attribute = attribute role { text }
+
+   spec.parameter.attlist =
+      spec.parameter.role.attribute?
+    & db.common.attributes
+    & attribute name { text }
+    & attribute type { text }?
+    & attribute required { "no" | "yes" }?
+
+   spec.parameter =
+      element p:parameter {
+         spec.parameter.attlist,
+         empty
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "input" ]
+   db:refpurpose [ "Describes the input to a component" ]
+]
+div {
+
+   spec.input.role.attribute = attribute role { text }
+
+   spec.input.attlist =
+      spec.input.role.attribute?
+    & db.common.attributes
+    & attribute name { text }
+    & attribute cardinality { "1" | "+" }
+
+   spec.input =
+      element p:input {
+         spec.input.attlist,
+         empty
+      }
+}
+
+# ======================================================================
+
+[
+   db:refname [ "output" ]
+   db:refpurpose [ "Describes the output of a component" ]
+]
+div {
+
+   spec.output.role.attribute = attribute role { text }
+
+   spec.output.attlist =
+      spec.output.role.attribute?
+    & db.common.attributes
+    & attribute name { text }
+    & attribute cardinality { "1" | "+" }
+
+   spec.output =
+      element p:output {
+         spec.output.attlist,
+         empty
+      }
+}
+
+# ======================================================================
+
+db.el =
+   [ r:remap [ db:tag [ class="tag" ] ] ]
+   element db:el {
+      db.common.attributes,
+      db._text
+   }
+
+db.att =
+   [ r:remap [ db:tag [ class="attribute" ] ] ]
+   element db:att {
+      db.common.attributes,
+      db._text
+   }
+
+

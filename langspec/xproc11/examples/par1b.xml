@@ -1,0 +1,24 @@
+<p:pipeline xmlns:p="http://www.w3.org/ns/xproc"
+	    version="1.0"
+	    name="main">
+
+  <p:xslt name="generate-stylesheet">
+    <p:input port="source">
+      <p:document href="someURI"/>
+    </p:input>
+    <p:input port="stylesheet">
+      <p:document href="someOtherURI"/>
+    </p:input>
+  </p:xslt>
+
+  <p:store name="save-xslt" href="gen-style.xsl"/>
+
+  <p:xslt name="style">
+    <p:input port="source">
+      <p:pipe step="main" port="source"/>
+    </p:input>
+    <p:input port="stylesheet">
+      <p:pipe step="generate-stylesheet" port="result"/>
+    </p:input>
+  </p:xslt>
+</p:pipeline>

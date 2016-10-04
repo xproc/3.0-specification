@@ -1,0 +1,26 @@
+<p:pipeline xmlns:p="http://www.w3.org/ns/xproc"
+            xmlns:c="http://www.w3.org/ns/xproc-step"
+            name="main" version="1.0">
+<p:option name="username" required="true"/>
+<p:option name="password" required="true"/>
+
+<p:in-scope-names name="vars"/>
+
+<p:template>
+  <p:input port="template">
+    <p:inline>
+      <c:request method="POST" href="{/doc/request/@uri}"
+                 username="{$username}" password="{$password}">
+        { /doc/request/node() }
+      </c:request>
+    </p:inline>
+  </p:input>
+  <p:input port="source">
+    <p:pipe step="main" port="source"/>
+  </p:input>
+  <p:input port="parameters">
+    <p:pipe step="vars" port="result"/>
+  </p:input>
+</p:template>
+
+</p:pipeline>

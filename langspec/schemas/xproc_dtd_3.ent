@@ -1,0 +1,351 @@
+<!ENTITY % annotation "%documentation;|%pipeinfo;">
+<!ENTITY % component
+ "(%for-each;|%viewport;|%choose;|%group;|%try;|%step;)">
+<!ENTITY % subpipeline
+ "((%variable; , (%annotation;)* )*,
+   (%component; , ( %annotation;)* )+ )">
+<!ENTITY % seqConnection
+ "((%annotation;)*,
+   ( ( %empty;,(%annotation;)* ) |
+     ( (%data;|%document;|%pipe;|%inline;),
+       (%annotation;)* )* ))">
+<!ENTITY % oneConnection
+ "((%annotation;)*,
+   (%empty;|%document;|%pipe;|%inline;|%data;),
+   (%annotation;)*)">
+<!ENTITY % oneReqConnection
+ "((%annotation;)*,
+   (%document;|%pipe;|%inline;|%data;),
+   (%annotation;)*)">
+<!ENTITY % optConnection
+ "((%annotation;|%namespaces;)*,
+   ((%empty;|%document;|%pipe;|%inline;|%data;),
+    (%annotation;|%namespaces;)*)?)">
+
+<!ENTITY % NCName "NMTOKEN">
+<!ENTITY % QName "NMTOKEN">
+<!ENTITY % URIref "CDATA">
+<!ENTITY % XPath_expression "CDATA">
+<!ENTITY % XSLT_match_pattern "CDATA">
+<!ENTITY % regexp "CDATA">
+<!ENTITY % port_name "%NCName;">
+<!ENTITY % step_name "%NCName;">
+<!ENTITY % string "CDATA">
+<!ENTITY % integer "NMTOKEN">
+<!ENTITY % boolean "(true|false|0|1)">
+
+<!ENTITY % global-attrs
+  "xml:id NMTOKEN #IMPLIED
+   xml:base %URIref; #IMPLIED
+   use-when %XPath_expression; #IMPLIED
+   %extra-attrs;" >
+
+<!-- For use on user-defined steps - - only works if xproc
+     namespace has explict prefix!!! -->
+<!ENTITY % user-global-attrs
+  "xml:id NMTOKEN #IMPLIED
+   xml:base %URIref; #IMPLIED
+   %p;use-when %XPath_expression; #IMPLIED
+   %extra-attrs;" >
+
+<!ENTITY % top-attrs
+ "exclude-inline-prefixes CDATA #IMPLIED
+  version CDATA #IMPLIED
+  xpath-version CDATA #IMPLIED
+  psvi-required %boolean; #IMPLIED">
+
+<!ENTITY % step-model
+ "((%input;)|
+   (%log;) |
+   (%with-option;) |
+   (%with-param;) |
+   (%annotation;))*">
+<!ENTITY % step-attrs
+ "name %NCName; #IMPLIED
+  %global-attrs;
+  %step-option-attrs;" >
+
+<!ENTITY % declProlog1
+ "((%input;) |
+   (%output;) |
+   (%option;) |
+   (%log;) |
+   (%serialization;) |
+   (%annotation;))*">
+
+<!ENTITY % declProlog2
+ " ( ( (%import;) | (%declare-step;) | (%pipeline;) ),
+     (%annotation;)* )*">
+
+<!ELEMENT %pipeline; 
+   (%declProlog1;,
+    %declProlog2;,
+    %subpipeline;)>
+<!ATTLIST %pipeline;
+  name %NCName; #IMPLIED
+  type %QName; #IMPLIED
+  %top-attrs;
+  %global-attrs;
+  %nds; %URIref; #IMPLIED
+ >
+
+<!ELEMENT %for-each; 
+   ((%annotation;)*,
+    (%iteration-source;,(%annotation;)*)?,
+    (((%output;) |
+      (%log;)),
+      (%annotation;)*)*,
+    %subpipeline;)>
+<!ATTLIST %for-each; 
+  %global-attrs;
+  name %NCName; #IMPLIED
+ >
+
+<!ELEMENT %viewport; 
+   ((%annotation;)*,
+    (%viewport-source;,(%annotation;)*)?,
+    (%output;,(%annotation;)*)?,
+    (%log;,(%annotation;)*)?,
+    %subpipeline;)>
+<!ATTLIST %viewport; 
+  %global-attrs;
+  name %NCName; #IMPLIED
+  match %XSLT_match_pattern;  #REQUIRED
+ >
+
+<!ELEMENT %choose; 
+   ((%annotation;)*,
+    (%xpath-context;,(%annotation;)*)?,
+    ( %variable; ,(%annotation;)*)*,
+    ( %when; ,((%when;) | (%annotation;))*)?,
+    ( %otherwise;, (%annotation;)*)?)>
+<!ATTLIST %choose; 
+  %global-attrs;
+  name %NCName; #IMPLIED
+ >
+
+<!ELEMENT %xpath-context;
+   (%oneConnection;)>
+<!ATTLIST %xpath-context;
+  %global-attrs;>
+
+<!ELEMENT %when; 
+   ((%annotation;)*,
+    (%xpath-context;,(%annotation;)*)?,
+    (((%output;) | (%log;)),
+     (%annotation;)* )?,
+    %subpipeline;)>
+<!ATTLIST %when; 
+  %global-attrs;
+  test %XPath_expression; #REQUIRED
+ >
+
+<!ELEMENT %otherwise; 
+   (((%output;) |
+     (%log;) |
+     (%annotation;) )*,
+    %subpipeline;)>
+<!ATTLIST %otherwise;
+  %global-attrs; >
+
+<!ELEMENT %group; 
+   (((%output;) |
+     (%log;) |
+     (%annotation;) )*,
+    %subpipeline;)>
+<!ATTLIST %group; 
+  %global-attrs;
+  name %NCName; #IMPLIED
+ >
+
+<!ELEMENT %try; 
+   ((%variable;|%annotation;)*,
+    %group;,
+    (%annotation;)*,
+    %catch;,
+    (%annotation;)*)>
+<!ATTLIST %try; 
+  %global-attrs;
+  name %NCName; #IMPLIED
+ >
+
+<!ELEMENT %catch; 
+   (((%output;) |
+     (%log;) |
+     (%annotation;) )*,
+    %subpipeline;)>
+<!ATTLIST %catch; 
+  %global-attrs;
+  name %NCName; #IMPLIED
+ >
+
+<!-- this is provided solely
+      for the use of user-defined compound steps,
+      which don't really have a place at all -->
+<!ENTITY % compound-step-model
+  "(((%input;) |
+     (%output;) |
+     (%log;) |
+     (%annotation;))*,
+    %subpipeline;)">
+
+<!ELEMENT %input; (%seqConnection;)>
+<!ATTLIST %input;  
+  %global-attrs;
+  port %NCName; #REQUIRED
+  sequence %boolean; #IMPLIED
+  primary %boolean; #IMPLIED
+  kind (document|parameter) #IMPLIED
+  select %XPath_expression;  #IMPLIED>
+
+<!ELEMENT %iteration-source; (%seqConnection;)>
+<!ATTLIST %iteration-source;  
+  %global-attrs;
+  select %XPath_expression;  #IMPLIED>
+
+<!ELEMENT %viewport-source; (%oneReqConnection;)?>
+<!ATTLIST %viewport-source;  
+  %global-attrs;>
+
+<!ELEMENT %output; 
+   (%seqConnection;)>
+<!ATTLIST %output;  
+  %global-attrs;
+  port %NCName; #REQUIRED
+  sequence %boolean;  #IMPLIED
+  primary %boolean; #IMPLIED>
+
+<!ELEMENT %log;
+   (%annotation;)*>
+<!ATTLIST %log;
+  %global-attrs;
+  port %NCName; #REQUIRED
+  href %URIref; #IMPLIED>
+
+<!ELEMENT %serialization; (%annotation;)*>
+<!ATTLIST %serialization;
+  %global-attrs;
+  port %NCName; #REQUIRED
+  byte-order-mark %boolean; #IMPLIED
+  cdata-section-elements NMTOKENS #IMPLIED
+  doctype-public CDATA #IMPLIED
+  doctype-system %URIref; #IMPLIED
+  encoding NMTOKEN #IMPLIED
+  escape-uri-attributes %boolean; #IMPLIED
+  include-content-type %boolean; #IMPLIED
+  indent %boolean; #IMPLIED
+  media-type CDATA #IMPLIED
+  method %QName; #IMPLIED
+  normalization-form NMTOKEN #IMPLIED
+  omit-xml-declaration %boolean; #IMPLIED
+  standalone (true|false|omit) #IMPLIED
+  undeclare-prefixes %boolean; #IMPLIED
+  version CDATA #IMPLIED>
+ <!-- normalization-form: NFC|NFD|NFKC|NFKD|fully-normalized|none|impl-def. . . -->
+
+<!ELEMENT %variable; (%optConnection;)>
+<!ATTLIST %variable;
+  %global-attrs;
+  name %QName; #REQUIRED
+  select %XPath_expression; #REQUIRED>
+
+
+<!ELEMENT %option; (%annotation;)*>
+<!ATTLIST %option;  
+  %global-attrs;
+  name %QName; #REQUIRED
+  required %boolean; #IMPLIED
+  select %XPath_expression;  #IMPLIED
+ >
+
+<!ELEMENT %with-option;
+   (%optConnection;)>
+<!ATTLIST %with-option;  
+  %global-attrs;
+  name %QName; #REQUIRED
+  select %XPath_expression;  #REQUIRED
+ >
+
+<!ELEMENT %with-param; 
+   (%optConnection;)>
+<!ATTLIST %with-param;  
+  %global-attrs;
+  name %QName; #REQUIRED
+  select %XPath_expression;  #REQUIRED
+  port %NCName; #IMPLIED
+ >
+
+<!ELEMENT %namespaces;
+   (%annotation;)*>
+<!ATTLIST %namespaces;
+  %global-attrs;
+  binding %QName; #IMPLIED
+  element %XPath_expression; #IMPLIED
+  except-prefixes NMTOKENS #IMPLIED>
+
+<!ELEMENT %declare-step; 
+    (%declProlog1;,
+     (%declProlog2;,
+      (%subpipeline;))? )>
+<!ATTLIST %declare-step; 
+  %global-attrs;
+  name %NCName; #IMPLIED
+  type %QName; #IMPLIED
+  %top-attrs;
+  %nds; %URIref; #IMPLIED
+ >
+
+<!ELEMENT %library; 
+   ((%import;) |
+    (%declare-step;) |
+    (%pipeline;) |
+    (%annotation;))*>
+<!ATTLIST %library;
+  %global-attrs;
+  %top-attrs;
+  %nds; %URIref; #IMPLIED>
+
+<!ELEMENT %import; (%annotation;)*>
+<!ATTLIST %import;
+  %global-attrs;
+  href %URIref; #REQUIRED
+ >
+
+<!ELEMENT %pipe; (%annotation;)*>
+<!ATTLIST %pipe;
+  %global-attrs;
+  step %step_name; #REQUIRED
+  port %port_name; #REQUIRED>
+
+<!ELEMENT %inline; %user-data;>
+<!ATTLIST %inline;
+  %global-attrs;
+  exclude-inline-prefixes CDATA #IMPLIED>
+
+<!ELEMENT %document; (%annotation;)*>
+<!ATTLIST %document;
+  %global-attrs;
+  href %URIref; #REQUIRED>
+
+<!ELEMENT %data; (%annotation;)*>
+<!ATTLIST %data;
+  %global-attrs;
+  href %URIref; #REQUIRED
+  wrapper %QName; #IMPLIED
+  content-type CDATA #IMPLIED>
+
+
+<!ELEMENT %empty; (%annotation;)*>
+<!ATTLIST %empty;
+  %global-attrs;>
+
+<!ELEMENT %documentation; (p | div %doc-elts;)*>
+<!ATTLIST %documentation;
+  %global-attrs;>
+
+<!ELEMENT %pipeinfo; %info-model;>
+<!ATTLIST %pipeinfo;
+  %global-attrs;>
+
+<!ELEMENT p (#PCDATA)>
+<!ELEMENT div (#PCDATA)>

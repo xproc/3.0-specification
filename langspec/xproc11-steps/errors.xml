@@ -1,0 +1,31 @@
+<section xmlns="http://docbook.org/ns/docbook" xml:id="errors">
+<title>Errors</title>
+    <para>Errors in a pipeline can be divided into two classes: static errors and dynamic
+      errors.</para>
+    <section xml:id="static-errors">
+      <title>Static Errors</title>
+      <para><termdef xml:id="dt-static-error">A <firstterm>static error</firstterm> is one which can
+          be detected before pipeline evaluation is even attempted.</termdef> Examples of static
+        errors include cycles and incorrect specification of inputs and outputs. </para>
+      <para>Static errors are fatal and must be detected before any steps are evaluated.</para>
+      <para>For a complete list of static errors, see <xref linkend="app.static-errors"/>.</para>
+    </section>
+    <section xml:id="dynamic-errors">
+      <title>Dynamic Errors</title>
+      <para>A <termdef xml:id="dt-dynamic-error">A <firstterm>dynamic error</firstterm> is one which
+          occurs while a pipeline is being evaluated.</termdef> Examples of dynamic errors include
+        references to URIs that cannot be resolved, steps which fail, and pipelines that exhaust the
+        capacity of an implementation (such as memory or disk space).</para>
+      <para>If a step fails due to a dynamic error, failure propagates upwards until either a
+          <tag>p:try</tag> is encountered or the entire pipeline fails. In other words, outside of a
+          <tag>p:try</tag>, step failure causes the entire pipeline to fail.</para>
+      <para>For a complete list of dynamic errors, see <xref linkend="app.dynamic-errors"/>.</para>
+    </section>
+    <section xml:id="step-errors">
+      <title>Step Errors</title>
+      <para>Several of the steps in the standard and option step library can generate dynamic
+        errors.</para>
+      <para>For a complete list of the dynamic errors raised by builtin pipeline steps, see <xref
+          linkend="app.step-errors"/>.</para>
+    </section>
+  </section>
