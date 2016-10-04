@@ -20,12 +20,12 @@ if [ "$TRAVIS_REPO_SLUG" == "$GIT_PUB_REPO" ]; then
         TIP=${TRAVIS_TAG:="head"}
 
         cd gh-pages
-        git rm -rf ./xproc11/${TRAVIS_BRANCH}/${TIP}
-        git rm -rf ./steps11/${TRAVIS_BRANCH}/${TIP}
-        mkdir -p ./xproc11/${TRAVIS_BRANCH}/${TIP}
-        mkdir -p ./steps11/${TRAVIS_BRANCH}/${TIP}
-        cp -Rf $HOME/pubroot/xproc11/* ./xproc11/${TRAVIS_BRANCH}/${TIP}
-        cp -Rf $HOME/pubroot/steps11/* ./steps11/${TRAVIS_BRANCH}/${TIP}
+        git rm -rf ./${TRAVIS_BRANCH}/${TIP}/xproc11
+        git rm -rf ./${TRAVIS_BRANCH}/${TIP}/steps11
+        mkdir -p ./${TRAVIS_BRANCH}/${TIP}/xproc11
+        mkdir -p ./${TRAVIS_BRANCH}/${TIP}/steps11
+        cp -Rf $HOME/pubroot/xproc11/* ./${TRAVIS_BRANCH}/${TIP}/xproc11
+        cp -Rf $HOME/pubroot/steps11/* ./${TRAVIS_BRANCH}/${TIP}/steps11
 
         git add -f .
         git commit -m "Successful travis build $TRAVIS_BUILD_NUMBER"
