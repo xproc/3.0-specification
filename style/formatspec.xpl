@@ -35,6 +35,8 @@
                 select="string(/c:result/c:env[@name='TRAVIS_TAG']/@value)"/>
   <p:with-param name="travis-build-number"
                 select="string(/c:result/c:env[@name='TRAVIS_BUILD_NUMBER']/@value)"/>
+  <p:with-param name="travis-branch"
+                select="string(/c:result/c:env[@name='TRAVIS_BRANCH']/@value)"/>
   <p:with-param name="travis-user"
                 select="substring-before(
                           /c:result/c:env[@name='TRAVIS_REPO_SLUG']/@value,
@@ -42,10 +44,6 @@
   <p:with-param name="travis-repo"
                 select="substring-after(
                           /c:result/c:env[@name='TRAVIS_REPO_SLUG']/@value,
-                          '/')"/>
-  <p:with-param name="travis-branch"
-                select="substring-after(
-                          /c:result/c:env[@name='TRAVIS_BRANCH']/@value,
                           '/')"/>
   <p:with-param name="auto-diff" select="''"/>
 <!--
