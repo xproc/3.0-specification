@@ -1,0 +1,245 @@
+buildscript {
+  repositories {
+    mavenCentral()
+    maven { url "http://maven.restlet.org" }
+  }
+
+  dependencies {
+    classpath group: 'org.docbook', name: 'docbook-xslt2', version: '2.0.19'
+    classpath group: 'com.xmlcalabash', name: 'xmlcalabash1-print', version: '1.1.4'
+    classpath group: 'com.xmlcalabash', name: 'xmlcalabash1-gradle', version: '1.1.2'
+  }
+}
+
+plugins {
+  id "de.undercouch.download" version "2.0.0"
+}
+
+repositories {
+  mavenLocal()
+  mavenCentral()
+}
+
+defaultTasks 'specification'
+
+apply plugin: 'org.docbook.task'
+apply plugin: 'com.xmlcalabash.task'
+
+import org.docbook.DocBookTask
+import com.xmlcalabash.XMLCalabashTask
+import de.undercouch.gradle.tasks.download.Download
+
+project.ext.docbookXslt = "docbook-xslt2-$docbookXsltVersion"
+
+task downloadDocBook(type: Download) {
+  src docbookXsltBaseUri + '/release/' + docbookXsltVersion + '/' + docbookXslt + '.zip'
+  dest new File(buildDir, docbookXslt + '.zip')
+}
+downloadDocBook.onlyIf { !file("$buildDir/${docbookXslt}.zip").exists() }
+
+task setupDocBook(dependsOn: downloadDocBook, type: Copy) {
+  from zipTree(downloadDocBook.dest)
+  into { "build" }
+  doLast {
+    copy {
+      from "build/$docbookXslt"
+      into 'build/docbook'
+    }
+  }
+}
+setupDocBook.onlyIf { !file("$buildDir/docbook").exists() }
+
+task publish(dependsOn: ["publish_xproc11", "publish_steps11"]) {
+  // nothing to see here
+}
+
+task publish_xproc11(dependsOn: ["xproc11",
+                                 "publish_xproc11_graphics",
+                                 "publish_xproc11_css"], type: Copy) {
+  from('build') {
+    include "xproc11.html"
+    rename "xproc11.html", "index.html"
+  }
+  into "build/xproc11"
+}
+
+task publish_xproc11_css(dependsOn: ["copyCSS"], type: Copy) {
+  from('build') {
+    include "*.css"
+  }
+  into "build/xproc11"
+}
+task publish_xproc11_css.doFirst {
+  mkdir 'build/xproc11'
+}
+
+task publish_xproc11_graphics(dependsOn: ["copyImages"], type: Copy) {
+  from 'build/graphics'
+  into "build/xproc11/graphics"
+}
+task publish_xproc11_graphics.doFirst {
+  mkdir 'build/xproc11'
+  mkdir 'build/xproc11/graphics'
+}
+
+task publish_steps11(dependsOn: ["steps11",
+                                 "publish_steps11_css"], type: Copy) {
+  from('build') {
+    include "steps11.html"
+    rename "steps11.html", "index.html"
+  }
+  into "build/steps11"
+}
+
+task publish_steps11_css(dependsOn: ["copyCSS"], type: Copy) {
+  from('build') {
+    include "*.css"
+  }
+  into "build/steps11"
+}
+task publish_steps11_css.doFirst {
+  mkdir 'build/steps11'
+}
+
+task copyCSS(type: Copy) {
+  from 'css'
+  into 'build'
+}
+
+task copyImages(type: Copy) {
+  from 'langspec/xproc11/graphics'
+  into 'build/graphics'
+}
+task copyImages.doFirst {
+  mkdir 'build'
+  mkdir 'build/graphics'
+}
+
+task copy_assets(dependsOn: ['copyCSS', 'copyImages']) {
+  // nothing to see here
+}
+
+task legacy_make(type: Exec) {
+  commandLine "make"
+}
+
+task xproc11(dependsOn: ["xproc11_xi2", "steps11_xi1",
+                         "copy_assets", "legacy_make"], type: XMLCalabashTask) {
+  inputs.file "build/,xproc11.xml"
+  inputs.file "langspec/xproc11/error-list.xml"
+  inputs.file "style/docbook.xsl"
+  inputs.file "style/dbspec.xsl"
+  inputs.file "style/xprocns.xsl"
+  inputs.file "style/rngsyntax.xsl"
+  outputs.file "build/xproc11.html"
+  input("source", "build/,xproc11.xml")
+  output("result", "build/xproc11.html")
+
+  param("schemaext.schema", "../../../../../schema/dbspec.rng")
+  param("xml.toc.filename", "xproc11.toc.xml")
+  param("otherspec", "../build/,steps.xml")
+  param("otherhref", "../steps11/")
+  param("otherlabel", "XPS")
+  option("style", "xproc-specs.xsl")
+  pipeline "style/formatspec.xpl"
+}
+
+task xproc11_xi1(dependsOn: ["setupDocBook"], type: XMLCalabashTask) {
+  inputs.file "langspec/xproc11/xproc.xml"
+  inputs.file "langspec/xproc11/conformance.xml"
+  inputs.file "langspec/xproc11/error-codes.xml"
+  inputs.file "langspec/xproc11/language-summary.xml"
+  inputs.file "langspec/xproc11/mediatype.xml"
+  inputs.file "langspec/xproc11/namespace-fixup.xml"
+  inputs.file "langspec/xproc11/parallel.xml"
+  inputs.file "langspec/xproc11/references.xml"
+  outputs.file "build/,,xproc11.xml"
+  input("source", "langspec/xproc11/xproc.xml")
+  output("result", "build/,,xproc11.xml")
+  option("schema", "schema/dbspec.rng")
+  option("schematron", "schema/docbook.sch")
+  pipeline "style/validate.xpl"
+}
+
+task xproc11_xi2(dependsOn: ["glossary"], type: XMLCalabashTask) {
+  inputs.file "langspec/xproc11/xproc.xml"
+  inputs.file "langspec/xproc11/conformance.xml"
+  inputs.file "langspec/xproc11/error-codes.xml"
+  inputs.file "langspec/xproc11/glossary.xml"
+  inputs.file "langspec/xproc11/language-summary.xml"
+  inputs.file "langspec/xproc11/mediatype.xml"
+  inputs.file "langspec/xproc11/namespace-fixup.xml"
+  inputs.file "langspec/xproc11/parallel.xml"
+  inputs.file "langspec/xproc11/references.xml"
+  outputs.file "build/,xproc11.xml"
+  input("source", "langspec/xproc11/xproc.xml")
+  output("result", "build/,xproc11.xml")
+  param("schema", "../../schema/dbspec.rng")
+  param("schematron", "../../schema/docbook.sch")
+  pipeline "style/validate.xpl"
+}
+
+task glossary(dependsOn: ["xproc11_xi1"], type: XMLCalabashTask) {
+  inputs.file "build/,,xproc11.xml"
+  inputs.file "style/makeglossary.xpl"
+  inputs.file "style/makeglossary.xsl"
+  outputs.file "langspec/xproc11/glossary.xml"
+  input("source", "build/,,xproc11.xml")
+  output("result", "langspec/xproc11/glossary.xml")
+  pipeline "style/makeglossary.xpl"
+}
+
+task steps11(dependsOn: ["steps11_xi1", "xproc11_xi2", "copy_assets"], type: XMLCalabashTask) {
+  inputs.file "build/,steps.xml"
+  inputs.file "style/docbook.xsl"
+  inputs.file "style/dbspec.xsl"
+  inputs.file "style/xprocns.xsl"
+  inputs.file "style/rngsyntax.xsl"
+  outputs.file "build/steps11.html"
+  input("source", "build/,steps.xml")
+  output("result", "build/steps11.html")
+
+  param("schemaext.schema", "../../../../../schema/dbspec.rng")
+  param("xml.toc.filename", "steps.toc.xml")
+  param("otherspec", "../build/,xproc11.xml")
+  param("otherhref", "../xproc11/")
+  param("otherlabel", "XP")
+  option("style", "xproc-specs.xsl")
+  pipeline "style/formatspec.xpl"
+}
+
+task steps11_xi1(dependsOn: ["setupDocBook"], type: XMLCalabashTask) {
+  inputs.file "langspec/xproc11-steps/steps.xml"
+  inputs.file "langspec/xproc11-steps/errors.xml"
+  inputs.file "langspec/xproc11-steps/error-codes.xml"
+  inputs.file "langspec/xproc11-steps/serialization-options-for-escape-markup.xml"
+  inputs.file "langspec/xproc11-steps/serialization-options.xml"
+  outputs.file "build/,steps.xml"
+  input("source", "langspec/xproc11-steps/steps.xml")
+  output("result", "build/,steps.xml")
+  param("schema", "")
+  param("schematron", "")
+  pipeline "style/validate.xpl"
+}
+
+/* Get the current git log in XML */
+/*
+task gitlog(type: Exec) {
+  if (System.getProperty('os.name').toLowerCase().contains('windows')) {
+    commandLine "cmd", "/c", "perl", "bin/git-log-summary"
+  } else {
+    commandLine "bin/git-log-summary"
+  }
+  standardOutput = new FileOutputStream(new File("etc/git-log-summary.xml"))
+}
+*/
+
+/* The default task. It just depends on all the necessary pages */
+task specification(dependsOn: ["xproc11"]) {
+  /* Nothing to see here */
+}
+
+task clean
+task clean.doFirst {
+  delete "$buildDir"
+}

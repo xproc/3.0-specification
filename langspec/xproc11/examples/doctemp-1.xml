@@ -1,0 +1,37 @@
+<p:pipeline xmlns:p="http://www.w3.org/ns/xproc"
+            xmlns:c="http://www.w3.org/ns/xproc-step"
+            name="main" version="1.0">
+<p:option name="username" required="true"/>
+<p:option name="password" required="true"/>
+
+<p:identity>
+  <p:input port="source">
+    <p:inline>
+      <c:request method="POST"/>
+    </p:inline>
+  </p:input>
+</p:identity>
+
+<p:add-attribute match="/c:request" attribute-name="href">
+  <p:with-option name="attribute-value" select="/doc/request/@uri">
+    <p:pipe step="main" port="source"/>
+  </p:with-option>
+</p:add-attribute>
+
+<p:add-attribute match="/c:request" attribute-name="username">
+  <p:with-option name="attribute-value" select="$username"/>
+</p:add-attribute>
+
+<p:add-attribute match="/c:request" attribute-name="password">
+  <p:with-option name="attribute-value" select="$password"/>
+</p:add-attribute>
+
+<p:insert position="first-child" match="/c:request">
+  <p:input port="insertion" select="/doc/request">
+    <p:pipe step="main" port="source"/>
+  </p:input>
+</p:insert>
+
+<p:unwrap match="/c:request/request"/>
+
+</p:pipeline>

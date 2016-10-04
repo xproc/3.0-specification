@@ -1,0 +1,28 @@
+<p:pipeline xmlns:p="http://www.w3.org/ns/xproc" version="1.0">
+
+<p:for-each name="chapters">
+  <p:iteration-source select="//chapter"/>
+  <p:output port="html-results">
+    <p:pipe step="make-html" port="result"/>
+  </p:output>
+  <p:output port="fo-results">
+    <p:pipe step="make-fo" port="result"/>
+  </p:output>
+
+  <p:xslt name="make-html">
+    <p:input port="stylesheet">
+      <p:document href="http://example.com/xsl/html.xsl"/>
+    </p:input>
+  </p:xslt>
+
+  <p:xslt name="make-fo">
+    <p:input port="source">
+      <p:pipe step="chapters" port="current"/>
+    </p:input>
+    <p:input port="stylesheet">
+      <p:document href="http://example.com/xsl/fo.xsl"/>
+    </p:input>
+  </p:xslt>
+</p:for-each>
+
+</p:pipeline>

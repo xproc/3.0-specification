@@ -1,0 +1,14 @@
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" xmlns:xp="x" type="xp:x" version="1.0">
+<p:output port="result" sequence="true"/>
+
+<p:variable name="home" select="'http://example.com/docs'"/>
+
+<p:load name="read-from-home">
+  <p:with-option name="href" select="concat($home,'/document.xml')"/>
+</p:load>
+
+<p:split-sequence name="select-chapters" test="@role='chapter'">
+  <p:input port="source" select="//section"/>
+</p:split-sequence>
+
+</p:declare-step>

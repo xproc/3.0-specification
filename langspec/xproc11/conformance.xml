@@ -1,0 +1,100 @@
+<appendix xmlns="http://docbook.org/ns/docbook"
+	  xml:id="conformance">
+<title>Conformance</title>
+
+<para>Conformant processors <rfc2119>must</rfc2119> implement all of the features
+described in this specification except those that are explicitly identified
+as optional.</para>
+
+<para>Some aspects of processor behavior are not completely specified; those
+features are either <glossterm role='unwrapped'>implementation-dependent</glossterm> or
+<glossterm role='unwrapped'>implementation-defined</glossterm>.</para>
+
+<para><termdef xml:id="dt-implementation-dependent">An
+<firstterm>implementation-dependent</firstterm> feature is one where the
+implementation has discretion in how it is performed.
+Implementations are not required to document or explain
+how <glossterm role='unwrapped'>implementation-dependent</glossterm> features are performed.</termdef>
+</para>
+
+<para><termdef xml:id="dt-implementation-defined">An
+<firstterm>implementation-defined</firstterm> feature is one where the
+implementation has discretion in how it is performed.
+Conformant implementations <rfc2119>must</rfc2119> document
+how <glossterm role='unwrapped'>implementation-defined</glossterm> features are performed.</termdef>
+</para>
+
+<section xml:id="implementation-defined">
+<title>Implementation-defined features</title>
+
+<para>The following features are implementation-defined:</para>
+
+<?implementation-defined-features?>
+</section>
+
+<section xml:id="implementation-dependent">
+<title>Implementation-dependent features</title>
+
+<para>The following features are implementation-dependent:</para>
+
+<?implementation-dependent-features?>
+</section>
+
+<section xml:id="infoset-conformance">
+<title>Infoset Conformance</title>
+
+<para>This specification conforms to the XML Information Set <biblioref
+linkend="xml-infoset-rec"/>. The information corresponding to the
+following information items and properties must be available to the
+processor for the documents that flow through the pipeline.</para>
+
+<itemizedlist>
+  <listitem><para>The <literal role="info-item">Document Information Item</literal> with
+           <literal role="infoset-property">base URI</literal> and
+           <literal role="infoset-property">children</literal>
+           properties.</para></listitem>
+
+  <listitem><para><literal role="info-item">Element Information Items</literal> with
+           <literal role="infoset-property">base URI</literal>,
+           <literal role="infoset-property">children</literal>,
+           <literal role="infoset-property">attributes</literal>,
+           <literal role="infoset-property">in-scope namespaces</literal>,
+           <literal role="infoset-property">prefix</literal>,
+           <literal role="infoset-property">local name</literal>,
+           <literal role="infoset-property">namespace name</literal>,
+           <literal role="infoset-property">parent</literal> properties.</para></listitem>
+
+  <listitem><para><literal role="info-item">Attribute Information Items</literal> with
+           <literal role="infoset-property">namespace name</literal>,
+           <literal role="infoset-property">prefix</literal>,
+           <literal role="infoset-property">local name</literal>,
+           <literal role="infoset-property">normalized value</literal>,
+           <literal role="infoset-property">attribute type</literal>, and
+           <literal role="infoset-property">owner element</literal> properties.</para></listitem>
+
+  <listitem><para><literal role="info-item">Character Information Items</literal> with
+           <literal role="infoset-property">character code</literal>,
+           <literal role="infoset-property">parent</literal>, and, optionally,
+           <literal role="infoset-property">element content whitespace</literal>
+           properties.</para></listitem>
+
+  <listitem><para><literal role="info-item">Processing Instruction Information Items</literal> with
+           <literal role="infoset-property">base URI</literal>,
+           <literal role="infoset-property">target</literal>,
+           <literal role="infoset-property">content</literal> and
+           <literal role="infoset-property">parent</literal> properties.</para></listitem>
+
+  <listitem><para><literal role="info-item">Comment Information Items</literal> with
+           <literal role="infoset-property">content</literal> and
+           <literal role="infoset-property">parent</literal> properties.</para></listitem>
+
+  <listitem><para><literal role="info-item">Namespace Information Items</literal> with
+           <literal role="infoset-property">prefix</literal> and
+           <literal role="infoset-property">namespace name</literal> properties.</para></listitem>
+</itemizedlist>
+
+<para><impl>It is <glossterm>implementation-defined</glossterm> whether
+additional information items and properties, particularly those made available
+in the PSVI, are preserved between steps.</impl></para>
+</section>
+</appendix>

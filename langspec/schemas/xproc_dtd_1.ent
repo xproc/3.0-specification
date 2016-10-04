@@ -1,0 +1,68 @@
+<!-- DTD (non-normative) for the W3C XML Processing Model language
+
+    This is DTD version $Id: xproc_dtd_1.ent,v 1.6 2009/11/02 19:59:11 ht Exp $
+
+     Minimal provision is made for user-defined steps - Users may override the
+      definition of the parameter entity user-steps and step-option-attrs - see below.
+
+     The parameter entity user-global-attrs is available as a convenience.
+
+     Minimal provision is made for extension elements and
+       attributes - users may override the definitions of the
+       parameter entities info-model and extra-attrs.
+       info-model must be a complete content model, e.g. "(mystuff)*",
+       and only allows extensions within p:pipeinfo
+
+     Likewise, for documentation, p and div are pre-allowed, others
+      can be added via the entity doc-elts
+
+     Finally, for inline data, users must override the definition of
+     the user-data parameter entity with a complete content model -->
+
+<!ENTITY % p 'p:'> <!-- can be overriden in the internal subset of a
+                         schema document to establish a different
+                         namespace prefix -->
+<!ENTITY % s ':p'> <!-- if %p is defined (e.g. as foo:) then you must
+                         also define %s as the suffix for the appropriate
+                         namespace declaration (e.g. :foo) -->
+<!ENTITY % nds 'xmlns%s;'>
+
+<!ENTITY % pipeline "%p;pipeline">
+<!ENTITY % for-each "%p;for-each">
+<!ENTITY % viewport "%p;viewport">
+<!ENTITY % choose "%p;choose">
+<!ENTITY % xpath-context "%p;xpath-context">
+<!ENTITY % when "%p;when">
+<!ENTITY % otherwise "%p;otherwise">
+<!ENTITY % group "%p;group">
+<!ENTITY % try "%p;try">
+<!ENTITY % catch "%p;catch">
+<!ENTITY % input "%p;input">
+<!ENTITY % iteration-source "%p;iteration-source">
+<!ENTITY % viewport-source "%p;viewport-source">
+<!ENTITY % output "%p;output">
+<!ENTITY % log "%p;log">
+<!ENTITY % serialization "%p;serialization">
+<!ENTITY % variable "%p;variable">
+<!ENTITY % option "%p;option">
+<!ENTITY % with-option "%p;with-option">
+<!ENTITY % with-param "%p;with-param">
+<!ENTITY % namespaces "%p;namespaces">
+<!ENTITY % declare-step "%p;declare-step">
+<!ENTITY % library "%p;library">
+<!ENTITY % import "%p;import">
+<!ENTITY % pipe "%p;pipe">
+<!ENTITY % inline "%p;inline">
+<!ENTITY % document "%p;document">
+<!ENTITY % data "%p;data">
+<!ENTITY % empty "%p;empty">
+<!ENTITY % documentation "%p;documentation">
+<!ENTITY % pipeinfo "%p;pipeinfo">
+
+<!ENTITY % user-steps "">
+<!ENTITY % user-data "EMPTY">
+<!ENTITY % step-option-attrs "">
+<!ENTITY % extra-attrs "">
+<!ENTITY % info-model "EMPTY">
+<!ENTITY % doc-elts "">
+

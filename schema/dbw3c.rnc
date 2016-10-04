@@ -1,0 +1,137 @@
+# This schema is a DocBook customization for W3C Specifications.
+#
+# Author: Norman Walsh, <ndw@nwalsh.com>
+# Release: $Id: dbw3c.rnc,v 1.7 2011/02/02 18:24:13 NormanWalsh Exp $
+#
+# ======================================================================
+
+namespace ctrl = "http://nwalsh.com/xmlns/schema-control/"
+namespace rng  = "http://relaxng.org/ns/structure/1.0"
+namespace s = "http://www.ascc.net/xml/schematron"
+namespace db = "http://docbook.org/ns/docbook"
+default namespace = "http://docbook.org/ns/docbook"
+
+include "docbookxi.rnc" {
+   start = db.specification
+}
+
+db.info.elements |= w3c.shortname
+
+# ======================================================================
+
+[
+   db:refname [ "w3c-shortname" ]
+   db:refpurpose [ "Identifies the W3C short name" ]
+]
+div {
+
+   w3c.shortname.role.attribute = attribute role { text }
+
+   w3c.shortname.attlist =
+      w3c.shortname.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+
+   w3c.shortname =
+      element w3c-shortname {
+         w3c.shortname.attlist,
+         text
+      }
+}
+
+# ======================================================================
+
+db.specification.components = db.toplevel.sections
+
+# ======================================================================
+
+[
+   db:refname [ "specification" ]
+   db:refpurpose [ "A W3C Specification" ]
+]
+div {
+   db.specification.status.attribute = db.status.attribute
+
+   db.specification.class.enumeration =
+      ## Editor's Draft
+      "ed"
+    | ## First Public Working Draft
+      "fpwd"
+    | ## Working Draft
+      "wd"
+    | ## Candidate Recommendation
+      "cr"
+    | ## Proposed Recommendation
+      "pr"
+    | ## Recommendation
+      "rec"
+    | ## Proposed Edited Recommendation 
+      "per"
+    | ## Working Group Note
+      "note"
+    | ## Member Submission
+      "memsub"
+    | ## Team Submission
+      "teamsub"
+    | ## Other
+      "other"
+    | ## Namespace document
+      "namespace"
+
+   db.specification.class.attribute =
+      [
+         db:refpurpose [ "Identifies the nature of the specification" ]
+      ]
+      attribute class { db.specification.class.enumeration }
+
+   db.specification.role.attribute = attribute role { text }
+
+   db.specification.attlist =
+      db.specification.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+    & db.label.attribute?
+    & db.specification.status.attribute?
+    & db.specification.class.attribute
+
+   db.specification.info = db._info.title.req
+
+   db.specification =
+      element specification {
+         db.specification.attlist,
+         db.specification.info,
+         db.navigation.components*,
+         ((db.all.blocks+, db.specification.components?)
+          | db.specification.components),
+         (db.appendix | db.navigation.components | db.colophon | db.xi.include)*
+      }
+}
+
+# ======================================================================
+
+db.technical.inlines |= db.rfc2119
+
+[
+   db:refname [ "rfc2119" ]
+   db:refpurpose [ "An RFC 2119 keyword" ]
+]
+div {
+
+   db.rfc2119.role.attribute = attribute role { text }
+   db.rfc2119.xrefstyle.attribute = db.xrefstyle.attribute
+   db.rfc2119.endterm.attribute = db.endterm.attribute
+
+   db.rfc2119.attlist =
+      db.rfc2119.role.attribute?
+    & db.common.attributes
+    & db.common.linking.attributes
+    & db.rfc2119.xrefstyle.attribute?
+    & db.rfc2119.endterm.attribute?
+
+   db.rfc2119 =
+      element rfc2119 {
+         db.rfc2119.attlist,
+         db.all.inlines*
+      }
+}
+
