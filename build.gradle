@@ -123,8 +123,7 @@ task legacy_make(type: Exec) {
   commandLine "make"
 }
 
-task xproc11(dependsOn: ["xproc11_xi2", "steps11_xi1",
-                         "copy_assets", "legacy_make"], type: XMLCalabashTask) {
+task xproc11(dependsOn: ["xproc11_xi2", "steps11_xi1", "copy_assets"], type: XMLCalabashTask) {
   inputs.file "build/,xproc11.xml"
   inputs.file "langspec/xproc11/error-list.xml"
   inputs.file "style/docbook.xsl"
@@ -179,7 +178,7 @@ task xproc11_xi2(dependsOn: ["glossary"], type: XMLCalabashTask) {
   pipeline "style/validate.xpl"
 }
 
-task glossary(dependsOn: ["xproc11_xi1"], type: XMLCalabashTask) {
+task glossary(dependsOn: ["xproc11_xi1", "legacy_make"], type: XMLCalabashTask) {
   inputs.file "build/,,xproc11.xml"
   inputs.file "style/makeglossary.xpl"
   inputs.file "style/makeglossary.xsl"
@@ -208,7 +207,7 @@ task steps11(dependsOn: ["steps11_xi1", "xproc11_xi2", "copy_assets"], type: XML
   pipeline "style/formatspec.xpl"
 }
 
-task steps11_xi1(dependsOn: ["setupDocBook"], type: XMLCalabashTask) {
+task steps11_xi1(dependsOn: ["setupDocBook", "legacy_make"], type: XMLCalabashTask) {
   inputs.file "langspec/xproc11-steps/steps.xml"
   inputs.file "langspec/xproc11-steps/errors.xml"
   inputs.file "langspec/xproc11-steps/error-codes.xml"
@@ -235,7 +234,7 @@ task gitlog(type: Exec) {
 */
 
 /* The default task. It just depends on all the necessary pages */
-task specification(dependsOn: ["xproc11"]) {
+task specification(dependsOn: ["xproc11", "steps11"]) {
   /* Nothing to see here */
 }
 
