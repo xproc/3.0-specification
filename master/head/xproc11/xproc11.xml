@@ -713,6 +713,38 @@ that set.</error>
             possibilities for this connection is exactly the same set as for any other input port
             within the current <glossterm>environment</glossterm>.</para>
 
+
+<section xml:id="depends">
+<title>Additional dependent connections</title>
+
+<para>The connections between input and output ports form the basis
+of the pipeline graph. Any step that depends on the output of another step
+is guaranteed to be run after the step on which it depends.</para>
+
+<para>However, it is sometimes the case that one step depends on
+another in ways that are not apparent in the input and output
+connections. Consider, for example, a pipeline that interacts with two
+different web services. It may very well be the case that one web
+service has to run before the other, even though the latter does not
+consume any output from the former.</para>
+
+<para>In these cases, the pipeline author can add an explicit
+dependency with the <tag class="attribute">depends</tag> attribute.
+The <tag class="attribute">depends</tag> attribute is allowed on any
+step element. The value of the attribute is a list of step names.
+<error code="S1010">It is a <glossterm>static error</glossterm> if any
+specified name is not the name of an in-scope step.</error>
+</para>
+
+<para>The connections specified by the
+<tag class="attribute">depends</tag> attribute taken together with
+the input and output connections must not form a cycle in the graph.
+</para>
+
+</section>
+
+
+
       <section xml:id="namespace-fixup">
         <title>Namespace Fixup on XML Outputs</title>
         <para>XProc processors are expected, and sometimes required, to perform <glossterm>namespace
@@ -2453,7 +2485,7 @@ or collections.</error>
 </para>
 </section>
 
-    <section xml:id="syntax-summaries"><title>Syntax Summaries</title><para>The description of each
+<section xml:id="syntax-summaries"><title>Syntax Summaries</title><para>The description of each
         element in the pipeline namespace is accompanied by a syntactic summary that provides a
         quick overview of the element's syntax:</para>
       <e:rng-fragment name="SomeElement" role="nosummary">
@@ -2515,32 +2547,36 @@ or collections.</error>
           <para>An element or group followed by a plus (“+”) is required and may be repeated; it
             must occur at least once, and it can occur any number of times. </para>
         </listitem>
-      </itemizedlist><para>For clarity of exposition, some attributes and elements are elided from
-        the summaries:</para><itemizedlist>
-        <listitem>
-          <para>An <tag class="attribute">xml:id</tag> attribute is allowed on any element. It has
-            the semantics of <biblioref linkend="xml-id"/>.</para>
-        </listitem>
-        <listitem>
-          <para>An <tag class="attribute">xml:base</tag> attribute is allowed on any element. It has
-            the semantics of <biblioref linkend="xml-base"/>.</para>
-        </listitem>
-        <listitem>
-          <para>A <tag class="attribute">use-when</tag> attribute is allowed on any element, see <xref linkend="use-when"/>.</para>
-        </listitem>
-        <listitem>
-          <para>The <tag>p:documentation</tag> and <tag>p:pipeinfo</tag> elements are not shown, but
-            they are allowed anywhere.</para>
-        </listitem>
-        <listitem>
-          <para>The <tag>p:log</tag> element is allowed on any step that has a
-            <tag>p:output</tag>.</para>
-        </listitem>
-        <listitem>
-          <para>Attributes that are <link linkend="option-shortcut">syntactic shortcuts for option
-              values</link> are not shown.</para>
-        </listitem>
-      </itemizedlist>
+
+</itemizedlist><para>For clarity of exposition, some attributes and elements are elided from
+the summaries:</para><itemizedlist>
+<listitem>
+  <para>An <tag class="attribute">xml:id</tag> attribute is allowed on any element. It has
+  the semantics of <biblioref linkend="xml-id"/>.</para>
+</listitem>
+<listitem>
+  <para>An <tag class="attribute">xml:base</tag> attribute is allowed on any element. It has
+  the semantics of <biblioref linkend="xml-base"/>.</para>
+</listitem>
+<listitem>
+  <para>A <tag class="attribute">use-when</tag> attribute is allowed on any element, see <xref linkend="use-when"/>.</para>
+</listitem>
+<listitem>
+  <para>A <tag class="attribute">depends</tag> attribute is allowed on any step element, see <xref linkend="depends"/>.</para>
+</listitem>
+<listitem>
+  <para>The <tag>p:documentation</tag> and <tag>p:pipeinfo</tag> elements are not shown, but
+  they are allowed anywhere.</para>
+</listitem>
+<listitem>
+  <para>The <tag>p:log</tag> element is allowed on any step that has a
+  <tag>p:output</tag>.</para>
+</listitem>
+<listitem>
+  <para>Attributes that are <link linkend="option-shortcut">syntactic shortcuts for option
+  values</link> are not shown.</para>
+</listitem>
+</itemizedlist>
 
 <para>The types given for attributes should be understood as follows:</para>
 <itemizedlist>
