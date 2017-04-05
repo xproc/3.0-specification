@@ -915,7 +915,7 @@ are visible.</para>
     <section xml:id="xpath-context">
       <title>XPaths in XProc</title>
 
-<para>XProc uses XPath as an expression language. XPath expressions
+<para>XProc uses XPath 3.1 as an expression language. XPath expressions
 are evaluated by the XProc processor in several places: on compound
 steps, to compute the default values of options and the values of
 variables; on atomic steps, to compute the actual values of options.
@@ -946,7 +946,7 @@ variables; on atomic steps, to compute the actual values of options.
         expression. Only some options on some steps expect XPath expressions. </para>
       <para>The XProc processor evaluates all of the XPath expressions in <tag class="attribute">select</tag> attributes on variables, options, and inputs, in <tag class="attribute">match</tag> attributes on <tag>p:viewport</tag>, and in <tag class="attribute">test</tag> attributes on <tag>p:when</tag> steps.</para>
 
-        <section xml:id="xproc-xpath-context-20">
+        <section xml:id="xproc-xpath-context-31">
           <title>Processor XPath Context</title>
 <para>When the XProc processor evaluates an XPath expression using
 XPath, unless otherwise indicated by a particular step, it does so
@@ -973,7 +973,8 @@ with the following static context:</para>
             <varlistentry>
               <term>Default function namespace</term>
               <listitem>
-                <para>The <biblioref linkend="xpath2"/> function namespace. Function names that do
+                <para>The default function namespace is <literal>http://www.w3.org/2005/xpath-functions</literal>, as defined in
+                  <biblioref linkend="xpath31-functions"/>. Function names that do
                   not contain a colon always refer to the default function namespace, any in-scope
                   binding for the default namespace <emphasis>does not</emphasis> apply. This
                   specification does not provide a mechanism to override the default function
@@ -983,7 +984,7 @@ with the following static context:</para>
             <varlistentry>
               <term>In-scope schema definitions</term>
               <listitem>
-                <para>A basic XPath 2.0 XProc processor includes the following named type
+                <para>A basic XPath 3.1 XProc processor includes the following named type
                   definitions in its in-scope schema definitions:</para>
                 <itemizedlist>
                   <listitem>
@@ -1041,7 +1042,9 @@ refer to that variable will raise an error.</para>
             <varlistentry>
               <term>Function signatures</term>
               <listitem>
-                <para>The signatures of the <biblioref linkend="xpath-functions"/> and the <xref linkend="xpath-extension-functions"/>. </para>
+                <para>The signatures of the <biblioref linkend="xpath31-functions"/> in namespaces <literal>http://www.w3.org/2005/xpath-functions</literal>,
+                  <literal>http://www.w3.org/2005/xpath-functions/math</literal>, <literal>http://www.w3.org/2005/xpath-functions/map</literal> and
+                  <literal>http://www.w3.org/2005/xpath-functions/array</literal>. Additionally the function signatures defined in <xref linkend="xpath-extension-functions"/>. </para>
               </listitem>
             </varlistentry>
             <varlistentry>
@@ -1061,7 +1064,7 @@ refer to that variable will raise an error.</para>
               </listitem>
             </varlistentry>
             <varlistentry>
-              <term>Base URI</term>
+              <term>Static base URI</term>
               <listitem>
                 <para>The base URI of the element on which the expression occurs.</para>
               </listitem>
@@ -1074,6 +1077,18 @@ refer to that variable will raise an error.</para>
             </varlistentry>
             <varlistentry>
               <term>Statically known collections</term>
+              <listitem>
+                <para>None.</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Statically known default collection type</term>
+              <listitem>
+                <para><literal>item()*</literal></para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Statically known decimal formats</term>
               <listitem>
                 <para>None.</para>
               </listitem>
@@ -1115,9 +1130,9 @@ readable port then the context node is undefined.</para>
               </listitem>
             </varlistentry>
             <varlistentry>
-              <term>Function implementations</term>
+              <term>Named functions</term>
               <listitem>
-                <para>The <biblioref linkend="xpath-functions"/> and the <xref linkend="xpath-extension-functions"/>. </para>
+                <para>The <biblioref linkend="xpath31-functions"/> and the <xref linkend="xpath-extension-functions"/>. </para>
               </listitem>
             </varlistentry>
             <varlistentry>
@@ -1136,10 +1151,35 @@ readable port then the context node is undefined.</para>
               </listitem>
             </varlistentry>
             <varlistentry>
+              <term>Default language</term>
+              <listitem>
+                <para><impl>The default language is <glossterm>implementation-defined</glossterm>.</impl></para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Default calendar</term>
+              <listitem>
+                <para><impl>The default calendar is <glossterm>implementation-defined</glossterm>.</impl></para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Default place</term>
+              <listitem>
+                <para><impl>The default place is <glossterm>implementation-defined</glossterm>.</impl></para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
               <term>Available documents</term>
               <listitem>
                 <para><impl>The set of available documents (those that may be retrieved with a URI)
                     is <glossterm>implementation-dependent</glossterm>.</impl></para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Available text resources</term>
+              <listitem>
+                <para><impl>The set of available text resources (those that may be retrieved with a URI)
+                is <glossterm>implementation-dependent</glossterm>.</impl></para>
               </listitem>
             </varlistentry>
             <varlistentry>
@@ -1155,11 +1195,29 @@ readable port then the context node is undefined.</para>
                 <para>None. </para>
               </listitem>
             </varlistentry>
+            <varlistentry>
+              <term>Available URI collections</term>
+              <listitem>
+                <para><impl>The set of available URI collections is <glossterm>implementation-dependent</glossterm>.</impl></para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Default URI collection</term>
+              <listitem>
+                <para><impl>The default URI collection is <glossterm>implementation-dependent</glossterm>.</impl></para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Environment variables</term>
+              <listitem>
+                <para><impl>The list of available environment variables is <glossterm>implementation-defined</glossterm>.</impl></para>
+              </listitem>
+            </varlistentry>
           </variablelist>
         </section>
-        <section xml:id="step-xpath-context-20">
+        <section xml:id="step-xpath-context-31">
           <title>Step XPath Context</title>
-          <para>When a step evaluates an XPath expression using XPath 2.0, unless otherwise
+          <para>When a step evaluates an XPath expression using XPath 3.1, unless otherwise
             indicated by a particular step, it does so with the following static context:</para>
           <variablelist>
             <varlistentry>
@@ -1184,7 +1242,8 @@ readable port then the context node is undefined.</para>
             <varlistentry>
               <term>Default function namespace</term>
               <listitem>
-                <para>The <biblioref linkend="xpath2"/> function namespace. Function names that do
+                <para>The default function namespace is <literal>http://www.w3.org/2005/xpath-functions</literal>, as defined in
+                  <biblioref linkend="xpath31-functions"/>. Function names that do
                   not contain a colon always refer to the default function namespace, any in-scope
                   binding for the default namespace <emphasis>does not</emphasis> apply. This
                   specification does not provide a mechanism to override the default function
@@ -1194,7 +1253,7 @@ readable port then the context node is undefined.</para>
             <varlistentry>
               <term>In-scope schema definitions</term>
               <listitem>
-                <para>The same as the <xref linkend="xproc-xpath-context-20"/>. </para>
+                <para>The same as the <xref linkend="xproc-xpath-context-31"/>. </para>
               </listitem>
             </varlistentry>
             <varlistentry>
@@ -1212,7 +1271,10 @@ readable port then the context node is undefined.</para>
             <varlistentry>
               <term>Function signatures</term>
               <listitem>
-                <para>The signatures of the <biblioref linkend="xpath-functions"/>.</para>
+                <para>The signatures of the <biblioref linkend="xpath31-functions"/> in namespaces <literal>http://www.w3.org/2005/xpath-functions</literal>,
+                  <literal>http://www.w3.org/2005/xpath-functions/math</literal>, <literal>http://www.w3.org/2005/xpath-functions/map</literal> and
+                  <literal>http://www.w3.org/2005/xpath-functions/array</literal>.
+                </para>
               </listitem>
             </varlistentry>
             <varlistentry>
@@ -1229,7 +1291,7 @@ readable port then the context node is undefined.</para>
               </listitem>
             </varlistentry>
             <varlistentry>
-              <term>Base URI</term>
+              <term>Static base URI</term>
               <listitem>
                 <para>The base URI of the element on which the expression occurs.</para>
               </listitem>
@@ -1242,6 +1304,18 @@ readable port then the context node is undefined.</para>
             </varlistentry>
             <varlistentry>
               <term>Statically known collections</term>
+              <listitem>
+                <para>None.</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Statically known default collection type</term>
+              <listitem>
+                <para>item()*</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Statically known decimal formats</term>
               <listitem>
                 <para>None.</para>
               </listitem>
@@ -1270,10 +1344,10 @@ readable port then the context node is undefined.</para>
               </listitem>
             </varlistentry>
             <varlistentry>
-              <term>Function implementations</term>
+              <term>Named functions</term>
               <listitem>
-                <para>The <biblioref linkend="xpath-functions"/>. </para>
-              </listitem>
+                <para>The <biblioref linkend="xpath31-functions"/>.</para>
+              </listitem> 
             </varlistentry>
             <varlistentry>
               <term>Current dateTime</term>
@@ -1289,10 +1363,35 @@ readable port then the context node is undefined.</para>
               </listitem>
             </varlistentry>
             <varlistentry>
+              <term>Default language</term>
+              <listitem>
+                <para><impl>The default language is <glossterm>implementation-defined</glossterm>.</impl></para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Default calendar</term>
+              <listitem>
+                <para><impl>The default calendar is <glossterm>implementation-defined</glossterm>.</impl></para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Default place</term>
+              <listitem>
+                <para><impl>The defualt place is <glossterm>implementation-defined</glossterm>.</impl></para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
               <term>Available documents</term>
               <listitem>
                 <para><impl>The set of available documents (those that may be retrieved with a URI)
                     is <glossterm>implementation-dependent</glossterm>.</impl></para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Available text resources</term>
+              <listitem>
+                <para><impl>The set of available text resources (those that may be retrieved with a URI)
+                  is <glossterm>implementation-dependent</glossterm>.</impl></para>
               </listitem>
             </varlistentry>
             <varlistentry>
@@ -1305,6 +1404,24 @@ readable port then the context node is undefined.</para>
               <term>Default collection</term>
               <listitem>
                 <para>None. </para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Available URI collections</term>
+              <listitem>
+                <para><impl>The set of available URI collections is <glossterm>implementation-dependent</glossterm>.</impl></para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Default URI collection</term>
+              <listitem>
+                <para><impl>The default URI collection is <glossterm>implementation-dependent</glossterm>.</impl></para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term>Environment variables</term>
+              <listitem>
+                <para><impl>The list of available environment variables is <glossterm>implementation-defined</glossterm>.</impl></para>
               </listitem>
             </varlistentry>
           </variablelist>
@@ -1781,14 +1898,19 @@ templates</glossterm></termdef>.</para>
 
 <para>Curly brackets are not treated specially in an attribute value
 in an XProc pipeline unless the attribute is specifically designated
-as one that permits an attribute value template. Option shortcuts permit
-attribute value templates. In an element syntax
-summary, the value of other such attributes is surrounded by curly
-brackets.</para>
+as one that permits an attribute value template. Option shortcuts
+permit attribute value templates.
+<impl>Whether or not an extension attribute permits attribute value
+templates is <glossterm>implementation-defined</glossterm>.</impl>
+In an element
+syntax summary, the value of an attribute that allows attribute value
+templates is surrounded by
+curly brackets.</para>
 
-<para>An attribute value template can be seen as an alternating sequence
-of zero or more “fixed” (non-expression) parts and expression parts. Each
-expression is evaluated with an undefined context node.</para>
+<para>An attribute value template can be seen as an alternating
+sequence of zero or more “fixed” (non-expression) parts and expression
+parts. Each expression is evaluated with an undefined context
+node.</para>
 
 <para>The result of the attribute value template is the concatentation
 of the fixed parts and the string-value of the result of evaluating
@@ -4926,10 +5048,10 @@ W3C Recommendation. 16 November 1999.</bibliomixed>
    <citetitle xlink:href="http://www.w3.org/TR/xslt-30/">XSL Transformations (XSLT) Version 3.0</citetitle>. Michael Kay,
    W3C Last Call Working Draft 2 October 2014</bibliomixed>
    
-<bibliomixed xml:id="xpath2"><abbrev>XPath 2.0</abbrev>
-<citetitle xlink:href="http://www.w3.org/TR/xpath20/">XML Path Language (XPath)
-2.0</citetitle>. Anders Berglund, Scott Boag, Don Chamberlin, et. al., editors.
-W3C Recommendation. 23 January 2007.</bibliomixed>
+<bibliomixed xml:id="xpath31"><abbrev>XPath 3.1</abbrev>
+<citetitle xlink:href="http://www.w3.org/TR/xpath31/">XML Path Language (XPath)
+	3.1</citetitle>. Jonathan Robie, Michael Dyck, Josh Spiegel, editors.
+W3C Recommendation. 21 March 2017.</bibliomixed>
 
 <bibliomixed xml:id="xpath-datamodel"><abbrev>XQuery 1.0 and XPath 2.0 Data
 Model (XDM)</abbrev>
@@ -4938,11 +5060,10 @@ XPath 2.0 Data Model (XDM)</citetitle>.
 Mary Fernández, Ashok Malhotra, Jonathan Marsh, <foreignphrase>et. al.</foreignphrase>, editors.
 W3C Recommendation. 23 January 2007.</bibliomixed>
 
-<bibliomixed xml:id="xpath-functions"><abbrev>XPath 2.0 Functions and Operators</abbrev>
-<citetitle xlink:href="http://www.w3.org/TR/xpath-functions/">XQuery 1.0 and
-XPath 2.0 Functions and Operators</citetitle>.
-Ashok Malhotra, Jim Melton, and Norman Walsh, editors.
-W3C Recommendation. 23 January 2007.</bibliomixed>
+<bibliomixed xml:id="xpath31-functions"><abbrev>XPath and XQuery Functions and Operators 3.1</abbrev>
+<citetitle xlink:href="https://www.w3.org/TR/xpath-functions-31/">XPath and XQuery Functions and  Operators 3.1</citetitle>. Michael Kay, editor.
+W3C Recommendation. 21 March 2017</bibliomixed>
+	
 
 <bibliomixed xml:id="xslt20"><abbrev>XSLT 2.0</abbrev>
 <citetitle xlink:href="http://www.w3.org/TR/xslt20/">XSL Transformations (XSLT)
