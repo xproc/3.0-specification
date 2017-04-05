@@ -49,80 +49,80 @@ task setupDocBook(dependsOn: downloadDocBook, type: Copy) {
 }
 setupDocBook.onlyIf { !file("$buildDir/docbook").exists() }
 
-task publish(dependsOn: ["publish_xproc11", "publish_steps11"]) {
+task publish(dependsOn: ["publish_xproc30", "publish_steps30"]) {
   // nothing to see here
 }
 
-task publish_xproc11(dependsOn: ["xproc11",
-                                 "publish_xproc11_xml",
-                                 "publish_xproc11_graphics",
-                                 "publish_xproc11_css"], type: Copy) {
+task publish_xproc30(dependsOn: ["xproc30",
+                                 "publish_xproc30_xml",
+                                 "publish_xproc30_graphics",
+                                 "publish_xproc30_css"], type: Copy) {
   from('build') {
-    include "xproc11.html"
-    rename "xproc11.html", "index.html"
+    include "xproc30.html"
+    rename "xproc30.html", "index.html"
   }
-  into "build/xproc11"
+  into "build/xproc30"
 }
 
-task publish_xproc11_xml(dependsOn: ['xproc11'], type: Copy) {
+task publish_xproc30_xml(dependsOn: ['xproc30'], type: Copy) {
   from('build') {
-    include ",xproc11.xml"
-    rename ",xproc11.xml", "xproc11.xml"
+    include ",xproc30.xml"
+    rename ",xproc30.xml", "xproc30.xml"
   }
-  into "build/xproc11"
+  into "build/xproc30"
 }
-task publish_xproc11_xml.doFirst {
-  mkdir 'build/xproc11'
+task publish_xproc30_xml.doFirst {
+  mkdir 'build/xproc30'
 }
 
-task publish_xproc11_css(dependsOn: ["copyCSS"], type: Copy) {
+task publish_xproc30_css(dependsOn: ["copyCSS"], type: Copy) {
   from('build') {
     include "*.css"
   }
-  into "build/xproc11"
+  into "build/xproc30"
 }
-task publish_xproc11_css.doFirst {
-  mkdir 'build/xproc11'
+task publish_xproc30_css.doFirst {
+  mkdir 'build/xproc30'
 }
 
-task publish_xproc11_graphics(dependsOn: ["copyImages"], type: Copy) {
+task publish_xproc30_graphics(dependsOn: ["copyImages"], type: Copy) {
   from 'build/graphics'
-  into "build/xproc11/graphics"
+  into "build/xproc30/graphics"
 }
-task publish_xproc11_graphics.doFirst {
-  mkdir 'build/xproc11'
-  mkdir 'build/xproc11/graphics'
+task publish_xproc30_graphics.doFirst {
+  mkdir 'build/xproc30'
+  mkdir 'build/xproc30/graphics'
 }
 
-task publish_steps11(dependsOn: ["steps11",
-                                 "publish_steps11_xml",
-                                 "publish_steps11_css"], type: Copy) {
+task publish_steps30(dependsOn: ["steps30",
+                                 "publish_steps30_xml",
+                                 "publish_steps30_css"], type: Copy) {
   from('build') {
-    include "steps11.html"
-    rename "steps11.html", "index.html"
+    include "steps30.html"
+    rename "steps30.html", "index.html"
   }
-  into "build/steps11"
+  into "build/steps30"
 }
 
-task publish_steps11_xml(dependsOn: ['steps11'], type: Copy) {
+task publish_steps30_xml(dependsOn: ['steps30'], type: Copy) {
   from('build') {
-    include ",steps11.xml"
-    rename ",steps11.xml", "steps11.xml"
+    include ",steps30.xml"
+    rename ",steps30.xml", "steps30.xml"
   }
-  into "build/steps11"
+  into "build/steps30"
 }
-task publish_steps11_xml.doFirst {
-  mkdir 'build/steps11'
+task publish_steps30_xml.doFirst {
+  mkdir 'build/steps30'
 }
 
-task publish_steps11_css(dependsOn: ["copyCSS"], type: Copy) {
+task publish_steps30_css(dependsOn: ["copyCSS"], type: Copy) {
   from('build') {
     include "*.css"
   }
-  into "build/steps11"
+  into "build/steps30"
 }
-task publish_steps11_css.doFirst {
-  mkdir 'build/steps11'
+task publish_steps30_css.doFirst {
+  mkdir 'build/steps30'
 }
 
 task copyCSS(type: Copy) {
@@ -131,7 +131,7 @@ task copyCSS(type: Copy) {
 }
 
 task copyImages(type: Copy) {
-  from 'langspec/xproc11/graphics'
+  from 'langspec/xproc30/graphics'
   into 'build/graphics'
 }
 task copyImages.doFirst {
@@ -147,108 +147,108 @@ task legacy_make(type: Exec) {
   commandLine "make"
 }
 
-task xproc11(dependsOn: ["xproc11_xi2", "steps11_xi1", "copy_assets"], type: XMLCalabashTask) {
-  inputs.file "build/,xproc11.xml"
-  inputs.file "langspec/xproc11/error-list.xml"
+task xproc30(dependsOn: ["xproc30_xi2", "steps30_xi1", "copy_assets"], type: XMLCalabashTask) {
+  inputs.file "build/,xproc30.xml"
+  inputs.file "langspec/xproc30/error-list.xml"
   inputs.file "style/docbook.xsl"
   inputs.file "style/dbspec.xsl"
   inputs.file "style/xprocns.xsl"
   inputs.file "style/rngsyntax.xsl"
-  outputs.file "build/xproc11.html"
-  input("source", "build/,xproc11.xml")
-  output("result", "build/xproc11.html")
+  outputs.file "build/xproc30.html"
+  input("source", "build/,xproc30.xml")
+  output("result", "build/xproc30.html")
 
   param("schemaext.schema", "../../../../../schema/dbspec.rng")
-  param("xml.toc.filename", "xproc11.toc.xml")
-  param("otherspec", "../build/,steps11.xml")
-  param("otherhref", "../steps11/")
+  param("xml.toc.filename", "xproc30.toc.xml")
+  param("otherspec", "../build/,steps30.xml")
+  param("otherhref", "../steps30/")
   param("otherlabel", "XPS")
-  param("spec", "xproc11")
+  param("spec", "xproc30")
   option("style", "xproc-specs.xsl")
   pipeline "style/formatspec.xpl"
 }
 
-task xproc11_xi1(dependsOn: ["setupDocBook"], type: XMLCalabashTask) {
-  inputs.file "langspec/xproc11/xproc.xml"
-  inputs.file "langspec/xproc11/conformance.xml"
-  inputs.file "langspec/xproc11/error-codes.xml"
-  inputs.file "langspec/xproc11/language-summary.xml"
-  inputs.file "langspec/xproc11/mediatype.xml"
-  inputs.file "langspec/xproc11/namespace-fixup.xml"
-  inputs.file "langspec/xproc11/parallel.xml"
-  inputs.file "langspec/xproc11/references.xml"
-  outputs.file "build/,,xproc11.xml"
-  input("source", "langspec/xproc11/xproc.xml")
-  output("result", "build/,,xproc11.xml")
+task xproc30_xi1(dependsOn: ["setupDocBook"], type: XMLCalabashTask) {
+  inputs.file "langspec/xproc30/xproc.xml"
+  inputs.file "langspec/xproc30/conformance.xml"
+  inputs.file "langspec/xproc30/error-codes.xml"
+  inputs.file "langspec/xproc30/language-summary.xml"
+  inputs.file "langspec/xproc30/mediatype.xml"
+  inputs.file "langspec/xproc30/namespace-fixup.xml"
+  inputs.file "langspec/xproc30/parallel.xml"
+  inputs.file "langspec/xproc30/references.xml"
+  outputs.file "build/,,xproc30.xml"
+  input("source", "langspec/xproc30/xproc.xml")
+  output("result", "build/,,xproc30.xml")
   option("schema", "schema/dbspec.rng")
   option("schematron", "schema/docbook.sch")
   pipeline "style/validate.xpl"
 }
 
-task xproc11_xi2(dependsOn: ["glossary"], type: XMLCalabashTask) {
-  inputs.file "langspec/xproc11/xproc.xml"
-  inputs.file "langspec/xproc11/conformance.xml"
-  inputs.file "langspec/xproc11/error-codes.xml"
-  inputs.file "langspec/xproc11/glossary.xml"
-  inputs.file "langspec/xproc11/language-summary.xml"
-  inputs.file "langspec/xproc11/mediatype.xml"
-  inputs.file "langspec/xproc11/namespace-fixup.xml"
-  inputs.file "langspec/xproc11/parallel.xml"
-  inputs.file "langspec/xproc11/references.xml"
-  outputs.file "build/,xproc11.xml"
-  input("source", "langspec/xproc11/xproc.xml")
-  output("result", "build/,xproc11.xml")
+task xproc30_xi2(dependsOn: ["glossary"], type: XMLCalabashTask) {
+  inputs.file "langspec/xproc30/xproc.xml"
+  inputs.file "langspec/xproc30/conformance.xml"
+  inputs.file "langspec/xproc30/error-codes.xml"
+  inputs.file "langspec/xproc30/glossary.xml"
+  inputs.file "langspec/xproc30/language-summary.xml"
+  inputs.file "langspec/xproc30/mediatype.xml"
+  inputs.file "langspec/xproc30/namespace-fixup.xml"
+  inputs.file "langspec/xproc30/parallel.xml"
+  inputs.file "langspec/xproc30/references.xml"
+  outputs.file "build/,xproc30.xml"
+  input("source", "langspec/xproc30/xproc.xml")
+  output("result", "build/,xproc30.xml")
   param("schema", "../../schema/dbspec.rng")
   param("schematron", "../../schema/docbook.sch")
   pipeline "style/validate.xpl"
 }
 
-task glossary(dependsOn: ["xproc11_xi1", "legacy_make"], type: XMLCalabashTask) {
-  inputs.file "build/,,xproc11.xml"
+task glossary(dependsOn: ["xproc30_xi1", "legacy_make"], type: XMLCalabashTask) {
+  inputs.file "build/,,xproc30.xml"
   inputs.file "style/makeglossary.xpl"
   inputs.file "style/makeglossary.xsl"
-  outputs.file "langspec/xproc11/glossary.xml"
-  input("source", "build/,,xproc11.xml")
-  output("result", "langspec/xproc11/glossary.xml")
+  outputs.file "langspec/xproc30/glossary.xml"
+  input("source", "build/,,xproc30.xml")
+  output("result", "langspec/xproc30/glossary.xml")
   pipeline "style/makeglossary.xpl"
 }
 
-task steps11(dependsOn: ["steps11_xi1", "xproc11_xi2", "copy_assets"], type: XMLCalabashTask) {
-  inputs.file "build/,steps11.xml"
+task steps30(dependsOn: ["steps30_xi1", "xproc30_xi2", "copy_assets"], type: XMLCalabashTask) {
+  inputs.file "build/,steps30.xml"
   inputs.file "style/docbook.xsl"
   inputs.file "style/dbspec.xsl"
   inputs.file "style/xprocns.xsl"
   inputs.file "style/rngsyntax.xsl"
-  outputs.file "build/steps11.html"
-  input("source", "build/,steps11.xml")
-  output("result", "build/steps11.html")
+  outputs.file "build/steps30.html"
+  input("source", "build/,steps30.xml")
+  output("result", "build/steps30.html")
 
   param("schemaext.schema", "../../../../../schema/dbspec.rng")
   param("xml.toc.filename", "steps.toc.xml")
-  param("otherspec", "../build/,xproc11.xml")
-  param("otherhref", "../xproc11/")
+  param("otherspec", "../build/,xproc30.xml")
+  param("otherhref", "../xproc30/")
   param("otherlabel", "XP")
-  param("spec", "steps11")
+  param("spec", "steps30")
   option("style", "xproc-specs.xsl")
   pipeline "style/formatspec.xpl"
 }
 
-task steps11_xi1(dependsOn: ["setupDocBook", "legacy_make"], type: XMLCalabashTask) {
-  inputs.file "langspec/xproc11-steps/steps.xml"
-  inputs.file "langspec/xproc11-steps/errors.xml"
-  inputs.file "langspec/xproc11-steps/error-codes.xml"
-  inputs.file "langspec/xproc11-steps/serialization-options-for-escape-markup.xml"
-  inputs.file "langspec/xproc11-steps/serialization-options.xml"
-  outputs.file "build/,steps11.xml"
-  input("source", "langspec/xproc11-steps/steps.xml")
-  output("result", "build/,steps11.xml")
+task steps30_xi1(dependsOn: ["setupDocBook", "legacy_make"], type: XMLCalabashTask) {
+  inputs.file "langspec/xproc30-steps/steps.xml"
+  inputs.file "langspec/xproc30-steps/errors.xml"
+  inputs.file "langspec/xproc30-steps/error-codes.xml"
+  inputs.file "langspec/xproc30-steps/serialization-options-for-escape-markup.xml"
+  inputs.file "langspec/xproc30-steps/serialization-options.xml"
+  outputs.file "build/,steps30.xml"
+  input("source", "langspec/xproc30-steps/steps.xml")
+  output("result", "build/,steps30.xml")
   param("schema", "")
   param("schematron", "")
   pipeline "style/validate.xpl"
 }
 
 /* The default task. It just depends on all the necessary pages */
-task specification(dependsOn: ["xproc11", "steps11"]) {
+task specification(dependsOn: ["xproc30", "steps30"]) {
   /* Nothing to see here */
 }
 
