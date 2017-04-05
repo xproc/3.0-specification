@@ -279,7 +279,7 @@
           </a>
         </dd>
         <dd>
-          <a href="http://github.com/xproc/1.1-specification/issues">
+          <a href="http://github.com/xproc/3.0-specification/issues">
             <xsl:text>Report an issue</xsl:text>
           </a>
         </dd>
