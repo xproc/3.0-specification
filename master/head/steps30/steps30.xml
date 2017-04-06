@@ -1,124 +1,42 @@
 <specification xmlns="http://docbook.org/ns/docbook" xmlns:cs="http://www.w3.org/XML/XProc/2006/04/components#" xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax" xmlns:p="http://www.w3.org/ns/xproc" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" class="ed" version="5.0-extension w3c-xproc">
   <info>
-    <title>XProc 1.1: Standard Step Library</title>
-    <w3c-shortname>xproc20-steps</w3c-shortname>
+    <title>XProc 3.0: Standard Step Library</title>
+    <w3c-shortname>xproc30-steps</w3c-shortname>
     <!-- defaults to date formatted <pubdate>2014-12-18</pubdate> -->
 
     <bibliorelation role="x-no-errata" type="references" xlink:href="http://www.w3.org/XML/2010/xproc-errata.html">errata</bibliorelation>
     <bibliorelation role="x-no-translations" type="references" xlink:href="http://www.w3.org/2003/03/Translations/byTechnology?technology=xproc">translations</bibliorelation>
 
-    <bibliorelation type="isformatof" xlink:href="steps11.xml">XML</bibliorelation>
-<!--
-    <bibliorelation type="isformatof" xlink:href="changelog.html">ChangeLog</bibliorelation>
--->
-
-<!--
-    <bibliorelation type="replaces" xlink:href="http://www.w3.org/TR/2010/PR-xproc-20100309/"/>
-    <bibliorelation type="replaces" xlink:href="http://www.w3.org/TR/2010/WD-xproc-20100105/"/>
-    <bibliorelation type="replaces" xlink:href="http://www.w3.org/TR/2009/CR-xproc-20090528/"/>
--->
-    <!--
-    <bibliorelation type="replaces" xlink:href="http://www.w3.org/TR/2008/CR-xproc-20081126/"/>
-    <bibliorelation type="replaces" xlink:href="http://www.w3.org/TR/2008/WD-xproc-20080814/"/>
-      <bibliorelation type="replaces" xlink:href="http://www.w3.org/TR/2007/WD-xproc-20071129/"/>
-      <bibliorelation type="replaces"
-		xlink:href="http://www.w3.org/TR/2007/WD-xproc-20070920/"/>
-<bibliorelation type="replaces"
-		xlink:href="http://www.w3.org/TR/2007/WD-xproc-20070706/"/>
-<bibliorelation type="replaces"
-		xlink:href="http://www.w3.org/TR/2007/WD-xproc-20070405/"/>
-<bibliorelation type="replaces"
-		xlink:href="http://www.w3.org/TR/2006/WD-xproc-20061117/"/>
--->
-    <authorgroup>
-      <author>
-        <personname>Norman Walsh</personname>
-        <affiliation>
-          <orgname>MarkLogic Corporation</orgname>
-        </affiliation>
-        <email>norman.walsh@marklogic.com</email>
-      </author>
-      <author>
-        <personname>Alex Milowski</personname>
-        <affiliation>
-          <orgname>Invited expert</orgname>
-        </affiliation>
-        <email>alex@milowski.org</email>
-      </author>
-      <author>
-        <personname>Henry S. Thompson</personname>
-        <affiliation>
-          <orgname>University of Edinburgh</orgname>
-        </affiliation>
-        <email>ht@inf.ed.ac.uk</email>
-      </author>
-    </authorgroup>
+    <bibliorelation type="isformatof" xlink:href="steps30.xml">XML</bibliorelation>
+<authorgroup>
+  <author>
+    <personname>Achim Berndzen</personname>
+  </author>
+  <author>
+    <personname>Gerrit Imsieke</personname>
+  </author>
+  <author>
+    <personname>Norman Walsh</personname>
+  </author>
+</authorgroup>
 
 <abstract>
 <para>This specification describes the standard step vocabulary of
-<citetitle>XProc 1.1: An XML Pipeline Language</citetitle>.</para>
+<citetitle>XProc 3.0: An XML Pipeline Language</citetitle>.</para>
 </abstract>
 
 <legalnotice role="status">
 
 <para><emphasis>This section describes the status of this document at
 the time of its publication. Other documents may supersede this
-document. A list of current W3C publications and the latest revision
-of this technical report can be found in the
-<link xlink:href="http://www.w3.org/TR/">W3C technical reports index</link> at
-http://www.w3.org/TR/.</emphasis></para>
+document.</emphasis></para>
 
-<para>Publication as a First Public Working Draft does not imply
-endorsement by the W3C Membership. This is a draft document and may be
-updated, replaced or obsoleted by other documents at any time. It is
-inappropriate to cite this document as other than work in
-progress.</para>
-
-<para><!--This document is an editor's draft without normative standing.
--->This document is a
-product of the
-<link xlink:href="http://www.w3.org/XML/Processing/">XML Processing Model
-Working Group</link>
-as part of the W3C
-<link xlink:href="http://www.w3.org/XML/Activity">XML Activity</link>.
-This draft is a first attempt to address some of the requirements of
-<biblioref linkend="use-cases"/>. It is in many ways substantially incomplete.
-The Working Group is publishing it in order to establish an intended direction
-and to provide an official opportunity for comment.
-</para>
-
-<para>Please report errors in this document by
-<link xlink:href="https://github.com/xproc/specification/issues">raising
-issues</link> on the
-<link xlink:href="https://github.com/xproc/specification">specification
-repository</link>.
-Alternatively, you may report errors in this document to the public
-mailing list
-<link xlink:href="mailto:public-xml-processing-model-comments@w3.org">public-xml-processing-model-comments@w3.org</link> (public
-<link xlink:href="http://lists.w3.org/Archives/Public/public-xml-processing-model-comments/">archives</link> are available).</para>
-
-<!--
-<para>There is an
-<link xlink:href="http://www.w3.org/XML/XProc/2010/02/ir.html">Implementation
-Report for XProc 1.0</link>. It documents the performance of implementations
-against the
-<link xlink:href="http://tests.xproc.org/">XProc 1.0 Test Suite</link>.
-At this time, there are no such reports for XProc 2.0.
-</para>
--->
-
-<para>This document was produced by a group operating under the <link xlink:href="http://www.w3.org/Consortium/Patent-Policy-20040205/">5
-February 2004 W3C Patent Policy</link>. W3C maintains a <link xlink:href="http://www.w3.org/2004/01/pp-impl/38398/status">public
-list of any patent disclosures</link> made in connection with the
-deliverables of the group; that page also includes instructions for
-disclosing a patent. An individual who has actual knowledge of a
-patent which the individual believes contains <link xlink:href="http://www.w3.org/Consortium/Patent-Policy-20040205/#def-essential">Essential
-Claim(s)</link> must disclose the information in accordance with <link xlink:href="http://www.w3.org/Consortium/Patent-Policy-20040205/#sec-Disclosure">section
-6 of the W3C Patent Policy</link>.</para>
-
-<para>This document is governed by the
-<link xml:id="w3c_process_revision" xlink:href="http://www.w3.org/2005/10/Process-20051014/">14 October 2005 W3C Process Document</link>.</para>
+<para>This document is derived from
+<link xlink:href="https://www.w3.org/TR/2010/REC-xproc-20100511/">XProc:
+An XML Pipeline Language</link> published by the W3C. See also
+<xref linkend="credits"/>.</para>
 </legalnotice>
+
 </info>
 
 <section xml:id="introduction">
@@ -3954,6 +3872,20 @@ can be raised by steps in this specification:</para>
 
 <?step-error-list?>
 </appendix>
+
+<appendix xml:id="credits">
+<title>Credits</title>
+
+<para>This document is derived from
+<link xlink:href="https://www.w3.org/TR/2010/REC-xproc-20100511/">XProc:
+An XML Pipeline Language</link> published by the W3C. It was developed
+by the <citetitle>XML Processing Model Working Group</citetitle> and edited by
+Norman Walsh, Alex Miłowski, and Henry Thompson.</para>
+
+<para>The editors of this specification extend their gratitude to everyone
+who contributed to this document and all of the versions that came before it.</para>
+</appendix>
+
 <appendix xml:id="references" version="5.0-extension w3c-xproc">
 
 <title>References</title>

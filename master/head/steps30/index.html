@@ -1,57 +1,17 @@
-<html xmlns="http://www.w3.org/1999/xhtml"><head><title>XProc 1.1: Standard Step Library</title><meta charset="utf-8" /><link rel="alternate" title="XML" href="steps11.xml" /><link rel="alternate" title="Latest editor's draft" href="http://www.w3.org/XML/XProc/docs/langspec.html" /><link rel="alternate" title="Latest Public Working Draft" href="http://www.w3.org/TR/xproc/" /><meta name="generator" content="DocBook XSL 2.0 Stylesheets V2.0.20" /><link rel="stylesheet" type="text/css" href="base.css" /><link rel="stylesheet" type="text/css" href="xproc.css" /><link rel="stylesheet" type="text/css" href="http://www.w3.org/StyleSheets/TR/base.css" /><link rel="stylesheet" type="text/css" href="base.css" /><script type="text/javascript" src="http://cdn.docbook.org/release/2.0.20/resources/js/dbmodnizr.js"></script><link href="http://cdn.docbook.org/release/2.0.20/resources/css/prism.css" rel="stylesheet" type="text/css" /><link href="http://cdn.docbook.org/release/2.0.20/resources/css/db-prism.css" rel="stylesheet" type="text/css" /></head><body><div class="specification"><div class="head" id="spec.head"><h1>XProc 1.1: Standard Step Library</h1><h2>Editor's Draft  <time datetime="2017-04-05T16:07:13Z">5 April 2017 at 16:07 UTC (<a href="https://github.com/xproc/3.0-specification/commit/4889b91cb8c45bac926380cf5a2cdec7b26fcba3">build 17</a>)</time></h2><dl><dt>This Version:</dt><dd><a href="https://xproc.github.io/3.0-specification/master/head/steps30/">https://xproc.github.io/3.0-specification/master/head/steps30</a></dd><dt>Latest Version:</dt><dd><a href="http://spec.xproc.org/master/head/steps30/">http://spec.xproc.org/master/head/steps30/</a></dd><dt>Editors:</dt><dd><span class="personname">Norman Walsh</span>, <span class="orgname">MarkLogic Corporation</span> <code class="email">&lt;<a href="mailto:norman.walsh@marklogic.com">norman.walsh@marklogic.com</a>&gt;</code></dd><dd><span class="personname">Alex Milowski</span>, <span class="orgname">Invited expert</span> <code class="email">&lt;<a href="mailto:alex@milowski.org">alex@milowski.org</a>&gt;</code></dd><dd><span class="personname">Henry S. Thompson</span>, <span class="orgname">University of Edinburgh</span> <code class="email">&lt;<a href="mailto:ht@inf.ed.ac.uk">ht@inf.ed.ac.uk</a>&gt;</code></dd><dt>Repository:</dt><dd><a href="http://github.com/xproc/3.0-specification">This specification on GitHub</a></dd><dd><a href="http://github.com/xproc/1.1-specification/issues">Report an issue</a></dd><dt>Changes:</dt><dd><a href="http://github.com/xproc/3.0-specification/commits/master">Commits for this specification</a></dd></dl><p>This document is also available in these non-normative formats: <a href="steps11.xml">XML</a>.</p><p class="copyright"><a href="http://www.w3.org/Consortium/Legal/ipr-notice#Copyright">Copyright</a> © 2014 <a href="http://www.w3.org/"><abbr title="World Wide Web Consortium">W3C</abbr></a><sup>®</sup> (<a href="http://www.csail.mit.edu/"><abbr title="Massachusetts Institute of Technology">MIT</abbr></a>, <a href="http://www.ercim.eu/"><abbr title="European Research Consortium for Informatics and Mathematics">ERCIM</abbr></a>, <a href="http://www.keio.ac.jp/">Keio</a>, <a href="http://ev.buaa.edu.cn/">Beihang</a>), All Rights Reserved. W3C <a href="http://www.w3.org/Consortium/Legal/ipr-notice#Legal_Disclaimer">liability</a>, <a href="http://www.w3.org/Consortium/Legal/ipr-notice#W3C_Trademarks">trademark</a> and <a href="http://www.w3.org/Consortium/Legal/copyright-documents">document use</a> rules apply.</p><hr /><div class="abstract"><h2>Abstract</h2>
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>XProc 3.0: Standard Step Library</title><meta charset="utf-8" /><link rel="alternate" title="XML" href="steps30.xml" /><link rel="alternate" title="Latest editor's draft" href="http://www.w3.org/XML/XProc/docs/langspec.html" /><link rel="alternate" title="Latest Public Working Draft" href="http://www.w3.org/TR/xproc/" /><meta name="generator" content="DocBook XSL 2.0 Stylesheets V2.0.20" /><link rel="stylesheet" type="text/css" href="base.css" /><link rel="stylesheet" type="text/css" href="xproc.css" /><link rel="stylesheet" type="text/css" href="http://www.w3.org/StyleSheets/TR/base.css" /><link rel="stylesheet" type="text/css" href="base.css" /><script type="text/javascript" src="http://cdn.docbook.org/release/2.0.20/resources/js/dbmodnizr.js"></script><link href="http://cdn.docbook.org/release/2.0.20/resources/css/prism.css" rel="stylesheet" type="text/css" /><link href="http://cdn.docbook.org/release/2.0.20/resources/css/db-prism.css" rel="stylesheet" type="text/css" /></head><body><div class="specification"><div class="head" id="spec.head"><h1>XProc 3.0: Standard Step Library</h1><h2>Editor's Draft  <time datetime="2017-04-06T17:21:16Z">6 April 2017 at 17:21 UTC (<a href="https://github.com/xproc/3.0-specification/commit/59c7d456ed127da505e84ae4db583a36ad8e5225">build 20</a>)</time></h2><dl><dt>This Version:</dt><dd><a href="https://xproc.github.io/3.0-specification/master/head/steps30/">https://xproc.github.io/3.0-specification/master/head/steps30</a></dd><dt>Latest Version:</dt><dd><a href="http://spec.xproc.org/master/head/steps30/">http://spec.xproc.org/master/head/steps30/</a></dd><dt>Editors:</dt><dd><span class="personname">Achim Berndzen</span></dd><dd><span class="personname">Gerrit Imsieke</span></dd><dd><span class="personname">Norman Walsh</span></dd><dt>Repository:</dt><dd><a href="http://github.com/xproc/3.0-specification">This specification on GitHub</a></dd><dd><a href="http://github.com/xproc/3.0-specification/issues">Report an issue</a></dd><dt>Changes:</dt><dd><a href="http://github.com/xproc/3.0-specification/commits/master">Commits for this specification</a></dd></dl><p>This document is also available in these non-normative formats: <a href="steps30.xml">XML</a>.</p><p class="copyright">Copyright © 2016 FIXME:</p><hr /><div class="abstract"><h2>Abstract</h2>
 <p>This specification describes the standard step vocabulary of
-<em class="citetitle">XProc 1.1: An XML Pipeline Language</em>.</p>
+<em class="citetitle">XProc 3.0: An XML Pipeline Language</em>.</p>
 </div><div class="status"><h2>Status of this Document</h2><p><strong>This document is an editor's  draft that has no official standing.</strong></p>
 
 <p><em>This section describes the status of this document at
 the time of its publication. Other documents may supersede this
-document. A list of current W3C publications and the latest revision
-of this technical report can be found in the
-<a href="http://www.w3.org/TR/">W3C technical reports index</a> at
-http://www.w3.org/TR/.</em></p>
+document.</em></p>
 
-<p>Publication as a First Public Working Draft does not imply
-endorsement by the W3C Membership. This is a draft document and may be
-updated, replaced or obsoleted by other documents at any time. It is
-inappropriate to cite this document as other than work in
-progress.</p>
-
-<p>This document is a
-product of the
-<a href="http://www.w3.org/XML/Processing/">XML Processing Model
-Working Group</a>
-as part of the W3C
-<a href="http://www.w3.org/XML/Activity">XML Activity</a>.
-This draft is a first attempt to address some of the requirements of
-[<a href="#use-cases"><span class="abbrev">XProc V2.0 Requirements</span></a>]. It is in many ways substantially incomplete.
-The Working Group is publishing it in order to establish an intended direction
-and to provide an official opportunity for comment.
-</p>
-
-<p>Please report errors in this document by
-<a href="https://github.com/xproc/specification/issues">raising
-issues</a> on the
-<a href="https://github.com/xproc/specification">specification
-repository</a>.
-Alternatively, you may report errors in this document to the public
-mailing list
-<a href="mailto:public-xml-processing-model-comments@w3.org">public-xml-processing-model-comments@w3.org</a> (public
-<a href="http://lists.w3.org/Archives/Public/public-xml-processing-model-comments/">archives</a> are available).</p>
-
-
-
-<p>This document was produced by a group operating under the <a href="http://www.w3.org/Consortium/Patent-Policy-20040205/">5
-February 2004 W3C Patent Policy</a>. W3C maintains a <a href="http://www.w3.org/2004/01/pp-impl/38398/status">public
-list of any patent disclosures</a> made in connection with the
-deliverables of the group; that page also includes instructions for
-disclosing a patent. An individual who has actual knowledge of a
-patent which the individual believes contains <a href="http://www.w3.org/Consortium/Patent-Policy-20040205/#def-essential">Essential
-Claim(s)</a> must disclose the information in accordance with <a href="http://www.w3.org/Consortium/Patent-Policy-20040205/#sec-Disclosure">section
-6 of the W3C Patent Policy</a>.</p>
-
-<p>This document is governed by the
-<a href="http://www.w3.org/2005/10/Process-20051014/" id="w3c_process_revision">14 October 2005 W3C Process Document</a>.</p>
-</div></div><hr /><div class="lists-of-titles"><div class="toc"><h2 id="TableOfContents">Table of Contents</h2><ul class="toc"><li><span>1 <a href="#introduction">Introduction</a></span><ul class="toc"><li><span>1.1 <a href="#std-required">Required Steps</a></span><ul class="toc"><li><span>1.1.1 <a href="#c.add-attribute">p:add-attribute</a></span></li><li><span>1.1.2 <a href="#c.add-xml-base">p:add-xml-base</a></span></li><li><span>1.1.3 <a href="#c.cast-content-type">p:cast-content-type</a></span></li><li><span>1.1.4 <a href="#c.compare">p:compare</a></span></li><li><span>1.1.5 <a href="#c.count">p:count</a></span></li><li><span>1.1.6 <a href="#c.delete">p:delete</a></span></li><li><span>1.1.7 <a href="#c.directory-list">p:directory-list</a></span></li><li><span>1.1.8 <a href="#c.error">p:error</a></span></li><li><span>1.1.9 <a href="#c.escape-markup">p:escape-markup</a></span></li><li><span>1.1.10 <a href="#c.filter">p:filter</a></span></li><li><span>1.1.11 <a href="#c.http-request">p:http-request</a></span></li><li><span>1.1.12 <a href="#c.identity">p:identity</a></span></li><li><span>1.1.13 <a href="#c.insert">p:insert</a></span></li><li><span>1.1.14 <a href="#c.label-elements">p:label-elements</a></span></li><li><span>1.1.15 <a href="#c.load">p:load</a></span></li><li><span>1.1.16 <a href="#c.make-absolute-uris">p:make-absolute-uris</a></span></li><li><span>1.1.17 <a href="#c.namespace-rename">p:namespace-rename</a></span></li><li><span>1.1.18 <a href="#c.pack">p:pack</a></span></li><li><span>1.1.19 <a href="#c.parameters">p:parameters</a></span></li><li><span>1.1.20 <a href="#c.rename">p:rename</a></span></li><li><span>1.1.21 <a href="#c.replace">p:replace</a></span></li><li><span>1.1.22 <a href="#c.set-attributes">p:set-attributes</a></span></li><li><span>1.1.23 <a href="#c.set-properties">p:set-properties</a></span></li><li><span>1.1.24 <a href="#c.sink">p:sink</a></span></li><li><span>1.1.25 <a href="#c.split-sequence">p:split-sequence</a></span></li><li><span>1.1.26 <a href="#c.store">p:store</a></span></li><li><span>1.1.27 <a href="#c.string-replace">p:string-replace</a></span></li><li><span>1.1.28 <a href="#c.unescape-markup">p:unescape-markup</a></span></li><li><span>1.1.29 <a href="#c.unwrap">p:unwrap</a></span></li><li><span>1.1.30 <a href="#c.wrap">p:wrap</a></span></li><li><span>1.1.31 <a href="#c.wrap-sequence">p:wrap-sequence</a></span></li><li><span>1.1.32 <a href="#c.xinclude">p:xinclude</a></span></li><li><span>1.1.33 <a href="#c.xslt">p:xslt</a></span></li></ul></li><li><span>1.2 <a href="#std-optional">Optional Steps</a></span><ul class="toc"><li><span>1.2.1 <a href="#c.exec">p:exec</a></span></li><li><span>1.2.2 <a href="#c.hash">p:hash</a></span></li><li><span>1.2.3 <a href="#c.in-scope-names">p:in-scope-names</a></span></li><li><span>1.2.4 <a href="#c.template">p:template</a></span></li><li><span>1.2.5 <a href="#c.uuid">p:uuid</a></span></li><li><span>1.2.6 <a href="#c.validate-with-relax-ng">p:validate-with-relax-ng</a></span></li><li><span>1.2.7 <a href="#c.validate-with-schematron">p:validate-with-schematron</a></span></li><li><span>1.2.8 <a href="#c.validate-with-xml-schema">p:validate-with-xml-schema</a></span></li><li><span>1.2.9 <a href="#c.www-form-urldecode">p:www-form-urldecode</a></span></li><li><span>1.2.10 <a href="#c.www-form-urlencode">p:www-form-urlencode</a></span></li><li><span>1.2.11 <a href="#c.xquery">p:xquery</a></span></li><li><span>1.2.12 <a href="#c.xsl-formatter">p:xsl-formatter</a></span></li></ul></li><li><span>1.3 <a href="#serialization-options">Serialization Options</a></span></li></ul></li><li><span>2 <a href="#errors">Errors</a></span><ul class="toc"><li><span>2.1 <a href="#static-errors">Static Errors</a></span></li><li><span>2.2 <a href="#dynamic-errors">Dynamic Errors</a></span></li><li><span>2.3 <a href="#step-errors">Step Errors</a></span></li></ul></li><li><span>A <a href="#app.step-errors">Step Errors</a></span></li><li><span>B <a href="#references">References</a></span><ul class="toc"><li><span>1 <a href="#normative-references">Normative References</a></span></li><li><span>2 <a href="#informative-references">Informative References</a></span></li></ul></li></ul></div></div>
+<p>This document is derived from
+<a href="https://www.w3.org/TR/2010/REC-xproc-20100511/">XProc:
+An XML Pipeline Language</a> published by the W3C. See also
+<a href="#credits" title="Credits">Appendix B, <i>Credits</i></a>.</p>
+</div></div><hr /><div class="lists-of-titles"><div class="toc"><h2 id="TableOfContents">Table of Contents</h2><ul class="toc"><li><span>1 <a href="#introduction">Introduction</a></span><ul class="toc"><li><span>1.1 <a href="#std-required">Required Steps</a></span><ul class="toc"><li><span>1.1.1 <a href="#c.add-attribute">p:add-attribute</a></span></li><li><span>1.1.2 <a href="#c.add-xml-base">p:add-xml-base</a></span></li><li><span>1.1.3 <a href="#c.cast-content-type">p:cast-content-type</a></span></li><li><span>1.1.4 <a href="#c.compare">p:compare</a></span></li><li><span>1.1.5 <a href="#c.count">p:count</a></span></li><li><span>1.1.6 <a href="#c.delete">p:delete</a></span></li><li><span>1.1.7 <a href="#c.directory-list">p:directory-list</a></span></li><li><span>1.1.8 <a href="#c.error">p:error</a></span></li><li><span>1.1.9 <a href="#c.escape-markup">p:escape-markup</a></span></li><li><span>1.1.10 <a href="#c.filter">p:filter</a></span></li><li><span>1.1.11 <a href="#c.http-request">p:http-request</a></span></li><li><span>1.1.12 <a href="#c.identity">p:identity</a></span></li><li><span>1.1.13 <a href="#c.insert">p:insert</a></span></li><li><span>1.1.14 <a href="#c.label-elements">p:label-elements</a></span></li><li><span>1.1.15 <a href="#c.load">p:load</a></span></li><li><span>1.1.16 <a href="#c.make-absolute-uris">p:make-absolute-uris</a></span></li><li><span>1.1.17 <a href="#c.namespace-rename">p:namespace-rename</a></span></li><li><span>1.1.18 <a href="#c.pack">p:pack</a></span></li><li><span>1.1.19 <a href="#c.parameters">p:parameters</a></span></li><li><span>1.1.20 <a href="#c.rename">p:rename</a></span></li><li><span>1.1.21 <a href="#c.replace">p:replace</a></span></li><li><span>1.1.22 <a href="#c.set-attributes">p:set-attributes</a></span></li><li><span>1.1.23 <a href="#c.set-properties">p:set-properties</a></span></li><li><span>1.1.24 <a href="#c.sink">p:sink</a></span></li><li><span>1.1.25 <a href="#c.split-sequence">p:split-sequence</a></span></li><li><span>1.1.26 <a href="#c.store">p:store</a></span></li><li><span>1.1.27 <a href="#c.string-replace">p:string-replace</a></span></li><li><span>1.1.28 <a href="#c.unescape-markup">p:unescape-markup</a></span></li><li><span>1.1.29 <a href="#c.unwrap">p:unwrap</a></span></li><li><span>1.1.30 <a href="#c.wrap">p:wrap</a></span></li><li><span>1.1.31 <a href="#c.wrap-sequence">p:wrap-sequence</a></span></li><li><span>1.1.32 <a href="#c.xinclude">p:xinclude</a></span></li><li><span>1.1.33 <a href="#c.xslt">p:xslt</a></span></li></ul></li><li><span>1.2 <a href="#std-optional">Optional Steps</a></span><ul class="toc"><li><span>1.2.1 <a href="#c.exec">p:exec</a></span></li><li><span>1.2.2 <a href="#c.hash">p:hash</a></span></li><li><span>1.2.3 <a href="#c.in-scope-names">p:in-scope-names</a></span></li><li><span>1.2.4 <a href="#c.template">p:template</a></span></li><li><span>1.2.5 <a href="#c.uuid">p:uuid</a></span></li><li><span>1.2.6 <a href="#c.validate-with-relax-ng">p:validate-with-relax-ng</a></span></li><li><span>1.2.7 <a href="#c.validate-with-schematron">p:validate-with-schematron</a></span></li><li><span>1.2.8 <a href="#c.validate-with-xml-schema">p:validate-with-xml-schema</a></span></li><li><span>1.2.9 <a href="#c.www-form-urldecode">p:www-form-urldecode</a></span></li><li><span>1.2.10 <a href="#c.www-form-urlencode">p:www-form-urlencode</a></span></li><li><span>1.2.11 <a href="#c.xquery">p:xquery</a></span></li><li><span>1.2.12 <a href="#c.xsl-formatter">p:xsl-formatter</a></span></li></ul></li><li><span>1.3 <a href="#serialization-options">Serialization Options</a></span></li></ul></li><li><span>2 <a href="#errors">Errors</a></span><ul class="toc"><li><span>2.1 <a href="#static-errors">Static Errors</a></span></li><li><span>2.2 <a href="#dynamic-errors">Dynamic Errors</a></span></li><li><span>2.3 <a href="#step-errors">Step Errors</a></span></li></ul></li><li><span>A <a href="#app.step-errors">Step Errors</a></span></li><li><span>B <a href="#credits">Credits</a></span></li><li><span>C <a href="#references">References</a></span><ul class="toc"><li><span>1 <a href="#normative-references">Normative References</a></span></li><li><span>2 <a href="#informative-references">Informative References</a></span></li></ul></li></ul></div></div>
   
 
 <section id="introduction" class="section"><div class="section-titlepage"><h2>1 Introduction</h2></div>
@@ -82,7 +42,7 @@ that flow through them.</p>
 <p id="cv.result">Also, in this specification, several steps use this
 element for result information:</p>
 
-<p id="d398e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:result&gt;<br />    <var>string</var><br />&lt;/c:result&gt;</code></p>
+<p id="d402e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:result&gt;<br />    <var>string</var><br />&lt;/c:result&gt;</code></p>
 
 <p>When a step uses an XPath to compute an option value, the XPath
 context is as defined in
@@ -259,7 +219,7 @@ media type will be preserved in the
 <code class="tag-attribute">content-type</code> attribute on the
 <a href="#c.data"><code class="tag-element">c:data</code></a> element.</p>
 
-<p id="d501e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:data<br />  <strong>content-type</strong> = <var>ContentType</var><br />  charset? = <var>string</var><br />  encoding? = <var>string</var>&gt;<br />    <var>string</var><br />&lt;/c:data&gt;</code></p>
+<p id="d505e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:data<br />  <strong>content-type</strong> = <var>ContentType</var><br />  charset? = <var>string</var><br />  encoding? = <var>string</var>&gt;<br />    <var>string</var><br />&lt;/c:data&gt;</code></p>
 
 <p>The content of the <a href="#c.data"><code class="tag-element">c:data</code></a> element is the base64 encoded
 representation of the non-XML content.</p>
@@ -420,7 +380,7 @@ element whose base URI is the directory path and whose
 <code class="tag-attribute">name</code> attribute is the last segment
 of the directory path (that is, the directory's (local) name).</p>
 
-<p id="d586e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:directory<br />  <strong>name</strong> = <var>string</var>&gt;<br />    (<a href="#cv.file">c:file</a> | <br />     <a href="#cv.directory">c:directory</a> | <br />     <a href="#cv.other">c:other</a>)*<br />&lt;/c:directory&gt;</code></p>
+<p id="d590e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:directory<br />  <strong>name</strong> = <var>string</var>&gt;<br />    (<a href="#cv.file">c:file</a> | <br />     <a href="#cv.directory">c:directory</a> | <br />     <a href="#cv.other">c:other</a>)*<br />&lt;/c:directory&gt;</code></p>
 
 <p>Its contents are determined as follows, based on the entries in
 the directory identified by the directory path. For each entry in the
@@ -440,14 +400,14 @@ determined to be special.</p>
 </li><li>
 <p id="cv.file">A <a href="#cv.file"><code class="tag-element">c:file</code></a> is produced for each file
 not determined to be special.</p>
-<p id="d595e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:file<br />  <strong>name</strong> = <var>string</var> /&gt;</code></p>
+<p id="d599e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:file<br />  <strong>name</strong> = <var>string</var> /&gt;</code></p>
 </li><li>
 <p id="cv.other"><span id="impl-4">Any file or directory determined to be
 special by the <code class="tag-element">p:directory-list</code> step may be output using a
 <a href="#cv.other"><code class="tag-element">c:other</code></a> element but the criteria for marking a file as
 special are <em class="glossterm"><a href="../xproc30/#dt-implementation-defined">implementation-defined</a><sup class="xrefspec"><a href="../xproc30/">XP</a></sup></em>.</span>
 </p>
-<p id="d599e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:other<br />  <strong>name</strong> = <var>string</var> /&gt;</code></p>
+<p id="d603e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:other<br />  <strong>name</strong> = <var>string</var> /&gt;</code></p>
 </li></ul></div>
 
 <p>When a directory entry is a subdirectory, that directory's entries are not
@@ -621,7 +581,7 @@ if the document element of the document that arrives on the
 
 <p>An HTTP request is represented by a <code class="tag-element">c:request</code> element.</p>
 
-<p id="d717e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:request<br />  <strong>method</strong> = <var>NCName</var><br />  href? = <var>anyURI</var><br />  detailed? = <var>boolean</var><br />  status-only? = <var>boolean</var><br />  username? = <var>string</var><br />  password? = <var>string</var><br />  auth-method? = <var>string</var><br />  send-authorization? = <var>boolean</var><br />  override-content-type? = <var>ContentType</var>&gt;<br />    (<a href="#cv.header">c:header</a>*,<br />     (<a href="#cv.multipart">c:multipart</a> | <br />      <a href="#cv.body">c:body</a>)?)<br />&lt;/c:request&gt;</code></p>
+<p id="d721e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:request<br />  <strong>method</strong> = <var>NCName</var><br />  href? = <var>anyURI</var><br />  detailed? = <var>boolean</var><br />  status-only? = <var>boolean</var><br />  username? = <var>string</var><br />  password? = <var>string</var><br />  auth-method? = <var>string</var><br />  send-authorization? = <var>boolean</var><br />  override-content-type? = <var>ContentType</var>&gt;<br />    (<a href="#cv.header">c:header</a>*,<br />     (<a href="#cv.multipart">c:multipart</a> | <br />      <a href="#cv.body">c:body</a>)?)<br />&lt;/c:request&gt;</code></p>
 
 <p><a id="err.inline.C0006"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic error</a></em> (<a href="#err.C0006"><code class="errqname">err:XC0006</code></a>) if the
 <code class="tag-attribute">method</code> is not specified on a <code class="tag-element">c:request</code>.
@@ -1602,7 +1562,7 @@ that contains the step.</p>
 <p>A <code class="tag-element">c:param</code> represents a parameter on a parameter
 input.</p>
 
-<p id="d1241e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:param<br />  <strong>name</strong> = <var>QName</var><br />  namespace? = <var>anyURI</var><br />  <strong>value</strong> = <var>string</var> /&gt;</code></p>
+<p id="d1245e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:param<br />  <strong>name</strong> = <var>QName</var><br />  namespace? = <var>anyURI</var><br />  <strong>value</strong> = <var>string</var> /&gt;</code></p>
 
 <p>The <code class="tag-attribute">name</code> attribute of the
 <code class="tag-element">c:param</code> must have the lexical form of a QName.</p>
@@ -1641,7 +1601,7 @@ appear on a <code class="tag-element">c:param</code> element.</p>
 <p>A <code class="tag-element">c:param-set</code> represents a set of parameters on a
 parameter input.</p>
 
-<p id="d1268e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:param-set&gt;<br />    <a href="#cv.param">c:param</a>*<br />&lt;/c:param-set&gt;</code></p>
+<p id="d1272e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:param-set&gt;<br />    <a href="#cv.param">c:param</a>*<br />&lt;/c:param-set&gt;</code></p>
 
 <p>The <code class="tag-element">c:param-set</code> contains zero or more
 <a href="#cv.param"><code class="tag-element">c:param</code></a> elements. <a id="err.inline.D0018"></a>It is a
@@ -2417,7 +2377,7 @@ and will be returned as escaped text.</p>
 <p id="cv.line">If <code class="option">wrap-result-lines</code> is
 true, a <a href="#cv.line"><code class="tag-element">c:line</code></a> element will be wrapped around each line of output.</p>
 
-<p id="d1641e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:line&gt;<br />    <var>string</var><br />&lt;/c:line&gt;</code></p>
+<p id="d1645e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:line&gt;<br />    <var>string</var><br />&lt;/c:line&gt;</code></p>
 
 <p><a id="err.inline.C0035"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic
 error</a></em> (<a href="#err.C0035"><code class="errqname">err:XC0035</code></a>) to specify both <code class="option">result-is-xml</code> and
@@ -3147,7 +3107,7 @@ is empty.</p>
 <ul><li>
 <p>If the document root element is <a href="#cv.query"><code id="cv.query" class="tag-element">c:query</code></a>, the text
 descendants of this element are considered the query.</p>
-<p id="d1924e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:query&gt;<br />    <var>string</var><br />&lt;/c:query&gt;</code></p>
+<p id="d1928e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:query&gt;<br />    <var>string</var><br />&lt;/c:query&gt;</code></p>
 </li><li>
 <p>If the document root element is in the XQueryX namespace, the
 document is treated as an XQueryX-encoded query. <span id="impl-25">Support for
@@ -3642,7 +3602,21 @@ the c:data element.</p><p>See: <a href="#err.inline.C1006">p:cast-content-type</
 is a c:data element, it is a dynamic
 error if the content-type is not supplied.</p><p>See: <a href="#err.inline.C1007">p:cast-content-type</a></p></dd></dl></div>
 </article>
-<article id="references" class="appendix"><header class="appendix-titlepage"><h2>B References</h2></header>
+
+<article id="credits" class="appendix"><header class="appendix-titlepage"><h2>B Credits</h2></header>
+
+
+<p>This document is derived from
+<a href="https://www.w3.org/TR/2010/REC-xproc-20100511/">XProc:
+An XML Pipeline Language</a> published by the W3C. It was developed
+by the <em class="citetitle">XML Processing Model Working Group</em> and edited by
+Norman Walsh, Alex Miłowski, and Henry Thompson.</p>
+
+<p>The editors of this specification extend their gratitude to everyone
+who contributed to this document and all of the versions that came before it.</p>
+</article>
+
+<article id="references" class="appendix"><header class="appendix-titlepage"><h2>C References</h2></header>
 
 
 
@@ -3650,12 +3624,7 @@ error if the content-type is not supplied.</p><p>See: <a href="#err.inline.C1007
 
 
 <div id="normative-references.2" class="bibliolist">
-<div id="use-cases" class="bibliomixed"><p>[<span class="abbrev">XProc V2.0 Requirements</span>] 
-<a href="http://www.w3.org/TR/xproc-v2-req/"><span class="citetitle"><cite>XProc V2.0
-Requirements</cite></span></a>.
-Alex Milowski, James Fuller, and Norman Walsh editors.
-W3C Working Draft 5 November 2013.
-</p></div>
+
 
 <div id="xproc20" class="bibliomixed"><p>[<span class="abbrev">XProc 2.0</span>] 
 <a href="http://www.w3.org/TR/xproc20/"><span class="citetitle"><cite>XProc 2.0:
