@@ -1357,7 +1357,7 @@ result a document (or documents) specified by an IRI.</para>
   <p:output port="result" sequence="true"/>
   <p:option name="href" required="true" as="xs:anyURI"/>
   <p:option name="dtd-validate" select="'false'" as="xs:boolean"/>
-  <p:option name="override-content-type" as="xs:string"/>
+  <p:option name="document-properties" as="map(xs:string, xs:string)"/>
 </p:declare-step>
 
 <para>The value of the <option>href</option> option
@@ -1382,7 +1382,7 @@ the <tag>p:load</tag> step is equivalent to performing the following
                  href="{HREF}"
                  detailed="false"
                  status-only="false"
-                 override-content-type="{OVERRIDE}"/>
+                 document-properties="{DOCUMENT-PROPERTIES}"/>
     </p:inline>
   </p:input>
 </p:http-request>]]></programlisting>
@@ -1402,7 +1402,7 @@ pipeline:</para>
 <programlisting language="xml"><![CDATA[<p:declare-step>
   <p:output port="result" sequence="false"/>
   <p:option name="href" required="true"/>
-  <p:option name="override-content-type"/>
+  <p:option name="document-properties"/>
 
   <p:http-request>
     <p:input port="source">
@@ -1411,7 +1411,7 @@ pipeline:</para>
                    href="{$href}"
                    detailed="false"
                    status-only="false"
-                   override-content-type="text/plain"/>
+                   document-properties="map{"content-type":"text/plain"}"/>
       </p:inline>
     </p:input>
   </p:http-request>
@@ -1419,8 +1419,8 @@ pipeline:</para>
   <p:xml-parse dtd-validate="true"/>
 
   <p:choose>
-    <p:when test="p:value-availalle('override-content-type')">
-      <p:cast-content-type content-type="{$override-content-type}"/>
+    <p:when test="p:value-available('document-properties')">
+      <p:cast-content-type content-type="{map:get($document-properties,'content-type')}"/>
     </p:when>
     <p:otherwise>
       <p:identity/>
