@@ -1419,7 +1419,7 @@ pipeline:</para>
   <p:xml-parse dtd-validate="true"/>
 
   <p:choose>
-    <p:when test="p:value-available('document-properties')">
+    <p:when test="p:value-available('document-properties') and map:contains($document-properties,'content-type')">
       <p:cast-content-type content-type="{map:get($document-properties,'content-type')}"/>
     </p:when>
     <p:otherwise>
