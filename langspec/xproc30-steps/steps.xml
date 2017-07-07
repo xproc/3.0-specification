@@ -1382,17 +1382,18 @@ the <tag>p:load</tag> step is equivalent to performing the following
                  href="{HREF}"
                  detailed="false"
                  status-only="false"
-                 document-properties="{DOCUMENT-PROPERTIES}"/>
+                 override-content-type="{OVERRIDE}"/>
     </p:inline>
   </p:input>
 </p:http-request>]]></programlisting>
 
 <para>Where the “<literal>{HREF}</literal>” value is the value of
 the <option>href</option> option made absolute and the
-“<literal>{DOCUMENT-PROPERTIES}</literal> value is the value of the
-<option>document-properties</option> option. If no value is provided
-for the <option>document-properties</option> option, then the
-<tag class="attribute">document-properties</tag> attribute is not
+“<literal>{OVERRIDE}</literal> value is the value returned by 
+<literal>map:get($document-properties,'content-type')</literal>. If no value is provided
+for the <option>document-properties</option> option or the provided map does not contain 
+a key 'content-type', then the
+<tag class="attribute">override-content-type</tag> attribute is not
 present on the <tag>c:request</tag>.</para>
 
 <para>If <option>dtd-validate</option> is <literal>true</literal>,
@@ -1411,7 +1412,7 @@ pipeline:</para>
                    href="{$href}"
                    detailed="false"
                    status-only="false"
-                   document-properties="map{"content-type":"text/plain"}"/>
+                   override-content-type="text/plain"/>
       </p:inline>
     </p:input>
   </p:http-request>
