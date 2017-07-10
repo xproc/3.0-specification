@@ -311,13 +311,13 @@ one input with respect to some set of XML Schemas, etc.</para>
 <glossterm>document properties</glossterm>.</termdef>.
 <termdef xml:id="dt-representation">A <firstterm>representation</firstterm>
 is a data structure used by an XProc processor to refer to the actual
-document content.</termdef>
-</para>
+document content.</termdef></para>
 
 <para>Documents have associated with them a set of properties. The properties
 are key/value pairs. <termdef xml:id="dt-document-properties">The
 <firstterm>document properties</firstterm> are exposed to the XProc
-pipeline as a map (<code>map(xs:string, xs:string)</code>).</termdef>
+pipeline as a map (<code>map(xs:string, xs:string)</code>) and, for non-XML documents,
+as an equivalent <glossterm>proxy document</glossterm>.</termdef>
 Several property keys are defined by this specification:</para>
 
 <variablelist>
@@ -408,6 +408,123 @@ formats, caching them on disk, etc.</para>
 
 </section>
 </section>
+
+      <section xml:id="proxy-documents">
+        <title>Proxy Documents</title>
+        <para><termdef xml:id="dt-proxy-document">A <firstterm>proxy document</firstterm> is an XML
+            document with a top-level element <tag>c:document-properties</tag>. The attribute names
+            and values of this <tag>c:document-properties</tag> element correspond to the map items
+            of the <glossterm>document properties</glossterm>.</termdef> Proxy documents do not
+          exist for XML documents. They exist only for non-XML documents, including text
+          documents.</para>
+        <note xml:id="note-proxy-documents">
+          <para>The purpose of proxy documents is to provide an XDM-compliant interface for passing
+            non-XML documents between steps. While this could have been achieved by using an empty
+            document node, XPath expressions in steps can be simplified if document properties don’t
+            have to be calculated from invoking <function>p:document-properties</function>. In
+            particular, proxy document attributes make document properties accessible when
+            evaluating step options. XProc extension functions are only available in these contexts
+            through attribute value templates.</para>
+        </note>
+        <para>The XProc processor <rfc2119>must</rfc2119> make sure that the attributes of proxy
+          documents always correspond to the underlying document properties.</para>
+        <note xml:id="ednote-proxy-document-attribute-sync" role="editorial">
+          <title>Editorial Note</title>
+          <para>Still need to flesh out whether this implies that <tag>p:add-attribute</tag> on a
+              <tag>c:document-properties</tag> document is forbidden in favor of a (fictitious?)
+              <function>p:set-document-properties</function> function or whether
+              <tag>p:add-attribute</tag> may in fact be used to manipulate document
+            properties.</para>
+        </note>
+        <para>The processor maintains an association between a document’s
+            <glossterm>representation</glossterm> and its proxy document(s). It makes the
+          representation available to a step that processes the document in an
+            <glossterm>implementation-dependent</glossterm> way. </para>
+        <para>An XProc extension function <function>p:is-proxy</function> will answer whether a
+          given proxy document has an underlying representation.</para>
+        <para>A proxy document <rfc2119>must</rfc2119> be processed as an XML document if and only
+          if the processing step accepts nothing but XML documents on its primary input port, as
+          declared by its <tag class="attribute">content-types</tag> attribute. Although
+            <tag>p:viewport</tag> does not declare <tag class="attribute">content-types</tag>, it is
+          a pure-XML-processing step, too, and it <rfc2119>must</rfc2119> process a proxy document
+          as an XML document. If and only if the primary result of such an operation is a
+            <tag>c:document-properties</tag> document, the XProc processor <rfc2119>must</rfc2119>
+          establish an association between the primary input document’s <glossterm>representation</glossterm> and
+          the resulting proxy document. </para>
+        <note xml:id="note-proxy-relationship">
+          <para>A few observations on “proxy-documents-as-XML”:</para>
+          <orderedlist>
+            <listitem>
+              <para>After an XML transformation, the output proxy document still points to the same
+            internally maintained resource as the input proxy document.</para>
+            </listitem>
+            <listitem>
+              <para>With the exception of <tag>p:identity</tag> operations, the input proxy document
+                and the output proxy documents are different XML documents from a node-identity
+                standpoint.</para>
+            </listitem>
+            <listitem>
+              <para>There is an 1:n relationship between a document’s
+                  <glossterm>representation</glossterm> and its proxy documents.</para>
+            </listitem>
+          </orderedlist>
+        </note>
+        <note xml:id="ednote-proxy-document-representation-identity" role="editorial">
+          <title>Editorial Note</title>
+          <para>Are users interested in determining whether two proxy documents share the same
+          <glossterm>representation</glossterm>? If so, should we allow these comparisons by adding
+          a mandatory <tag class="attribute">uuid</tag> attribute to <tag>c:document-properties</tag> by which
+          the processor locates the document representation that it maintains internally?</para>
+          <para>If we allow or prescribe such an <tag class="attribute">uuid</tag> attribute,
+          should we disallow any manipulation of it, or should we just say that the processor 
+          should raise a dynamic error if there is no representation for a given UUID?</para>
+        </note>
+        <para>A step may add further XML elements below a proxy document’a top-level element. For
+          example, a step that loads or analyzes an image may extract the image’s XMP metadata and
+          insert it below <tag>c:document-properties</tag>:</para>
+        <programlisting language="xml">&lt;c:document-properties xmlns:c="http://www.w3.org/ns/xproc-step" 
+  content-type="image/jpeg" base-uri="file:///tmp/photo.jpg">
+  &lt;x:xmpmeta xmlns:x="adobe:ns:meta/">
+    &lt;rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+      &lt;rdf:Description rdf:about="" xmlns:exif="http://ns.adobe.com/exif/1.0/">
+        &lt;exif:PixelXDimension>5312&lt;/exif:PixelXDimension>
+        &lt;exif:PixelYDimension>2988&lt;/exif:PixelYDimension>
+        &lt;exif:ExifVersion>0220&lt;/exif:ExifVersion>
+      &lt;/rdf:Description>
+    &lt;/rdf:RDF>
+  &lt;/x:xmpmeta>
+&lt;/c:document-properties></programlisting>        
+        <section>
+          <title>Proxy Documents for Text Documents</title>
+          <para>For text documents, the XProc processor <rfc2119>may</rfc2119> include the text
+            content as a text node below <tag>c:document-properties</tag>. If it does, it
+              <rfc2119>must</rfc2119> use the document property <code>text-in-proxy</code> to
+            communicate the amount of text that has been included. Posible values are
+              “<literal>complete</literal>,” “<literal>none</literal>,” or a string that matches the
+            regular expression <literal>-?\d+[KkMm](lines|chars)</literal>, where the optional
+            hyphen-minus prefix signifies that the lines or characters are taken from the end of the
+            text document, otherwise the first lines or characters will be included. The prefix
+              <literal>k</literal> stands for 1000 lines or 1024 characters, while
+              <literal>M</literal> stands for 1 million lines or 1024*1024 characters.
+              <literal>k</literal> and <literal>M</literal> are case-insensitive.</para>
+          <note xml:id="ednote-text-in-proxy" role="editorial">
+            <title>Editorial Note</title>
+            <para>There should be a corresponding option when reading text files that tells the
+              processor to put the complete text, nothing, or the first or last X characters or Y
+              lines below <tag>c:document-properties</tag> when reading the text file.</para>
+            <para>Should we use XPointer for text instead?</para>
+            <para>Does it get to detailed anyway at this point?</para>
+            <para>Use cases for head and tail inclusion of potentially large text files are 
+            “reading the BoundingBox of ASCII-encoded EPS files” and “reading the most recent events in a 
+            Web server log file.” You only extract up to 50 lines into the document properties document 
+            in order to pass it as an argument to <function>fn:matches</function> or whatever.</para>
+            <para>If we are to specify a number of lines, we probably need to also be able to supply
+              a line separator? Or should we just rely on Java system property 
+              <literal>line.separator</literal>?</para>
+          </note>
+        </section>
+      </section>
+
 </section>
 
 <section xml:id="input-output">
