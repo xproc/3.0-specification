@@ -438,10 +438,10 @@ formats, caching them on disk, etc.</para>
         </note>
         <para>The processor maintains an association between a document’s
             <glossterm>representation</glossterm> and its proxy document(s). It makes the
-          representation available to a step that processes the document in an
+          representation available to a step that processes the proxy document in an
             <glossterm>implementation-dependent</glossterm> way. </para>
         <para>An XProc extension function <function>p:is-proxy</function> will answer whether a
-          given proxy document has an underlying representation.</para>
+          given <tag>c:document-properties</tag> document has an underlying representation.</para>
         <para>A proxy document <rfc2119>must</rfc2119> be processed as an XML document if and only
           if the processing step accepts nothing but XML documents on its primary input port, as
           declared by its <tag class="attribute">content-types</tag> attribute. Although
@@ -450,7 +450,7 @@ formats, caching them on disk, etc.</para>
           as an XML document. If and only if the primary result of such an operation is a
             <tag>c:document-properties</tag> document, the XProc processor <rfc2119>must</rfc2119>
           establish an association between the primary input document’s <glossterm>representation</glossterm> and
-          the resulting proxy document. </para>
+          the resulting proxy document.</para>
         <note xml:id="note-proxy-relationship">
           <para>A few observations on “proxy-documents-as-XML”:</para>
           <orderedlist>
@@ -516,7 +516,7 @@ formats, caching them on disk, etc.</para>
             <para>Does it get to detailed anyway at this point?</para>
             <para>Use cases for head and tail inclusion of potentially large text files are 
             “reading the BoundingBox of ASCII-encoded EPS files” and “reading the most recent events in a 
-            Web server log file.” You only extract up to 50 lines into the document properties document 
+            Web server log file.” You’ll only want to extract up to 50 lines into the document properties document 
             in order to pass it as an argument to <function>fn:matches</function> or whatever.</para>
             <para>If we are to specify a number of lines, we probably need to also be able to supply
               a line separator? Or should we just rely on Java system property 
