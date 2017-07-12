@@ -451,7 +451,9 @@ formats, caching them on disk, etc.</para>
         <para>An XProc extension function <function>p:is-proxy</function> will answer whether a
           given <tag>c:document-properties</tag> document has an underlying 
           <glossterm>representation</glossterm>.</para>
-        <para>A proxy document <rfc2119>must</rfc2119> be processed as an XML document if and only
+        <para>Applying <function>p:document-properties</function> to a proxy document will
+        return the underlying document’s <code>content-type</code>, not an XML content type.</para>
+        <para>However, a proxy document <rfc2119>must</rfc2119> be processed as an XML document if and only
           if the processing step accepts nothing but XML documents on its primary input port, as
           declared by its <tag class="attribute">content-types</tag> attribute. Although
             <tag>p:viewport</tag> does not declare <tag class="attribute">content-types</tag>, it is
@@ -487,7 +489,8 @@ formats, caching them on disk, etc.</para>
           the processor locates the document representation that it maintains internally?</para>
           <para>If we allow or prescribe such an <tag class="attribute">uuid</tag> attribute,
           should we disallow any manipulation of it, or should we just say that the processor 
-          should raise a dynamic error if there is no representation for a given UUID?</para>
+          should raise a dynamic error if there is no representation for a given UUID when
+          passing a proxy document to a step?</para>
         </note>
         <para>A step may add further XML elements below a proxy document’a top-level element. For
           example, a step that loads or analyzes an image may extract the image’s XMP metadata and
