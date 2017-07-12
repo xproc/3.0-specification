@@ -451,18 +451,72 @@ formats, caching them on disk, etc.</para>
         <para>An XProc extension function <function>p:is-proxy</function> will answer whether a
           given <tag>c:document-properties</tag> document has an underlying 
           <glossterm>representation</glossterm>.</para>
+        <note xml:id="ednote-proxy-document-is-proxy-function" role="editorial">
+          <title>Editorial Note</title>
+          <para>If we make the association explicit via <tag class="attribute">uuid</tag> attribute
+            (see <xref linkend="ednote-proxy-document-representation-identity"/>), and if the
+            processor makes sure that the presence of such an attribute implies the integrity of the
+            association, we can do without such a function.</para>
+        </note>
         <para>Applying <function>p:document-properties</function> to a proxy document will
         return the underlying document’s <code>content-type</code>, not an XML content type.</para>
-        <para>However, a proxy document <rfc2119>must</rfc2119> be processed as an XML document if and only
-          if the processing step accepts nothing but XML documents on its primary input port, as
-          declared by its <tag class="attribute">content-types</tag> attribute. Although
+        <para>However, a proxy document <rfc2119>must</rfc2119> be processed as an XML document if
+          and only if the processing step accepts nothing but XML documents on its primary input
+          port, as declared by its <tag class="attribute">content-types</tag> attribute. (Although
             <tag>p:viewport</tag> does not declare <tag class="attribute">content-types</tag>, it is
           a pure-XML-processing step, too, and it <rfc2119>must</rfc2119> process a proxy document
-          as an XML document. If and only if the primary result of such an operation is a
-            <tag>c:document-properties</tag> document, the XProc processor <rfc2119>must</rfc2119>
-          establish an <glossterm>implementation-dependent</glossterm> association between the
-          primary input document’s <glossterm>representation</glossterm> and the resulting proxy
-          document.</para>
+          as an XML document.) If and only if the first document on the primary port of such an
+          operation is a <tag>c:document-properties</tag> document with an associated 
+          <glossterm>representation</glossterm>, the XProc processor <rfc2119>must</rfc2119> establish 
+          an <glossterm>implementation-dependent</glossterm> association between the 
+          <glossterm>representation</glossterm> of the first document on the primary inpurt port and 
+          the resulting proxy document.</para>
+        <note xml:id="ednote-proxy-document-xml-processing" role="editorial">
+          <title>Editorial Note</title>
+          <para>This first-document-on-primary-port restriction is in place in order to make
+            transfer of the <glossterm>representation</glossterm> association unambiguous. Suppose
+            you have a <tag>p:xslt</tag> step that processes two image documents, where the latter
+            is a conversion result of the former. The purpose of the XSLT step is to attach a
+            conversion instruction as new custom metadata to the original image. (In order to make
+            the association visible in this example, we assume that the processor assigned a UUID to
+            each <glossterm>representation</glossterm> and that it makes it explicit by exposing a
+              <tag class="attribute">uuid</tag> attribute on <tag>c:document-properties</tag>. The
+              <tag>p:xslt</tag> step receives the image documents on its <literal>source</literal>
+            port. Since it only processes XML, it will process the proxy documents
+<programlisting language="xml">&lt;c:document-properties content-type="image/jpeg" uuid="d238026f-7302-484b-95fc-cfc84b3e7b41" base-uri="file:///tmp/photo1.jpg">
+  &lt;image-props width="1024" height="768" colorspace="CMYK"/>
+&lt;/c:document-properties></programlisting>
+          and 
+<programlisting language="xml">&lt;c:document-properties content-type="image/jpeg" uuid="d238026f-7302-484b-95fc-cfc84b3e7b41" base-uri="file:///tmp/photo1.jpg">
+  &lt;image-props width="800" height="600" colorspace="sRGB"/>
+&lt;/c:document-properties></programlisting>
+            to yield the result (yes, this example is contrived)
+<programlisting language="xml">&lt;c:document-properties content-type="image/jpeg" base-uri="file:///tmp/photo1.jpg">
+  &lt;image-props width="1024" height="768" colorspace="CMYK"/>
+  &lt;my:image-transform xmlns:my="http://acme.com/namespace/my">
+    &lt;my:inputParams pixelXdim="1024" pixelYdim="768" colorspace="CMYK"/>
+    &lt;my:targetParams pixelXdim="800" pixelYdim="768" colorspace="sRGB"/>
+  &lt;/my:image-transform>
+&lt;/c:document-properties></programlisting>
+          </para>
+          <para>Then the processor needs to know which of the input documents’ <tag
+              class="attribute">uuid</tag> attribute it should attach to the result document (or “to
+            which result document” if there are multiple). This is solved most easily if we stipulate
+          “first doc on primary port must be proxy doc, otherwise no association transfer.”</para>
+          <para>Another question is whether the processor will be able to transfer the association
+            to a <tag>c:document-properties</tag> result document that some custom extension step
+            creates, without the need to bother the extension step author to transfer the
+            association. This should be feasible. It is equivalent to applying an
+              <tag>p:add-attribute</tag> to the first primary result, with
+              <code>attribute-name="uuid"</code> and the attribute value taken from the <tag
+              class="attribute">uuid</tag> attribute of the first document that is connected to the
+            primary input port, if both documents are <tag>c:document-properties</tag>.</para>
+
+
+
+erzeugt, dann muss er doch wissen, zu welcher Repräsentation (uuid="d238026f-7302-484b-95fc-cfc84b3e7b41" oder uuid="d238026f-7302-484b-95fc-cfc84b3e7b41") das neue Proxy-Dokument gehört.
+
+        </note>
         <note xml:id="note-proxy-relationship">
           <para>A few observations on “proxy-documents-as-XML”:</para>
           <orderedlist>
