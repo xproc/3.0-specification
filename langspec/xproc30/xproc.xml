@@ -411,12 +411,15 @@ formats, caching them on disk, etc.</para>
 
       <section xml:id="proxy-documents">
         <title>Proxy Documents</title>
-        <para><termdef xml:id="dt-proxy-document">A <firstterm>proxy document</firstterm> is an XML
+        <para>
+          <termdef xml:id="dt-proxy-document">A <firstterm>proxy document</firstterm> is an XML
             document with a top-level element <tag>c:document-properties</tag>. The attribute names
             and values of this <tag>c:document-properties</tag> element correspond to the map items
-            of the <glossterm>document properties</glossterm>.</termdef> Proxy documents do not
-          exist for XML documents. They exist only for non-XML documents, including text
-          documents.</para>
+            of a document’s <glossterm>document properties</glossterm>.</termdef> The XProc processor
+          maintains <glossterm>implementation-dependent</glossterm> associations between a
+          document’s <glossterm>representation</glossterm> and the document’s proxy documents. Proxy
+          documents do not exist for XML documents. They exist only for non-XML documents, including
+          text documents.</para>
         <note xml:id="note-proxy-documents">
           <para>The purpose of proxy documents is to provide an XDM-compliant interface for passing
             non-XML documents between steps. While this could have been achieved by using an empty
@@ -425,6 +428,11 @@ formats, caching them on disk, etc.</para>
             particular, proxy document attributes make document properties accessible when
             evaluating step options. XProc extension functions are only available in these contexts
             through attribute value templates.</para>
+          <para>There may be multiple proxy documents for a given document. This is because proxy
+            documents may be processed as XML documents by XProc steps, resulting in newly created
+            XML documents that differ from the sources from a node-identity standpoint. However,
+          the association with a single <glossterm>representation</glossterm> will be preserved by 
+          the XProc processor, as specified below.</para>
         </note>
         <para>The XProc processor <rfc2119>must</rfc2119> make sure that the attributes of proxy
           documents always correspond to the underlying document properties.</para>
@@ -441,7 +449,8 @@ formats, caching them on disk, etc.</para>
           representation available to a step that processes the proxy document in an
             <glossterm>implementation-dependent</glossterm> way. </para>
         <para>An XProc extension function <function>p:is-proxy</function> will answer whether a
-          given <tag>c:document-properties</tag> document has an underlying representation.</para>
+          given <tag>c:document-properties</tag> document has an underlying 
+          <glossterm>representation</glossterm>.</para>
         <para>A proxy document <rfc2119>must</rfc2119> be processed as an XML document if and only
           if the processing step accepts nothing but XML documents on its primary input port, as
           declared by its <tag class="attribute">content-types</tag> attribute. Although
@@ -449,8 +458,9 @@ formats, caching them on disk, etc.</para>
           a pure-XML-processing step, too, and it <rfc2119>must</rfc2119> process a proxy document
           as an XML document. If and only if the primary result of such an operation is a
             <tag>c:document-properties</tag> document, the XProc processor <rfc2119>must</rfc2119>
-          establish an association between the primary input document’s <glossterm>representation</glossterm> and
-          the resulting proxy document.</para>
+          establish an <glossterm>implementation-dependent</glossterm> association between the
+          primary input document’s <glossterm>representation</glossterm> and the resulting proxy
+          document.</para>
         <note xml:id="note-proxy-relationship">
           <para>A few observations on “proxy-documents-as-XML”:</para>
           <orderedlist>
@@ -493,35 +503,78 @@ formats, caching them on disk, etc.</para>
       &lt;/rdf:Description>
     &lt;/rdf:RDF>
   &lt;/x:xmpmeta>
-&lt;/c:document-properties></programlisting>        
+&lt;/c:document-properties></programlisting>
         <section>
-          <title>Proxy Documents for Text Documents</title>
-          <para>For text documents, the XProc processor <rfc2119>may</rfc2119> include the text
-            content as a text node below <tag>c:document-properties</tag>. If it does, it
-              <rfc2119>must</rfc2119> use the document property <code>text-in-proxy</code> to
-            communicate the amount of text that has been included. Posible values are
-              “<literal>complete</literal>,” “<literal>none</literal>,” or a string that matches the
-            regular expression <literal>-?\d+[KkMm](lines|chars)</literal>, where the optional
-            hyphen-minus prefix signifies that the lines or characters are taken from the end of the
-            text document, otherwise the first lines or characters will be included. The prefix
-              <literal>k</literal> stands for 1000 lines or 1024 characters, while
-              <literal>M</literal> stands for 1 million lines or 1024*1024 characters.
-              <literal>k</literal> and <literal>M</literal> are case-insensitive.</para>
-          <note xml:id="ednote-text-in-proxy" role="editorial">
-            <title>Editorial Note</title>
-            <para>There should be a corresponding option when reading text files that tells the
-              processor to put the complete text, nothing, or the first or last X characters or Y
-              lines below <tag>c:document-properties</tag> when reading the text file.</para>
-            <para>Should we use XPointer for text instead?</para>
-            <para>Does it get to detailed anyway at this point?</para>
-            <para>Use cases for head and tail inclusion of potentially large text files are 
-            “reading the BoundingBox of ASCII-encoded EPS files” and “reading the most recent events in a 
-            Web server log file.” You’ll only want to extract up to 50 lines into the document properties document 
-            in order to pass it as an argument to <function>fn:matches</function> or whatever.</para>
-            <para>If we are to specify a number of lines, we probably need to also be able to supply
-              a line separator? Or should we just rely on Java system property 
-              <literal>line.separator</literal>?</para>
+          <title>Content Extracts in Proxy Documents</title>
+          <para>In order to further facilitate XPath-based access to non-XML documents, a user may
+            instruct the processor to create or update an XML representation of a document’s content
+            or parts thereof. The representation depends on the document type and may be further
+            influenced by an <glossterm>extraction option</glossterm> map that may be supplied to 
+            <tag>p:load</tag> or to steps that process non-XML documents.</para>
+          <para>Such a full or partial XML representation is called a <glossterm>content extract</glossterm>.
+            <termdef xml:id="dt-content-extract">A <firstterm>content extract</firstterm> is a
+                <tag>c:content-extract</tag> element that is a child of a
+                <tag>c:document-properties</tag> top-level element. It contains optional attributes
+            that correspond to extraction options. Below that element, it can contain any nodes.</termdef></para>
+          <note xml:id="note-content-extract-nodes">
+            <para>The nodes below <tag>c:content-extract</tag> can be a text node containing 
+            the <literal>xs:string</literal> representation of a text file or the 
+              <literal>xs:hexBinary</literal> representation of a binary file, or it can 
+            be an XML representation of a JSON file as returned by <function>fn:json-to-xml</function>.</para>
+            <para>The extract can be an abridged representation of the content, as controlled
+            by extraction options. The purpose of abridged content extracts is to allow, for example,
+            BoundingBox parsing of a potentially large ASCII-encoded EPS file, where it is only necessary to
+            read the first couple of lines, or analysis of only the most recent events in a large Web server
+            log file. If a content extract of a text file is included in the proxy document, XPath expressions
+            such as <code>matches(., 'regex')</code> just work in the context of a text document.</para>
           </note>
+          <note xml:id="ednote-extract-in-proxy" role="editorial">
+            <title>Editorial Note</title>
+            <para>(Just some preliminary notes in lieu of spec prose proper)</para>
+            <para>Extraction options should be passed in a <code>map(xs:string, xs:string)</code>,
+              for example <code>map{'as':'xs:string', 'update':'true', 'max-characters':'1k',
+                'from':'top'}</code>. This means that a step that creates or updates this extract
+              (for example, <tag>p:load</tag> or a custom text-processing step) should attempt to
+              create or update an existing <tag>c:content-extract</tag> element with an up-to-date
+              xs:string representation of the first up to 1000 characters of a text file that it
+              just loaded or processed.</para>
+            <para>It should raise a dynamic error if the representation specified in
+            the <tag class="attribute">as</tag> attribute or option map item cannot be complied
+            with. For example, <code>map('as':'Q{http://www.w3.org/2005/xpath-functions}map')</code>
+            requests a <function>fn:json-to-xml</function> output; but if this cannot be produced 
+            because the file is not of type <literal>application/json</literal>, then an error
+            will be raised.</para>
+            <para>When the <literal>update</literal> attribute or map item is
+                <literal>true</literal>, a step should attempt to update the extract according to
+              the other extraction parameters. The presence of an extraction option map may be used
+              to trigger the initial extraction of content at all. For existing <tag>c:content-extract</tag>
+            elements, updating only happens when the <tag class="attribute">update</tag> attribute 
+            is <literal>true</literal>.</para>
+            <para>There should be a list of extraction parameters that apply to all non-XML documents 
+              (such as <literal>as</literal>, <literal>byte-order</literal>, <literal>max-bytes</literal>,
+              <literal>from</literal>) and
+              others that apply only to text documents (such as <literal>max-lines</literal> and
+                <literal>max-characters</literal>, <literal>line-separator</literal>). All these 
+              parameters are optional when given in a map,
+            but may have default values. The actual values such as an automatically determined 
+            <tag class="attribute">as</tag> attribute should be added to the <tag>c:content-extract</tag>
+            document by the step that loads or processes the document.</para>
+            <para>Dependent on the answer to the question raised in <xref
+                linkend="proxy-document-representation-identity"/>, whether to have an explicit <tag
+                class="attribute">uuid</tag> attribute on <tag>c:document-properties</tag>, the
+                <tag>c:content-extract</tag> element should also have an <tag class="attribute"
+                >uuid</tag> attribute that corresponds to the document
+                <glossterm>representation</glossterm> that the extract was drawn from. This way,
+              users can determine whether the extract is current with respect to the
+                <glossterm>representation</glossterm>. If such an attribute is present, the
+              processor is only responsible for keeping the <tag class="attribute">uuid</tag>
+              attribute of <tag>c:document-properties</tag> up-to-date. It should be noted that the
+                <tag class="attribute">uuid</tag> attribute of <tag>c:content-extract</tag> is
+              subject to user manipulation.</para>
+          </note>
+          <para>The processor <rfc2119>must not</rfc2119> make any efforts to update the document
+          <glossterm>representation</glossterm> when the <glossterm>content extract</glossterm> is 
+          updated (which can be done by an XML-manipulating step).</para>
         </section>
       </section>
 
@@ -1184,9 +1237,8 @@ appears where a document to be used as the context node is
 expected.</error>
 </para>
 
-<para><impl>The result of evaluating an expression when the context
-node has a non-XML content type is
-<glossterm>implementation-defined</glossterm>.</impl>
+<para>When the context node has a non-XML content type, XPath expressions are evaluated
+  in the context of the corresponding <glossterm>proxy document</glossterm>.
 </para>
 
 <para>If there is no explicit connection and there is no default
