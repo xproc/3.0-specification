@@ -466,7 +466,7 @@ formats, caching them on disk, etc.</para>
             through attribute value templates.</para>
           <para>It should be noted that, while proxy documents do not exist for XML documents, XML
             documents may well have document properties. These can only be queried by the
-              <function>p:document-poperties</function>.
+              <function>p:document-poperties</function> function.
             </para>
           <para>There may be multiple proxy documents for a given document. This is because whenever
             a step processes a proxy document, a different (from a node-identity perspective) XML
@@ -477,7 +477,7 @@ formats, caching them on disk, etc.</para>
           </note>
         <note role="editorial" xml:id="ednote-base-uri-property-sync">
           <title>Editorial Note</title>
-          <para>Maybe we should stipulate that the processor make sure that <code>base-uri</code>
+          <para>Maybe we should stipulate that the processor must make sure that <code>base-uri</code>
             property corresponds to an XML document’s base URI?</para>          
         </note>
         <note role="editorial" xml:id="ednote-why-proxy-documents">
@@ -487,9 +487,9 @@ formats, caching them on disk, etc.</para>
               <function>p:document-poperties</function> function, there is a programming and
             debugging convenience argument that supports the proxy document approach. It will save
             the programmer <tag>p:variable</tag> declarations and the pesky overhead that comes with
-            using <tag>p:group</tag> and declaring a number of output ports for each
-              <tag>p:group</tag>. Therefore this approach is in line with the requirement of making 
-          XProc less verbose.</para>
+            the necessary <tag>p:group</tag> envelope and with potentially having to declare a
+            number of output ports for each <tag>p:group</tag>. Therefore this approach is in line
+            with the requirement of making XProc less verbose.</para>
         </note>
         <para>The XProc processor <rfc2119>must</rfc2119> make sure that the attributes of proxy
           documents always correspond to the underlying document properties.</para>
@@ -504,10 +504,9 @@ formats, caching them on disk, etc.</para>
         </note>
         <para>The XProc processor <rfc2119>must</rfc2119> make sure that proxy documents have a
             <code>handle</code> attribute by which the processor can find the document’s
-            <glossterm>representation</glossterm>. This is a consequence of the preceding
-          requirement and the requirement that non-XML documents always have a <code>handle</code>
-          document property.</para>
-        
+            <glossterm>representation</glossterm>. This is not a new requirement but a consequence
+          of the preceding requirement and the requirement that non-XML documents always have a
+            <code>handle</code> document property.</para>
         <para>The processor makes the <glossterm>representation</glossterm> available to a step that
           processes non-XML documents in an <glossterm>implementation-dependent</glossterm> way.
           However, a step that (also) expects non-XML documents on an input port will always receive
@@ -517,11 +516,15 @@ formats, caching them on disk, etc.</para>
           whether this document is a proxy document for a non-XML document (in contrast to a regular
             <tag>c:document-properties</tag> XML document) and that there is an underlying
             <glossterm>representation</glossterm> available.</para>
-        <para>When serializing a proxy document<remark> (which has to be done by other means than
-            p:store, or using a new, not-yet-introduced serialization option)</remark>, the
-          processor <rfc2119>must</rfc2119> write the <tag class="attribute">handle</tag> attribute
-          as a namespaced <tag class="attribute">c:handle</tag> attribute. This is to make sure that
-          when this document is read again, it will not be treated as a proxy document.</para>
+        <para>When serializing a proxy document, the processor <rfc2119>must</rfc2119> write the
+            <tag class="attribute">handle</tag> attribute as a namespaced <tag class="attribute"
+            >c:handle</tag> attribute. This is to make sure that when this document is read again,
+          it will not be treated as a proxy document.</para>
+        <note role="editorial" xml:id="ednote-">
+          <title>Editorial Note</title>
+          <para>Serialization of proxy documents has to be done by other means than
+              <tag>p:store</tag>, or using a new, not-yet-introduced serialization option.</para>
+        </note>
         <para>It is a <glossterm>dynamic error</glossterm> if a purported proxy document
             (a <tag>c:document-properties</tag> document with a <tag class="attribute"
             >content-type</tag> attribute that does not stand for an XML content type and a <tag
