@@ -352,6 +352,8 @@ no base URI.</para>
               processor to identify the <glossterm>representation</glossterm> of non-XML documents,
               including text documents. It <rfc2119>must not</rfc2119> be present for <link
                 linkend="xml-documents">XML documents</link>.</para>
+            <para>The XProc processor <rfc2119>must not</rfc2119> assign the same handle to
+              different representations.</para>
             <note xml:id="note-handle-property">
               <para>The purpose of exposing this document property is that users be able to determine
               whether two non-XML documents share the same representation; that is, whether they are
@@ -359,6 +361,13 @@ no base URI.</para>
               <para>The format of this property’s string value is
                   <glossterm>implementation-dependent</glossterm>. It can be a UUID, a URI, a
                 map constructor, etc.</para>
+            </note>
+            <note role="editorial" xml:id="ednote-representation-identity">
+              <para>The requirement that a handle has to be unique does not imply that the
+                underlying resource doesn’t change over time. Think of a handle that identifies a
+                streaming source. Should we make this explicit? Or do we in fact stipulate that the
+                representation will not change once a document has been loaded, thereby deferring
+                the discussion of streaming resources to another version of the spec?</para>
             </note>
           </listitem>
         </varlistentry>
@@ -455,13 +464,32 @@ formats, caching them on disk, etc.</para>
             evaluating step options. XProc extension functions such as
               <function>p:document-properties</function> are only available in these contexts
             through attribute value templates.</para>
+          <para>It should be noted that, while proxy documents do not exist for XML documents, XML
+            documents may well have document properties. These can only be queried by the
+              <function>p:document-poperties</function>.
+            </para>
           <para>There may be multiple proxy documents for a given document. This is because whenever
             a step processes a proxy document, a different (from a node-identity perspective) XML
             document may be returned on the respective output port. However, the association with
-            a single <glossterm>representation</glossterm> will be preserved by the XProc processor,
-            as specified below.</para>
+            a single <glossterm>representation</glossterm> will be preserved by the XProc processor.</para>
           <para>A proxy document has always a <tag class="attribute">handle</tag> and a <tag
               class="attribute">content-type</tag> attribute.</para>
+          </note>
+        <note role="editorial" xml:id="ednote-base-uri-property-sync">
+          <title>Editorial Note</title>
+          <para>Maybe we should stipulate that the processor make sure that <code>base-uri</code>
+            property corresponds to an XML document’s base URI?</para>          
+        </note>
+        <note role="editorial" xml:id="ednote-why-proxy-documents">
+          <title>Editorial Note</title>
+          <para>While there is a strong argument in favor of having a uniform interface to query
+            document properties for all kinds of documents, and this can only be the
+              <function>p:document-poperties</function> function, there is a programming and
+            debugging convenience argument that supports the proxy document approach. It will save
+            the programmer <tag>p:variable</tag> declarations and the pesky overhead that comes with
+            using <tag>p:group</tag> and declaring a number of output ports for each
+              <tag>p:group</tag>. Therefore this approach is in line with the requirement of making 
+          XProc less verbose.</para>
         </note>
         <para>The XProc processor <rfc2119>must</rfc2119> make sure that the attributes of proxy
           documents always correspond to the underlying document properties.</para>
@@ -476,9 +504,10 @@ formats, caching them on disk, etc.</para>
         </note>
         <para>The XProc processor <rfc2119>must</rfc2119> make sure that proxy documents have a
             <code>handle</code> attribute by which the processor can find the document’s
-            <glossterm>representation</glossterm>. This is a consequence of the immediately
-          preceding requirement and the requirement that non-XML documents always have a
-            <code>handle</code> document property.</para>
+            <glossterm>representation</glossterm>. This is a consequence of the preceding
+          requirement and the requirement that non-XML documents always have a <code>handle</code>
+          document property.</para>
+        
         <para>The processor makes the <glossterm>representation</glossterm> available to a step that
           processes non-XML documents in an <glossterm>implementation-dependent</glossterm> way.
           However, a step that (also) expects non-XML documents on an input port will always receive
