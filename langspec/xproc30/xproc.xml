@@ -451,7 +451,7 @@ formats, caching them on disk, etc.</para>
               <glossterm>document properties</glossterm>.</termdef> The XProc processor maintains
             <glossterm>implementation-dependent</glossterm> associations between a document’s
             <glossterm>representation</glossterm> and the document’s proxy documents. It exposes
-          these association to pipeline authors by means of the “<code>handle</code>” document
+          these associations to pipeline authors by means of the “<code>handle</code>” document
           property, where each unique (after whitespace normalization) <code>handle</code> string
           represents a distinct <glossterm>representation</glossterm>. Proxy documents do not exist
           for XML documents. They only exist for non-XML documents, including text documents.</para>
@@ -461,24 +461,27 @@ formats, caching them on disk, etc.</para>
             document node, XPath expressions in steps can be simplified if document properties don’t
             have to be calculated from invoking <function>p:document-properties</function>. In
             particular, proxy document attributes make document properties accessible when
-            evaluating step options. XProc extension functions such as
-              <function>p:document-properties</function> are only available in these contexts
-            through attribute value templates.</para>
-          <para>It should be noted that, while proxy documents do not exist for XML documents, XML
-            documents may well have document properties. These can only be queried by the
-              <function>p:document-poperties</function> function.
-            </para>
+            evaluating step options. In a step context, XProc extension functions such as
+              <function>p:document-properties</function> can only be made available indirectly, by
+            letting the XPath processor insert the function result as a string value into the XPath
+            expression. While <glossterm baseform="attribute value template">attribute value
+              templates</glossterm> will make this kind of option value construction easier, XProc
+            developers might find an attribute-based access of document properties even more
+            convenient.</para>
+          <para>It should be noted that even though proxy documents do not exist for XML documents,
+            XML documents may well have document properties. These can only be queried by the
+              <function>p:document-poperties</function> function.</para>
           <para>There may be multiple proxy documents for a given document. This is because whenever
             a step processes a proxy document, a different (from a node-identity perspective) XML
             document may be returned on the respective output port. However, the association with
-            a single <glossterm>representation</glossterm> will be preserved by the XProc processor.</para>
-          <para>A proxy document has always a <tag class="attribute">handle</tag> and a <tag
+            a single distinct <glossterm>representation</glossterm> will be preserved by the XProc processor.</para>
+          <para>A proxy document always has a <tag class="attribute">handle</tag> and a <tag
               class="attribute">content-type</tag> attribute.</para>
           </note>
         <note role="editorial" xml:id="ednote-base-uri-property-sync">
           <title>Editorial Note</title>
-          <para>Maybe we should stipulate that the processor must make sure that <code>base-uri</code>
-            property corresponds to an XML document’s base URI?</para>          
+          <para>Maybe we should stipulate that the processor must make sure that the <code>base-uri</code>
+            property corresponds to an XML document’s base URI?</para>
         </note>
         <note role="editorial" xml:id="ednote-why-proxy-documents">
           <title>Editorial Note</title>
@@ -499,7 +502,7 @@ formats, caching them on disk, etc.</para>
               <tag>c:document-properties</tag> document is forbidden (in favor of a (fictitious?)
               <function>p:set-document-properties</function> function or nothing at all) or whether
               <tag>p:add-attribute</tag> may in fact be used to manipulate document properties. In
-            any case, the <code>handle</code> properties may not be deleted or altered by a
+            any case, the <code>handle</code> property may not be deleted or altered by a
             user,</para>
         </note>
         <para>The XProc processor <rfc2119>must</rfc2119> make sure that proxy documents have a
@@ -507,10 +510,7 @@ formats, caching them on disk, etc.</para>
             <glossterm>representation</glossterm>. This is not a new requirement but a consequence
           of the preceding requirement and the requirement that non-XML documents always have a
             <code>handle</code> document property.</para>
-        <para>The processor makes the <glossterm>representation</glossterm> available to a step that
-          processes non-XML documents in an <glossterm>implementation-dependent</glossterm> way.
-          However, a step that (also) expects non-XML documents on an input port will always receive
-          proxy documents for non-XML documents on the respective port.</para>
+        
         <para>The presence of the <code>handle</code> attribute on a
             <tag>c:document-properties</tag> document is a sufficient criterion for determining
           whether this document is a proxy document for a non-XML document (in contrast to a regular
@@ -533,21 +533,32 @@ formats, caching them on disk, etc.</para>
             class="attribute">handle</tag> attribute.</para>
         <para>Applying <function>p:document-properties</function> to a proxy document will return
           the underlying document’s <code>content-type</code>, not an XML content type.</para>
+        
+        <para>The processor makes the <glossterm>representation</glossterm> available to a step that
+          processes non-XML documents in an <glossterm>implementation-dependent</glossterm> way.</para>
+        <para>With the exception of a special case that is described in the next paragraph, a step
+            <rfc2119>must not</rfc2119> make an attempt to process the proxy document as an XML
+          document if it does not accept the content-type of the non-XML document on the port that
+          it arrives on. The processor will raise an <error code="D1003">error</error> if this
+          happens.</para>
         <para>However, a proxy document <rfc2119>must</rfc2119> be processed as an XML document if
           and only if the processing step accepts nothing but XML documents on its primary input
-          port, as declared by its <tag class="attribute">content-types</tag> attribute. (Although
-            <tag>p:viewport</tag> does not declare <tag class="attribute">content-types</tag>, it is
-          a pure-XML-processing step, too, and it <rfc2119>must</rfc2119> process a proxy document
-          as an XML document.) If and only if the first document on the primary output port of such
-          an operation is a <tag>c:document-properties</tag> document with a non-XML
-            <code>content-type</code> property, the XProc processor <rfc2119>must</rfc2119>
-          re-attach the <tag class="attribute">handle</tag> attribute of the first document on the
-          primary input port to the resulting first document on the primary output port.</para>
+          port. If and only if the first document on the primary output port of such an operation is
+          a <tag>c:document-properties</tag> document with a non-XML <code>content-type</code>
+          property, the XProc processor <rfc2119>must</rfc2119> re-attach the <tag class="attribute"
+            >handle</tag> attribute of the first document on the primary input port to the resulting
+          first document on the primary output port. The purpose of this rule is to enable proxy
+          documents to be enriched with additional metadata below the top-level element by XML
+          processing steps.</para>
+        <para>Although the <tag>p:viewport</tag> element does not declare <tag class="attribute"
+            >content-types</tag>, it is a pure-XML-processing step in the sense of the preceding
+          paragraph, too, and it <rfc2119>must</rfc2119> process a proxy document as an XML
+          document.</para>
         <para>For documents on other output ports, or for documents on the primary output port that
           are not first in sequence, the processor <rfc2119>must</rfc2119> remove the <tag
             class="attribute">handle</tag> attribute and the corresponding document property. In
           addition, the processor <rfc2119>must</rfc2119> change the content type of these resulting
-          documents to an XML content type.</para>
+          documents to <code>application/xml</code>.</para>
         <note xml:id="ednote-proxy-document-xml-processing" role="editorial">
           <title>Editorial Note</title>
           <para>This first-document-on-primary-port restriction is in place in order to make
@@ -611,7 +622,7 @@ formats, caching them on disk, etc.</para>
             </listitem>
           </orderedlist>
         </note>
-        <para>A step may add further XML elements below a proxy document’a top-level element. For
+        <para>A step may add further XML elements below a proxy document’s top-level element. For
           example, a step that loads or analyzes an image may extract the image’s XMP metadata and
           insert it below <tag>c:document-properties</tag>:</para>
         <programlisting language="xml">&lt;c:document-properties xmlns:c="http://www.w3.org/ns/xproc-step" 
