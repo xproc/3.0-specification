@@ -1353,7 +1353,7 @@ result a document (or documents) specified by an IRI.</para>
   <p:output port="result" sequence="true"/>
   <p:option name="href" required="true" as="xs:anyURI"/>
   <p:option name="dtd-validate" select="'false'" as="xs:boolean"/>
-  <p:option name="override-content-type" as="xs:string"/>
+  <p:option name="document-properties" as="map(xs:string, xs:string)"/>
 </p:declare-step>
 
 <para>The value of the <option>href</option> option
@@ -1385,9 +1385,10 @@ the <tag>p:load</tag> step is equivalent to performing the following
 
 <para>Where the “<literal>{HREF}</literal>” value is the value of
 the <option>href</option> option made absolute and the
-“<literal>{OVERRIDE}</literal> value is the value of the
-<option>override-content-type</option> option. If no value is provided
-for the <option>override-content-type</option> option, then the
+“<literal>{OVERRIDE}</literal>” value is the value returned by 
+<literal>map:get($document-properties,'content-type')</literal>. If no value is provided
+for the <option>document-properties</option> option or the provided map does not contain 
+a key 'content-type', then the
 <tag class="attribute">override-content-type</tag> attribute is not
 present on the <tag>c:request</tag>.</para>
 
@@ -1398,7 +1399,7 @@ pipeline:</para>
 <programlisting language="xml">&lt;p:declare-step&gt;
   &lt;p:output port="result" sequence="false"/&gt;
   &lt;p:option name="href" required="true"/&gt;
-  &lt;p:option name="override-content-type"/&gt;
+  &lt;p:option name="document-properties"/&gt;
 
   &lt;p:http-request&gt;
     &lt;p:input port="source"&gt;
@@ -1415,8 +1416,8 @@ pipeline:</para>
   &lt;p:xml-parse dtd-validate="true"/&gt;
 
   &lt;p:choose&gt;
-    &lt;p:when test="p:value-availalle('override-content-type')"&gt;
-      &lt;p:cast-content-type content-type="{$override-content-type}"/&gt;
+    &lt;p:when test="p:value-available('document-properties') and map:contains($document-properties,'content-type')"&gt;
+      &lt;p:cast-content-type content-type="{map:get($document-properties,'content-type')}"/&gt;
     &lt;/p:when&gt;
     &lt;p:otherwise&gt;
       &lt;p:identity/&gt;
