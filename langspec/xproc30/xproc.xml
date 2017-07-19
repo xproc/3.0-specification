@@ -4404,11 +4404,14 @@ output of one of its children.</para>
 
 <e:rng-pattern name="Inline"/>
 
+<para>The <tag class="attribute">document-properties</tag> attribute can 
+  be used to set the <glossterm>document properties</glossterm> of the provided document. The document's 
+  content type is determined by the value of the "content-type" key in the provided map.
+  If no attribute <tag class="attribute">document-properties</tag> is provided or the provided map does not
+  contain a "content-type" key, the value "<literal>application/xml</literal>" is assumed.
+</para>
 <para>How the content of a <tag>p:inline</tag> element is interpreted
-depends on the <tag class="attribute">content-type</tag> and
-<tag class="attribute">encoding</tag> attributes. If no
-<tag class="attribute">content-type</tag> is provided, the value
-“<literal>application/xml</literal>” is assumed.
+depends on the document's content type and the <tag class="attribute">encoding</tag> attribute.
 </para>
 
 <!--
@@ -4481,13 +4484,13 @@ class="attribute">encoding</tag> attribute.</error>
 </para>
 
 <para>The interpretation of the (possibily decoded) content
-depends on the <tag class="attribute">content-type</tag> attribute.
+depends on the document's content type.
 </para>
 
 <section xml:id="inline-non-xml">
 <title>Inline non-XML content</title>
 
-<para>If the <tag class="attribute">content-type</tag> is not
+<para>If the document's content type is not
 an <glossterm>XML media type</glossterm>, then the content is
 non-XML.</para>
 
@@ -4498,8 +4501,9 @@ non-XML.</para>
 <section xml:id="inline-xml-content">
 <title>Inline XML content</title>
 
-<para>If the <tag class="attribute">content-type</tag> is not
-specified or specifies an <glossterm>XML media type</glossterm>, then
+<para>If the <tag class="attribute">document-properties</tag> is not
+specified or the map does not contain a key "content-type" or specifies 
+an <glossterm>XML media type</glossterm>, then
 the content is XML. <error code="S0024">It is a <glossterm>static
 error</glossterm> if the content of the <tag>p:inline</tag> element
 does not consist of exactly one element, optionally preceded and/or
@@ -4643,8 +4647,8 @@ the base URI of the <tag>p:document</tag> element.</para>
 <para>The semantics of <tag>p:document</tag> are the same as a the
 semantics of <tag>p:load</tag> where the <option>href</option> option
 comes from the <tag class="attribute">href</tag> attribute, the
-<option>override-content-type</option> option comes from the
-<tag class="attribute">override-content-type</tag> attribute, and the
+<option>document-properties</option> option comes from the
+<tag class="attribute">document-properties</tag> attribute, and the
 <option>dtd-validate</option> option is always <literal>false</literal>.
 </para>
 

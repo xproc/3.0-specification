@@ -17,6 +17,9 @@
   <define name="ContentTypes" sa:model="ContentTypes">
     <text/>
   </define>
+  <define name="StringMap" sa:model="map(xs:string, xs:string)">
+    <text />
+  </define>
   <define name="name.ncname.attr">
     <attribute name="name">
       <data type="NCName"/>
@@ -63,6 +66,11 @@
   <define name="psvi-required.attr">
     <attribute name="psvi-required">
       <data type="boolean"/>
+    </attribute>
+  </define>
+  <define name="document-properties.attr">
+    <attribute name="document-properties">
+      <ref name="StringMap" />
     </attribute>
   </define>
   <define name="content-type.attr">
@@ -450,9 +458,7 @@
     <element name="document">
       <ref name="href.attr"/>
       <optional>
-        <attribute name="override-content-type">
-          <ref name="ContentType"/>
-        </attribute>
+        <ref name="document-properties.attr"/>
       </optional>
       <ref name="common.attributes"/>
       <optional>
@@ -476,7 +482,7 @@
         </attribute>
       </optional>
       <optional>
-        <ref name="content-type.attr"/>
+        <ref name="document-properties.attr"/>
       </optional>
       <optional>
         <attribute name="encoding"/>
@@ -1294,7 +1300,7 @@
       </optional>
       <optional>
         <attribute name="override-content-type">
-          <ref name="ContentType"/>
+         <ref name="ContentType"/>
         </attribute>
       </optional>
       <group>
