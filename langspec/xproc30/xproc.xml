@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <?xml-model href="../../schema/dbspec.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
 <specification xmlns="http://docbook.org/ns/docbook"
                xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -354,20 +353,28 @@ no base URI.</para>
                 linkend="xml-documents">XML documents</link>.</para>
             <para>The XProc processor <rfc2119>must not</rfc2119> assign the same handle to
               different representations.</para>
+            <para>The XProc processor <rfc2119>must</rfc2119> make sure that the <code>handle</code>
+              property cannot be manipulated by users.</para>
             <note xml:id="note-handle-property">
-              <para>The purpose of exposing this document property is that users be able to determine
-              whether two non-XML documents share the same representation; that is, whether they are
-              identical, modulo possible differences in other document properties.</para>
+              <para>The purpose of exposing this document property is that users be able to
+                determine whether two non-XML documents share the same representation; that is,
+                whether they are identical, modulo possible differences in other document
+                properties. For “regular” documents, this justifies a prima facie assumption that
+                they will yield the same binary representation (moduly byte order considerations)
+                when serialized to disk. This assumption is not justified if streaming sources such
+                as <filename>/dev/urandom</filename> can serve as a document.</para>
               <para>The format of this property’s string value is
                   <glossterm>implementation-dependent</glossterm>. It can be a UUID, a URI, a
                 map constructor, etc.</para>
             </note>
             <note role="editorial" xml:id="ednote-representation-identity">
               <para>The requirement that a handle has to be unique does not imply that the
-                underlying resource doesn’t change over time. Think of a handle that identifies a
-                streaming source. Should we make this explicit? Or do we in fact stipulate that the
-                representation will not change once a document has been loaded, thereby deferring
-                the discussion of streaming resources to another version of the spec?</para>
+                underlying resource doesn’t change over time or that each <tag>p:store</tag>
+                operation of the same document with the same parameters must yield a byte-identical
+                file on disk. Think of a handle that identifies a streaming source. Should we make
+                this explicit? Or do we in fact stipulate that the representation will not change
+                once a document has been loaded, thereby deferring the discussion of streaming
+                resources to another version of the spec?</para>
             </note>
           </listitem>
         </varlistentry>
@@ -474,7 +481,8 @@ formats, caching them on disk, etc.</para>
           <para>There may be multiple proxy documents for a given document. This is because whenever
             a step processes a proxy document, a different (from a node-identity perspective) XML
             document may be returned on the respective output port. However, the association with
-            a single distinct <glossterm>representation</glossterm> will be preserved by the XProc processor.</para>
+            a single distinct <glossterm>representation</glossterm> will be preserved or established
+            by the XProc processor.</para>
           <para>A proxy document always has a <tag class="attribute">handle</tag> and a <tag
               class="attribute">content-type</tag> attribute.</para>
           </note>
@@ -492,7 +500,12 @@ formats, caching them on disk, etc.</para>
             the programmer <tag>p:variable</tag> declarations and the pesky overhead that comes with
             the necessary <tag>p:group</tag> envelope and with potentially having to declare a
             number of output ports for each <tag>p:group</tag>. Therefore this approach is in line
-            with the requirement of making XProc less verbose.</para>
+            with the requirement of making XProc less verbose. One can argue that the asymmetric
+            convenience of a proxy document for non-XML documents is an attempt to compensate for
+            the asymmetric inconvenience of accessing non-XML document content by XPath.</para>
+          <para>We have briefly contemplated making the document properties also available in
+          XML documents via namespaced attributes to the top-level element. We dropped this 
+          idea though, primarily because of issues regarding validation.</para>
         </note>
         <para>The XProc processor <rfc2119>must</rfc2119> make sure that the attributes of proxy
           documents always correspond to the underlying document properties.</para>
@@ -527,10 +540,10 @@ formats, caching them on disk, etc.</para>
         </note>
         <para>It is a <glossterm>dynamic error</glossterm> if a purported proxy document
             (a <tag>c:document-properties</tag> document with a <tag class="attribute"
-            >content-type</tag> attribute that does not stand for an XML content type and a <tag
-            class="attribute">handle</tag> attribute) arrives on an input port and the processor is
-          unable to locate a <glossterm>representation</glossterm> for the value given in the <tag
-            class="attribute">handle</tag> attribute.</para>
+            >content-type</tag> attribute that does not stand for an XML content type, and with
+            a <tag class="attribute">handle</tag> attribute) arrives on an input port and the
+          processor is unable to locate a <glossterm>representation</glossterm> for the value given
+          in the <tag class="attribute">handle</tag> attribute.</para>
         <para>Applying <function>p:document-properties</function> to a proxy document will return
           the underlying document’s <code>content-type</code>, not an XML content type.</para>
         
@@ -539,17 +552,19 @@ formats, caching them on disk, etc.</para>
         <para>With the exception of a special case that is described in the next paragraph, a step
             <rfc2119>must not</rfc2119> make an attempt to process the proxy document as an XML
           document if it does not accept the content-type of the non-XML document on the port that
-          it arrives on. The processor will raise an <error code="D1003">error</error> if this
-          happens.</para>
+          the document arrives on. The processor will raise a 
+          <error code="D1003"><glossterm>dynamic error</glossterm></error> if this happens.</para>
         <para>However, a proxy document <rfc2119>must</rfc2119> be processed as an XML document if
           and only if the processing step accepts nothing but XML documents on its primary input
           port. If and only if the first document on the primary output port of such an operation is
-          a <tag>c:document-properties</tag> document with a non-XML <code>content-type</code>
-          property, the XProc processor <rfc2119>must</rfc2119> re-attach the <tag class="attribute"
-            >handle</tag> attribute of the first document on the primary input port to the resulting
-          first document on the primary output port. The purpose of this rule is to enable proxy
-          documents to be enriched with additional metadata below the top-level element by XML
-          processing steps.</para>
+          a <tag>c:document-properties</tag> document with a non-XML <code>content-type</code> and a
+            <code>handle</code> property, the XProc processor <rfc2119>must</rfc2119> re-attach the
+            <tag class="attribute">handle</tag> attribute of the first document on the primary input
+          port to the resulting first document on the primary output port.</para>
+        <note xml:id="note-xml-processing-of-proxy-documents">
+          <para>The purpose of this rule is to enable proxy documents to be enriched with additional
+            metadata below the top-level element by XML processing steps.</para>
+        </note>
         <para>Although the <tag>p:viewport</tag> element does not declare <tag class="attribute"
             >content-types</tag>, it is a pure-XML-processing step in the sense of the preceding
           paragraph, too, and it <rfc2119>must</rfc2119> process a proxy document as an XML
@@ -648,8 +663,8 @@ formats, caching them on disk, etc.</para>
               extract</glossterm>. <termdef xml:id="dt-content-extract">A <firstterm>content
                 extract</firstterm> is a <tag>c:content-extract</tag> element that is a child of a
                 <tag>c:document-properties</tag> top-level element. It contains optional attributes
-              that correspond to extraction options. Below that element, it can contain any
-              nodes.</termdef></para>
+              that correspond to extraction options. Below that element, it 
+              <rfc2119>may</rfc2119> contain any nodes.</termdef></para>
           <note xml:id="note-content-extract-nodes">
             <para>The nodes below <tag>c:content-extract</tag> can be a text node containing the
                 <literal>xs:string</literal> representation of a text file or the
