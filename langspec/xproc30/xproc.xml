@@ -1396,9 +1396,16 @@ readable port then the context node is undefined.</para>
     <section xml:id="xpath-extension-functions">
       <title>XPath Extension Functions</title>
 
-<para>The XProc processor <rfc2119>must</rfc2119> support the
-additional functions described in this section in XPath expressions
-evaluated by the processor.</para>
+      <para>The XProc processor <rfc2119>must</rfc2119> support the 
+        additional functions described in this section in XPath expressions 
+        evaluated by the processor. These functions <rfc2119>must not</rfc2119> be supported 
+        in XPath expressions evaluated by a step.</para>
+
+      <note role="editorial">
+        <title>Editorial Note</title>
+        <para>Explain the reasons for this restriction: Interoperability of processors, functions are mostly
+        pointless in step context, step may defer XPath evalution to third party software (or web services).</para>
+      </note>
 
       <section xml:id="f.system-property">
         <title>System Properties</title>
