@@ -242,8 +242,8 @@ task steps30_xi1(dependsOn: ["setupDocBook", "legacy_make"], type: XMLCalabashTa
   outputs.file "build/,steps30.xml"
   input("source", "langspec/xproc30-steps/steps.xml")
   output("result", "build/,steps30.xml")
-  param("schema", "")
-  param("schematron", "")
+  option("schema", "schema/dbspec.rng")
+  option("schematron", "schema/docbook.sch")
   pipeline "style/validate.xpl"
 }
 
