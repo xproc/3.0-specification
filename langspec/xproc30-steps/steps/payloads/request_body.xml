@@ -1,0 +1,119 @@
+<section xmlns="http://docbook.org/ns/docbook" xmlns:cs="http://www.w3.org/XML/XProc/2006/04/components#" xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax" xmlns:p="http://www.w3.org/ns/xproc" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="c.request_body">
+<title>Request Entity body conversion</title>
+
+<para>The <code>c:multipart</code> element specifies a multi-part
+body, per <biblioref linkend="rfc1521"/>, either for inclusion in a
+request or as received in a response.</para>
+
+<e:rng-pattern name="VocabMultipart" xml:id="cv.multipart"/>
+
+<para>In the context of a request, the media type of the
+<tag>c:multipart</tag> <rfc2119>must</rfc2119> be a multipart media
+type (i.e. have a main type of 'multipart'). If the
+<code>content-type</code> attribute is not specified, a value of
+“<literal>multipart/mixed</literal>” will be assumed. (<impl>Whether
+or not, and to what extent, “<literal>multipart/byte-ranges</literal>”
+responses are supported is
+<glossterm>implementation-defined</glossterm>.)</impl>
+</para>
+
+<para>The <code>boundary</code> attribute is required and is used to
+provide a multipart boundary marker. The implementation must use this
+boundary marker and must prefix the value with the string
+“<literal>--</literal>” when formulating the multipart message. <error code="C0002">It is a <glossterm>dynamic error</glossterm> if the value
+starts with the string “<literal>--</literal>”.</error></para>
+
+<para>If the boundary is also specified as a parameter in the
+<option>content-type</option> option, then the parameter value specified
+and the <option>boundary</option> value specified <rfc2119>must</rfc2119>
+be the same. If the boundary is specified in both the <option>boundary</option>
+option and the <option>content-type</option> option then the two values
+<rfc2119>must</rfc2119> be the same.</para>
+
+<para>The <tag>c:body</tag> element holds the body or body part of the message.  Each of the attributes holds controls some aspect of the encoding the request body or decoding the body element's content when the request is formulated.  These are specified as follows:</para>
+
+<e:rng-pattern name="VocabBody" xml:id="cv.body"/>
+
+<para>The <code>content-type</code> attribute specifies the media type
+of the body or body part, that is, the value of its
+<code>Content-Type</code> header. If the media type is not an XML type
+or text, the content must already be base64-encoded.</para>
+
+<para>The <code>encoding</code> attribute controls the decoding of the
+element content for formulating the body. A value of
+<literal>base64</literal> indicates the element's content is a base64
+encoded string whose byte stream should be sent as the message body.
+<impl>An implementation may support encodings other than
+<literal>base64</literal> but these encodings and their names are
+<glossterm>implementation-defined</glossterm>.</impl>
+<error code="C0052">It is a <glossterm>dynamic
+error</glossterm> if the encoding specified is not supported by the
+implementation.</error></para>
+
+<note xml:id="note-single-set-ser">
+<para>The <tag>p:http-request</tag> step provides only a single set of
+serialization options for XML media types. There's no direct support
+for sending a multipart message with two XML parts encoded
+differently.</para>
+</note>
+
+<para>For each body or body part, the <code>id</code> attribute
+specifies the value of the <code>Content-ID</code> header;
+the <code>description</code> attribute specifies the
+value of the <code>Content-Description</code> header;
+and the <code>disposition</code> attribute specifies the value
+of the <code>Content-Disposition</code> header.
+</para>
+
+<para>If an entity body is to be sent as part of a request (e.g. a
+<code>POST</code>), either a <tag>c:body</tag> element, specifying the
+request entity body, or a <tag>c:multipart</tag> element, specifying
+multiple entity body parts, may be used. When <tag>c:multipart</tag>
+is used it may contain multiple <tag>c:body</tag> children. A
+<tag>c:body</tag> specifies the construction of a body or body part as
+follows:</para>
+
+<para>If the <code>content-type</code> attribute does not specify an
+XML media type, or the <code>encoding</code> attribute is
+“<literal>base64</literal>”, then <error code="C0028">it is a
+<glossterm>dynamic error</glossterm> if the content of the
+<tag>c:body</tag> element does not consist entirely of
+characters</error>, and the entity body or body part will consist of
+exactly those characters.</para>
+
+<para>Otherwise (the <code>content-type</code> attribute
+<emphasis>does</emphasis> specify an XML media type and the
+<code>encoding</code> attribute is <emphasis>not</emphasis> 'base64'),
+<error code="C0022">it is a <glossterm>dynamic error</glossterm> if
+the content of the <tag>c:body</tag> element does not consist of
+exactly one element, optionally preceded and/or followed by any number
+of processing instructions, comments or whitespace characters</error>,
+and the entity body or body part will consist of the serialization of
+a document node containing that content. The serialization of that
+document is controlled by the serialization options on the
+<code>p:http-request</code> step itself.</para>
+
+<para>For example, the following input to a
+<code>p:http-request</code> step will POST a small XML
+document:</para>
+
+<programlisting language="xml">&lt;c:request method="POST" href="http://example.com/someservice"&gt;
+&lt;c:body xmlns:c="http://www.w3.org/ns/xproc-step" content-type="application/xml"&gt;
+&lt;doc&gt;
+&lt;title&gt;My document&lt;/title&gt;
+&lt;/doc&gt;
+&lt;/c:body&gt;
+&lt;/c:request&gt;
+</programlisting>
+  <para>The corresponding request should look something like this:</para>
+
+  <programlisting language="xml">POST http://example.com/someservice HTTP/1.1
+Host: example.com
+Content-Type: application/xml; charset="utf-8"
+
+&lt;?xml version='1.0'?&gt;
+&lt;doc&gt;
+&lt;title&gt;My document&lt;/title&gt;
+&lt;/doc&gt;
+</programlisting>
+</section>

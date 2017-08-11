@@ -1,0 +1,63 @@
+<section xmlns="http://docbook.org/ns/docbook" xmlns:cs="http://www.w3.org/XML/XProc/2006/04/components#" xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax" xmlns:p="http://www.w3.org/ns/xproc" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="c.error">
+<title>p:error</title>
+
+<para>The <code>p:error</code> step generates a <glossterm role="unwrapped">dynamic error</glossterm> using the input provided
+to the step.</para>
+
+<p:declare-step type="p:error">
+  <p:input port="source" primary="false"/>
+  <p:output port="result" sequence="true"/>
+  <p:option name="code" required="true" as="xs:QName"/>
+  <p:option name="code-prefix" as="xs:NCName"/>
+  <p:option name="code-namespace" as="xs:anyURI"/>
+</p:declare-step>
+
+<para>The value of the <option>code</option> option
+<rfc2119>must</rfc2119> be a <type>QName</type>.
+If the lexical value does not contain a colon, then the <tag class="attribute">code-namespace</tag> may be used to specify the
+namespace of the code. In that case, the <tag class="attribute">code-prefix</tag> may be specified to suggest a
+prefix for the code. <error code="D0034">It is a
+<glossterm>dynamic error</glossterm> to specify a new namespace or
+prefix if the lexical value of the specified name contains a
+colon.</error></para>
+
+<para>This step uses the document provided on its input as the content
+of the error raised. An instance of the
+<tag>c:errors</tag> element will be produced on the error output port, as is
+always the case for <glossterm baseform="dynamic error" role="unwrapped">dynamic errors</glossterm>.
+The error generated can be caught by a <tag>p:try</tag> just like any
+other dynamic error.</para>
+
+<para>For authoring convenience, the <tag>p:error</tag> step is
+declared with a single, primary output port. With respect to
+<glossterm baseform="connection">connections</glossterm>, this port behaves like
+any other output port even though nothing can ever
+appear on it since the step always fails.</para>
+
+<para>For example, given the following invocation:</para>
+<programlisting language="xml">&lt;p:error xmlns:my="http://www.example.org/error"
+         name="bad-document" code="my:unk12"&gt;
+   &lt;p:input port="source"&gt;
+     &lt;p:inline&gt;
+       &lt;message&gt;The document element is unknown.&lt;/message&gt;
+     &lt;/p:inline&gt;
+   &lt;/p:input&gt;
+&lt;/p:error&gt;</programlisting>
+
+<para>The error vocabulary element (and document) generated on the
+error output port would be:</para>
+<programlisting language="xml">&lt;c:errors xmlns:c="http://www.w3.org/ns/xproc-step"
+          xmlns:p="http://www.w3.org/ns/xproc"
+          xmlns:my="http://www.example.org/error"&gt;
+ &lt;c:error name="bad-document" type="p:error"
+          code="my:unk12"&gt;&lt;message&gt;The document element is unknown.&lt;/message&gt;
+&lt;/c:error&gt;
+&lt;/c:errors&gt;</programlisting>
+
+<para>The <tag class="attribute">href</tag>,
+<tag class="attribute">line</tag> and <tag class="attribute">column</tag>,
+or <tag class="attribute">offset</tag>, might also be present on the
+<tag>c:error</tag> to identify the location of the <tag>p:error</tag>
+element in the pipeline.</para>
+
+</section>

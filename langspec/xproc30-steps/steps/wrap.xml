@@ -1,0 +1,65 @@
+<section xmlns="http://docbook.org/ns/docbook" xmlns:cs="http://www.w3.org/XML/XProc/2006/04/components#" xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax" xmlns:p="http://www.w3.org/ns/xproc" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="c.wrap">
+<title>p:wrap</title>
+
+<para>The <tag>p:wrap</tag> step wraps matching nodes in the
+<port>source</port> document with a new parent element.</para>
+
+<p:declare-step type="p:wrap">
+   <p:input port="source" content-types="application/xml text/xml */*+xml"/>
+   <p:output port="result"/>
+   <p:option name="wrapper" required="true" as="xs:QName"/>
+   <p:option name="wrapper-prefix" as="xs:NCName"/>
+   <p:option name="wrapper-namespace" as="xs:anyURI"/>
+   <p:option name="match" required="true" as="xs:string" e:type="XSLTMatchPattern"/>
+   <p:option name="group-adjacent" as="xs:string" e:type="XPathExpression"/>
+</p:declare-step>
+
+<para>The value of the <option>wrapper</option> option
+<rfc2119>must</rfc2119> be a <type>QName</type>. If the lexical value
+does not contain a colon, then the <tag class="attribute">wrapper-namespace</tag>
+may be used to specify the namespace of the wrapper. In that case, the
+<tag class="attribute">wrapper-prefix</tag> may be specified to suggest a
+prefix for the wrapper element.
+<error code="D0034">It is a <glossterm>dynamic error</glossterm>
+to specify a new namespace or prefix if the lexical value of the specified
+name contains a colon.</error></para>
+
+<para>The value of the <option>match</option> option
+<rfc2119>must</rfc2119> be an XSLTMatchPattern. <error code="C0023">It
+is a <glossterm>dynamic error</glossterm> if the pattern matches
+anything other than document, element, text, processing instruction, and comment
+nodes.</error>
+</para>
+
+<para>The value of the <option>group-adjacent</option> option
+<rfc2119>must</rfc2119> be an XPathExpression.</para>
+
+<para>If the node matched is the document node (<code>match="/"</code>),
+the result is a new document where the document element is a new
+element node whose QName is the value specified in the
+<option>wrapper</option> option. That new element contains copies of
+all of the children of the original document node.</para>
+
+<para>When the match pattern does not match the document node,
+every node that matches the specified <option>match</option>
+pattern is replaced with a new element node whose QName is the value
+specified in the <option>wrapper</option> option.
+The content of that new element is a copy of the original,
+matching node. The <tag>p:wrap</tag> step performs a "deep" wrapping, the children
+of the matching node and their descendants are processed and wrappers
+are added to all matching nodes.
+</para>
+
+<para>The <option>group-adjacent</option> option can be used to group
+adjacent matching nodes in a single wrapper element. The specified
+XPath expression is evaluated for each matching node with that node
+as the XPath context node. Whenever two or more adjacent matching nodes
+have the same “group adjacent” value, they are wrapped together in
+a single wrapper element.</para>
+
+<para>Two matching nodes are considered adjacent if and only if they
+are siblings and either there are no nodes between them or all
+intervening, non-matching nodes are whitespace text, comment, or processing
+instruction nodes.</para>
+
+</section>

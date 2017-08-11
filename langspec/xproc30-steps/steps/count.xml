@@ -1,0 +1,23 @@
+<section xmlns="http://docbook.org/ns/docbook" xmlns:cs="http://www.w3.org/XML/XProc/2006/04/components#" xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax" xmlns:p="http://www.w3.org/ns/xproc" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="c.count">
+<title>p:count</title>
+
+<para>The <code>p:count</code> step counts the number of documents in
+the <code>source</code> input sequence and returns a single document
+on <code>result</code> containing that number. The generated document
+contains a single <tag>c:result</tag> element whose contents is the
+string representation of the number of documents in the
+sequence.</para>
+
+<p:declare-step type="p:count">
+   <p:input port="source" content-types="*/*" sequence="true"/>
+   <p:output port="result"/>
+   <p:option name="limit" select="0" as="xs:integer"/>
+</p:declare-step>
+
+<para>If the <tag class="attribute">limit</tag> option is specified
+and is greater than zero, the <tag>p:count</tag> step will count at most
+that many documents. This provides a convenient mechanism to discover,
+for example, if a sequence consists of more than 1 document, without
+requiring every single document to be buffered before processing can
+continue.</para>
+</section>

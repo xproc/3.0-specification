@@ -1,0 +1,63 @@
+<section xmlns="http://docbook.org/ns/docbook" xmlns:cs="http://www.w3.org/XML/XProc/2006/04/components#" xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax" xmlns:p="http://www.w3.org/ns/xproc" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="c.hash">
+<title>p:hash</title>
+
+<para>The <tag>p:hash</tag> step generates a hash, or digital “fingerprint”,
+for some value and injects it into the <port>source</port> document.</para>
+
+<p:declare-step type="p:hash">
+  <p:input port="source" primary="true"/>
+  <p:output port="result"/>
+  <p:option name="parameters" as="map(xs:QName,item())"/>
+  <p:option name="value" required="true" as="xs:string"/>
+  <p:option name="algorithm" required="true" as="xs:QName"/>
+  <p:option name="match" required="true" as="xs:string" e:type="XSLTMatchPattern"/>
+  <p:option name="version" as="xs:string"/>
+</p:declare-step>
+
+<para>The value of the <option>algorithm</option> option must be a QName.
+If it does not have a prefix, then it must be one of the following values:
+“crc”, “md”, or “sha”.</para>
+
+<para>If a <tag class="attribute">version</tag> is not specified, the
+default version is algorithm-defined. For “<literal>crc</literal>” it
+is 32, for “<literal>md</literal>” it is 5, for “<literal>sha</literal>”
+it is 1.</para>
+
+<para>A hash is constructed from the string specified in the
+<option>value</option> option using the specified algorithm and version.
+Implementations <rfc2119>must</rfc2119> support
+<biblioref linkend="bib.crc"/>,
+<biblioref linkend="rfc1321"/>, and <biblioref linkend="bib.sha"/>
+hashes. <impl>It is
+<glossterm>implementation-defined</glossterm> what other algorithms are
+supported.</impl>
+The resulting hash <rfc2119>should</rfc2119> be returned as a string of
+hexadecimal characters.
+</para>
+
+<para>The value of the <option>match</option> option must be an
+XSLTMatchPattern.</para>
+
+<para>The hash of the specified value is computed using the algorithm and
+parameters specified. <error code="C0036">It is a
+<glossterm>dynamic error</glossterm> if the requested hash algorithm is not
+one that the processor understands or if the value or parameters are
+not appropriate for that algorithm.</error></para>
+
+<para>The matched nodes are specified with the match pattern in the
+<option>match</option> option. For each matching node, the string
+value of the computed hash is used in the output (if more than one node
+matches, the <emphasis>same</emphasis> hash value is used in each match).
+Nodes that do not
+match are copied without change.</para>
+
+<para>If the expression given in the <option>match</option> option
+matches an <emphasis>attribute</emphasis>, the hash is used as the new
+value of the attribute in the output.
+If the attribute is named “<tag class="attribute">xml:base</tag>”, the base URI
+of the element <rfc2119>must</rfc2119> also be amended accordingly.</para>
+
+<para>If the expression matches any
+other kind of node, the entire node (and <emphasis>not</emphasis> just
+its contents) is replaced by the hash.</para>
+</section>
