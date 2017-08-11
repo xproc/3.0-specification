@@ -1,0 +1,39 @@
+<section xmlns="http://docbook.org/ns/docbook" xmlns:cs="http://www.w3.org/XML/XProc/2006/04/components#" xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax" xmlns:p="http://www.w3.org/ns/xproc" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="c.string-replace">
+<title>p:string-replace</title>
+
+<para>The <tag>p:string-replace</tag> step matches nodes in the
+document provided on the <port>source</port> port and replaces them
+with the string result of evaluating an XPath expression.</para>
+
+<p:declare-step type="p:string-replace">
+   <p:input port="source" content-types="application/xml text/xml */*+xml"/>
+   <p:output port="result"/>
+   <p:option name="match" required="true" as="xs:string" e:type="XSLTMatchPattern"/>
+   <p:option name="replace" required="true" as="xs:string" e:type="XPathExpression"/>
+</p:declare-step>
+
+<para>The value of the <option>match</option> option <rfc2119>must</rfc2119> be an
+XSLTMatchPattern.</para>
+
+<para>The value of the <option>replace</option> option <rfc2119>must</rfc2119> be an
+XPathExpression.</para>
+
+<para>The matched nodes are specified with the match pattern in the
+<option>match</option> option.
+For each matching node, the XPath
+expression provided by the <option>replace</option> option is
+evaluated with the matching node as the XPath context node.
+The string value of the result is used in the output.
+Nodes that do not match are copied without change.</para>
+
+<para>If the expression given in the <option>match</option> option
+matches an <emphasis>attribute</emphasis>, the string value of the
+<option>replace</option>
+expression is used as the new value of the attribute in the output.
+If the attribute is named “<tag class="attribute">xml:base</tag>”, the base URI
+of the element <rfc2119>must</rfc2119> also be amended accordingly.</para>
+
+<para>If the expression matches any other kind of node, the entire
+node (and <emphasis>not</emphasis> just its contents) is replaced by
+the string value of the <option>replace</option> expression.</para>
+</section>

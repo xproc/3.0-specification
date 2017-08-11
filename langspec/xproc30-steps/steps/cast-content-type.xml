@@ -1,0 +1,73 @@
+<section xmlns="http://docbook.org/ns/docbook" xmlns:cs="http://www.w3.org/XML/XProc/2006/04/components#" xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax" xmlns:p="http://www.w3.org/ns/xproc" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="c.cast-content-type">
+<title>p:cast-content-type</title>
+
+<para>The <tag>p:cast-content-type</tag> step changes the media type
+of its input.</para>
+
+<p:declare-step type="p:cast-content-type">
+   <p:input port="source" content-types="*/*"/>
+   <p:output port="result"/>
+   <p:option name="content-type" as="xs:string"/>
+</p:declare-step>
+
+<para>The input document is transformed from one media type to another.
+<error code="C1002">It is a <glossterm>dynamic
+error</glossterm> if the supplied <option>content-type</option> is not
+a valid media type of the form
+“<literal><replaceable>type</replaceable>/<replaceable>subtype</replaceable>+<replaceable>ext</replaceable></literal>”.</error></para>
+
+<itemizedlist>
+<listitem>
+<para>Casting from one XML media type to another simply changes the
+“<literal>content-type</literal>” <glossterm baseform="document properties">document
+property</glossterm>.
+</para>
+</listitem>
+<listitem xml:id="c.data">
+<para>Casting from a non-XML media type to an XML media type produces an
+XML document with a <tag>c:data</tag> document element. The original
+media type will be preserved in the
+<tag class="attribute">content-type</tag> attribute on the
+<tag>c:data</tag> element.</para>
+
+<e:rng-pattern name="VocabData"/>
+
+<para>The content of the <tag>c:data</tag> element is the base64 encoded
+representation of the non-XML content.</para>
+</listitem>
+<listitem>
+<para>Casting from an XML media type to a non-XML media type
+<rfc2119>must</rfc2119> support the case where the input document is
+a <tag>c:data</tag> document. The resulting document will
+have the specified media type and a <glossterm>representation</glossterm> that
+is the content of the <tag>c:data</tag> element after decoding the base64
+encoded content.</para>
+<para><error code="C1004">It is a <glossterm>dynamic
+error</glossterm> if the <tag>c:data</tag> contains content is not
+a valid base64 string.</error></para>
+<para><error code="C1005">It is a <glossterm>dynamic
+error</glossterm> if the <tag>c:data</tag> element does not have
+a <tag class="attribute">content-type</tag> attribute.</error></para>
+<para><error code="C1006">It is a <glossterm>dynamic
+error</glossterm> if the <option>content-type</option> is supplied and is
+not the same as the <tag class="attribute">content-type</tag> specified on
+the <tag>c:data</tag> element.</error>
+</para>
+<para><impl>Casting from an XML media type to a non-XML media type when
+the input document is not a <tag>c:data</tag> document is
+<glossterm>implementation-defined</glossterm>.</impl></para>
+</listitem>
+<listitem>
+<para><impl>What happens when one non-XML media type is cast to another
+non-XML media type is <glossterm>implementation-defined</glossterm>.</impl>
+<error code="C1003">It is a <glossterm>dynamic
+error</glossterm> if the <tag>p:cast-content-type</tag> step
+cannot perform the requested cast.</error></para>
+</listitem>
+</itemizedlist>
+
+<para><error code="C1007">In all cases except when the input document
+is a <tag>c:data</tag> element, it is a <glossterm>dynamic
+error</glossterm> if the <option>content-type</option> is not supplied.</error>
+</para>
+</section>

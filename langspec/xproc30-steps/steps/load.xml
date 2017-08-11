@@ -1,0 +1,96 @@
+<section xmlns="http://docbook.org/ns/docbook" xmlns:cs="http://www.w3.org/XML/XProc/2006/04/components#" xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax" xmlns:p="http://www.w3.org/ns/xproc" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="c.load">
+<title>p:load</title>
+
+<para>The <code>p:load</code> step has no inputs but produces as its
+result a document (or documents) specified by an IRI.</para>
+
+<p:declare-step type="p:load">
+  <p:output port="result" sequence="true"/>
+  <p:option name="href" required="true" as="xs:anyURI"/>
+  <p:option name="dtd-validate" select="'false'" as="xs:boolean"/>
+  <p:option name="document-properties" as="map(xs:string, xs:string)"/>
+</p:declare-step>
+
+<para>The value of the <option>href</option> option
+<rfc2119>must</rfc2119> be an <type>anyURI</type>. It is interpreted
+as an IRI reference. If it is relative, it is made absolute against
+the base URI of the element on which it is specified
+(<tag>p:with-option</tag> or <tag>p:load</tag> in the case of a
+<olink targetdoc="../xproc20/xproc20.xml" targetptr="option-shortcut">syntactic shortcut</olink> value).</para>
+
+<para>The document or documents identified by the URI is loaded and returned. If the
+URI protocol supports redirection, then redirects
+<rfc2119>must</rfc2119> be followed.</para>
+
+<para>If <option>dtd-validate</option> is <literal>false</literal>,
+the <tag>p:load</tag> step is equivalent to performing the following
+<tag>p:http-request</tag>:</para>
+
+<programlisting language="xml">&lt;p:http-request&gt;
+  &lt;p:input port="source"&gt;
+    &lt;p:inline&gt;
+      &lt;c:request method="GET"
+                 href="{HREF}"
+                 detailed="false"
+                 status-only="false"
+                 override-content-type="{OVERRIDE}"/&gt;
+    &lt;/p:inline&gt;
+  &lt;/p:input&gt;
+&lt;/p:http-request&gt;</programlisting>
+
+<para>Where the “<literal>{HREF}</literal>” value is the value of
+the <option>href</option> option made absolute and the
+“<literal>{OVERRIDE}</literal>” value is the value returned by 
+<literal>map:get($document-properties,'content-type')</literal>. If no value is provided
+for the <option>document-properties</option> option or the provided map does not contain 
+a key 'content-type', then the
+<tag class="attribute">override-content-type</tag> attribute is not
+present on the <tag>c:request</tag>.</para>
+
+<para>If <option>dtd-validate</option> is <literal>true</literal>,
+the <tag>p:load</tag> step is equivalent to performing the following
+pipeline:</para>
+
+<programlisting language="xml">&lt;p:declare-step&gt;
+  &lt;p:output port="result" sequence="false"/&gt;
+  &lt;p:option name="href" required="true"/&gt;
+  &lt;p:option name="document-properties"/&gt;
+
+  &lt;p:http-request&gt;
+    &lt;p:input port="source"&gt;
+      &lt;p:inline expand-text="true"&gt;
+        &lt;c:request method="GET"
+                   href="{$href}"
+                   detailed="false"
+                   status-only="false"
+                   override-content-type="text/plain"/&gt;
+      &lt;/p:inline&gt;
+    &lt;/p:input&gt;
+  &lt;/p:http-request&gt;
+
+  &lt;p:xml-parse dtd-validate="true"/&gt;
+
+  &lt;p:choose&gt;
+    &lt;p:when test="p:value-available('document-properties') and map:contains($document-properties,'content-type')"&gt;
+      &lt;p:cast-content-type content-type="{map:get($document-properties,'content-type')}"/&gt;
+    &lt;/p:when&gt;
+    &lt;p:otherwise&gt;
+      &lt;p:identity/&gt;
+    &lt;/p:otherwise&gt;
+  &lt;/p:choose&gt;
+&lt;/p:declare-step&gt;</programlisting>
+
+<para>The retrieved document or documents are produced on the
+<port>result</port> port. For single part responses, the base URI of
+the result is the (absolute) IRI used to retrieve it. For multipart
+responses, the base URI of each part is the (absolute) IRI used to
+retrieve it unless the <code>content-disposition</code> header indicates
+a URI. If the <code>content-disposition</code> header indicates a relative
+URI, it is made absolute agains the (absolute) IRI used to retreive it.</para>
+
+<note xml:id="ednote-load" role="editorial">
+<title>Editorial Note</title>
+<para>How does the preceding paragraph jibe with what
+<tag>p:http-request</tag> says about multipart responses?</para>
+</note>
+</section>

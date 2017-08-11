@@ -1,0 +1,56 @@
+<section xmlns="http://docbook.org/ns/docbook" xmlns:cs="http://www.w3.org/XML/XProc/2006/04/components#" xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax" xmlns:p="http://www.w3.org/ns/xproc" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="c.insert">
+<title>p:insert</title>
+
+<para>The <code>p:insert</code> step inserts the
+<code>insertion</code> port's document into the <port>source</port>
+port's document relative to the matching elements in the
+<code>source</code> port's document.</para>
+
+<p:declare-step type="p:insert">
+   <p:input port="source" primary="true"/>
+   <p:input port="insertion" sequence="true"/>
+   <p:output port="result"/>
+   <p:option name="match" select="'/*'" as="xs:string" e:type="XSLTMatchPattern"/>
+   <p:option name="position" required="true" as="xs:token" e:type="first-child|last-child|before|after"/>
+</p:declare-step>
+
+<para>The value of the <option>match</option> option
+<rfc2119>must</rfc2119> be an XSLTMatchPattern. <error code="C0023">It
+is a <glossterm>dynamic error</glossterm> if that pattern matches
+anything other than element, text, processing-instruction, or comment nodes.</error>
+Multiple matches are
+allowed, in which case multiple copies of the <port>insertion</port>
+documents will occur. If no elements match, then the document is
+unchanged.</para>
+
+<para>The value of the <option>position</option> option <rfc2119>must</rfc2119> be an NMTOKEN in
+the following list:
+</para>
+
+<itemizedlist>
+<listitem>
+<para>“<literal>first-child</literal>” - the insertion is made as the first child of the match;</para>
+</listitem>
+<listitem>
+<para>“<literal>last-child</literal>” - the insertion is made as the last child of the match;</para>
+</listitem>
+<listitem>
+<para>“<literal>before</literal>” - the insertion is made as the immediate preceding sibling of the match;</para>
+</listitem>
+<listitem>
+<para>“<literal>after</literal>” - the insertion is made as the immediate following sibling of the match.</para>
+</listitem>
+</itemizedlist>
+
+<para><error code="C0025">It is a <glossterm>dynamic error</glossterm>
+if the match pattern matches anything other than an element node and
+the value of the <option>position</option> option is
+“<literal>first-child</literal>” or
+“<literal>last-child</literal>”.</error></para>
+
+<para>As the inserted elements are part of the output of the step they
+are not considered in determining matching elements. If an empty sequence
+appears on the <port>insertion</port> port, the result will be the same
+as the source.</para>
+
+</section>
