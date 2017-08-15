@@ -894,16 +894,32 @@
         <zeroOrMore>
           <ref name="Variable"/>
         </zeroOrMore>
-        <zeroOrMore>
+        <group>
+          <zeroOrMore>
+            <choice>
+              <ref name="Documentation"/>
+              <ref name="PipeInfo"/>
+            </choice>
+          </zeroOrMore>
           <choice>
-            <ref name="When"/>
-            <ref name="Documentation"/>
-            <ref name="PipeInfo"/>
+            <ref name="When" />
+            <ref name="Otherwise" />
+            <group>
+              <oneOrMore>
+                <ref name="When" />
+                <zeroOrMore>
+                  <choice>
+                    <ref name="Documentation"/>
+                    <ref name="PipeInfo"/>
+                  </choice>
+                </zeroOrMore>
+              </oneOrMore>
+              <optional>
+                <ref name="Otherwise" />
+              </optional>
+            </group>
           </choice>
-        </zeroOrMore>
-        <optional>
-          <ref name="Otherwise"/>
-        </optional>
+        </group>
         <zeroOrMore>
           <choice>
             <ref name="Documentation"/>
