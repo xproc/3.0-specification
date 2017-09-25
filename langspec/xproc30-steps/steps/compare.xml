@@ -5,23 +5,29 @@
 equality.</para>
 
 <p:declare-step type="p:compare">
-   <p:input port="source" primary="true"/>
-   <p:input port="alternate"/>
-   <p:output port="result" as="xs:boolean"/>
-   <p:option name="fail-if-not-equal" select="'false'" as="xs:boolean"/>
+   <p:input port="source" primary="true" content-types="*/*"/>
+   <p:input port="alternate" content-types="*/*"/>
+   <p:output port="result" content-types="application/xml"/>
+   <p:option name="fail-if-not-equal" select="false" as="xs:boolean"/>
 </p:declare-step>
 
- <para>The value of the <option>fail-if-not-equal</option> option <rfc2119>must</rfc2119> be a boolean.</para>
+<para>The value of the <option>fail-if-not-equal</option> option
+<rfc2119>must</rfc2119> be a boolean.</para>
 
- <para>This step takes single documents on each of two ports and compares them
-using the <function>fn:deep-equal</function> (as defined in
-<biblioref linkend="xpath-functions"/>).  <error code="C0019">It is a
-<glossterm>dynamic error</glossterm> if the documents are not equal, and the value
-of the <option>fail-if-not-equal</option> option is
-<literal>true</literal>.</error>  If the documents are equal, or if the value
-of the <option>fail-if-not-equal</option> option is
-<literal>false</literal>, a <tag>c:result</tag>
-document is produced with contents <literal>true</literal> if the documents
-are equal, otherwise <literal>false</literal>.</para>
+<para>This step takes single documents on each of two ports and
+compares them. If both media types are XML media types, the comparison
+uses <function>fn:deep-equal</function> (as defined in <biblioref
+linkend="xpath-functions"/>). <impl>In <tag>p:compare</tag>, if either
+media type is not an XML media type, the result is
+<glossterm>implementation-defined</glossterm>.</impl></para>
+
+<para><error code="C0019">It is a <glossterm>dynamic error</glossterm>
+if the documents are not equal, and the value of the
+<option>fail-if-not-equal</option> option is
+<literal>true</literal>.</error> If the documents are equal, or if the
+value of the <option>fail-if-not-equal</option> option is
+<literal>false</literal>, a <tag>c:result</tag> document is produced
+with contents <literal>true</literal> if the documents are equal,
+otherwise <literal>false</literal>.</para>
 
 </section>

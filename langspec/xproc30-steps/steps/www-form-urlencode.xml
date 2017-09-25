@@ -6,8 +6,8 @@ values as a <literal>x-www-form-urlencoded</literal> string and
 injects it into the <port>source</port> document.</para>
 
 <p:declare-step type="p:www-form-urlencode">
-  <p:input port="source" primary="true"/>
-  <p:output port="result"/>
+  <p:input port="source" primary="true" content-types="application/xml text/xml */*+xml"/>
+  <p:output port="result" content-types="application/xml"/>
   <p:option name="parameters" as="map(xs:QName,item())"/>
   <p:option name="match" required="true" as="xs:string" e:type="XSLTMatchPattern"/>
 </p:declare-step>

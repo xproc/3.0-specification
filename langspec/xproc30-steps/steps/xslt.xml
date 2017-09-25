@@ -6,10 +6,11 @@
 <biblioref linkend="xslt20"/> stylesheet to a document.</para>
 
 <p:declare-step type="p:xslt">
-  <p:input port="source" content-types="application/xml text/xml */*+xml" sequence="true" primary="true"/>
-  <p:input port="stylesheet"/>
+  <p:input port="source" content-types="application/xml text/xml */*+xml"
+           sequence="true" primary="true"/>
+  <p:input port="stylesheet" content-types="application/xml text/xml */*+xml"/>
   <p:option name="parameters" as="map(xs:QName,item())"/>
-  <p:output port="result" primary="true" sequence="true"/>
+  <p:output port="result" primary="true" sequence="true" content-types="*/*"/>
   <p:output port="secondary" sequence="true"/>
   <p:option name="initial-mode" as="xs:QName"/>
   <p:option name="template-name" as="xs:QName"/>
