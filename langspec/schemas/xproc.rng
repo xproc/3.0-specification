@@ -17,6 +17,9 @@
   <define name="ContentTypes" sa:model="ContentTypes">
     <text/>
   </define>
+  <define name="PropertyMap" sa:model="map(xs:QName,item())">
+    <text/>
+  </define>
   <define name="name.ncname.attr">
     <attribute name="name">
       <data type="NCName"/>
@@ -63,6 +66,11 @@
   <define name="psvi-required.attr">
     <attribute name="psvi-required">
       <data type="boolean"/>
+    </attribute>
+  </define>
+  <define name="document-properties.attr">
+    <attribute name="document-properties">
+      <ref name="PropertyMap"/>
     </attribute>
   </define>
   <define name="content-type.attr">
@@ -443,6 +451,9 @@
     <element name="document">
       <ref name="href.attr"/>
       <optional>
+        <ref name="document-properties.attr"/>
+      </optional>
+      <optional>
         <attribute name="override-content-type">
           <ref name="ContentType"/>
         </attribute>
@@ -467,6 +478,9 @@
         <attribute name="expand-text">
           <data type="boolean"/>
         </attribute>
+      </optional>
+      <optional>
+        <ref name="document-properties.attr"/>
       </optional>
       <optional>
         <ref name="content-type.attr"/>

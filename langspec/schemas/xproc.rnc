@@ -34,6 +34,11 @@ ContentType = text
 ]
 ContentTypes = text
 
+[
+   sa:model = "map(xs:QName,item())"
+]
+PropertyMap = text
+
 name.ncname.attr = attribute name { xsd:NCName }
 name.qname.attr = attribute name { xsd:QName }
 as.attr = attribute as { XPathSequenceType }
@@ -44,6 +49,7 @@ primary.attr = attribute primary { xsd:boolean }
 select.attr = attribute select { XPathExpression }
 xpath-version.attr = attribute xpath-version { text }
 psvi-required.attr = attribute psvi-required { xsd:boolean }
+document-properties.attr = attribute document-properties { PropertyMap }
 content-type.attr = attribute content-type { ContentType }
 content-types.attr = attribute content-types { ContentTypes }
 
@@ -239,6 +245,7 @@ Pipe =
 Document =
    element document {
       href.attr,
+      document-properties.attr?,
       attribute override-content-type { ContentType }?,
       common.attributes,
       use-when.attr?,
@@ -253,6 +260,7 @@ Inline =
       common.attributes,
       inline.attributes,
       attribute expand-text { xsd:boolean }?,
+      document-properties.attr?,
       content-type.attr?,
       attribute encoding { text }?,
       use-when.attr?,
