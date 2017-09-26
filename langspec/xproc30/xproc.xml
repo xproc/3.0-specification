@@ -2962,10 +2962,6 @@ the summaries:</para><itemizedlist>
   they are allowed anywhere.</para>
 </listitem>
 <listitem>
-  <para>The <tag>p:log</tag> element is allowed on any step that has a
-  <tag>p:output</tag>.</para>
-</listitem>
-<listitem>
   <para>Attributes that are <link linkend="option-shortcut">syntactic shortcuts for option
   values</link> are not shown.</para>
 </listitem>
@@ -4088,31 +4084,6 @@ port.</para>
         </para>
 </section>
     <!-- ============================================================ -->
-    <section xml:id="p.log"><title>p:log</title><para>A <tag>p:log</tag> element is a debugging aid.
-        It associates a URI with a specific output port on a step:</para>
-      <e:rng-pattern name="Log"/>
-      <para>The semantics of <tag>p:log</tag> are that it writes to the specified IRI whatever
-        document or documents appear on the specified port. <impl>If the <tag class="attribute"
-            >href</tag> attribute is not specified, the location of the log file or files is
-            <glossterm>implementation-defined</glossterm>.</impl></para>
-<para><impl>How each
-          document or sequence of documents is represented in a <tag>p:log</tag> is
-            <glossterm>implementation-defined</glossterm>.</impl> Pipelines are not expected to be
-        able to consume their own logging output. <impl>The ability of a step to read the
-            <tag>p:log</tag> output of some former step is
-            <glossterm>implementation-dependent</glossterm>. </impl>
-      </para>
-<para><error code="S0026">It is a <glossterm>static error</glossterm> if the port
-          specified on the <tag>p:log</tag> is not the name of an output port on the step in which
-          it appears or if more than one <tag>p:log</tag> element is applied to the same
-          port.</error></para>
-<para>Implementations may, at user option, ignore all <tag>p:log</tag>
-        elements.</para>
-<note xml:id="note-log-sec-risk">
-        <para>This element represents a potential security risk: running unexamined 3rd-party
-          pipelines could result in vital system resources being overwritten.</para>
-      </note></section>
-    <!-- ============================================================ -->
     <section xml:id="p.serialization"><title>p:serialization</title><para>The
           <tag>p:serialization</tag> element allows the user to request serialization properties on
         a <tag>p:pipeline</tag> output. </para>
@@ -4573,7 +4544,7 @@ attribute">extension
         <para>It is not an error for a pipeline to include declarations for steps that a particular
           processor does not know how to implement. It is, of course, an error to attempt to
           evaluate such steps.</para>
-        <para>If <tag>p:log</tag> or <tag>p:serialization</tag> elements appear in the declaration
+        <para>If <tag>p:serialization</tag> elements appear in the declaration
           of an atomic step, they will only be used if the atomic step is directly evaluated by the
           processor. They have no effect if the step appears in a
           <glossterm>subpipeline</glossterm>; only the serialization options of the “top level” step
