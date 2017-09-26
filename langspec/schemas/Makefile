@@ -14,27 +14,28 @@ XSD_PARTS=xproc_xsd_1.frag xproc_xsd_2.frag xproc_xsd_3.frag
 
 all: steps.rnc xproc.rng xproc.dtd xproc.xsd
 
-steps.rnc: ../xproc20-steps/typed-pipeline-library.xml ../../style/library-to-rnc.xsl
-	@echo Build steps.rnc...
-	@$(SAXON) -s:../xproc20-steps/typed-pipeline-library.xml -xsl:../../style/library-to-rnc.xsl -o:$@
+#steps.rnc: ../xproc20-steps/typed-pipeline-library.xml ../../style/library-to-rnc.xsl
+#	@echo Build steps.rnc...
+#	@$(SAXON) -s:../xproc20-steps/typed-pipeline-library.xml -xsl:../../style/library-to-rnc.xsl -o:$@
+#
 
 xproc.rng: xproc.rnc steps.rnc
 	@echo Convert RNC to RNG
 	@$(TRANG) $< $@
 
-xproc.dtd: $(DTD_PARTS)
-	cat $^ > $@
-
-xproc_dtd_2.ent xproc_dtd_4.ent: ../xproc20-steps/typed-pipeline-library.xml ../../style/library-to-dtd.xsl
-	@echo Construct DTD entities
-	@$(SAXON) -s:../xproc20-steps/typed-pipeline-library.xml -xsl:../../style/library-to-dtd.xsl step-cm=xproc_dtd_2.ent step-decls=xproc_dtd_4.ent
-
-xproc.xsd: $(XSD_PARTS)
-	cat $^ > $@
-
-xproc_xsd_2.frag: ../xproc20-steps/typed-pipeline-library.xml ../../style/library-to-xsd.xsl
-	@echo Construct XSD fragment
-	@$(SAXON) -s:../xproc20-steps/typed-pipeline-library.xml -xsl:../../style/library-to-xsd.xsl | sed '1d;/xmlns:/d;/<.wrapper/d' > $@
+#xproc.dtd: $(DTD_PARTS)
+#	cat $^ > $@
+#
+#xproc_dtd_2.ent xproc_dtd_4.ent: ../xproc20-steps/typed-pipeline-library.xml ../../style/library-to-dtd.xsl
+#	@echo Construct DTD entities
+#	@$(SAXON) -s:../xproc20-steps/typed-pipeline-library.xml -xsl:../../style/library-to-dtd.xsl step-cm=xproc_dtd_2.ent step-decls=xproc_dtd_4.ent
+#
+#xproc.xsd: $(XSD_PARTS)
+#	cat $^ > $@
+#
+#xproc_xsd_2.frag: ../xproc20-steps/typed-pipeline-library.xml ../../style/library-to-xsd.xsl
+#	@echo Construct XSD fragment
+#	@$(SAXON) -s:../xproc20-steps/typed-pipeline-library.xml -xsl:../../style/library-to-xsd.xsl | sed '1d;/xmlns:/d;/<.wrapper/d' > $@
 
 clean:
 	rm -f xproc.rng xproc.dtd xproc.xsd
