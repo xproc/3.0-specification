@@ -143,7 +143,7 @@ Pipeline =
       common.attributes,
       use-when.attr?,
       decl.attributes,
-      (Input|Output|Option|Log
+      (Input|Output|Option
        |Serialization|Documentation|PipeInfo)*,
       (DeclareStep|Pipeline|Import|Documentation|PipeInfo)*,
       Subpipeline
@@ -267,18 +267,6 @@ Inline =
 ]
 \Empty =
    element empty {
-      (Documentation|PipeInfo)*
-   }
-
-[
-   sa:class = "language-construct"
-]
-Log =
-   element log {
-      common.attributes,
-      use-when.attr?,
-      port.attr?,
-      href.attr?,
       (Documentation|PipeInfo)*
    }
 
@@ -410,7 +398,7 @@ DeclareStep =
       decl.attributes,
       common.attributes,
       use-when.attr?,
-      (Input|Output|Option|Log
+      (Input|Output|Option
        |Serialization|Documentation|PipeInfo)*,
       ((DeclareStep|Pipeline|Import|Documentation|PipeInfo)*,Subpipeline)?
    }
@@ -425,7 +413,7 @@ ForEach =
       name.ncname.attr?,
       common.attributes,
       use-when.attr?,
-      ((Input? & (Output|Log|Documentation|PipeInfo)*), Subpipeline)
+      ((Input? & (Output|Documentation|PipeInfo)*), Subpipeline)
    }
 
 # ============================================================
@@ -439,7 +427,7 @@ Viewport =
       attribute match { XSLTMatchPattern },
       common.attributes,
       use-when.attr?,
-      ((Input? & Output? & Log? & Documentation* & PipeInfo*), Subpipeline)
+      ((Input? & Output? & Documentation* & PipeInfo*), Subpipeline)
    }
 
 # ============================================================
@@ -470,7 +458,7 @@ When =
       use-when.attr?,
       ((Documentation|PipeInfo)*,
          Input?,
-         (Output|Log|Documentation|PipeInfo)*,
+         (Output|Documentation|PipeInfo)*,
          Subpipeline)
    }
 
@@ -481,7 +469,7 @@ Otherwise =
    element otherwise {
       common.attributes,
       use-when.attr?,
-      ((Output|Log|Documentation|PipeInfo)*, Subpipeline)
+      ((Output|Documentation|PipeInfo)*, Subpipeline)
    }
 
 # ============================================================
@@ -494,7 +482,7 @@ Group =
       name.ncname.attr?,
       common.attributes,
       use-when.attr?,
-      ((Output|Log|Documentation|PipeInfo)*, Subpipeline)
+      ((Output|Documentation|PipeInfo)*, Subpipeline)
    }
 
 # ============================================================
@@ -517,7 +505,7 @@ TryGroup =
    element group {
       common.attributes,
       use-when.attr?,
-      ((Output|Log|Documentation|PipeInfo)*, Subpipeline)
+      ((Output|Documentation|PipeInfo)*, Subpipeline)
    }
 
 [
@@ -529,7 +517,7 @@ Catch =
       attribute code { QNameList }?,
       common.attributes,
       use-when.attr?,
-      ((Output|Log|Documentation|PipeInfo)*, Subpipeline)
+      ((Output|Documentation|PipeInfo)*, Subpipeline)
    }
 
 [
@@ -554,7 +542,7 @@ OtherAtomicStep =
       option.attr*,
       common.attributes,
       p_use-when.attr?,
-      (InputConnection|WithOption|Log|Documentation|PipeInfo)*
+      (InputConnection|WithOption|Documentation|PipeInfo)*
    }
 
 [
@@ -565,7 +553,7 @@ OtherCompoundStep =
       name.ncname.attr?,
       common.attributes,
       p_use-when.attr?,
-      ((Output|Log|Documentation|PipeInfo)*, Subpipeline)
+      ((Output|Documentation|PipeInfo)*, Subpipeline)
    }
 
 OtherStep = StandardStep | OtherAtomicStep | OtherCompoundStep
