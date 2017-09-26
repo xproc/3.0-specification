@@ -17,9 +17,6 @@
   <define name="ContentTypes" sa:model="ContentTypes">
     <text/>
   </define>
-  <define name="StringMap" sa:model="map(xs:string, xs:string)">
-    <text />
-  </define>
   <define name="name.ncname.attr">
     <attribute name="name">
       <data type="NCName"/>
@@ -66,11 +63,6 @@
   <define name="psvi-required.attr">
     <attribute name="psvi-required">
       <data type="boolean"/>
-    </attribute>
-  </define>
-  <define name="document-properties.attr">
-    <attribute name="document-properties">
-      <ref name="StringMap" />
     </attribute>
   </define>
   <define name="content-type.attr">
@@ -273,7 +265,7 @@
     </oneOrMore>
   </define>
   <!-- ============================================================ -->
-  <define name="InputDeclaration" sa:class="language-construct">
+  <define name="Input" sa:class="language-construct" sa:element="input">
     <element name="input">
       <ref name="port.attr"/>
       <optional>
@@ -317,8 +309,8 @@
       </choice>
     </element>
   </define>
-  <define name="InputConnection" sa:class="language-construct">
-    <element name="input">
+  <define name="WithInput" sa:class="language-construct" sa:element="with-input">
+    <element name="with-input">
       <optional>
         <ref name="port.attr"/>
       </optional>
@@ -337,7 +329,6 @@
               <ref name="Empty"/>
               <oneOrMore>
                 <choice>
-                  <ref name="Pipe" />
                   <ref name="Document"/>
                   <ref name="Inline"/>
                 </choice>
@@ -354,12 +345,6 @@
         <ref name="Any"/>
       </choice>
     </element>
-  </define>
-  <define name="Input" sa:element="input">
-    <choice>
-      <ref name="InputDeclaration"/>
-      <ref name="InputConnection"/>
-    </choice>
   </define>
   <!-- ============================================================ -->
   <define name="OutputDeclaration" sa:class="language-construct">
@@ -458,7 +443,9 @@
     <element name="document">
       <ref name="href.attr"/>
       <optional>
-        <ref name="document-properties.attr"/>
+        <attribute name="override-content-type">
+          <ref name="ContentType"/>
+        </attribute>
       </optional>
       <ref name="common.attributes"/>
       <optional>
@@ -482,7 +469,7 @@
         </attribute>
       </optional>
       <optional>
-        <ref name="document-properties.attr"/>
+        <ref name="content-type.attr"/>
       </optional>
       <optional>
         <attribute name="encoding"/>
@@ -821,7 +808,7 @@
       <group>
         <interleave>
           <optional>
-            <ref name="Input"/>
+            <ref name="WithInput"/>
           </optional>
           <zeroOrMore>
             <choice>
@@ -852,7 +839,7 @@
       <group>
         <interleave>
           <optional>
-            <ref name="Input"/>
+            <ref name="WithInput"/>
           </optional>
           <optional>
             <ref name="Output"/>
@@ -889,37 +876,21 @@
           </choice>
         </zeroOrMore>
         <optional>
-          <ref name="Input"/>
+          <ref name="WithInput"/>
         </optional>
         <zeroOrMore>
           <ref name="Variable"/>
         </zeroOrMore>
-        <group>
-          <zeroOrMore>
-            <choice>
-              <ref name="Documentation"/>
-              <ref name="PipeInfo"/>
-            </choice>
-          </zeroOrMore>
+        <zeroOrMore>
           <choice>
-            <ref name="When" />
-            <ref name="Otherwise" />
-            <group>
-              <oneOrMore>
-                <ref name="When" />
-                <zeroOrMore>
-                  <choice>
-                    <ref name="Documentation"/>
-                    <ref name="PipeInfo"/>
-                  </choice>
-                </zeroOrMore>
-              </oneOrMore>
-              <optional>
-                <ref name="Otherwise" />
-              </optional>
-            </group>
+            <ref name="When"/>
+            <ref name="Documentation"/>
+            <ref name="PipeInfo"/>
           </choice>
-        </group>
+        </zeroOrMore>
+        <optional>
+          <ref name="Otherwise"/>
+        </optional>
         <zeroOrMore>
           <choice>
             <ref name="Documentation"/>
@@ -946,7 +917,7 @@
           </choice>
         </zeroOrMore>
         <optional>
-          <ref name="Input"/>
+          <ref name="WithInput"/>
         </optional>
         <zeroOrMore>
           <choice>
@@ -1120,7 +1091,7 @@
       </optional>
       <zeroOrMore>
         <choice>
-          <ref name="InputConnection"/>
+          <ref name="WithInput"/>
           <ref name="WithOption"/>
           <ref name="Log"/>
           <ref name="Documentation"/>
@@ -1316,7 +1287,7 @@
       </optional>
       <optional>
         <attribute name="override-content-type">
-         <ref name="ContentType"/>
+          <ref name="ContentType"/>
         </attribute>
       </optional>
       <group>

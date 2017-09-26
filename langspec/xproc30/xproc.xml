@@ -2449,9 +2449,9 @@ in some sense be limited to ancillary inputs and outputs and they
 encounter the following step:</para>
 
 <programlisting language="xml"><![CDATA[<p:string-replace match="div/@class" replace="newclass">
-  <p:input port="ancillary">
+  <p:with-input port="ancillary">
     <p:document href="doc.xml"/>
-  </p:input>
+  </p:with-input>
 </p:string-replace>]]></programlisting>
 
 <para>The processor will simply ignore the “<port>ancillary</port>” port.
@@ -2464,17 +2464,17 @@ encounter the following step:</para>
             version="2.0">
 
   <p:xslt name="style">
-    <p:input port="stylesheet">
+    <p:with-input port="stylesheet">
       <p:document href="style.xsl"/>
-    </p:input>
+    </p:with-input>
   </p:xslt>
 
   <p:sink/>
 
   <p:count>
-    <p:input port="source">
+    <p:with-input port="source">
       <p:pipe step="style" port="messages"/>
-    </p:input>
+    </p:with-input>
   </p:count>
 </p:pipeline>]]></programlisting>
 
@@ -2688,7 +2688,7 @@ port in four ways: <glossterm>by source</glossterm>, <glossterm>by
 URI</glossterm>, by providing an <glossterm>inline
 document</glossterm>, or by making it
 <glossterm baseform="empty-sequence">explicitly empty</glossterm>.
-Each of these mechanisms is allowed on the <tag>p:input</tag> and
+Each of these mechanisms is allowed on the <tag>p:input</tag>, <tag>p:with-input</tag> and
 <tag>p:output</tag>
 elements.</para>
 <variablelist>
@@ -2728,7 +2728,7 @@ documents by URI.</para>
                 specified directly in the body of the element to which it connects.</termdef> The
               content of the <tag>p:inline</tag> element is used for this purpose. </para>
             <para>In this example, the “<literal>stylesheet</literal>” input to the XSLT step named
-                “<literal>xform</literal>” comes from the content of the <tag>p:input</tag> element
+                “<literal>xform</literal>” comes from the content of the <tag>p:with-input</tag> element
               itself.</para>
             <programlisting language="xml"><xi:include href="examples/xslt.txt" parse="text"/></programlisting>
             <para>Inline documents are considered “quoted”. The pipeline processor passes them
@@ -2752,7 +2752,7 @@ documents by URI.</para>
           </listitem>
         </varlistentry>
       </variablelist>
-      <para>Note that a <tag>p:input</tag> or <tag>p:output</tag> element may contain more than one
+      <para>Note that a <tag>p:input</tag>, <tag>p:with-input</tag>, or <tag>p:output</tag> element may contain more than one
           <tag>p:pipe</tag>, <tag>p:document</tag>, or <tag>p:inline</tag>
         element. If more than one <glossterm>connection</glossterm> is provided, then the specified
         sequence of documents is made available on that port in the same order as the
@@ -3237,7 +3237,7 @@ each document in the sequence in turn.</para>
 
 <para>The <tag>p:for-each</tag> has a single anonymous input: its
 <glossterm>connection</glossterm> is provided by the
-<tag>p:input</tag>. If no iteration sequence is explicitly provided,
+<tag>p:with-input</tag>. If no iteration sequence is explicitly provided,
 then the iteration source is read from the <glossterm>default readable
 port</glossterm>.</para>
 
@@ -3326,7 +3326,7 @@ the results of applying the subpipeline to them.</para>
 
 <para>The <tag>p:viewport</tag> has a single anonymous input: its
 <glossterm>connection</glossterm> is provided by the
-<tag>p:input</tag>. If no document is explicitly provided,
+<tag>p:with-input</tag>. If no document is explicitly provided,
 then the viewport source is read from the <glossterm>default readable
 port</glossterm>. If the <tag>p:viewport</tag> input is a sequence,
 each document in the sequence is processed in turn producing a sequence
@@ -3454,7 +3454,7 @@ on the output.</para>
 <para>The <tag>p:choose</tag> can specify the context node against
 which the XPath expressions that occur on each branch are evaluated.
 The context node is specified as a <glossterm>connection</glossterm>
-in the <tag>p:input</tag>. If no explicit connection is
+in the <tag>p:with-input</tag>. If no explicit connection is
 provided,
 the <glossterm>default readable port</glossterm> is used.
 If the context node is connected
@@ -3482,7 +3482,7 @@ represented by a <tag>p:otherwise</tag> element.</para>
 <para>The <tag>p:when</tag> can specify a context node against which
 its <tag class="attribute">test</tag> expression is to be evaluated.
 That context node is specified as a <glossterm>connection</glossterm>
-for the <tag>p:input</tag>. If no context is specified on the
+for the <tag>p:with-input</tag>. If no context is specified on the
 <tag>p:when</tag>, the context of the <tag>p:choose</tag> is
 used.
 <error code="D0005">It is a <glossterm>dynamic error</glossterm> if
@@ -3855,15 +3855,6 @@ and extension atomic steps.</para>
 <section xml:id="p.input">
 <title>p:input</title>
 
-<para>A <tag>p:input</tag> identifies an input port for a step. In
-some contexts, <tag>p:input</tag> declares that a port with the
-specified name exists and identifies the properties of that port. In
-other contexts, it provides a connection for a port declared
-elsewhere. And in some contexts, it does both.</para>
-
-<section xml:id="input-declarations">
-<title>Input declarations</title>
-
 <para>The declaration of an input identifies the name of the
 port, whether or not the port accepts a sequence, whether or not the
 port is a <glossterm>primary input port</glossterm>, what content types it
@@ -3873,7 +3864,7 @@ default connection for the port.</para>
 <para>An input <emphasis>declaration</emphasis> has the following
 form:</para>
 
-<e:rng-pattern name="InputDeclaration"/>
+<e:rng-pattern name="Input"/>
 
 <para>The <tag class="attribute">port</tag> attribute defines the name
 of the port. <error code="S0011">It is a <glossterm>static
@@ -3952,13 +3943,13 @@ provide a connection for an input port on the declaration of an atomic
 step.</error></para>
 
 </section>
-<section xml:id="input-connections">
-<title>Input connections</title>
+<section xml:id="p.with-input">
+<title>p:with-input</title>
 
 <para>An input <emphasis>connection</emphasis> has the following
 form:</para>
 
-<e:rng-pattern name="InputConnection"/>
+<e:rng-pattern name="WithInput"/>
 
 <para>If the <tag class="attribute">port</tag> is specified, then this
 is a binding for the specified port. If no port is specified, then:</para>
@@ -4022,6 +4013,7 @@ documents.)</para>
 expression is the base URI of the matched element or document. <error
 code="D0016">It is a <glossterm>dynamic error</glossterm> if the <tag
 class="attribute">select</tag> expression on a <tag>p:input</tag>
+or <tag>p:with-input</tag>
 returns atomic values or anything other than element or document
 nodes (or an empty sequence).</error></para>
 
@@ -4056,7 +4048,6 @@ processor. In that case, the processor <rfc2119>must</rfc2119> use the
 default connection if no external connection is provided for the
 port.</para>
 
-</section>
 </section>
 
     <!-- ============================================================ -->
@@ -4976,17 +4967,17 @@ following whitespace is discarded.</para>
 <para>The following example demonstrates this implicit behaviour:</para>
 
 <programlisting language="xml"><![CDATA[<p:identity name="identity" code="my:implicitinline1">
-    <p:input port="source">
+    <p:with-input port="source">
         <para xmlns="http://docbook.org/ns/docbook">Some text</para>
-    </p:input>
+    </p:with-input>
 </p:identity>]]></programlisting>
 
 <para>Is interpreted as follows:</para>
 
 <programlisting language="xml"><![CDATA[<p:identity name="identity" code="my:implicitinline2">
-    <p:input port="source">
+    <p:with-input port="source">
         <p:inline><para xmlns="http://docbook.org/ns/docbook">Some text</para></p:inline>
-    </p:input>
+    </p:with-input>
 </p:identity>]]></programlisting>
 
 <para>An explicit <tag>p:inline</tag> is required if the author
@@ -5027,7 +5018,8 @@ validation.
 
 <note xml:id="note-document">
 <para>A <tag>p:document</tag> always <emphasis>reads</emphasis> from
-the specified IRI. In the context of a <tag>p:input</tag>, this seems
+the specified IRI. In the context of a <tag>p:input</tag> or <tag>p:with-input</tag>,
+this seems
 perfectly natural. In the context of a <tag>p:output</tag>, this may
 seem a little asymmetrical. Putting a <tag>p:document</tag> in a
 <tag>p:output</tag> causes the pipeline to <emphasis>read</emphasis>

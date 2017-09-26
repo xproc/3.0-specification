@@ -158,8 +158,9 @@ Subpipeline = Variable*,(ForEach|Viewport|Choose|Group|Try|OtherStep|Documentati
 
 [
    sa:class = "language-construct"
+   sa:element = "input"
 ]
-InputDeclaration =
+Input =
    element input {
       port.attr,
       sequence.attr?,
@@ -174,21 +175,17 @@ InputDeclaration =
 
 [
    sa:class = "language-construct"
+   sa:element = "with-input"
 ]
-InputConnection =
-   element input {
+WithInput =
+   element with-input {
       port.attr?,
       select.attr?,
       common.attributes,
       inline.attributes,
       use-when.attr?,
-      (((\Empty|(Document|Inline)+)? & (Documentation|PipeInfo)*)|Any)
+      (((\Empty|(Pipe|Document|Inline)+)? & (Documentation|PipeInfo)*)|Any)
    }
-
-[
-   sa:element = "input"
-]
-Input = InputDeclaration | InputConnection
 
 # ============================================================
 
@@ -425,7 +422,7 @@ ForEach =
       name.ncname.attr?,
       common.attributes,
       use-when.attr?,
-      ((Input? & (Output|Log|Documentation|PipeInfo)*), Subpipeline)
+      ((WithInput? & (Output|Log|Documentation|PipeInfo)*), Subpipeline)
    }
 
 # ============================================================
@@ -439,7 +436,7 @@ Viewport =
       attribute match { XSLTMatchPattern },
       common.attributes,
       use-when.attr?,
-      ((Input? & Output? & Log? & Documentation* & PipeInfo*), Subpipeline)
+      ((WithInput? & Output? & Log? & Documentation* & PipeInfo*), Subpipeline)
    }
 
 # ============================================================
@@ -453,7 +450,7 @@ Choose =
       common.attributes,
       use-when.attr?,
       ((Documentation|PipeInfo)*,
-         Input?,
+         WithInput?,
          Variable*,
          (When|Documentation|PipeInfo)*,
          Otherwise?,
@@ -469,7 +466,7 @@ When =
       common.attributes,
       use-when.attr?,
       ((Documentation|PipeInfo)*,
-         Input?,
+         WithInput?,
          (Output|Log|Documentation|PipeInfo)*,
          Subpipeline)
    }
@@ -554,7 +551,7 @@ OtherAtomicStep =
       option.attr*,
       common.attributes,
       p_use-when.attr?,
-      (InputConnection|WithOption|Log|Documentation|PipeInfo)*
+      (WithInput|WithOption|Log|Documentation|PipeInfo)*
    }
 
 [
