@@ -5098,10 +5098,33 @@ as defined below, are removed:</para>
               prefix has been preserved, but it would be equally correct if a different
               prefix had been used.</para>
 
-<para>If the <tag class="attribute">expand-text</tag> attribute is
-not false, then each text node within the <tag>p:inline</tag> is evaluated
-as a <glossterm>text value template</glossterm>. The context node for
-these expressions is undefined.</para>
+<para>If the <tag class="attribute">expand-text</tag> attribute is not
+false, then each attribute value and text node within the
+<tag>p:inline</tag> is evaluated as a <glossterm>text value
+template</glossterm>. The context node for these expressions is
+undefined.</para>
+
+<para>Within the descendants of <tag>p:inline</tag> the attribute
+<tag class="attribute">p:expand-text</tag> (i.e., the attribute <code>expand-text</code>
+<emphasis>in the XProc namespace</emphasis>), may appear on an element.
+If it does, the specified value is used as the expand text value
+for the descendants of the element on which it occurs. The
+<tag class="attribute">p:expand-text</tag> will not appear in the inline content.
+</para>
+
+<!--feature="p-inline-no-nesting"-->
+<para>If a <tag>p:inline</tag> occurs as
+a descendant of another <tag>p:inline</tag>, any <tag class="attribute">expand-text</tag> within the inner
+<tag>p:inline</tag> is treated like an ordinary attribute; that is,
+neither will its value influence text expansion nor will it be removed
+from the descendant.</para>
+
+<!-- feature="no-p-expand-text-on-p"-->
+<para>(A <tag class="attribute">p:expand-text</tag> attribute on an element in the
+XProc namespace is an error. If it occurs on other elements that are
+not descendants of <tag>p:inline</tag>, the attribute has no
+effect.)</para>
+
 </section>
 
 <section xml:id="implicit-inlines">
