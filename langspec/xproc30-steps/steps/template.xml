@@ -6,9 +6,10 @@ curly braces, in the <port>template</port> document with the result of evaluatin
 expression.</para>
 
 <p:declare-step type="p:template">
-  <p:input port="template"/>
-  <p:input port="source" sequence="true" primary="true"/>
-  <p:output port="result"/>
+  <p:input port="source" sequence="true" primary="true"
+           content-types="application/xml text/xml */*+xml"/>
+  <p:input port="template" content-types="application/xml text/xml */*+xml"/>
+  <p:output port="result" content-types="application/xml"/>
   <p:option name="parameters" as="map(xs:QName,item())"/>
 </p:declare-step>
 

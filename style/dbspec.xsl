@@ -213,6 +213,10 @@
   </xsl:choose>
 </xsl:template>
 
+<xsl:template match="db:feature">
+  <a id="{@xml:id}" name="{@xml:id}"/>
+</xsl:template>
+
 <xsl:template match="db:literal[@role='infoset-property']">
   <xsl:call-template name="t:inline-monoseq">
     <xsl:with-param name="content">
