@@ -3582,19 +3582,19 @@ error</glossterm> to identify two ports with the same name on the same
 step.</error></para>
 
 <para>The <tag class="attribute" >sequence</tag> attribute determines
-whether or not a sequence of documents is allowed on the port. <error
-code="D0006">If <tag class="attribute">sequence</tag> is not
+whether or not a sequence of documents is allowed on the port.
+<error code="D0006">If <tag class="attribute">sequence</tag> is not
 specified, or has the value false, then it is a <glossterm>dynamic
 error</glossterm> unless exactly one document appears on the declared
 port.</error></para>
 
 <para>The <tag class="attribute">primary</tag> attribute is used to
 identify the <glossterm>primary input port</glossterm>. An input port
-is a <glossterm>primary input port</glossterm> if <tag
-class="attribute">primary</tag> is specified with the value
+is a <glossterm>primary input port</glossterm> if
+<tag class="attribute">primary</tag> is specified with the value
 <literal>true</literal> or if the step has only a single input port
-and <tag class="attribute">primary</tag> is not specified. <error
-code="S0030">It is a <glossterm>static error</glossterm> to specify
+and <tag class="attribute">primary</tag> is not specified.
+<error code="S0030">It is a <glossterm>static error</glossterm> to specify
 that more than one input port is the primary.</error></para>
 
 <para>For <tag class="attribute">exclude-inline-prefixes</tag>, see <tag>p:inline</tag> .
@@ -3627,12 +3627,14 @@ document.</simpara>
 
 <para>The media type of input documents must
 <link linkend="media-type-match">match</link> the allowed content types.</para>
-  
-<para>If a connection is provided in the declaration, then <tag
-class="attribute">select</tag> may be used to select a portion of the
+
+<para>If a connection is provided in the declaration, then
+<tag class="attribute">select</tag> may be used to select a portion of the
 input identified by the <tag>p:empty</tag>, <tag>p:document</tag>,
 or <tag>p:inline</tag> elements in the
-<tag>p:input</tag>. This select expression applies
+<tag>p:input</tag>. This select expression <rfc2119>must</rfc2119> be an XPath
+expression; the selected nodes are returned as separate documents. The
+<tag class="attribute">select</tag> expression applies
 <emphasis>only</emphasis> if the default connection is used. If an
 explicit connection is provided by the caller, then the default select
 expression is ignored.</para>
