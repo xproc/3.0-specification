@@ -493,6 +493,45 @@ formats, caching them on disk, etc.</para>
 </section>
 </section>
 
+<section xml:id="media-type-match">
+<title>Matching Media Types</title>
+
+<para feature="media-type-match">When an input document arrives on a
+port, it must be match at least one of the media types specified on
+that input port. It matches if the port specifies no media types or if
+the media type of the input document is compatible with at least one
+of the specified media types. Two media types are compatible if:</para>
+
+<orderedlist>
+<listitem>
+<para feature="xml-media-types-compatible">They are both <glossterm baseform="XML-media-type">XML media types</glossterm>
+(<code>application/xml</code> is compatible with <code>image/svg+xml</code>),
+</para>
+</listitem>
+<listitem>
+<para feature="text-media-types-compatible">they are both <glossterm baseform="text-media-type">text media types</glossterm>
+(<code>text/plain</code> is compatible with <code>text/csv</code>),
+</para>
+</listitem>
+<listitem>
+<para feature="other-media-types-equal">or they are equal when
+compared with the Unicode codepoint collation
+(<code>image/png</code> is compatible with <code>image/png</code>).</para>
+</listitem>
+<listitem>
+<para feature="impl-media-type-equal"><impl>It is
+<glossterm>implementation-defined</glossterm> what additional
+content types are considered equal.</impl>
+</para>
+</listitem>
+</orderedlist>
+
+<para><error code="D1003">It is a <glossterm>dynamic error</glossterm>
+if an input document arrives on a port and it does not match the
+allowed media types.</error></para>
+
+</section>
+
       <section xml:id="proxy-documents">
         <title>Proxy Documents</title>
         <para>
@@ -591,11 +630,14 @@ formats, caching them on disk, etc.</para>
         
         <para>The processor makes the <glossterm>representation</glossterm> available to a step that
           processes non-XML documents in an <glossterm>implementation-dependent</glossterm> way.</para>
-        <para>With the exception of a special case that is described in the next paragraph, a step
-            <rfc2119>must not</rfc2119> make an attempt to process the proxy document as an XML
-          document if it does not accept the content-type of the non-XML document on the port that
-          the document arrives on. The processor will raise a 
-          <error code="D1003"><glossterm>dynamic error</glossterm></error> if this happens.</para>
+
+<para>With the exception of a special case that is described in the
+next paragraph, a step <rfc2119>must not</rfc2119> make an attempt to
+process the proxy document as an XML document if it does not accept
+the content-type of the non-XML document on the port that the document
+arrives on. The processor will raise a <error code="D1003"><glossterm>dynamic error</glossterm></error> if this
+happens.</para>
+
         <para>However, a proxy document <rfc2119>must</rfc2119> be processed as an XML document if
           and only if the processing step accepts nothing but XML documents on its primary input
           port. If and only if the first document on the primary output port of such an operation is
@@ -889,13 +931,8 @@ the pipeline is
 <glossterm>implementation-defined</glossterm>.</impl></para>
 
 <para>Input ports <rfc2119>may</rfc2119> specify a content type, or list of
-content types, that they accept.
-<error code="D1003">If an input port provides a set of acceptable content
-types, it is a <glossterm>dynamic error</glossterm>
-if an input document that arrives on the port has a content type that
-does not match any content type in
-that set.</error>
-</para>
+content types, that they accept. Input documents must
+<link linkend="media-type-match">match</link> the specified content types.</para>
 
 <section xml:id="external-docs">
         <title>External Documents</title>
@@ -4065,10 +4102,8 @@ document.</simpara>
 </listitem>
 </itemizedlist>
 
-<para><error code="D1003">It is a <glossterm>dynamic error</glossterm> if an input port provides a set of 
-  acceptable content types and an input document arrives on that port 
-  with a content type that does not match any content type in that set.</error> If an input port 
-  declaration has no <tag class="attribute">content-types</tag> attribute, any XML document is accepted, see <xref linkend="xml-documents"/>.</para>
+<para>The media type of input documents must
+<link linkend="media-type-match">match</link> the allowed content types.</para>
   
 <para>If a connection is provided in the declaration, then <tag class="attribute">select</tag> may be used to select a portion of the
 input identified by the <tag>p:empty</tag>, <tag>p:document</tag>,
