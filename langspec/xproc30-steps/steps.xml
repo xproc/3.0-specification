@@ -66,9 +66,16 @@ input document unless the step's process explicitly sets an
 description explicitly states how the base URI is constructed.</para>
 </listitem>
 <listitem>
-<para>Unless otherwise specified, steps in this library do not
-modify the <glossterm>document properties</glossterm> of the documents
-that flow through them.</para>
+<para>Each step describes how it modifies the
+<glossterm>document properties</glossterm> of the documents
+that flow through it.</para>
+<para>A great many steps indicate that they preserve some or all of
+the properties of the input document. It should be noted that in some
+cases the transformation performed by the step will violate the
+condition associated with some property. In general, the steps cannot
+know this and the pipeline author is responsible for managing the
+properties with greater care in this case.
+</para>
 </listitem>
 </itemizedlist>
 
