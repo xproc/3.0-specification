@@ -58,9 +58,16 @@ input document unless the step's process explicitly sets an
 description explicitly states how the base URI is constructed.</para>
 </listitem>
 <listitem>
-<para>Unless otherwise specified, steps in this library do not
-modify the <glossterm>document properties</glossterm> of the documents
-that flow through them.</para>
+<para>Each step describes how it modifies the
+<glossterm>document properties</glossterm> of the documents
+that flow through it.</para>
+<para>A great many steps indicate that they preserve some or all of
+the properties of the input document. It should be noted that in some
+cases the transformation performed by the step will violate the
+condition associated with some property. In general, the steps cannot
+know this and the pipeline author is responsible for managing the
+properties with greater care in this case.
+</para>
 </listitem>
 </itemizedlist>
 
@@ -160,6 +167,10 @@ matched element may result in a namespace binding being added by
 <tag class="attribute">xml:base</tag> is added or changed, the base URI
 of the element <rfc2119>must</rfc2119> also be amended accordingly.</para>
 
+<section>
+<title>Document properties</title>
+<para feature="add-attribute-preserves-all">All document properties are preserved.</para>
+</section>
 </section>
 <section xml:id="c.add-xml-base">
 
@@ -218,6 +229,11 @@ element's [base URI].</para>
 </itemizedlist>
 </listitem>
 </itemizedlist>
+
+<section>
+<title>Document properties</title>
+<para feature="add-xml-base-preserves-all">All document properties are preserved.</para>
+</section>
 </section>
 <section xml:id="c.cast-content-type">
 <title>p:cast-content-type</title>
@@ -291,6 +307,13 @@ cannot perform the requested cast.</error></para>
 is a <tag>c:data</tag> element, it is a <glossterm>dynamic
 error</glossterm> if the <option>content-type</option> is not supplied.</error>
 </para>
+
+<section>
+<title>Document properties</title>
+<para feature="cast-content-type-preserves-some">All document
+properties are preserved except the <code>content-type</code> property
+which is updated accordingly.</para>
+</section>
 </section>
 <section xml:id="c.compare">
 <title>p:compare</title>
@@ -323,6 +346,10 @@ value of the <option>fail-if-not-equal</option> option is
 with contents <literal>true</literal> if the documents are equal,
 otherwise <literal>false</literal>.</para>
 
+<section>
+<title>Document properties</title>
+<para feature="compare-preserves-none">No document properties are preserved.</para>
+</section>
 </section>
 <section xml:id="c.count">
 <title>p:count</title>
@@ -346,6 +373,11 @@ that many documents. This provides a convenient mechanism to discover,
 for example, if a sequence consists of more than 1 document, without
 requiring every single document to be buffered before processing can
 continue.</para>
+
+<section>
+<title>Document properties</title>
+<para feature="count-preserves-none">No document properties are preserved.</para>
+</section>
 </section>
 <section xml:id="c.delete">
 <title>p:delete</title>
@@ -374,6 +406,10 @@ Also, note that deleting an attribute named
 <tag class="attribute">xml:base</tag> does not change the base URI
 of the element on which it occurred.</para>
 
+<section>
+<title>Document properties</title>
+<para feature="delete-preserves-all">All document properties are preserved.</para>
+</section>
 </section>
 <section xml:id="c.directory-list">
 <title>p:directory-list</title>
@@ -471,6 +507,10 @@ directory name.</para>
 <tag>c:file</tag>, <tag>c:directory</tag>, or <tag>c:other</tag>
 are <glossterm>implementation-defined</glossterm>.</impl></para>
 
+<section>
+<title>Document properties</title>
+<para feature="directory-list-preserves-none">No document properties are preserved.</para>
+</section>
 </section>
 <section xml:id="c.error">
 <title>p:error</title>
@@ -534,6 +574,10 @@ or <tag class="attribute">offset</tag>, might also be present on the
 <tag>c:error</tag> to identify the location of the <tag>p:error</tag>
 element in the pipeline.</para>
 
+<section>
+<title>Document properties</title>
+<para feature="error-preserves-none">No document properties are preserved.</para>
+</section>
 </section>
 <section xml:id="c.escape-markup">
 <title>p:escape-markup</title>
@@ -580,6 +624,10 @@ from the standard serialization options on this step.</para>
 <para>By default, this step <rfc2119>must not</rfc2119> generate an
 XML declaration in the escaped result.</para>
 
+<section>
+<title>Document properties</title>
+<para feature="escape-markup-preserves-none">No document properties are preserved.</para>
+</section>
 </section>
 <section xml:id="c.filter">
 <title>p:filter</title>
@@ -597,6 +645,10 @@ based on a (possibly dynamically constructed) XPath select expression.</para>
 a <tag class="attribute">select</tag> expression except that the select
 expression is computed dynamically.</para>
 
+<section>
+<title>Document properties</title>
+<para feature="filter-preserves-all">All document properties are preserved.</para>
+</section>
 </section>
 <section xml:id="c.http-request">
 <title>p:http-request</title>
@@ -1163,6 +1215,10 @@ name=W3C&amp;amp;spec=XProc
 &lt;/c:response&gt;</programlisting>
 </section>
 
+<section>
+<title>Document properties</title>
+<para feature="http-request-preserves-none">No document properties are preserved.</para>
+</section>
 </section>
 <section xml:id="c.identity">
 <title>p:identity</title>
@@ -1179,6 +1235,10 @@ available on its output.</para>
 steps, the <tag>p:identity</tag> step <rfc2119>must</rfc2119> preserve
 any annotations that appear in the input.</para>
 
+<section>
+<title>Document properties</title>
+<para feature="identity-preserves-all">All document properties are preserved.</para>
+</section>
 </section>
 <section xml:id="c.insert">
 <title>p:insert</title>
@@ -1235,6 +1295,12 @@ are not considered in determining matching elements. If an empty sequence
 appears on the <port>insertion</port> port, the result will be the same
 as the source.</para>
 
+<section>
+<title>Document properties</title>
+<para feature="insert-preserves-all">All document properties on the
+<port>source</port> port are preserved. No document properties on the
+<port>insertion</port> port are preserved.</para>
+</section>
 </section>
 <section xml:id="c.label-elements">
 <title>p:label-elements</title>
@@ -1301,6 +1367,10 @@ etc.</para>
 attribute labels associated with matched elements.  All other non-matching content
 remains the same.</para>
 
+<section>
+<title>Document properties</title>
+<para feature="label-elements-preserves-all">All document properties are preserved.</para>
+</section>
 </section>
 <section xml:id="c.load">
 <title>p:load</title>
@@ -1397,6 +1467,11 @@ URI, it is made absolute agains the (absolute) IRI used to retreive it.</para>
 <para>How does the preceding paragraph jibe with what
 <tag>p:http-request</tag> says about multipart responses?</para>
 </note>
+
+<section>
+<title>Document properties</title>
+<para feature="load-preserves-none">No document properties are preserved.</para>
+</section>
 </section>
 <section xml:id="c.make-absolute-uris">
 <title>p:make-absolute-uris</title>
@@ -1445,6 +1520,10 @@ not valid, or if it is absent and the input document has no base URI,
 the results are <glossterm>implementation-dependent</glossterm>.</impl>
 </para>
 
+<section>
+<title>Document properties</title>
+<para feature="make-absolute-uris-preserves-all">All document properties are preserved.</para>
+</section>
 </section>
 <section xml:id="c.namespace-rename">
 <title>p:namespace-rename</title>
@@ -1557,6 +1636,10 @@ specifies no namespace, since many attributes are in no namespace.</para>
 <option>to</option> option.  Prefixed names in content, for example QNames and
 XPath expressions, may end up with no appropriate namespace binding.</para></note>
 
+<section>
+<title>Document properties</title>
+<para feature="namespace-rename-preserves-all">All document properties are preserved.</para>
+</section>
 </section>
 <section xml:id="c.pack">
 <title>p:pack</title>
@@ -1600,6 +1683,11 @@ comments, processing instructions, or white space text nodes that
 occur between them may have come from either of the input documents;
 this step does not attempt to distinguish which one.</para>
 </note>
+
+<section>
+<title>Document properties</title>
+<para feature="pack-preserves-none">No document properties are preserved.</para>
+</section>
 </section>
 <section xml:id="c.parameters">
 <title>p:parameters</title>
@@ -1689,6 +1777,10 @@ names to appear on a <tag>c:param-set</tag>
 element.</error></para>
 </section>
 
+<section>
+<title>Document properties</title>
+<para feature="parameters-preserves-none">No document properties are preserved.</para>
+</section>
 </section>
 <section xml:id="c.rename">
 <title>p:rename</title>
@@ -1746,6 +1838,10 @@ is a <glossterm>dynamic error</glossterm> if the pattern matches
 a processing instruction and the new name has a non-null namespace.</error>
 </para>
 
+<section>
+<title>Document properties</title>
+<para feature="rename-preserves-all">All document properties are preserved.</para>
+</section>
 </section>
 <section xml:id="c.replace">
 <title>p:replace</title>
@@ -1774,6 +1870,10 @@ of the <port>replacement</port> document. Only non-nested matches are
 replaced. That is, once a node is replaced, its descendants cannot
 be matched.</para>
 
+<section>
+<title>Document properties</title>
+<para feature="replace-preserves-all">All document properties are preserved.</para>
+</section>
 </section>
 <section xml:id="c.set-attributes">
 <title>p:set-attributes</title>
@@ -1817,6 +1917,10 @@ prefixes bound to different namespaces, the document produced on the
 <tag class="attribute">xml:base</tag> is added or changed, the base URI
 of the element <rfc2119>must</rfc2119> also be amended accordingly.</para>
 
+<section>
+<title>Document properties</title>
+<para feature="set-attributes-preserves-all">All document properties are preserved.</para>
+</section>
 </section>
 <section xml:id="c.set-properties">
 <title>p:set-properties</title>
@@ -1828,6 +1932,7 @@ properties</glossterm> on the source document.</para>
    <p:input port="source" content-types="*/*"/>
    <p:output port="result" content-types="*/*"/>
    <p:option name="properties" required="true" as="map(xs:QName,item())"/>
+   <p:option name="merge" default="false()" as="xs:boolean"/>
 </p:declare-step>
 
  <para>The <glossterm>document properties</glossterm> of the document
@@ -1836,11 +1941,24 @@ in the <option>properties</option> option. The document produced on
 the <port>result</port> port has the same representation but the
 adjusted property values.</para>
 
+<para feature="p-set-properties-merge">If the <option>merge</option>
+option is true, then the supplied properties are added to the existing
+properties. If it is false, the document’s properties are replaced by
+the new set.</para>
+
 <para><error code="C1001">It is a <glossterm>dynamic
 error</glossterm> if the <option>properties</option> map contains
 a key equal to the string “<literal>content-type</literal>”.</error>
 </para>
 
+<section>
+<title>Document properties</title>
+<para feature="set-properties-preserves-some">If <option>merge</option> is
+true, document properties not overridden by settings in the <option>properties</option>
+map are  preserved, otherwise the resulting document has the properties specified in
+the <option>properties</option> map.
+</para>
+</section>
 </section>
 <section xml:id="c.sink">
 <title>p:sink</title>
@@ -1852,6 +1970,10 @@ discards them. It has no output.</para>
    <p:input port="source" content-types="*/*" sequence="true"/>
 </p:declare-step>
 
+<section>
+<title>Document properties</title>
+<para feature="sing-preserves-na">Not applicable.</para>
+</section>
 </section>
 <section xml:id="c.split-sequence">
 <title>p:split-sequence</title>
@@ -1904,6 +2026,10 @@ and ignore the context size.</para>
 steps, the <tag>p:split-sequence</tag> step <rfc2119>must</rfc2119> preserve
 any annotations that appear in the input.</para>
 
+<section>
+<title>Document properties</title>
+<para feature="split-sequence-preserves-all">All document properties are preserved.</para>
+</section>
 </section>
 <section xml:id="c.store">
 <title>p:store</title>
@@ -1938,6 +2064,11 @@ document stored by the step.</para>
 <para>The standard serialization options are provided to control the
 serialization of XML content when it is stored. These options are
 as specified in <link linkend="serialization-options"/>.</para>
+
+<section>
+<title>Document properties</title>
+<para feature="store-preserves-none">No document properties are preserved.</para>
+</section>
 </section>
 <section xml:id="c.string-replace">
 <title>p:string-replace</title>
@@ -1977,6 +2108,11 @@ of the element <rfc2119>must</rfc2119> also be amended accordingly.</para>
 <para>If the expression matches any other kind of node, the entire
 node (and <emphasis>not</emphasis> just its contents) is replaced by
 the string value of the <option>replace</option> expression.</para>
+
+<section>
+<title>Document properties</title>
+<para feature="string-replace-preserves-all">All document properties are preserved.</para>
+</section>
 </section>
 <section xml:id="c.unescape-markup">
 <title>p:unescape-markup</title>
@@ -2077,6 +2213,11 @@ namespace, the following input:</para>
 &lt;p xmlns="http://www.w3.org/1999/xhtml"&gt;This is a chunk.&lt;/p&gt;
 &lt;p xmlns="http://www.w3.org/1999/xhtml"&gt;This is a another chunk.&lt;/p&gt;
 &lt;/description&gt;</programlisting>
+
+<section>
+<title>Document properties</title>
+<para feature="unescape-markup-preserves-none">No document properties are preserved.</para>
+</section>
 </section>
 <section xml:id="c.unwrap">
 <title>p:unwrap</title>
@@ -2109,6 +2250,11 @@ ones.</para>
 
 <para>This step produces a single document; if the document element is
 unwrapped, the result might not be well-formed XML.</para>
+
+<section>
+<title>Document properties</title>
+<para feature="unwrap-preserves-none">No document properties are preserved.</para>
+</section>
 </section>
 <section xml:id="c.wrap">
 <title>p:wrap</title>
@@ -2174,6 +2320,10 @@ are siblings and either there are no nodes between them or all
 intervening, non-matching nodes are whitespace text, comment, or processing
 instruction nodes.</para>
 
+<section>
+<title>Document properties</title>
+<para feature="wrap-preserves-none">No document properties are preserved.</para>
+</section>
 </section>
 <section xml:id="c.wrap-sequence">
 <title>p:wrap-sequence</title>
@@ -2228,6 +2378,10 @@ adjacent” value, they are wrapped together in a single wrapper
 element.
 </para>
 
+<section>
+<title>Document properties</title>
+<para feature="wrap-sequence-preserves-none">No document properties are preserved.</para>
+</section>
 </section>
 <section xml:id="c.xinclude">
 <title>p:xinclude</title>
@@ -2254,6 +2408,11 @@ input document and are not provided as input to the step.</para>
 
 <para><error code="C0029">It is a <glossterm>dynamic error</glossterm>
 if an XInclude error occurs during processing.</error> </para>
+
+<section>
+<title>Document properties</title>
+<para feature="xinclude-preserves-all">All document properties are preserved.</para>
+</section>
 </section>
 <section xml:id="c.xslt">
 <title>p:xslt</title>
@@ -2388,6 +2547,11 @@ to the XSLT processor.</para>
 </listitem>
 </varlistentry>
 </variablelist>
+
+<section>
+<title>Document properties</title>
+<para feature="xslt-preserves-none">No document properties are preserved.</para>
+</section>
 </section>
 </section>
 
@@ -2543,6 +2707,10 @@ the specified <option>failure-threshold</option> value.</error>
 This failure, like any step failure,
 can be captured with a <tag>p:try</tag>.</para>
 
+<section>
+<title>Document properties</title>
+<para feature="exec-preserves-none">No document properties are preserved.</para>
+</section>
 </section>
 <section xml:id="c.hash">
 <title>p:hash</title>
@@ -2606,6 +2774,11 @@ of the element <rfc2119>must</rfc2119> also be amended accordingly.</para>
 <para>If the expression matches any
 other kind of node, the entire node (and <emphasis>not</emphasis> just
 its contents) is replaced by the hash.</para>
+
+<section>
+<title>Document properties</title>
+<para feature="hash-preserves-all">All document properties are preserved.</para>
+</section>
 </section>
 <section xml:id="c.in-scope-names">
 <title>p:in-scope-names</title>
@@ -2669,6 +2842,11 @@ respectively, the output would be:</para>
   &lt;c:param name="password" namespace="" value="pass"/&gt;
 &lt;/c:param-set&gt;</programlisting>
 
+</section>
+
+<section>
+<title>Document properties</title>
+<para feature="in-scope-names-preserves-none">No document properties are preserved.</para>
 </section>
 </section>
 <section xml:id="c.template" role="ext-optional">
@@ -2915,6 +3093,11 @@ each XPath expression.</para>
 they appear in text content, their node values are used.</para>
 
 </section>
+
+<section>
+<title>Document properties</title>
+<para feature="template-preserves-none">No document properties are preserved.</para>
+</section>
 </section>
 <section xml:id="c.uuid">
 <title>p:uuid</title>
@@ -2962,6 +3145,11 @@ value of the attribute in the output. If the attribute is named “<tag class="a
 <para>If the expression matches any
 other kind of node, the entire node (and <emphasis>not</emphasis> just
 its contents) is replaced by the UUID.</para>
+
+<section>
+<title>Document properties</title>
+<para feature="uuid-preserves-all">All document properties are preserved.</para>
+</section>
 </section>
 <section xml:id="c.validate-with-relax-ng">
 <title>p:validate-with-relax-ng</title>
@@ -3013,6 +3201,12 @@ augmented by application of the
 <para><impl>Support for <biblioref linkend="relaxng-dtd-compat"/> is
 <glossterm>implementation defined</glossterm>.</impl></para>
 
+<section>
+<title>Document properties</title>
+<para feature="validate-with-relax-ng-preserves-all">All document properties on
+the <port>source</port> port are preserved on the <port>result</port> port.
+No document properties on the <port>schemas</port> port are preserved.</para>
+</section>
 </section>
 <section xml:id="c.validate-with-schematron">
 <title>p:validate-with-schematron</title>
@@ -3051,6 +3245,14 @@ Validation Report Language</citetitle> (SVRL).</para>
 
 <para>The output of this step
 <rfc2119>may</rfc2119> include PSVI annotations.</para>
+
+<section>
+<title>Document properties</title>
+<para feature="validate-with-schematron-preserves-all">All document properties
+on the <port>source</port> port are preserved on the <port>result</port> port.
+No document properties on the <port>schemas</port> port are preserved. No document
+properties are preserved on the <port>report</port> port.</para>
+</section>
 </section>
 <section xml:id="c.validate-with-xml-schema">
 <title>p:validate-with-xml-schema</title>
@@ -3158,6 +3360,13 @@ Post-Schema-Validation-Infoset (PSVI) (<biblioref linkend="xmlschema-1"/>) annot
 supports such annotations. If not, the input document is reproduced
 with any defaulting of attributes and elements performed as specified
 by the XML Schema recommendation.</para>
+
+<section>
+<title>Document properties</title>
+<para feature="validate-with-xml-schema-preserves-all">All document properties
+on the <port>source</port> port are preserved on the <port>result</port> port.
+No document properties on the <port>schemas</port> port are preserved.</para>
+</section>
 </section>
 <section xml:id="c.www-form-urldecode">
 <title>p:www-form-urldecode</title>
@@ -3196,6 +3405,10 @@ as the order of the encoded parameters, reading from left to right.</para>
 the resulting parameter set will contain a <tag>c:param</tag> for
 each instance.</para>
 
+<section>
+<title>Document properties</title>
+<para feature="www-form-urldecode-preserves-none">No document properties are preserved.</para>
+</section>
 </section>
 <section xml:id="c.www-form-urlencode">
 <title>p:www-form-urlencode</title>
@@ -3235,6 +3448,11 @@ string is used as the new value of the attribute in the output.
 If the expression matches any other kind of node, the entire
 node (and <emphasis>not</emphasis> just its contents) is replaced by
 the encoded string.</para>
+
+<section>
+<title>Document properties</title>
+<para feature="www-form-urlencode-preserves-none">No document properties are preserved.</para>
+</section>
 </section>
 <section xml:id="c.xquery">
 <title>p:xquery</title>
@@ -3448,6 +3666,11 @@ validation before using XQuery:</para>
 <programlisting language="xml">&lt;count&gt;{count(.//p)}&lt;/count&gt;</programlisting>
 
 </section>
+
+<section>
+<title>Document properties</title>
+<para feature="xquery-preserves-none">No document properties are preserved.</para>
+</section>
 </section>
 <section xml:id="c.xsl-formatter">
 <title>p:xsl-formatter</title>
@@ -3492,6 +3715,11 @@ are defined by the XSL implementation used and are
 <para>The output of this step is a document containing a single
 <tag>c:result</tag> element whose content is the absolute URI of the
 document stored by the step.</para>
+
+<section>
+<title>Document properties</title>
+<para feature="xsl-formatter-preserves-none">No document properties are preserved.</para>
+</section>
 </section>
 </section>
 
