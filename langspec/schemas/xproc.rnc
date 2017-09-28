@@ -39,6 +39,11 @@ ContentTypes = text
 ]
 PropertyMap = text
 
+[
+   sa:model = "map(xs:string,xs:anyAtomicValue)"
+]
+SerializationMap = text
+
 name.ncname.attr = attribute name { xsd:NCName }
 name.qname.attr = attribute name { xsd:QName }
 as.attr = attribute as { XPathSequenceType }
@@ -50,6 +55,7 @@ select.attr = attribute select { XPathExpression }
 xpath-version.attr = attribute xpath-version { text }
 psvi-required.attr = attribute psvi-required { xsd:boolean }
 document-properties.attr = attribute document-properties { PropertyMap }
+serialization.attr = attribute serialization { SerializationMap }
 content-type.attr = attribute content-type { ContentType }
 content-types.attr = attribute content-types { ContentTypes }
 
@@ -149,8 +155,7 @@ Pipeline =
       common.attributes,
       use-when.attr?,
       decl.attributes,
-      (Input|Output|Option
-       |Serialization|Documentation|PipeInfo)*,
+      (Input|Output|Option|Documentation|PipeInfo)*,
       (DeclareStep|Pipeline|Import|Documentation|PipeInfo)*,
       Subpipeline
    }
@@ -205,6 +210,7 @@ OutputDeclaration =
       primary.attr?,
       common.attributes,
       use-when.attr?,
+      serialization.attr?,
       (Documentation|PipeInfo)*
    }
 
@@ -219,6 +225,7 @@ OutputConnection =
       common.attributes,
       inline.attributes,
       use-when.attr?,
+      serialization.attr?,
       (((\Empty|(Pipe|Document|Inline)+)? & (Documentation|PipeInfo)*)|Any)
    }
 
@@ -271,32 +278,6 @@ Inline =
 ]
 \Empty =
    element empty {
-      (Documentation|PipeInfo)*
-   }
-
-[
-   sa:class = "language-construct"
-]
-Serialization =
-   element serialization {
-      common.attributes,
-      use-when.attr?,
-      port.attr,
-      attribute byte-order-mark { xsd:boolean }?,
-      attribute cdata-section-elements { xsd:NMTOKENS }?,
-      attribute doctype-public { text }?,
-      attribute doctype-system { text }?,
-      attribute encoding { text }?,
-      attribute escape-uri-attributes { xsd:boolean }?,
-      attribute include-content-type { xsd:boolean }?,
-      attribute indent { xsd:boolean }?,
-      attribute media-type { text }?,
-      attribute method { xsd:QName }?,
-      attribute normalization-form { 'NFC'|'NFD'|'NFKC'|'NFKD'|'fully-normalized'|'none'|xsd:NMTOKEN }?,
-      attribute omit-xml-declaration { xsd:boolean }?,
-      attribute standalone { "true" | "false" | "omit" }?,
-      attribute undeclare-prefixes { xsd:boolean }?,
-      attribute version { text }?,
       (Documentation|PipeInfo)*
    }
 
@@ -402,8 +383,7 @@ DeclareStep =
       decl.attributes,
       common.attributes,
       use-when.attr?,
-      (Input|Output|Option
-       |Serialization|Documentation|PipeInfo)*,
+      (Input|Output|Option|Documentation|PipeInfo)*,
       ((DeclareStep|Pipeline|Import|Documentation|PipeInfo)*,Subpipeline)?
    }
 

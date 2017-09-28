@@ -10,13 +10,12 @@ serialized.</para>
 <p:declare-step type="p:escape-markup">
   <p:input port="source" content-types="application/xml text/xml */*+xml"/>
   <p:output port="result" content-types="application/xml"/>
-  <xi:include href="options/serialization-options-for-escape-markup.xml"
-              xpointer="xmlns(p=http://www.w3.org/ns/xproc)
-                        xpath(/p:pipeline/p:option)" parse="xml"/>
+  <p:option name="serialization" as="map(xs:string,xs:anyAtomicValue)"/>
 </p:declare-step>
 
-<para>This step supports the standard serialization options as specified in <link linkend="serialization-options"/>.  These
-options control how the output markup is produced before it is escaped.
+<para>This step supports the standard serialization options as
+specified in <link linkend="xml-serialization"/>. These options
+control how the output markup is produced before it is escaped.
 </para>
 
 <para>For example, the input:</para>

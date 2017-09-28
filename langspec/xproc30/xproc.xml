@@ -3761,73 +3761,319 @@ port.</para>
 </section>
 
     <!-- ============================================================ -->
-    <section xml:id="p.output"><title>p:output</title><para>A <tag>p:output</tag> identifies an
-        output port, optionally connecting an input for it, if necessary.</para>
-      <e:rng-pattern name="OutputDeclaration"/>
-      <para>The <tag class="attribute">port</tag> attribute defines the name of the port. <error
-          code="S0011">It is a <glossterm>static error</glossterm> to identify two ports with the
-          same name on the same step.</error></para>
-<para>An output declaration can indicate if a
-        sequence of documents is allowed to appear on the declared port. If <tag class="attribute"
-          >sequence</tag> is specified with the value <literal>true</literal>, then a sequence is
-        allowed. <error code="D0007">If <tag class="attribute">sequence</tag> is not specified on
-            <tag>p:output</tag>, or has the value false, then it is a <glossterm>dynamic
-            error</glossterm> if the step does not produce exactly one document on the declared
-          port.</error></para>
+
+<section xml:id="p.output">
+<title>p:output</title>
+
+<para>A <tag>p:output</tag> identifies an output port, optionally
+connecting an input for it, if necessary.</para>
+
+<e:rng-pattern name="OutputDeclaration"/>
+
+<para>The <tag class="attribute">port</tag> attribute defines the name
+of the port. <error code="S0011">It is a <glossterm>static
+error</glossterm> to identify two ports with the same name on the same
+step.</error></para>
+
+<para>An output declaration can indicate if a sequence of documents is
+allowed to appear on the declared port. If <tag class="attribute"
+>sequence</tag> is specified with the value <literal>true</literal>,
+then a sequence is allowed. <error code="D0007">If <tag
+class="attribute">sequence</tag> is not specified on
+<tag>p:output</tag>, or has the value false, then it is a
+<glossterm>dynamic error</glossterm> if the step does not produce
+exactly one document on the declared port.</error></para>
+
 <para>The <tag class="attribute">primary</tag> attribute is used to
-        identify the primary output port. An output port is a primary output port if <tag
-          class="attribute">primary</tag> is specified with the value <literal>true</literal> or if
-        the step has only a single output port and primary is not specified. <error code="S0014">It
-          is a <glossterm>static error</glossterm> to identify more than one output port as
-          primary.</error></para>
+identify the primary output port. An output port is a primary output
+port if <tag class="attribute">primary</tag> is specified with the
+value <literal>true</literal> or if the step has only a single output
+port and primary is not specified. <error code="S0014">It is a
+<glossterm>static error</glossterm> to identify more than one output
+port as primary.</error></para>
+
+<para>The <tag class="attribute">serialization</tag> attribute can
+be used to provide <link linkend="serialization">serialization
+parameters</link>.
+</para>
+
 <para>On <glossterm baseform="compound step">compound
-          steps</glossterm>, the declaration <rfc2119>may</rfc2119> be accompanied by a
-          <glossterm>connection</glossterm> for the output.</para>
+steps</glossterm>, the declaration <rfc2119>may</rfc2119> be
+accompanied by a <glossterm>connection</glossterm> for the
+output.</para>
+
       <e:rng-pattern name="OutputConnection"/>
-      <para><error code="S0029">It is a <glossterm>static error</glossterm> to specify a connection
-          for a <tag>p:output</tag> inside a <tag>p:declare-step</tag> for an atomic
-        step.</error></para>
+
+<para><error code="S0029">It is a <glossterm>static error</glossterm>
+to specify a connection for a <tag>p:output</tag> inside a
+<tag>p:declare-step</tag> for an atomic step.</error></para>
+
 <para>If a connection is provided for a <tag>p:output</tag>, documents
-        are <emphasis>read from</emphasis> that connection and those documents form the output that
-          <emphasis>is written</emphasis> to the output port. In other words, placing a
-          <tag>p:document</tag> inside a <tag>p:output</tag> causes the processor to <emphasis>read
-          that document</emphasis> and provide it on the output port. It <emphasis>does
-          not</emphasis> cause the processor to <emphasis>write</emphasis> the output to that
-        document.</para>
-        <para>For <tag class="attribute">exclude-inline-prefixes</tag>, see <tag>p:inline</tag> .
-        </para>
+are <emphasis>read from</emphasis> that connection and those documents
+form the output that <emphasis>is written</emphasis> to the output
+port. In other words, placing a <tag>p:document</tag> inside a
+<tag>p:output</tag> causes the processor to <emphasis>read that
+document</emphasis> and provide it on the output port. It
+<emphasis>does not</emphasis> cause the processor to
+<emphasis>write</emphasis> the output to that document.</para>
+
+<para>For <tag class="attribute">exclude-inline-prefixes</tag>, see
+<tag>p:inline</tag> .
+</para>
+
+<section xml:id="serialization">
+<title>Serialization parameters</title>
+
+<!-- This ID exists so that old links to the p.serialization section
+     will come here. Not that it will matter, but that's why.
+-->
+<para xml:id="p.serialization">The <tag class="attribute">serialization</tag>
+attribute allows the user to request serialization parameters on an
+output port. The attribute value is an XPath expression which returns
+a map from strings to atomic values.</para>
+
+<para>If the pipeline processor serializes the output on a port, it
+<rfc2119 feature="ser-must-use">must</rfc2119> use the serialization
+parameters specified. If the processor is not serializing (if, for
+example, the pipeline has been called from another pipeline), then the
+<tag class="attribute">serialization</tag>
+<rfc2119 feature="ser-must-ignore">must</rfc2119> be
+ignored.</para>
+
+<para><impl>The default value of any serialization parameters not
+specified on a particular output is
+<glossterm>implementation-defined</glossterm>.</impl>
+<error code="D0020">It is a <glossterm>dynamic error</glossterm> if
+the combination of serialization options specified or defaulted is not
+allowed.</error> Implementations <rfc2119>must</rfc2119> check that
+all of the specified serialization options are allowed if they
+serialize the specified output. If the specified output is not being
+serialized implementations
+<rfc2119>may</rfc2119> but are not required to check that the
+specified options are allowed.</para>
+
+<para>For XML outputs, see <xref linkend="xml-serialization"/>.
+For non-XML outputs, see <xref linkend="non-xml-serialization"/>.
+<error code="S1201">It is a <glossterm>static error</glossterm> if the
+map contains any property name not recognized as a serialization
+parameter.</error></para>
+
+<section xml:id="xml-serialization">
+<title>XML serialization</title>
+
+<para>The names and values of XML serialization parameters are defined
+by <biblioref linkend="xml-serialization"/>.</para>
+
+<para>The following parameters may be present in the serialization
+map:</para>
+
+<variablelist>
+<varlistentry>
+<term><option>byte-order-mark</option></term>
+<listitem>
+<para>The value of this option <rfc2119>must</rfc2119> be a boolean.
+If it's not specified, the default varies by encoding: for UTF-16 it's
+true, for all others, it's false.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>cdata-section-elements</option></term>
+<listitem>
+<para>The value of this option <rfc2119>must</rfc2119> be a list of
+<type>QName</type>s. They are interpreted as elements name.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>doctype-public</option></term>
+<listitem>
+<para>The value of this option <rfc2119>must</rfc2119> be a string.
+The public identifier of the doctype.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>doctype-system</option></term>
+<listitem>
+<para>The value of this option <rfc2119>must</rfc2119> be an
+<type>anyURI</type>. The system identifier of the doctype. It need not
+be absolute, and is not resolved.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>encoding</option></term>
+<listitem>
+<para>A character set name. <impl>If no <option>encoding</option> is
+specified, the encoding used is <glossterm>implementation
+defined</glossterm>. If the <option>method</option> is
+“<literal>xml</literal>” or “<literal>xhtml</literal>”, the
+implementation defined encoding <rfc2119>must</rfc2119> be either
+UTF-8 or UTF-16.</impl></para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>escape-uri-attributes</option></term>
+<listitem>
+<para>The value of this option <rfc2119>must</rfc2119> be a
+boolean. It is ignored unless the specified method is
+“<literal>xhtml</literal>” or “<literal>html</literal>”.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>include-content-type</option></term>
+<listitem>
+<para>The value of this option <rfc2119>must</rfc2119> be a boolean.
+It is ignored unless the specified method is
+“<literal>xhtml</literal>” or “<literal>html</literal>”.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>indent</option></term>
+<listitem>
+<para>The value of this option <rfc2119>must</rfc2119> be a
+boolean.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>media-type</option></term>
+<listitem>
+<para>The value of this option <rfc2119>must</rfc2119> be a string. It
+specifies the media type (MIME content type). If not specified, the
+default varies according to the <option>method</option>:</para>
+
+<variablelist>
+<varlistentry><term><literal>xml</literal></term>
+<listitem><simpara><literal>application/xml</literal></simpara></listitem>
+</varlistentry>
+<varlistentry><term><literal>html</literal></term>
+<listitem><simpara><literal>text/html</literal></simpara></listitem>
+</varlistentry>
+<varlistentry><term><literal>xhtml</literal></term>
+<listitem><simpara><literal>application/xhtml+xml</literal></simpara></listitem>
+</varlistentry>
+<varlistentry><term><literal>text</literal></term>
+<listitem><simpara><literal>text/plain</literal></simpara></listitem>
+</varlistentry>
+</variablelist>
+
+<para><impl>For methods other than <literal>xml</literal>, <literal>html</literal>,
+<literal>xhtml</literal>, and <literal>text</literal>; the
+<option>media-type</option> is <glossterm>implementation defined</glossterm>.
+</impl></para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>method</option></term>
+<listitem>
+<para>The value of this option <rfc2119>must</rfc2119> be a
+<type>QName</type>. It specifies the serialization method.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>normalization-form</option></term>
+<listitem>
+<para>The value of this option <rfc2119>must</rfc2119> be an NMTOKEN,
+one of the enumerated values <code>NFC</code>, <code>NFD</code>,
+<code>NFKC</code>, <code>NFKD</code>, <code>fully-normalized</code>,
+<code>none</code> or an implementation-defined value.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>omit-xml-declaration</option></term>
+<listitem>
+<para>The value of this option <rfc2119>must</rfc2119> be a
+boolean.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>standalone</option></term>
+<listitem>
+<para>The value of this option <rfc2119>must</rfc2119> be an NMTOKEN,
+one of the enumerated values <code>true</code>, <code>false</code>, or
+<code>omit</code>.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>undeclare-prefixes</option></term>
+<listitem>
+<para>The value of this option <rfc2119>must</rfc2119> be a
+boolean.</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><option>version</option></term>
+<listitem>
+<para>The value of this option <rfc2119>must</rfc2119> be a
+string.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+<para>In order to be consistent with the rest of this specification,
+boolean values for the serialization parameters must use one of the
+XML Schema lexical forms for boolean: "true", "false", "1", or "0".
+This is different from the <biblioref linkend="xml-serialization"/>
+specification which uses “yes” and “no”. No change in
+semantics is implied by this different spelling.</para>
+
+<para>The <option>method</option> option controls the serialization
+method used by this component with standard values of 'html', 'xml',
+'xhtml', and 'text' but only the 'xml' value is required to be
+supported. The interpretation of the remaining options is as
+specified in <biblioref linkend="xml-serialization"/>.</para>
+
+<para><impl>Implementations may support other method values but their
+results are <glossterm>implementation-defined</glossterm>.</impl>
+</para>
+
+<para>A minimally conforming implementation must support the
+<code>xml</code> output method with the following option
+values:</para>
+
+<itemizedlist>
+   <listitem><para>The <code>version</code> must support the value <code>1.0</code>.</para></listitem>
+   <listitem><para>The <code>encoding</code> must support the values <code>UTF-8</code>.</para></listitem>
+   <listitem><para>The <code>omit-xml-declaration</code> must be supported.  If the value is not specified or has the value <code>no</code>, an XML declaration must be produced.</para></listitem>
+</itemizedlist>
+
+<para>All other option values may be ignored for the <code>xml</code>
+output method.</para>
+
+<para>If a processor chooses to implement an option for serialization,
+it must conform to the semantics defined in the <biblioref
+linkend="xml-serialization"/> specification.</para>
+
+<note xml:id="note-use-char-maps">
+<para>The use-character-maps parameter in
+<biblioref linkend="xml-serialization"/> specification has not been provided in
+the standard serialization options provided by this
+specification.</para>
+</note>
+
 </section>
-    <!-- ============================================================ -->
-    <section xml:id="p.serialization"><title>p:serialization</title><para>The
-          <tag>p:serialization</tag> element allows the user to request serialization properties on
-        a <tag>p:pipeline</tag> output. </para>
-      <e:rng-pattern name="Serialization"/>
-      <para>If the pipeline processor serializes the output on the specified port, it
-          <rfc2119>must</rfc2119> use the serialization options specified. If the processor is not
-        serializing (if, for example, the pipeline has been called from another pipeline), then the
-          <tag>p:serialization</tag>
-        <rfc2119>must</rfc2119> be ignored. The processor <rfc2119>may</rfc2119> reject statically a
-        pipeline that requests serialization options that it cannot provide.</para>
-<para><impl>The
-          default value of any serialization options not specified on a particular
-            <tag>p:serialization</tag> element is
-          <glossterm>implementation-defined</glossterm>.</impl> The allowed options are defined by
-          <biblioref linkend="xml-serialization"/>. <error code="D0020">It is a <glossterm>dynamic
-            error</glossterm> if the combination of serialization options specified or defaulted is
-          not allowed.</error> Implementations <rfc2119>must</rfc2119> check that all of the
-        specified serialization options are allowed if they serialize the specified output. If the
-        specified output is not being serialized (because it is being returned as the result of a
-        call from within another pipeline, for example) implementations <rfc2119>may</rfc2119> but
-        are not required to check that the specified options are allowed.</para>
-<para>The semantics
-        of the attributes on a <tag>p:serialization</tag> are described in <xref
-          linkend="serialization-options"/>.</para>
-<para><error code="S0039">It is a
-            <glossterm>static error</glossterm> if the port specified on the
-            <tag>p:serialization</tag> is not the name of an output port on the pipeline in which it
-          appears or if more than one <tag>p:serialization</tag> element is applied to the same
-          port.</error></para></section>
-    <!-- ============================================================ -->
+<section xml:id="non-xml-serialization">
+<title>Non-XML serialization</title>
+
+<para><impl>The names and values of non-XML serialization parameters are
+<glossterm>implementation-defined</glossterm>.</impl></para>
+</section>
+
+</section>
+</section>
+
+<!-- ============================================================ -->
     <section xml:id="variables-options">
       <title>Variables and Options</title>
       <para>Variables and options provide a mechanism for pipeline authors to construct
@@ -4258,12 +4504,6 @@ attribute">extension
         <para>It is not an error for a pipeline to include declarations for steps that a particular
           processor does not know how to implement. It is, of course, an error to attempt to
           evaluate such steps.</para>
-        <para>If <tag>p:serialization</tag> elements appear in the declaration
-          of an atomic step, they will only be used if the atomic step is directly evaluated by the
-          processor. They have no effect if the step appears in a
-          <glossterm>subpipeline</glossterm>; only the serialization options of the “top level” step
-          or pipeline are used because that is the only step which the processor is required to
-          serialize.</para>
       </section><section xml:id="declare-pipelines">
         <title>Declaring pipelines</title>
         <para>When a <tag>p:declare-step</tag> declares a pipeline, that pipeline encapsulates the
