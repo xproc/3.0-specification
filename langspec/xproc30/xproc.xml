@@ -316,13 +316,8 @@ document content.</termdef></para>
 <para>Documents have associated with them a set of properties. The properties
 are key/value pairs. <termdef xml:id="dt-document-properties">The
 <firstterm>document properties</firstterm> are exposed to the XProc
-pipeline as a map (<code>map(xs:string, xs:string)</code>) and, for non-XML documents,
-as an equivalent <glossterm>proxy document</glossterm>.</termdef></para>
-      <para>The proxy document is equivalent in a sense that each attribute of its top-level element
-        correspond to a document property map item, see <xref linkend="proxy-documents"/>. Because of this
-        equivalence requirement, the XProc processor <rfc2119>must</rfc2119> make sure that the map
-        value is normalized in the same way that an attribute value would be normalized according to
-        the rules set forth in clause 3.3.3 of <biblioref linkend="xml10"/>.</para>
+pipeline as a map (<code>map(xs:QName, item())</code>).</termdef></para>
+
 <para>Several property keys are defined by this specification:</para>
 
 <variablelist>
@@ -332,7 +327,9 @@ as an equivalent <glossterm>proxy document</glossterm>.</termdef></para>
 <para>The value of the “<code>content-type</code>”
 key identifies the media type (<biblioref linkend="rfc2046"/>) of the
 representation. The “<code>content-type</code>” <rfc2119>must</rfc2119>
-always be present.
+always be present. The processor is responsible for assuring that the
+<code>content-type</code> property matches the content type of each document
+produced on every output port.
 </para>
 </listitem>
 </varlistentry>
@@ -341,43 +338,11 @@ always be present.
 <listitem>
 <para>The value of the “<code>base-uri</code>” key identifies the
 base URI of the document. If no such key is present, the document has
-no base URI.</para>
+no base URI. The processor is responsible for assuring that the <code>base-uri</code>
+property matches the base URI of each document produced on every output port.
+</para>
 </listitem>
 </varlistentry>
-        <varlistentry>
-          <term><code>handle</code></term>
-          <listitem>
-            <para>The value of the “<code>handle</code>” key is a string that is used by the XProc
-              processor to identify the <glossterm>representation</glossterm> of non-XML documents,
-              including text documents. It <rfc2119>must not</rfc2119> be present for <link
-                linkend="xml-documents">XML documents</link>.</para>
-            <para>The XProc processor <rfc2119>must not</rfc2119> assign the same handle to
-              different representations.</para>
-            <para>The XProc processor <rfc2119>must</rfc2119> make sure that the <code>handle</code>
-              property cannot be manipulated by users.</para>
-            <note xml:id="note-handle-property">
-              <para>The purpose of exposing this document property is that users be able to
-                determine whether two non-XML documents share the same representation; that is,
-                whether they are identical, modulo possible differences in other document
-                properties. For “regular” documents, this justifies a prima facie assumption that
-                they will yield the same binary representation (moduly byte order considerations)
-                when serialized to disk. This assumption is not justified if streaming sources such
-                as <filename>/dev/urandom</filename> can serve as a document.</para>
-              <para>The format of this property’s string value is
-                  <glossterm>implementation-dependent</glossterm>. It can be a UUID, a URI, a
-                map constructor, etc.</para>
-            </note>
-            <note role="editorial" xml:id="ednote-representation-identity">
-              <para>The requirement that a handle has to be unique does not imply that the
-                underlying resource doesn’t change over time or that each <tag>p:store</tag>
-                operation of the same document with the same parameters must yield a byte-identical
-                file on disk. Think of a handle that identifies a streaming source. Should we make
-                this explicit? Or do we in fact stipulate that the representation will not change
-                once a document has been loaded, thereby deferring the discussion of streaming
-                resources to another version of the spec?</para>
-            </note>
-          </listitem>
-        </varlistentry>
 </variablelist>
 
 <para>Other property keys may also be present, including user
@@ -447,295 +412,6 @@ formats, caching them on disk, etc.</para>
 
 </section>
 </section>
-
-      <section xml:id="proxy-documents">
-        <title>Proxy Documents</title>
-        <para>
-          <termdef xml:id="dt-proxy-document">A <firstterm>proxy document</firstterm> is an XML
-            document with a top-level element <tag>c:document-properties</tag> and a non-XML
-              <code>content-type</code> document property. Each attribute name and value of this
-              <tag>c:document-properties</tag> element correspond to a map item of a document’s
-              <glossterm>document properties</glossterm>.</termdef> The XProc processor maintains
-            <glossterm>implementation-dependent</glossterm> associations between a document’s
-            <glossterm>representation</glossterm> and the document’s proxy documents. It exposes
-          these associations to pipeline authors by means of the “<code>handle</code>” document
-          property, where each unique (after whitespace normalization) <code>handle</code> string
-          represents a distinct <glossterm>representation</glossterm>. Proxy documents do not exist
-          for XML documents. They only exist for non-XML documents, including text documents.</para>
-        <note xml:id="note-proxy-documents">
-          <para>The purpose of proxy documents is to provide an XDM-compliant interface for passing
-            non-XML documents between steps. While this could have been achieved by using an empty
-            document node, XPath expressions in steps can be simplified if document properties don’t
-            have to be calculated from invoking <function>p:document-properties</function>. In
-            particular, proxy document attributes make document properties accessible when
-            evaluating step options. In a step context, XProc extension functions such as
-              <function>p:document-properties</function> can only be made available indirectly, by
-            letting the XPath processor insert the function result as a string value into the XPath
-            expression. While <glossterm baseform="attribute value template">attribute value
-              templates</glossterm> will make this kind of option value construction easier, XProc
-            developers might find an attribute-based access of document properties even more
-            convenient.</para>
-          <para>It should be noted that even though proxy documents do not exist for XML documents,
-            XML documents may well have document properties. These can only be queried by the
-              <function>p:document-poperties</function> function.</para>
-          <para>There may be multiple proxy documents for a given document. This is because whenever
-            a step processes a proxy document, a different (from a node-identity perspective) XML
-            document may be returned on the respective output port. However, the association with
-            a single distinct <glossterm>representation</glossterm> will be preserved or established
-            by the XProc processor.</para>
-          <para>A proxy document always has a <tag class="attribute">handle</tag> and a <tag
-              class="attribute">content-type</tag> attribute.</para>
-          </note>
-        <note role="editorial" xml:id="ednote-base-uri-property-sync">
-          <title>Editorial Note</title>
-          <para>Maybe we should stipulate that the processor must make sure that the <code>base-uri</code>
-            property corresponds to an XML document’s base URI?</para>
-        </note>
-        <note role="editorial" xml:id="ednote-why-proxy-documents">
-          <title>Editorial Note</title>
-          <para>While there is a strong argument in favor of having a uniform interface to query
-            document properties for all kinds of documents, and this can only be the
-              <function>p:document-poperties</function> function, there is a programming and
-            debugging convenience argument that supports the proxy document approach. It will save
-            the programmer <tag>p:variable</tag> declarations and the pesky overhead that comes with
-            the necessary <tag>p:group</tag> envelope and with potentially having to declare a
-            number of output ports for each <tag>p:group</tag>. Therefore this approach is in line
-            with the requirement of making XProc less verbose. One can argue that the asymmetric
-            convenience of a proxy document for non-XML documents is an attempt to compensate for
-            the asymmetric inconvenience of accessing non-XML document content by XPath.</para>
-          <para>We have briefly contemplated making the document properties also available in
-          XML documents via namespaced attributes to the top-level element. We dropped this 
-          idea though, primarily because of issues regarding validation.</para>
-        </note>
-        <para>The XProc processor <rfc2119>must</rfc2119> make sure that the attributes of proxy
-          documents always correspond to the underlying document properties.</para>
-        <note xml:id="ednote-proxy-document-attribute-sync" role="editorial">
-          <title>Editorial Note</title>
-          <para>Still need to flesh out whether this implies that <tag>p:add-attribute</tag> on a
-              <tag>c:document-properties</tag> document is forbidden (in favor of a (fictitious?)
-              <function>p:set-document-properties</function> function or nothing at all) or whether
-              <tag>p:add-attribute</tag> may in fact be used to manipulate document properties. In
-            any case, the <code>handle</code> property may not be deleted or altered by a
-            user,</para>
-        </note>
-        <para>The XProc processor <rfc2119>must</rfc2119> make sure that proxy documents have a
-            <code>handle</code> attribute by which the processor can find the document’s
-            <glossterm>representation</glossterm>. This is not a new requirement but a consequence
-          of the preceding requirement and the requirement that non-XML documents always have a
-            <code>handle</code> document property.</para>
-        
-        <para>The presence of the <code>handle</code> attribute on a
-            <tag>c:document-properties</tag> document is a sufficient criterion for determining
-          whether this document is a proxy document for a non-XML document (in contrast to a regular
-            <tag>c:document-properties</tag> XML document) and that there is an underlying
-            <glossterm>representation</glossterm> available.</para>
-        <para>When serializing a proxy document, the processor <rfc2119>must</rfc2119> write the
-            <tag class="attribute">handle</tag> attribute as a namespaced <tag class="attribute"
-            >c:handle</tag> attribute. This is to make sure that when this document is read again,
-          it will not be treated as a proxy document.</para>
-        <note role="editorial" xml:id="ednote-">
-          <title>Editorial Note</title>
-          <para>Serialization of proxy documents has to be done by other means than
-              <tag>p:store</tag>, or using a new, not-yet-introduced serialization option.</para>
-        </note>
-        <para>It is a <glossterm>dynamic error</glossterm> if a purported proxy document
-            (a <tag>c:document-properties</tag> document with a <tag class="attribute"
-            >content-type</tag> attribute that does not stand for an XML content type, and with
-            a <tag class="attribute">handle</tag> attribute) arrives on an input port and the
-          processor is unable to locate a <glossterm>representation</glossterm> for the value given
-          in the <tag class="attribute">handle</tag> attribute.</para>
-        <para>Applying <function>p:document-properties</function> to a proxy document will return
-          the underlying document’s <code>content-type</code>, not an XML content type.</para>
-        
-        <para>The processor makes the <glossterm>representation</glossterm> available to a step that
-          processes non-XML documents in an <glossterm>implementation-dependent</glossterm> way.</para>
-        <para>With the exception of a special case that is described in the next paragraph, a step
-            <rfc2119>must not</rfc2119> make an attempt to process the proxy document as an XML
-          document if it does not accept the content-type of the non-XML document on the port that
-          the document arrives on. The processor will raise a 
-          <error code="D1003"><glossterm>dynamic error</glossterm></error> if this happens.</para>
-        <para>However, a proxy document <rfc2119>must</rfc2119> be processed as an XML document if
-          and only if the processing step accepts nothing but XML documents on its primary input
-          port. If and only if the first document on the primary output port of such an operation is
-          a <tag>c:document-properties</tag> document with a non-XML <code>content-type</code> and a
-            <code>handle</code> property, the XProc processor <rfc2119>must</rfc2119> re-attach the
-            <tag class="attribute">handle</tag> attribute of the first document on the primary input
-          port to the resulting first document on the primary output port.</para>
-        <note xml:id="note-xml-processing-of-proxy-documents">
-          <para>The purpose of this rule is to enable proxy documents to be enriched with additional
-            metadata below the top-level element by XML processing steps.</para>
-        </note>
-        <para>Although the <tag>p:viewport</tag> element does not declare <tag class="attribute"
-            >content-types</tag>, it is a pure-XML-processing step in the sense of the preceding
-          paragraph, too, and it <rfc2119>must</rfc2119> process a proxy document as an XML
-          document.</para>
-        <para>For documents on other output ports, or for documents on the primary output port that
-          are not first in sequence, the processor <rfc2119>must</rfc2119> remove the <tag
-            class="attribute">handle</tag> attribute and the corresponding document property. In
-          addition, the processor <rfc2119>must</rfc2119> change the content type of these resulting
-          documents to <code>application/xml</code>.</para>
-        <note xml:id="ednote-proxy-document-xml-processing" role="editorial">
-          <title>Editorial Note</title>
-          <para>This first-document-on-primary-port restriction is in place in order to make
-            transfer of the <glossterm>representation</glossterm> association unambiguous. Suppose
-            you have a <tag>p:xslt</tag> step that processes two image documents, where the latter
-            is a conversion result of the former. The purpose of the XSLT step is to attach a
-            conversion instruction as new custom metadata to the original image. The
-              <tag>p:xslt</tag> step receives the image documents on its <literal>source</literal>
-            port. Since it only processes XML, it will process the proxy documents
-            <programlisting language="xml">&lt;c:document-properties content-type="image/jpeg" handle="d238026f-7302-484b-95fc-cfc84b3e7b41" base-uri="file:///tmp/photo1.jpg">
-  &lt;image-props width="1024" height="768" colorspace="CMYK"/>
-&lt;/c:document-properties></programlisting>
-            and
-            <programlisting language="xml">&lt;c:document-properties content-type="image/jpeg" handle="d238026f-7302-484b-95fc-cfc84b3e7b41" base-uri="file:///tmp/photo1.jpg">
-  &lt;image-props width="800" height="600" colorspace="sRGB"/>
-&lt;/c:document-properties></programlisting>
-            to yield the result <remark>(yes, this example is contrived)</remark>
-            <programlisting language="xml">&lt;c:document-properties content-type="image/jpeg" base-uri="file:///tmp/photo1.jpg">
-  &lt;image-props width="1024" height="768" colorspace="CMYK"/>
-  &lt;my:image-transform xmlns:my="http://acme.com/namespace/my">
-    &lt;my:inputParams pixelXdim="1024" pixelYdim="768" colorspace="CMYK"/>
-    &lt;my:targetParams pixelXdim="800" pixelYdim="768" colorspace="sRGB"/>
-  &lt;/my:image-transform>
-&lt;/c:document-properties></programlisting>
-          </para>
-          <para>Then the processor needs to know which of the input documents’ <tag
-              class="attribute">handle</tag> attribute it should attach to the result document (or “to
-            which result document” if there are multiple). This is solved most easily if we
-            stipulate “first doc on primary port must be proxy doc, otherwise no association
-            transfer.”</para>
-          <para>Another question is whether the processor will be able to transfer the association
-            to a <tag>c:document-properties</tag> result document that some custom extension step
-            creates, without the need to bother the extension step author to transfer the
-            association. This should be feasible. It is equivalent to applying an
-              <tag>p:add-attribute</tag> to the first primary result, with
-              <code>attribute-name="handle"</code> and the attribute value taken from the <tag
-              class="attribute">handle</tag> attribute of the first document that is connected to the
-            primary input port, if both documents are <tag>c:document-properties</tag>.</para>
-          <para></para>
-        </note>
-        <note xml:id="note-proxy-relationship">
-          <para>A few observations on “proxy-documents-as-XML”:</para>
-          <orderedlist>
-            <listitem>
-              <para>After an XML transformation, the output proxy document still points to the same
-                internally maintained resource as the input proxy document.</para>
-            </listitem>
-            <listitem>
-              <para>With the exception of <tag>p:identity</tag> operations, the input proxy document
-                and the output proxy documents are different XML documents from a node-identity
-                standpoint.</para>
-            </listitem>
-            <listitem>
-              <para>There is an 1:n relationship between a document’s
-                  <glossterm>representation</glossterm> and its proxy documents.</para>
-            </listitem>
-            <listitem>
-              <para>A <tag>p:delete</tag> on a <code>/c:document-properties/@handle</code> attribute
-              won’t delete the <tag class="attribute">handle</tag> attribute because the processor 
-              will re-insert it after the “classic” delete operation has completed.</para>
-            </listitem>
-          </orderedlist>
-        </note>
-        <para>A step may add further XML elements below a proxy document’s top-level element. For
-          example, a step that loads or analyzes an image may extract the image’s XMP metadata and
-          insert it below <tag>c:document-properties</tag>:</para>
-        <programlisting language="xml">&lt;c:document-properties xmlns:c="http://www.w3.org/ns/xproc-step" 
-  content-type="image/jpeg" base-uri="file:///tmp/photo.jpg">
-  &lt;x:xmpmeta xmlns:x="adobe:ns:meta/">
-    &lt;rdf:RDF xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
-      &lt;rdf:Description rdf:about="" xmlns:exif="http://ns.adobe.com/exif/1.0/">
-        &lt;exif:PixelXDimension>5312&lt;/exif:PixelXDimension>
-        &lt;exif:PixelYDimension>2988&lt;/exif:PixelYDimension>
-        &lt;exif:ExifVersion>0220&lt;/exif:ExifVersion>
-      &lt;/rdf:Description>
-    &lt;/rdf:RDF>
-  &lt;/x:xmpmeta>
-&lt;/c:document-properties></programlisting>
-        <section xml:id="content-extracts">
-          <title>Content Extracts in Proxy Documents</title>
-          <para>In order to further facilitate XPath-based access to non-XML documents, a user may
-            instruct the processor to create or update an XML representation of a document’s content
-            or parts thereof. The representation depends on the document type and may be further
-            influenced by an <glossterm>extraction option</glossterm> map that may be supplied to
-              <tag>p:load</tag> or to steps that process non-XML documents.</para>
-          <para>Such a full or partial XML representation is called a <glossterm>content
-              extract</glossterm>. <termdef xml:id="dt-content-extract">A <firstterm>content
-                extract</firstterm> is a <tag>c:content-extract</tag> element that is a child of a
-                <tag>c:document-properties</tag> top-level element. It contains optional attributes
-              that correspond to extraction options. Below that element, it 
-              <rfc2119>may</rfc2119> contain any nodes.</termdef></para>
-          <note xml:id="note-content-extract-nodes">
-            <para>The nodes below <tag>c:content-extract</tag> can be a text node containing the
-                <literal>xs:string</literal> representation of a text file or the
-                <literal>xs:hexBinary</literal> representation of a binary file, or it can be an XML
-              representation of a JSON file as returned by
-              <function>fn:json-to-xml</function>.</para>
-            <para>The extract can be an abridged representation of the content, as controlled by
-              extraction options. The purpose of abridged content extracts is to allow, for example,
-              BoundingBox parsing of a potentially large ASCII-encoded EPS file, where it is only
-              necessary to read the first couple of lines, or analysis of only the most recent
-              events in a large Web server log file. If a content extract of a text file is included
-              in the proxy document, XPath expressions such as <code>matches(., 'regex')</code> just
-              work in the context of a text document.</para>
-          </note>
-          <note xml:id="ednote-extract-in-proxy" role="editorial">
-            <title>Editorial Note</title>
-            <para>(Just some preliminary notes in lieu of spec prose proper)</para>
-            <para>Extraction options should be passed in a <code>map(xs:string, xs:string)</code>,
-              for example <code>map{'as':'xs:string', 'update':'true', 'max-characters':'1k',
-                'from':'top'}</code>. This means that a step that creates or updates this extract
-              (for example, <tag>p:load</tag> or a custom text-processing step) should attempt to
-              create or update an existing <tag>c:content-extract</tag> element with an up-to-date
-              xs:string representation of the first up to 1000 characters of a text file that it
-              just loaded or processed.</para>
-            <para>It should raise a dynamic error if the representation specified in the <tag
-                class="attribute">as</tag> attribute or option map item cannot be complied with. For
-              example, <code>map('as':'Q{http://www.w3.org/2005/xpath-functions}map')</code>
-              requests a <function>fn:json-to-xml</function> output; but if this cannot be produced
-              because the file is not of type <literal>application/json</literal>, then an error
-              will be raised.</para>
-            <para>The presence of an extraction option map may be used
-              to trigger the initial extraction of content at all. For existing
-                <tag>c:content-extract</tag> elements, updating only happens when the <tag
-                class="attribute">update</tag> attribute is <literal>true</literal>.</para>
-            <para>There should be a list of extraction parameters that apply to all non-XML
-              documents (such as <literal>as</literal>, <literal>byte-order</literal>,
-                <literal>max-bytes</literal>, <literal>from</literal>) and others that apply only to
-              text documents (such as <literal>max-lines</literal> and
-                <literal>max-characters</literal>, <literal>line-separator</literal>). All these
-              parameters are optional when given in a map, but may have default values. The actual
-              values such as an automatically determined <tag class="attribute">as</tag> attribute
-              should be added to the <tag>c:content-extract</tag> document by the step that loads or
-              processes the document.</para>
-
-            <para>When the <literal>update</literal> attribute or map item is
-                <literal>true</literal>, a step should attempt to update the extract according to
-              the other extraction parameters.</para>
-            <para>Alternatively, it can be stipulated that a step <rfc2119>must</rfc2119> update the
-              content extract (according to the options given on the existing extract or to the
-              options given on its invocation) if it is able to do so. If the step cannot do so
-              (because it is content-type agnostic and/or primitive, maybe a step that only counts
-              bytes), then it <rfc2119>must</rfc2119> remove the content extract altogether.</para>
-            <para>Another possibility: The <tag>c:content-extract</tag> element may also have an
-                <tag class="attribute">handle</tag> attribute that corresponds to the document
-                <glossterm>representation</glossterm> that the extract was taken from. This way,
-              users can determine whether the extract is current with respect to the
-                <glossterm>representation</glossterm>. It should be noted that the <tag
-                class="attribute">handle</tag> attribute of <tag>c:content-extract</tag> is subject
-              to user manipulation and that the processor need not make sure that the 
-              <glossterm>representation</glossterm> that corresponds to 
-              <code>/c:document-properties/c:content-extract/@handle</code>
-            still exists. If we follow this path, <tag>c:document-properties</tag> can carry 
-            multiple <tag>c:content-extract elements</tag>, where each one corresponds to 
-            another <glossterm>representation</glossterm>.</para>
-          </note>
-          <para>The processor <rfc2119>must not</rfc2119> make any efforts to update the document
-              <glossterm>representation</glossterm> when the <glossterm>content extract</glossterm>
-            is updated (which can be done by an XML-manipulating step).</para>
-        </section>
-      </section>
-
 </section>
 
 <section xml:id="input-output">
@@ -2030,7 +1706,7 @@ if any of the <tag>c:param</tag> elements are invalid.</error>
 of a document as a map.</para>
 
 <methodsynopsis>
-<type>map(xs:string,xs:string)</type>
+<type>map(xs:QName,item())</type>
 <methodname>p:document-properties</methodname>
 <methodparam><type>document-node()</type><parameter>doc</parameter></methodparam>
 </methodsynopsis>
@@ -2038,12 +1714,13 @@ of a document as a map.</para>
 <para>The map returned contains (exclusively) the document properties
 associated with the <parameter>doc</parameter> specified.</para>
 
-<note xml:id="ednote-non-xml-props">
-<title>Editorial Note</title>
-<para>This function is only defined on XML documents but clearly the
-intent is that it should work on any kind of document. How can we
-do that?</para>
-</note>
+<para feature="document-properties-non-xml-document">The context node
+for the <function>p:document-properties</function> function must be an
+XPath document node. In order to access the document properties of a
+non-XML document, the processor is responsible for manufacturing an
+empty document node for this purpose and for maintaining the
+association between that empty document node and the corresponding
+non-XML document.</para>
 </section>
 
       <section xml:id="other-xpath-extension-functions">
