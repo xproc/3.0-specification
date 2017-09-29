@@ -591,11 +591,12 @@ serialized.</para>
 <p:declare-step type="p:escape-markup">
   <p:input port="source" content-types="application/xml text/xml */*+xml"/>
   <p:output port="result" content-types="application/xml"/>
-  <p:option name="cdata-section-elements" select="''" as="xs:string" e:type="ListOfQNames"/><p:option name="doctype-public" as="xs:string"/><p:option name="doctype-system" as="xs:anyURI"/><p:option name="escape-uri-attributes" select="false()" as="xs:boolean"/><p:option name="include-content-type" select="true()" as="xs:boolean"/><p:option name="indent" select="false()" as="xs:boolean"/><p:option name="media-type" as="xs:string"/><p:option name="method" select="'xml'" as="xs:QName"/><p:option name="omit-xml-declaration" select="true()" as="xs:boolean"/><p:option name="standalone" select="'omit'" as="xs:token" e:type="true|false|omit"/><p:option name="undeclare-prefixes" as="xs:boolean"/><p:option name="version" select="'1.0'" as="xs:string"/>
+  <p:option name="serialization" as="map(xs:string,xs:anyAtomicValue)"/>
 </p:declare-step>
 
-<para>This step supports the standard serialization options as specified in <link linkend="serialization-options"/>.  These
-options control how the output markup is produced before it is escaped.
+<para>This step supports the standard serialization options as
+specified in <link linkend="xml-serialization"/>. These options
+control how the output markup is produced before it is escaped.
 </para>
 
 <para>For example, the input:</para>
@@ -664,12 +665,14 @@ including an entity body (content) for the request.</para>
 <p:declare-step type="p:http-request">
   <p:input port="source" content-types="*/*"/>
   <p:output port="result" sequence="true" content-types="*/*"/>
-  <p:option name="byte-order-mark" as="xs:boolean"/><p:option name="cdata-section-elements" select="''" as="xs:string" e:type="ListOfQNames"/><p:option name="doctype-public" as="xs:string"/><p:option name="doctype-system" as="xs:anyURI"/><p:option name="encoding" as="xs:string"/><p:option name="escape-uri-attributes" select="false()" as="xs:boolean"/><p:option name="include-content-type" select="true()" as="xs:boolean"/><p:option name="indent" select="false()" as="xs:boolean"/><p:option name="media-type" as="xs:string"/><p:option name="method" select="'xml'" as="xs:QName"/><p:option name="normalization-form" select="'none'" as="xs:token" e:type="NormalizationForm"/><p:option name="omit-xml-declaration" select="true()" as="xs:boolean"/><p:option name="standalone" select="'omit'" as="xs:token" e:type="true|false|omit"/><p:option name="undeclare-prefixes" as="xs:boolean"/><p:option name="version" select="'1.0'" as="xs:string"/>
+  <p:option name="serialization" as="map(xs:string,xs:anyAtomicValue)"/>
 </p:declare-step>
 
-<para>The standard serialization options are provided to control the
-serialization of any XML content which is sent as part of the request.
-The effect of these options is as specified in <link linkend="serialization-options"/>. See <link linkend="c.request_body"/> for a discussion of when serialization
+<para>The <option>serialization</option> option is provided to control the
+serialization of any content which is sent as part of the request.
+The effect of these options is as specified in
+<link linkend="serialization">Serialization</link>.
+See <link linkend="c.request_body"/> for a discussion of when serialization
 occurs in constructing a request.</para>
 
 <para><error code="C0040">It is a <glossterm>dynamic error</glossterm>
@@ -2042,7 +2045,7 @@ location of the stored document.</para>
   <p:input port="source" content-types="*/*"/>
   <p:output port="result" content-types="application/xml"/>
   <p:option name="href" required="true" as="xs:anyURI"/>
-  <p:option name="byte-order-mark" as="xs:boolean"/><p:option name="cdata-section-elements" select="''" as="xs:string" e:type="ListOfQNames"/><p:option name="doctype-public" as="xs:string"/><p:option name="doctype-system" as="xs:anyURI"/><p:option name="encoding" as="xs:string"/><p:option name="escape-uri-attributes" select="false()" as="xs:boolean"/><p:option name="include-content-type" select="true()" as="xs:boolean"/><p:option name="indent" select="false()" as="xs:boolean"/><p:option name="media-type" as="xs:string"/><p:option name="method" select="'xml'" as="xs:QName"/><p:option name="normalization-form" select="'none'" as="xs:token" e:type="NormalizationForm"/><p:option name="omit-xml-declaration" select="true()" as="xs:boolean"/><p:option name="standalone" select="'omit'" as="xs:token" e:type="true|false|omit"/><p:option name="undeclare-prefixes" as="xs:boolean"/><p:option name="version" select="'1.0'" as="xs:string"/>
+  <p:option name="serialization" as="map(xs:string,xs:anyAtomicValue)"/>
 </p:declare-step>
 
 <para>The value of the <option>href</option> option
@@ -2061,9 +2064,9 @@ specified location.</error></para>
 <tag>c:result</tag> element whose content is the absolute URI of the
 document stored by the step.</para>
 
-<para>The standard serialization options are provided to control the
-serialization of XML content when it is stored. These options are
-as specified in <link linkend="serialization-options"/>.</para>
+<para>The <option>serialization</option> option is provided to control the
+serialization of content when it is stored. Serialization is described in
+<link linkend="serialization">Serialization</link>.</para>
 
 <section>
 <title>Document properties</title>
@@ -2587,9 +2590,7 @@ from standard error.</para>
   <p:option name="path-separator" as="xs:string"/>
   <p:option name="failure-threshold" as="xs:integer"/>
   <p:option name="arg-separator" select="' '" as="xs:string"/>
-
-  <!-- plus the serialization options -->
-  <p:option name="byte-order-mark" as="xs:boolean"/><p:option name="cdata-section-elements" select="''" as="xs:string" e:type="ListOfQNames"/><p:option name="doctype-public" as="xs:string"/><p:option name="doctype-system" as="xs:anyURI"/><p:option name="encoding" as="xs:string"/><p:option name="escape-uri-attributes" select="false()" as="xs:boolean"/><p:option name="include-content-type" select="true()" as="xs:boolean"/><p:option name="indent" select="false()" as="xs:boolean"/><p:option name="media-type" as="xs:string"/><p:option name="method" select="'xml'" as="xs:QName"/><p:option name="normalization-form" select="'none'" as="xs:token" e:type="NormalizationForm"/><p:option name="omit-xml-declaration" select="true()" as="xs:boolean"/><p:option name="standalone" select="'omit'" as="xs:token" e:type="true|false|omit"/><p:option name="undeclare-prefixes" as="xs:boolean"/><p:option name="version" select="'1.0'" as="xs:string"/>
+  <p:option name="serialization" as="map(xs:string,xs:anyAtomicValue)"/>
 </p:declare-step>
 
 <para>The values of the <option>command</option>, <option>args</option>,
@@ -2652,17 +2653,19 @@ first uses the default <option>arg-separator</option>:</para>
 <para>If one of the arguments contains a space (e.g., a filename that
 contains a space), then you must specify an alternate separator.</para>
 
-<para>The <port>source</port> port is declared to accept a sequence so that
-  it can be empty. If no document appears on the <port>source</port> port, then the
-  command receives nothing on standard input. If a document does arrive on the <port>source</port> port,
-  it will
-be passed to the command as its standard input. <error code="D0006">It is a <glossterm>dynamic error</glossterm> if
-more than one document appears on the <port>source</port> port of the <tag>p:exec</tag> step.</error>
-  If
-<option>source-is-xml</option> is true, the serialization options are
-used to convert the input into serialized XML which is passed to
-the command, otherwise the XPath string-value
-of the document is passed.</para>
+<para>The <port>source</port> port is declared to accept a sequence so
+that it can be empty. If no document appears on the
+<port>source</port> port, then the command receives nothing on
+standard input. If a document does arrive on the <port>source</port>
+port, it will be passed to the command as its standard input. <error code="D0006">It is a <glossterm>dynamic error</glossterm> if more than
+one document appears on the <port>source</port> port of the
+<tag>p:exec</tag> step.</error>
+If <option>source-is-xml</option> is true, the value of the
+<option>serialization</option> option is used to convert the input
+into serialized XML which is passed to the command, otherwise the
+XPath string-value of the document is passed. Serialization is
+described in
+<link linkend="serialization">Serialization</link>.</para>
 
 <para>The standard output of the command is read and returned on
 <port>result</port>; the standard error output is read and returned on
@@ -3721,211 +3724,6 @@ document stored by the step.</para>
 <para feature="xsl-formatter-preserves-none">No document properties are preserved.</para>
 </section>
 </section>
-</section>
-
-<section xml:id="serialization-options" version="5.0-extension w3c-xproc">
-<title>Serialization Options</title>
-
-<para>Several steps in this step library require serialization options
-to control the serialization of XML. These options are used to control
-serialization as in the <biblioref linkend="xml-serialization"/>
-specification.</para>
-
-<para>The following options may be present on steps that perform
-serialization:</para>
-
-<variablelist>
-<varlistentry>
-<term><option>byte-order-mark</option></term>
-<listitem>
-<para>The value of this option <rfc2119>must</rfc2119> be a boolean.
-If it's not specified, the default varies by encoding: for UTF-16 it's
-true, for all others, it's false.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><option>cdata-section-elements</option></term>
-<listitem>
-<para>The value of this option <rfc2119>must</rfc2119> be a list of
-<type>QName</type>s. They are interpreted as elements name.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><option>doctype-public</option></term>
-<listitem>
-<para>The value of this option <rfc2119>must</rfc2119> be a string.
-The public identifier of the doctype.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><option>doctype-system</option></term>
-<listitem>
-<para>The value of this option <rfc2119>must</rfc2119> be an
-<type>anyURI</type>. The system identifier of the doctype. It need not
-be absolute, and is not resolved.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><option>encoding</option></term>
-<listitem>
-<para>A character set name. <impl>If no <option>encoding</option> is
-specified, the encoding used is <glossterm>implementation
-defined</glossterm>. If the <option>method</option> is
-“<literal>xml</literal>” or “<literal>xhtml</literal>”, the
-implementation defined encoding <rfc2119>must</rfc2119> be either
-UTF-8 or UTF-16.</impl></para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><option>escape-uri-attributes</option></term>
-<listitem>
-<para>The value of this option <rfc2119>must</rfc2119> be a
-boolean. It is ignored unless the specified method is
-“<literal>xhtml</literal>” or “<literal>html</literal>”.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><option>include-content-type</option></term>
-<listitem>
-<para>The value of this option <rfc2119>must</rfc2119> be a boolean.
-It is ignored unless the specified method is
-“<literal>xhtml</literal>” or “<literal>html</literal>”.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><option>indent</option></term>
-<listitem>
-<para>The value of this option <rfc2119>must</rfc2119> be a
-boolean.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><option>media-type</option></term>
-<listitem>
-<para>The value of this option <rfc2119>must</rfc2119> be a string. It
-specifies the media type (MIME content type). If not specified, the
-default varies according to the <option>method</option>:</para>
-
-<variablelist>
-<varlistentry><term><literal>xml</literal></term>
-<listitem><simpara><literal>application/xml</literal></simpara></listitem>
-</varlistentry>
-<varlistentry><term><literal>html</literal></term>
-<listitem><simpara><literal>text/html</literal></simpara></listitem>
-</varlistentry>
-<varlistentry><term><literal>xhtml</literal></term>
-<listitem><simpara><literal>application/xhtml+xml</literal></simpara></listitem>
-</varlistentry>
-<varlistentry><term><literal>text</literal></term>
-<listitem><simpara><literal>text/plain</literal></simpara></listitem>
-</varlistentry>
-</variablelist>
-
-<para><impl>For methods other than <literal>xml</literal>, <literal>html</literal>,
-<literal>xhtml</literal>, and <literal>text</literal>; the
-<option>media-type</option> is <glossterm>implementation defined</glossterm>.
-</impl></para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><option>method</option></term>
-<listitem>
-<para>The value of this option <rfc2119>must</rfc2119> be a
-<type>QName</type>. It specifies the serialization method.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><option>normalization-form</option></term>
-<listitem>
-<para>The value of this option <rfc2119>must</rfc2119> be an NMTOKEN,
-one of the enumerated values <code>NFC</code>, <code>NFD</code>,
-<code>NFKC</code>, <code>NFKD</code>, <code>fully-normalized</code>,
-<code>none</code> or an implementation-defined value.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><option>omit-xml-declaration</option></term>
-<listitem>
-<para>The value of this option <rfc2119>must</rfc2119> be a
-boolean.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><option>standalone</option></term>
-<listitem>
-<para>The value of this option <rfc2119>must</rfc2119> be an NMTOKEN,
-one of the enumerated values <code>true</code>, <code>false</code>, or
-<code>omit</code>.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><option>undeclare-prefixes</option></term>
-<listitem>
-<para>The value of this option <rfc2119>must</rfc2119> be a
-boolean.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><option>version</option></term>
-<listitem>
-<para>The value of this option <rfc2119>must</rfc2119> be a
-string.</para>
-</listitem>
-</varlistentry>
-</variablelist>
-
-<para>In order to be consistent with the rest of this specification,
-boolean values for the serialization parameters must use one of the
-XML Schema lexical forms for boolean: "true", "false", "1", or "0".
-This is different from the <biblioref linkend="xml-serialization"/>
-  specification which uses “yes” and “no”. No change in
-semantics is implied by this different spelling.</para>
-
-<para>The <option>method</option> option controls the serialization
-method used by this component with standard values of 'html', 'xml',
-'xhtml', and 'text' but only the 'xml' value is required to be
-supported. The interpretation of the remaining options is as
-specified in <biblioref linkend="xml-serialization"/>.</para>
-
-<para><impl>Implementations may support other method values but their
-results are <glossterm>implementation-defined</glossterm>.</impl>
-</para>
-
-<para>A minimally conforming implementation must support the
-<code>xml</code> output method with the following option
-values:</para>
-
-<itemizedlist>
-   <listitem><para>The <code>version</code> must support the value <code>1.0</code>.</para></listitem>
-   <listitem><para>The <code>encoding</code> must support the values <code>UTF-8</code>.</para></listitem>
-   <listitem><para>The <code>omit-xml-declaration</code> must be supported.  If the value is not specified or has the value <code>no</code>, an XML declaration must be produced.</para></listitem>
-</itemizedlist>
-
-<para>All other option values may be ignored for the <code>xml</code>
-output method.</para>
-
-<para>If a processor chooses to implement an option for serialization,
-it must conform to the semantics defined in the <biblioref linkend="xml-serialization"/> specification.</para>
-
-<note xml:id="note-use-char-maps">
-<para>The use-character-maps parameter in <biblioref linkend="xml-serialization"/> specification has not been provided in
-the standard serialization options provided by this
-specification.</para>
-</note>
 </section>
 </section>
 
