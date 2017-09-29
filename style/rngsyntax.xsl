@@ -410,6 +410,9 @@
     <xsl:when test="contains(@type,'&quot;')">
       <xsl:value-of select="@type"/>
     </xsl:when>
+    <xsl:when test="@type = 'QName'">
+      <var>EQName</var>
+    </xsl:when>
     <xsl:otherwise>
       <var>
 	<xsl:value-of select="@type"/>
