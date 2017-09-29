@@ -3194,10 +3194,15 @@ its <tag class="attribute">test</tag> expression is to be evaluated.
 That context node is specified as a <glossterm>connection</glossterm>
 for the <tag>p:with-input</tag>. If no context is specified on the
 <tag>p:when</tag>, the context of the <tag>p:choose</tag> is
-used.
-<error code="D0005">It is a <glossterm>dynamic error</glossterm> if
-more than one document appears on the connection for this input
-port.</error>
+used.</para>
+<para><error code="D0005">If the <tag
+class="attribute">collection</tag> attribute is not specified, or if
+its value is false,
+it is a <glossterm>dynamic error</glossterm> if
+more than one document appears on the connection for the <tag>p:when</tag>
+test expression.</error> If the collection attribute has the value true,
+then the default collection will contain all of the documents that appeared
+on that input and the context item will be undefined.
 </para>
 </section>
 
@@ -3216,6 +3221,42 @@ preceding <tag>p:when</tag> evaluates to true.</para>
           <programlisting language="xml"><xi:include href="examples/choose.txt" parse="text"/></programlisting>
         </example>
       </section></section>
+
+<section xml:id="p.if">
+<title>p:if</title>
+
+<para>A <tag>p:if</tag> specifies a single subpipeline guarded by a test expression.</para>
+
+<e:rng-pattern name="If"/>
+
+<para>The <tag>p:if</tag> has a <tag class="attribute">test</tag>
+attribute which <rfc2119>must</rfc2119> contain an XPath expression.
+That XPath expression's effective boolean value is the guard for the
+<glossterm>subpipeline</glossterm> contained within it.
+</para>
+
+<para>The <tag>p:if</tag> can specify a context node against which
+its <tag class="attribute">test</tag> expression is to be evaluated.
+That context node is specified as a <glossterm>connection</glossterm>
+for the <tag>p:with-input</tag>. If no context is specified on the
+<tag>p:if</tag>, the context comes from the
+<glossterm>default readable port</glossterm>.</para>
+
+<para><error code="D0005">If the <tag
+class="attribute">collection</tag> attribute is not specified, or if
+its value is false,
+it is a <glossterm>dynamic error</glossterm> if
+more than one document appears on the connection for the <tag>p:if</tag>
+test expression.</error> If the collection attribute has the value true,
+then the default collection will contain all of the documents that appeared
+on that input and the context item will be undefined.
+</para>
+
+<para>If the effective boolean value of the test expression is true, then
+the subpipline will be run. If it is not run, then none of the output ports
+on the <tag>p:if</tag> will produce any documents.</para>
+</section>
+
     <section xml:id="p.group"><title>p:group</title><para>A group is specified by the
           <tag>p:group</tag> element. In a <tag>p:try</tag>, it is a non-step wrapper, everywhere
         else, it is a <glossterm>compound step</glossterm>. A group encapsulates the behavior of its

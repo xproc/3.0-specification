@@ -58,7 +58,7 @@ document-properties.attr = attribute document-properties { PropertyMap }
 serialization.attr = attribute serialization { SerializationMap }
 content-type.attr = attribute content-type { ContentType }
 content-types.attr = attribute content-types { ContentTypes }
-
+collection.attr = attribute collection { xsd:boolean }
 
 exclude-inline-prefixes.attr =
    attribute exclude-inline-prefixes { ExcludeInlinePrefixes }
@@ -163,7 +163,7 @@ Pipeline =
 [
    sa:model = "subpipeline"
 ]
-Subpipeline = Variable*,(ForEach|Viewport|Choose|Group|Try|OtherStep|Documentation|PipeInfo)+
+Subpipeline = Variable*,(ForEach|Viewport|Choose|If|Group|Try|OtherStep|Documentation|PipeInfo)+
 
 # ============================================================
 
@@ -346,6 +346,7 @@ VariableSelect =
       name.qname.attr,
       as.attr?,
       select.attr,
+      collection.attr?,
       common.attributes,
       inline.attributes,
       use-when.attr?,
@@ -438,6 +439,7 @@ Choose =
 When =
    element when {
       attribute test { XPathExpression },
+      collection.attr?,
       common.attributes,
       use-when.attr?,
       ((Documentation|PipeInfo)*,
@@ -454,6 +456,23 @@ Otherwise =
       common.attributes,
       use-when.attr?,
       ((Output|Documentation|PipeInfo)*, Subpipeline)
+   }
+
+# ============================================================
+
+[
+   sa:class = "language-construct"
+]
+If =
+   element if {
+      attribute test { XPathExpression },
+      collection.attr?,
+      common.attributes,
+      use-when.attr?,
+      ((Documentation|PipeInfo)*,
+         WithInput?,
+         (Output|Documentation|PipeInfo)*,
+         Subpipeline)
    }
 
 # ============================================================
