@@ -114,7 +114,7 @@ with the specified value.
 <p:declare-step type="p:add-attribute">
   <p:input port="source" content-types="application/xml text/xml */*+xml"/>
   <p:output port="result" content-types="application/xml"/>
-  <p:option name="match" required="true" as="xs:string" e:type="XSLTMatchPattern"/>
+  <p:option name="match" select="'/*'" as="xs:string" e:type="XSLTMatchPattern"/>
   <p:option name="attribute-name" required="true" as="xs:QName"/>
   <p:option name="attribute-prefix" as="xs:NCName"/>
   <p:option name="attribute-namespace" as="xs:anyURI"/>
@@ -1794,7 +1794,7 @@ processing-instruction targets in a document.</para>
 <p:declare-step type="p:rename">
   <p:input port="source" content-types="application/xml text/xml */*+xml"/>
   <p:output port="result" content-types="application/xml"/>
-  <p:option name="match" required="true" as="xs:string" e:type="XSLTMatchPattern"/>
+  <p:option name="match" select="'/*'" as="xs:string" e:type="XSLTMatchPattern"/>
   <p:option name="new-name" required="true" as="xs:QName"/>
   <p:option name="new-prefix" as="xs:NCName"/>
   <p:option name="new-namespace" as="xs:anyURI"/>
@@ -1888,7 +1888,7 @@ matching elements.</para>
    <p:input port="source" primary="true" content-types="application/xml text/xml */*+xml"/>
    <p:input port="attributes" content-types="application/xml text/xml */*+xml"/>
    <p:output port="result" content-types="application/xml"/>
-   <p:option name="match" required="true" as="xs:string" e:type="XSLTMatchPattern"/>
+   <p:option name="match" select="'/*'" as="xs:string" e:type="XSLTMatchPattern"/>
 </p:declare-step>
 
  <para>The value of the <option>match</option> option <rfc2119>must</rfc2119> be an
@@ -2231,7 +2231,7 @@ children.</para>
 <p:declare-step type="p:unwrap">
    <p:input port="source" content-types="application/xml text/xml */*+xml"/>
    <p:output port="result" content-types="application/xml"/>
-   <p:option name="match" required="true" as="xs:string" e:type="XSLTMatchPattern"/>
+   <p:option name="match" select="'/*'" as="xs:string" e:type="XSLTMatchPattern"/>
 </p:declare-step>
 
  <para>The value of the <option>match</option> option <rfc2119>must</rfc2119> be an
@@ -2727,7 +2727,7 @@ for some value and injects it into the <port>source</port> document.</para>
   <p:option name="parameters" as="map(xs:QName,item())"/>
   <p:option name="value" required="true" as="xs:string"/>
   <p:option name="algorithm" required="true" as="xs:QName"/>
-  <p:option name="match" required="true" as="xs:string" e:type="XSLTMatchPattern"/>
+  <p:option name="match" select="'/*'" as="xs:string" e:type="XSLTMatchPattern"/>
   <p:option name="version" as="xs:string"/>
 </p:declare-step>
 
@@ -3112,7 +3112,7 @@ the <port>source</port> document.</para>
 <p:declare-step type="p:uuid">
   <p:input port="source" primary="true" content-types="application/xml text/xml */*+xml"/>
   <p:output port="result" content-types="application/xml"/>
-  <p:option name="match" required="true" as="xs:string" e:type="XSLTMatchPattern"/>
+  <p:option name="match" select="'/*'" as="xs:string" e:type="XSLTMatchPattern"/>
   <p:option name="version" as="xs:integer"/>
 </p:declare-step>
 
