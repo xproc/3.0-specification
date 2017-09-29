@@ -4663,7 +4663,7 @@ attribute and the name of the port on that step in the
 
 <para>If the <tag class="attribute">step</tag> attribute is not specified,
 it defaults to the step which provides the default readable port.
-If the  <tag class="attribute">port</tag> attribute is not specified,
+If the <tag class="attribute">port</tag> attribute is not specified,
 it defaults to the primary output port of the step identified (explicitly
 or implicitly).</para>
 
@@ -4676,9 +4676,10 @@ is no default readable port.
 step identified has no primary output port.</error>
 </error></para>
 
-<para><error code="S0022">In all cases except the <tag>p:output</tag>
-of a <glossterm>compound step</glossterm>, it is a <glossterm>static
-error</glossterm> if the port identified by a <tag>p:pipe</tag> is not
+<para><error code="S0022">In all cases except when the
+<tag>p:pipe</tag> is within an <tag>p:output</tag> of a
+<glossterm>compound step</glossterm>, it is a <glossterm>static
+error</glossterm> if the port identified by the <tag>p:pipe</tag> is not
 in the <glossterm>readable ports</glossterm> of the step that contains
 the <tag>p:pipe</tag>.</error></para>
 
@@ -4689,6 +4690,14 @@ output port on one of the compound step's <glossterm>contained
 steps</glossterm>. In other words, the output of a compound step can
 simply be a copy of one of the available inputs or it can be the
 output of one of its children.</para>
+
+<para><error code="S1202">When the <tag>p:pipe</tag> is within an
+<tag>p:output</tag> of a <glossterm>compound step</glossterm>, it is a
+<glossterm>static error</glossterm> if the port identified by the
+<tag>p:pipe</tag> is not in the <glossterm>readable ports</glossterm>
+of the compound step and is not a readable port of a contained
+step.</error>
+</para>
 
 </section>
 
