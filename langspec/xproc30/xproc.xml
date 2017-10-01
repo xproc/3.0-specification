@@ -1460,16 +1460,20 @@ readable port then the context node is undefined.</para>
 <methodparam><type>xs:string</type><parameter>property</parameter></methodparam>
 </methodsynopsis>
 
-        <para>The <varname>$property</varname> string must have the form of a <link
-            xlink:href="http://www.w3.org/TR/xml-names/#NT-QName">QName</link>; the QName is
-          expanded into a name using the namespace declarations in scope for the expression. <error
-            code="D0015">It is a <glossterm>dynamic error</glossterm> if the specified QName cannot
-            be resolved with the in-scope namespace declarations.</error> The
-            <function>p:system-property</function> function returns the string representing the
-          value of the system property identified by the QName. If there is no such property, the
-          empty string <rfc2119>must</rfc2119> be returned.</para>
-        <para>Implementations <rfc2119>must</rfc2119> provide the following system properties, which
-          are all in the XProc namespace:</para>
+<para>The <varname>$property</varname> string <rfc2119>must</rfc2119> have the form of an
+<link xlink:href="https://www.w3.org/TR/xquery-30/#doc-xquery30-EQName">EQName</link>.
+If it is a QName, it is expanded using the namespace declarations in
+scope for the expression. <error code="D0015">It is a
+<glossterm>dynamic error</glossterm> if a QName is specified and it cannot be
+resolved with the in-scope namespace declarations.</error> The
+<function>p:system-property</function> function returns the string
+representing the value of the system property identified by the EQName.
+If there is no such property, the empty string <rfc2119>must</rfc2119>
+be returned.</para>
+
+<para>Implementations <rfc2119>must</rfc2119> provide the following
+system properties, which are all in the XProc namespace:</para>
+
         <variablelist>
           <varlistentry>
             <term><varname>p:episode</varname></term>
@@ -1567,10 +1571,15 @@ in the XProc namespace.</para>
 <methodparam><type>xs:string</type><parameter>step-name</parameter></methodparam>
 </methodsynopsis>
 
-        <para>The <varname>$step-type</varname> string <rfc2119>must</rfc2119> have the form of a
-          QName; the QName is expanded into a name using the namespace declarations in-scope for the
-          expression. The <function>p:step-available</function> function returns true if and only if
-          the processor knows how to evaluate steps of the specified type.</para>
+<para>The <varname>$step-type</varname> string <rfc2119>must</rfc2119>
+have the form of an
+<link xlink:href="https://www.w3.org/TR/xquery-30/#doc-xquery30-EQName">EQName</link>.
+If it is a QName, it is expanded using the namespace declarations in
+scope for the expression. The
+<function>p:step-available</function> function returns true if and
+only if the processor knows how to evaluate steps of the specified
+type.</para>
+
       </section>
       <section xml:id="f.value-available">
         <title>Value Available</title>
@@ -1591,10 +1600,12 @@ in the XProc namespace.</para>
 <methodparam><type>xs:boolean</type><parameter>fail-if-unknown</parameter></methodparam>
 </methodsynopsis>
 
-<para>The <varname>$option-name</varname> string
-<rfc2119>must</rfc2119> have the form of a QName; the QName is
-expanded into a name using the namespace declarations in-scope for the
-expression. The <function>p:value-available</function> function
+<para>The <varname>$option-name</varname> string <rfc2119>must</rfc2119>
+have the form of an
+<link xlink:href="https://www.w3.org/TR/xquery-30/#doc-xquery30-EQName">EQName</link>.
+If it is a QName, it is expanded using the namespace declarations in
+scope for the expression.
+The <function>p:value-available</function> function
 returns true if and only if the name specified is the name of an
 <glossterm baseform="in-scope-bindings">in-scope binding</glossterm>
 and the binding has a value. <error code="D0033">It is a
@@ -2285,10 +2296,14 @@ appear on the <code>messages</code> port.</para>
     </section>
     <section xml:id="scoping">
       <title>Scoping of Names</title>
-      <para>Names are used to identify step types, steps, ports, options and variables. Step types, options, and variables are named with QNames. Steps and
-        ports are named with NCNames. The scope of a name is a measure of where it is available in a
-        pipeline. <termdef xml:id="dt-visible">If two names are in the same scope, we say that they
-          are <firstterm>visible</firstterm> to each other. </termdef></para>
+
+<para>Names are used to identify step types, steps, ports, options and
+variables. Step types, options, and variables are named with EQNames.
+Steps and ports are named with NCNames. The scope of a name is a
+measure of where it is available in a pipeline. <termdef
+xml:id="dt-visible">If two names are in the same scope, we say that
+they are <firstterm>visible</firstterm> to each other.
+</termdef></para>
       <para>The scope of the names of the step types is the pipeline in which they are declared,
         including any declarations imported from libraries via <tag>p:import</tag>. Nested pipelines
         inherit the step types in scope for their parent.</para>
@@ -2655,7 +2670,9 @@ or collections.</error>
             must occur at least once, and it can occur any number of times. </para>
         </listitem>
 
-</itemizedlist><para>For clarity of exposition, some attributes and elements are elided from
+</itemizedlist>
+
+<para>For clarity of exposition, some attributes and elements are elided from
 the summaries:</para><itemizedlist>
 <listitem>
   <para>An <tag class="attribute">xml:id</tag> attribute is allowed on any element. It has
@@ -2691,14 +2708,12 @@ the summaries:</para><itemizedlist>
     appropriate.</para>
   </listitem>
   <listitem>
-    <para><type>QName</type>: With whitespace normalization as per
-    <biblioref linkend="xmlschema-2"/> and according to the following
-    definition: In the context of XProc, a <type>QName</type> is
-    almost always a QName in the <glossterm>Namespaces in
-    XML</glossterm> sense. Note, however, that <tag>p:option</tag>
-    values can get their namespace declarations in a non-standard way
-    (with <tag>p:namespaces</tag>) and QNames that have no prefix are
-    always in no-namespace, irrespective of the default namespace.
+    <para><type>EQName</type>: With whitespace normalization as per
+    <biblioref linkend="xmlschema-2"/> for QNames. Note, however, that
+    <tag>p:option</tag> values can get their namespace declarations in
+    a non-standard way (with <tag>p:namespaces</tag>) and QNames that
+    have no prefix are always in no-namespace, irrespective of the
+    default namespace.
     </para>
   </listitem>
   <listitem>
@@ -2723,7 +2738,7 @@ the summaries:</para><itemizedlist>
     <para><type>XPathExpression</type>, <type>XSLTMatchPattern</type>:
     As a string per <biblioref linkend="xmlschema-2"/>, including
     whitespace normalization, and the further requirement to be a
-    conformant Expression per <biblioref linkend="xpath2"/> or Match
+    conformant Expression per <biblioref linkend="xpath31"/> or Match
     pattern per <biblioref linkend="xslt20"/>.
     </para>
   </listitem>
@@ -3438,11 +3453,11 @@ element:</para>
 class="attribute">type</tag> attributes identify the name and type,
 respectively, of the step which failed.</para>
 
-<para>The <tag class="attribute">code</tag> is a QName which
+<para>The <tag class="attribute">code</tag> is an EQName which
 identifies the error. For steps which have defined error codes, this
 is an opportunity for the step to identify the error in a
 machine-processable fashion. Many steps omit this because they do not
-include the concept of errors identified by QNames.</para>
+include the concept of errors identified by EQNames.</para>
 
 <para>If the error was caused by a specific document, or by the
 location of some erroneous construction in a specific document, the
@@ -3922,7 +3937,7 @@ true, for all others, it's false.</para>
 <term><option>cdata-section-elements</option></term>
 <listitem>
 <para>The value of this option <rfc2119>must</rfc2119> be a list of
-<type>QName</type>s. They are interpreted as elements name.</para>
+<type>EQName</type>s. They are interpreted as element names.</para>
 </listitem>
 </varlistentry>
 
@@ -4013,8 +4028,8 @@ default varies according to the <option>method</option>:</para>
 <varlistentry>
 <term><option>method</option></term>
 <listitem>
-<para>The value of this option <rfc2119>must</rfc2119> be a
-<type>QName</type>. It specifies the serialization method.</para>
+<para>The value of this option <rfc2119>must</rfc2119> be an
+<type>EQName</type>. It specifies the serialization method.</para>
 </listitem>
 </varlistentry>
 
@@ -4133,7 +4148,7 @@ specification.</para>
 value with it. Variable declarations may optionally specify the type
 of the variable using an XPath Sequence Type.</para>
 
-<para>The name of the variable <rfc2119>must</rfc2119> be a QName. If
+<para>The name of the variable <rfc2119>must</rfc2119> be an EQName. If
 it does not contain a prefix then it is in no namespace. <error
 code="S0028">It is a <glossterm>static error</glossterm> to declare an
 option or variable in the XProc namespace.</error>
@@ -4166,7 +4181,7 @@ type.</error></para>
 in the Processor XPath Context as variable bindings, <tag
 class="attribute">select</tag> expressions may refer to the value of
 <glossterm>in-scope bindings</glossterm> by variable reference. If a
-variable reference uses a QName that is not the name of an <glossterm
+variable reference uses an QName that is not the name of an <glossterm
 baseform="in-scope bindings">in-scope binding</glossterm>, an XPath
 evaluation error will occur.</para>
 
@@ -4220,7 +4235,7 @@ default value with it. The <tag>p:option</tag> tag can only be used in
 a <tag>p:declare-step</tag> or a <tag>p:pipeline</tag> (which is a
 syntactic abbreviation for a step declaration).</para>
 
-<para>The name of the option <rfc2119>must</rfc2119> be a QName. If it
+<para>The name of the option <rfc2119>must</rfc2119> be an EQName. If it
 does not contain a prefix then it is in no namespace. <error
 code="S0028">It is a <glossterm>static error</glossterm> to declare an
 option or variable in the XProc namespace.</error></para>
@@ -4298,7 +4313,7 @@ an <type>xs:untypedAtomic</type>.</para>
 <para>A <tag>p:with-option</tag> provides an actual value for an
 option when a step is invoked.</para>
 
-<para>The name of the option <rfc2119>must</rfc2119> be a QName. If it
+<para>The name of the option <rfc2119>must</rfc2119> be a EQName. If it
 does not contain a prefix then it is in no namespace.
 <error code="S0031">It is a <glossterm>static error</glossterm> to use an
 option name in <tag>p:with-option</tag> if the step type being invoked
@@ -4381,7 +4396,7 @@ option value are computed as follows:</para><orderedlist>
 <para>If the <tag class="attribute">select</tag> attribute was used to
 specify the value and it consisted of a single
 <literal>VariableReference</literal> (per <biblioref
-linkend="xpath2"/>), then the namespace bindings from the referenced
+linkend="xpath31"/>), then the namespace bindings from the referenced
 option or variable are used.</para>
 </listitem>
           <listitem>
@@ -4492,14 +4507,20 @@ option or variable are used.</para>
         provides the type and <glossterm>signature</glossterm> of an <glossterm>atomic
           step</glossterm> or pipeline. It declares the inputs, outputs, and options for all steps
         of that type.</para>
+
       <e:rng-pattern name="DeclareStep"/>
-      <para>The value of the <tag class="attribute">type</tag> can be from any namespace provided
-        that the expanded-QName of the value has a non-null namespace URI. <error code="S0025">It is
-          a <glossterm>static error</glossterm> if the expanded-QName value of the <tag
-            class="attribute">type</tag> attribute is in no namespace or in the XProc
-          namespace.</error> Except as described in <xref linkend="versioning-considerations"/>, the
-        XProc namespace <rfc2119>must not</rfc2119> be used in the type of steps. Neither users nor
-        implementers may define additional steps in the XProc namespace.</para>
+
+<para>The value of the <tag class="attribute">type</tag> can be from
+any namespace provided that the expanded-QName of the value has a
+non-null namespace URI. <error code="S0025">It is a <glossterm>static
+error</glossterm> if the expanded-QName value of the <tag
+class="attribute">type</tag> attribute is in no namespace or in the
+XProc namespace.</error> Except as described in <xref
+linkend="versioning-considerations"/>, the XProc namespace
+<rfc2119>must not</rfc2119> be used in the type of steps. Neither
+users nor implementers may define additional steps in the XProc
+namespace.</para>
+
 <para>Irrespective of
         the context in which the <tag>p:declare-step</tag> occurs, there are initially no option or
         variable names in-scope inside a <tag>p:declare-step</tag>. That is, <tag>p:option</tag> and
