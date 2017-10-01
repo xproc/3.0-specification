@@ -38,14 +38,52 @@ An XML Pipeline Language</link> published by the W3C. See also
 <section xml:id="introduction">
   <title>Introduction</title>
 
-<para>This specification describes the standard, atomic XProc steps of
-<biblioref linkend="xproc20"/>.
+<para>This specification describes the standard, atomic XProc steps.
 <!-- FIXME:
 A machine-readable description of
 these steps may be found in
 <link xlink:href="xproc-2.0.xpl">xproc-2.0.xpl</link>.
 -->
 </para>
+
+<para>The types given for options should be understood as follows:</para>
+<itemizedlist>
+  <listitem>
+    <para>Types in the XML Schema namespace, identified as QNames with the
+    <code>xs:</code> prefix, as per the XML Schema specification with one
+    exception. Anywhere an <code>xs:QName</code> is specified,
+    an
+    <link xlink:href="https://www.w3.org/TR/xquery-30/#doc-xquery30-EQName">EQName</link>
+    is allowed.</para>
+  </listitem>
+  <listitem>
+    <para><type>XPathExpression</type>:
+    As a string per <biblioref linkend="xmlschema-2"/>, including
+    whitespace normalization, and the further requirement to be a
+    conformant Expression per <biblioref linkend="xpath31"/>.
+    </para>
+  </listitem>
+  <listitem>
+    <para><type>XSLTMatchPattern</type>: An XSLT pattern.
+    </para>
+  </listitem>
+  <listitem>
+    <para><type>XPathSequenceType</type>: An XPath
+    <link xlink:href="https://www.w3.org/TR/xpath-31/#id-types">sequence type</link>.
+    </para>
+  </listitem>
+  <listitem>
+    <para><type>ContentType</type>: A media type as defined in
+    <biblioref linkend="rfc2046"/>.
+    </para>
+  </listitem>
+  <listitem>
+    <para><type>ContentTypes</type>:
+    As a whitespace separated list of media types as defined in
+    <biblioref linkend="rfc2046"/>.
+    </para>
+  </listitem>
+</itemizedlist>
 
 <para>Some aspects of documents are generally unchanged by steps:</para>
 
@@ -3840,6 +3878,11 @@ W3C Recommendation. 16 November 1999.</bibliomixed>
    <citetitle xlink:href="http://www.w3.org/TR/xslt-30/">XSL Transformations (XSLT) Version 3.0</citetitle>. Michael Kay,
    W3C Last Call Working Draft 2 October 2014</bibliomixed>
    
+<bibliomixed xml:id="xpath31"><abbrev>XPath 3.1</abbrev>
+<citetitle xlink:href="http://www.w3.org/TR/xpath31/">XML Path Language (XPath)
+	3.1</citetitle>. Jonathan Robie, Michael Dyck, Josh Spiegel, editors.
+W3C Recommendation. 21 March 2017.</bibliomixed>
+
 <bibliomixed xml:id="xpath2"><abbrev>XPath 2.0</abbrev>
 <citetitle xlink:href="http://www.w3.org/TR/xpath20/">XML Path Language (XPath)
 2.0</citetitle>. Anders Berglund, Scott Boag, Don Chamberlin, et. al., editors.
