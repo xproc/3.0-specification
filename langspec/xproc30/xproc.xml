@@ -448,7 +448,7 @@ content types are considered equal.</impl>
 </listitem>
 </orderedlist>
 
-<para><error code="D1003">It is a <glossterm>dynamic error</glossterm>
+<para><error code="D0038">It is a <glossterm>dynamic error</glossterm>
 if an input document arrives on a port and it does not match the
 allowed media types.</error></para>
 
@@ -726,7 +726,7 @@ consume any output from the former.</para>
 dependency with the <tag class="attribute">depends</tag> attribute.
 The <tag class="attribute">depends</tag> attribute is allowed on any
 step element. The value of the attribute is a space separated list of step names.
-<error code="S1010">It is a <glossterm>static error</glossterm> if any
+<error code="S0073">It is a <glossterm>static error</glossterm> if any
 specified name is not the name of an in-scope step.</error>
 </para>
 
@@ -1728,7 +1728,7 @@ represented by the <parameter>param-set</parameter> item.</para>
 <rfc2119>must</rfc2119> be a <tag>c:param-set</tag> element or a
 document. If it is a document, <tag>c:param-set</tag>
 <rfc2119>must</rfc2119> be the document element.
-<error code="D1000">It is a <glossterm>dynamic error</glossterm>
+<error code="D0035">It is a <glossterm>dynamic error</glossterm>
 if the element (or document element) passed to
 <function>p:make-map</function> is not a <tag>c:param-set</tag>
 element.</error></para>
@@ -1737,7 +1737,7 @@ element.</error></para>
 element are considered, all other nodes are ignored. The parameters
 represented by those <tag>c:param</tag> children
 are added to the map that is returned.
-<error code="D1002">It is a <glossterm>dynamic error</glossterm>
+<error code="D0037">It is a <glossterm>dynamic error</glossterm>
 if any of the <tag>c:param</tag> elements are invalid.</error>
 </para>
 
@@ -1891,7 +1891,7 @@ expression are part of that expression and are not recognized as
 nested value templates.</para>
 
 <para>
-<error code="S1003">It is a <glossterm>static error</glossterm> if
+<error code="S0066">It is a <glossterm>static error</glossterm> if
 an expression does not have a closing right curly bracket or if an
 unescaped right curly bracket occurs outside of an expression.
 </error>
@@ -3143,7 +3143,7 @@ on the output.</para>
       <e:rng-pattern name="Choose"/>
       <para>A <tag>p:choose</tag> contains an arbitrary number of alternative
           <glossterm baseform="subpipeline">subpipelines</glossterm>, exactly one of which will be
-        evaluated. <error code="S1011">It is a <glossterm>static error</glossterm> if a <tag>p:choose</tag>
+        evaluated. <error code="S0074">It is a <glossterm>static error</glossterm> if a <tag>p:choose</tag>
         has neither a <tag>p:when</tag> nor a <tag>p:otherwise</tag>.</error></para>
 <para>The list of alternative subpipelines consists of zero or more
         subpipelines guarded by an XPath expression, followed optionally by a single default
@@ -3301,7 +3301,7 @@ the recovery (or “catch”) pipelines are identified with
 <tag>p:catch</tag> elements. The <tag>p:finally</tag> pipeline always
 runs after the <tag>p:try</tag>.</para>
 
-<para><error code="S1012">It is a <glossterm>static error</glossterm> 
+<para><error code="S0075">It is a <glossterm>static error</glossterm> 
 if a <tag>p:try</tag> does not have exactly one <tag>p:group</tag> and 
 at least one <tag>p:catch</tag>.</error></para>
 
@@ -3321,7 +3321,7 @@ The last <tag>p:catch</tag>
 <rfc2119>must not</rfc2119> have a <tag class="attribute">code</tag>
 attribute; it is selected if no preceding <tag>p:catch</tag> has a
 matching error code.
-<error code="S1001">It is a <glossterm>static error</glossterm>
+<error code="S0064">It is a <glossterm>static error</glossterm>
 if the <tag class="attribute">code</tag> attribute is missing from
 any but the last <tag>p:catch</tag>, if the last <tag>p:catch</tag>
 has a <tag class="attribute">code</tag>, or if any error code is
@@ -3406,7 +3406,7 @@ block of an enclosing <tag>p:try</tag>.</para>
 I've sketched it in for completeness. Also, should <tag>p:catch</tag>
 be entirely optional, allowing just try/group/finally?</para>
   <para>If we decide to make <tag>p:catch</tag> optional, the text
-    of <glossterm>static error</glossterm> XS1012 has to be changed
+    of <glossterm>static error</glossterm> XS0075 has to be changed
     to this: It is a <glossterm>static error</glossterm> if a 
     <tag>p:try</tag> does not have exactly one <tag>p:group</tag> and 
     either at least one <tag>p:catch</tag> or exactly one 
@@ -3732,7 +3732,7 @@ binding for the context item for the test expression(s).</para>
 <listitem>
 <para>Elsewhere, it is a binding for the primary input port of the
 step in which it occurs.
-<error code="S1002">It is a <glossterm>static error</glossterm> if there
+<error code="S0065">It is a <glossterm>static error</glossterm> if there
 is no primary input port.</error>
 </para>
 </listitem>
@@ -3749,7 +3749,7 @@ undefined.</error></para>
 <rfc2119>may</rfc2119> also be provided with a connection.
 The <tag class="attribute">select</tag> expression, if specified, applies the
 specified XPath select expression to the document(s) that are read.
-<error code="D1004">It is a <glossterm>dynamic error</glossterm>
+<error code="D0039">It is a <glossterm>dynamic error</glossterm>
 if the <tag class="attribute">select</tag> is used and any input
 document is not an XML document.</error></para>
 
@@ -3910,7 +3910,7 @@ specified options are allowed.</para>
 
 <para>For XML outputs, see <xref linkend="xml-serialization"/>.
 For non-XML outputs, see <xref linkend="non-xml-serialization"/>.
-<error code="S1201">It is a <glossterm>static error</glossterm> if the
+<error code="S0077">It is a <glossterm>static error</glossterm> if the
 map contains any property name not recognized as a serialization
 parameter.</error></para>
 
@@ -4173,7 +4173,7 @@ class="attribute">as</tag> attribute using an XPath Sequence
 Type<superscript>[citation needed]</superscript>. If an atomic type,
 or sequence of atomic types, is specified, the value provided for the
 option will be atomized according to the standard XPath rules.
-<error code="D1001">It is a <glossterm>dynamic error</glossterm> if
+<error code="D0036">It is a <glossterm>dynamic error</glossterm> if
 the computed value does not match the specified sequence
 type.</error></para>
 
@@ -4213,7 +4213,7 @@ ports. Variables are connected to steps by their input, which provides
 the context node for the expression, and by the expressions that contain
 references to them. Any step which contains a reference to a variable
 effectively consumes the “output” of the variable.
-<error code="S1100">It is a <glossterm>static error</glossterm> if
+<error code="S0076">It is a <glossterm>static error</glossterm> if
 there are any loops in the connections between steps and variables:
 no step can refer to a variable if there is any sequence of connections
 from that step that leads back to the input that provides the context
@@ -4251,7 +4251,7 @@ name.</error></para>
 Type<superscript>[citation needed]</superscript>. If an atomic type,
 or sequence of atomic types, is specified, the value provided for the
 option will be atomized according to the standard XPath rules.
-<error code="D1001">It is a <glossterm>dynamic error</glossterm> if
+<error code="D0036">It is a <glossterm>dynamic error</glossterm> if
 the computed value does not match the specified sequence
 type.</error></para>
 
@@ -4340,7 +4340,7 @@ class="attribute">as</tag> attribute using an XPath Sequence
 Type<superscript>[citation needed]</superscript>. If an atomic type,
 or sequence of atomic types, is specified, the value provided for the
 option will be atomized according to the standard XPath rules.
-<error code="D1001">It is a <glossterm>dynamic error</glossterm> if
+<error code="D0036">It is a <glossterm>dynamic error</glossterm> if
 the computed value does not match the specified sequence
 type.</error></para>
 
@@ -4689,10 +4689,10 @@ it defaults to the primary output port of the step identified (explicitly
 or implicitly).</para>
 
 <para>
-<error code="S1004">It is a <glossterm>static error</glossterm> if the
+<error code="S0067">It is a <glossterm>static error</glossterm> if the
 <tag class="attribute">step</tag> attribute is not specified, and there
 is no default readable port.
-<error code="S1005">It is a <glossterm>static error</glossterm> if the
+<error code="S0068">It is a <glossterm>static error</glossterm> if the
 <tag class="attribute">port</tag> attribute is not specified, and the
 step identified has no primary output port.</error>
 </error></para>
@@ -4712,7 +4712,7 @@ steps</glossterm>. In other words, the output of a compound step can
 simply be a copy of one of the available inputs or it can be the
 output of one of its children.</para>
 
-<para><error code="S1202">When the <tag>p:pipe</tag> is within an
+<para><error code="S0078">When the <tag>p:pipe</tag> is within an
 <tag>p:output</tag> of a <glossterm>compound step</glossterm>, it is a
 <glossterm>static error</glossterm> if the port identified by the
 <tag>p:pipe</tag> is not in the <glossterm>readable ports</glossterm>
@@ -4776,17 +4776,17 @@ is “<literal>base64</literal>”.</th>
 </informaltable>
 -->
 
-<para><error code="S1007">It is a
+<para><error code="S0070">It is a
 <glossterm>static error</glossterm> if an encoding is specified
 and the content type is an <glossterm>XML media type</glossterm>.</error>
 </para>
 
-<para><error code="S1008">It is a <glossterm>static error</glossterm>
+<para><error code="S0071">It is a <glossterm>static error</glossterm>
 if the content type value specifies a character set and the <tag
 class="attribute">encoding</tag> attribute is absent.</error>
 </para>
 
-<para><error code="S1009">It is a <glossterm>static error</glossterm>
+<para><error code="S0072">It is a <glossterm>static error</glossterm>
 if an encoding is specified and the content of the <tag>p:inline</tag>
 contains any XML markup.</error> In other words, the entire content
 must be a single text node. CDATA sections and character references do
@@ -4801,9 +4801,9 @@ identifies the content as being base64-encoded.
 support encodings other than <literal>base64</literal>, but these
 encodings and their names are
 <glossterm>implementation-defined</glossterm>.</impl>
-<error code="S1006">It is a <glossterm>static error</glossterm> if the
+<error code="S0069">It is a <glossterm>static error</glossterm> if the
 encoding specified is not supported by the implementation.</error>
-<error code="D1005">It is a <glossterm>dynamic error</glossterm> if
+<error code="D0040">It is a <glossterm>dynamic error</glossterm> if
 the body is not correctly encoded per the value of the <tag
 class="attribute">encoding</tag> attribute.</error>
 </para>
