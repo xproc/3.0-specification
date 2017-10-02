@@ -325,7 +325,7 @@
             </choice>
           </zeroOrMore>
         </interleave>
-        <ref name="Any"/>
+        <ref name="AnyElement"/>
       </choice>
     </element>
   </define>
@@ -363,7 +363,7 @@
             </choice>
           </zeroOrMore>
         </interleave>
-        <ref name="Any"/>
+        <ref name="AnyElement"/>
       </choice>
     </element>
   </define>
@@ -434,7 +434,7 @@
             </choice>
           </zeroOrMore>
         </interleave>
-        <ref name="Any"/>
+        <ref name="AnyElement"/>
       </choice>
     </element>
   </define>
@@ -507,7 +507,9 @@
       <optional>
         <ref name="use-when.attr"/>
       </optional>
-      <ref name="Any"/>
+      <zeroOrMore>
+        <ref name="Any"/>
+      </zeroOrMore>
     </element>
   </define>
   <define name="Empty" sa:class="language-construct">
@@ -601,7 +603,7 @@
             </choice>
           </zeroOrMore>
         </interleave>
-        <ref name="Any"/>
+        <ref name="AnyElement"/>
       </choice>
     </element>
   </define>
@@ -642,7 +644,7 @@
             </choice>
           </zeroOrMore>
         </interleave>
-        <ref name="Any"/>
+        <ref name="AnyElement"/>
       </choice>
     </element>
   </define>
@@ -1121,10 +1123,7 @@
     </element>
   </define>
   <define name="DocContent" sa:model="any-well-formed-content">
-    <choice>
-      <text/>
-      <ref name="Any"/>
-    </choice>
+    <ref name="Any"/>
   </define>
   <!-- ============================================================ -->
   <define name="PipeInfo" sa:ignore="yes" sa:class="language-construct">
@@ -1164,17 +1163,31 @@
       </anyName>
     </attribute>
   </define>
-  <define name="Any" sa:model="anyElement">
+  <define name="AnyElement" sa:model="anyElement">
     <element>
       <anyName/>
       <zeroOrMore>
         <choice>
           <ref name="_any.attr"/>
           <text/>
-          <ref name="Any"/>
+          <ref name="AnyElement"/>
         </choice>
       </zeroOrMore>
     </element>
+  </define>
+  <define name="Any" sa:model="anyNode">
+    <choice>
+      <element>
+        <anyName/>
+        <zeroOrMore>
+          <choice>
+            <ref name="_any.attr"/>
+            <ref name="Any"/>
+          </choice>
+        </zeroOrMore>
+      </element>
+      <text/>
+    </choice>
   </define>
   <!-- ============================================================ -->
   <define name="VocabParam" sa:class="step-vocabulary">
@@ -1399,10 +1412,7 @@
         </attribute>
       </optional>
       <zeroOrMore>
-        <choice>
-          <text/>
-          <ref name="Any"/>
-        </choice>
+        <ref name="Any"/>
       </zeroOrMore>
     </element>
   </define>
