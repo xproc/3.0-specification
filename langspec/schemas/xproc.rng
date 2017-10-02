@@ -793,19 +793,48 @@
         <optional>
           <ref name="WithInput"/>
         </optional>
-        <zeroOrMore>
-          <ref name="Variable"/>
-        </zeroOrMore>
-        <zeroOrMore>
-          <choice>
-            <ref name="When"/>
-            <ref name="Documentation"/>
-            <ref name="PipeInfo"/>
-          </choice>
-        </zeroOrMore>
-        <optional>
-          <ref name="Otherwise"/>
-        </optional>
+        <choice>
+          <group>
+            <oneOrMore>
+              <zeroOrMore>
+                <choice>
+                  <ref name="Documentation"/>
+                  <ref name="PipeInfo"/>
+                </choice>
+              </zeroOrMore>
+              <ref name="When"/>
+            </oneOrMore>
+            <optional>
+              <zeroOrMore>
+                <choice>
+                  <ref name="Documentation"/>
+                  <ref name="PipeInfo"/>
+                </choice>
+              </zeroOrMore>
+              <ref name="Otherwise"/>
+            </optional>
+          </group>
+          <group>
+            <zeroOrMore>
+              <zeroOrMore>
+                <choice>
+                  <ref name="Documentation"/>
+                  <ref name="PipeInfo"/>
+                </choice>
+              </zeroOrMore>
+              <ref name="When"/>
+            </zeroOrMore>
+            <group>
+              <zeroOrMore>
+                <choice>
+                  <ref name="Documentation"/>
+                  <ref name="PipeInfo"/>
+                </choice>
+              </zeroOrMore>
+              <ref name="Otherwise"/>
+            </group>
+          </group>
+        </choice>
         <zeroOrMore>
           <choice>
             <ref name="Documentation"/>

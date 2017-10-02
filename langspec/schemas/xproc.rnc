@@ -426,11 +426,14 @@ Choose =
       common.attributes,
       use-when.attr?,
       ((Documentation|PipeInfo)*,
-         WithInput?,
-         Variable*,
-         (When|Documentation|PipeInfo)*,
-         Otherwise?,
-         (Documentation|PipeInfo)*)
+       WithInput?,
+
+       ((((Documentation|PipeInfo)*, When)+,
+         ((Documentation|PipeInfo)*, Otherwise)?)
+       | (((Documentation|PipeInfo)*, When)*,
+         ((Documentation|PipeInfo)*, Otherwise))),
+
+       (Documentation|PipeInfo)*)
    }
 
 [
