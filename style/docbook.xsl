@@ -20,25 +20,7 @@
 
 <xsl:param name="toc.section.depth">3</xsl:param>
 
-<xsl:param name="docbook.css">
-  <xsl:if test="db:specification/db:info/db:pubdate">
-    <xsl:text>http://www.w3.org/StyleSheets/TR/</xsl:text>
-  </xsl:if>
-  <xsl:choose>
-    <xsl:when test="$w3c-doctype='ed'">base</xsl:when>
-    <xsl:when test="$w3c-doctype='fpwd'">W3C-WD</xsl:when>
-    <xsl:when test="$w3c-doctype='wd'">W3C-WD</xsl:when>
-    <xsl:when test="$w3c-doctype='rec'">W3C-REC</xsl:when>
-    <xsl:when test="$w3c-doctype='pr'">W3C-PR</xsl:when>
-    <xsl:when test="$w3c-doctype='per'">W3C-PER</xsl:when>
-    <xsl:when test="$w3c-doctype='cr'">W3C-CR</xsl:when>
-    <xsl:when test="$w3c-doctype='note'">W3C-WG-NOTE</xsl:when>
-    <xsl:when test="$w3c-doctype='memsub'">W3C-Member-SUBM</xsl:when>
-    <xsl:when test="$w3c-doctype='teamsub'">W3C-Team-SUBM</xsl:when>
-    <xsl:otherwise>base</xsl:otherwise>
-  </xsl:choose>
-  <xsl:text>.css</xsl:text>
-</xsl:param>
+<xsl:param name="docbook.css" select="'css/base.css'"/>
 
 <xsl:param name="publication.root.uri"
 	   select="if (/processing-instruction(publication-root))

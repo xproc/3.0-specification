@@ -42,7 +42,7 @@
 </xsl:param>
 
 <xsl:param name="resource.root"
-           select="'http://cdn.docbook.org/release/2.0.20/resources/'"/>
+           select="''"/> <!-- http://cdn.docbook.org/release/2.0.20/resources/'"/> -->
 
 <!-- Default macros -->
 <xsl:variable name="ml:defaultMacros" select="document($defaultMacros)"/>
@@ -398,15 +398,8 @@
     </script>
   </xsl:if>
 
-  <link rel="stylesheet" type="text/css"
-        href="xproc.css"/>
+  <link rel="stylesheet" type="text/css" href="css/xproc.css"/>
 
-<!--
-  <link rel="stylesheet" type="text/css"
-        href="http://www.w3.org/StyleSheets/TR/w3c-tr.css"/>
--->
-  <link rel="stylesheet" type="text/css"
-        href="http://www.w3.org/StyleSheets/TR/base.css"/>
   <link rel="stylesheet" type="text/css" href="{$docbook.css}"/>
 </xsl:template>
 

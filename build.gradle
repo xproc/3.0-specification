@@ -56,7 +56,8 @@ task publish(dependsOn: ["publish_xproc30", "publish_steps30"]) {
 task publish_xproc30(dependsOn: ["xproc30",
                                  "publish_xproc30_xml",
                                  "publish_xproc30_graphics",
-                                 "publish_xproc30_css"], type: Copy) {
+                                 "publish_xproc30_css",
+                                 "publish_xproc30_js" ], type: Copy) {
   from('build') {
     include "xproc30.html"
     rename "xproc30.html", "index.html"
@@ -76,13 +77,23 @@ task publish_xproc30_xml.doFirst {
 }
 
 task publish_xproc30_css(dependsOn: ["copyCSS"], type: Copy) {
-  from('build') {
+  from('build/css') {
     include "*.css"
   }
-  into "build/xproc30"
+  into "build/xproc30/css"
 }
 task publish_xproc30_css.doFirst {
-  mkdir 'build/xproc30'
+  mkdir 'build/xproc30/css'
+}
+
+task publish_xproc30_js(dependsOn: ["copyJS"], type: Copy) {
+  from('build/js') {
+    include "*.js"
+  }
+  into "build/xproc30/js"
+}
+task publish_xproc30_js.doFirst {
+  mkdir 'build/xproc30/js'
 }
 
 task publish_xproc30_graphics(dependsOn: ["copyImages"], type: Copy) {
@@ -96,7 +107,8 @@ task publish_xproc30_graphics.doFirst {
 
 task publish_steps30(dependsOn: ["steps30",
                                  "publish_steps30_xml",
-                                 "publish_steps30_css"], type: Copy) {
+                                 "publish_steps30_css",
+                                 "publish_steps30_js" ], type: Copy) {
   from('build') {
     include "steps30.html"
     rename "steps30.html", "index.html"
@@ -116,18 +128,33 @@ task publish_steps30_xml.doFirst {
 }
 
 task publish_steps30_css(dependsOn: ["copyCSS"], type: Copy) {
-  from('build') {
+  from('build/css') {
     include "*.css"
   }
-  into "build/steps30"
+  into "build/steps30/css"
 }
 task publish_steps30_css.doFirst {
-  mkdir 'build/steps30'
+  mkdir 'build/steps30/css'
+}
+
+task publish_steps30_js(dependsOn: ["copyJS"], type: Copy) {
+  from('build/js') {
+    include "*.js"
+  }
+  into "build/steps30/js"
+}
+task publish_steps30_js.doFirst {
+  mkdir 'build/steps30/js'
 }
 
 task copyCSS(type: Copy) {
   from 'css'
-  into 'build'
+  into 'build/css'
+}
+
+task copyJS(type: Copy) {
+  from 'js'
+  into 'build/js'
 }
 
 task copyImages(type: Copy) {
@@ -139,7 +166,7 @@ task copyImages.doFirst {
   mkdir 'build/graphics'
 }
 
-task copy_assets(dependsOn: ['copyCSS', 'copyImages']) {
+task copy_assets(dependsOn: ['copyCSS', 'copyJS', 'copyImages']) {
   // nothing to see here
 }
 
