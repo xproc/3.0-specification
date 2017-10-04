@@ -179,6 +179,7 @@
     <xsl:otherwise>
       <xsl:apply-templates select="$rngpat/*">
 	<xsl:with-param name="repeat" select="$repeat"/>
+        <xsl:with-param name="avt" select="@sa:avt"/>
       </xsl:apply-templates>
     </xsl:otherwise>
   </xsl:choose>
@@ -229,13 +230,16 @@
       <xsl:with-param name="repeat" select="$repeat"/>
     </xsl:apply-templates>
   </ss:group>
-</xsl:template> 
+</xsl:template>
 
 <xsl:template match="rng:attribute[@name]" priority="10">
   <xsl:param name="schema" tunnel="yes"/>
   <xsl:param name="repeat" select="''"/>
+  <xsl:param name="avt" select="()"/>
 
-  <ss:attribute name="{@name}" optional="{$repeat}">
+  <xsl:variable name="is-avt" select="($avt,@sa:avt)[1]"/>
+
+  <ss:attribute name="{@name}" optional="{$repeat}" avt="{$is-avt}">
     <xsl:attribute name="type">
       <xsl:choose>
 	<xsl:when test="rng:data">
@@ -405,6 +409,10 @@
   <xsl:value-of select="@optional"/>
   <xsl:text> = </xsl:text>
 
+  <xsl:if test="@avt = 'true'">
+    <xsl:text>{ </xsl:text>
+  </xsl:if>
+
   <!-- hack! -->
   <xsl:choose>
     <xsl:when test="contains(@type,'&quot;')">
@@ -419,6 +427,10 @@
       </var>
     </xsl:otherwise>
   </xsl:choose>
+
+  <xsl:if test="@avt = 'true'">
+    <xsl:text> }</xsl:text>
+  </xsl:if>
 </xsl:template>
 
 <xsl:template match="ss:content-model">
