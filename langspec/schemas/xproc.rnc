@@ -163,7 +163,7 @@ Pipeline =
 [
    sa:model = "subpipeline"
 ]
-Subpipeline = Variable*,(ForEach|Viewport|Choose|If|Group|Try|OtherStep|Documentation|PipeInfo)+
+Subpipeline = (Variable|ForEach|Viewport|Choose|If|Group|Try|OtherStep|Documentation|PipeInfo)+
 
 # ============================================================
 
@@ -325,6 +325,8 @@ WithOptionSelect =
       name.qname.attr,
       as.attr?,
       select.attr,
+      [ sa:avt = "true" ]
+        collection.attr?,
       common.attributes,
       inline.attributes,
       use-when.attr?,
@@ -501,7 +503,7 @@ Try =
       name.ncname.attr?,
       common.attributes,
       use-when.attr?,
-      ((Variable*, TryGroup, Catch+, Finally?) & (Documentation|PipeInfo)*)
+      ((TryGroup, Catch+, Finally?) & (Documentation|PipeInfo)*)
    }
 
 [
