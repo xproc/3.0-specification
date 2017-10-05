@@ -267,11 +267,9 @@
     </element>
   </define>
   <define name="Subpipeline" sa:model="subpipeline">
-    <zeroOrMore>
-      <ref name="Variable"/>
-    </zeroOrMore>
     <oneOrMore>
       <choice>
+        <ref name="Variable"/>
         <ref name="ForEach"/>
         <ref name="Viewport"/>
         <ref name="Choose"/>
@@ -580,6 +578,9 @@
         <ref name="as.attr"/>
       </optional>
       <ref name="select.attr"/>
+      <optional>
+        <ref name="collection.attr" sa:avt="true"/>
+      </optional>
       <ref name="common.attributes"/>
       <ref name="inline.attributes"/>
       <optional>
@@ -965,9 +966,6 @@
       </optional>
       <interleave>
         <group>
-          <zeroOrMore>
-            <ref name="Variable"/>
-          </zeroOrMore>
           <ref name="TryGroup"/>
           <oneOrMore>
             <ref name="Catch"/>
