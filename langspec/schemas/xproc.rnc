@@ -251,9 +251,11 @@ Pipe =
 ]
 Document =
    element document {
-      href.attr,
+      [ sa:avt = "true" ]
+         href.attr,
       document-properties.attr?,
-      attribute override-content-type { ContentType }?,
+      [ sa:avt = "true" ]
+         attribute override-content-type { ContentType }?,
       common.attributes,
       use-when.attr?,
       (Documentation|PipeInfo)*
@@ -346,7 +348,8 @@ VariableSelect =
       name.qname.attr,
       as.attr?,
       select.attr,
-      collection.attr?,
+      [ sa:avt = "true" ]
+         collection.attr?,
       common.attributes,
       inline.attributes,
       use-when.attr?,
@@ -409,7 +412,8 @@ ForEach =
 Viewport =
    element viewport {
       name.ncname.attr?,
-      attribute match { XSLTMatchPattern },
+      [ sa:avt = "true" ]
+         attribute match { XSLTMatchPattern },
       common.attributes,
       use-when.attr?,
       ((WithInput? & Output? & Documentation* & PipeInfo*), Subpipeline)
@@ -442,7 +446,8 @@ Choose =
 When =
    element when {
       attribute test { XPathExpression },
-      collection.attr?,
+      [ sa:avt = "true" ]
+         collection.attr?,
       common.attributes,
       use-when.attr?,
       ((Documentation|PipeInfo)*,
@@ -469,7 +474,8 @@ Otherwise =
 If =
    element if {
       attribute test { XPathExpression },
-      collection.attr?,
+      [ sa:avt = "true" ]
+         collection.attr?,
       common.attributes,
       use-when.attr?,
       ((Documentation|PipeInfo)*,
