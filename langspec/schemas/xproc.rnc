@@ -181,7 +181,7 @@ Input =
       common.attributes,
       inline.attributes,
       use-when.attr?,
-      (((\Empty|(Document|Inline)+)? & (Documentation|PipeInfo)*)|Any)
+      (((\Empty|(Document|Inline)+)? & (Documentation|PipeInfo)*)|AnyElement)
    }
 
 [
@@ -195,7 +195,7 @@ WithInput =
       common.attributes,
       inline.attributes,
       use-when.attr?,
-      (((\Empty|(Pipe|Document|Inline)+)? & (Documentation|PipeInfo)*)|Any)
+      (((\Empty|(Pipe|Document|Inline)+)? & (Documentation|PipeInfo)*)|AnyElement)
    }
 
 # ============================================================
@@ -226,7 +226,7 @@ OutputConnection =
       inline.attributes,
       use-when.attr?,
       serialization.attr?,
-      (((\Empty|(Pipe|Document|Inline)+)? & (Documentation|PipeInfo)*)|Any)
+      (((\Empty|(Pipe|Document|Inline)+)? & (Documentation|PipeInfo)*)|AnyElement)
    }
 
 [
@@ -270,7 +270,7 @@ Inline =
       document-properties.attr?,
       attribute encoding { text }?,
       use-when.attr?,
-      Any
+      Any*
    }
 
 [
@@ -328,7 +328,7 @@ WithOptionSelect =
       common.attributes,
       inline.attributes,
       use-when.attr?,
-      (((\Empty|Pipe|Document|Inline)? & (Namespaces|Documentation|PipeInfo)*)|Any)
+      (((\Empty|Pipe|Document|Inline)? & (Namespaces|Documentation|PipeInfo)*)|AnyElement)
    }
 
 [
@@ -350,7 +350,7 @@ VariableSelect =
       common.attributes,
       inline.attributes,
       use-when.attr?,
-      (((\Empty|Pipe|Document|Inline)? & (Namespaces|Documentation|PipeInfo)*)|Any)
+      (((\Empty|Pipe|Document|Inline)? & (Namespaces|Documentation|PipeInfo)*)|AnyElement)
    }
 
 [
@@ -579,7 +579,7 @@ Documentation =
 [
    sa:model = "any-well-formed-content"
 ]
-DocContent = (text | Any)
+DocContent = Any
 
 # ============================================================
 [
@@ -607,10 +607,19 @@ extension.attr =
 [
    sa:model = "anyElement"
 ]
-Any =
+AnyElement =
    element * {
-      (_any.attr | text | Any)*
+      (_any.attr | text | AnyElement)*
    }
+
+[
+   sa:model = "anyNode"
+]
+Any =
+   (element * {
+       (_any.attr | Any)*
+    }
+   | text)
 
 # ============================================================
 
@@ -772,7 +781,7 @@ Error =
       attribute line { xsd:integer }?,
       attribute column { xsd:integer }?,
       attribute offset { xsd:integer }?,
-      (text|Any)*
+      Any*
    }
 
 Charset = text

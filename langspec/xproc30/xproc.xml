@@ -4734,14 +4734,18 @@ step.</error>
 
 <e:rng-pattern name="Inline"/>
 
-<para>The <tag class="attribute">document-properties</tag> attribute can 
-  be used to set the <glossterm>document properties</glossterm> of the provided document. The document's 
-  content type is determined by the value of the "content-type" key in the provided map.
-  If no attribute <tag class="attribute">document-properties</tag> is provided or the provided map does not
-  contain a "content-type" key, the value "<literal>application/xml</literal>" is assumed.
+<para>The <tag class="attribute">document-properties</tag> attribute
+can be used to set the <glossterm>document properties</glossterm> of
+the provided document. The document's content type is determined by
+the value of the "content-type" key in the provided map. If no
+attribute <tag class="attribute">document-properties</tag> is provided
+or the provided map does not contain a "content-type" key, the value
+"<literal>application/xml</literal>" is assumed.
 </para>
+
 <para>How the content of a <tag>p:inline</tag> element is interpreted
-depends on the document's content type and the <tag class="attribute">encoding</tag> attribute.
+depends on the document's content type and the <tag
+class="attribute">encoding</tag> attribute.
 </para>
 
 <!--
@@ -4958,10 +4962,10 @@ effect.)</para>
 <section xml:id="implicit-inlines">
 <title>Implicit inlines</title>
 
-<para>As an authoring convenience, if a single element node,
-optionally preceded and/or followed by whitespace, in any namespace other
-than the XProc namespace, occurs where a <tag>p:inline</tag> is
-allowed, it is treated as if it was enclosed within a
+<para>As an authoring convenience, if one or more element nodes,
+optionally preceded and/or followed by whitespace, in any namespace
+other than the XProc namespace, occurs where a <tag>p:inline</tag> is
+allowed, each is treated as if it was enclosed within a
 <tag>p:inline</tag> element (with no attributes). Any preceding or
 following whitespace is discarded.</para>
 
@@ -4970,6 +4974,7 @@ following whitespace is discarded.</para>
 <programlisting language="xml"><![CDATA[<p:identity name="identity" code="my:implicitinline1">
     <p:with-input port="source">
         <para xmlns="http://docbook.org/ns/docbook">Some text</para>
+        <para xmlns="http://docbook.org/ns/docbook">Some other text</para>
     </p:with-input>
 </p:identity>]]></programlisting>
 
@@ -4978,12 +4983,18 @@ following whitespace is discarded.</para>
 <programlisting language="xml"><![CDATA[<p:identity name="identity" code="my:implicitinline2">
     <p:with-input port="source">
         <p:inline><para xmlns="http://docbook.org/ns/docbook">Some text</para></p:inline>
+        <p:inline><para xmlns="http://docbook.org/ns/docbook">Some other text</para></p:inline>
     </p:with-input>
 </p:identity>]]></programlisting>
 
 <para>An explicit <tag>p:inline</tag> is required if the author
 wants to include top level comments, processing instructions, or whitespace,
 or if the document element is in the XProc namespace.</para>
+
+<para><error code="S00xx">It is a <glossterm>static error</glossterm>
+if comments or processing instructions occur as siblings of an element node
+that would be treated as an implicit inline.</error>
+</para>
 </section>
 </section>
 
