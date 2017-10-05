@@ -2663,15 +2663,26 @@ or collections.</error>
 </para>
 </section>
 
-<section xml:id="syntax-summaries"><title>Syntax Summaries</title><para>The description of each
-        element in the pipeline namespace is accompanied by a syntactic summary that provides a
-        quick overview of the element's syntax:</para>
+<section xml:id="syntax-summaries"><title>Syntax Summaries</title>
+
+<para>The description of each element in the pipeline namespace is
+accompanied by a syntactic summary that provides a quick overview of
+the element's syntax:</para>
+
       <e:rng-fragment name="SomeElement" role="nosummary">
         <grammar xmlns="http://relaxng.org/ns/structure/1.0">
           <define xmlns:sa="http://xproc.org/ns/syntax-annotations" name="SomeElement" sa:class="language-example">
             <element name="some-element">
+              <attribute name="reqd-attribute">
+                <data type="some-type"/>
+              </attribute>
               <optional>
                 <attribute name="some-attribute">
+                  <data type="some-type"/>
+                </attribute>
+              </optional>
+              <optional>
+                <attribute name="avt-attribute" sa:avt="true">
                   <data type="some-type"/>
                 </attribute>
               </optional>
@@ -2724,6 +2735,13 @@ or collections.</error>
         <listitem>
           <para>An element or group followed by a plus (“+”) is required and may be repeated; it
             must occur at least once, and it can occur any number of times. </para>
+        </listitem>
+        <listitem>
+          <para>Required attributes are bold. Optional attributes are followed by a question mark.</para>
+        </listitem>
+        <listitem>
+          <para>If an attribute value is an attribute value template, its type is shown
+          in curly brackets: “<code>{ some-type }</code>”.</para>
         </listitem>
 
 </itemizedlist>
