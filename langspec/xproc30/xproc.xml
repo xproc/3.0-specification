@@ -3865,6 +3865,22 @@ class="attribute">sequence</tag> is not specified on
 <glossterm>dynamic error</glossterm> if the step does not produce
 exactly one document on the declared port.</error></para>
 
+<para>An output declaration can indicate the content types of the 
+  documents appearing on that port. If <tag class="attribute">content-types</tag> 
+  is specified then only documents matching these content types are allowed
+  to appear on that port. If the attribute is not specified, 
+  <literal>*/*</literal> is assumed. <error code="D0042">It is a dynamic error 
+  if a document arrives on an output port whose content type is not accepted 
+  by the output port specification.</error></para>
+  
+<note role="editorial">
+        <title>Editorial Note</title>
+  <para>Implementations are free to perform a static checking of the connected
+  ports and indicate, that the content types of the connected ports will not
+    match, however they <rfc2119>must not</rfc2119> raise a <glossterm>static error</glossterm>.
+  </para>
+  </note>
+  
 <para>The <tag class="attribute">primary</tag> attribute is used to
 identify the primary output port. An output port is a primary output
 port if <tag class="attribute">primary</tag> is specified with the
