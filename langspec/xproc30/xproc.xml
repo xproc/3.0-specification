@@ -3161,59 +3161,75 @@ on the output.</para>
           step is a copy of the input document with a horizontal rule as the first child of each
           selected <code>h:div</code>.</para>
       </section></section>
-    <section xml:id="p.choose"><title>p:choose</title><para>A choose is specified by the
-          <tag>p:choose</tag> element. It is a <glossterm>multi-container step</glossterm> that
-        selects exactly one of a list of alternative <glossterm baseform="subpipeline"
-          >subpipelines</glossterm> based on the evaluation of XPath expressions.</para>
+
+<section xml:id="p.choose">
+<title>p:choose</title>
+
+<para>A choose is specified by the <tag>p:choose</tag> element. It is
+a <glossterm>multi-container step</glossterm> that selects exactly one
+of a list of alternative <glossterm baseform="subpipeline"
+>subpipelines</glossterm> based on the evaluation of XPath
+expressions.</para>
+
       <e:rng-pattern name="Choose"/>
-      <para>A <tag>p:choose</tag> contains an arbitrary number of alternative
-          <glossterm baseform="subpipeline">subpipelines</glossterm>, exactly one of which will be
-        evaluated. <error code="S0074">It is a <glossterm>static error</glossterm> if a <tag>p:choose</tag>
-        has neither a <tag>p:when</tag> nor a <tag>p:otherwise</tag>.</error></para>
+
+<para>A <tag>p:choose</tag> contains an arbitrary number of
+alternative <glossterm
+baseform="subpipeline">subpipelines</glossterm>, exactly one of which
+will be evaluated. <error code="S0074">It is a <glossterm>static
+error</glossterm> if a <tag>p:choose</tag> has neither a
+<tag>p:when</tag> nor a <tag>p:otherwise</tag>.</error></para>
+
 <para>The list of alternative subpipelines consists of zero or more
-        subpipelines guarded by an XPath expression, followed optionally by a single default
-        subpipeline.</para>
+subpipelines guarded by an XPath expression, followed optionally by a
+single default subpipeline.</para>
+
 <para>The <tag>p:choose</tag> considers each subpipeline in turn and
-        selects the first (and only the first) subpipeline for which the guard expression evaluates
-        to true in its context. If there are no subpipelines for which the expression evaluates to
-        true, the default subpipeline, if it was specified, is selected.</para>
-<para>After a
-          <glossterm>subpipeline</glossterm> is selected, it is evaluated as if only it had been
-        present.</para>
-<para>The outputs of the <tag>p:choose</tag> are taken from the outputs of
-        the selected <glossterm>subpipeline</glossterm>. The <tag>p:choose</tag> has the same number
-        of outputs as the selected subpipeline with the same names. If the selected subpipeline has
-        a <glossterm>primary output port</glossterm>, the port with the same name on the
-          <tag>p:choose</tag> is also a primary output port.</para>
-<para>In order to ensure that the
-        output of the <tag>p:choose</tag> is consistent irrespective of the
-          <glossterm>subpipeline</glossterm> chosen, each <glossterm>subpipeline</glossterm> must
-        declare the same number of outputs with the same names. If any of the subpipelines specifies
-        a <glossterm>primary output port</glossterm>, each subpipeline must specify exactly the same
-        output as primary. <error code="S0007">It is a <glossterm>static error</glossterm> if two
-            <glossterm baseform="subpipeline">subpipelines</glossterm> in a <tag>p:choose</tag>
-          declare different outputs.</error></para>
-<para>As a convenience to authors, it is not an
-        error if some subpipelines declare outputs that can produce sequences and some do not. Each
-        output of the <tag>p:choose</tag> is declared to produce a sequence if that output is
-        declared to produce a sequence in any of its subpipelines.</para>
-<para><error code="D0004"
-          >It is a <glossterm>dynamic error</glossterm> if no <glossterm>subpipeline</glossterm> is
-          selected by the <tag>p:choose</tag> and no default is provided.</error></para>
+selects the first (and only the first) subpipeline for which the guard
+expression evaluates to true in its context. If there are no
+subpipelines for which the expression evaluates to true, the default
+subpipeline, if it was specified, is selected.</para>
+
+<para>After a <glossterm>subpipeline</glossterm> is selected, it is
+evaluated as if only it had been present.</para>
+
+<para>The outputs of the <tag>p:choose</tag> are taken from the
+outputs of the selected <glossterm>subpipeline</glossterm>. The
+<tag>p:choose</tag> has the same number of outputs as the selected
+subpipeline with the same names. If the selected subpipeline has a
+<glossterm>primary output port</glossterm>, the port with the same
+name on the <tag>p:choose</tag> is also a primary output port.</para>
+
+<para>In order to ensure that the output of the <tag>p:choose</tag> is
+consistent irrespective of the <glossterm>subpipeline</glossterm>
+chosen, each <glossterm>subpipeline</glossterm> must declare the same
+number of outputs with the same names. If any of the subpipelines
+specifies a <glossterm>primary output port</glossterm>, each
+subpipeline must specify exactly the same output as primary. <error
+code="S0007">It is a <glossterm>static error</glossterm> if two
+<glossterm baseform="subpipeline">subpipelines</glossterm> in a
+<tag>p:choose</tag> declare different outputs.</error></para>
+
+<para>As a convenience to authors, it is not an error if some
+subpipelines declare outputs that can produce sequences and some do
+not. Each output of the <tag>p:choose</tag> is declared to produce a
+sequence if that output is declared to produce a sequence in any of
+its subpipelines.</para>
+
+<para><error code="D0004">It is a <glossterm>dynamic
+error</glossterm> if no <glossterm>subpipeline</glossterm> is selected
+by the <tag>p:choose</tag> and no default is provided.</error></para>
 
 <para>The <tag>p:choose</tag> can specify the context node against
 which the XPath expressions that occur on each branch are evaluated.
 The context node is specified as a <glossterm>connection</glossterm>
-in the <tag>p:with-input</tag>. If no explicit connection is
-provided,
-the <glossterm>default readable port</glossterm> is used.
-If the context node is connected
-to <tag>p:empty</tag>, or is unconnected and the <glossterm>default
-readable port</glossterm> is undefined, the context
-item is undefined.
-<error code="D0005">It is a <glossterm>dynamic error</glossterm> if
-more than one document appears on the connection for this input
-port.</error>
+in the <tag>p:with-input</tag>. If no explicit connection is provided,
+the <glossterm>default readable port</glossterm> is used. If the
+context node is connected to <tag>p:empty</tag>, or is unconnected and
+the <glossterm>default readable port</glossterm> is undefined, the
+context item is undefined. <error code="D0005">It is a
+<glossterm>dynamic error</glossterm> if more than one document appears
+on the connection for this input port.</error>
 </para>
 
 <para>Each conditional <glossterm>subpipeline</glossterm> is
