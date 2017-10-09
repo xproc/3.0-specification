@@ -3203,9 +3203,7 @@ subpipelines.</para>
 subpipelines where one declares output ports “A” and “B” and the other
 declares output ports “B” and “C”. The outputs available from the
 <tag>p:choose</tag> are “A”, “B”, and “C”. No documents appear on any
-outputs not declared in the subpipline actually selected.
-<tag>p:choose</tag> has the same number of outputs as the selected
-subpipeline with the same names.</para>
+outputs not declared in the subpipline actually selected.</para>
 
 <para>In order to maintain consistency with respect to the
 <glossterm>default readable port</glossterm>, if any subpipeline has a
@@ -3378,23 +3376,28 @@ recovery subpipeline are the outputs of the <tag>p:try</tag> step. If
 the recovery subpipeline is evaluated and a step within that
 subpipeline fails, the <tag>p:try</tag> fails.</para>
 
-<para>The outputs of the <tag>p:try</tag> are taken from the outputs
-of the initial subpipeline or the recovery subpipeline if an error
-occurred in the initial subpipeline. The <tag>p:try</tag> has the same
-number of outputs as the selected subpipeline with the same names. If
-the selected subpipeline has a <glossterm>primary output
-port</glossterm>, the port with the same name on the <tag>p:try</tag>
-is also a primary output port.</para>
+<para>The outputs of the <tag>p:try</tag> are taken from the
+outputs of the initial <glossterm>subpipeline</glossterm> or the recovery
+subpipline if an error occurred in the initial subpipeline. The
+outputs <emphasis>available</emphasis> from the <tag>p:try</tag>
+are union of all of the outputs declared in any of its alternative
+subpipelines.</para>
 
-<para>In order to ensure that the output of the <tag>p:try</tag> is
-consistent irrespective of whether the initial subpipeline provides
-its output or the recovery subpipeline does, both subpipelines must
-declare the same number of outputs with the same names. If either of
-the subpipelines specifies a <glossterm>primary output
-port</glossterm>, both subpipelines must specify exactly the same
-output as primary. <error code="S0009">It is a <glossterm>static
-error</glossterm> if the <tag>p:group</tag> and <tag>p:catch</tag>
-subpipelines declare different outputs.</error></para>
+<para>Consider a <tag>p:try</tag> that has an initial
+subpipeline that declares output ports “A” and “B” and a recovery
+subpipeline that
+declares output ports “B” and “C”. The outputs available from the
+<tag>p:try</tag> are “A”, “B”, and “C”. No documents appear on any
+outputs not declared in the subpipeline whose results are actually
+returned.</para>
+
+<para>In order to maintain consistency with respect to the
+<glossterm>default readable port</glossterm>, if any subpipeline has a
+<glossterm>primary output port</glossterm>, even implicitly, then
+<emphasis>every</emphasis> subpipline must have exactly the same
+primary output port. In some cases, this may require making the implicit
+primary output explicit in order to assure that it has the same name.
+</para>
 
 <para>As a convenience to authors, it is not an error if an output
 port can produce a sequence in the initial subpipeline but not in the
