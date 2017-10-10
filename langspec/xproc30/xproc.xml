@@ -1752,7 +1752,7 @@ if any of the <tag>c:param</tag> elements are invalid.</error>
 <section xml:id="f.document-properties">
 <title>Document properties</title>
 
-<para>This function retreives the <glossterm>document properties</glossterm>
+<para>This function retrieves the <glossterm>document properties</glossterm>
 of a document as a map.</para>
 
 <methodsynopsis>
@@ -1763,6 +1763,61 @@ of a document as a map.</para>
 
 <para>The map returned contains (exclusively) the document properties
 associated with the <parameter>doc</parameter> specified.</para>
+
+<para feature="document-properties-non-xml-document">The context node
+for the <function>p:document-properties</function> function must be an
+XPath document node. In order to access the document properties of a
+non-XML document, the processor is responsible for manufacturing an
+empty document node for this purpose and for maintaining the
+association between that empty document node and the corresponding
+non-XML document.</para>
+</section>
+
+<section xml:id="f.document-properties-document">
+<title>Document properties document</title>
+
+<para>This function retrieves the <glossterm>document properties</glossterm>
+of a document as an XML document.</para>
+
+<methodsynopsis>
+<type>document-node()</type>
+<methodname>p:document-properties-document</methodname>
+<methodparam><type>document-node()</type><parameter>doc</parameter></methodparam>
+</methodsynopsis>
+
+<para>The document returned is a <tag>p:document-properties</tag>
+document that contains (exclusively) the document properties
+associated with the <parameter>doc</parameter> specified. Each key in the
+properties becomes an element, each value becomes the content of that element.
+For atomic values other than string, an <tag
+class="attribute">xsi:type</tag> attribute is added to identify the
+type of the value.</para>
+
+<para feature="document-properties-non-xml-document">The context node
+for the <function>p:document-properties</function> function must be an
+XPath document node. In order to access the document properties of a
+non-XML document, the processor is responsible for manufacturing an
+empty document node for this purpose and for maintaining the
+association between that empty document node and the corresponding
+non-XML document.</para>
+</section>
+
+<section xml:id="f.document-property">
+<title>Document property</title>
+
+<para>This function retrieves a single value from the
+<glossterm>document properties</glossterm> of a document.</para>
+
+<methodsynopsis>
+<type>item()</type>
+<methodname>p:document-property</methodname>
+<methodparam><type>document-node()</type><parameter>doc</parameter></methodparam>
+<methodparam><type>xs:QName</type><parameter>key</parameter></methodparam>
+</methodsynopsis>
+
+<para>The item returned is the value of the “<code>$key</code>” property
+in the document properties. An empty sequence is returned if no such key
+exists.</para>
 
 <para feature="document-properties-non-xml-document">The context node
 for the <function>p:document-properties</function> function must be an
