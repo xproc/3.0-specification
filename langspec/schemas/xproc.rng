@@ -347,6 +347,7 @@
             <zeroOrMore>
               <choice>
                 <ref name="Document"/>
+                <ref name="Pipe"/>
                 <ref name="Inline"/>
               </choice>
             </zeroOrMore>
@@ -418,18 +419,16 @@
       </optional>
       <choice>
         <interleave>
-          <optional>
-            <choice>
-              <ref name="Empty"/>
-              <oneOrMore>
-                <choice>
-                  <ref name="Pipe"/>
-                  <ref name="Document"/>
-                  <ref name="Inline"/>
-                </choice>
-              </oneOrMore>
-            </choice>
-          </optional>
+          <choice>
+            <ref name="Empty"/>
+            <zeroOrMore>
+              <choice>
+                <ref name="Document"/>
+                <ref name="Pipe"/>
+                <ref name="Inline"/>
+              </choice>
+            </zeroOrMore>
+          </choice>
           <zeroOrMore>
             <choice>
               <ref name="Documentation"/>
@@ -437,7 +436,9 @@
             </choice>
           </zeroOrMore>
         </interleave>
-        <ref name="AnyElement"/>
+        <zeroOrMore>
+          <ref name="AnyElement"/>
+        </zeroOrMore>
       </choice>
     </element>
   </define>
