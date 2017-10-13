@@ -1422,7 +1422,7 @@ result a document (or documents) specified by an IRI.</para>
 <p:declare-step type="p:load">
   <p:output port="result" sequence="true" content-types="*/*"/>
   <p:option name="href" required="true" as="xs:anyURI"/>
-  <p:option name="dtd-validate" select="false()" as="xs:boolean"/>
+  <p:option name="parameters" as="map(xs:QName,item())"/>
   <p:option name="document-properties" as="map(xs:QName, item())"/>
 </p:declare-step>
 
@@ -1433,85 +1433,97 @@ the base URI of the element on which it is specified
 (<tag>p:with-option</tag> or <tag>p:load</tag> in the case of a
 <olink targetdoc="../xproc20/xproc20.xml" targetptr="option-shortcut">syntactic shortcut</olink> value).</para>
 
-<para>The document or documents identified by the URI is loaded and returned. If the
-URI protocol supports redirection, then redirects
+<para>The document or documents identified by the URI are loaded and
+returned. If the URI protocol supports redirection, then redirects
 <rfc2119>must</rfc2119> be followed.</para>
 
-<para>If <option>dtd-validate</option> is <literal>false</literal>,
-the <tag>p:load</tag> step is equivalent to performing the following
-<tag>p:http-request</tag>:</para>
+<para>The behavior of this step depends on the content type of the
+document or documents loaded. The content type of each document is
+determined as follows:</para>
 
-<programlisting language="xml">&lt;p:http-request&gt;
-  &lt;p:input port="source"&gt;
-    &lt;p:inline&gt;
-      &lt;c:request method="GET"
-                 href="{HREF}"
-                 detailed="false"
-                 status-only="false"
-                 override-content-type="{OVERRIDE}"/&gt;
-    &lt;/p:inline&gt;
-  &lt;/p:input&gt;
-&lt;/p:http-request&gt;</programlisting>
+<orderedlist>
+<listitem>
+<para>If a <property>content-type</property> property is specified
+in <option>document-properties</option>, then each document
+<rfc2119>must</rfc2119> be interpreted according to that content type.
+</para>
+</listitem>
+<listitem>
+<para>If the documents are retrieved with a URI protocol that specifies
+a content type (for example, <literal>http:</literal>), then the document
+<rfc2119>must</rfc2119> be interpreted according to that content type.
+</para>
+</listitem>
+<listitem>
+<para><impl>In the absence of an explicit type, the content
+type is <glossterm>implementation-defined</glossterm></impl>.</para>
+</listitem>
+</orderedlist>
 
-<para>Where the “<literal>{HREF}</literal>” value is the value of
-the <option>href</option> option made absolute and the
-“<literal>{OVERRIDE}</literal>” value is the value returned by 
-<literal>map:get($document-properties,'content-type')</literal>. If no value is provided
-for the <option>document-properties</option> option or the provided map does not contain 
-a key 'content-type', then the
-<tag class="attribute">override-content-type</tag> attribute is not
-present on the <tag>c:request</tag>.</para>
+<para>The <option>parameters</option> map contains additional, optional
+parameters that may influence the way that content is loaded. The interpretation
+of this map varies according to the content type. Parameter names that are in
+no namespace are treated as strings using only the local-name where appropriate.</para>
 
-<para>If <option>dtd-validate</option> is <literal>true</literal>,
-the <tag>p:load</tag> step is equivalent to performing the following
-pipeline:</para>
+<para>Broadly speaking, there are four categories of data that might
+be loaded:
+<link linkend="c.load.xml">XML</link>,
+<link linkend="c.load.text">text</link>,
+<link linkend="c.load.json">JSON</link>, and “other”
+<link linkend="c.load.binary">binary</link> data.</para>
 
-<programlisting language="xml">&lt;p:declare-step&gt;
-  &lt;p:output port="result" sequence="false"/&gt;
-  &lt;p:option name="href" required="true"/&gt;
-  &lt;p:option name="document-properties"/&gt;
+<section xml:id="c.load.xml">
+<title>Loading XML data</title>
 
-  &lt;p:http-request&gt;
-    &lt;p:input port="source"&gt;
-      &lt;p:inline expand-text="true"&gt;
-        &lt;c:request method="GET"
-                   href="{$href}"
-                   detailed="false"
-                   status-only="false"
-                   override-content-type="text/plain"/&gt;
-      &lt;/p:inline&gt;
-    &lt;/p:input&gt;
-  &lt;/p:http-request&gt;
+<para>For an XML media type, the content is loaded and parsed as XML.</para>
 
-  &lt;p:xml-parse dtd-validate="true"/&gt;
+<para>If the <option>dtd-validate</option> parameter is <literal>true</literal>,
+then DTD validation must be performed when parsing the document.
+<error code="D0043">It is a <glossterm>dynamic error</glossterm>
+if the <option>dtd-validate</option> parameter is <literal>true</literal> and
+the processor does not support DTD validation.</error></para>
 
-  &lt;p:choose&gt;
-    &lt;p:when test="p:value-available('document-properties') and map:contains($document-properties,'content-type')"&gt;
-      &lt;p:cast-content-type content-type="{map:get($document-properties,'content-type')}"/&gt;
-    &lt;/p:when&gt;
-    &lt;p:otherwise&gt;
-      &lt;p:identity/&gt;
-    &lt;/p:otherwise&gt;
-  &lt;/p:choose&gt;
-&lt;/p:declare-step&gt;</programlisting>
+<para><impl>Additional XML parameters are <glossterm>implementation-defined</glossterm>.
+</impl></para>
+</section>
 
-<para>The retrieved document or documents are produced on the
-<port>result</port> port. For single part responses, the base URI of
-the result is the (absolute) IRI used to retrieve it. For multipart
-responses, the base URI of each part is the (absolute) IRI used to
-retrieve it unless the <code>content-disposition</code> header indicates
-a URI. If the <code>content-disposition</code> header indicates a relative
-URI, it is made absolute agains the (absolute) IRI used to retreive it.</para>
+<section xml:id="c.load.text">
+<title>Loading text data</title>
+<para>For a text media type, the content is loaded as a text document.</para>
 
-<note xml:id="ednote-load" role="editorial">
-<title>Editorial Note</title>
-<para>How does the preceding paragraph jibe with what
-<tag>p:http-request</tag> says about multipart responses?</para>
-</note>
+<para><impl>Text parameters are <glossterm>implementation-defined</glossterm>.
+</impl></para>
+
+</section>
+
+<section xml:id="c.load.json">
+<title>Loading JSON data</title>
+
+<para>For a JSON media type, the content is loaded and parsed as JSON.</para>
+
+<para>The parameters specified for the <code>fn:parse-json</code> function
+in <biblioref linkend="xpath-functions"/>
+<rfc2119>must</rfc2119> be supported.
+<impl>Additional JSON parameters are <glossterm>implementation-defined</glossterm>.
+</impl></para>
+
+</section>
+<section xml:id="c.load.binary">
+<title>Loading binary data</title>
+
+<para>An XProc processor may load other, arbitrary data types. <impl>How a
+processor interprets other media types is <glossterm>implementation-defined</glossterm>.
+</impl>
+<impl>Parameters for other media types
+are <glossterm>implementation-defined</glossterm>.
+</impl></para>
+</section>
 
 <section>
 <title>Document properties</title>
-<para feature="load-preserves-none">No document properties are preserved.</para>
+<para feature="load-preserves-none">No document properties are preserved.
+The properties specified in <option>document-properties</option> are applied.
+</para>
 </section>
 </section>
 <section xml:id="c.make-absolute-uris">
@@ -3895,11 +3907,12 @@ XPath 2.0 Data Model (XDM)</citetitle>.
 Mary Fernández, Ashok Malhotra, Jonathan Marsh, <foreignphrase>et. al.</foreignphrase>, editors.
 W3C Recommendation. 23 January 2007.</bibliomixed>
 
-<bibliomixed xml:id="xpath-functions"><abbrev>XPath 2.0 Functions and Operators</abbrev>
-<citetitle xlink:href="http://www.w3.org/TR/xpath-functions/">XQuery 1.0 and
-XPath 2.0 Functions and Operators</citetitle>.
-Ashok Malhotra, Jim Melton, and Norman Walsh, editors.
-W3C Recommendation. 23 January 2007.</bibliomixed>
+<bibliomixed xml:id="xpath-functions"><abbrev>XPath and XQuery
+Functions and Operators 3.1</abbrev>
+<citetitle xlink:href="https://www.w3.org/TR/xpath-functions-31/">XPath and XQuery
+Functions and Operators 3.1</citetitle>.
+Michael Kay, editors
+W3C Recommendation. 21 March 2017.</bibliomixed>
 
 <bibliomixed xml:id="xslt20"><abbrev>XSLT 2.0</abbrev>
 <citetitle xlink:href="http://www.w3.org/TR/xslt20/">XSL Transformations (XSLT)
