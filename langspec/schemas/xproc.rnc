@@ -59,6 +59,7 @@ serialization.attr = attribute serialization { SerializationMap }
 content-type.attr = attribute content-type { ContentType }
 content-types.attr = attribute content-types { ContentTypes }
 collection.attr = attribute collection { xsd:boolean }
+pipe.attr = attribute pipe { text }
 
 exclude-inline-prefixes.attr =
    attribute exclude-inline-prefixes { ExcludeInlinePrefixes }
@@ -178,6 +179,10 @@ Input =
       primary.attr?,
       content-types.attr?,
       select.attr?,
+      [ sa:avt = "true" ]
+         href.attr?,
+      [ sa:avt = "true" ]
+         pipe.attr?,
       common.attributes,
       inline.attributes,
       use-when.attr?,
@@ -192,6 +197,10 @@ WithInput =
    element with-input {
       port.attr?,
       select.attr?,
+      [ sa:avt = "true" ]
+         href.attr?,
+      [ sa:avt = "true" ]
+         pipe.attr?,
       common.attributes,
       inline.attributes,
       use-when.attr?,
@@ -207,8 +216,8 @@ OutputDeclaration =
    element output {
       port.attr?,
       sequence.attr?,
-      content-types.attr?,
       primary.attr?,
+      content-types.attr?,
       common.attributes,
       use-when.attr?,
       serialization.attr?,
@@ -222,12 +231,16 @@ OutputConnection =
    element output {
       port.attr?,
       sequence.attr?,
-      content-types.attr?,
       primary.attr?,
+      content-types.attr?,
+      serialization.attr?,
+      [ sa:avt = "true" ]
+         href.attr?,
+      [ sa:avt = "true" ]
+         pipe.attr?,
       common.attributes,
       inline.attributes,
       use-when.attr?,
-      serialization.attr?,
       ( ( (\Empty | (Document|Pipe|Inline)*) & (Documentation|PipeInfo)* ) | AnyElement* )
    }
 
@@ -331,6 +344,10 @@ WithOptionSelect =
       select.attr,
       [ sa:avt = "true" ]
         collection.attr?,
+      [ sa:avt = "true" ]
+         href.attr?,
+      [ sa:avt = "true" ]
+         pipe.attr?,
       common.attributes,
       inline.attributes,
       use-when.attr?,
@@ -354,6 +371,10 @@ VariableSelect =
       select.attr,
       [ sa:avt = "true" ]
          collection.attr?,
+      [ sa:avt = "true" ]
+         href.attr?,
+      [ sa:avt = "true" ]
+         pipe.attr?,
       common.attributes,
       inline.attributes,
       use-when.attr?,
