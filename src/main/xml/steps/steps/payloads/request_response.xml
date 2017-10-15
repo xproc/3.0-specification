@@ -1,0 +1,149 @@
+<section xmlns="http://docbook.org/ns/docbook" xmlns:cs="http://www.w3.org/XML/XProc/2006/04/components#" xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax" xmlns:p="http://www.w3.org/ns/xproc" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="c.request_response">
+<title>Managing the response</title>
+
+<note xml:id="ednote-content-types" role="editorial">
+<para>Where do we say that for URI schemes (such as
+<code>file:</code> and <code>ftp:</code>) where a content type is not
+provided by the underlying request, the content type is
+implementation-dependent?</para>
+</note>
+
+<para>The handling of the response to the request and the generation
+of the step's result document is controlled by the
+<code>status-only</code>, <code>override-content-type</code> and
+<code>detailed</code> attributes on the <tag>c:request</tag>
+input.</para>
+
+<para>The <code>override-content-type</code> attribute controls
+interpretation of the response's <code>Content-Type</code> header. If
+this attribute is present, the response will be treated as if it
+returned the <code>Content-Type</code> given by its value. This
+original <code>Content-Type</code> header will however be reflected
+unchanged as a <tag>c:header</tag> in the result document. <error code="C0030">It is a <glossterm>dynamic error</glossterm> if the
+<code>override-content-type</code> value cannot be used (e.g.
+<code>text/plain</code> to override
+<code>image/png</code>).</error></para>
+
+<para>If the <code>override-content-type</code> includes an encoding
+parameter, then that encoding <rfc2119>must</rfc2119> be used to
+read the document.</para>
+
+<para>If the <code>status-only</code> attribute has the value
+<literal>true</literal>, the result document will contain only header
+information. The entity of the response will not be processed to
+produce a <tag>c:body</tag> or <tag>c:multipart</tag> element.</para>
+
+<para>The <tag>c:response</tag> element represents an HTTP response.
+The response's status code is encoded in the <code>status</code>
+attribute and the headers and entity body are processing into
+<tag>c:header</tag> and <tag>c:multipart</tag> or <tag>c:body</tag>
+content.</para>
+
+<e:rng-pattern name="VocabHttpResponse" xml:id="c.response"/>
+
+<para>The value of the <code>detailed</code> attribute determines the
+content of the result document. If it is <literal>true</literal>, the
+response to the request is handled as follows:</para>
+
+<orderedlist>
+<listitem><para>A single <tag>c:response</tag> element is produced with the <code>status</code> attribute containing the status of the response received.</para></listitem>
+<listitem><para>Each response header is translated into a <tag>c:header</tag> element.</para></listitem>
+<listitem><para>Unless the <code>status-only</code> attribute has a value
+<literal>true</literal>, the entity body of the response is converted into
+a <tag>c:body</tag> or <tag>c:multipart</tag> element via the rules given in
+ <xref linkend="c.response_body"/>.</para></listitem>
+</orderedlist>
+
+<para>Otherwise (the <code>detailed</code> attribute is not specified
+or its value is <literal>false</literal>), the response to the request
+is handled as follows:</para>
+
+<orderedlist>
+<listitem><para>If the media type (as determined by the
+<code>override-content-type</code> attribute or the
+<code>Content-Type</code> response header) is an XML media type, the
+entity is decoded if necessary, then parsed as an XML document:</para>
+
+<itemizedlist>
+<listitem>
+<para>The parser which <tag>p:http-request</tag> employs
+<rfc2119>must</rfc2119> process the external subset; all general and
+external parsed entities <rfc2119>must</rfc2119> be fully expanded.</para>
+
+<note xml:id="ednote-parser" role="editorial">
+<title>Editorial Note</title>
+<para>The requirement to process the external subset comes from p:load,
+we probably don't want to impose that on all p:http-request calls.
+Need a way to control it?</para>
+</note>
+
+</listitem>
+<listitem>
+<para>It
+<rfc2119>may</rfc2119> perform <tag class="attribute">xml:id</tag>
+processing, but it <rfc2119>must not</rfc2119> perform any other
+processing, such as expanding XIncludes.</para>
+</listitem>
+<listitem>
+<para>The parser
+<rfc2119>must</rfc2119> be conformant to <citetitle>Namespaces in
+XML</citetitle>.</para>
+</listitem>
+<listitem>
+<para>Parsing the document
+<rfc2119>must not</rfc2119> fail due to validation errors.
+</para>
+</listitem>
+</itemizedlist>
+
+<para>The resulting XML document is
+produced on the <code>result</code> output port as the entire output
+of the step.</para>
+
+</listitem>
+<listitem><para>Otherwise, the entity body of the response is converted into
+a <tag>c:body</tag> or <tag>c:multipart</tag> element via the rules given in
+<xref linkend="c.response_body"/>.</para></listitem>
+</orderedlist>
+
+<para>In either case the base URI of the output document is the resolved value
+of the <code>href</code> attribute from the input <tag>c:request</tag>.</para>
+
+<section xml:id="redirects">
+<title>Redirects</title>
+
+<para>One possible response from an HTTP request is a redirect,
+indicated by a status code in the three-hundred range. The precise
+semantics of the 3xx return codes are laid out by section
+<citetitle>10.3 Redirection 3xx</citetitle> in <biblioref linkend="rfc2616"/>.
+</para>
+
+<para>The <tag>p:http-request</tag> step <rfc2119>should</rfc2119> follow
+redirect requests (in a manner consistent with <biblioref linkend="rfc2616"/>)
+if they are returned by the server.
+</para>
+</section>
+
+<section xml:id="cookies">
+<title>Cookies</title>
+
+<para>With one exception, in version 1.0 of XProc, the
+<tag>p:http-request</tag> step does not provide any standard
+mechanisms for managing cookies. <impl>Pipeline authors that need to
+preserve cookies across several <tag>p:http-request</tag> calls in the
+same pipeline or across multiple invocations of the same or different
+pipelines will have to rely on
+<glossterm>implementation-defined</glossterm> mechanisms.</impl>
+</para>
+
+<para>The exception arises in the case of redirection. If a redirect
+response includes cookies, those cookies <rfc2119>should</rfc2119> be
+forwarded as appropriate to the redirected location when the
+redirection is followed.</para>
+
+<para>This behavior will allow the <tag>p:http-request</tag> step to
+interoperate with web services that use cookies as part of an
+authentication protocol.</para>
+
+</section>
+ </section>
