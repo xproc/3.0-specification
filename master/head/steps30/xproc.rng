@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar xmlns:p="http://www.w3.org/ns/xproc" ns="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:s="http://www.ascc.net/xml/schematron" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:sa="http://xproc.org/ns/syntax-annotations" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+<grammar xmlns:p="http://www.w3.org/ns/xproc" ns="http://www.w3.org/ns/xproc" xmlns:c="http://www.w3.org/ns/xproc-step" xmlns:s="http://www.ascc.net/xml/schematron" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:sa="http://xproc.org/ns/syntax-annotations" xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
   <!-- This is schema version $Id: xproc.rnc,v 1.84 2010/05/03 20:31:46 NormanWalsh Exp $ -->
   <!-- This schema neither supports nor requires the use of RELAX NG DTD Compatibility -->
   <define name="XPathExpression" sa:model="XPathExpression">
@@ -95,6 +95,9 @@
     <attribute name="collection">
       <data type="boolean"/>
     </attribute>
+  </define>
+  <define name="pipe.attr">
+    <attribute name="pipe"/>
   </define>
   <define name="exclude-inline-prefixes.attr">
     <attribute name="exclude-inline-prefixes">
@@ -298,6 +301,12 @@
       <optional>
         <ref name="select.attr"/>
       </optional>
+      <optional>
+        <ref name="href.attr" sa:avt="true"/>
+      </optional>
+      <optional>
+        <ref name="pipe.attr" sa:avt="true"/>
+      </optional>
       <ref name="common.attributes"/>
       <ref name="inline.attributes"/>
       <optional>
@@ -334,6 +343,12 @@
       </optional>
       <optional>
         <ref name="select.attr"/>
+      </optional>
+      <optional>
+        <ref name="href.attr" sa:avt="true"/>
+      </optional>
+      <optional>
+        <ref name="pipe.attr" sa:avt="true"/>
       </optional>
       <ref name="common.attributes"/>
       <ref name="inline.attributes"/>
@@ -375,10 +390,10 @@
         <ref name="sequence.attr"/>
       </optional>
       <optional>
-        <ref name="content-types.attr"/>
+        <ref name="primary.attr"/>
       </optional>
       <optional>
-        <ref name="primary.attr"/>
+        <ref name="content-types.attr"/>
       </optional>
       <ref name="common.attributes"/>
       <optional>
@@ -404,18 +419,24 @@
         <ref name="sequence.attr"/>
       </optional>
       <optional>
+        <ref name="primary.attr"/>
+      </optional>
+      <optional>
         <ref name="content-types.attr"/>
       </optional>
       <optional>
-        <ref name="primary.attr"/>
+        <ref name="serialization.attr"/>
+      </optional>
+      <optional>
+        <ref name="href.attr" sa:avt="true"/>
+      </optional>
+      <optional>
+        <ref name="pipe.attr" sa:avt="true"/>
       </optional>
       <ref name="common.attributes"/>
       <ref name="inline.attributes"/>
       <optional>
         <ref name="use-when.attr"/>
-      </optional>
-      <optional>
-        <ref name="serialization.attr"/>
       </optional>
       <choice>
         <interleave>
@@ -587,6 +608,12 @@
       <optional>
         <ref name="collection.attr" sa:avt="true"/>
       </optional>
+      <optional>
+        <ref name="href.attr" sa:avt="true"/>
+      </optional>
+      <optional>
+        <ref name="pipe.attr" sa:avt="true"/>
+      </optional>
       <ref name="common.attributes"/>
       <ref name="inline.attributes"/>
       <optional>
@@ -631,6 +658,12 @@
       <ref name="select.attr"/>
       <optional>
         <ref name="collection.attr" sa:avt="true"/>
+      </optional>
+      <optional>
+        <ref name="href.attr" sa:avt="true"/>
+      </optional>
+      <optional>
+        <ref name="pipe.attr" sa:avt="true"/>
       </optional>
       <ref name="common.attributes"/>
       <ref name="inline.attributes"/>

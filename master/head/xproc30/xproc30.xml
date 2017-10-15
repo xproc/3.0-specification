@@ -1833,7 +1833,7 @@ of a document as an XML document.</para>
 <methodparam><type>document-node()</type><parameter>doc</parameter></methodparam>
 </methodsynopsis>
 
-<para>The document returned is a <code>c:document-properties</code>
+<para>The document returned is a <code>p:document-properties</code>
 document that contains (exclusively) the document properties
 associated with the <parameter>doc</parameter> specified. Each key in the
 properties becomes an element, each value becomes the content of that element.
@@ -2807,7 +2807,8 @@ the element's syntax:</para>
 
 </itemizedlist>
 
-<para>For clarity of exposition, some attributes and elements are elided from
+<para xml:id="common-attr">For clarity of exposition,
+some attributes and elements are elided from
 the summaries:</para><itemizedlist>
 <listitem>
   <para>An <tag class="attribute">xml:id</tag> attribute is allowed on any element. It has
@@ -3905,18 +3906,30 @@ form:</para>
 
 <e:rng-pattern name="Input"/>
 
+<para>The attributes that can appear on <tag>p:input</tag> are
+<link linkend="common-attr">the common attributes</link> and:</para>
+
+<variablelist>
+<varlistentry><term><tag class="attribute">port</tag></term>
+<listitem>
 <para>The <tag class="attribute">port</tag> attribute defines the name
 of the port. <error code="S0011">It is a <glossterm>static
 error</glossterm> to identify two ports with the same name on the same
 step.</error></para>
-
+</listitem>
+</varlistentry>
+<varlistentry><term><tag class="attribute">sequence</tag></term>
+<listitem>
 <para>The <tag class="attribute">sequence</tag> attribute determines
 whether or not a sequence of documents is allowed on the port.
 <error code="D0006">If <tag class="attribute">sequence</tag> is not
 specified, or has the value false, then it is a <glossterm>dynamic
 error</glossterm> unless exactly one document appears on the declared
 port.</error></para>
-
+</listitem>
+</varlistentry>
+<varlistentry><term><tag class="attribute">primary</tag></term>
+<listitem>
 <para>The <tag class="attribute">primary</tag> attribute is used to
 identify the <glossterm>primary input port</glossterm>. An input port
 is a <glossterm>primary input port</glossterm> if
@@ -3925,10 +3938,10 @@ is a <glossterm>primary input port</glossterm> if
 and <tag class="attribute">primary</tag> is not specified.
 <error code="S0030">It is a <glossterm>static error</glossterm> to specify
 that more than one input port is the primary.</error></para>
-
-<para>For <tag class="attribute">exclude-inline-prefixes</tag>, see <tag>p:inline</tag> .
-</para>
-
+</listitem>
+</varlistentry>
+<varlistentry><term><tag class="attribute">content-types</tag></term>
+<listitem>
 <para>The <tag class="attribute">content-types</tag> attribute lists one
 or more (space separated) content types that this input port will
 accept. A content type must be of the form
@@ -3956,7 +3969,10 @@ document.</simpara>
 
 <para>The media type of input documents must
 <link linkend="media-type-match">match</link> the allowed content types.</para>
-
+</listitem>
+</varlistentry>
+<varlistentry><term><tag class="attribute">select</tag></term>
+<listitem>
 <para>If a connection is provided in the declaration, then
 <tag class="attribute">select</tag> may be used to select a portion of the
 input identified by the <tag>p:empty</tag>, <tag>p:document</tag>,
@@ -3967,18 +3983,52 @@ expression; the selected nodes are returned as separate documents. The
 <emphasis>only</emphasis> if the default connection is used. If an
 explicit connection is provided by the caller, then the default select
 expression is ignored.</para>
-
-<note xml:id="note-pipe-excl">
-  <para>The <tag>p:pipe</tag> element is explicitly excluded from a
-  declaration because it would make the default value of an input
-  dependent on the execution of some part of the pipeline. Default
-  values are designed so that they can be computed statically.</para>
-</note>
+</listitem>
+</varlistentry>
+<varlistentry><term><tag class="attribute">href</tag></term>
+<listitem>
+<para>The <tag class="attribute">href</tag> attribute is a shortcut for a
+<tag>p:document</tag> child element with the specified
+<tag class="attribute">href</tag> attribute. <error code="S0081">If
+<tag class="attribute">href</tag> is specified, it is a <glossterm>static error</glossterm>
+if <tag>p:document</tag>, <tag>p:pipe</tag>, or <tag>p:inline</tag> appear among
+the children of <tag>p:input</tag>.</error></para>
+</listitem>
+</varlistentry>
+<varlistentry><term><tag class="attribute">pipe</tag></term>
+<listitem>
+<para>The <tag class="attribute">pipe</tag> attribute is a shortcut for one or
+more <tag>p:pipe</tag> children. The attribute value <rfc2119>must</rfc2119> be
+space-separated list of step/port pairs of the form
+“<replaceable>step-name</replaceable>@<replaceable>port-name</replaceable>”.
+If “@port-name” is omitted, the connection is to the primary output port of
+the step named “step-name”. If the “step-name” is omitted, the connection is
+to the specified port on the same step as the step associated with the
+current default readable port.</para>
+<para><error code="S0082">If
+<tag class="attribute">pipe</tag> is specified, it is a <glossterm>static error</glossterm>
+if <tag>p:document</tag>, <tag>p:pipe</tag>, or <tag>p:inline</tag> appear among
+the children of <tag>p:input</tag>.</error></para>
+</listitem>
+</varlistentry>
+<varlistentry><term><tag class="attribute">exclude-inline-prefixes</tag></term>
+<listitem>
+<para>The <tag class="attribute">exclude-inline-prefixes</tag> allows the pipeline
+author to exclude some namespace declarations in inline content, see <tag>p:inline</tag>.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
 
 <para>On a <tag>p:declare-step</tag> for an atomic step, the
 <tag>p:input</tag> simply declares the input port. <error code="S0042">It is a <glossterm>static error</glossterm> to attempt to
 provide a connection for an input port on the declaration of an atomic
 step.</error></para>
+
+<para xml:id="note-pipe-excl">The <tag>p:pipe</tag> element is explicitly excluded from a
+declaration because it would make the default value of an input
+dependent on the execution of some part of the pipeline. Default
+values are designed so that they can be computed statically.</para>
 
 </section>
 <section xml:id="p.with-input">
@@ -3989,6 +4039,12 @@ form:</para>
 
 <e:rng-pattern name="WithInput"/>
 
+<para>The attributes that can appear on <tag>p:with-input</tag> are
+<link linkend="common-attr">the common attributes</link> and:</para>
+
+<variablelist>
+<varlistentry><term><tag class="attribute">port</tag></term>
+<listitem>
 <para>If the <tag class="attribute">port</tag> is specified, then this
 is a binding for the specified port. If no port is specified, then:</para>
 
@@ -4016,7 +4072,10 @@ port</glossterm>, the input will be connected to the
 is a <glossterm>static error</glossterm> if no connection is provided
 and the <glossterm>default readable port</glossterm> is
 undefined.</error></para>
-
+</listitem>
+</varlistentry>
+<varlistentry><term><tag class="attribute">select</tag></term>
+<listitem>
 <para>A <tag class="attribute">select</tag> expression
 <rfc2119>may</rfc2119> also be provided with a connection.
 The <tag class="attribute">select</tag> expression, if specified, applies the
@@ -4044,20 +4103,55 @@ and provided to the input port. In other words,</para>
 may result in the same content being returned in several
 documents.)</para>
 
-<para>A select expression can equally be applied to input read
-          from another step. This
-          input:</para><programlisting language="xml">&lt;p:input port="source" select="//html:div" xmlns:html="http://www.w3.org/1999/xhtml"&gt;
+<para>A select expression can equally be applied to input read from
+another step. This input:</para><programlisting language="xml">&lt;p:input port="source" select="//html:div" xmlns:html="http://www.w3.org/1999/xhtml"&gt;
   &lt;p:pipe step="origin" port="result"/&gt;
-&lt;/p:input&gt;</programlisting><para>provides
-          a sequence of zero or more documents, one for each <code>html:div</code> in the document
-          (or each of the documents) that is read from the <literal>result</literal> port of the
-          step named <literal>origin</literal>.</para>
+&lt;/p:input&gt;</programlisting><para>provides a sequence of zero or
+more documents, one for each <code>html:div</code> in the document (or
+each of the documents) that is read from the <literal>result</literal>
+port of the step named <literal>origin</literal>.</para>
 
 <para>The base URI of the document that results from a select
 expression is the base URI of the matched element or document. <error code="D0016">It is a <glossterm>dynamic error</glossterm> if the <tag class="attribute">select</tag> expression on a <tag>p:input</tag>
 or <tag>p:with-input</tag>
 returns atomic values or anything other than element or document
 nodes (or an empty sequence).</error></para>
+</listitem>
+</varlistentry>
+<varlistentry><term><tag class="attribute">href</tag></term>
+<listitem>
+<para>The <tag class="attribute">href</tag> attribute is a shortcut for a
+<tag>p:document</tag> child element with the specified
+<tag class="attribute">href</tag> attribute. <error code="S0081">If
+<tag class="attribute">href</tag> is specified, it is a <glossterm>static error</glossterm>
+if <tag>p:document</tag>, <tag>p:pipe</tag>, or <tag>p:inline</tag> appear among
+the children of <tag>p:with-input</tag>.</error></para>
+</listitem>
+</varlistentry>
+<varlistentry><term><tag class="attribute">pipe</tag></term>
+<listitem>
+<para>The <tag class="attribute">pipe</tag> attribute is a shortcut for one or
+more <tag>p:pipe</tag> children. The attribute value <rfc2119>must</rfc2119> be
+space-separated list of step/port pairs of the form
+“<replaceable>step-name</replaceable>@<replaceable>port-name</replaceable>”.
+If “@port-name” is omitted, the connection is to the primary output port of
+the step named “step-name”. If the “step-name” is omitted, the connection is
+to the specified port on the same step as the step associated with the
+current default readable port.</para>
+<para><error code="S0082">If
+<tag class="attribute">pipe</tag> is specified, it is a <glossterm>static error</glossterm>
+if <tag>p:document</tag>, <tag>p:pipe</tag>, or <tag>p:inline</tag> appear among
+the children of <tag>p:with-input</tag>.</error></para>
+</listitem>
+</varlistentry>
+<varlistentry><term><tag class="attribute">exclude-inline-prefixes</tag></term>
+<listitem>
+<para>The <tag class="attribute">exclude-inline-prefixes</tag> allows the pipeline
+author to exclude some namespace declarations in inline content, see <tag>p:inline</tag>.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
 
 <para>An input declaration may include a default connection. If no
 connection is provided for an input port which has a default
@@ -4092,7 +4186,7 @@ port.</para>
 
 </section>
 
-    <!-- ============================================================ -->
+<!-- ============================================================ -->
 
 <section xml:id="p.output">
 <title>p:output</title>
@@ -4102,18 +4196,41 @@ connecting an input for it, if necessary.</para>
 
 <e:rng-pattern name="OutputDeclaration"/>
 
+<para>The attributes that can appear on <tag>p:output</tag> are
+<link linkend="common-attr">the common attributes</link> and:</para>
+
+<variablelist>
+<varlistentry><term><tag class="attribute">port</tag></term>
+<listitem>
 <para>The <tag class="attribute">port</tag> attribute defines the name
 of the port. <error code="S0011">It is a <glossterm>static
 error</glossterm> to identify two ports with the same name on the same
 step.</error></para>
-
+</listitem>
+</varlistentry>
+<varlistentry><term><tag class="attribute">sequence</tag></term>
+<listitem>
 <para>An output declaration can indicate if a sequence of documents is
 allowed to appear on the declared port. If <tag class="attribute">sequence</tag> is specified with the value <literal>true</literal>,
 then a sequence is allowed. <error code="D0007">If <tag class="attribute">sequence</tag> is not specified on
 <tag>p:output</tag>, or has the value false, then it is a
 <glossterm>dynamic error</glossterm> if the step does not produce
 exactly one document on the declared port.</error></para>
-
+</listitem>
+</varlistentry>
+<varlistentry><term><tag class="attribute">primary</tag></term>
+<listitem>
+<para>The <tag class="attribute">primary</tag> attribute is used to
+identify the primary output port. An output port is a primary output
+port if <tag class="attribute">primary</tag> is specified with the
+value <literal>true</literal> or if the step has only a single output
+port and primary is not specified. <error code="S0014">It is a
+<glossterm>static error</glossterm> to identify more than one output
+port as primary.</error></para>
+</listitem>
+</varlistentry>
+<varlistentry><term><tag class="attribute">content-types</tag></term>
+<listitem>
 <para>An output declaration can indicate the content types of the
   documents appearing on that port. If <tag class="attribute">content-types</tag>
   is specified then only documents matching these content types are allowed
@@ -4131,25 +4248,63 @@ static error.
 </para>
 </note>
 
-<para>The <tag class="attribute">primary</tag> attribute is used to
-identify the primary output port. An output port is a primary output
-port if <tag class="attribute">primary</tag> is specified with the
-value <literal>true</literal> or if the step has only a single output
-port and primary is not specified. <error code="S0014">It is a
-<glossterm>static error</glossterm> to identify more than one output
-port as primary.</error></para>
-
+</listitem>
+</varlistentry>
+<varlistentry><term><tag class="attribute">serialization</tag></term>
+<listitem>
 <para>The <tag class="attribute">serialization</tag> attribute can
 be used to provide <link linkend="serialization">serialization
 parameters</link>.
 </para>
+</listitem>
+</varlistentry>
+</variablelist>
 
 <para>On <glossterm baseform="compound step">compound
 steps</glossterm>, the declaration <rfc2119>may</rfc2119> be
 accompanied by a <glossterm>connection</glossterm> for the
 output.</para>
 
-      <e:rng-pattern name="OutputConnection"/>
+<e:rng-pattern name="OutputConnection"/>
+
+<para>The additional attributes that can appear on an output connection
+are:</para>
+
+<variablelist>
+<varlistentry><term><tag class="attribute">href</tag></term>
+<listitem>
+<para>The <tag class="attribute">href</tag> attribute is a shortcut for a
+<tag>p:document</tag> child element with the specified
+<tag class="attribute">href</tag> attribute. <error code="S0081">If
+<tag class="attribute">href</tag> is specified, it is a <glossterm>static error</glossterm>
+if <tag>p:document</tag>, <tag>p:pipe</tag>, or <tag>p:inline</tag> appear among
+the children of <tag>p:output</tag>.</error></para>
+</listitem>
+</varlistentry>
+<varlistentry><term><tag class="attribute">pipe</tag></term>
+<listitem>
+<para>The <tag class="attribute">pipe</tag> attribute is a shortcut for one or
+more <tag>p:pipe</tag> children. The attribute value <rfc2119>must</rfc2119> be
+space-separated list of step/port pairs of the form
+“<replaceable>step-name</replaceable>@<replaceable>port-name</replaceable>”.
+If “@port-name” is omitted, the connection is to the primary output port of
+the step named “step-name”. If the “step-name” is omitted, the connection is
+to the specified port on the same step as the step associated with the
+current default readable port.</para>
+<para><error code="S0082">If
+<tag class="attribute">pipe</tag> is specified, it is a <glossterm>static error</glossterm>
+if <tag>p:document</tag>, <tag>p:pipe</tag>, or <tag>p:inline</tag> appear among
+the children of <tag>p:output</tag>.</error></para>
+</listitem>
+</varlistentry>
+<varlistentry><term><tag class="attribute">exclude-inline-prefixes</tag></term>
+<listitem>
+<para>The <tag class="attribute">exclude-inline-prefixes</tag> allows the pipeline
+author to exclude some namespace declarations in inline content, see <tag>p:inline</tag>.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
 
 <para><error code="S0029">It is a <glossterm>static error</glossterm>
 to specify a connection for a <tag>p:output</tag> inside a
@@ -4163,10 +4318,6 @@ port. In other words, placing a <tag>p:document</tag> inside a
 document</emphasis> and provide it on the output port. It
 <emphasis>does not</emphasis> cause the processor to
 <emphasis>write</emphasis> the output to that document.</para>
-
-<para>For <tag class="attribute">exclude-inline-prefixes</tag>, see
-<tag>p:inline</tag> .
-</para>
 
 <section xml:id="serialization">
 <title>Serialization parameters</title>
@@ -4420,36 +4571,61 @@ specification.</para>
 </section>
 
 <!-- ============================================================ -->
-    <section xml:id="variables-options">
-      <title>Variables and Options</title>
-      <para>Variables and options provide a mechanism for pipeline authors to construct
-        temporary results and hold onto them for reuse.</para>
-      <para>Variables are created in compound steps and, like XSLT variables, are single assignment,
-        though they may be shadowed by subsequent declarations of other variables with the same
-        name.</para>
-      <para>Options can be declared on atomic or compound steps. The value of an option can be
-        specified by the caller invoking the step. Any value specified by the caller takes
-        precedence over any default value specified in the declaration.</para>
+
+<section xml:id="variables-options">
+<title>Variables and Options</title>
+
+<para>Variables and options provide a mechanism for pipeline authors
+to construct temporary results and hold onto them for reuse.</para>
+
+<para>Variables are created in compound steps and, like XSLT
+variables, are single assignment, though they may be shadowed by
+subsequent declarations of other variables with the same name.</para>
+
+<para>Options can be declared on atomic or compound steps. The value
+of an option can be specified by the caller invoking the step. Any
+value specified by the caller takes precedence over any default value
+specified in the declaration.</para>
 
 <section xml:id="p.variable">
 <title>p:variable</title>
 
 <para>A <tag>p:variable</tag> declares a variable and associates a
 value with it. Variable declarations may optionally specify the type
-of the variable using an XPath Sequence Type.</para>
+of the variable using an
+XPath Sequence Type<superscript>[citation needed]</superscript>.</para>
 
+<e:rng-pattern name="VariableSelect"/>
+
+<para>The attributes that can appear on <tag>p:variable</tag> are
+<link linkend="common-attr">the common attributes</link> and:</para>
+
+<variablelist>
+<varlistentry><term><tag class="attribute">name</tag></term>
+<listitem>
 <para>The name of the variable <rfc2119>must</rfc2119> be an EQName. If
 it does not contain a prefix then it is in no namespace. <error code="S0028">It is a <glossterm>static error</glossterm> to declare an
 option or variable in the XProc namespace.</error>
 </para>
-
+</listitem>
+</varlistentry>
+<varlistentry><term><tag class="attribute">as</tag></term>
+<listitem>
+<para>The type of the value may be specified in the <tag class="attribute">as</tag> attribute using an XPath Sequence
+Type<superscript>[citation needed]</superscript>. If an atomic type,
+or sequence of atomic types, is specified, the value provided for the
+option will be atomized according to the standard XPath rules.
+<error code="D0036">It is a <glossterm>dynamic error</glossterm> if
+the computed value does not match the specified sequence
+type.</error></para>
+</listitem>
+</varlistentry>
+<varlistentry><term><tag class="attribute">select</tag></term>
+<listitem>
 <para>The variable's value is specified with a <tag class="attribute">select</tag> attribute. The <tag class="attribute">select</tag> attribute <rfc2119>must</rfc2119> be
 specified. The content of the <tag class="attribute">select</tag>
 attribute is an XPath expression which will be evaluated to provide
 the value of the variable.</para>
-
-<e:rng-pattern name="VariableSelect"/>
-
 <para>The <tag class="attribute">select</tag> expression
 is evaluated as an XPath expression using the appropriate context as
 described in <xref linkend="xpath-context"/>, for the enclosing
@@ -4458,15 +4634,6 @@ described in <xref linkend="xpath-context"/>, for the enclosing
 (for example, can the expression declare a function) is
 <glossterm>implementation-defined</glossterm>.</impl>
 </para>
-
-<para>The type of the value may be specified in the <tag class="attribute">as</tag> attribute using an XPath Sequence
-Type<superscript>[citation needed]</superscript>. If an atomic type,
-or sequence of atomic types, is specified, the value provided for the
-option will be atomized according to the standard XPath rules.
-<error code="D0036">It is a <glossterm>dynamic error</glossterm> if
-the computed value does not match the specified sequence
-type.</error></para>
-
 <para>Since all <glossterm>in-scope bindings</glossterm> are present
 in the Processor XPath Context as variable bindings, <tag class="attribute">select</tag> expressions may refer to the value of
 <glossterm>in-scope bindings</glossterm> by variable reference. If a
@@ -4485,16 +4652,62 @@ no document connection is provided, the implicit connection is to the
 <glossterm>default readable port</glossterm> computed as if the variable
 was an atomic step. If there is no default readable port, the
 connection is treated as if <tag>p:empty</tag> was specified.</para>
-
-<para><error code="D0008">It is a <glossterm>dynamic error</glossterm>
+</listitem>
+</varlistentry>
+<varlistentry><term><tag class="attribute">collection</tag></term>
+<listitem>
+<para><error code="D0008">If <tag class="attribute">collection</tag> is
+unspecified or has the value <literal>false</literal>,
+it is a <glossterm>dynamic error</glossterm>
 if a sequence of more than one document appears on the connection for
-a <tag>p:variable</tag>.</error> If <tag>p:empty</tag> is given or
-implied as the document connection, the context item is undefined.
-<error code="D0026">It is a <glossterm>dynamic error</glossterm> if
+a <tag>p:variable</tag>.</error>
+</para>
+
+<para>If <tag class="attribute">collection</tag> is <literal>true</literal>,
+the context item is undefined. All of the documents that appear on the
+connection for the <tag>p:variable</tag> will be available as the
+default collection within <tag class="attribute">select</tag> expression.</para>
+
+<para><error code="D0026">It is a <glossterm>dynamic error</glossterm> if
 the <tag class="attribute">select</tag> expression makes reference to
 the context node, size, or position when the context item is
-undefined.</error>
+undefined.</error></para>
+</listitem>
+</varlistentry>
+<varlistentry><term><tag class="attribute">href</tag></term>
+<listitem>
+<para>The <tag class="attribute">href</tag> attribute is a shortcut for a
+<tag>p:document</tag> child element with the specified
+<tag class="attribute">href</tag> attribute. <error code="S0081">If
+<tag class="attribute">href</tag> is specified, it is a <glossterm>static error</glossterm>
+if <tag>p:document</tag>, <tag>p:pipe</tag>, or <tag>p:inline</tag> appear among
+the children of <tag>p:variable</tag>.</error></para>
+</listitem>
+</varlistentry>
+<varlistentry><term><tag class="attribute">pipe</tag></term>
+<listitem>
+<para>The <tag class="attribute">pipe</tag> attribute is a shortcut for one or
+more <tag>p:pipe</tag> children. The attribute value <rfc2119>must</rfc2119> be
+space-separated list of step/port pairs of the form
+“<replaceable>step-name</replaceable>@<replaceable>port-name</replaceable>”.
+If “@port-name” is omitted, the connection is to the primary output port of
+the step named “step-name”. If the “step-name” is omitted, the connection is
+to the specified port on the same step as the step associated with the
+current default readable port.</para>
+<para><error code="S0082">If
+<tag class="attribute">pipe</tag> is specified, it is a <glossterm>static error</glossterm>
+if <tag>p:document</tag>, <tag>p:pipe</tag>, or <tag>p:inline</tag> appear among
+the children of <tag>p:variable</tag>.</error></para>
+</listitem>
+</varlistentry>
+<varlistentry><term><tag class="attribute">exclude-inline-prefixes</tag></term>
+<listitem>
+<para>The <tag class="attribute">exclude-inline-prefixes</tag> allows the pipeline
+author to exclude some namespace declarations in inline content, see <tag>p:inline</tag>.
 </para>
+</listitem>
+</varlistentry>
+</variablelist>
 
 <para>Steps are connected together by their input and output
 ports. Variables are connected to steps by their input, which provides
@@ -4506,10 +4719,6 @@ there are any loops in the connections between steps and variables:
 no step can refer to a variable if there is any sequence of connections
 from that step that leads back to the input that provides the context
 node for the expression that defines the value of the variable.</error>
-</para>
-
-<para>For <tag class="attribute">exclude-inline-prefixes</tag> and
-<tag class="attribute">expand-text</tag>, see <tag>p:inline</tag> .
 </para>
 </section>
 
@@ -4598,6 +4807,14 @@ an <type>xs:untypedAtomic</type>.</para>
 <para>A <tag>p:with-option</tag> provides an actual value for an
 option when a step is invoked.</para>
 
+<e:rng-pattern name="WithOptionSelect"/>
+
+<para>The attributes that can appear on <tag>p:with-option</tag> are
+<link linkend="common-attr">the common attributes</link> and:</para>
+
+<variablelist>
+<varlistentry><term><tag class="attribute">name</tag></term>
+<listitem>
 <para>The name of the option <rfc2119>must</rfc2119> be a EQName. If it
 does not contain a prefix then it is in no namespace.
 <error code="S0031">It is a <glossterm>static error</glossterm> to use an
@@ -4610,14 +4827,10 @@ is operating in
 <para><error code="S0080">It is a <glossterm>static error</glossterm>
 to include more than one <tag>p:with-option</tag> with the same option
 name as part of the same step invocation.</error></para>
-
-<para>The actual value is specified with a <tag class="attribute">select</tag> attribute. The <tag class="attribute">select</tag> attribute <rfc2119>must</rfc2119> be
-specified. The value of the <tag class="attribute">select</tag>
-attribute is an XPath expression which will be evaluated to provide
-the value of the variable.</para>
-
-<e:rng-pattern name="WithOptionSelect"/>
-
+</listitem>
+</varlistentry>
+<varlistentry><term><tag class="attribute">as</tag></term>
+<listitem>
 <para>The type of the value may be specified in the <tag class="attribute">as</tag> attribute using an XPath Sequence
 Type<superscript>[citation needed]</superscript>. If an atomic type,
 or sequence of atomic types, is specified, the value provided for the
@@ -4625,6 +4838,14 @@ option will be atomized according to the standard XPath rules.
 <error code="D0036">It is a <glossterm>dynamic error</glossterm> if
 the computed value does not match the specified sequence
 type.</error></para>
+</listitem>
+</varlistentry>
+<varlistentry><term><tag class="attribute">select</tag></term>
+<listitem>
+<para>The actual value is specified with a <tag class="attribute">select</tag> attribute. The <tag class="attribute">select</tag> attribute <rfc2119>must</rfc2119> be
+specified. The value of the <tag class="attribute">select</tag>
+attribute is an XPath expression which will be evaluated to provide
+the value of the variable.</para>
 
 <para>All <glossterm>in-scope bindings</glossterm> for the step
 instance itself are present in the Processor XPath Context as variable
@@ -4639,21 +4860,63 @@ no document connection is provided, the implicit connection is to the
 <glossterm>default readable port</glossterm>. If there is no default
 readable port, the connection is treated as if <tag>p:empty</tag> was
 specified.</para>
-
-<para><error code="D0008">It is a <glossterm>dynamic error</glossterm>
+</listitem>
+</varlistentry>
+<varlistentry><term><tag class="attribute">collection</tag></term>
+<listitem>
+<para><error code="D0008">If <tag class="attribute">collection</tag> is
+unspecified or has the value <literal>false</literal>,
+it is a <glossterm>dynamic error</glossterm>
 if a sequence of more than one document appears on the connection for
-a <tag>p:with-option</tag>. </error> If <tag>p:empty</tag> is given or
-implied as the document connection, the context item is undefined.
-<error code="D0026">It is a <glossterm>dynamic error</glossterm> if
+the <tag>p:with-option</tag>.</error>
+</para>
+
+<para>If <tag class="attribute">collection</tag> is <literal>true</literal>,
+the context item is undefined. All of the documents that appear on the
+connection for the <tag>p:with-option</tag> will be available as the
+default collection within <tag class="attribute">select</tag> expression.</para>
+
+<para><error code="D0026">It is a <glossterm>dynamic error</glossterm> if
 the <tag class="attribute">select</tag> expression makes reference to
 the context node, size, or position when the context item is
-undefined.</error>
+undefined.</error></para>
+</listitem>
+</varlistentry>
+<varlistentry><term><tag class="attribute">href</tag></term>
+<listitem>
+<para>The <tag class="attribute">href</tag> attribute is a shortcut for a
+<tag>p:document</tag> child element with the specified
+<tag class="attribute">href</tag> attribute. <error code="S0081">If
+<tag class="attribute">href</tag> is specified, it is a <glossterm>static error</glossterm>
+if <tag>p:document</tag>, <tag>p:pipe</tag>, or <tag>p:inline</tag> appear among
+the children of <tag>p:with-option</tag>.</error></para>
+</listitem>
+</varlistentry>
+<varlistentry><term><tag class="attribute">pipe</tag></term>
+<listitem>
+<para>The <tag class="attribute">pipe</tag> attribute is a shortcut for one or
+more <tag>p:pipe</tag> children. The attribute value <rfc2119>must</rfc2119> be
+space-separated list of step/port pairs of the form
+“<replaceable>step-name</replaceable>@<replaceable>port-name</replaceable>”.
+If “@port-name” is omitted, the connection is to the primary output port of
+the step named “step-name”. If the “step-name” is omitted, the connection is
+to the specified port on the same step as the step associated with the
+current default readable port.</para>
+<para><error code="S0082">If
+<tag class="attribute">pipe</tag> is specified, it is a <glossterm>static error</glossterm>
+if <tag>p:document</tag>, <tag>p:pipe</tag>, or <tag>p:inline</tag> appear among
+the children of <tag>p:with-option</tag>.</error></para>
+</listitem>
+</varlistentry>
+<varlistentry><term><tag class="attribute">exclude-inline-prefixes</tag></term>
+<listitem>
+<para>The <tag class="attribute">exclude-inline-prefixes</tag> allows the pipeline
+author to exclude some namespace declarations in inline content, see <tag>p:inline</tag>.
 </para>
-
-<para>For <tag class="attribute">exclude-inline-prefixes</tag>, see <tag>p:inline</tag> .
-</para>
+</listitem>
+</varlistentry>
+</variablelist>
 </section>
-
 
 <!-- ============================================================ -->
 
@@ -5291,7 +5554,7 @@ following whitespace is discarded.</para>
 wants to include top level comments, processing instructions, or whitespace,
 or if the document element is in the XProc namespace.</para>
 
-<para><error code="S0083">It is a <glossterm>static error</glossterm>
+<para><error code="S00xx">It is a <glossterm>static error</glossterm>
 if comments or processing instructions occur as siblings of an element node
 that would be treated as an implicit inline.</error>
 </para>
