@@ -1,4 +1,6 @@
-<?xml-model href="../../schema/dbspec.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>
+<?xml-model href="../../schema/dbspec.rng"
+  type="application/xml"
+  schematypens="http://relaxng.org/ns/structure/1.0" ?>
 <specification xmlns="http://docbook.org/ns/docbook"
                xmlns:xlink="http://www.w3.org/1999/xlink"
                xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax"
@@ -1110,9 +1112,11 @@ appears where a document to be used as the context node is
 expected.</error>
 </para>
 
-<para>When the context node has a non-XML content type, XPath expressions are evaluated
-  in the context of the corresponding <glossterm>proxy document</glossterm>.
-</para>
+<para>When the context node has a non-XML content type, XPath
+expressions are evaluated in the context of the corresponding
+<glossterm>proxy document</glossterm>.
+<termdef xml:id="dt-proxy-document">A <firstterm>proxy document</firstterm> is
+an empty document node.</termdef>.</para>
 
 <para>If there is no explicit connection and there is no default
 readable port then the context node is undefined.</para>
@@ -1350,7 +1354,7 @@ readable port then the context node is undefined.</para>
               <term>Named functions</term>
               <listitem>
                 <para>The <biblioref linkend="xpath31-functions"/>.</para>
-              </listitem> 
+              </listitem>
             </varlistentry>
             <varlistentry>
               <term>Current dateTime</term>
@@ -1438,9 +1442,9 @@ readable port then the context node is undefined.</para>
     <section xml:id="xpath-extension-functions">
       <title>XPath Extension Functions</title>
 
-      <para>The XProc processor <rfc2119>must</rfc2119> support the 
-        additional functions described in this section in XPath expressions 
-        evaluated by the processor. These functions <rfc2119>must not</rfc2119> be supported 
+      <para>The XProc processor <rfc2119>must</rfc2119> support the
+        additional functions described in this section in XPath expressions
+        evaluated by the processor. These functions <rfc2119>must not</rfc2119> be supported
         in XPath expressions evaluated by a step.</para>
 
       <note role="editorial">
@@ -1785,7 +1789,7 @@ of a document as an XML document.</para>
 <methodparam><type>document-node()</type><parameter>doc</parameter></methodparam>
 </methodsynopsis>
 
-<para>The document returned is a <tag>p:document-properties</tag>
+<para>The document returned is a <code>c:document-properties</code>
 document that contains (exclusively) the document properties
 associated with the <parameter>doc</parameter> specified. Each key in the
 properties becomes an element, each value becomes the content of that element.
@@ -1794,7 +1798,7 @@ class="attribute">xsi:type</tag> attribute is added to identify the
 type of the value.</para>
 
 <para feature="document-properties-non-xml-document">The context node
-for the <function>p:document-properties</function> function must be an
+for the <function>p:document-properties-document</function> function must be an
 XPath document node. In order to access the document properties of a
 non-XML document, the processor is responsible for manufacturing an
 empty document node for this purpose and for maintaining the
@@ -1820,7 +1824,7 @@ in the document properties. An empty sequence is returned if no such key
 exists.</para>
 
 <para feature="document-properties-non-xml-document">The context node
-for the <function>p:document-properties</function> function must be an
+for the <function>p:document-property</function> function must be an
 XPath document node. In order to access the document properties of a
 non-XML document, the processor is responsible for manufacturing an
 empty document node for this purpose and for maintaining the
@@ -2850,7 +2854,7 @@ attribute">extension attributes</glossterm>.</error>
           </para>
         </listitem>
         <listitem>
-          <para><error code="S0077">It is a <glossterm>static error</glossterm> if the value on an 
+          <para><error code="S0077">It is a <glossterm>static error</glossterm> if the value on an
             attribute of an XProc element does not satisfy the type required for that attribute.</error>
           </para>
         </listitem>
@@ -3401,8 +3405,8 @@ the recovery (or “catch”) pipelines are identified with
 <tag>p:catch</tag> elements. The <tag>p:finally</tag> pipeline always
 runs after the <tag>p:try</tag>.</para>
 
-<para><error code="S0075">It is a <glossterm>static error</glossterm> 
-if a <tag>p:try</tag> does not have exactly one <tag>p:group</tag> and 
+<para><error code="S0075">It is a <glossterm>static error</glossterm>
+if a <tag>p:try</tag> does not have exactly one <tag>p:group</tag> and
 at least one <tag>p:catch</tag>.</error></para>
 
 <para>The <tag>p:try</tag> step evaluates the initial subpipeline and,
@@ -3510,12 +3514,12 @@ block of an enclosing <tag>p:try</tag>.</para>
 <para>I'm not actually sure <tag>p:finally</tag> is worth doing, but
 I've sketched it in for completeness. Also, should <tag>p:catch</tag>
 be entirely optional, allowing just try/group/finally?</para>
-  <para>If we decide to make <tag>p:catch</tag> optional, the text
-    of <glossterm>static error</glossterm> XS0075 has to be changed
-    to this: It is a <glossterm>static error</glossterm> if a 
-    <tag>p:try</tag> does not have exactly one <tag>p:group</tag> and 
-    either at least one <tag>p:catch</tag> or exactly one 
-    <tag>p:finally</tag>.</para>
+
+<para>If we decide to make <tag>p:catch</tag> optional, the text of
+static error XS0075 has to be changed to this: It is a
+static error if a <tag>p:try</tag> does not
+have exactly one <tag>p:group</tag> and either at least one
+<tag>p:catch</tag> or exactly one <tag>p:finally</tag>.</para>
 </note>
 
 <section xml:id="err-vocab">
@@ -3945,22 +3949,23 @@ class="attribute">sequence</tag> is not specified on
 <glossterm>dynamic error</glossterm> if the step does not produce
 exactly one document on the declared port.</error></para>
 
-<para>An output declaration can indicate the content types of the 
-  documents appearing on that port. If <tag class="attribute">content-types</tag> 
+<para>An output declaration can indicate the content types of the
+  documents appearing on that port. If <tag class="attribute">content-types</tag>
   is specified then only documents matching these content types are allowed
-  to appear on that port. If the attribute is not specified, 
-  <literal>*/*</literal> is assumed. <error code="D0042">It is a <glossterm>dynamic error</glossterm> 
-  if a document arrives on an output port whose content type is not accepted 
+  to appear on that port. If the attribute is not specified,
+  <literal>*/*</literal> is assumed. <error code="D0042">It is a <glossterm>dynamic error</glossterm>
+  if a document arrives on an output port whose content type is not accepted
   by the output port specification.</error></para>
-  
+
 <note role="editorial">
-        <title>Editorial Note</title>
-  <para>Implementations are free to perform a static checking of the connected
-  ports and indicate, that the content types of the connected ports will not
-    match, however they <rfc2119>must not</rfc2119> raise a <glossterm>static error</glossterm>.
-  </para>
-  </note>
-  
+<title>Editorial Note</title>
+<para>Implementations are free to perform a static checking of the
+connected ports and indicate, that the content types of the connected
+ports will not match, however they <rfc2119>must not</rfc2119> raise a
+static error.
+</para>
+</note>
+
 <para>The <tag class="attribute">primary</tag> attribute is used to
 identify the primary output port. An output port is a primary output
 port if <tag class="attribute">primary</tag> is specified with the
@@ -4956,7 +4961,7 @@ non-XML.</para>
 <title>Inline XML content</title>
 
 <para>If the <tag class="attribute">document-properties</tag> is not
-specified or the map does not contain a key "content-type" or specifies 
+specified or the map does not contain a key "content-type" or specifies
 an <glossterm>XML media type</glossterm>, then
 the content is XML. <error code="S0024">It is a <glossterm>static
 error</glossterm> if the content of the <tag>p:inline</tag> element
@@ -5054,7 +5059,7 @@ false, then each attribute value and text node within the
 template</glossterm>. The context node for these expressions is
 undefined.</para>
 
-<para>Within the descendants of <tag>p:inline</tag> the attribute
+<para xml:id="p.expand-text">Within the descendants of <tag>p:inline</tag> the attribute
 <tag class="attribute">p:expand-text</tag> (i.e., the attribute <code>expand-text</code>
 <emphasis>in the XProc namespace</emphasis>), may appear on an element.
 If it does, the specified value is used as the expand text value
