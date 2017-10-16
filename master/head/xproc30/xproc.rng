@@ -1014,12 +1014,22 @@
       <interleave>
         <group>
           <ref name="TryGroup"/>
-          <oneOrMore>
-            <ref name="Catch"/>
-          </oneOrMore>
-          <optional>
-            <ref name="Finally"/>
-          </optional>
+          <choice>
+            <group>
+              <oneOrMore>
+                <ref name="Catch"/>
+              </oneOrMore>
+              <optional>
+                <ref name="Finally"/>
+              </optional>
+            </group>
+            <group>
+              <zeroOrMore>
+                <ref name="Catch"/>
+              </zeroOrMore>
+              <ref name="Finally"/>
+            </group>
+          </choice>
         </group>
         <zeroOrMore>
           <choice>
