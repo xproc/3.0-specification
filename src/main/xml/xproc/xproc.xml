@@ -3407,8 +3407,8 @@ the recovery (or “catch”) pipelines are identified with
 runs after the <tag>p:try</tag>.</para>
 
 <para><error code="S0075">It is a <glossterm>static error</glossterm>
-if a <tag>p:try</tag> does not have exactly one <tag>p:group</tag> followed
-by either a <tag>p:catch</tag> or a <tag>p:finally</tag>.</error></para>
+if a <tag>p:try</tag> does not have exactly one <tag>p:group</tag> and
+at least one <tag>p:catch</tag> or exactly one <tag>p:finally</tag>.</error></para>
 
 <para>The <tag>p:try</tag> step evaluates the initial subpipeline and,
 if no errors occur, the outputs of that pipeline are the outputs of
@@ -3509,19 +3509,6 @@ fails.</para>
 only to handle recovery and resource cleanup tasks. If cleanup tasks
 require access to readable ports, put them in the <tag>p:catch</tag>
 block of an enclosing <tag>p:try</tag>.</para>
-
-<note xml:id="ednote-finally" role="editorial">
-<title>Editorial Note</title>
-<para>I'm not actually sure <tag>p:finally</tag> is worth doing, but
-I've sketched it in for completeness. Also, should <tag>p:catch</tag>
-be entirely optional, allowing just try/group/finally?</para>
-
-<para>If we decide to make <tag>p:catch</tag> optional, the text of
-static error XS0075 has to be changed to this: It is a
-static error if a <tag>p:try</tag> does not
-have exactly one <tag>p:group</tag> and either at least one
-<tag>p:catch</tag> or exactly one <tag>p:finally</tag>.</para>
-</note>
 
 <section xml:id="err-vocab">
 <title>The Error Vocabulary</title>
