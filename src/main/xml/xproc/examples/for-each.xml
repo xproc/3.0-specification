@@ -1,7 +1,10 @@
-<p:pipeline xmlns:p="http://www.w3.org/ns/xproc" version="3.0">
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
+                version="3.0">
+<p:input port="source"/>
+<p:output port="result"/>
 
 <p:for-each name="chapters">
-  <p:input select="//chapter"/>
+  <p:with-input select="//chapter"/>
   <p:output port="html-results">
     <p:pipe step="make-html" port="result"/>
   </p:output>
@@ -10,19 +13,13 @@
   </p:output>
 
   <p:xslt name="make-html">
-    <p:input port="stylesheet">
-      <p:document href="http://example.com/xsl/html.xsl"/>
-    </p:input>
+    <p:with-input port="stylesheet" href="http://example.com/xsl/html.xsl"/>
   </p:xslt>
 
   <p:xslt name="make-fo">
-    <p:input port="source">
-      <p:pipe step="chapters" port="current"/>
-    </p:input>
-    <p:input port="stylesheet">
-      <p:document href="http://example.com/xsl/fo.xsl"/>
-    </p:input>
+    <p:with-input port="source" pipe="chapters@current"/>
+    <p:with-input port="stylesheet" href="http://example.com/xsl/fo.xsl"/>
   </p:xslt>
 </p:for-each>
 
-</p:pipeline>
+</p:declare-step>

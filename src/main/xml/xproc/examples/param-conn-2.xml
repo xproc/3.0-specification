@@ -1,12 +1,11 @@
-<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" version="1.0">
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" version="3.0">
 <p:input port="source"/>
 <p:output port="result"/>
 
-<p:xslt>
-  <p:input port="stylesheet">
+<p:xslt parameters="map { 'mode': 'debug' }">
+  <p:with-input port="stylesheet">
     <p:document href="http://example.com/stylesheets/doc.xsl"/>
-  </p:input>
-  <p:with-param name="mode" select="'debug'"/>
+  </p:with-input>
 </p:xslt>
 
 </p:declare-step>

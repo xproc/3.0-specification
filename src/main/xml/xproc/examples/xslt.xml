@@ -1,13 +1,17 @@
-<p:pipeline xmlns:p="http://www.w3.org/ns/xproc" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" version="1.0">
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                version="3.0">
+<p:input port="source"/>
+<p:output port="result"/>
 
 <p:xslt name="xform">
-  <p:input port="stylesheet">
+  <p:with-input port="stylesheet">
     <p:inline>
       <xsl:stylesheet version="1.0">
         ...
       </xsl:stylesheet>
     </p:inline>
-  </p:input>
+  </p:with-input>
 </p:xslt>
 
-</p:pipeline>
+</p:declare-step>

@@ -1,17 +1,21 @@
-<p:pipeline xmlns:p="http://www.w3.org/ns/xproc" version="1.0">
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
+                version="3.0">
+<p:input port="source"/>
+<p:output port="result"/>
 
 <p:xinclude/>
 
 <p:validate-with-xml-schema>
-  <p:input port="schema">
+  <p:with-input port="schema">
     <p:document href="http://example.com/path/to/schema.xsd"/>
-  </p:input>
+  </p:with-input>
 </p:validate-with-xml-schema>
 
 <p:xslt>
-  <p:input port="stylesheet">
+  <p:with-input port="stylesheet">
     <p:document href="http://example.com/path/to/stylesheet.xsl"/>
-  </p:input>
+  </p:with-input>
 </p:xslt>
 
-</p:pipeline>
+</p:declare-step>
+

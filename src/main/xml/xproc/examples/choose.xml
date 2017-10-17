@@ -1,19 +1,18 @@
-<p:pipeline xmlns:p="http://www.w3.org/ns/xproc" version="1.0">
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
+                version="3.0">
+<p:input port="source"/>
+<p:output port="result"/>
 
 <p:choose name="version">
   <p:when test="/*[@version = 2]">
     <p:validate-with-xml-schema>
-      <p:input port="schema">
-	<p:document href="v2schema.xsd"/>
-      </p:input>
+      <p:with-input port="schema" href="v2schema.xsd"/>
     </p:validate-with-xml-schema>
   </p:when>
 
   <p:when test="/*[@version = 1]">
     <p:validate-with-xml-schema>
-      <p:input port="schema">
-	<p:document href="v1schema.xsd"/>
-      </p:input>
+      <p:with-input port="schema" href="v1schema.xsd"/>
     </p:validate-with-xml-schema>
   </p:when>
 
@@ -23,13 +22,13 @@
 
   <p:otherwise>
     <p:error code="NOVERSION">
-      <p:input port="source">
+      <p:with-input port="source">
 	<p:inline>
 	  <message>Required version attribute missing.</message>
 	</p:inline>
-      </p:input>
+      </p:with-input>
     </p:error>
   </p:otherwise>
 </p:choose>
 
-</p:pipeline>
+</p:declare-step>
