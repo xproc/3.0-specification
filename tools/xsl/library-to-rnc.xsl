@@ -47,9 +47,8 @@
 
   <xsl:choose>
     <xsl:when test="p:input">
-      <xsl:text>    (InputConnection*</xsl:text>
+      <xsl:text>    (WithInput*</xsl:text>
       <xsl:if test="p:option"> &amp; WithOption*</xsl:if>
-      <xsl:if test="p:output"> &amp; Log*</xsl:if>
       <xsl:if test="p:input[@kind='parameter']"> &amp; WithParam*</xsl:if>
       <xsl:text> &amp; (Documentation|PipeInfo)*</xsl:text>
       <xsl:text>)&#10;</xsl:text>
