@@ -117,7 +117,7 @@ decl.attributes = psvi-required.attr?,
 
 # ============================================================
 
-start = Pipeline | Library | DeclareStep
+start = Library | DeclareStep
  | VocabParam | VocabParamSet | VocabResult | VocabHttpRequest
  | VocabHeader | VocabMultipart | VocabBody | VocabHttpResponse | VocabQuery
  | VocabLine | VocabData | VocabDirectory | Errors | StandardStep
@@ -132,7 +132,7 @@ Library =
       decl.attributes,
       common.attributes,
       use-when.attr?,
-      (Import|DeclareStep|Pipeline|Documentation|PipeInfo)*
+      (Import|DeclareStep|Documentation|PipeInfo)*
    }
 
 [
@@ -144,21 +144,6 @@ Import =
       use-when.attr?,
       href.attr,
       (Documentation|PipeInfo)*
-   }
-
-[
-   sa:class = "language-construct"
-]
-Pipeline =
-   element pipeline {
-      name.ncname.attr?,
-      attribute type { xsd:QName }?,
-      common.attributes,
-      use-when.attr?,
-      decl.attributes,
-      (Input|Output|Option|Documentation|PipeInfo)*,
-      (DeclareStep|Pipeline|Import|Documentation|PipeInfo)*,
-      Subpipeline
    }
 
 [
@@ -413,7 +398,7 @@ DeclareStep =
       common.attributes,
       use-when.attr?,
       (Input|Output|Option|Documentation|PipeInfo)*,
-      ((DeclareStep|Pipeline|Import|Documentation|PipeInfo)*,Subpipeline)?
+      ((DeclareStep|Import|Documentation|PipeInfo)*,Subpipeline)?
    }
 
 # ============================================================

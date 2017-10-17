@@ -3052,18 +3052,18 @@ request.</para>
 content come from an input document, and the username and password are options, then a
 typical pipeline to compute the request becomes quite complex.</para>
 
-<programlisting>&lt;p:pipeline xmlns:p="http://www.w3.org/ns/xproc"
-            xmlns:c="http://www.w3.org/ns/xproc-step"
-            name="main" version="1.0"&gt;
+<programlisting>&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
+                xmlns:c="http://www.w3.org/ns/xproc-step"
+                name="main" version="3.0"&gt;
+&lt;p:input port="source"/&gt;
+&lt;p:output port="result"/&gt;
 &lt;p:option name="username" required="true"/&gt;
 &lt;p:option name="password" required="true"/&gt;
 
 &lt;p:identity&gt;
-  &lt;p:input port="source"&gt;
-    &lt;p:inline&gt;
-      &lt;c:request method="POST"/&gt;
-    &lt;/p:inline&gt;
-  &lt;/p:input&gt;
+  &lt;p:with-input port="source"&gt;
+    &lt;c:request method="POST"/&gt;
+  &lt;/p:with-input&gt;
 &lt;/p:identity&gt;
 
 &lt;p:add-attribute match="/c:request" attribute-name="href"&gt;
@@ -3081,14 +3081,14 @@ typical pipeline to compute the request becomes quite complex.</para>
 &lt;/p:add-attribute&gt;
 
 &lt;p:insert position="first-child" match="/c:request"&gt;
-  &lt;p:input port="insertion" select="/doc/request"&gt;
+  &lt;p:with-input port="insertion" select="/doc/request"&gt;
     &lt;p:pipe step="main" port="source"/&gt;
-  &lt;/p:input&gt;
+  &lt;/p:with-input&gt;
 &lt;/p:insert&gt;
 
 &lt;p:unwrap match="/c:request/request"/&gt;
 
-&lt;/p:pipeline&gt;</programlisting>
+&lt;/p:declare-step&gt;</programlisting>
 
 <para>There's nothing wrong with this pipeline, but it requires
 several steps to accomplish with the pipeline author probably
@@ -3104,32 +3104,36 @@ strongly encourage implementors to provide them.</para>
 <tag>p:template</tag>. Taken together, they greatly simplify
 the pipeline:</para>
 
-<programlisting>&lt;p:pipeline xmlns:p="http://www.w3.org/ns/xproc"
-            xmlns:c="http://www.w3.org/ns/xproc-step"
-            name="main" version="1.0"&gt;
+<programlisting>&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
+                xmlns:c="http://www.w3.org/ns/xproc-step"
+                name="main" version="3.0"&gt;
+&lt;p:input port="source"/&gt;
+&lt;p:output port="result"/&gt;
 &lt;p:option name="username" required="true"/&gt;
 &lt;p:option name="password" required="true"/&gt;
+
+&lt;!-- FIXME: this exmaple doesn't work anymore --&gt;
 
 &lt;p:in-scope-names name="vars"/&gt;
 
 &lt;p:template&gt;
-  &lt;p:input port="template"&gt;
+  &lt;p:with-input port="template"&gt;
     &lt;p:inline&gt;
       &lt;c:request method="POST" href="{/doc/request/@uri}"
                  username="{$username}" password="{$password}"&gt;
         { /doc/request/node() }
       &lt;/c:request&gt;
     &lt;/p:inline&gt;
-  &lt;/p:input&gt;
-  &lt;p:input port="source"&gt;
-    &lt;p:pipe step="main" port="source"/&gt;
-  &lt;/p:input&gt;
+  &lt;/p:with-input&gt;
+  &lt;p:with-input port="source" pipe="main@source"/&gt;
+  &lt;!--
   &lt;p:input port="parameters"&gt;
     &lt;p:pipe step="vars" port="result"/&gt;
   &lt;/p:input&gt;
+  --&gt;
 &lt;/p:template&gt;
 
-&lt;/p:pipeline&gt;</programlisting>
+&lt;/p:declare-step&gt;</programlisting>
 
 <para>The <tag>p:in-scope-names</tag> step provides all of the in-scope options and variables
 in a <tag>c:param-set</tag> (this operation is exactly analagous to what the
@@ -3695,23 +3699,22 @@ validation before using XQuery:</para>
 
 <example xml:id="ex.c.xquery">
 <title>A Sample Pipeline Document</title>
-<programlisting language="xml">&lt;p:pipeline xmlns:p="http://www.w3.org/ns/xproc" version="1.0"&gt;
+<programlisting language="xml">&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
+                version="3.0"&gt;
+&lt;p:input port="source"/&gt;
+&lt;p:output port="result"/&gt;
 
 &lt;p:xinclude/&gt;
 
 &lt;p:validate-with-xml-schema name="validate"&gt;
-  &lt;p:input port="schema"&gt;
-    &lt;p:document href="http://example.com/path/to/schema.xsd"/&gt;
-  &lt;/p:input&gt;
+  &lt;p:with-input port="schema" href="http://example.com/path/to/schema.xsd"/&gt;
 &lt;/p:validate-with-xml-schema&gt;
 
 &lt;p:xquery&gt;
-   &lt;p:input port="query"&gt;
-      &lt;p:data href="countp.xq" /&gt;
-   &lt;/p:input&gt;
+   &lt;p:with-input port="query" href="countp.xq"/&gt;
 &lt;/p:xquery&gt;
 
-&lt;/p:pipeline&gt;</programlisting>
+&lt;/p:declare-step&gt;</programlisting>
 </example>
 
 <para>Where <filename>countp.xq</filename> might contain:</para>
