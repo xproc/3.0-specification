@@ -15,7 +15,7 @@ Step-add-attribute =
     attribute attribute-prefix { xsd:NCName }?,
     attribute attribute-namespace { xsd:anyURI }?,
     attribute attribute-value { xsd:string }?,
-    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
   }
 
 Step-add-xml-base =
@@ -25,7 +25,7 @@ Step-add-xml-base =
     use-when.attr?,
     attribute all { xsd:boolean }?,
     attribute relative { xsd:boolean }?,
-    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
   }
 
 Step-cast-content-type =
@@ -34,7 +34,7 @@ Step-cast-content-type =
     common.attributes,
     use-when.attr?,
     attribute content-type { xsd:string }?,
-    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
   }
 
 Step-compare =
@@ -43,7 +43,7 @@ Step-compare =
     common.attributes,
     use-when.attr?,
     attribute fail-if-not-equal { xsd:boolean }?,
-    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
   }
 
 Step-count =
@@ -52,7 +52,7 @@ Step-count =
     common.attributes,
     use-when.attr?,
     attribute limit { xsd:integer }?,
-    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
   }
 
 Step-delete =
@@ -61,7 +61,7 @@ Step-delete =
     common.attributes,
     use-when.attr?,
     attribute match { XSLTMatchPattern }?,
-    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
   }
 
 Step-directory-list =
@@ -83,7 +83,7 @@ Step-error =
     attribute code { xsd:QName }?,
     attribute code-prefix { xsd:NCName }?,
     attribute code-namespace { xsd:anyURI }?,
-    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
   }
 
 Step-escape-markup =
@@ -92,7 +92,7 @@ Step-escape-markup =
     common.attributes,
     use-when.attr?,
     attribute serialization { xsd:string }?,
-    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
   }
 
 Step-filter =
@@ -101,7 +101,7 @@ Step-filter =
     common.attributes,
     use-when.attr?,
     attribute select { XPathExpression }?,
-    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
   }
 
 Step-http-request =
@@ -110,7 +110,7 @@ Step-http-request =
     common.attributes,
     use-when.attr?,
     attribute serialization { xsd:string }?,
-    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
   }
 
 Step-identity =
@@ -118,7 +118,7 @@ Step-identity =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
-    (InputConnection* & Log* & (Documentation|PipeInfo)*)
+    (WithInput* & (Documentation|PipeInfo)*)
   }
 
 Step-insert =
@@ -128,7 +128,7 @@ Step-insert =
     use-when.attr?,
     attribute match { XSLTMatchPattern }?,
     attribute position { "first-child" | "last-child" | "before" | "after" }?,
-    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
   }
 
 Step-label-elements =
@@ -142,7 +142,7 @@ Step-label-elements =
     attribute label { XPathExpression }?,
     attribute match { XSLTMatchPattern }?,
     attribute replace { xsd:boolean }?,
-    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
   }
 
 Step-load =
@@ -163,7 +163,7 @@ Step-make-absolute-uris =
     use-when.attr?,
     attribute match { XSLTMatchPattern }?,
     attribute base-uri { xsd:anyURI }?,
-    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
   }
 
 Step-namespace-rename =
@@ -174,7 +174,7 @@ Step-namespace-rename =
     attribute from { xsd:anyURI }?,
     attribute to { xsd:anyURI }?,
     attribute apply-to { "all" | "elements" | "attributes" }?,
-    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
   }
 
 Step-pack =
@@ -185,7 +185,7 @@ Step-pack =
     attribute wrapper { xsd:QName }?,
     attribute wrapper-prefix { xsd:NCName }?,
     attribute wrapper-namespace { xsd:anyURI }?,
-    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
   }
 
 Step-parameters =
@@ -206,7 +206,7 @@ Step-rename =
     attribute new-name { xsd:QName }?,
     attribute new-prefix { xsd:NCName }?,
     attribute new-namespace { xsd:anyURI }?,
-    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
   }
 
 Step-replace =
@@ -215,7 +215,7 @@ Step-replace =
     common.attributes,
     use-when.attr?,
     attribute match { XSLTMatchPattern }?,
-    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
   }
 
 Step-set-attributes =
@@ -224,7 +224,7 @@ Step-set-attributes =
     common.attributes,
     use-when.attr?,
     attribute match { XSLTMatchPattern }?,
-    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
   }
 
 Step-set-properties =
@@ -234,7 +234,7 @@ Step-set-properties =
     use-when.attr?,
     attribute properties { xsd:string }?,
     attribute merge { xsd:boolean }?,
-    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
   }
 
 Step-sink =
@@ -242,7 +242,7 @@ Step-sink =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
-    (InputConnection* & (Documentation|PipeInfo)*)
+    (WithInput* & (Documentation|PipeInfo)*)
   }
 
 Step-split-sequence =
@@ -252,7 +252,7 @@ Step-split-sequence =
     use-when.attr?,
     attribute initial-only { xsd:boolean }?,
     attribute test { XPathExpression }?,
-    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
   }
 
 Step-store =
@@ -262,7 +262,7 @@ Step-store =
     use-when.attr?,
     attribute href { xsd:anyURI }?,
     attribute serialization { xsd:string }?,
-    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
   }
 
 Step-string-replace =
@@ -272,7 +272,7 @@ Step-string-replace =
     use-when.attr?,
     attribute match { XSLTMatchPattern }?,
     attribute replace { XPathExpression }?,
-    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
   }
 
 Step-unescape-markup =
@@ -284,7 +284,7 @@ Step-unescape-markup =
     attribute content-type { xsd:string }?,
     attribute encoding { xsd:string }?,
     attribute charset { xsd:string }?,
-    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
   }
 
 Step-unwrap =
@@ -293,7 +293,7 @@ Step-unwrap =
     common.attributes,
     use-when.attr?,
     attribute match { XSLTMatchPattern }?,
-    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
   }
 
 Step-wrap =
@@ -306,7 +306,7 @@ Step-wrap =
     attribute wrapper-namespace { xsd:anyURI }?,
     attribute match { XSLTMatchPattern }?,
     attribute group-adjacent { XPathExpression }?,
-    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
   }
 
 Step-wrap-sequence =
@@ -318,7 +318,7 @@ Step-wrap-sequence =
     attribute wrapper-prefix { xsd:NCName }?,
     attribute wrapper-namespace { xsd:anyURI }?,
     attribute group-adjacent { XPathExpression }?,
-    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
   }
 
 Step-xinclude =
@@ -328,7 +328,7 @@ Step-xinclude =
     use-when.attr?,
     attribute fixup-xml-base { xsd:boolean }?,
     attribute fixup-xml-lang { xsd:boolean }?,
-    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
   }
 
 Step-xslt =
@@ -341,7 +341,7 @@ Step-xslt =
     attribute template-name { xsd:QName }?,
     attribute output-base-uri { xsd:anyURI }?,
     attribute version { xsd:string }?,
-    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
   }
 
 Step-exec =
@@ -361,7 +361,7 @@ Step-exec =
     attribute failure-threshold { xsd:integer }?,
     attribute arg-separator { xsd:string }?,
     attribute serialization { xsd:string }?,
-    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
   }
 
 Step-hash =
@@ -374,7 +374,7 @@ Step-hash =
     attribute algorithm { xsd:QName }?,
     attribute match { XSLTMatchPattern }?,
     attribute version { xsd:string }?,
-    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
   }
 
 Step-in-scope-names =
@@ -391,7 +391,7 @@ Step-template =
     common.attributes,
     use-when.attr?,
     attribute parameters { xsd:string }?,
-    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
   }
 
 Step-uuid =
@@ -401,7 +401,7 @@ Step-uuid =
     use-when.attr?,
     attribute match { XSLTMatchPattern }?,
     attribute version { xsd:integer }?,
-    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
   }
 
 Step-validate-with-relax-ng =
@@ -412,7 +412,7 @@ Step-validate-with-relax-ng =
     attribute dtd-attribute-values { xsd:boolean }?,
     attribute dtd-id-idref-warnings { xsd:boolean }?,
     attribute assert-valid { xsd:boolean }?,
-    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
   }
 
 Step-validate-with-schematron =
@@ -423,7 +423,7 @@ Step-validate-with-schematron =
     attribute parameters { xsd:string }?,
     attribute phase { xsd:string }?,
     attribute assert-valid { xsd:boolean }?,
-    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
   }
 
 Step-validate-with-xml-schema =
@@ -436,7 +436,7 @@ Step-validate-with-xml-schema =
     attribute assert-valid { xsd:boolean }?,
     attribute mode { "strict" | "lax" }?,
     attribute version { xsd:string }?,
-    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
   }
 
 Step-www-form-urldecode =
@@ -455,7 +455,7 @@ Step-www-form-urlencode =
     use-when.attr?,
     attribute parameters { xsd:string }?,
     attribute match { XSLTMatchPattern }?,
-    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
   }
 
 Step-xquery =
@@ -465,7 +465,7 @@ Step-xquery =
     use-when.attr?,
     attribute parameters { xsd:string }?,
     attribute version { xsd:string }?,
-    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
   }
 
 Step-xsl-formatter =
@@ -476,6 +476,6 @@ Step-xsl-formatter =
     attribute parameters { xsd:string }?,
     attribute href { xsd:anyURI }?,
     attribute content-type { xsd:string }?,
-    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
   }
 
