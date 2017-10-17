@@ -106,45 +106,51 @@ document.</para>
       <title>A simple, linear XInclude/Validate pipeline</title>
       <programlisting language="xml"><xi:include href="examples/fig1.xml" parse="text"/></programlisting>
     </example>
-    <para>The example in <xref linkend="ex1"/> is very verbose. It makes all of the connections seen
-      in the figure explicit. In practice, pipelines do not have to be this verbose. XProc supports
-      defaults for many common cases:</para>
-    <itemizedlist>
-      <listitem>
-        <para>If you use <tag>p:pipeline</tag> instead of <tag>p:declare-step</tag>, the
-            “<port>source</port>” input port and “<port>result</port>” output port are implicitly
-          declared for you.</para>
-      </listitem>
-      <listitem>
-        <para>Where inputs and outputs are connected between sequential sibling steps, they do not
-          have to be made explicit.</para>
-      </listitem>
-    </itemizedlist>
-    <para>The same pipeline, using XProc defaults, is shown in <xref linkend="ex1-abbr"/>.</para>
-    <example xml:id="ex1-abbr">
-      <title>A simple, linear XInclude/Validate pipeline (simplified)</title>
-      <programlisting language="xml"><xi:include href="examples/fig1-abbr.xml" parse="text"/></programlisting>
-    </example>
-    <para><xref linkend="fig-style-proc"/> is a more complex example: it performs schema validation
-      with an appropriate schema and then styles the validated document.</para>
-    <figure xml:id="fig-style-proc">
-      <title>A validate and transform pipeline</title>
-      <mediaobject>
-        <alt>A validate and transform pipeline</alt>
-        <imageobject>
-          <imagedata fileref="graphics/sch-transform.png"/>
-        </imageobject>
-      </mediaobject>
-    </figure>
-    <para>The heart of this example is the conditional. The “choose” step evaluates an XPath
-      expression over a test document. Based on the result of that expression, one or another branch
-      is run. In this example, each branch consists of a single validate step.</para>
-    <example xml:id="ex2">
-      <title>A validate and transform pipeline</title>
-      <programlisting language="xml"><xi:include href="examples/fig2.xml" parse="text"/></programlisting>
-    </example>
-    <para>This example, like the preceding, relies on XProc defaults for simplicity. It is always
-      valid to write the fully explicit form if you prefer.</para>
+
+<para>The example in <xref linkend="ex1"/> is very verbose. It makes
+all of the connections seen in the figure explicit. In practice,
+pipelines do not have to be this verbose. By default, Where inputs and
+outputs are connected between sequential sibling steps, they do not
+have to be made explicit.</para>
+
+<para>The same pipeline, using XProc defaults, is shown in <xref
+linkend="ex1-abbr"/>.</para>
+
+<example xml:id="ex1-abbr">
+  <title>A simple, linear XInclude/Validate pipeline (simplified)</title>
+  <programlisting language="xml"><xi:include href="examples/fig1-abbr.xml" parse="text"/></programlisting>
+</example>
+
+<para><xref linkend="fig-style-proc"/> is a more complex example: it
+performs schema validation with an appropriate schema and then styles
+the validated document.</para>
+
+<figure xml:id="fig-style-proc">
+  <title>A validate and transform pipeline</title>
+  <mediaobject>
+    <alt>A validate and transform pipeline</alt>
+    <imageobject>
+      <imagedata fileref="graphics/sch-transform.png"/>
+    </imageobject>
+  </mediaobject>
+</figure>
+
+<para>The heart of this example is the conditional. The “choose” step
+evaluates an XPath expression over a test document. Based on the
+result of that expression, one or another branch is run. In this
+example, each branch consists of a single validate step.</para>
+
+<example xml:id="ex2">
+  <title>A validate and transform pipeline</title>
+  <programlisting language="xml"><xi:include href="examples/fig2.xml" parse="text"/></programlisting>
+</example>
+
+<para>This example, like the preceding, relies on XProc defaults for
+simplicity. It is always valid to write the fully explicit form if you
+prefer. This example also takes advantage of using the <tag class="attribute">href</tag>
+attribute directly on <tag>p:with-input</tag> as a shortcut for the
+<tag>p:document</tag> connection.</para>
+
     <para>The media type for pipeline documents is <literal>application/xml</literal>. Often,
       pipeline documents are identified by the extension <filename class="extension"
       >.xpl</filename>.</para>
@@ -274,7 +280,7 @@ one input with respect to some set of XML Schemas, etc.</para>
           elements) of the step's highest ancestor element within the pipeline document or library
           which contains it, “<replaceable>n</replaceable>” is the position of the next-highest
           ancestor, and so on, including both steps and non-step wrappers. For example, consider the
-          pipeline in <xref linkend="ex2"/>. The <tag>p:pipeline</tag> step has no name, so it gets
+          pipeline in <xref linkend="ex2"/>. The <tag>p:declare-step</tag> step has no name, so it gets
           the default name “<literal>!1</literal>”; the <tag>p:choose</tag> gets the name
             “<literal>!1.1</literal>”; the first <tag>p:when</tag> gets the name
             “<literal>!1.1.1</literal>”; the <tag>p:otherwise</tag> gets the name
@@ -1855,7 +1861,7 @@ non-XML document.</para>
           >psvi-required</tag> attribute:</para>
       <itemizedlist>
         <listitem>
-          <para>On a <tag>p:pipeline</tag> or <tag>p:declare-step</tag>, <tag class="attribute"
+          <para>On a <tag>p:declare-step</tag>, <tag class="attribute"
               >psvi-required</tag> indicates whether or not the declared step requires PSVI support.
               <error code="D0022">It is a <glossterm>dynamic error</glossterm> if a processor that
               does not support PSVI annotations attempts to invoke a step which asserts that they
@@ -1863,8 +1869,7 @@ non-XML document.</para>
         </listitem>
         <listitem>
           <para>On a <tag>p:library</tag>, the <tag class="attribute">psvi-required</tag> attribute
-            provides a default value for all of its <tag>p:pipeline</tag> and
-              <tag>p:declare-step</tag>
+            provides a default value for all of its <tag>p:declare-step</tag>
             <emphasis>children</emphasis> that do not specify a value themselves.</para>
         </listitem>
       </itemizedlist>
@@ -2136,7 +2141,7 @@ name</link>. The value may be any XDM value.</termdef>
 for which a particular pipeline was authored by setting the
 <tag class="attribute">version</tag> attribute. The
 <tag class="attribute">version</tag> attribute can be specified on
-<tag>p:declare-step</tag>, <tag>p:pipeline</tag>, or <tag>p:library</tag>.
+<tag>p:declare-step</tag> or <tag>p:library</tag>.
 If specified, the value of
 the <tag class="attribute">version</tag> attribute <rfc2119>must</rfc2119> be a
 <type>xs:decimal</type>. <error code="S0063">It is a
@@ -2246,8 +2251,10 @@ encounter the following step:</para>
           <para>Suppose that XProc version 3.0 changes the definition of the <tag>p:xslt</tag> step
             so that it has an additional output port, <code>messages</code>. Then consider the
             following pipeline: </para>
-          <programlisting language="xml"><![CDATA[<p:pipeline xmlns:p="http://www.w3.org/ns/xproc"
-            version="2.0">
+          <programlisting language="xml"><![CDATA[<p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
+                version="99.0">
+<p:input port="source"/>
+<p:output port="result"/>
 
   <p:xslt name="style">
     <p:with-input port="stylesheet">
@@ -2262,9 +2269,9 @@ encounter the following step:</para>
       <p:pipe step="style" port="messages"/>
     </p:with-input>
   </p:count>
-</p:pipeline>]]></programlisting>
+</p:declare-step>]]></programlisting>
 
-<para>When run by a "2.0" or later processor, it will count the
+<para>When run by a "99.0" or later processor, it will count the
 documents that appear on the <code>messages</code> port. When run by a
 “1.0” processor in forwards-compatible mode, the binding to the
 “<port>messages</port>” port is not a static error.
@@ -2368,22 +2375,20 @@ they are <firstterm>visible</firstterm> to each other.
       <para>The scope of the names of the step types is the pipeline in which they are declared,
         including any declarations imported from libraries via <tag>p:import</tag>. Nested pipelines
         inherit the step types in scope for their parent.</para>
-      <para>In other words, the step types that are in scope in a <tag>p:pipeline</tag> or
-          <tag>p:declare-step</tag> are:</para>
+      <para>In other words, the step types that are in scope in a <tag>p:declare-step</tag> are:</para>
       <itemizedlist>
         <listitem>
-          <para>The standard, built-in types (<tag>p:pipeline</tag>, <tag>p:choose</tag>, etc.).
+          <para>The standard, built-in types (<tag>p:declare-step</tag>, <tag>p:choose</tag>, etc.).
           </para>
         </listitem>
         <listitem>
           <para>Any implementation-provided types. </para>
         </listitem>
         <listitem>
-          <para>Any step types declared in the pipeline (the <tag>p:pipeline</tag> and
-              <tag>p:declare-step</tag> children of the pipeline element). </para>
+          <para>Any step types declared in the <tag>p:declare-step</tag> children of the pipeline element. </para>
         </listitem>
         <listitem>
-          <para>The types of any <tag>p:pipeline</tag>s or <tag>p:declare-step</tag>s that are
+          <para>The types of any <tag>p:declare-step</tag>s that are
             imported. </para>
         </listitem>
         <listitem>
@@ -2391,7 +2396,7 @@ they are <firstterm>visible</firstterm> to each other.
           </para>
         </listitem>
         <listitem>
-          <para>Any step types that are in scope for the pipeline's parent <tag>p:pipeline</tag> or
+          <para>Any step types that are in scope for the pipeline's parent
               <tag>p:declare-step</tag>, if it has one. </para>
         </listitem>
         <listitem>
@@ -2401,18 +2406,18 @@ they are <firstterm>visible</firstterm> to each other.
       <para>The step types that are in scope in a <tag>p:library</tag> are:</para>
       <itemizedlist>
         <listitem>
-          <para>The standard, built-in types (<tag>p:pipeline</tag>, <tag>p:choose</tag>, etc.).
+          <para>The standard, built-in types (<tag>p:declare-step</tag>, <tag>p:choose</tag>, etc.).
           </para>
         </listitem>
         <listitem>
           <para>Any implementation-provided types. </para>
         </listitem>
         <listitem>
-          <para>Any step types declared in the library (the <tag>p:pipeline</tag> and
+          <para>Any step types declared in the library (the
               <tag>p:declare-step</tag> children of the <tag>p:library</tag> element). </para>
         </listitem>
         <listitem>
-          <para>The types of <tag>p:pipeline</tag>s or <tag>p:declare-step</tag>s that are imported
+          <para>The types of <tag>p:declare-step</tag>s that are imported
             into the library. </para>
         </listitem>
         <listitem>
@@ -2838,7 +2843,7 @@ the summaries:</para><itemizedlist>
       <itemizedlist>
         <listitem>
           <para><error code="S0059">It is a <glossterm>static error</glossterm> if the pipeline
-              element is not <tag>p:pipeline</tag>, <tag>p:declare-step</tag>, or
+              element is not <tag>p:declare-step</tag> or
                 <tag>p:library</tag>.</error>
           </para>
         </listitem>
@@ -2965,63 +2970,44 @@ colon.</error></para>
 </listitem>
 </itemizedlist>
 
-<section xml:id="p.pipeline"><title>p:pipeline</title><para>A <tag>p:pipeline</tag> declares a
-        pipeline that can be evaluated by an XProc processor. It encapsulates the behavior of a
-          <glossterm>subpipeline</glossterm>. Its children declare inputs, outputs, and options that
-        the pipeline exposes and identify the steps in its subpipeline. (A <tag>p:pipeline</tag> is
-        a simplified form of <link linkend="p.declare-step">step declaration</link>.)
-        </para>
+<section xml:id="pipelines">
+<title>Pipelines</title>
 
-<para>All <tag>p:pipeline</tag> pipelines have an implicit
-<glossterm>primary input port</glossterm> named “<port>source</port>”
-and an implicit <glossterm>primary output
-port</glossterm> named “<port>result</port>”. Any input or output
-ports that the <tag>p:pipeline</tag> declares explicitly are
-<emphasis>in addition</emphasis> to those ports and may not be
-declared primary.</para>
+<para>The document element of a pipeline document is
+<tag>p:declare-step</tag> which declares a pipeline that can be
+evaluated by an XProc processor.</para>
 
-      <e:rng-pattern name="Pipeline"/>
-      <para>Viewed from the outside, a <tag>p:pipeline</tag> is a black box which performs some
-        calculation on its inputs and produces its outputs. From the pipeline author's perspective,
-        the computation performed by the pipeline is described in terms of <glossterm>contained
-          steps</glossterm> which read the pipeline's inputs and produce the pipeline's
-        outputs.</para>
+<para>It encapsulates the behavior of a
+<glossterm>subpipeline</glossterm>. Its children declare inputs,
+outputs, and options that the pipeline exposes and identify the steps
+in its subpipeline.
+</para>
 
-<para>The <tag class="attribute">version</tag> attribute identifies the version
-of XProc for which this pipeline was authored. If the <tag>p:pipeline</tag>
-has no ancestors in the XProc namespace, then it <rfc2119>must</rfc2119>
-have a <tag class="attribute">version</tag> attribute.
-See <xref linkend="versioning-considerations"/>.</para>
+<para>Viewed from the outside, a <tag>p:declare-step</tag> is a black
+box which performs some calculation on its inputs and produces its
+outputs. From the pipeline author's perspective, the computation
+performed by the pipeline is described in terms of
+<glossterm>contained steps</glossterm> which read the pipeline's
+inputs and produce the pipeline's outputs.</para>
 
-<para>If a pipeline does not have a <tag class="attribute">type</tag>
-then that pipeline cannot be invoked as a step.</para>
+<para>A <tag>p:declare-step</tag> element can also be nested inside
+other <tag>p:declare-step</tag> or <tag>p:library</tag> elements in
+which case it simply declares a pipeline that will be run
+elsewhere.</para>
 
-<para>The <tag>p:pipeline</tag> element is just a simplified form of
-step declaration. A document that reads:</para>
+<para>For more details, see <xref linkend="p.declare-step"/>.</para>
 
-<programlisting language="xml">&lt;p:pipeline <replaceable>some-attributes</replaceable>&gt;
-  <replaceable>some-content</replaceable>
-&lt;/p:pipeline&gt;</programlisting>
-
-<para>can be interpreted as if it read:</para>
-
-<programlisting language="xml">&lt;p:declare-step <replaceable>some-attributes</replaceable>&gt;
-  &lt;p:input port='source' primary='true'/&gt;
-  &lt;p:output port='result' primary='true'/&gt;
-  <replaceable>some-content</replaceable>
-&lt;/p:declare-step&gt;</programlisting>
-
-<para>See
-          <tag>p:declare-step</tag> for more details.</para><section xml:id="example-pipeline"
-        role="tocsuppress">
-        <title>Example</title>
-        <para>A pipeline might accept a document as input; perform XInclude, validation, and
-          transformation; and produce the transformed document as its output.</para>
-        <example xml:id="ex.p.pipeline">
-          <title>A Sample Pipeline Document</title>
-          <programlisting language="xml"><xi:include href="examples/pipeline.txt" parse="text"/></programlisting>
-        </example>
-      </section></section>
+<section xml:id="example-pipeline"
+         role="tocsuppress">
+<title>Example</title>
+<para>A pipeline might accept a document as input; perform XInclude, validation, and
+transformation; and produce the transformed document as its output.</para>
+<example xml:id="ex.p.pipeline">
+  <title>A Sample Pipeline Document</title>
+  <programlisting language="xml"><xi:include href="examples/pipeline.txt" parse="text"/></programlisting>
+</example>
+</section>
+</section>
 
 <section xml:id="p.for-each">
 <title>p:for-each</title>
@@ -3995,13 +3981,13 @@ see <tag>p:inline</tag>.</para>
 <para>A default connection does not satisfy the requirement that a
 primary input port is automatically connected by the processor, nor is
 it used when no default readable port is defined. In other words, a
-<tag>p:declare-step</tag> or a <tag>p:pipeline</tag> can define
+<tag>p:declare-step</tag> can define
 defaults for all of its inputs, whether they are primary or not, but
 defining a default for a primary input usually has no effect. It's
 never used by an atomic step since the step, when it's called, will
 always connect the primary input port to the default readable port (or
 cause a static error). The only case where it has value is on a
-<tag>p:pipeline</tag> when that pipeline is invoked directly by the
+<tag>p:declare-step</tag> when that pipeline is invoked directly by the
 processor. In that case, the processor <rfc2119>must</rfc2119> use the
 default connection if no external connection is provided for the
 port.</para>
@@ -4560,8 +4546,7 @@ node for the expression that defines the value of the variable.</error>
 
 <para>A <tag>p:option</tag> declares an option and may associate a
 default value with it. The <tag>p:option</tag> tag can only be used in
-a <tag>p:declare-step</tag> or a <tag>p:pipeline</tag> (which is a
-syntactic abbreviation for a step declaration).</para>
+a <tag>p:declare-step</tag>.</para>
 
 <para>The name of the option <rfc2119>must</rfc2119> be an EQName. If it
 does not contain a prefix then it is in no namespace. <error
@@ -4885,10 +4870,14 @@ option or variable are used.</para>
         </para></section>
     </section>
     <!-- ============================================================ -->
-    <section xml:id="p.declare-step"><title>p:declare-step</title><para>A <tag>p:declare-step</tag>
-        provides the type and <glossterm>signature</glossterm> of an <glossterm>atomic
-          step</glossterm> or pipeline. It declares the inputs, outputs, and options for all steps
-        of that type.</para>
+
+<section xml:id="p.declare-step">
+<title>p:declare-step</title>
+
+<para>A <tag>p:declare-step</tag> provides the type and
+<glossterm>signature</glossterm> of an <glossterm>atomic
+step</glossterm> or pipeline. It declares the inputs, outputs, and
+options for all steps of that type.</para>
 
       <e:rng-pattern name="DeclareStep"/>
 
@@ -5006,7 +4995,7 @@ See <xref linkend="versioning-considerations"/>.</para>
 
 <note xml:id="note-step-decl">
         <para>The steps declared in a pipeline library are referred to by their type. It is not an
-          error to put a <tag>p:pipeline</tag> or <tag>p:declare-step</tag> without a <tag
+          error to put a <tag>p:declare-step</tag> without a <tag
             class="attribute">type</tag> in a <tag>p:library</tag>, but there is no standard
           mechanism for instantiating it or referring to it. It is effectively invisible.</para>
       </note><para>Libraries can import pipelines and/or other libraries.
@@ -5021,8 +5010,8 @@ See also <xref linkend="handling-imports"
         available to the current pipeline. </para>
 <para><error code="S0052">It is a
             <glossterm>static error</glossterm> if the URI of a <tag>p:import</tag> cannot be
-          retrieved or if, once retrieved, it does not point to a <tag>p:library</tag>,
-            <tag>p:declare-step</tag>, or <tag>p:pipeline</tag>.</error>
+          retrieved or if, once retrieved, it does not point to a <tag>p:library</tag> or
+            <tag>p:declare-step</tag>.</error>
         <error code="S0053">It is a <glossterm>static error</glossterm> to import a single pipeline
           if that pipeline does not have a <tag class="attribute">type</tag>.</error>
       </para>
@@ -5238,8 +5227,7 @@ as defined below, are removed:</para>
                   </listitem>
                   <listitem>
                       <para>A namespace URI designated by using an <tag class="attribute"
-                          >exclude-inline-prefixes</tag> attribute on any ancestor <tag>p:declare-step</tag>,
-                          <tag>p:pipeline</tag>, or <tag>p:library</tag> is also excluded. (In other words, the
+                          >exclude-inline-prefixes</tag> attribute on any ancestor <tag>p:declare-step</tag> or <tag>p:library</tag> is also excluded. (In other words, the
                           effect of several <tag class="attribute">exclude-inline-prefixes</tag> attributes among
                           the ancestors of <tag>p:inline</tag> is cumulative.)</para>
                   </listitem>
@@ -5499,7 +5487,7 @@ output</emphasis> on that port. </para>
       as follows:</para>
     <variablelist>
       <varlistentry>
-        <term>p:pipeline, p:declare-step</term>
+        <term>p:declare-step</term>
         <listitem>
           <para>A singleton bag containing the <code>type</code> of the element</para>
         </listitem>
@@ -5548,19 +5536,19 @@ output</emphasis> on that port. </para>
           exports</glossterm> of its children, against the background of a singleton set containing
           <emphasis>DU</emphasis> as the initial <emphasis>Visited</emphasis> set, contains any
         duplicates.</error></para>
-    <para>Given a non-top-level <code>p:pipeline</code> or <code>p:declare-step</code> element,
+    <para>Given a non-top-level <code>p:declare-step</code> element,
         <error code="S0036">it is a <glossterm>static error</glossterm> if the
           <glossterm>bag-merger</glossterm> of the <glossterm>step type exports</glossterm> of its
         parent with the <glossterm>step type exports</glossterm> of its children, against the
         background of a copy of the <emphasis>Visited</emphasis> set of its parent as the initial
           <emphasis>Visited</emphasis> set, contains any duplicates.</error></para>
     <para>The phrase "a copy of the <emphasis>Visited</emphasis> set" in the preceding paragraph is
-      meant to indicate that checking of non-top-level <code>p:pipeline</code> or
+      meant to indicate that checking of non-top-level
         <code>p:declare-step</code> elements does <emphasis>not</emphasis> have a persistent impact
       on the checking of its parent. The contrast is that whereas changes to
         <emphasis>Visited</emphasis> pass both up <emphasis>and</emphasis> down through
         <code>p:import</code>, they pass only <emphasis>down</emphasis> through
-        <emphasis>p:pipeline</emphasis> and <emphasis>p:declare-step</emphasis>.</para>
+        <emphasis>p:declare-step</emphasis>.</para>
     <para><termdef xml:id="dt-bag-merger">The <firstterm>bag-merger</firstterm> of two or more bags
         (where a bag is an unordered list or, equivalently, something like a set except that it may
         contain duplicates) is a bag constructed by starting with an empty bag and adding each
