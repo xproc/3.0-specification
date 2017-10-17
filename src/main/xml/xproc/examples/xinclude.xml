@@ -1,10 +1,13 @@
-<p:pipeline xmlns:p="http://www.w3.org/ns/xproc" version="1.0">
-<!-- there's no otherstep so this isn't expected to work... -->
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
+                version="3.0">
+<p:input port="source"/>
+<p:output port="result"/>
 
+<!-- there's no otherstep so this isn't expected to work... -->
 <p:xinclude name="expand">
-  <p:input port="source">
+  <p:with-input port="source">
     <p:pipe step="otherstep" port="result"/>
-  </p:input>
+  </p:with-input>
 </p:xinclude>
 
-</p:pipeline>
+</p:declare-step>

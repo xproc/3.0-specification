@@ -1,26 +1,30 @@
-<p:pipeline xmlns:p="http://www.w3.org/ns/xproc"
-            xmlns:c="http://www.w3.org/ns/xproc-step"
-            name="main" version="1.0">
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
+                xmlns:c="http://www.w3.org/ns/xproc-step"
+                name="main" version="3.0">
+<p:input port="source"/>
+<p:output port="result"/>
 <p:option name="username" required="true"/>
 <p:option name="password" required="true"/>
+
+<!-- FIXME: this exmaple doesn't work anymore -->
 
 <p:in-scope-names name="vars"/>
 
 <p:template>
-  <p:input port="template">
+  <p:with-input port="template">
     <p:inline>
       <c:request method="POST" href="{/doc/request/@uri}"
                  username="{$username}" password="{$password}">
         { /doc/request/node() }
       </c:request>
     </p:inline>
-  </p:input>
-  <p:input port="source">
-    <p:pipe step="main" port="source"/>
-  </p:input>
+  </p:with-input>
+  <p:with-input port="source" pipe="main@source"/>
+  <!--
   <p:input port="parameters">
     <p:pipe step="vars" port="result"/>
   </p:input>
+  -->
 </p:template>
 
-</p:pipeline>
+</p:declare-step>
