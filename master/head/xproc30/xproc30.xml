@@ -3994,7 +3994,9 @@ step.</error></para>
 <para xml:id="note-pipe-excl">The <tag>p:pipe</tag> element is explicitly excluded from a
 declaration because it would make the default value of an input
 dependent on the execution of some part of the pipeline. Default
-values are designed so that they can be computed statically.</para>
+values are designed so that they can be computed statically. For the very
+same reason <tag class="attribute">href</tag> is neither an attribute value template
+on <tag>p:input</tag> nor on a <tag>p:document</tag> within a <tag>p:input</tag>.</para>
 
 </section>
 <section xml:id="p.with-input">
@@ -5554,6 +5556,14 @@ comes from the <tag class="attribute">href</tag> attribute, the
 <tag class="attribute">parameters</tag> attribute.
 </para>
 
+<para>The attribute <tag class="attribute">href</tag> can be an attribute
+value template in all use cases except when the <tag>p:document</tag> appears
+as a child of <tag>p:input</tag>, because a static binding is required there. 
+<error code="S0084">It is a <glossterm>static error</glossterm> if the attribute
+<tag class="attribute">href</tag> on a <tag>p:document</tag> within a <tag>p:input</tag>
+is an attribute value template.</error>  
+</para>
+  
 <para><error code="D0011">It is a <glossterm>dynamic error</glossterm>
 if the resource referenced by a <tag>p:document</tag> element does not
 exist, cannot be accessed, or has an XML content type and is not a
