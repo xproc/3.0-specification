@@ -29,11 +29,21 @@ configurations {
   runtime {
     extendsFrom compile
   }
+
+  deltaxml {
+    extendsFrom compile
+  }
 }
 
 dependencies {
   runtime (
     fileTree(dir: 'tools/lib').include("*.jar")
+  )
+
+  // This only works if you have a DeltaXML license, so I haven't tried
+  // to make it very versatile. Yet.
+  deltaxml (
+    fileTree(dir: '/usr/local/DeltaXMLCore-8_2_6_j').include("*.jar")
   )
 }
 
@@ -460,7 +470,9 @@ specification.doLast {
 }
 
 task clean(dependsOn: [ "clean_xproc30_examples", "clean_steps30_examples" ]) {
-  delete "build"
+  doLast {
+    delete "build"
+  }
 }
 
 task clean_xproc30_examples(type: Exec) {
@@ -469,4 +481,68 @@ task clean_xproc30_examples(type: Exec) {
 
 task clean_steps30_examples(type: Exec) {
   commandLine "make", "-C", "src/main/xml/steps/examples", "clean"
+}
+
+task diff(dependsOn: [ "diff_xproc30", "diff_steps30" ]) {
+  // nop
+}
+
+task diff_xproc30(dependsOn: [ "prep_xproc30_base", "prep_xproc30_spec" ], type: JavaExec) {
+  classpath = configurations.deltaxml
+  main = "com.deltaxml.cmdline.PipelinedTextUI"
+  args = ["compare", "xhtml", "build/diff-xproc30-base.html",
+          "build/diff-xproc30-update.html", "build/xproc30/diff.html"]
+}
+
+task diff_steps30(dependsOn: [ "prep_steps30_base", "prep_steps30_spec" ], type: JavaExec) {
+  classpath = configurations.deltaxml
+  main = "com.deltaxml.cmdline.PipelinedTextUI"
+  args = ["compare", "xhtml", "build/diff-steps30-base.html",
+          "build/diff-steps30-update.html", "build/steps30/diff.html"]
+}
+
+task prep_xproc30_base(type: XMLCalabashTask) {
+  inputs.file "tools/xpl/fix-pre.xpl"
+  outputs.file "build/diff-xproc30-base.html"
+  input("source", "http://xpspectest.nwalsh.com/master/head/xproc30/")
+  output("result", "build/diff-xproc30-base.html")
+  pipeline "tools/xpl/fix-pre.xpl"
+}
+prep_xproc30_base.doFirst {
+  mkdir "build"
+}
+
+task prep_xproc30_spec(dependsOn: [ "specification" ], type: XMLCalabashTask) {
+  inputs.file "tools/xpl/fix-pre.xpl"
+  inputs.file "build/xproc30/index.html"
+  outputs.file "build/diff-xproc30-update.html"
+  input("source", "build/xproc30/index.html")
+  output("result", "build/diff-xproc30-update.html")
+  pipeline "tools/xpl/fix-pre.xpl"
+}
+prep_xproc30_spec.doFirst {
+  mkdir "build"
+}
+
+task prep_steps30_base(type: XMLCalabashTask) {
+  inputs.file "tools/xpl/fix-pre.xpl"
+  outputs.file "build/diff-steps30-base.html"
+  input("source", "http://xpspectest.nwalsh.com/master/head/steps30/")
+  output("result", "build/diff-steps30-base.html")
+  pipeline "tools/xpl/fix-pre.xpl"
+}
+prep_steps30_base.doFirst {
+  mkdir "build"
+}
+
+task prep_steps30_spec(dependsOn: [ "specification" ], type: XMLCalabashTask) {
+  inputs.file "tools/xpl/fix-pre.xpl"
+  inputs.file "build/steps30/index.html"
+  outputs.file "build/diff-steps30-update.html"
+  input("source", "build/steps30/index.html")
+  output("result", "build/diff-steps30-update.html")
+  pipeline "tools/xpl/fix-pre.xpl"
+}
+prep_steps30_spec.doFirst {
+  mkdir "build"
 }
