@@ -1972,6 +1972,12 @@ XPath error code.</para>
 <error code="D0050">It is a <glossterm>dynamic error</glossterm> if the 
 XPath expression in an AVT or TVT can not be evaluated.</error>
 </para>
+  
+<para>
+<error code="D0051">It is a <glossterm>dynamic error</glossterm> if the 
+XPath expression in an AVT or TVT evaluates to something to other than an
+atomic value or a node.</error>
+</para>
     
 <section xml:id="attribute-value-templates">
 <title>Attribute Value Templates</title>
@@ -2050,6 +2056,15 @@ and converted to single text nodes. It is possible to insert nodes with
 text value templates in XProc, for example, if the XPath
 expressions refer to variables that have node content.</para>
 </note>
+  
+<para>If the node to be inserted with a text value template is a document
+node, all children of the document node are inserted. If the node is an attribute 
+it is added to an element parent if and only if the attribute either has
+no siblings in the XDM sequence or has only attributes as preceding siblings.
+<error code="D0052">It is a <glossterm>dynamic error</glossterm> if the XPath 
+expression in a TVT evaluates to an attribute and either the parent is not an 
+element or the attribute has a preceding sibling, that it not an attribute.</error>
+</para>
 </section>
 </section>
 
