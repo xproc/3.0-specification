@@ -1,4 +1,8 @@
-<section xmlns="http://docbook.org/ns/docbook" xmlns:cs="http://www.w3.org/XML/XProc/2006/04/components#" xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax" xmlns:p="http://www.w3.org/ns/xproc" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="c.compare">
+<section xmlns="http://docbook.org/ns/docbook"
+         xmlns:p="http://www.w3.org/ns/xproc"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xml:id="c.compare">
 <title>p:compare</title>
 
 <para>The <code>p:compare</code> step compares two documents for
@@ -8,27 +12,42 @@ equality.</para>
    <p:input port="source" primary="true" content-types="*/*"/>
    <p:input port="alternate" content-types="*/*"/>
    <p:output port="result" content-types="application/xml"/>
-   <p:option name="fail-if-not-equal" select="false" as="xs:boolean"/>
+   <p:output port="differences" content-types="*/*" sequence="true"/>
+   <p:option name="method" as="xs:QName"/>
+   <p:option name="fail-if-not-equal" select="false()" as="xs:boolean"/>
+   <p:option name="parameters" as="map(xs:QName,item())"/>
 </p:declare-step>
 
-<para>The value of the <option>fail-if-not-equal</option> option
-<rfc2119>must</rfc2119> be a boolean.</para>
-
 <para>This step takes single documents on each of two ports and
-compares them. If both media types are XML media types, the comparison
+compares them. If <option>method</option> is not specified, or if
+<code>deep-equal</code> is specified, the comparison
 uses <function>fn:deep-equal</function> (as defined in <biblioref
-linkend="xpath-functions"/>). <impl>In <tag>p:compare</tag>, if either
-media type is not an XML media type, the result is
-<glossterm>implementation-defined</glossterm>.</impl></para>
+linkend="xpath-functions"/>). <impl>Implementations of <tag>p:compare</tag>
+<rfc2119>must</rfc2119> support the <code>deep-equal</code> <option>method</option>;
+other supported methods are <glossterm>implementation-defined</glossterm>.</impl>
+<error code="C0076">It is a <glossterm>dynamic error</glossterm> if
+the comparison <option>method</option> specified in <tag>p:compare</tag>
+is not supported by the implementation.</error>
+<error code="C0077">It is a <glossterm>dynamic error</glossterm> if
+the media types of the documents supplied are incompatible with the
+comparison <option>method</option>.</error>
+</para>
 
 <para><error code="C0019">It is a <glossterm>dynamic error</glossterm>
-if the documents are not equal, and the value of the
+if the documents are not equal according to the specified comparison
+<option>method</option>, and the value of the
 <option>fail-if-not-equal</option> option is
 <literal>true</literal>.</error> If the documents are equal, or if the
 value of the <option>fail-if-not-equal</option> option is
 <literal>false</literal>, a <tag>c:result</tag> document is produced
 with contents <literal>true</literal> if the documents are equal,
 otherwise <literal>false</literal>.</para>
+
+<para><impl>If
+<option>fail-if-not-equal</option> is <code>false</code>, and the
+documents differ, an <glossterm>implementation-defined</glossterm>
+summary of the differences between the two documents may appear on the
+<port>differences</port> port.</impl></para>
 
 <section>
 <title>Document properties</title>
