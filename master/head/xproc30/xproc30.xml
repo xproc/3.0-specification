@@ -2513,16 +2513,23 @@ declaration and the descendants of those siblings.
 </section>
     <section xml:id="xml-base-attribute">
       <title>Base URIs and xml:base</title>
-      <para>When a relative URI appears in an option value, the base URI against which it
-          <rfc2119>must</rfc2119> be made absolute is the base URI of the <tag>p:option</tag>
-        element. If an option value is specified using a <link linkend="option-shortcut">syntactic
-          shortcut</link>, the base URI of the step on which the shortcut attribute appears
-          <rfc2119>must</rfc2119> be used. In general, whenever a relative URI appears, its base URI
-        is the base URI of the nearest ancestor element.</para>
-      <para>The pipeline author can control the base URIs of elements within the pipeline document
-        with the <tag class="attribute">xml:base</tag> attribute. The <tag class="attribute">xml:base</tag> attribute <rfc2119>may</rfc2119> appear on any element in a pipeline and
-        has the semantics outlined in <biblioref linkend="xml-base"/>.</para>
-    </section>
+
+<para>If a relative URI appears in an option of type <type>xs:anyURI</type>,
+the base URI against which it <rfc2119>must</rfc2119> be made absolute is the base
+URI of the <tag>p:option</tag> element. If the option value is
+specified using a <link linkend="option-shortcut">syntactic
+shortcut</link>, the base URI of the step element on which the shortcut
+attribute appears <rfc2119>must</rfc2119> be used. In general,
+whenever a relative URI appears in an <type>xs:anyURI</type>,
+its base URI is the base URI of the nearest ancestor element.</para>
+
+<para>The pipeline author can control the base URIs of elements within
+the pipeline document with the <tag class="attribute">xml:base</tag>
+attribute. The <tag class="attribute">xml:base</tag> attribute
+<rfc2119>may</rfc2119> appear on any element in a pipeline and has the
+semantics outlined in <biblioref linkend="xml-base"/>.</para>
+
+</section>
     <section xml:id="xml-id-attribute">
       <title>Unique identifiers</title>
       <para>A pipeline author can provide a globally unique identifier for any element in a pipeline
