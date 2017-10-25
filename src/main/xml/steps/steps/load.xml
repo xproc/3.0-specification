@@ -11,16 +11,12 @@ result a document (or documents) specified by an IRI.</para>
   <p:option name="document-properties" as="map(xs:QName, item())"/>
 </p:declare-step>
 
-<para>The value of the <option>href</option> option
-<rfc2119>must</rfc2119> be an <type>anyURI</type>. It is interpreted
-as an IRI reference. If it is relative, it is made absolute against
-the base URI of the element on which it is specified
-(<tag>p:with-option</tag> or <tag>p:load</tag> in the case of a
-<olink targetdoc="../xproc20/xproc20.xml" targetptr="option-shortcut">syntactic shortcut</olink> value).</para>
-
-<para>The document or documents identified by the URI are loaded and
+<para>The document or documents identified by the
+<option>href</option> URI are loaded and
 returned. If the URI protocol supports redirection, then redirects
-<rfc2119>must</rfc2119> be followed.</para>
+<rfc2119>must</rfc2119> be followed. Implementations
+<rfc2119>should</rfc2119> support “globbing”. See
+<xref linkend="uri-globbing"/>.</para>
 
 <para>The behavior of this step depends on the content type of the
 document or documents loaded. The content type of each document is
