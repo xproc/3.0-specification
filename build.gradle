@@ -198,6 +198,7 @@ task steps30_xi1(dependsOn: ["compileSpecSchema", "steps30_examples"], type: XML
   inputs.file "src/main/xml/steps/steps.xml"
   inputs.file "src/main/xml/steps/errors.xml"
   inputs.file "src/main/xml/steps/error-codes.xml"
+  inputs.file "src/main/xml/steps/glob.xml"
   inputs.file "src/main/xml/steps/steps/add-attribute.xml"
   inputs.file "src/main/xml/steps/steps/add-xml-base.xml"
   inputs.file "src/main/xml/steps/steps/cast-content-type.xml"
@@ -263,6 +264,7 @@ task steps30_src(dependsOn: ["steps_glossary"], type: XMLCalabashTask) {
   inputs.file "src/main/xml/steps/steps.xml"
   inputs.file "src/main/xml/steps/errors.xml"
   inputs.file "src/main/xml/steps/error-codes.xml"
+  inputs.file "src/main/xml/steps/glob.xml"
   inputs.file "src/main/xml/steps/steps/add-attribute.xml"
   inputs.file "src/main/xml/steps/steps/add-xml-base.xml"
   inputs.file "src/main/xml/steps/steps/cast-content-type.xml"
@@ -423,7 +425,7 @@ xproc_images.doFirst {
 
 task steps30(dependsOn: ["setupDocBook", "xproc30_src", "steps30_src", "step_assets"],
              type: XMLCalabashTask) {
-  inputs.file "build/,steps30.xml"
+  inputs.file "build/steps30/steps30.xml"
   inputs.file "style/docbook.xsl"
   inputs.file "style/dbspec.xsl"
   inputs.file "style/xprocns.xsl"

@@ -12,12 +12,14 @@ directory.</para>
   <p:option name="exclude-filter" as="xs:string" e:type="RegularExpression"/>
 </p:declare-step>
 
-<para>The value of the <option>path</option> option
-<rfc2119>must</rfc2119> be an <type>anyURI</type>. It is interpreted
-as an IRI reference. If it is relative, it is made absolute against
-the base URI of the element on which it is specified
-(<tag>p:with-option</tag> or <tag>p:directory-list</tag> in the case of a
-<olink targetdoc="../xproc20/xproc20.xml" targetptr="option-shortcut">syntactic shortcut</olink> value).</para>
+<para><impl>Conformant processors <rfc2119>must</rfc2119> support directory paths whose
+scheme is <code>file</code>. It is
+<glossterm>implementation-defined</glossterm> what other schemes are
+supported by <tag>p:directory-list</tag>, and what the interpretation
+of 'directory', 'file' and 'contents' is for those schemes.</impl>
+Implementations
+<rfc2119>should</rfc2119> support “globbing”. See
+<xref linkend="uri-globbing"/>.</para>
 
 <para><error code="C0017">It is a
 <glossterm>dynamic error</glossterm> if the absolute path does not
@@ -25,13 +27,6 @@ identify a directory.</error> <error code="C0012">It is a
 <glossterm>dynamic error</glossterm> if the contents of the directory
 path are not available to the step due to access restrictions in the
 environment in which the pipeline is run.</error></para>
-
-<para><impl>Conformant processors <rfc2119>must</rfc2119> support directory paths whose
-scheme is <code>file</code>. It is
-<glossterm>implementation-defined</glossterm> what other schemes are
-supported by <tag>p:directory-list</tag>, and what the interpretation
-of 'directory', 'file' and 'contents' is for those schemes.</impl>
-</para>
 
 <para>If present, the value of the <option>include-filter</option>
 or <option>exclude-filter</option>
