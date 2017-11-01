@@ -3936,6 +3936,32 @@ and <tag class="attribute">primary</tag> is not specified.
 that more than one input port is the primary.</error></para>
 </listitem>
 </varlistentry>
+
+<varlistentry><term><tag class="attribute">select</tag></term>
+<listitem>
+<para>If a connection is provided in the declaration, then
+<tag class="attribute">select</tag> may be used to select a portion of the
+input identified by the <tag>p:empty</tag>, <tag>p:document</tag>,
+or <tag>p:inline</tag> elements in the
+<tag>p:input</tag>. This select expression <rfc2119>must</rfc2119> be an XPath
+expression.
+The selected nodes are returned as separate documents.
+If such a document consists exclusively of text nodes, then it has a content
+type of <literal>text/plain</literal>, otherwise it has a content type
+of <literal>application/xml</literal>.
+</para>
+
+<para>The
+<tag class="attribute">select</tag> expression applies
+<emphasis>only</emphasis> if the default connection is used. If an
+explicit connection is provided by the caller, then the default select
+expression is ignored.
+<error code="D0039">It is a <glossterm>dynamic error</glossterm>
+if the <tag class="attribute">select</tag> is used and any input
+document is not an XML document.</error></para>
+</listitem>
+</varlistentry>
+
 <varlistentry><term><tag class="attribute">content-types</tag></term>
 <listitem>
 <para>The <tag class="attribute">content-types</tag> attribute lists one
@@ -3967,20 +3993,7 @@ document.</simpara>
 <link linkend="media-type-match">match</link> the allowed content types.</para>
 </listitem>
 </varlistentry>
-<varlistentry><term><tag class="attribute">select</tag></term>
-<listitem>
-<para>If a connection is provided in the declaration, then
-<tag class="attribute">select</tag> may be used to select a portion of the
-input identified by the <tag>p:empty</tag>, <tag>p:document</tag>,
-or <tag>p:inline</tag> elements in the
-<tag>p:input</tag>. This select expression <rfc2119>must</rfc2119> be an XPath
-expression; the selected nodes are returned as separate documents. The
-<tag class="attribute">select</tag> expression applies
-<emphasis>only</emphasis> if the default connection is used. If an
-explicit connection is provided by the caller, then the default select
-expression is ignored.</para>
-</listitem>
-</varlistentry>
+
 <varlistentry><term><tag class="attribute">href</tag></term>
 <listitem>
 <para>The <tag class="attribute">href</tag> attribute is a shortcut for a
@@ -4098,7 +4111,7 @@ and provided to the input port. In other words,</para>
 <para>provides a sequence of zero or more documents, one for each
 <code>html:div</code> in <uri>http://example.org/input.html</uri>.
 (Note that in the case of nested <code>html:div</code> elements, this
-may result in the same content being returned in several
+will result in the same content being returned in several
 documents.)</para>
 
 <para>A select expression can equally be applied to input read from
@@ -4110,10 +4123,12 @@ each of the documents) that is read from the <literal>result</literal>
 port of the step named <literal>origin</literal>.</para>
 
 <para>The base URI of the document that results from a select
-expression is the base URI of the matched element or document. <error code="D0016">It is a <glossterm>dynamic error</glossterm> if the <tag class="attribute">select</tag> expression on a <tag>p:input</tag>
-or <tag>p:with-input</tag>
-returns atomic values or anything other than element or document
-nodes (or an empty sequence).</error></para>
+expression is the base URI of the matched element or document.</para>
+
+<para>If a document constructed by selection consists exclusively of
+text nodes, then it has a content type of
+<literal>text/plain</literal>, otherwise it has a content type of
+<literal>application/xml</literal>.</para>
 </listitem>
 </varlistentry>
 <varlistentry><term><tag class="attribute">href</tag></term>
