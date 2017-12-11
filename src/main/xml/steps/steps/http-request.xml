@@ -105,6 +105,21 @@ challenge contains an authentication method that isn't
 supported.</error> All implementations are required to support "Basic"
 and "Digest" authentication per <biblioref linkend="rfc2617"/>.</para>
 
+<para>The attribute <code>timeout</code> controls the time the XProc processor is 
+waiting for the request to be answered. If a value is given for <code>timeout</code> 
+it is taken as the number of seconds to wait for the response to be delivered. 
+If no response is received after that time, the request is terminated. 
+If <code>fail-on-timeout</code> is <literal>true</literal>, a <glossterm>dynamic 
+error</glossterm> is raised, if it is <literal>false</literal>, a 
+<code>c:response</code> document with <code>status=<literal>408</literal></code> 
+is generated. If no value is given for fail-on-timeout, <literal>false</literal> is assumed. 
+If no value for <code>timeout</code> is given, <code>fail-on-timeout</code> is ignored.</para>
+
+<para><error code="C0078">It is a <glossterm>dynamic error</glossterm> if <option>fail-on-timeout</option>
+is specified as <literal>true</literal> and a value is given for <option>timeout</option> and the
+http-request is not finished in the time specified by <option>timeout</option>.</error>
+</para>
+
   <para>The <code>c:header</code> element specifies a
 header name and value, either for inclusion in a request, or as received in a response.</para>
 
