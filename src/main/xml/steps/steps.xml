@@ -147,10 +147,10 @@ compatible versions.</para>
 <section xml:id="common-options">
 <title>Common options</title>
 <para>All XProc steps <rfc2119>must</rfc2119> accept the option 
-<option>p:terminate-after</option>. As a debugging tool this option can be used 
+<option>p:timeout</option>. As a debugging tool this option can be used 
 to tell the XProc processor that a step with such an option should be terminated 
 if its execution does take more time than expected. The value of the 
-<option>p:terminate-after</option> option must be a <type>xs:positiveInteger</type>. 
+<option>p:timeout</option> option must be a <type>xs:positiveInteger</type>. 
 It is interpreted as the maximal number of seconds the step is expected to run. The 
 measurement of time starts after all bindings for input ports and all options are evaluated. 
 If the XProc processor realizes a longer runtime, it should terminate the execution of the step 
@@ -158,7 +158,7 @@ as soon as possible, do cleanup to ensure proper execution of other steps in
 the pipeline and then raise a dynamic error.</para>
 
 <para><error code="D0053">It is a <glossterm>dynamic error</glossterm> if a step runs 
-longer than its terminate-after value.</error> <impl>It is
+longer than its timeout value.</error> <impl>It is
 <glossterm>implementation-defined</glossterm> whether a processor supports
 timeouts, and if it does, how precisely and precisely how the
 execution time of a step is measured.</impl>
@@ -170,17 +170,17 @@ execution time of a step is measured.</impl>
 the XProc processor's execution strategy, the system load etc., this feature can not 
 be used as an exact timing tool in XProc. Execution times may vary on different executions 
 of the same pipeline on the same computer and the same XProc processor due to  
-execution contingencies. Developers are advised to calculate the value for p:terminate-after 
+execution contingencies. Developers are advised to calculate the value for p:timeout 
 generously, so the dynamic error is raised only in extreme cases.</para>
 </note>
 
 <note>
 <title>Note</title>
-<para>Note that the name of this option is <option>p:terminate-after</option>
+<para>Note that the name of this option is <option>p:timeout</option>
 even on steps in the XProc namespace. This limits the extent to which the
 option restricts the space of available option names for steps.
 (If the option name wasn’t in a namespace, then no step could have an option
-named “<literal>terminate-after</literal>” which seems unreasonable.)
+named “<literal>timeout</literal>” which seems unreasonable.)
 </para>
 </note>
 </section>
