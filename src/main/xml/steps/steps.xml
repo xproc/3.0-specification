@@ -144,6 +144,46 @@ version or a subsequent version that is backwards compatible with that
 version. At user-option, they may implement other non-backwards
 compatible versions.</para>
 
+<section xml:id="common-options">
+<title>Common options</title>
+
+<para>All XProc steps <rfc2119>must</rfc2119> accept the option
+<option>p:timeout</option>. The value of the
+<option>p:timeout</option> option <rfc2119>must</rfc2119> be a
+non-negative <type>xs:duration</type> or <type>xs:decimal</type>.
+If it is a decimal, it is interpreted as a duration of that many
+seconds. If no timeout is specified, the timeout
+<rfc2119>must</rfc2119> be treated as infinite.</para>
+
+<para><error code="D0053">It is a <glossterm>dynamic error</glossterm> if a step
+runs longer than its timeout value.</error> <impl>It is
+<glossterm>implementation-defined</glossterm> if a processor supports
+timeouts, and if it does, how precisely and precisely how the
+execution time of a step is measured.</impl>
+</para>
+
+<note>
+<title>Note</title>
+<para>Note that the name of this option is <option>p:timeout</option>
+even on steps in the XProc namespace. This limits the extent to which the
+option restricts the space of available option names for steps.
+(If the option name wasn’t in a namespace, then no step could have an option
+named “<literal>timeout</literal>” which seems unreasonable.)
+</para>
+</note>
+</section>
+
+</section>
+
+<section xml:id="steps">
+<title>Steps</title>
+
+<para>This specification describes both required and optional steps.
+All implementations <rfc2119>must</rfc2119> implement the required steps.
+If an implementation chooses to implement an optional step, it
+<rfc2119>must</rfc2119> be implemented with the semantics described in
+this specification.</para>
+
 <section xml:id="std-required">
 <title>Required Steps</title>
 
