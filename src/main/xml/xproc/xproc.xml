@@ -4964,6 +4964,15 @@ has no ancestors in the XProc namespace, then it <rfc2119>must</rfc2119>
 have a <tag class="attribute">version</tag> attribute.
 See <xref linkend="versioning-considerations"/>.</para>
 
+<para>If the <tag>p:declare-step</tag> is a child of a <tag>p:library</tag> the
+<tag class="attribute">visibility</tag> attribute controls whether the step is 
+visible to an importing pipeline. If <tag class="attribute">visibility</tag> is set to
+<literal>private</literal>, the step type is only visible inside the <tag>p:library</tag> 
+but not visible to any pipeline importing the <tag>p:library</tag>. If the 
+<tag class="attribute">visibility</tag> attribute is missing, <literal>public</literal> 
+is assumed. If the <tag>p:declare-step</tag> is not a child of a <tag>p:library</tag> the 
+attribute is ignored.</para>
+
 <para>For a description of <tag class="attribute">psvi-required</tag>,
 see <xref linkend="psvi-support" />. For <tag
 class="attribute">xpath-version</tag>, see <xref
