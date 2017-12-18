@@ -816,6 +816,31 @@ challenge contains an authentication method that isn't
 supported.</error> All implementations are required to support "Basic"
 and "Digest" authentication per <biblioref linkend="rfc2617"/>.</para>
 
+<para>The attribute <code>timeout</code> controls the time the XProc processor is 
+waiting for the request to be answered. If a value is given for <code>timeout</code> 
+it is taken as the number of seconds to wait for the response to be delivered. 
+If no response is received after that time, the request is terminated. 
+If <code>fail-on-timeout</code> is <literal>true</literal>, a <glossterm>dynamic 
+error</glossterm> is raised, if it is <literal>false</literal>, a 
+<code>c:response</code> document with <code>status=408</code> 
+is generated. If no value is given for fail-on-timeout, <literal>false</literal> is assumed. 
+If no value for <code>timeout</code> is given, <code>fail-on-timeout</code> is ignored.</para>
+
+<para><error code="C0078">It is a <glossterm>dynamic error</glossterm> if <option>fail-on-timeout</option>
+is specified as <literal>true</literal> and a value is given for <option>timeout</option> and the
+http-request is not finished in the time specified by <option>timeout</option>.</error>
+</para>
+
+<note>
+<title>Note</title>
+<para>Please note the difference between option <code>p:timeout</code> on <code>p:http-request</code> and 
+the attribute <code>timeout</code> in combination with <code>fail-on-timeout="true"</code> on <code>c:request</code>. If 
+the step does not finish in the set time, <code>D0053</code> is raised. If the request does not finish in time and 
+fail-on-timeout is true, <code>C0078</code> is raised. The actual times after which a timeout is detected may also 
+differ slightly.
+</para>
+</note>
+  
   <para>The <code>c:header</code> element specifies a
 header name and value, either for inclusion in a request, or as received in a response.</para>
 
