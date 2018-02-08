@@ -330,7 +330,7 @@ WithOptionSelect =
       common.attributes,
       inline.attributes,
       use-when.attr?,
-      ( ( (\Empty | (Document|Pipe|Inline)*) & (Namespaces|Documentation|PipeInfo)* ) | AnyElement* )
+      ( ( (\Empty | (Document|Pipe|Inline)*) & (Documentation|PipeInfo)* ) | AnyElement* )
    }
 
 [
@@ -356,27 +356,13 @@ VariableSelect =
       common.attributes,
       inline.attributes,
       use-when.attr?,
-      ( ( (\Empty | (Document|Pipe|Inline)*) & (Namespaces|Documentation|PipeInfo)* ) | AnyElement* )
+      ( ( (\Empty | (Document|Pipe|Inline)*) & (Documentation|PipeInfo)* ) | AnyElement* )
    }
 
 [
    sa:element = "variable"
 ]
 Variable = VariableSelect
-
-# ============================================================
-
-[
-   sa:class = "language-construct"
-]
-Namespaces =
-   element namespaces {
-      attribute binding { xsd:QName }?,
-      attribute element { XPathExpression }?,
-      attribute except-prefixes { PrefixList }?,
-      (Documentation|PipeInfo)*
-   }
-
 
 # ============================================================
 

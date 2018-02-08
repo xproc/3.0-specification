@@ -592,7 +592,6 @@
           </choice>
           <zeroOrMore>
             <choice>
-              <ref name="Namespaces"/>
               <ref name="Documentation"/>
               <ref name="PipeInfo"/>
             </choice>
@@ -643,7 +642,6 @@
           </choice>
           <zeroOrMore>
             <choice>
-              <ref name="Namespaces"/>
               <ref name="Documentation"/>
               <ref name="PipeInfo"/>
             </choice>
@@ -657,32 +655,6 @@
   </define>
   <define name="Variable" sa:element="variable">
     <ref name="VariableSelect"/>
-  </define>
-  <!-- ============================================================ -->
-  <define name="Namespaces" sa:class="language-construct">
-    <element name="namespaces">
-      <optional>
-        <attribute name="binding">
-          <data type="QName"/>
-        </attribute>
-      </optional>
-      <optional>
-        <attribute name="element">
-          <ref name="XPathExpression"/>
-        </attribute>
-      </optional>
-      <optional>
-        <attribute name="except-prefixes">
-          <ref name="PrefixList"/>
-        </attribute>
-      </optional>
-      <zeroOrMore>
-        <choice>
-          <ref name="Documentation"/>
-          <ref name="PipeInfo"/>
-        </choice>
-      </zeroOrMore>
-    </element>
   </define>
   <!-- ============================================================ -->
   <define name="DeclareStep" sa:class="language-construct">
