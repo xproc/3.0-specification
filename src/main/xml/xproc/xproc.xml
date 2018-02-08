@@ -1245,8 +1245,7 @@ readable port then the context node is undefined.</para>
             <varlistentry>
               <term>Statically known namespaces</term>
               <listitem>
-                <para>The namespace declarations in-scope for the containing element or made
-                  available through <tag>p:namespaces</tag>. </para>
+                <para>The namespace declarations in-scope for the containing element.</para>
               </listitem>
             </varlistentry>
             <varlistentry>
@@ -2833,9 +2832,7 @@ the summaries:</para><itemizedlist>
   <listitem>
     <para><type>EQName</type>: With whitespace normalization as per
     <biblioref linkend="xmlschema-2"/> for QNames. Note, however, that
-    <tag>p:option</tag> values can get their namespace declarations in
-    a non-standard way (with <tag>p:namespaces</tag>) and QNames that
-    have no prefix are always in no-namespace, irrespective of the
+    QNames that have no prefix are always in no-namespace, irrespective of the
     default namespace.
     </para>
   </listitem>
@@ -4862,87 +4859,30 @@ option or variable are used.</para>
           pipeline:</para><programlisting language="xml"><xi:include href="examples/opns-2.xml" parse="text"/></programlisting><para>It
           defines an atomic step (“<literal>ex:delete-in-div</literal>”) that deletes elements that
           occur inside of XHTML div elements. It might be used as
-          follows:</para><programlisting language="xml"><xi:include href="examples/opns-3.xml" parse="text"/></programlisting><para>In
-          this case, the <varname>match</varname> option passed to the <tag>p:delete</tag> step
-          needs <emphasis>both</emphasis> the namespace binding of “<literal>h</literal>” specified
-          in the <tag>ex:delete-in-div</tag> pipeline definition <emphasis>and</emphasis> the
-          namespace binding of “<literal>html</literal>” specified in the
-            <varname>divchild</varname> option on the call of that pipeline. It's not sufficient to
-          provide just one of the sets of bindings.</para><para xml:id="p.namespaces">The
-            <tag>p:namespaces</tag> element can be used as a child of <tag>p:variable</tag>,
-            <tag>p:with-option</tag> to provide explicit bindings.</para>
-        <e:rng-pattern name="Namespaces"/>
-        <para>The namespace bindings specified by a <tag>p:namespaces</tag> element are determined
-          as follows:</para><orderedlist>
-          <listitem>
-            <para>If the <tag class="attribute">binding</tag> attribute is specified, it
-                <rfc2119>must</rfc2119> contain the name of a single <glossterm
-                baseform="in-scope-bindings">in-scope binding</glossterm>. The namespace bindings
-              associated with that binding are used. <error code="S0020">It is a <glossterm>static
-                  error</glossterm> if the <tag class="attribute">binding</tag> attribute on
-                  <tag>p:namespaces</tag> is specified and its value is not the name of an
-                  <glossterm baseform="in-scope-bindings">in-scope binding</glossterm>.</error>
-            </para>
-          </listitem>
-          <listitem>
-            <para>If the <tag class="attribute">element</tag> attribute is specified, it
-                <rfc2119>must</rfc2119> contain an XPath expression which identifies a single
-              element node (the input connection for this expression is the same as the connection
-              for the <tag>p:option</tag> which contains it). The
-              in-scope namespaces of that node are used.</para>
-            <para>The expression is evaluated in the appropriate context, See <xref
-                linkend="xpath-context"/>.</para>
-            <para><error code="D0009">It is a <glossterm>dynamic error</glossterm> if the <tag
-                  class="attribute">element</tag> attribute on <tag>p:namespaces</tag> is specified
-                and it does not identify a single element node.</error>
-            </para>
-          </listitem>
-          <listitem>
-            <para>If neither <tag class="attribute">binding</tag> nor <tag class="attribute"
-                >element</tag> is specified, the in-scope namespaces on the <tag>p:namespaces</tag>
-              element itself are used.</para>
-          </listitem>
-        </orderedlist><para>Irrespective of how the set of namespaces are determined, the <tag
-            class="attribute">except-prefixes</tag> attribute can be used to exclude one or more
-          namespaces. The value of the except-prefixes attribute <rfc2119>must</rfc2119> be a
-          sequence of tokens, each of which <rfc2119>must</rfc2119> be a prefix bound to a namespace
-          in the in-scope namespaces of the <tag>p:namespaces</tag> element. All bindings of
-          prefixes to each of the namespaces thus identified are excluded. <error code="S0051">It is
-            a <glossterm>static error</glossterm> if the <tag class="attribute"
-              >except-prefixes</tag> attribute on <tag>p:namespaces</tag> does not contain a list of
-            tokens or if any of those tokens is not a prefix bound to a namespace in the in-scope
-            namespaces of the <tag>p:namespaces</tag> element.</error>
-        </para>
-<para><error code="S0041">It is a <glossterm>static error</glossterm> to specify both
-              <tag class="attribute">binding</tag> and <tag class="attribute">element</tag> on the
-            same <tag>p:namespaces</tag> element.</error>
-        </para>
-<para>If a <tag>p:variable</tag>, <tag>p:with-option</tag>
-          includes one or more <tag>p:namespaces</tag> elements, then the union of all the
-          namespaces specified on those elements are used as the bindings for the variable or option value. In this case, the in-scope namespaces on the <tag>p:variable</tag> and
-            <tag>p:with-option</tag> are ignored. <error code="D0013">It
-            is a <glossterm>dynamic error</glossterm> if the specified namespace bindings are
-            inconsistent; that is, if the same prefix is bound to two different namespace
-            names.</error></para>
-<para>For example, this would allow the preceding example to
-          work:</para><programlisting language="xml"><xi:include href="examples/opns-4.xml" parse="text"/></programlisting><para>The
-            <tag>p:namespaces</tag> element provides namespace bindings for both of the prefixes
-          necessary to correctly interpret the expression ultimately passed to the
-            <tag>p:delete</tag> step (the binding for <literal>html:</literal> is explicitly
-          provided and the binding for <literal>h:</literal> is in-scope). </para>
+          follows:</para>
 
-<note xml:id="note-namespaces">
-          <para>The use of <tag>p:namespaces</tag> here, when all of the bindings are provided with
-            explicit namespace declarations, is unnecessary. The bindings could simply be placed on
-            the parent <tag>p:with-option</tag> element. We use <tag>p:namespaces</tag> here only to
-            make the example parallel to the one which follows.</para>
-        </note><para>The preceding solution has the weakness that it depends on knowing the bindings
-          that will be used by the caller. A more flexible solution would use the <tag
-            class="attribute">binding</tag> attribute to copy the bindings from the caller's option
-          value.</para><programlisting language="xml"><xi:include href="examples/opns-5.xml" parse="text"/></programlisting><para>This
-          example will succeed as long as the caller-specified option does not bind the
-            “<literal>h</literal>” prefix to something other than the XHTML namespace.
-        </para></section>
+<programlisting language="xml"><xi:include href="examples/opns-3.xml" parse="text"/></programlisting>
+
+<para>In this case, the <varname>match</varname> option passed to the
+<tag>p:delete</tag> step needs <emphasis>both</emphasis> the namespace
+binding of “<literal>h</literal>” specified in the
+<tag>ex:delete-in-div</tag> pipeline definition
+<emphasis>and</emphasis> the namespace binding of
+“<literal>html</literal>” specified in the <varname>divchild</varname>
+option on the call of that pipeline. It's not sufficient to provide
+just one of the sets of bindings.</para>
+
+<para>If pipeline authors cannot arrange for all of the necessary namespace
+bindings to be in scope, then EQNames can be used to remove the dependency
+on namespace bindings:</para>
+
+<programlisting language="xml"><xi:include href="examples/opns-4.xml" parse="text"/></programlisting>
+
+<para>In this example, the expression will match “<literal>p</literal>”
+elements in the XHTML namespace irrespective of any bindings that may or may
+not be in scope.</para>
+
+</section>
     </section>
     <!-- ============================================================ -->
 
