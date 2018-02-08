@@ -4632,10 +4632,15 @@ the sequence type is not syntactically valid.</error>
 the computed value does not match the specified sequence
 type.</error></para>
 
-<para>An option may be declared as <tag
-class="attribute">required</tag>. <error code="S0018">If an option is
-required, it is a <glossterm>static error</glossterm> to invoke the
-step without specifying a value for that option.</error></para>
+<para>An option may declare that it is required by specifying
+the value <literal>true</literal> for the
+<tag class="attribute">required</tag> attribute. <error code="S0018">If an
+option is required, it is a <glossterm>static error</glossterm> to
+invoke the step without specifying a value for that
+option.</error> Options are only required if they are specifically
+declared to be so; in other words, the default value for the
+<tag class="attribute">required</tag> attribute is <code>false</code>.
+</para>
 
 <para>If an option is not declared to be required, it
 <rfc2119>may</rfc2119> be given a default value. The value is
