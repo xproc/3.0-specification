@@ -1544,21 +1544,23 @@ system properties, which are all in the XProc namespace:</para>
           <varlistentry>
             <term><varname>p:version</varname></term>
             <listitem>
-<para>Returns the version(s) of XProc implemented by the processor
-as a space-separated list. For example, a processor
-that supports XProc 1.0 would return “1.0”; a processor that
-supports XProc 1.0 and 2.0 would
-return “1.0 2.0”; a processor that supports only XProc 2.0 would
-return “2.0”.</para>
+              <para>Returns the version(s) of XProc implemented by the processor
+                as a space-separated list. For example, a processor that
+                supports XProc 1.0 would return “1.0”; a processor that supports
+                XProc 1.0 and 2.0 would return “1.0 2.0”; a processor that
+                supports only XProc 2.0 would return “2.0”.</para>
             </listitem>
           </varlistentry>
           <varlistentry>
             <term><varname>p:xpath-version</varname></term>
             <listitem>
-              <para>Returns the version(s) of XPath implemented by the processor for evaluating
-                XPath expressions on XProc elements. The result is a space-separated list of versions supported. For
-                example, a processor that only supports XPath 2.0 would return “2.0”; a processor
-                that supports XPath 2.0 and XPath 3.0 could return “2.0 3.0”; a processor that supports only XPath 2.0 would return “2.0”.</para>
+              <para>Returns the version(s) of XPath implemented by the processor
+                for evaluating XPath expressions on XProc elements. The result
+                is a space-separated list of versions supported. For example, a
+                processor that only supports XPath 2.0 would return “2.0”; a
+                processor that supports XPath 2.0 and XPath 3.0 could return
+                “2.0 3.0”; a processor that supports only XPath 2.0 would return
+                “2.0”.</para>
             </listitem>
           </varlistentry>
           <varlistentry>
@@ -3980,10 +3982,10 @@ attribute.</error></para>
 <listitem>
 <para>The <tag class="attribute">pipe</tag> attribute is a shortcut for one or
 more <tag>p:pipe</tag> children. The attribute value <rfc2119>must</rfc2119> be
-space-separated list of step/port pairs of the form
-“<replaceable>step-name</replaceable>@<replaceable>port-name</replaceable>”.
-If “@port-name” is omitted, the connection is to the primary output port of
-the step named “step-name”. If the “step-name” is omitted, the connection is
+space-separated list of port@step pairs of the form
+“<replaceable>port-name</replaceable>@<replaceable>step-name</replaceable>”.
+If “port-name” is omitted, the connection is to the primary output port of
+the step named “step-name”. If the “@step-name” is omitted, the connection is
 to the specified port on the same step as the step associated with the
 current default readable port. An empty or all whitespace attribute value is a shortcut
 for the binding to the default readable port.</para>
@@ -4140,14 +4142,15 @@ attribute.</error></para>
 </varlistentry>
 <varlistentry><term><tag class="attribute">pipe</tag></term>
 <listitem>
-<para>The <tag class="attribute">pipe</tag> attribute is a shortcut for one or
-more <tag>p:pipe</tag> children. The attribute value <rfc2119>must</rfc2119> be
-space-separated list of step/port pairs of the form
-“<replaceable>step-name</replaceable>@<replaceable>port-name</replaceable>”.
-If “@port-name” is omitted, the connection is to the primary output port of
-the step named “step-name”. If the “step-name” is omitted, the connection is
-to the specified port on the same step as the step associated with the
-current default readable port.</para>
+  <para>The <tag class="attribute">pipe</tag> attribute is a shortcut for one or
+    more <tag>p:pipe</tag> children. The attribute value <rfc2119>must</rfc2119> be
+    space-separated list of port@step pairs of the form
+    “<replaceable>port-name</replaceable>@<replaceable>step-name</replaceable>”.
+    If “port-name” is omitted, the connection is to the primary output port of
+    the step named “step-name”. If the “@step-name” is omitted, the connection is
+    to the specified port on the same step as the step associated with the
+    current default readable port. An empty or all whitespace attribute value is a shortcut
+    for the binding to the default readable port.</para>
 <para><error code="S0082">If
 <tag class="attribute">pipe</tag> is specified, it is a <glossterm>static error</glossterm>
 if <tag>p:output</tag> has any child elements other than <tag>p:documentation</tag> and
@@ -4559,14 +4562,15 @@ attribute.</error></para>
 </varlistentry>
 <varlistentry><term><tag class="attribute">pipe</tag></term>
 <listitem>
-<para>The <tag class="attribute">pipe</tag> attribute is a shortcut for one or
-more <tag>p:pipe</tag> children. The attribute value <rfc2119>must</rfc2119> be
-space-separated list of step/port pairs of the form
-“<replaceable>step-name</replaceable>@<replaceable>port-name</replaceable>”.
-If “@port-name” is omitted, the connection is to the primary output port of
-the step named “step-name”. If the “step-name” is omitted, the connection is
-to the specified port on the same step as the step associated with the
-current default readable port.</para>
+  <para>The <tag class="attribute">pipe</tag> attribute is a shortcut for one or
+    more <tag>p:pipe</tag> children. The attribute value <rfc2119>must</rfc2119> be
+    space-separated list of port@step pairs of the form
+    “<replaceable>port-name</replaceable>@<replaceable>step-name</replaceable>”.
+    If “port-name” is omitted, the connection is to the primary output port of
+    the step named “step-name”. If the “@step-name” is omitted, the connection is
+    to the specified port on the same step as the step associated with the
+    current default readable port. An empty or all whitespace attribute value is a shortcut
+    for the binding to the default readable port.</para>
 <para><error code="S0082">If
 <tag class="attribute">pipe</tag> is specified, it is a <glossterm>static error</glossterm>
 if <tag>p:variable</tag> has any child elements other than <tag>p:documentation</tag> and
@@ -4789,14 +4793,15 @@ attribute.</error></para>
 </varlistentry>
 <varlistentry><term><tag class="attribute">pipe</tag></term>
 <listitem>
-<para>The <tag class="attribute">pipe</tag> attribute is a shortcut for one or
-more <tag>p:pipe</tag> children. The attribute value <rfc2119>must</rfc2119> be
-space-separated list of step/port pairs of the form
-“<replaceable>step-name</replaceable>@<replaceable>port-name</replaceable>”.
-If “@port-name” is omitted, the connection is to the primary output port of
-the step named “step-name”. If the “step-name” is omitted, the connection is
-to the specified port on the same step as the step associated with the
-current default readable port.</para>
+  <para>The <tag class="attribute">pipe</tag> attribute is a shortcut for one or
+    more <tag>p:pipe</tag> children. The attribute value <rfc2119>must</rfc2119> be
+    space-separated list of port@step pairs of the form
+    “<replaceable>port-name</replaceable>@<replaceable>step-name</replaceable>”.
+    If “port-name” is omitted, the connection is to the primary output port of
+    the step named “step-name”. If the “@step-name” is omitted, the connection is
+    to the specified port on the same step as the step associated with the
+    current default readable port. An empty or all whitespace attribute value is a shortcut
+    for the binding to the default readable port.</para>
 <para><error code="S0082">If
 <tag class="attribute">pipe</tag> is specified, it is a <glossterm>static error</glossterm>
 if <tag>p:with-option</tag> has any child elements other than <tag>p:documentation</tag> and
