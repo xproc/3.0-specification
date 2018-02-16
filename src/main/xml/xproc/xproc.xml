@@ -1,12 +1,7 @@
 <?xml-model href="../../schema/dbspec.rng"
   type="application/xml"
   schematypens="http://relaxng.org/ns/structure/1.0" ?>
-<specification xmlns="http://docbook.org/ns/docbook"
-               xmlns:xlink="http://www.w3.org/1999/xlink"
-               xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax"
-               xmlns:xi="http://www.w3.org/2001/XInclude"
-               class="ed"
-               version="5.0-extension w3c-xproc">
+<specification xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax" xmlns:xi="http://www.w3.org/2001/XInclude" class="ed" version="5.0-extension w3c-xproc">
 <info>
 <title>XProc 3.0: An XML Pipeline Language</title>
 <w3c-shortname>xproc30</w3c-shortname>
@@ -116,8 +111,7 @@ pipelines do not have to be this verbose. By default, Where inputs and
 outputs are connected between sequential sibling steps, they do not
 have to be made explicit.</para>
 
-<para>The same pipeline, using XProc defaults, is shown in <xref
-linkend="ex1-abbr"/>.</para>
+<para>The same pipeline, using XProc defaults, is shown in <xref linkend="ex1-abbr"/>.</para>
 
 <example xml:id="ex1-abbr">
   <title>A simple, linear XInclude/Validate pipeline (simplified)</title>
@@ -155,12 +149,10 @@ attribute directly on <tag>p:with-input</tag> as a shortcut for the
 <tag>p:document</tag> connection.</para>
 
     <para>The media type for pipeline documents is <literal>application/xml</literal>. Often,
-      pipeline documents are identified by the extension <filename class="extension"
-      >.xpl</filename>.</para>
+      pipeline documents are identified by the extension <filename class="extension">.xpl</filename>.</para>
     <para>In this specification the words <rfc2119>must</rfc2119>, <rfc2119>must not</rfc2119>,
         <rfc2119>should</rfc2119>, <rfc2119>should not</rfc2119>, <rfc2119>may</rfc2119> and
-        <rfc2119>recommended</rfc2119> are to be interpreted as described in <biblioref
-        linkend="rfc2119"/>.</para>
+        <rfc2119>recommended</rfc2119> are to be interpreted as described in <biblioref linkend="rfc2119"/>.</para>
   </section>
 
   <section xml:id="pipeline-concepts">
@@ -175,7 +167,7 @@ attribute directly on <tag>p:with-input</tag> as a shortcut for the
       otherwise indicated, implementations <rfc2119>must not</rfc2119> assume that steps are
 
 functional (that is, that their outputs depend only on their
-<link linkend="input-output" >inputs</link> and
+<link linkend="input-output">inputs</link> and
 <glossterm baseform="option">options</glossterm>) or side-effect
 free.</para>
 
@@ -189,8 +181,7 @@ free.</para>
         documents to process, zero or more outputs, to which it sends document results, and
         can have options.</para>
       <para>There are three kinds of steps: <glossterm baseform="atomic step">atomic</glossterm>,
-          <glossterm baseform="compound step">compound</glossterm>, and <glossterm
-          baseform="multi-container step">multi-container</glossterm>.</para>
+          <glossterm baseform="compound step">compound</glossterm>, and <glossterm baseform="multi-container step">multi-container</glossterm>.</para>
 
 <para><termdef xml:id="dt-atomic-step">An <firstterm>atomic
 step</firstterm> is a step that performs a unit of processing
@@ -219,8 +210,7 @@ one input with respect to some set of XML Schemas, etc.</para>
         that it contains.</para>
       <para>Finally, there are two “multi-container steps”: <tag>p:choose</tag> and
         <tag>p:try</tag>. <termdef xml:id="dt-multi-container-step">A <firstterm>multi-container
-            step</firstterm> is a step that contains several alternate <glossterm
-            baseform="subpipeline">subpipelines</glossterm>. </termdef> Each subpipeline is
+            step</firstterm> is a step that contains several alternate <glossterm baseform="subpipeline">subpipelines</glossterm>. </termdef> Each subpipeline is
         identified by a non-step wrapper element: <tag>p:when</tag> and <tag>p:otherwise</tag> in
         the case of <tag>p:choose</tag>, <tag>p:group</tag> and <tag>p:catch</tag> in the case of
           <tag>p:try</tag>. </para>
@@ -248,11 +238,8 @@ one input with respect to some set of XML Schemas, etc.</para>
         <termdef xml:id="dt-last-step">The <firstterm>last step</firstterm> in a subpipeline is its
           last step in document order.</termdef></para>
 
-      <para xml:id="p.subpipeline"
-        role="element-syntax element-syntax-language-construct hanging-indent">
-        <code>subpipeline</code>&#xa0;=&#xa0;(<tag>p:variable</tag>|<tag>p:for-each</tag>|<tag>p:viewport</tag>|<tag>p:choose</tag>|<tag>p:if</tag>|<tag>p:group</tag>|<tag>p:try</tag>|<code
-          xlink:href="#p.atomic">p:<replaceable>standard-step</replaceable></code>|<code
-          xlink:href="#p.atomic"><replaceable>pfx:user-pipeline</replaceable></code>)+ </para>
+      <para xml:id="p.subpipeline" role="element-syntax element-syntax-language-construct hanging-indent">
+        <code>subpipeline</code>&#xa0;=&#xa0;(<tag>p:variable</tag>|<tag>p:for-each</tag>|<tag>p:viewport</tag>|<tag>p:choose</tag>|<tag>p:if</tag>|<tag>p:group</tag>|<tag>p:try</tag>|<code xlink:href="#p.atomic">p:<replaceable>standard-step</replaceable></code>|<code xlink:href="#p.atomic"><replaceable>pfx:user-pipeline</replaceable></code>)+ </para>
 
       <note xml:id="note-udp">
         <para>User-defined pipelines (identified with
@@ -306,8 +293,7 @@ one input with respect to some set of XML Schemas, etc.</para>
         <para>In a valid pipeline that runs successfully to completion, the manufactured names
           aren't visible (except perhaps in debugging or logging output).</para>
         <note xml:id="def-name-ncname">
-          <para>The format for defaulted names does not conform to the requirements of an <link
-              xlink:href="http://www.w3.org/TR/xml-names/#NT-NCName">NCName</link>. This is an
+          <para>The format for defaulted names does not conform to the requirements of an <link xlink:href="http://www.w3.org/TR/xml-names/#NT-NCName">NCName</link>. This is an
             explicit design decision; it prevents pipelines from using the defaulted names on
               <tag>p:pipe</tag> elements. If an explicit connection is required, the pipeline author
             must provide an explicit name for the step.</para>
@@ -437,14 +423,12 @@ of the specified media types. Two media types are compatible if:</para>
 
 <orderedlist>
 <listitem>
-<para feature="xml-media-types-compatible">They are both <glossterm
-baseform="XML-media-type">XML media types</glossterm>
+<para feature="xml-media-types-compatible">They are both <glossterm baseform="XML-media-type">XML media types</glossterm>
 (<code>application/xml</code> is compatible with <code>image/svg+xml</code>),
 </para>
 </listitem>
 <listitem>
-<para feature="text-media-types-compatible">they are both <glossterm
-baseform="text-media-type">text media types</glossterm>
+<para feature="text-media-types-compatible">they are both <glossterm baseform="text-media-type">text media types</glossterm>
 (<code>text/plain</code> is compatible with <code>text/csv</code>),
 </para>
 </listitem>
@@ -519,24 +503,20 @@ output named “<literal>result</literal>”, and the same set of options.
 
          <para>When a step is used, all of the <glossterm>declared inputs</glossterm> of the step
                <rfc2119>must</rfc2119> be connected. Each connection binds the input to a data
-            source that may be from a variety of sources (see <xref linkend="connections"/>). <error
-               code="S0003">It is a <glossterm>static error</glossterm> if any declared input is not
+            source that may be from a variety of sources (see <xref linkend="connections"/>). <error code="S0003">It is a <glossterm>static error</glossterm> if any declared input is not
                connected.</error></para>
          <para>The <glossterm>declared outputs</glossterm> of a step are only connected when they
             are used by another step or expression.  Usually, this connection is made in reverse
-            where the use of the output describes the connection (see <xref linkend="connections"
-            />).</para>
+            where the use of the output describes the connection (see <xref linkend="connections"/>).</para>
 
 <para>The <glossterm>primary output port</glossterm> of a step
-<rfc2119>must</rfc2119> be connected to some consumer. <error
-code="S0005">It is a <glossterm>static error</glossterm> if the
+<rfc2119>must</rfc2119> be connected to some consumer. <error code="S0005">It is a <glossterm>static error</glossterm> if the
 primary output port of any step is not connected.</error> Other
 outputs can remain unconnected. Any documents produced on an
 unconnected output port are discarded.</para>
 
 <para>Primary input and primary output ports may be implicitly
-connected if no explicit connection is given, see <xref
-linkend="primary-input-output"/>.</para>
+connected if no explicit connection is given, see <xref linkend="primary-input-output"/>.</para>
 
 <para>Output ports on compound steps have a dual nature: from the
 perspective of the compound step's siblings, its outputs are just
@@ -661,8 +641,7 @@ content types, that they accept. Input documents must
     </section>
     <section xml:id="connections">
       <title>Connections</title>
-      <para>Steps are connected together by their input ports and output ports. <error code="S0001"
-          >It is a <glossterm>static error</glossterm> if there are any loops in the connections
+      <para>Steps are connected together by their input ports and output ports. <error code="S0001">It is a <glossterm>static error</glossterm> if there are any loops in the connections
           between steps: no step can be connected to itself nor can there be any sequence of
           connections through other steps that leads back to itself.</error></para>
 
@@ -784,23 +763,16 @@ the input and output connections must not form a cycle in the graph.
         <para>Except where the semantics of a step explicitly require changes, processors are
           required to preserve the information in the documents and fragments they manipulate. In
           particular, the information corresponding to the <biblioref linkend="xml-infoset-rec"/>
-          properties <literal role="infoset-property">attributes</literal>, <literal
-            role="infoset-property">base URI</literal>, <literal role="infoset-property"
-            >children</literal>, <literal role="infoset-property">local name</literal>, <literal
-            role="infoset-property">namespace name</literal>, <literal role="infoset-property"
-            >normalized value</literal>, <literal role="infoset-property">owner</literal>, and
+          properties <literal role="infoset-property">attributes</literal>, <literal role="infoset-property">base URI</literal>, <literal role="infoset-property">children</literal>, <literal role="infoset-property">local name</literal>, <literal role="infoset-property">namespace name</literal>, <literal role="infoset-property">normalized value</literal>, <literal role="infoset-property">owner</literal>, and
             <literal role="infoset-property">parent</literal>
           <rfc2119>must</rfc2119> be preserved.</para>
         <para>The information corresponding to <literal role="infoset-property">prefix</literal>,
-            <literal role="infoset-property">in-scope namespaces</literal>, <literal
-            role="infoset-property">namespace attributes</literal>, and <literal
-            role="infoset-property">attribute type</literal>
+            <literal role="infoset-property">in-scope namespaces</literal>, <literal role="infoset-property">namespace attributes</literal>, and <literal role="infoset-property">attribute type</literal>
           <rfc2119>should</rfc2119> be preserved, with changes to the first three only as required
           for <glossterm>namespace fixup</glossterm>. In particular, processors are encouraged to
           take account of prefix information in creating new namespace bindings, to minimize
           negative impact on prefixed names in content.</para>
-        <para><impl>Except for cases which are specifically called out in <biblioref
-              linkend="std-components"/>, the extent to which namespace fixup, and other checks for
+        <para><impl>Except for cases which are specifically called out in <biblioref linkend="std-components"/>, the extent to which namespace fixup, and other checks for
             outputs which cannot be serialized, are performed on intermediate outputs is
               <glossterm>implementation-defined</glossterm>.</impl></para>
         <para>Whenever an implementation serializes pipeline contents, for example for pipeline
@@ -842,12 +814,9 @@ the input and output connections must not form a cycle in the graph.
           contains no readable ports, an undefined default readable port and no in-scope
           bindings.</termdef>
       </para>
-      <para>Unless otherwise specified, the environment of a <glossterm baseform="contained steps"
-          >contained step</glossterm> is its <glossterm>inherited environment</glossterm>. <termdef
-          xml:id="dt-inherited-environment">The <firstterm>inherited environment</firstterm> of a
+      <para>Unless otherwise specified, the environment of a <glossterm baseform="contained steps">contained step</glossterm> is its <glossterm>inherited environment</glossterm>. <termdef xml:id="dt-inherited-environment">The <firstterm>inherited environment</firstterm> of a
             <glossterm baseform="contained steps">contained step</glossterm> is an environment that
-          is the same as the environment of its <glossterm>container</glossterm> with the <link
-            linkend="dt-standard-modifications">standard modifications</link>. </termdef></para>
+          is the same as the environment of its <glossterm>container</glossterm> with the <link linkend="dt-standard-modifications">standard modifications</link>. </termdef></para>
       <para>The <phrase xml:id="dt-standard-modifications">standard modifications</phrase> made to
         an inherited environment are:</para>
       <orderedlist>
@@ -953,10 +922,7 @@ variables; on atomic steps, to compute the actual values of options.
           <literal>test</literal> option on the <tag>p:split-sequence</tag> step. That's because the
         nature of the <tag>p:split-sequence</tag> is that <emphasis>it evaluates</emphasis> the
         expression. Only some options on some steps expect XPath expressions. </para>
-      <para>The XProc processor evaluates all of the XPath expressions in <tag class="attribute"
-          >select</tag> attributes on variables, options, and inputs, in <tag
-          class="attribute">match</tag> attributes on <tag>p:viewport</tag>, and in <tag
-          class="attribute">test</tag> attributes on <tag>p:when</tag> steps.</para>
+      <para>The XProc processor evaluates all of the XPath expressions in <tag class="attribute">select</tag> attributes on variables, options, and inputs, in <tag class="attribute">match</tag> attributes on <tag>p:viewport</tag>, and in <tag class="attribute">test</tag> attributes on <tag>p:when</tag> steps.</para>
 
         <section xml:id="xproc-xpath-context-31">
           <title>Processor XPath Context</title>
@@ -1000,8 +966,7 @@ with the following static context:</para>
                   definitions in its in-scope schema definitions:</para>
                 <itemizedlist>
                   <listitem>
-                    <para>All the primitive atomic types defined in <biblioref linkend="xmlschema-2"
-                      />, with the exception of <literal>xs:NOTATION</literal>. That is:
+                    <para>All the primitive atomic types defined in <biblioref linkend="xmlschema-2"/>, with the exception of <literal>xs:NOTATION</literal>. That is:
                         <literal>xs:string</literal>, <literal>xs:boolean</literal>,
                         <literal>xs:decimal</literal>, <literal>xs:double</literal>,
                         <literal>xs:float</literal>, <literal>xs:date</literal>,
@@ -1057,8 +1022,7 @@ refer to that variable will raise an error.</para>
               <listitem>
                 <para>The signatures of the <biblioref linkend="xpath31-functions"/> in namespaces <literal>http://www.w3.org/2005/xpath-functions</literal>,
                   <literal>http://www.w3.org/2005/xpath-functions/math</literal>, <literal>http://www.w3.org/2005/xpath-functions/map</literal> and
-                  <literal>http://www.w3.org/2005/xpath-functions/array</literal>. Additionally the function signatures defined in <xref
-                    linkend="xpath-extension-functions"/>. </para>
+                  <literal>http://www.w3.org/2005/xpath-functions/array</literal>. Additionally the function signatures defined in <xref linkend="xpath-extension-functions"/>. </para>
               </listitem>
             </varlistentry>
             <varlistentry>
@@ -1147,8 +1111,7 @@ readable port then the context node is undefined.</para>
             <varlistentry>
               <term>Named functions</term>
               <listitem>
-                <para>The <biblioref linkend="xpath31-functions"/> and the <xref
-                    linkend="xpath-extension-functions"/>. </para>
+                <para>The <biblioref linkend="xpath31-functions"/> and the <xref linkend="xpath-extension-functions"/>. </para>
               </listitem>
             </varlistentry>
             <varlistentry>
@@ -1496,8 +1459,7 @@ system properties, which are all in the XProc namespace:</para>
                 of the pipeline processor. In other words, if a processor is run several times in
                 succession, or if several processors are running simultaneously, each invocation of
                 each processor should get a distinct value from <varname>p:episode</varname>.</para>
-              <para>The unique identifier must be a valid <link
-                  xlink:href="http://www.w3.org/TR/xml/#NT-Name">XML name</link>. </para>
+              <para>The unique identifier must be a valid <link xlink:href="http://www.w3.org/TR/xml/#NT-Name">XML name</link>. </para>
             </listitem>
           </varlistentry>
           <varlistentry>
@@ -1598,55 +1560,6 @@ only if the processor knows how to evaluate steps of the specified
 type.</para>
 
       </section>
-      <section xml:id="f.value-available">
-        <title>Value Available</title>
-        <para>The <function>p:value-available</function> function reports whether or not a
-          particular in-scope option has a value.</para>
-
-
-<methodsynopsis>
-<type>xs:boolean</type>
-<methodname>p:value-available</methodname>
-<methodparam><type>xs:string</type><parameter>option-name</parameter></methodparam>
-</methodsynopsis>
-
-<methodsynopsis>
-<type>xs:boolean</type>
-<methodname>p:value-available</methodname>
-<methodparam><type>xs:string</type><parameter>option-name</parameter></methodparam>
-<methodparam><type>xs:boolean</type><parameter>fail-if-unknown</parameter></methodparam>
-</methodsynopsis>
-
-<para>The <varname>$option-name</varname> string <rfc2119>must</rfc2119>
-have the form of an
-<link xlink:href="https://www.w3.org/TR/xquery-30/#doc-xquery30-EQName">EQName</link>.
-If it is a QName, it is expanded using the namespace declarations in
-scope for the expression.
-The <function>p:value-available</function> function
-returns true if and only if the name specified is the name of an
-<glossterm baseform="in-scope-bindings">in-scope binding</glossterm>
-and the binding has a value. <error code="D0033">It is a
-<glossterm>dynamic error</glossterm> if the name specified is not the
-name of an in-scope option or variable.</error></para>
-
-<para>In the two-argument form, it is not an error to specify a name
-that is not the name of an in-scope option or variable if
-<varname>$fail-if-unknown</varname> is false; the function simply
-returns false. The semantics of the two-argument form when
-<varname>$fail-if-unknown</varname> is true are precisely the same as
-the single argument form.</para>
-
-<para>Consider the following example:</para>
-
-<programlisting language="xml"><xi:include href="examples/value-available.txt" parse="text"/></programlisting>
-
-<para>If the <option>path</option> option is specified in the call to
-<code>ex:dir-list</code>, then the first <tag>p:when</tag> clause will
-be evaluated and the specified value will be used. If the option is
-not specified, then the <tag>p:otherwise</tag> clause will be
-evaluated and "<literal>.</literal>" will be used instead.</para>
-
-</section>
 
 <section xml:id="f.iteration-position">
 <title>Iteration Position</title>
@@ -1804,8 +1717,7 @@ of a document as an XML document.</para>
 document that contains (exclusively) the document properties
 associated with the <parameter>doc</parameter> specified. Each key in the
 properties becomes an element, each value becomes the content of that element.
-For atomic values other than string, an <tag
-class="attribute">xsi:type</tag> attribute is added to identify the
+For atomic values other than string, an <tag class="attribute">xsi:type</tag> attribute is added to identify the
 type of the value.</para>
 
 <para feature="document-properties-non-xml-document">The context node
@@ -1852,8 +1764,7 @@ non-XML document.</para>
     </section>
     <section xml:id="psvi-support">
       <title>PSVIs in XProc</title>
-      <para>XML documents flow between steps in an XProc pipeline. <xref
-          linkend="infoset-conformance"/> identifies the properties of those documents that
+      <para>XML documents flow between steps in an XProc pipeline. <xref linkend="infoset-conformance"/> identifies the properties of those documents that
           <rfc2119>must</rfc2119> be available. Implementations <rfc2119>may</rfc2119> also have the
         ability to pass PSVI annotations between steps.</para>
       <para><impl>Whether or not the pipeline processor supports passing PSVI annotations between
@@ -1862,12 +1773,10 @@ non-XML document.</para>
           is <glossterm>implementation-defined</glossterm>.</impl></para>
       <para>A pipeline can use the <varname>p:psvi-supported</varname> system property to determine
         whether or not PSVI properties can be passed between steps.</para>
-      <para>A pipeline can assert that PSVI support is required with the <tag class="attribute"
-          >psvi-required</tag> attribute:</para>
+      <para>A pipeline can assert that PSVI support is required with the <tag class="attribute">psvi-required</tag> attribute:</para>
       <itemizedlist>
         <listitem>
-          <para>On a <tag>p:declare-step</tag>, <tag class="attribute"
-              >psvi-required</tag> indicates whether or not the declared step requires PSVI support.
+          <para>On a <tag>p:declare-step</tag>, <tag class="attribute">psvi-required</tag> indicates whether or not the declared step requires PSVI support.
               <error code="D0022">It is a <glossterm>dynamic error</glossterm> if a processor that
               does not support PSVI annotations attempts to invoke a step which asserts that they
               are required.</error></para>
@@ -1892,9 +1801,7 @@ non-XML document.</para>
             produced on step outputs to the steps to which they are connected.</para>
         </listitem>
         <listitem>
-          <para>When only a subset of the input is processed by a step (because a <tag
-              class="attribute">select</tag> expression appears on an input port or a <tag
-              class="attribute">match</tag> expression is used to process only part of the input),
+          <para>When only a subset of the input is processed by a step (because a <tag class="attribute">select</tag> expression appears on an input port or a <tag class="attribute">match</tag> expression is used to process only part of the input),
             any PSVI annotations that appear on the selected input <rfc2119>must</rfc2119> be
             preserved in the resulting documents passed to the step.</para>
           <para>Note that ID/IDREF constraints, and any other whole-document constraints, may not be
@@ -1939,8 +1846,7 @@ non-XML document.</para>
 <para>An attribute or text node in a pipeline may, in particular
 circumstances, contain embedded expressions enclosed between curly
 brackets. Attributes and text nodes that use (or are permitted to use)
-this mechanism are referred to respectively as <glossterm
-baseform="attribute value template">attribute value
+this mechanism are referred to respectively as <glossterm baseform="attribute value template">attribute value
 templates</glossterm> and <glossterm baseform="text value
 template">text value templates.</glossterm>.</para>
 
@@ -2031,8 +1937,7 @@ value template as an <type>xs:untypedAtomic</type>.</para>
 <para>This section describes how text nodes are processed when they
 are designated text value templates. All text nodes that are the
 descendants of a <tag>p:inline</tag> element are text value templates
-unless the <tag>p:inline</tag> has an <tag
-class="attribute">expand-text</tag> attribute with the value
+unless the <tag>p:inline</tag> has an <tag class="attribute">expand-text</tag> attribute with the value
 “<code>false</code>”. Text nodes that are not the descendants of
 a <tag>p:inline</tag> are never text value templates.</para>
 
@@ -2090,8 +1995,7 @@ provided by the caller of the step (overriding any default), or may be
 undefined.</para>
 
 <para><termdef xml:id="dt-option">An <firstterm>option</firstterm>
-is a name/value pair. The name <rfc2119>must</rfc2119> be an <link
-xlink:href="http://www.w3.org/TR/REC-xml-names/#dt-expname">expanded
+is a name/value pair. The name <rfc2119>must</rfc2119> be an <link xlink:href="http://www.w3.org/TR/REC-xml-names/#dt-expname">expanded
 name</link>. The value may be any XDM value.</termdef>
 </para>
 
@@ -2132,8 +2036,7 @@ specific to the step.</para>
 variables to hold computed values.</para>
 
 <para><termdef xml:id="dt-variable">A <firstterm>variable</firstterm>
-is a name/value pair. The name <rfc2119>must</rfc2119> be an <link
-xlink:href="http://www.w3.org/TR/REC-xml-names/#dt-expname">expanded
+is a name/value pair. The name <rfc2119>must</rfc2119> be an <link xlink:href="http://www.w3.org/TR/REC-xml-names/#dt-expname">expanded
 name</link>. The value may be any XDM value.</termdef>
 </para>
 
@@ -2319,13 +2222,11 @@ appear on the <code>messages</code> port.</para>
   <section xml:id="syntax">
     <title>Syntax Overview</title>
     <para>This section describes the normative XML syntax of XProc. This syntax is sufficient to
-      represent all the aspects of a pipeline, as set out in the preceding sections. <termdef
-        xml:id="dt-XML">XProc is intended to work equally well with <biblioref linkend="xml10"/> and
+      represent all the aspects of a pipeline, as set out in the preceding sections. <termdef xml:id="dt-XML">XProc is intended to work equally well with <biblioref linkend="xml10"/> and
           <biblioref linkend="xml11"/>. Unless otherwise noted, the term
         “<firstterm>XML</firstterm>” refers equally to both versions.</termdef>
       <termdef xml:id="dt-Namespaces-in-XML">Unless otherwise noted, the term <firstterm>Namespaces
-          in XML</firstterm> refers equally to <biblioref linkend="xmlns10"/> and <biblioref
-          linkend="xmlns11"/>.</termdef>
+          in XML</firstterm> refers equally to <biblioref linkend="xmlns10"/> and <biblioref linkend="xmlns11"/>.</termdef>
       <impl>Support for pipeline documents written in XML 1.1 and pipeline inputs and outputs that
         use XML 1.1 is <glossterm>implementation-defined</glossterm>.</impl>
     </para>
@@ -2392,8 +2293,7 @@ appear on the <code>messages</code> port.</para>
         </varlistentry>
       </variablelist>
       <para>This specification also makes use of the prefix “<literal>xs:</literal>” to refer to the
-          <biblioref linkend="xmlschema-1"/> namespace <uri type="xmlnamespace"
-          >http://www.w3.org/2001/XMLSchema</uri>. </para>
+          <biblioref linkend="xmlschema-1"/> namespace <uri type="xmlnamespace">http://www.w3.org/2001/XMLSchema</uri>. </para>
     </section>
     <section xml:id="scoping">
       <title>Scoping of Names</title>
@@ -2401,8 +2301,7 @@ appear on the <code>messages</code> port.</para>
 <para>Names are used to identify step types, steps, ports, options and
 variables. Step types, options, and variables are named with EQNames.
 Steps and ports are named with NCNames. The scope of a name is a
-measure of where it is available in a pipeline. <termdef
-xml:id="dt-visible">If two names are in the same scope, we say that
+measure of where it is available in a pipeline. <termdef xml:id="dt-visible">If two names are in the same scope, we say that
 they are <firstterm>visible</firstterm> to each other.
 </termdef></para>
       <para>The scope of the names of the step types is the pipeline in which they are declared,
@@ -2466,8 +2365,7 @@ they are <firstterm>visible</firstterm> to each other.
 the <glossterm>environment</glossterm> of each step. In general, the
 name of a step, the names of its sibling steps, the names of any steps
 that it contains directly, the names of its ancestors, and the names
-of the siblings of its ancestors are all in a common scope. <error
-code="S0002">All steps in the same scope <rfc2119>must</rfc2119> have
+of the siblings of its ancestors are all in a common scope. <error code="S0002">All steps in the same scope <rfc2119>must</rfc2119> have
 unique names: it is a <glossterm>static error</glossterm> if two steps
 with the same name appear in the same scope.</error></para>
 
@@ -2510,8 +2408,7 @@ semantics outlined in <biblioref linkend="xml-base"/>.</para>
       <para>A pipeline author can provide a globally unique identifier for any element in a pipeline
         with the <tag class="attribute">xml:id</tag> attribute.</para>
       <para>The <tag class="attribute">xml:id</tag> attribute <rfc2119>may</rfc2119> appear on any
-        element in a pipeline and has the semantics outlined in <biblioref linkend="xml-id"
-        />.</para>
+        element in a pipeline and has the semantics outlined in <biblioref linkend="xml-id"/>.</para>
     </section>
 
 <section xml:id="syntax-docs-ports">
@@ -2720,8 +2617,7 @@ the element's syntax:</para>
 
       <e:rng-fragment name="SomeElement" role="nosummary">
         <grammar xmlns="http://relaxng.org/ns/structure/1.0">
-          <define xmlns:sa="http://xproc.org/ns/syntax-annotations" name="SomeElement"
-            sa:class="language-example">
+          <define xmlns:sa="http://xproc.org/ns/syntax-annotations" name="SomeElement" sa:class="language-example">
             <element name="some-element">
               <attribute name="reqd-attribute">
                 <data type="some-type"/>
@@ -2828,8 +2724,7 @@ the summaries:</para><itemizedlist>
   <listitem>
     <para><type>ID</type>, <type>NCName</type>, <type>NMTOKEN</type>,
     <type>NMTOKENS</type>, <type>anyURI</type>, <type>boolean</type>,
-    <type>integer</type>, <type>string</type>: As per <biblioref
-    linkend="xmlschema-2"/> including whitespace normalization as
+    <type>integer</type>, <type>string</type>: As per <biblioref linkend="xmlschema-2"/> including whitespace normalization as
     appropriate.</para>
   </listitem>
   <listitem>
@@ -2845,8 +2740,7 @@ the summaries:</para><itemizedlist>
     </para>
   </listitem>
   <listitem>
-    <para><type>PrefixList</type>: As a list with <literal
-    role="infoset-property">item type</literal> <type>NMTOKEN</type>,
+    <para><type>PrefixList</type>: As a list with <literal role="infoset-property">item type</literal> <type>NMTOKEN</type>,
     per <biblioref linkend="xmlschema-2"/>, including whitespace
     normalization.
     </para>
@@ -2985,8 +2879,8 @@ names other than “<literal>name</literal>”,
 appear on a <code>c:param</code> element.</error></para>
 </listitem>
 <listitem>
-<para><error code="D0025" >It is a <glossterm>dynamic
-error</glossterm> if the <tag class="attribute" >namespace</tag>
+<para><error code="D0025">It is a <glossterm>dynamic
+error</glossterm> if the <tag class="attribute">namespace</tag>
 attribute is specified on <code>c:param</code>,
 the <tag class="attribute">name</tag> contains
 a colon, and the specified namespace is not the same as the in-scope
@@ -3034,8 +2928,7 @@ elsewhere.</para>
 
 <para>For more details, see <xref linkend="p.declare-step"/>.</para>
 
-<section xml:id="example-pipeline"
-         role="tocsuppress">
+<section xml:id="example-pipeline" role="tocsuppress">
 <title>Example</title>
 <para>A pipeline might accept a document as input; perform XInclude, validation, and
 transformation; and produce the transformed document as its output.</para>
@@ -3112,8 +3005,7 @@ with the <link linkend="dt-standard-modifications">standard modifications</link>
         aggregated results.</para>
 <para>The <tag class="attribute">sequence</tag> attribute on a
           <tag>p:output</tag> inside a <tag>p:for-each</tag> only applies inside the step. From the
-        outside, all of the outputs produce sequences.</para><section
-        xml:id="for-each-xpath-context">
+        outside, all of the outputs produce sequences.</para><section xml:id="for-each-xpath-context">
         <title>XPath Context</title>
         <para>Within a <tag>p:for-each</tag>, the <function>p:iteration-position</function> and
             <function>p:iteration-size</function> are taken from the sequence of documents that will
@@ -3190,8 +3082,7 @@ on the output.</para>
               <glossterm>default readable port</glossterm>.</para>
         </listitem>
       </itemizedlist><para>The <tag>p:viewport</tag> must contain a single, <glossterm>primary
-          output port</glossterm> declared explicitly or <link linkend="primary-input-output"
-          >supplied by default</link>. If that port has no <glossterm>connection</glossterm>, then
+          output port</glossterm> declared explicitly or <link linkend="primary-input-output">supplied by default</link>. If that port has no <glossterm>connection</glossterm>, then
         it is connected to the <glossterm>primary output port</glossterm> of the <glossterm>last
           step</glossterm> in the <glossterm>subpipeline</glossterm>. <error code="S0006">It is a
             <glossterm>static error</glossterm> if the primary output port is unconnected and the
@@ -3251,15 +3142,13 @@ on the output.</para>
 
 <para>A choose is specified by the <tag>p:choose</tag> element. It is
 a <glossterm>multi-container step</glossterm> that selects exactly one
-of a list of alternative <glossterm baseform="subpipeline"
->subpipelines</glossterm> based on the evaluation of XPath
+of a list of alternative <glossterm baseform="subpipeline">subpipelines</glossterm> based on the evaluation of XPath
 expressions.</para>
 
       <e:rng-pattern name="Choose"/>
 
 <para>A <tag>p:choose</tag> contains an arbitrary number of
-alternative <glossterm
-baseform="subpipeline">subpipelines</glossterm>, exactly one of which
+alternative <glossterm baseform="subpipeline">subpipelines</glossterm>, exactly one of which
 will be evaluated. <error code="S0074">It is a <glossterm>static
 error</glossterm> if a <tag>p:choose</tag> has neither a
 <tag>p:when</tag> nor a <tag>p:otherwise</tag>.</error></para>
@@ -3326,8 +3215,7 @@ represented by a <tag>p:otherwise</tag> element.</para>
 <section xml:id="p.when"><title>p:when</title><para>A
           when specifies one subpipeline guarded by a test expression. </para>
         <e:rng-pattern name="When"/>
-        <para>Each <tag>p:when</tag> branch of the <tag>p:choose</tag> has a <tag class="attribute"
-            >test</tag> attribute which <rfc2119>must</rfc2119> contain an XPath expression. That
+        <para>Each <tag>p:when</tag> branch of the <tag>p:choose</tag> has a <tag class="attribute">test</tag> attribute which <rfc2119>must</rfc2119> contain an XPath expression. That
           XPath expression's effective boolean value is the guard for the
             <glossterm>subpipeline</glossterm> contained within that
           <tag>p:when</tag>.</para>
@@ -3338,8 +3226,7 @@ That context node is specified as a <glossterm>connection</glossterm>
 for the <tag>p:with-input</tag>. If no context is specified on the
 <tag>p:when</tag>, the context of the <tag>p:choose</tag> is
 used.</para>
-<para><error code="D0005">If the <tag
-class="attribute">collection</tag> attribute is not specified, or if
+<para><error code="D0005">If the <tag class="attribute">collection</tag> attribute is not specified, or if
 its value is false,
 it is a <glossterm>dynamic error</glossterm> if
 more than one document appears on the connection for the <tag>p:when</tag>
@@ -3349,8 +3236,7 @@ on that input and the context item will be undefined.
 </para>
 </section>
 
-<section xml:id="p.otherwise"
-><title>p:otherwise</title><para>An otherwise specifies the default
+<section xml:id="p.otherwise"><title>p:otherwise</title><para>An otherwise specifies the default
 branch; the subpipeline selected if no test expression on any
 preceding <tag>p:when</tag> evaluates to true.</para>
 
@@ -3385,8 +3271,7 @@ for the <tag>p:with-input</tag>. If no context is specified on the
 <tag>p:if</tag>, the context comes from the
 <glossterm>default readable port</glossterm>.</para>
 
-<para><error code="D0005">If the <tag
-class="attribute">collection</tag> attribute is not specified, or if
+<para><error code="D0005">If the <tag class="attribute">collection</tag> attribute is not specified, or if
 its value is false,
 it is a <glossterm>dynamic error</glossterm> if
 more than one document appears on the connection for the <tag>p:if</tag>
@@ -3405,8 +3290,7 @@ on the <tag>p:if</tag> will produce any documents.</para>
         else, it is a <glossterm>compound step</glossterm>. A group encapsulates the behavior of its
           <glossterm>subpipeline</glossterm>.</para>
       <e:rng-pattern name="Group"/>
-      <para>A <tag>p:group</tag> is a convenience wrapper for a collection of steps. </para><section
-        xml:id="example-group" role="tocsuppress">
+      <para>A <tag>p:group</tag> is a convenience wrapper for a collection of steps. </para><section xml:id="example-group" role="tocsuppress">
         <title>Example</title>
         <example xml:id="ex.p.group">
           <title>An Example Group</title>
@@ -3509,8 +3393,7 @@ added to the <glossterm>readable ports</glossterm>.</para>
 </listitem>
 </itemizedlist>
 
-<para>What appears on the <port>error</port> output port is an <link
-linkend="err-vocab">error document</link>. The error document may
+<para>What appears on the <port>error</port> output port is an <link linkend="err-vocab">error document</link>. The error document may
 contain messages generated by steps that were part of the initial
 subpipeline. Not all messages that appear are indicative of errors;
 for example, it is common for all <tag>xsl:message</tag> output from
@@ -3569,8 +3452,7 @@ element:</para>
 
 <e:rng-pattern name="Error"/>
 
-<para>The <tag class="attribute">name</tag> and <tag
-class="attribute">type</tag> attributes identify the name and type,
+<para>The <tag class="attribute">name</tag> and <tag class="attribute">type</tag> attributes identify the name and type,
 respectively, of the step which failed.</para>
 
 <para>The <tag class="attribute">code</tag> is an EQName which
@@ -3581,9 +3463,8 @@ include the concept of errors identified by EQNames.</para>
 
 <para>If the error was caused by a specific document, or by the
 location of some erroneous construction in a specific document, the
-<tag class="attribute">href</tag>, <tag class="attribute" >line</tag>,
-<tag class="attribute">column</tag>, and <tag class="attribute"
->offset</tag> attributes identify this location. Generally, the error
+<tag class="attribute">href</tag>, <tag class="attribute">line</tag>,
+<tag class="attribute">column</tag>, and <tag class="attribute">offset</tag> attributes identify this location. Generally, the error
 location is identified either with line and column numbers or with an
 offset from the beginning of the document, but not usually
 both.</para>
@@ -3642,8 +3523,7 @@ can provide some sort of default for the rest of the pipeline.</para>
 
 <section xml:id="p.atomic"><title>Atomic Steps</title><para>In addition to the six step types
         described in the preceding sections, XProc provides a standard library of atomic step types.
-        The full vocabulary of standards steps is described in <biblioref linkend="std-components"
-        />.</para>
+        The full vocabulary of standards steps is described in <biblioref linkend="std-components"/>.</para>
 <para>All of the standard, atomic steps are invoked in the same way:</para>
       <e:rng-pattern name="OtherAtomicStep"/>
       <para>Where “<replaceable>p:atomic-step</replaceable>” <rfc2119>must</rfc2119> be in the XProc
@@ -3667,14 +3547,12 @@ can provide some sort of default for the rest of the pipeline.</para>
         in imported libraries, and to other pipelines in the same library if they are in a
         library.</para>
 <para><error code="S0010">It is a <glossterm>static error</glossterm> if a
-          pipeline contains a step whose specified inputs, outputs, and options do not <glossterm
-            baseform="matches">match</glossterm> the <glossterm>signature</glossterm> for steps of
+          pipeline contains a step whose specified inputs, outputs, and options do not <glossterm baseform="matches">match</glossterm> the <glossterm>signature</glossterm> for steps of
           that type.</error></para>
 <para><error code="D0017">It is a <glossterm>dynamic
             error</glossterm> if the running pipeline attempts to invoke a step which the processor
           does not know how to perform.</error></para>
-<para><impl>The presence of other <glossterm
-            baseform="compound step">compound steps</glossterm> is
+<para><impl>The presence of other <glossterm baseform="compound step">compound steps</glossterm> is
             <glossterm>implementation-defined</glossterm>; XProc provides no standard mechanism for
           defining them or describing what they can contain.</impl>
         <error code="S0048">It is a <glossterm>static error</glossterm> to use a declared step as a
@@ -3683,9 +3561,8 @@ can provide some sort of default for the rest of the pipeline.</para>
 <section xml:id="option-shortcut">
 <title>Syntactic Shortcut for Option Values</title>
 
-<para>Namespace qualified attributes on a step are <glossterm
-baseform="extension attribute" >extension attributes</glossterm>.
-Attributes, other than <tag class="attribute" >name</tag>, that are
+<para>Namespace qualified attributes on a step are <glossterm baseform="extension attribute">extension attributes</glossterm>.
+Attributes, other than <tag class="attribute">name</tag>, that are
 not namespace qualified are treated as a syntactic shortcut for
 specifying the value of an option. In other words, the following two
 steps are equivalent:</para>
@@ -3766,7 +3643,7 @@ step.</error></para>
 </varlistentry>
 <varlistentry><term><tag class="attribute">sequence</tag></term>
 <listitem>
-<para>The <tag class="attribute" >sequence</tag> attribute determines
+<para>The <tag class="attribute">sequence</tag> attribute determines
 whether or not a sequence of documents is allowed on the port.
 <error code="D0006">If <tag class="attribute">sequence</tag> is not
 specified, or has the value false, then it is a <glossterm>dynamic
@@ -3864,8 +3741,7 @@ author to exclude some namespace declarations in inline content, see <tag>p:inli
 </variablelist>
 
 <para>On a <tag>p:declare-step</tag> for an atomic step, the
-<tag>p:input</tag> simply declares the input port. <error
-code="S0042">It is a <glossterm>static error</glossterm> to attempt to
+<tag>p:input</tag> simply declares the input port. <error code="S0042">It is a <glossterm>static error</glossterm> to attempt to
 provide a connection for an input port on the declaration of an atomic
 step.</error></para>
 
@@ -3949,9 +3825,7 @@ will result in the same content being returned in several
 documents.)</para>
 
 <para>A select expression can equally be applied to input read from
-another step. This input:</para><programlisting
-language="xml"><xi:include href="examples/input-port.txt"
-parse="text"/></programlisting><para>provides a sequence of zero or
+another step. This input:</para><programlisting language="xml"><xi:include href="examples/input-port.txt" parse="text"/></programlisting><para>provides a sequence of zero or
 more documents, one for each <code>html:div</code> in the document (or
 each of the documents) that is read from the <literal>result</literal>
 port of the step named <literal>origin</literal>.</para>
@@ -4065,10 +3939,8 @@ step.</error></para>
 <varlistentry><term><tag class="attribute">sequence</tag></term>
 <listitem>
 <para>An output declaration can indicate if a sequence of documents is
-allowed to appear on the declared port. If <tag class="attribute"
->sequence</tag> is specified with the value <literal>true</literal>,
-then a sequence is allowed. <error code="D0007">If <tag
-class="attribute">sequence</tag> is not specified on
+allowed to appear on the declared port. If <tag class="attribute">sequence</tag> is specified with the value <literal>true</literal>,
+then a sequence is allowed. <error code="D0007">If <tag class="attribute">sequence</tag> is not specified on
 <tag>p:output</tag>, or has the value false, then it is a
 <glossterm>dynamic error</glossterm> if the step does not produce
 exactly one document on the declared port.</error></para>
@@ -4415,8 +4287,7 @@ values:</para>
 output method.</para>
 
 <para>If a processor chooses to implement an option for serialization,
-it must conform to the semantics defined in the <biblioref
-linkend="xml-serialization"/> specification.</para>
+it must conform to the semantics defined in the <biblioref linkend="xml-serialization"/> specification.</para>
 
 <note xml:id="note-use-char-maps">
 <para>The use-character-maps parameter in
@@ -4470,8 +4341,7 @@ XPath Sequence Type<superscript>[citation needed]</superscript>.</para>
 <varlistentry><term><tag class="attribute">name</tag></term>
 <listitem>
 <para>The name of the variable <rfc2119>must</rfc2119> be an EQName. If
-it does not contain a prefix then it is in no namespace. <error
-code="S0028">It is a <glossterm>static error</glossterm> to declare an
+it does not contain a prefix then it is in no namespace. <error code="S0028">It is a <glossterm>static error</glossterm> to declare an
 option or variable in the XProc namespace.</error> <error code="S0087">It is 
 a <glossterm>static error</glossterm> if the name attribute on p:option or p:variable 
 has a prefix which is not bound to a namespace.</error>
@@ -4480,8 +4350,7 @@ has a prefix which is not bound to a namespace.</error>
 </varlistentry>
 <varlistentry><term><tag class="attribute">as</tag></term>
 <listitem>
-<para>The type of the value may be specified in the <tag
-class="attribute">as</tag> attribute using an XPath Sequence
+<para>The type of the value may be specified in the <tag class="attribute">as</tag> attribute using an XPath Sequence
 Type<superscript>[citation needed]</superscript>. If an atomic type,
 or sequence of atomic types, is specified, the value provided for the
 option will be atomized according to the standard XPath rules.
@@ -4494,9 +4363,7 @@ type.</error></para>
 </varlistentry>
 <varlistentry><term><tag class="attribute">select</tag></term>
 <listitem>
-<para>The variable's value is specified with a <tag
-class="attribute">select</tag> attribute. The <tag
-class="attribute">select</tag> attribute <rfc2119>must</rfc2119> be
+<para>The variable's value is specified with a <tag class="attribute">select</tag> attribute. The <tag class="attribute">select</tag> attribute <rfc2119>must</rfc2119> be
 specified. The content of the <tag class="attribute">select</tag>
 attribute is an XPath expression which will be evaluated to provide
 the value of the variable.</para>
@@ -4509,11 +4376,9 @@ described in <xref linkend="xpath-context"/>, for the enclosing
 <glossterm>implementation-defined</glossterm>.</impl>
 </para>
 <para>Since all <glossterm>in-scope bindings</glossterm> are present
-in the Processor XPath Context as variable bindings, <tag
-class="attribute">select</tag> expressions may refer to the value of
+in the Processor XPath Context as variable bindings, <tag class="attribute">select</tag> expressions may refer to the value of
 <glossterm>in-scope bindings</glossterm> by variable reference. If a
-variable reference uses an QName that is not the name of an <glossterm
-baseform="in-scope bindings">in-scope binding</glossterm>, an XPath
+variable reference uses an QName that is not the name of an <glossterm baseform="in-scope bindings">in-scope binding</glossterm>, an XPath
 evaluation error will occur.</para>
 
 <para>If a <tag class="attribute">select</tag> expression is given,
@@ -4612,8 +4477,7 @@ default value with it. The <tag>p:option</tag> tag can only be used in
 a <tag>p:declare-step</tag>.</para>
 
 <para>The name of the option <rfc2119>must</rfc2119> be an EQName. If it
-does not contain a prefix then it is in no namespace. <error
-code="S0028">It is a <glossterm>static error</glossterm> to declare an
+does not contain a prefix then it is in no namespace. <error code="S0028">It is a <glossterm>static error</glossterm> to declare an
 option or variable in the XProc namespace.</error></para>
 
 <para><error code="S0087">It is a <glossterm>static error</glossterm> if the name attribute on p:option or p:variable 
@@ -4648,7 +4512,9 @@ declared to be so; in other words, the default value for the
 
 <para>If an option is not declared to be required, it
 <rfc2119>may</rfc2119> be given a default value. The value is
-specified with a <tag class="attribute">select</tag> attribute.</para>
+specified with a <tag class="attribute">select</tag> attribute. If
+no default value is specified, the option has an empty sequence as default
+value.</para>
 
 <e:rng-pattern name="OptionSelect"/>
 
@@ -4679,8 +4545,7 @@ type being declared. In this case, it is evaluated as described in
 </itemizedlist>
 
 <para><error code="S0017">It is a <glossterm>static error</glossterm>
-to specify that an option is both <tag
-class="attribute">required</tag> <emphasis>and</emphasis> has a
+to specify that an option is both <tag class="attribute">required</tag> <emphasis>and</emphasis> has a
 default value.</error></para>
 
 <para><error code="D0026">It is a <glossterm>dynamic error</glossterm> if
@@ -4721,8 +4586,7 @@ name as part of the same step invocation.</error></para>
 </varlistentry>
 <varlistentry><term><tag class="attribute">as</tag></term>
 <listitem>
-<para>The type of the value may be specified in the <tag
-class="attribute">as</tag> attribute using an XPath Sequence
+<para>The type of the value may be specified in the <tag class="attribute">as</tag> attribute using an XPath Sequence
 Type<superscript>[citation needed]</superscript>. If an atomic type,
 or sequence of atomic types, is specified, the value provided for the
 option will be atomized according to the standard XPath rules.
@@ -4735,9 +4599,7 @@ type.</error></para>
 </varlistentry>
 <varlistentry><term><tag class="attribute">select</tag></term>
 <listitem>
-<para>The actual value is specified with a <tag
-class="attribute">select</tag> attribute. The <tag
-class="attribute">select</tag> attribute <rfc2119>must</rfc2119> be
+<para>The actual value is specified with a <tag class="attribute">select</tag> attribute. The <tag class="attribute">select</tag> attribute <rfc2119>must</rfc2119> be
 specified. The value of the <tag class="attribute">select</tag>
 attribute is an XPath expression which will be evaluated to provide
 the value of the variable.</para>
@@ -4747,8 +4609,7 @@ instance itself are present in the Processor XPath Context as variable
 bindings, so <tag class="attribute">select</tag> expressions may refer
 to any option or variable bound in those <glossterm>in-scope
 bindings</glossterm> by variable reference. If a variable reference
-uses a QName that is not the name of an <glossterm
-baseform="in-scope-bindings">in-scope binding</glossterm> or preceding
+uses a QName that is not the name of an <glossterm baseform="in-scope-bindings">in-scope binding</glossterm> or preceding
 sibling option, an XPath evaluation error will occur.</para>
 
 <para>If a <tag class="attribute">select</tag> expression is used but
@@ -4828,8 +4689,7 @@ author to exclude some namespace declarations in inline content, see <tag>p:inli
 <para>Variable and option values carry with them not only
 their literal or computed string value but also a set of namespaces.
 To see why this is necessary, consider the following
-step:</para><programlisting language="xml"><xi:include
-href="examples/opns-1.xml" parse="text"/></programlisting><para>The
+step:</para><programlisting language="xml"><xi:include href="examples/opns-1.xml" parse="text"/></programlisting><para>The
 <tag>p:delete</tag> step will delete elements that match the
 expression “<literal>html:div</literal>”, but that expression can only
 be correctly interpreted if there's a namespace binding for the prefix
@@ -4842,16 +4702,14 @@ option value are computed as follows:</para><orderedlist>
 <listitem>
 <para>If the <tag class="attribute">select</tag> attribute was used to
 specify the value and it consisted of a single
-<literal>VariableReference</literal> (per <biblioref
-linkend="xpath31"/>), then the namespace bindings from the referenced
+<literal>VariableReference</literal> (per <biblioref linkend="xpath31"/>), then the namespace bindings from the referenced
 option or variable are used.</para>
 </listitem>
           <listitem>
             <para>If the <tag class="attribute">select</tag> attribute was used to specify the value
               and it evaluated to a node-set, then the in-scope namespaces from the first node in
               the selected node-set (or, if it's not an element, its parent) are used.</para>
-            <para>The expression is evaluated in the appropriate context, See <xref
-                linkend="xpath-context"/>.</para>
+            <para>The expression is evaluated in the appropriate context, See <xref linkend="xpath-context"/>.</para>
           </listitem>
           <listitem>
             <para>Otherwise, the in-scope namespaces from the element providing the value are used.
@@ -4907,10 +4765,8 @@ options for all steps of that type.</para>
 <para>The value of the <tag class="attribute">type</tag> can be from
 any namespace provided that the expanded-QName of the value has a
 non-null namespace URI. <error code="S0025">It is a <glossterm>static
-error</glossterm> if the expanded-QName value of the <tag
-class="attribute">type</tag> attribute is in no namespace or in the
-XProc namespace.</error> Except as described in <xref
-linkend="versioning-considerations"/>, the XProc namespace
+error</glossterm> if the expanded-QName value of the <tag class="attribute">type</tag> attribute is in no namespace or in the
+XProc namespace.</error> Except as described in <xref linkend="versioning-considerations"/>, the XProc namespace
 <rfc2119>must not</rfc2119> be used in the type of steps. Neither
 users nor implementers may define additional steps in the XProc
 namespace.</para>
@@ -4927,8 +4783,7 @@ processor (as opposed to occurring as an atomic step in some
 connected to documents is
 <glossterm>implementation-defined</glossterm>.</impl></para>
 
-<para>A step declaration is not a <link
-linkend="step-concept">step</link> in its own right. Sibling steps
+<para>A step declaration is not a <link linkend="step-concept">step</link> in its own right. Sibling steps
 cannot refer to the inputs or outputs of a <tag>p:declare-step</tag>
 using <tag>p:pipe</tag>; only instances of the type can be
 referenced.</para>
@@ -4950,10 +4805,7 @@ is assumed. If the <tag>p:declare-step</tag> is not a child of a <tag>p:library<
 attribute is ignored.</para>
 
 <para>For a description of <tag class="attribute">psvi-required</tag>,
-see <xref linkend="psvi-support" />. For <tag
-class="attribute">xpath-version</tag>, see <xref
-linkend="xpath-context"/>. For <tag
-class="attribute">exclude-inline-prefixes</tag>, see
+see <xref linkend="psvi-support"/>. For <tag class="attribute">xpath-version</tag>, see <xref linkend="xpath-context"/>. For <tag class="attribute">exclude-inline-prefixes</tag>, see
 <tag>p:inline</tag>.</para>
 
 <section xml:id="declare-atomic-steps">
@@ -5020,19 +4872,15 @@ has no ancestors in the XProc namespace, then it <rfc2119>must</rfc2119>
 have a <tag class="attribute">version</tag> attribute.
 See <xref linkend="versioning-considerations"/>.</para>
 
-      <para>For a description of <tag class="attribute">psvi-required</tag>, see <xref
-          linkend="psvi-support"/>; for <tag class="attribute">xpath-version</tag>, see <xref
-          linkend="xpath-context"/>; for <tag class="attribute">exclude-inline-prefixes</tag>, see
+      <para>For a description of <tag class="attribute">psvi-required</tag>, see <xref linkend="psvi-support"/>; for <tag class="attribute">xpath-version</tag>, see <xref linkend="xpath-context"/>; for <tag class="attribute">exclude-inline-prefixes</tag>, see
           <tag>p:inline</tag>.</para>
 
 <note xml:id="note-step-decl">
         <para>The steps declared in a pipeline library are referred to by their type. It is not an
-          error to put a <tag>p:declare-step</tag> without a <tag
-            class="attribute">type</tag> in a <tag>p:library</tag>, but there is no standard
+          error to put a <tag>p:declare-step</tag> without a <tag class="attribute">type</tag> in a <tag>p:library</tag>, but there is no standard
           mechanism for instantiating it or referring to it. It is effectively invisible.</para>
       </note><para>Libraries can import pipelines and/or other libraries.
-See also <xref linkend="handling-imports"
-      />.</para></section>
+See also <xref linkend="handling-imports"/>.</para></section>
     <!-- ============================================================ -->
     <section xml:id="p.import"><title>p:import</title><para>An <tag>p:import</tag> loads a pipeline
         or pipeline library, making it available in the pipeline or library which contains the
@@ -5061,8 +4909,7 @@ See also <xref linkend="handling-imports"
         resource. Also, a duplicate, circular chain of imports, or a re-entrant import is not an
         error and implementations must take the necessary steps to avoid infinite loops and/or
         incorrect notification of duplicate step definitions. It is not an error for a library to
-        import itself. An example of such steps is listed in <xref linkend="handling-imports"
-        />.</para>
+        import itself. An example of such steps is listed in <xref linkend="handling-imports"/>.</para>
 <para>A library is considered the same library if the URI of the resource
         retrieved is the same. If a pipeline or library author uses two different URI values that
         resolve to the same resource, they must not be considered the same imported
@@ -5142,8 +4989,7 @@ or the provided map does not contain a "content-type" key, the value
 </para>
 
 <para>How the content of a <tag>p:inline</tag> element is interpreted
-depends on the document's content type and the <tag
-class="attribute">encoding</tag> attribute.
+depends on the document's content type and the <tag class="attribute">encoding</tag> attribute.
 </para>
 
 <!--
@@ -5189,8 +5035,7 @@ and the content type is an <glossterm>XML media type</glossterm>.</error>
 </para>
 
 <para><error code="S0071">It is a <glossterm>static error</glossterm>
-if the content type value specifies a character set and the <tag
-class="attribute">encoding</tag> attribute is absent.</error>
+if the content type value specifies a character set and the <tag class="attribute">encoding</tag> attribute is absent.</error>
 </para>
 
 <para><error code="S0072">It is a <glossterm>static error</glossterm>
@@ -5211,8 +5056,7 @@ encodings and their names are
 <error code="S0069">It is a <glossterm>static error</glossterm> if the
 encoding specified is not supported by the implementation.</error>
 <error code="D0040">It is a <glossterm>dynamic error</glossterm> if
-the body is not correctly encoded per the value of the <tag
-class="attribute">encoding</tag> attribute.</error>
+the body is not correctly encoded per the value of the <tag class="attribute">encoding</tag> attribute.</error>
 </para>
 
 <para>The interpretation of the (possibily decoded) content
@@ -5253,20 +5097,17 @@ as defined below, are removed:</para>
                           excluded.</para>
                   </listitem>
                   <listitem>
-                      <para>A namespace URI designated by using an <tag class="attribute"
-                          >exclude-inline-prefixes</tag> attribute on the enclosing <tag>p:inline</tag> is
+                      <para>A namespace URI designated by using an <tag class="attribute">exclude-inline-prefixes</tag> attribute on the enclosing <tag>p:inline</tag> is
                           excluded.</para>
                   </listitem>
                   <listitem>
-                      <para>A namespace URI designated by using an <tag class="attribute"
-                          >exclude-inline-prefixes</tag> attribute on any ancestor <tag>p:declare-step</tag> or <tag>p:library</tag> is also excluded. (In other words, the
+                      <para>A namespace URI designated by using an <tag class="attribute">exclude-inline-prefixes</tag> attribute on any ancestor <tag>p:declare-step</tag> or <tag>p:library</tag> is also excluded. (In other words, the
                           effect of several <tag class="attribute">exclude-inline-prefixes</tag> attributes among
                           the ancestors of <tag>p:inline</tag> is cumulative.)</para>
                   </listitem>
               </itemizedlist>
 
-          <para>The value of each prefix in the <tag
-              class="attribute">exclude-inline-prefixes</tag> attribute is
+          <para>The value of each prefix in the <tag class="attribute">exclude-inline-prefixes</tag> attribute is
               interpreted as follows:</para>
 
           <itemizedlist>
@@ -5274,29 +5115,23 @@ as defined below, are removed:</para>
                   <para>The value of the attribute is either <literal>#all</literal>, or
                       a whitespace-separated list of tokens, each of which is either a
                       namespace prefix or <literal>#default</literal>. The namespace bound
-                      to each of the prefixes is designated as an excluded namespace. <error
-                          code="S0057">It is a <glossterm>static error</glossterm> if the <tag
-                              class="attribute" >exclude-inline-prefixes</tag> attribute does not
+                      to each of the prefixes is designated as an excluded namespace. <error code="S0057">It is a <glossterm>static error</glossterm> if the <tag class="attribute">exclude-inline-prefixes</tag> attribute does not
                           contain a list of tokens or if any of those tokens (except
                           <literal>#all</literal> or <literal>#default</literal>) is not a
                           prefix bound to a namespace in the in-scope namespaces of the element
                           on which it occurs.</error></para>
               </listitem>
               <listitem>
-                  <para>The default namespace of the element on which <tag
-                      class="attribute">exclude-inline-prefixes</tag> occurs may be
+                  <para>The default namespace of the element on which <tag class="attribute">exclude-inline-prefixes</tag> occurs may be
                       designated as an excluded namespace by including
-                      <literal>#default</literal> in the list of namespace prefixes. <error
-                          code="S0058">It is a <glossterm>static error</glossterm> if the value
-                          <literal>#default</literal> is used within the <tag class="attribute"
-                              >exclude-inline-prefixes</tag> attribute and there is no default
+                      <literal>#default</literal> in the list of namespace prefixes. <error code="S0058">It is a <glossterm>static error</glossterm> if the value
+                          <literal>#default</literal> is used within the <tag class="attribute">exclude-inline-prefixes</tag> attribute and there is no default
                           namespace in scope.</error>
                   </para>
               </listitem>
               <listitem>
                   <para>The value <literal>#all</literal> indicates that all namespaces
-                      that are in scope for the element on which <tag
-                          class="attribute">exclude-inline-prefixes</tag> occurs are designated
+                      that are in scope for the element on which <tag class="attribute">exclude-inline-prefixes</tag> occurs are designated
                       as excluded namespaces.</para>
               </listitem>
           </itemizedlist>
@@ -5341,15 +5176,13 @@ for the descendants of the element on which it occurs. The
 
 <!--feature="p-inline-no-nesting"-->
 <para>If a <tag>p:inline</tag> occurs as
-a descendant of another <tag>p:inline</tag>, any <tag
-class="attribute">expand-text</tag> within the inner
+a descendant of another <tag>p:inline</tag>, any <tag class="attribute">expand-text</tag> within the inner
 <tag>p:inline</tag> is treated like an ordinary attribute; that is,
 neither will its value influence text expansion nor will it be removed
 from the descendant.</para>
 
 <!-- feature="no-p-expand-text-on-p"-->
-<para>(A <tag
-class="attribute">p:expand-text</tag> attribute on an element in the
+<para>(A <tag class="attribute">p:expand-text</tag> attribute on an element in the
 XProc namespace is an error. If it occurs on other elements that are
 not descendants of <tag>p:inline</tag>, the attribute has no
 effect.)</para>
@@ -5458,8 +5291,7 @@ output</emphasis> on that port. </para>
     <section xml:id="p.pipeinfo"><title>p:pipeinfo</title><para>A <tag>p:pipeinfo</tag> contains
         ancillary information for steps in the pipeline.</para>
       <e:rng-pattern name="PipeInfo"/>
-      <para>There are no constraints on the content of the <tag>p:pipeinfo</tag> element, see <link
-          linkend="annotations"/>.</para></section>
+      <para>There are no constraints on the content of the <tag>p:pipeinfo</tag> element, see <link linkend="annotations"/>.</para></section>
     </section>
   <section xml:id="errors">
     <title>Errors</title>
@@ -5488,8 +5320,7 @@ output</emphasis> on that port. </para>
       <title>Step Errors</title>
       <para>Several of the steps in the standard and option step library can generate dynamic
         errors.</para>
-      <para>For a complete list of the dynamic errors raised by builtin pipeline steps, see <xref
-          linkend="app.step-errors"/>.</para>
+      <para>For a complete list of the dynamic errors raised by builtin pipeline steps, see <xref linkend="app.step-errors"/>.</para>
     </section>
   </section>
 
@@ -5564,8 +5395,7 @@ output</emphasis> on that port. </para>
       variable, or not only passing <emphasis>Visited</emphasis> as an argument to any recursive or
       iterative processing, but also <emphasis>returning</emphasis> its updated value for subsequent
       use, along with the bag of step types.</para>
-    <para>Given a pipeline library document with actual resolved URI <emphasis>DU</emphasis>, <error
-        code="S0036">it is a <glossterm>static error</glossterm> if the <glossterm>step type
+    <para>Given a pipeline library document with actual resolved URI <emphasis>DU</emphasis>, <error code="S0036">it is a <glossterm>static error</glossterm> if the <glossterm>step type
           exports</glossterm> of the document element of the retrieved representation, against the
         background of a singleton set containing <emphasis>DU</emphasis> as the initial
           <emphasis>Visited</emphasis> set, contains any duplicates.</error></para>
