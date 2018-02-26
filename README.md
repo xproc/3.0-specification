@@ -27,7 +27,7 @@ page for your fork:
 
 You also have to setup a `gh-pages` branch, naturally.
 
-* How it works
+## How it works
 
 The documents are built by a gradle task that runs XML Calabash and
 other tools. The individual specifications are in sub-projects.
