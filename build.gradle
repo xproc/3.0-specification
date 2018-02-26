@@ -1,13 +1,14 @@
 buildscript {
   repositories {
+    maven { url '/tmp/repo' }
     mavenCentral()
     maven { url "http://maven.restlet.org" }
   }
 
   dependencies {
-    classpath group: 'org.docbook', name: 'docbook-xslt2', version: '2.0.19'
+    classpath group: 'org.docbook', name: 'docbook-xslt2', version: '2.1.0'
     classpath group: 'com.xmlcalabash', name: 'xmlcalabash1-print', version: '1.1.4'
-    classpath group: 'com.xmlcalabash', name: 'xmlcalabash1-gradle', version: '1.1.2'
+    classpath group: 'com.xmlcalabash', name: 'xmlcalabash1-gradle', version: '1.2.2'
   }
 }
 
@@ -21,36 +22,23 @@ repositories {
 }
 
 configurations {
-  compile {
-    description = "Compile the project"
+  tools {
+    description = "Run tools"
     transitive = true
-  }
-
-  runtime {
-    extendsFrom compile
-  }
-
-  deltaxml {
-    extendsFrom compile
   }
 }
 
 dependencies {
-  runtime (
+  tools (
     fileTree(dir: 'tools/lib').include("*.jar")
-  )
-
-  // This only works if you have a DeltaXML license, so I haven't tried
-  // to make it very versatile. Yet.
-  deltaxml (
-    fileTree(dir: '/usr/local/DeltaXMLCore-8_2_6_j').include("*.jar")
   )
 }
 
-defaultTasks 'specification'
+defaultTasks 'allspecs'
 
 apply plugin: 'org.docbook.task'
 apply plugin: 'com.xmlcalabash.task'
+apply plugin: 'groovy'
 
 import org.docbook.DocBookTask
 import com.xmlcalabash.XMLCalabashTask
@@ -59,13 +47,389 @@ import de.undercouch.gradle.tasks.download.Download
 project.ext.docbookXslt = "docbook-xslt2-$docbookXsltVersion"
 
 // ================================================================================
+
+task allspecs() {
+  // dependencies are added by the specs
+}
+
+task xproc(dependsOn: [ "setupDocBook", "xproc_schemas", "spec_schemas",
+                        "xproc:specification", "xproc_assets", "xproc_src" ],
+             type: XMLCalabashTask) {
+  inputs.file "xproc/build/source.xml"
+  inputs.file "tools/xsl/docbook.xsl"
+  inputs.file "tools/xsl/dbspec.xsl"
+  inputs.file "tools/xsl/xprocns.xsl"
+  inputs.file "tools/xsl/ml-macro.xsl"
+  inputs.file "tools/xsl/rngsyntax.xsl"
+  inputs.file "tools/xpl/formatspec.xpl"
+  outputs.file "build/dist/xproc/index.html"
+  input("source", "xproc/build/source.xml")
+  output("result", "build/dist/xproc/index.html")
+
+  param("schemaext.schema", "build/schema/dbspec.rng")
+  param("xml.toc.filename", "build/xproc.toc.xml")
+  param("spec", "xproc")
+  option("style", "../../tools/xsl/xproc-specs.xsl")
+  pipeline "tools/xpl/formatspec.xpl"
+}
+allspecs.dependsOn "xproc"
+
+task xproc_assets(dependsOn: [ "xproc_web_assets" ], type: Copy) {
+  from "xproc/build/graphics"
+  into "build/dist/xproc/graphics/"
+}
+
+task xproc_web_assets(type: Copy) {
+  from "src/main/resources"
+  into "build/dist/xproc/"
+}
+
+task xproc_src(dependsOn: ["xproc:source"], type: Copy) {
+  from "xproc/build/"
+  into "build/dist/xproc/"
+  include "source.xml"
+  rename ("source.xml", "specification.xml")
+}
+
+// ======================================================================
+// overview
+
+task overview(dependsOn: [ "setupDocBook", "xproc_schemas", "spec_schemas",
+                           "overview:specification", "overview_assets",
+                           "overview_src" ],
+              type: XMLCalabashTask) {
+  inputs.file "overview/build/source.xml"
+  inputs.file "tools/xsl/docbook.xsl"
+  inputs.file "tools/xsl/dbspec.xsl"
+  inputs.file "tools/xsl/xprocns.xsl"
+  inputs.file "tools/xsl/ml-macro.xsl"
+  inputs.file "tools/xsl/rngsyntax.xsl"
+  inputs.file "tools/xpl/formatspec.xpl"
+  outputs.file "build/dist/index.html"
+  input("source", "overview/build/source.xml")
+  output("result", "build/dist/index.html")
+
+  param("schemaext.schema", "build/schema/dbspec.rng")
+  param("xml.toc.filename", "build/xproc.toc.xml")
+  param("spec", "xproc")
+  option("style", "../../tools/xsl/xproc-specs.xsl")
+  pipeline "tools/xpl/formatspec.xpl"
+}
+allspecs.dependsOn "overview"
+
+task overview_assets(type: Copy) {
+  from "src/main/resources"
+  into "build/dist/"
+}
+
+task overview_src(dependsOn: ["overview:source"], type: Copy) {
+  from "overview/build/"
+  into "build/dist/"
+  include "source.xml"
+  rename ("source.xml", "specification.xml")
+}
+
+// ======================================================================
+// steps-intro
+
+// This step didn't run if it was named 'steps_intro'. ¯\_(ツ)_/¯?
+task steps_intro_x(dependsOn: [ "setupDocBook", "xproc_schemas", "spec_schemas",
+                                "steps-intro:specification", "steps_intro_assets",
+                                "steps_intro_src" ],
+                 type: XMLCalabashTask) {
+  inputs.file "steps-intro/build/source.xml"
+  inputs.file "tools/xsl/docbook.xsl"
+  inputs.file "tools/xsl/dbspec.xsl"
+  inputs.file "tools/xsl/xprocns.xsl"
+  inputs.file "tools/xsl/ml-macro.xsl"
+  inputs.file "tools/xsl/rngsyntax.xsl"
+  inputs.file "tools/xpl/formatspec.xpl"
+  outputs.file "build/dist/steps-intro/index.html"
+  input("source", "steps-intro/build/source.xml")
+  output("result", "build/dist/steps-intro/index.html")
+
+  param("schemaext.schema", "build/schema/dbspec.rng")
+  param("xml.toc.filename", "build/xproc.toc.xml")
+  param("spec", "xproc")
+  option("style", "../../tools/xsl/xproc-specs.xsl")
+  pipeline "tools/xpl/formatspec.xpl"
+}
+allspecs.dependsOn "steps_intro_x"
+
+task steps_intro_assets(type: Copy) {
+  from "src/main/resources"
+  into "build/dist/steps-intro/"
+}
+
+task steps_intro_src(dependsOn: ["steps-intro:source"], type: Copy) {
+  from "steps-intro/build/"
+  into "build/dist/steps-intro/"
+  include "source.xml"
+  rename ("source.xml", "specification.xml")
+}
+
+// ======================================================================
+// steps
+
+task steps(dependsOn: [ "setupDocBook", "xproc_schemas", "spec_schemas",
+                        "steps:specification", "steps_assets", "steps_src",
+                        "steps_xpl" ],
+           type: XMLCalabashTask) {
+  inputs.file "steps/build/source.xml"
+  inputs.file "tools/xsl/docbook.xsl"
+  inputs.file "tools/xsl/dbspec.xsl"
+  inputs.file "tools/xsl/xprocns.xsl"
+  inputs.file "tools/xsl/ml-macro.xsl"
+  inputs.file "tools/xsl/rngsyntax.xsl"
+  inputs.file "tools/xpl/formatspec.xpl"
+  outputs.file "build/dist/steps/index.html"
+  input("source", "steps/build/source.xml")
+  output("result", "build/dist/steps/index.html")
+
+  param("schemaext.schema", "build/schema/dbspec.rng")
+  param("xml.toc.filename", "build/xproc.toc.xml")
+  param("spec", "xproc")
+  option("style", "../../tools/xsl/xproc-specs.xsl")
+  pipeline "tools/xpl/formatspec.xpl"
+}
+allspecs.dependsOn "steps"
+
+task steps_assets(type: Copy) {
+  from "src/main/resources"
+  into "build/dist/steps/"
+}
+
+task steps_src(dependsOn: ["steps:source"], type: Copy) {
+  from "steps/build/"
+  into "build/dist/steps/"
+  include "source.xml"
+  rename ("source.xml", "specification.xml")
+}
+
+task steps_xpl(dependsOn: ["steps:library"], type: Copy) {
+  from "steps/build/"
+  into "build/dist/steps/"
+  include "library.xml"
+  rename ("library.xml", "steps.xpl")
+}
+
+// ======================================================================
+// step-validate-relax-ng
+
+task validate_relax_ng(dependsOn: [ "setupDocBook", "xproc_schemas", "spec_schemas",
+                                    "step-validate-relax-ng:specification",
+                                    "validate_relax_ng_assets",
+                                    "validate_relax_ng_src", "validate_relax_ng_xpl" ],
+                       type: XMLCalabashTask) {
+  inputs.file "step-validate-relax-ng/build/source.xml"
+  inputs.file "tools/xsl/docbook.xsl"
+  inputs.file "tools/xsl/dbspec.xsl"
+  inputs.file "tools/xsl/xproc-specs.xsl"
+  inputs.file "tools/xsl/xprocns.xsl"
+  inputs.file "tools/xsl/ml-macro.xsl"
+  inputs.file "tools/xsl/rngsyntax.xsl"
+  inputs.file "tools/xpl/formatspec.xpl"
+  outputs.file "build/dist/validate-with-relax-ng/index.html"
+  input("source", "step-validate-relax-ng/build/source.xml")
+  output("result", "build/dist/validate-with-relax-ng/index.html")
+
+  param("schemaext.schema", "build/schema/dbspec.rng")
+  param("xml.toc.filename", "build/xproc.toc.xml")
+  param("spec", "xproc")
+  option("style", "../../tools/xsl/xproc-specs.xsl")
+  pipeline "tools/xpl/formatspec.xpl"
+}
+allspecs.dependsOn "validate_relax_ng"
+
+task validate_relax_ng_assets(type: Copy) {
+  from "src/main/resources"
+  into "build/dist/validate-with-relax-ng/"
+}
+
+task validate_relax_ng_src(dependsOn: ["step-validate-relax-ng:source"], type: Copy) {
+  from "step-validate-relax-ng/build/"
+  into "build/dist/validate-with-relax-ng/"
+  include "source.xml"
+  rename ("source.xml", "specification.xml")
+}
+
+task validate_relax_ng_xpl(dependsOn: ["step-validate-relax-ng:library"], type: Copy) {
+  from "step-validate-relax-ng/build/"
+  into "build/dist/validate-with-relax-ng/"
+  include "library.xml"
+  rename ("library.xml", "steps.xpl")
+}
+
+// ======================================================================
+// step-validate-xml-schema
+
+task validate_xml_schema(dependsOn: [ "setupDocBook", "xproc_schemas", "spec_schemas",
+                                      "step-validate-xml-schema:specification",
+                                      "validate_xml_schema_assets",
+                                      "validate_xml_schema_src", "validate_xml_schema_xpl"],
+                         type: XMLCalabashTask) {
+  inputs.file "step-validate-xml-schema/build/source.xml"
+  inputs.file "tools/xsl/docbook.xsl"
+  inputs.file "tools/xsl/dbspec.xsl"
+  inputs.file "tools/xsl/xproc-specs.xsl"
+  inputs.file "tools/xsl/xprocns.xsl"
+  inputs.file "tools/xsl/ml-macro.xsl"
+  inputs.file "tools/xsl/rngsyntax.xsl"
+  inputs.file "tools/xpl/formatspec.xpl"
+  outputs.file "build/dist/validate-with-xml-schema/index.html"
+  input("source", "step-validate-xml-schema/build/source.xml")
+  output("result", "build/dist/validate-with-xml-schema/index.html")
+
+  param("schemaext.schema", "build/schema/dbspec.rng")
+  param("xml.toc.filename", "build/xproc.toc.xml")
+  param("spec", "xproc")
+  option("style", "../../tools/xsl/xproc-specs.xsl")
+  pipeline "tools/xpl/formatspec.xpl"
+}
+allspecs.dependsOn "validate_xml_schema"
+
+task validate_xml_schema_assets(type: Copy) {
+  from "src/main/resources"
+  into "build/dist/validate-with-xml-schema/"
+}
+
+task validate_xml_schema_src(dependsOn: ["step-validate-xml-schema:source"], type: Copy) {
+  from "step-validate-xml-schema/build/"
+  into "build/dist/validate-with-xml-schema/"
+  include "source.xml"
+  rename ("source.xml", "specification.xml")
+}
+
+task validate_xml_schema_xpl(dependsOn: ["step-validate-xml-schema:library"], type: Copy) {
+  from "step-validate-xml-schema/build/"
+  into "build/dist/validate-with-xml-schema/"
+  include "library.xml"
+  rename ("library.xml", "steps.xpl")
+}
+
+// ======================================================================
+// step-validate-schematron
+
+task validate_schematron(dependsOn: [ "setupDocBook", "xproc_schemas", "spec_schemas",
+                                      "step-validate-schematron:specification",
+                                      "validate_schematron_assets",
+                                      "validate_schematron_src","validate_schematron_xpl" ],
+                         type: XMLCalabashTask) {
+  inputs.file "step-validate-schematron/build/source.xml"
+  inputs.file "tools/xsl/docbook.xsl"
+  inputs.file "tools/xsl/dbspec.xsl"
+  inputs.file "tools/xsl/xproc-specs.xsl"
+  inputs.file "tools/xsl/xprocns.xsl"
+  inputs.file "tools/xsl/ml-macro.xsl"
+  inputs.file "tools/xsl/rngsyntax.xsl"
+  inputs.file "tools/xpl/formatspec.xpl"
+  outputs.file "build/dist/validate-with-schematron/index.html"
+  input("source", "step-validate-schematron/build/source.xml")
+  output("result", "build/dist/validate-with-schematron/index.html")
+
+  param("schemaext.schema", "build/schema/dbspec.rng")
+  param("xml.toc.filename", "build/xproc.toc.xml")
+  param("spec", "xproc")
+  option("style", "../../tools/xsl/xproc-specs.xsl")
+  pipeline "tools/xpl/formatspec.xpl"
+}
+allspecs.dependsOn "validate_schematron"
+
+task validate_schematron_assets(type: Copy) {
+  from "src/main/resources"
+  into "build/dist/validate-with-schematron/"
+}
+
+task validate_schematron_src(dependsOn: ["step-validate-schematron:source"], type: Copy) {
+  from "step-validate-schematron/build/"
+  into "build/dist/validate-with-schematron/"
+  include "source.xml"
+  rename ("source.xml", "specification.xml")
+}
+
+task validate_schematron_xpl(dependsOn: ["step-validate-schematron:library"], type: Copy) {
+  from "step-validate-schematron/build/"
+  into "build/dist/validate-with-schematron/"
+  include "library.xml"
+  rename ("library.xml", "steps.xpl")
+}
+
+// ======================================================================
+// Specification schemas
+
+task spec_schemas(dependsOn: [ "spec_rng", "spec_sch" ]) {
+  // nop
+}
+
+task spec_rng(type: JavaExec) {
+  classpath = configurations.tools
+  main = 'com.thaiopensource.relaxng.translate.Driver'
+  args = ["schema/dbspec.rnc", "build/schema/dbspec.rng"]
+}
+spec_rng.doFirst {
+  mkdir("build/schema")
+}
+
+task spec_sch(type: Copy) {
+  from('schema') {
+    include "docbook.sch"
+  }
+  into "build/schema"
+}
+
+// ======================================================================
+// XProc schemas
+
+task core_rng(type: JavaExec) {
+  classpath = configurations.tools
+  main = 'com.thaiopensource.relaxng.translate.Driver'
+  args = ["src/main/schema/xproc.rnc", "build/core.rng"]
+}
+core_rng.doFirst {
+  mkdir("build")
+}
+
+task xproc_rng(dependsOn: [ "core_rng",
+                            "steps:rng", "step-validate-relax-ng:rng",
+                            "step-validate-xml-schema:rng",
+                            "step-validate-schematron:rng" ],
+               type: XMLCalabashTask) {
+  inputs.file "build/core.rng"
+  inputs.file "steps/build/library.xml"
+  inputs.file "step-validate-relax-ng/build/library.xml"
+  inputs.file "step-validate-xml-schema/build/library.xml"
+  inputs.file "step-validate-schematron/build/library.xml"
+  inputs.file "tools/xpl/make-rng.xpl"
+  inputs.file "tools/xsl/make-rng.xsl"
+  outputs.file "build/xproc.rng"
+  input("source", "build/core.rng")
+  output("result", "build/xproc.rng")
+  pipeline "tools/xpl/make-rng.xpl"
+}
+
+task xproc_rnc(dependsOn: [ "xproc_rng" ], type: JavaExec) {
+  classpath = configurations.tools
+  main = 'com.thaiopensource.relaxng.translate.Driver'
+  args = ["build/xproc.rng", "build/xproc.rnc"]
+}
+xproc_rnc.doFirst {
+  mkdir("build")
+}
+
+task xproc_schemas(dependsOn: [ "xproc_rnc", "xproc_rng" ]) {
+  // nop
+}
+
+// ================================================================================
 // Setup DocBook
 
 task downloadDocBook(type: Download) {
   src docbookXsltBaseUri + '/release/' + docbookXsltVersion + '/' + docbookXslt + '.zip'
   dest new File(buildDir, docbookXslt + '.zip')
 }
-downloadDocBook.onlyIf { !file("build/${docbookXslt}.zip").exists() }
+downloadDocBook.onlyIf {
+  !file("build/${docbookXslt}.zip").exists()
+}
 
 task setupDocBook(dependsOn: downloadDocBook, type: Copy) {
   from zipTree(downloadDocBook.dest)
@@ -79,472 +443,12 @@ task setupDocBook(dependsOn: downloadDocBook, type: Copy) {
 }
 setupDocBook.onlyIf { !file("build/docbook").exists() }
 
-// ================================================================================
-// Compile the schemas
+// ======================================================================
+// Clean up
 
-task compileSpecSchema(dependsOn: ["copySpecSchematron"], type: JavaExec) {
-  classpath = configurations.runtime
-  main = 'com.thaiopensource.relaxng.translate.Driver'
-  args = ["schema/dbspec.rnc", "build/schema/dbspec.rng"]
-}
-
-task copySpecSchematron(type: Copy) {
-  from('schema') {
-    include "docbook.sch"
-  }
-  into "build/schema"
-}
-copySpecSchematron.doFirst {
-  mkdir "build/schema"
-}
-
-task compileXProcSchema(dependsOn: ["copyXProcSchema", "steps_rnc"], type: JavaExec) {
-  classpath = configurations.runtime
-  main = 'com.thaiopensource.relaxng.translate.Driver'
-  args = ["build/xproc.rnc", "build/xproc.rng"]
-}
-
-task copyXProcSchema(type: Copy) {
-  from('src/main/schema') {
-    include "xproc.rnc"
-  }
-  into "build"
-}
-
-task xproc_schemas(dependsOn: [ "compileXProcSchema", "steps_rnc" ], type: Copy) {
-  from('build') {
-    include "xproc.rnc"
-    include "xproc.rng"
-    include "steps.rnc"
-    include "steps.rng"
-  }
-  into "build/xproc30"
-}
-xproc_schemas.doFirst {
-  mkdir "build/xproc30"
-}
-
-task step_schemas(dependsOn: [ "compileXProcSchema", "steps_rnc" ], type: Copy) {
-  from('build') {
-    include "xproc.rnc"
-    include "xproc.rng"
-    include "steps.rnc"
-    include "steps.rng"
-  }
-  into "build/steps30"
-}
-step_schemas.doFirst {
-  mkdir "build/steps30"
-}
-
-
-// ================================================================================
-// XInclude the sources
-
-task xproc30_xi1(dependsOn: ["compileSpecSchema", "xproc30_examples"],
-                 type: XMLCalabashTask) {
-  inputs.file "src/main/xml/xproc/xproc.xml"
-  inputs.file "src/main/xml/xproc/conformance.xml"
-  inputs.file "src/main/xml/xproc/error-codes.xml"
-  inputs.file "src/main/xml/xproc/language-summary.xml"
-  inputs.file "src/main/xml/xproc/mediatype.xml"
-  inputs.file "src/main/xml/xproc/namespace-fixup.xml"
-  inputs.file "src/main/xml/xproc/parallel.xml"
-  inputs.file "src/main/xml/xproc/references.xml"
-  outputs.file "build/,xproc30.xml"
-  input("source", "src/main/xml/xproc/xproc.xml")
-  output("result", "build/,xproc30.xml")
-  option("schema", "build/schema/dbspec.rng")
-  option("schematron", "build/schema/docbook.sch")
-  pipeline "tools/xpl/validate.xpl"
-}
-
-task xproc30_examples(type: Exec) {
-  commandLine "make", "-C", "src/main/xml/xproc/examples"
-}
-
-task xproc30_src(dependsOn: ["xproc_glossary"], type: XMLCalabashTask) {
-  inputs.file "src/main/xml/xproc/xproc.xml"
-  inputs.file "src/main/xml/xproc/conformance.xml"
-  inputs.file "src/main/xml/xproc/error-codes.xml"
-  inputs.file "build/xproc-glossary.xml"
-  inputs.file "src/main/xml/xproc/language-summary.xml"
-  inputs.file "src/main/xml/xproc/mediatype.xml"
-  inputs.file "src/main/xml/xproc/namespace-fixup.xml"
-  inputs.file "src/main/xml/xproc/parallel.xml"
-  inputs.file "src/main/xml/xproc/references.xml"
-  outputs.file "build/xproc30/xproc30.xml"
-  input("source", "src/main/xml/xproc/xproc.xml")
-  output("result", "build/xproc30/xproc30.xml")
-  param("schema", "build/schema/dbspec.rng")
-  param("schematron", "build/schema/docbook.sch")
-  pipeline "tools/xpl/validate.xpl"
-}
-xproc30_src.doFirst {
-  mkdir "build/xproc30"
-}
-
-task xproc_glossary(dependsOn: ["xproc30_xi1"], type: XMLCalabashTask) {
-  inputs.file "build/,xproc30.xml"
-  inputs.file "tools/xpl/makeglossary.xpl"
-  inputs.file "tools/xsl/makeglossary.xsl"
-  outputs.file "build/xproc-glossary.xml"
-  input("source", "build/,xproc30.xml")
-  output("result", "build/xproc-glossary.xml")
-  pipeline "tools/xpl/makeglossary.xpl"
-}
-
-task steps30_xi1(dependsOn: ["compileSpecSchema", "steps30_examples"], type: XMLCalabashTask) {
-  inputs.file "src/main/xml/steps/steps.xml"
-  inputs.file "src/main/xml/steps/errors.xml"
-  inputs.file "src/main/xml/steps/error-codes.xml"
-  inputs.file "src/main/xml/steps/glob.xml"
-  inputs.file "src/main/xml/steps/steps/add-attribute.xml"
-  inputs.file "src/main/xml/steps/steps/add-xml-base.xml"
-  inputs.file "src/main/xml/steps/steps/cast-content-type.xml"
-  inputs.file "src/main/xml/steps/steps/compare.xml"
-  inputs.file "src/main/xml/steps/steps/count.xml"
-  inputs.file "src/main/xml/steps/steps/delete.xml"
-  inputs.file "src/main/xml/steps/steps/directory-list.xml"
-  inputs.file "src/main/xml/steps/steps/error.xml"
-  inputs.file "src/main/xml/steps/steps/escape-markup.xml"
-  inputs.file "src/main/xml/steps/steps/exec.xml"
-  inputs.file "src/main/xml/steps/steps/filter.xml"
-  inputs.file "src/main/xml/steps/steps/hash.xml"
-  inputs.file "src/main/xml/steps/steps/http-request.xml"
-  inputs.file "src/main/xml/steps/steps/identity.xml"
-  inputs.file "src/main/xml/steps/steps/in-scope-names.xml"
-  inputs.file "src/main/xml/steps/steps/insert.xml"
-  inputs.file "src/main/xml/steps/steps/label-elements.xml"
-  inputs.file "src/main/xml/steps/steps/load.xml"
-  inputs.file "src/main/xml/steps/steps/make-absolute-uris.xml"
-  inputs.file "src/main/xml/steps/steps/namespace-rename.xml"
-  inputs.file "src/main/xml/steps/steps/pack.xml"
-  inputs.file "src/main/xml/steps/steps/parameters.xml"
-  inputs.file "src/main/xml/steps/steps/rename.xml"
-  inputs.file "src/main/xml/steps/steps/replace.xml"
-  inputs.file "src/main/xml/steps/steps/schemas.xml"
-  inputs.file "src/main/xml/steps/steps/set-attributes.xml"
-  inputs.file "src/main/xml/steps/steps/set-properties.xml"
-  inputs.file "src/main/xml/steps/steps/sink.xml"
-  inputs.file "src/main/xml/steps/steps/split-sequence.xml"
-  inputs.file "src/main/xml/steps/steps/store.xml"
-  inputs.file "src/main/xml/steps/steps/string-replace.xml"
-  inputs.file "src/main/xml/steps/steps/template.xml"
-  inputs.file "src/main/xml/steps/steps/unescape-markup.xml"
-  inputs.file "src/main/xml/steps/steps/unwrap.xml"
-  inputs.file "src/main/xml/steps/steps/uuid.xml"
-  inputs.file "src/main/xml/steps/steps/validate-with-relax-ng.xml"
-  inputs.file "src/main/xml/steps/steps/validate-with-schematron.xml"
-  inputs.file "src/main/xml/steps/steps/validate-with-xml-schema.xml"
-  inputs.file "src/main/xml/steps/steps/wrap-sequence.xml"
-  inputs.file "src/main/xml/steps/steps/wrap.xml"
-  inputs.file "src/main/xml/steps/steps/www-form-urldecode.xml"
-  inputs.file "src/main/xml/steps/steps/www-form-urlencode.xml"
-  inputs.file "src/main/xml/steps/steps/xinclude.xml"
-  inputs.file "src/main/xml/steps/steps/xquery.xml"
-  inputs.file "src/main/xml/steps/steps/xsl-formatter.xml"
-  inputs.file "src/main/xml/steps/steps/xslt.xml"
-  inputs.file "src/main/xml/steps/steps/payloads/request_body.xml"
-  inputs.file "src/main/xml/steps/steps/payloads/request_response.xml"
-  inputs.file "src/main/xml/steps/steps/payloads/response_body.xml"
-  outputs.file "build/,steps30.xml"
-  input("source", "src/main/xml/steps/steps.xml")
-  output("result", "build/,steps30.xml")
-  option("schema", "build/schema/dbspec.rng")
-  option("schematron", "build/schema/docbook.sch")
-  pipeline "tools/xpl/validate.xpl"
-}
-
-task steps30_examples(type: Exec) {
-  commandLine "make", "-C", "src/main/xml/steps/examples"
-}
-
-task steps30_src(dependsOn: ["steps_glossary"], type: XMLCalabashTask) {
-  inputs.file "src/main/xml/steps/steps.xml"
-  inputs.file "src/main/xml/steps/errors.xml"
-  inputs.file "src/main/xml/steps/error-codes.xml"
-  inputs.file "src/main/xml/steps/glob.xml"
-  inputs.file "src/main/xml/steps/steps/add-attribute.xml"
-  inputs.file "src/main/xml/steps/steps/add-xml-base.xml"
-  inputs.file "src/main/xml/steps/steps/cast-content-type.xml"
-  inputs.file "src/main/xml/steps/steps/compare.xml"
-  inputs.file "src/main/xml/steps/steps/count.xml"
-  inputs.file "src/main/xml/steps/steps/delete.xml"
-  inputs.file "src/main/xml/steps/steps/directory-list.xml"
-  inputs.file "src/main/xml/steps/steps/error.xml"
-  inputs.file "src/main/xml/steps/steps/escape-markup.xml"
-  inputs.file "src/main/xml/steps/steps/exec.xml"
-  inputs.file "src/main/xml/steps/steps/filter.xml"
-  inputs.file "src/main/xml/steps/steps/hash.xml"
-  inputs.file "src/main/xml/steps/steps/http-request.xml"
-  inputs.file "src/main/xml/steps/steps/identity.xml"
-  inputs.file "src/main/xml/steps/steps/in-scope-names.xml"
-  inputs.file "src/main/xml/steps/steps/insert.xml"
-  inputs.file "src/main/xml/steps/steps/label-elements.xml"
-  inputs.file "src/main/xml/steps/steps/load.xml"
-  inputs.file "src/main/xml/steps/steps/make-absolute-uris.xml"
-  inputs.file "src/main/xml/steps/steps/namespace-rename.xml"
-  inputs.file "src/main/xml/steps/steps/pack.xml"
-  inputs.file "src/main/xml/steps/steps/parameters.xml"
-  inputs.file "src/main/xml/steps/steps/rename.xml"
-  inputs.file "src/main/xml/steps/steps/replace.xml"
-  inputs.file "src/main/xml/steps/steps/schemas.xml"
-  inputs.file "src/main/xml/steps/steps/set-attributes.xml"
-  inputs.file "src/main/xml/steps/steps/set-properties.xml"
-  inputs.file "src/main/xml/steps/steps/sink.xml"
-  inputs.file "src/main/xml/steps/steps/split-sequence.xml"
-  inputs.file "src/main/xml/steps/steps/store.xml"
-  inputs.file "src/main/xml/steps/steps/string-replace.xml"
-  inputs.file "src/main/xml/steps/steps/template.xml"
-  inputs.file "src/main/xml/steps/steps/unescape-markup.xml"
-  inputs.file "src/main/xml/steps/steps/unwrap.xml"
-  inputs.file "src/main/xml/steps/steps/uuid.xml"
-  inputs.file "src/main/xml/steps/steps/validate-with-relax-ng.xml"
-  inputs.file "src/main/xml/steps/steps/validate-with-schematron.xml"
-  inputs.file "src/main/xml/steps/steps/validate-with-xml-schema.xml"
-  inputs.file "src/main/xml/steps/steps/wrap-sequence.xml"
-  inputs.file "src/main/xml/steps/steps/wrap.xml"
-  inputs.file "src/main/xml/steps/steps/www-form-urldecode.xml"
-  inputs.file "src/main/xml/steps/steps/www-form-urlencode.xml"
-  inputs.file "src/main/xml/steps/steps/xinclude.xml"
-  inputs.file "src/main/xml/steps/steps/xquery.xml"
-  inputs.file "src/main/xml/steps/steps/xsl-formatter.xml"
-  inputs.file "src/main/xml/steps/steps/xslt.xml"
-  outputs.file "build/steps30/steps30.xml"
-  input("source", "src/main/xml/steps/steps.xml")
-  output("result", "build/steps30/steps30.xml")
-  option("schema", "build/schema/dbspec.rng")
-  option("schematron", "build/schema/docbook.sch")
-  pipeline "tools/xpl/validate.xpl"
-}
-steps30_src.doFirst {
-  mkdir "build/steps30"
-}
-
-task steps_glossary(dependsOn: ["steps30_xi1"], type: XMLCalabashTask) {
-  inputs.file "build/,steps30.xml"
-  inputs.file "tools/xpl/makeglossary.xpl"
-  inputs.file "tools/xsl/makeglossary.xsl"
-  outputs.file "build/xproc-glossary.xml"
-  input("source", "build/,steps30.xml")
-  output("result", "build/steps-glossary.xml")
-  pipeline "tools/xpl/makeglossary.xpl"
-}
-
-// ================================================================================
-// Make the pipeline libraries
-
-task pipeline_library(dependsOn: ["steps30_src"], type: XMLCalabashTask) {
-  inputs.file "build/steps30/steps30.xml"
-  inputs.file "tools/xpl/pipeline-library.xpl"
-  inputs.file "tools/xsl/pipeline-library.xsl"
-  outputs.file "build/pipeline-library.xml"
-  input("source", "build/steps30/steps30.xml")
-  output("result", "build/pipeline-library.xml")
-  pipeline "tools/xpl/pipeline-library.xpl"
-}
-
-task typed_pipeline_library(dependsOn: ["steps30_src"], type: XMLCalabashTask) {
-  inputs.file "build/steps30/steps30.xml"
-  inputs.file "tools/xpl/typed-pipeline-library.xpl"
-  inputs.file "tools/xsl/typed-pipeline-library.xsl"
-  outputs.file "build/typed-pipeline-library.xml"
-  input("source", "build/steps30/steps30.xml")
-  output("result", "build/typed-pipeline-library.xml")
-  pipeline "tools/xpl/typed-pipeline-library.xpl"
-}
-
-// ================================================================================
-// Make steps.rnc
-
-task steps_rnc(dependsOn: ["typed_pipeline_library"], type: XMLCalabashTask) {
-  inputs.file "build/typed-pipeline-library.xml"
-  inputs.file "tools/xpl/library-to-rnc.xpl"
-  inputs.file "tools/xsl/library-to-rnc.xsl"
-  // For some reason, if I declare the output file, it thinks it's up-to-date
-  // outputs.file "build/steps.rnc"
-  input("source", "build/typed-pipeline-library.xml")
-  output("result", "build/steps.rnc")
-  pipeline "tools/xpl/library-to-rnc.xpl"
-}
-
-// ================================================================================
-// Format the specs
-
-task xproc30(dependsOn: ["setupDocBook", "xproc30_src", "steps30_src", "xproc_assets"],
-             type: XMLCalabashTask) {
-  inputs.file "build/xproc30/xproc30.xml"
-  inputs.file "tools/xsl/docbook.xsl"
-  inputs.file "tools/xsl/dbspec.xsl"
-  inputs.file "tools/xsl/xprocns.xsl"
-  inputs.file "tools/xsl/ml-macro.xsl"
-  inputs.file "tools/xsl/rngsyntax.xsl"
-  inputs.file "tools/xpl/formatspec.xpl"
-  outputs.file "build/xproc30/index.html"
-  input("source", "build/xproc30/xproc30.xml")
-  output("result", "build/xproc30/index.html")
-
-  param("schemaext.schema", "../../../../../schema/dbspec.rng")
-  param("xml.toc.filename", "xproc30.toc.xml")
-  param("otherspec", "../steps30/steps30.xml")
-  param("otherhref", "../steps30/")
-  param("otherlabel", "XPS")
-  param("spec", "xproc30")
-  option("style", "../xsl/xproc-specs.xsl")
-  pipeline "tools/xpl/formatspec.xpl"
-}
-
-task xproc_assets(dependsOn: [ "xproc_schemas", "xproc_css", "xproc_js", "xproc_images" ]) {
-  // nop
-}
-
-task xproc_css(type: Copy) {
-  from 'src/main/resources/css'
-  into 'build/xproc30/css'
-}
-xproc_css.doFirst {
-  mkdir "build/xproc30/css"
-}
-
-task xproc_js(type: Copy) {
-  from 'src/main/resources/js'
-  into 'build/xproc30/js'
-}
-xproc_js.doFirst {
-  mkdir "build/xproc30/js"
-}
-
-task xproc_images(type: Copy) {
-  from 'src/main/xml/xproc/graphics'
-  into 'build/xproc30/graphics'
-}
-xproc_images.doFirst {
-  mkdir 'build/xproc30/graphics'
-}
-
-task steps30(dependsOn: ["setupDocBook", "xproc30_src", "steps30_src", "step_assets"],
-             type: XMLCalabashTask) {
-  inputs.file "build/steps30/steps30.xml"
-  inputs.file "tools/xsl/docbook.xsl"
-  inputs.file "tools/xsl/dbspec.xsl"
-  inputs.file "tools/xsl/xprocns.xsl"
-  inputs.file "tools/xsl/rngsyntax.xsl"
-  outputs.file "build/steps30/index.html"
-  input("source", "build/steps30/steps30.xml")
-  output("result", "build/steps30/index.html")
-
-  param("schemaext.schema", "../../../../../schema/dbspec.rng")
-  param("xml.toc.filename", "steps.toc.xml")
-  param("otherspec", "../xproc30/xproc30.xml")
-  param("otherhref", "../xproc30/")
-  param("otherlabel", "XP")
-  param("spec", "steps30")
-  option("style", "../xsl/xproc-specs.xsl")
-  pipeline "tools/xpl/formatspec.xpl"
-}
-
-task step_assets(dependsOn: [ "step_schemas", "step_css", "step_js" ]) {
-  // nop
-}
-
-task step_css(type: Copy) {
-  from 'src/main/resources/css'
-  into 'build/steps30/css'
-}
-step_css.doFirst {
-  mkdir "build/steps30/css"
-}
-
-task step_js(type: Copy) {
-  from 'src/main/resources/js'
-  into 'build/steps30/js'
-}
-step_js.doFirst {
-  mkdir "build/steps30/js"
-}
-
-task specification(dependsOn: [ "xproc30", "steps30" ]) {
-  // nop
-}
-specification.doLast {
-  println "Compiled XProc 3.0 specifications"
-}
-
-task clean(dependsOn: [ "clean_xproc30_examples", "clean_steps30_examples" ]) {
-  doLast {
-    delete "build"
+clean {
+  doFirst {
+    delete("build")
   }
 }
 
-task clean_xproc30_examples(type: Exec) {
-  commandLine "make", "-C", "src/main/xml/xproc/examples", "clean"
-}
-
-task clean_steps30_examples(type: Exec) {
-  commandLine "make", "-C", "src/main/xml/steps/examples", "clean"
-}
-
-task diff(dependsOn: [ "diff_xproc30", "diff_steps30" ]) {
-  // nop
-}
-
-task diff_xproc30(dependsOn: [ "prep_xproc30_base", "prep_xproc30_spec" ], type: JavaExec) {
-  classpath = configurations.deltaxml
-  main = "com.deltaxml.cmdline.PipelinedTextUI"
-  args = ["compare", "xhtml", "build/diff-xproc30-base.html",
-          "build/diff-xproc30-update.html", "build/xproc30/diff.html"]
-}
-
-task diff_steps30(dependsOn: [ "prep_steps30_base", "prep_steps30_spec" ], type: JavaExec) {
-  classpath = configurations.deltaxml
-  main = "com.deltaxml.cmdline.PipelinedTextUI"
-  args = ["compare", "xhtml", "build/diff-steps30-base.html",
-          "build/diff-steps30-update.html", "build/steps30/diff.html"]
-}
-
-task prep_xproc30_base(type: XMLCalabashTask) {
-  inputs.file "tools/xpl/fix-pre.xpl"
-  outputs.file "build/diff-xproc30-base.html"
-  input("source", "http://xpspectest.nwalsh.com/master/head/xproc30/")
-  output("result", "build/diff-xproc30-base.html")
-  pipeline "tools/xpl/fix-pre.xpl"
-}
-prep_xproc30_base.doFirst {
-  mkdir "build"
-}
-
-task prep_xproc30_spec(dependsOn: [ "specification" ], type: XMLCalabashTask) {
-  inputs.file "tools/xpl/fix-pre.xpl"
-  inputs.file "build/xproc30/index.html"
-  outputs.file "build/diff-xproc30-update.html"
-  input("source", "build/xproc30/index.html")
-  output("result", "build/diff-xproc30-update.html")
-  pipeline "tools/xpl/fix-pre.xpl"
-}
-prep_xproc30_spec.doFirst {
-  mkdir "build"
-}
-
-task prep_steps30_base(type: XMLCalabashTask) {
-  inputs.file "tools/xpl/fix-pre.xpl"
-  outputs.file "build/diff-steps30-base.html"
-  input("source", "http://xpspectest.nwalsh.com/master/head/steps30/")
-  output("result", "build/diff-steps30-base.html")
-  pipeline "tools/xpl/fix-pre.xpl"
-}
-prep_steps30_base.doFirst {
-  mkdir "build"
-}
-
-task prep_steps30_spec(dependsOn: [ "specification" ], type: XMLCalabashTask) {
-  inputs.file "tools/xpl/fix-pre.xpl"
-  inputs.file "build/steps30/index.html"
-  outputs.file "build/diff-steps30-update.html"
-  input("source", "build/steps30/index.html")
-  output("result", "build/diff-steps30-update.html")
-  pipeline "tools/xpl/fix-pre.xpl"
-}
-prep_steps30_spec.doFirst {
-  mkdir "build"
-}

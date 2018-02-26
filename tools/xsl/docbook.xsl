@@ -84,6 +84,14 @@
 <xsl:template match="db:specification">
   <xsl:variable name="revisionflags" select="//*[@revisionflag][1]"/>
 
+  <xsl:if test="'step' = tokenize(@role, '\s+')
+                and //db:error[starts-with(@code,'C')]
+                and not(//processing-instruction('step-error-list'))">
+    <xsl:message terminate="yes">
+      <xsl:text>Step has errors but no error list glossary</xsl:text>
+    </xsl:message>
+  </xsl:if>
+
   <div class="{local-name(.)}">
     <xsl:if test="$revisionflags">
       <p>The presentation of this document has been augmented to
@@ -313,7 +321,16 @@
       </p>
     </xsl:if>
 
-<p class="copyright">Copyright © 2016 FIXME:</p>
+    <xsl:choose>
+      <xsl:when test="db:info/db:copyright">
+        <p class="copyright">
+          <xsl:apply-templates select="db:info/db:copyright"/>
+        </p>
+      </xsl:when>
+      <xsl:otherwise>
+        <p class="copyright">Copyright © 2018 FIXME:</p>
+      </xsl:otherwise>
+    </xsl:choose>
 
     <hr/>
 

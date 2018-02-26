@@ -1,0 +1,53 @@
+<section xmlns="http://docbook.org/ns/docbook" xmlns:cs="http://www.w3.org/XML/XProc/2006/04/components#" xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax" xmlns:p="http://www.w3.org/ns/xproc" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="c.in-scope-names">
+<title>p:in-scope-names</title>
+
+<para>The <code>p:in-scope-names</code> step exposes all of the
+in-scope variables and options as a set of parameters in a
+<tag>c:param-set</tag> document.</para>
+
+<p:declare-step type="p:in-scope-names">
+  <p:output port="result" primary="false" content-types="application/xml"/>
+</p:declare-step>
+
+<para>Each in-scope variable and option is converted into a
+<tag>c:param</tag> element.
+The resulting <tag>c:param</tag> elements are wrapped in a 
+<tag>c:param-set</tag> and the parameter set document is written
+to the <port>result</port> port.
+<impl>The
+order in which <tag>c:param</tag> elements occur in the <tag>c:param-set</tag> is
+<glossterm>implementation-dependent</glossterm>.</impl></para>
+
+<para>For consistency and user convenience, if any of the variables or options
+have names that are in a namespace, the
+<tag class="attribute">namespace</tag> attribute on the
+<tag>c:param</tag> element <rfc2119>must</rfc2119> be used. Each
+<tag class="attribute">name</tag> <rfc2119>must</rfc2119> be an NCName.</para>
+
+<para>The base URI of the output document is the URI of the pipeline document
+that contains the step.</para>
+
+<para>For consistency with the <tag>p:parameters</tag> step, the
+<port>result</port> port is not primary.</para>
+
+<section xml:id="ex-in-scope-names" role="tocsuppress">
+<title>Example</title>
+
+<para>This unlikely pipeline demonstrates the behavior of <tag>p:in-scope-names</tag>:
+</para>
+
+<programlisting><xi:include href="../../../../build/examples/doctemp-3.txt" parse="text"/></programlisting>
+
+<para>Assuming the values supplied for the username and password
+options are “<literal>user</literal>” and “<literal>pass</literal>”,
+respectively, the output would be:</para>
+
+<programlisting><xi:include href="../../../../build/examples/doctemp-3-result.txt" parse="text"/></programlisting>
+
+</section>
+
+<section>
+<title>Document properties</title>
+<para feature="in-scope-names-preserves-none">No document properties are preserved.</para>
+</section>
+</section>

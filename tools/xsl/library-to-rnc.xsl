@@ -19,7 +19,7 @@
   <xsl:text># This schema could be made more constrained.&#10;</xsl:text>
   <xsl:text>&#10;</xsl:text>
 
-  <xsl:text>StandardStep</xsl:text>
+  <xsl:text>Step</xsl:text>
   <xsl:value-of select="concat(' ', $assign, ' ')"/>
   <xsl:for-each select="/p:library/p:declare-step">
     <xsl:if test="position() &gt; 1"> | </xsl:if>

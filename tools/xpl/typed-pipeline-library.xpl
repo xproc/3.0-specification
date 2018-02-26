@@ -4,6 +4,7 @@
 <p:input port="source"/>
 <p:input port="parameters" kind="parameter"/>
 <p:output port="result"/>
+<p:serialization port="result" method="xml" indent="true"/>
 
 <p:xslt>
   <p:input port="stylesheet">

@@ -1,0 +1,99 @@
+<section xmlns="http://docbook.org/ns/docbook" xmlns:cs="http://www.w3.org/XML/XProc/2006/04/components#" xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax" xmlns:p="http://www.w3.org/ns/xproc" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="c.unescape-markup">
+<title>p:unescape-markup</title>
+
+<para>The <tag>p:unescape-markup</tag> step takes the string value of
+the document element and parses the content as if it was a Unicode
+character stream containing serialized XML. The output consists of the
+same document element with children that result from the parse. This
+is the reverse of the <tag>p:escape-markup</tag> step.</para>
+
+<p:declare-step type="p:unescape-markup">
+  <p:input port="source" content-types="application/xml text/xml */*+xml text/*"/>
+  <p:output port="result" content-types="application/xml text/xml */*+xml"/>
+  <p:option name="namespace" as="xs:anyURI"/>
+  <p:option name="content-type" select="'application/xml'" as="xs:string"/>
+  <p:option name="encoding" as="xs:string"/>
+  <p:option name="charset" as="xs:string"/>
+</p:declare-step>
+
+<para>The value of the <option>namespace</option> option
+<rfc2119>must</rfc2119> be an <type>anyURI</type>. It
+<rfc2119>should</rfc2119> be absolute, but will not be
+resolved.</para>
+
+<para>When the string value is parsed, the original document element
+is preserved so that the result will be well-formed XML even if the
+content consists of multiple, sibling elements.</para>
+
+<para>The <option>namespace</option> option specifies a default
+namespace. Elements that are in no namespace in the unescaped content
+will be placed into this namespace unless there is an in-scope namespace
+declaration that specifies a different namespace (or explicitly undeclares
+the default namespace).</para>
+
+<para>The <option>content-type</option> option <rfc2119>may</rfc2119>
+be used to specify an alternate content type for the string value. An
+implementation <rfc2119>may</rfc2119> use a different parser to
+produce XML content depending on the specified content-type. For
+example, an implementation might provide an HTML to XHTML parser (e.g.
+<biblioref linkend="tidy"/> or <biblioref linkend="tagsoup"/>) for the
+content type '<literal>text/html</literal>'.</para>
+
+<para>All implementations <rfc2119>must</rfc2119> support the content
+type <literal>application/xml</literal>, and must use a standard XML
+parser for it. <error code="C0051">It is a <glossterm>dynamic
+error</glossterm> if the content-type specified is not supported by
+the implementation.</error>
+<impl>Behavior of
+<tag>p:unescape-markup</tag> for <option>content-type</option>s other
+than <literal>application/xml</literal> is
+<glossterm>implementation-defined</glossterm>.</impl></para>
+
+<para>The <option>encoding</option> option specifies how the data is
+encoded. All implementations <rfc2119>must</rfc2119> support the
+<literal>base64</literal> encoding (and the absence of an encoding
+option, which implies that the content is plain Unicode text).
+<error code="C0052">It is a <glossterm>dynamic error</glossterm> if the
+encoding specified is not supported by the
+implementation.</error></para>
+
+<para>If an <option>encoding</option> is specified, a
+<option>charset</option> may also be specified.
+The character set may be specified as a parameter on the
+<option>content-type</option> or via the separate
+<option>charset</option> option. If it is specified in both places,
+the value of the <option>charset</option> option
+<rfc2119>must</rfc2119> be used.</para>
+
+<para>If the specified
+<option>encoding</option> is <literal>base64</literal>,
+then the character set
+<rfc2119>must</rfc2119> be specified.
+<error code="C0010">It is a <glossterm>dynamic error</glossterm>
+if an encoding of <literal>base64</literal> is specified and
+the character set is not specified or if the specified
+character set is not supported by the implementation.</error>
+</para>
+
+<para>The octet-stream that results from decoding the
+text <rfc2119>must</rfc2119> be interpreted using the character encoding named by
+the value of the <option>charset</option> option
+to produce a sequence of Unicode characters to parse.</para>
+
+<para>If no <option>encoding</option> is specified, the character set
+is ignored, irrespective of where it was specified.</para>
+
+<para>For example, with the 'namespace' option set to the XHTML
+namespace, the following input:</para>
+
+<programlisting language="xml"><xi:include href="../../../../build/examples/parse.input.ex.txt" parse="text"/></programlisting>
+
+<para>would produce:</para>
+
+<programlisting language="xml"><xi:include href="../../../../build/examples/parse.output.ex.txt" parse="text"/></programlisting>
+
+<section>
+<title>Document properties</title>
+<para feature="unescape-markup-preserves-none">No document properties are preserved.</para>
+</section>
+</section>

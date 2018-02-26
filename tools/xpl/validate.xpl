@@ -6,27 +6,39 @@
 <p:input port="parameters" kind="parameter"/>
 <p:output port="result"/>
 
-<p:option name="schema" select="''"/>
-<p:option name="schematron" select="''"/>
+<p:option name="schema" select="'../../build/schema/dbspec.rng'"/>
+<p:option name="schematron" select="'../../build/schema/docbook.sch'"/>
 
-<p:xinclude name="doc" xmlns:cx="http://xmlcalabash.com/ns/extensions"
-            cx:trim="true"/>
+<p:xinclude xmlns:cx="http://xmlcalabash.com/ns/extensions"
+            cx:trim="true">
+</p:xinclude>
+
+<!-- If the glossary is empty, remove it ... -->
+<p:delete xmlns:db="http://docbook.org/ns/docbook"
+          match="db:appendix[db:title='Glossary' and db:glosslist[count(*)=0]]"/>
+
+
+<p:xslt>
+  <p:input port="stylesheet">
+    <p:document href="../xsl/masterbib.xsl"/>
+  </p:input>
+</p:xslt>
+
+<p:identity name="doc">
+<!--
+  <p:log port="result" href="/tmp/xi.xml"/>
+-->
+</p:identity>
 
 <p:choose name="rngschema">
   <p:when test="$schema = ''">
     <p:output port="result"/>
     <p:identity/>
   </p:when>
-  <p:when test="not(contains($schema, '.'))">
-    <p:output port="result"/>
-    <p:load>
-      <p:with-option name="href" select="concat($schema, '.rng')"/>
-    </p:load>
-  </p:when>
   <p:otherwise>
     <p:output port="result"/>
     <p:load>
-      <p:with-option name="href" select="resolve-uri($schema, exf:cwd())"/>
+      <p:with-option name="href" select="$schema"/>
     </p:load>
   </p:otherwise>
 </p:choose>
@@ -57,21 +69,9 @@
   </p:when>
   <p:otherwise>
     <p:output port="result"/>
-    <p:choose name="schschema">
-      <p:when test="not(contains($schematron, '.'))">
-        <p:output port="result"/>
-        <p:load>
-          <p:with-option name="href" select="concat($schematron, '.sch')"/>
-        </p:load>
-      </p:when>
-      <p:otherwise>
-        <p:output port="result"/>
-        <p:load>
-          <p:with-option name="href" select="resolve-uri($schematron, exf:cwd())"/>
-        </p:load>
-      </p:otherwise>
-    </p:choose>
-
+    <p:load name="schschema">
+      <p:with-option name="href" select="$schematron"/>
+    </p:load>
     <p:validate-with-schematron>
       <p:input port="source">
         <p:pipe step="rngvalid" port="result"/>

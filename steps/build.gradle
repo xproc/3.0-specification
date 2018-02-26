@@ -1,0 +1,170 @@
+configurations {
+  tools {
+    description = "Run tools"
+    transitive = true
+  }
+}
+
+dependencies {
+  tools (
+    fileTree(dir: '../tools/lib').include("*.jar")
+  )
+}
+
+defaultTasks 'specification'
+
+apply plugin: 'org.docbook.task'
+apply plugin: 'com.xmlcalabash.task'
+
+import com.xmlcalabash.XMLCalabashTask
+import com.nwalsh.tasks.StripAmblesTask
+
+task xinclude(dependsOn: [ ":spec_schemas" ], type: XMLCalabashTask) {
+  inputs.file "src/main/xml/specification.xml"
+  inputs.file "src/main/xml/errors.xml"
+  inputs.file "src/main/xml/error-codes.xml"
+  inputs.file "src/main/xml/glob.xml"
+  inputs.file "src/main/xml/steps/add-attribute.xml"
+  inputs.file "src/main/xml/steps/add-xml-base.xml"
+  inputs.file "src/main/xml/steps/cast-content-type.xml"
+  inputs.file "src/main/xml/steps/compare.xml"
+  inputs.file "src/main/xml/steps/count.xml"
+  inputs.file "src/main/xml/steps/delete.xml"
+  inputs.file "src/main/xml/steps/directory-list.xml"
+  inputs.file "src/main/xml/steps/error.xml"
+  inputs.file "src/main/xml/steps/escape-markup.xml"
+  inputs.file "src/main/xml/steps/exec.xml"
+  inputs.file "src/main/xml/steps/filter.xml"
+  inputs.file "src/main/xml/steps/hash.xml"
+  inputs.file "src/main/xml/steps/http-request.xml"
+  inputs.file "src/main/xml/steps/identity.xml"
+  inputs.file "src/main/xml/steps/in-scope-names.xml"
+  inputs.file "src/main/xml/steps/insert.xml"
+  inputs.file "src/main/xml/steps/label-elements.xml"
+  inputs.file "src/main/xml/steps/load.xml"
+  inputs.file "src/main/xml/steps/make-absolute-uris.xml"
+  inputs.file "src/main/xml/steps/namespace-rename.xml"
+  inputs.file "src/main/xml/steps/pack.xml"
+  inputs.file "src/main/xml/steps/parameters.xml"
+  inputs.file "src/main/xml/steps/rename.xml"
+  inputs.file "src/main/xml/steps/replace.xml"
+  inputs.file "src/main/xml/steps/set-attributes.xml"
+  inputs.file "src/main/xml/steps/set-properties.xml"
+  inputs.file "src/main/xml/steps/sink.xml"
+  inputs.file "src/main/xml/steps/split-sequence.xml"
+  inputs.file "src/main/xml/steps/store.xml"
+  inputs.file "src/main/xml/steps/string-replace.xml"
+  inputs.file "src/main/xml/steps/template.xml"
+  inputs.file "src/main/xml/steps/unescape-markup.xml"
+  inputs.file "src/main/xml/steps/unwrap.xml"
+  inputs.file "src/main/xml/steps/uuid.xml"
+  inputs.file "src/main/xml/steps/wrap-sequence.xml"
+  inputs.file "src/main/xml/steps/wrap.xml"
+  inputs.file "src/main/xml/steps/www-form-urldecode.xml"
+  inputs.file "src/main/xml/steps/www-form-urlencode.xml"
+  inputs.file "src/main/xml/steps/xinclude.xml"
+  inputs.file "src/main/xml/steps/xquery.xml"
+  inputs.file "src/main/xml/steps/xsl-formatter.xml"
+  inputs.file "src/main/xml/steps/xslt.xml"
+  inputs.file "src/main/xml/steps/payloads/request_body.xml"
+  inputs.file "src/main/xml/steps/payloads/request_response.xml"
+  inputs.file "src/main/xml/steps/payloads/response_body.xml"
+  outputs.file "build/xinclude.xml"
+  input("source", "src/main/xml/specification.xml")
+  output("result", "build/xinclude.xml")
+  pipeline "../tools/xpl/validate.xpl"
+}
+xinclude.doFirst {
+  mkdir("build")
+}
+
+task source(dependsOn: ["glossary"], type: XMLCalabashTask) {
+  inputs.file "../tools/xsl/masterbib.xsl"
+  inputs.file "../src/main/xml/bibliography.xml"
+  inputs.file "src/main/xml/specification.xml"
+  inputs.file "build/glossary.xml"
+  outputs.file "build/source.xml"
+  input("source", "src/main/xml/specification.xml")
+  output("result", "build/source.xml")
+  pipeline "../tools/xpl/validate.xpl"
+}
+
+task glossary(dependsOn: ["xinclude"], type: XMLCalabashTask) {
+  inputs.file "build/xinclude.xml"
+  inputs.file "../tools/xpl/makeglossary.xpl"
+  inputs.file "../tools/xsl/makeglossary.xsl"
+  outputs.file "build/glossary.xml"
+  input("source", "build/xinclude.xml")
+  output("result", "build/glossary.xml")
+  pipeline "../tools/xpl/makeglossary.xpl"
+}
+
+task library(dependsOn: ["source"], type: XMLCalabashTask) {
+  inputs.file "build/source.xml"
+  inputs.file "../tools/xpl/typed-pipeline-library.xpl"
+  inputs.file "../tools/xsl/typed-pipeline-library.xsl"
+  outputs.file "build/library.xml"
+  input("source", "build/source.xml")
+  output("result", "build/library.xml")
+  pipeline "../tools/xpl/typed-pipeline-library.xpl"
+}
+
+task rnc(dependsOn: ["library"], type: XMLCalabashTask) {
+  inputs.file "build/library.xml"
+  inputs.file "../tools/xpl/library-to-rnc.xpl"
+  inputs.file "../tools/xsl/library-to-rnc.xsl"
+  outputs.file "build/steps.rnc"
+  input("source", "build/library.xml")
+  output("result", "build/steps.rnc")
+  pipeline "../tools/xpl/library-to-rnc.xpl"
+}
+
+task rng(dependsOn: ["rnc"], type: JavaExec) {
+  inputs.file "build/steps.rnc"
+  outputs.file "build/steps.rng"
+  classpath = configurations.tools
+  main = 'com.thaiopensource.relaxng.translate.Driver'
+  args = ["build/steps.rnc", "build/steps.rng"]
+}
+
+task specification(dependsOn: [ "source", "library", "rng" ]) {
+  // nop
+}
+
+// ================================================================================
+// Process the examples
+
+def stripFiles = [ "exec-as1.xml", "exec-as2.xml" ]
+
+stripFiles.each { String name ->
+  String newname = name.substring(0, name.lastIndexOf(".")) + ".txt"
+
+  task "process_$name"(type: StripAmblesTask) {
+    input = file("src/main/examples/$name")
+    output = file("$buildDir/examples/$newname")
+  }
+  xinclude.dependsOn "process_$name"
+}
+
+def copyFiles = [ "xquery.xml",
+                  "serialize.input.ex.xml", "serialize.output.ex.xml",
+                  "form.post.xml", "form.response.xml",
+                  "parse.input.ex.xml", "parse.output.ex.xml",
+                  "doctemp-1.xml", "doctemp-2.xml", "doctemp-3.xml", "doctemp-3-result.xml", ]
+
+copyFiles.each { String name ->
+  String newname = name.substring(0, name.lastIndexOf(".")) + ".txt"
+
+  task "copy_$name"(type: Copy) {
+    from "src/main/examples/$name"
+    into "$buildDir/examples"
+    rename (name, newname)
+  }
+  xinclude.dependsOn "copy_$name"
+}
+
+task clean() {
+  doFirst {
+    delete("build")
+  }
+}

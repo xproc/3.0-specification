@@ -1,0 +1,47 @@
+<section xmlns="http://docbook.org/ns/docbook" xmlns:cs="http://www.w3.org/XML/XProc/2006/04/components#" xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax" xmlns:p="http://www.w3.org/ns/xproc" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="c.set-attributes">
+<title>p:set-attributes</title>
+
+<para>The <tag>p:set-attributes</tag> step sets attributes on
+matching elements.</para>
+
+<p:declare-step type="p:set-attributes">
+   <p:input port="source" primary="true" content-types="application/xml text/xml */*+xml"/>
+   <p:input port="attributes" content-types="application/xml text/xml */*+xml"/>
+   <p:output port="result" content-types="application/xml"/>
+   <p:option name="match" select="'/*'" as="xs:string" e:type="XSLTMatchPattern"/>
+</p:declare-step>
+
+ <para>The value of the <option>match</option> option <rfc2119>must</rfc2119> be an
+ XSLTMatchPattern. <error code="C0023">It is a <glossterm>dynamic
+ error</glossterm> if that pattern matches anything other than element
+ nodes.</error></para>
+
+<para>Each attribute on the document element of the document that
+appears on the <port>attributes</port> port is copied to each element
+that matches the <option>match</option> expression.</para>
+
+<para>If an attribute with the same name as one of the attributes to
+be copied already exists, the value specified on the
+<port>attribute</port> port's document is used. The result port of
+this step produces a copy of the <port>source</port> port's document
+with the matching elements' attributes modified.</para>
+
+<para>The matching elements are specified by the match pattern in the
+<option>match</option> option. All matching elements are processed.
+If no elements match, the step will not change any elements.</para>
+
+<para>This step must not copy namespace declarations.  If the attributes
+copied from the <port>attributes</port> use namespaces, prefixes, or
+prefixes bound to different namespaces, the document produced on the
+<port>result</port> output port will require
+<olink targetdoc="../xproc/xproc.xml" targetptr="namespace-fixup"/>.</para>
+
+<para>If an attribute named
+<tag class="attribute">xml:base</tag> is added or changed, the base URI
+of the element <rfc2119>must</rfc2119> also be amended accordingly.</para>
+
+<section>
+<title>Document properties</title>
+<para feature="set-attributes-preserves-all">All document properties are preserved.</para>
+</section>
+</section>

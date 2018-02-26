@@ -1,0 +1,116 @@
+defaultTasks 'specification'
+
+apply plugin: 'org.docbook.task'
+apply plugin: 'com.xmlcalabash.task'
+apply plugin: 'groovy'
+
+import org.docbook.DocBookTask
+import com.xmlcalabash.XMLCalabashTask
+import de.undercouch.gradle.tasks.download.Download
+import com.nwalsh.tasks.StripAmblesTask
+
+// ================================================================================
+// XInclude the sources
+
+task xinclude(dependsOn: [ ":spec_schemas" ], type: XMLCalabashTask) {
+  inputs.file "src/main/xml/specification.xml"
+  inputs.file "src/main/xml/conformance.xml"
+  inputs.file "src/main/xml/error-codes.xml"
+  inputs.file "src/main/xml/language-summary.xml"
+  inputs.file "src/main/xml/mediatype.xml"
+  inputs.file "src/main/xml/namespace-fixup.xml"
+  inputs.file "src/main/xml/parallel.xml"
+  inputs.file "src/main/xml/references.xml"
+  outputs.file "build/xinclude.xml"
+  input("source", "src/main/xml/specification.xml")
+  output("result", "build/xinclude.xml")
+  pipeline "../tools/xpl/validate.xpl"
+}
+xinclude.doFirst {
+  mkdir("build")
+}
+
+task source(dependsOn: ["glossary"], type: XMLCalabashTask) {
+  inputs.file "../tools/xsl/masterbib.xsl"
+  inputs.file "../src/main/xml/bibliography.xml"
+  inputs.file "src/main/xml/specification.xml"
+  inputs.file "build/glossary.xml"
+  outputs.file "build/source.xml"
+  input("source", "src/main/xml/specification.xml")
+  output("result", "build/source.xml")
+  pipeline "../tools/xpl/validate.xpl"
+}
+
+task glossary(dependsOn: ["xinclude"], type: XMLCalabashTask) {
+  inputs.file "build/xinclude.xml"
+  inputs.file "../tools/xpl/makeglossary.xpl"
+  inputs.file "../tools/xsl/makeglossary.xsl"
+  outputs.file "build/glossary.xml"
+  input("source", "build/xinclude.xml")
+  output("result", "build/glossary.xml")
+  pipeline "../tools/xpl/makeglossary.xpl"
+}
+
+task images(type: Copy) {
+  from 'src/main/graphics'
+  into 'build/graphics'
+}
+images.doFirst {
+  mkdir 'build/graphics'
+}
+
+task specification(dependsOn: [ "source", "images" ]) {
+  // nop
+}
+
+// ================================================================================
+// Process the examples
+
+def stripFiles = [ "choose.xml",
+                   "doctemp-1.xml", "doctemp-2.xml", "doctemp-3-result.xml", "doctemp-3.xml",
+                   "doctemp-input.xml",
+                   "fig1-abbr.xml", "fig1.xml", "fig2.xml", "filebin.xpl", "file.xpl",
+                   "for-each.xml",
+                   "group.xml",
+                   "identity.xml",
+                   "input-doc.xml", "input-port.xml", "input-select.xml",
+                   "par1.xml", "par1b.xml",
+                   "parameter.xml", "trycatch.xml",
+                   "viewport.xml", "xinclude.xml", "xpathcontext.xml", "xslt-empty.xml",
+                   "xslt.xml" ]
+
+stripFiles.each { String name ->
+  String newname = name.substring(0, name.lastIndexOf(".")) + ".txt"
+
+  task "process_$name"(type: StripAmblesTask) {
+    input = file("src/main/examples/$name")
+    output = file("$buildDir/examples/$newname")
+  }
+  xinclude.dependsOn "process_$name"
+}
+
+def copyFiles = ["pipeline.xml", "pipeline-library.xml", "simple-default.xml",
+                 "opns-1.xml", "opns-2.xml", "opns-3.xml", "opns-4.xml",
+                 "simple-explicit.xml", "exclude-pfx.xml",
+                 "fig1.xml", "fig1-abbr.xml", "fig2.xml",
+                 "par1.xml", "par1b.xml" ]
+
+copyFiles.each { String name ->
+  String newname = name.substring(0, name.lastIndexOf(".")) + ".txt"
+
+  task "copy_$name"(type: Copy) {
+    from "src/main/examples/$name"
+    into "$buildDir/examples"
+    rename (name, newname)
+  }
+  xinclude.dependsOn "copy_$name"
+}
+
+// ================================================================================
+// Clean
+
+clean {
+  doFirst {
+    delete("build")
+  }
+}
