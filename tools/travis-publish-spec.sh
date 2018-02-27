@@ -6,8 +6,7 @@ if [ "$TRAVIS_REPO_SLUG" == "$GIT_PUB_REPO" ]; then
     echo -e "Setting up for publication...\n"
 
     mkdir $HOME/pubroot
-    cp -R build/xproc30 $HOME/pubroot/xproc30
-    cp -R build/steps30 $HOME/pubroot/steps30
+    cp -R build/dist/* $HOME/pubroot
 
     cd $HOME
     git config --global user.email ${GIT_EMAIL}
@@ -20,12 +19,9 @@ if [ "$TRAVIS_REPO_SLUG" == "$GIT_PUB_REPO" ]; then
         TIP=${TRAVIS_TAG:="head"}
 
         cd gh-pages
-        git rm -rf ./${TRAVIS_BRANCH}/${TIP}/xproc30
-        git rm -rf ./${TRAVIS_BRANCH}/${TIP}/steps30
-        mkdir -p ./${TRAVIS_BRANCH}/${TIP}/xproc30
-        mkdir -p ./${TRAVIS_BRANCH}/${TIP}/steps30
-        cp -Rf $HOME/pubroot/xproc30/* ./${TRAVIS_BRANCH}/${TIP}/xproc30
-        cp -Rf $HOME/pubroot/steps30/* ./${TRAVIS_BRANCH}/${TIP}/steps30
+        git rm -rf ./${TRAVIS_BRANCH}/${TIP}
+        mkdir -p ./${TRAVIS_BRANCH}/${TIP}
+        cp -Rf $HOME/pubroot/* ./${TRAVIS_BRANCH}/${TIP}
 
         if [ "$GITHUB_CNAME" != "" ]; then
             echo $GITHUB_CNAME > CNAME

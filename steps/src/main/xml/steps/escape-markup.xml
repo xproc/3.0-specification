@@ -1,0 +1,43 @@
+<section xmlns="http://docbook.org/ns/docbook" xmlns:cs="http://www.w3.org/XML/XProc/2006/04/components#" xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax" xmlns:p="http://www.w3.org/ns/xproc" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="c.escape-markup">
+<title>p:escape-markup</title>
+
+<para>The <code>p:escape-markup</code> step applies XML serialization to the
+children of the document element and replaces those children with their
+serialization. The outcome is a single element with text content that
+represents the "escaped" syntax of the children as they were
+serialized.</para>
+
+<p:declare-step type="p:escape-markup">
+  <p:input port="source" content-types="application/xml text/xml */*+xml"/>
+  <p:output port="result" content-types="application/xml"/>
+  <p:option name="serialization" as="map(xs:string,xs:anyAtomicValue)"/>
+</p:declare-step>
+
+<para>This step supports the standard serialization options as
+specified in <link linkend="xml-serialization"/>. These options
+control how the output markup is produced before it is escaped.
+</para>
+
+<para>For example, the input:</para>
+<programlisting language="xml"><xi:include href="../../../../build/examples/serialize.input.ex.txt" parse="text"/></programlisting>
+<para>produces:</para>
+<programlisting language="xml"><xi:include href="../../../../build/examples/serialize.output.ex.txt" parse="text"/></programlisting>
+
+<note xml:id="note-escaped">
+<para>The result of this step is an XML document that contains the
+Unicode characters that are the characters that result from escaping
+the input. It is not encoded characters in a serialized octet stream,
+therefore, the serialization options related to encoding characters
+(<option>byte-order-mark</option>, <option>encoding</option>, and
+<option>normalization-form</option>) do not apply. They are omitted
+from the standard serialization options on this step.</para>
+</note>
+
+<para>By default, this step <rfc2119>must not</rfc2119> generate an
+XML declaration in the escaped result.</para>
+
+<section>
+<title>Document properties</title>
+<para feature="escape-markup-preserves-none">No document properties are preserved.</para>
+</section>
+</section>

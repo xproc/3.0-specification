@@ -438,7 +438,7 @@
 </xsl:template>
 
 <xsl:template name="t:syntax-highlight-body">
-  <xsl:if test="$syntax-highlighter != '0'">
+  <xsl:if test="$syntax-highlighter">
     <script src="prism.js"></script>
   </xsl:if>
 </xsl:template>
@@ -752,6 +752,14 @@
       <xsl:call-template name="t:xlink"/>
     </xsl:with-param>
   </xsl:call-template>
+</xsl:template>
+
+<xsl:template match="db:biblioref">
+  <xsl:variable name="entry" select="key('id', @linkend)"/>
+  <xsl:if test="@linkend and not($entry/self::db:bibliomixed)">
+    <span class="error">@@FIXME:MISSING </span>
+  </xsl:if>
+  <xsl:next-match/>
 </xsl:template>
 
 </xsl:stylesheet>

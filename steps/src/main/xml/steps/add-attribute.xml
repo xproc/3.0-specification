@@ -1,0 +1,80 @@
+<section xmlns="http://docbook.org/ns/docbook" xmlns:cs="http://www.w3.org/XML/XProc/2006/04/components#" xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax" xmlns:p="http://www.w3.org/ns/xproc" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="c.add-attribute">
+<title>p:add-attribute</title>
+
+<para>The <code>p:add-attribute</code> step adds a single attribute to
+a set of matching elements. The input document specified on the
+<code>source</code> is processed for matches specified by the match
+pattern in the <option>match</option> option. For each of these
+matches, the attribute whose name is specified by the
+<option>attribute-name</option> option is set to the attribute value
+specified by the <option>attribute-value</option> option.
+</para>
+
+<para>The resulting document is produced on the <code>result</code>
+output port and consists of a exact copy of the input with the
+exception of the matched elements. Each of the matched elements is
+copied to the output with the addition of the specified attribute
+with the specified value.
+</para>
+
+<p:declare-step type="p:add-attribute">
+  <p:input port="source" content-types="application/xml text/xml */*+xml"/>
+  <p:output port="result" content-types="application/xml"/>
+  <p:option name="match" select="'/*'" as="xs:string" e:type="XSLTMatchPattern"/>
+  <p:option name="attribute-name" required="true" as="xs:QName"/>
+  <p:option name="attribute-prefix" as="xs:NCName"/>
+  <p:option name="attribute-namespace" as="xs:anyURI"/>
+  <p:option name="attribute-value" required="true" as="xs:string"/>
+</p:declare-step>
+
+<para>The value of the <option>match</option> option
+<rfc2119>must</rfc2119> be an XSLTMatchPattern. <error code="C0023">It
+is a <glossterm>dynamic error</glossterm> if the match pattern matches a node
+which is not an element.</error></para>
+
+<para>The value of the <option>attribute-name</option> option
+<rfc2119>must</rfc2119> be a <type>QName</type>.
+If the lexical value does not contain a colon, then the <tag class="attribute">attribute-namespace</tag> may be used to specify the
+namespace of the attribute. In that case, the <tag class="attribute">attribute-prefix</tag> may be specified to suggest a
+prefix for the attribute name. <error code="D0034">It is a
+<glossterm>dynamic error</glossterm> to specify a new namespace or
+prefix if the lexical value of the specified name contains a
+colon.</error>
+The corresponding expanded name is used to construct the attribute.</para>
+
+<para>The value of the <option>attribute-value</option> option
+<rfc2119>must</rfc2119> be a legal attribute value according to XML.</para>
+
+<para>If an attribute with the same name as the expanded name
+from the <option>attribute-name</option> option exists on the matched
+element, the value specified in
+the <option>attribute-value</option> option is used to set the
+value of that existing attribute.  That is, the value of the
+existing attribute is changed to the <option>attribute-value</option>
+value. </para>
+
+<note xml:id="note-multattr"><para>If multiple attributes need to be set on the same
+element(s), the <tag>p:set-attributes</tag> step can be used to set them
+all at once.</para>
+</note>
+
+<para>This step cannot be used to add namespace declarations. <error code="C0059">It is a <glossterm>dynamic error</glossterm> if the QName
+value in the <option>attribute-name</option> option uses the prefix
+“<literal>xmlns</literal>”
+or any other prefix that resolves to the namespace name
+<uri>http://www.w3.org/2000/xmlns/</uri>.
+</error> Note, however, that while namespace declarations cannot be
+added explicitly by this step, adding an attribute whose name is in a
+namespace for which there is no namespace declaration in scope on the
+matched element may result in a namespace binding being added by
+<olink targetdoc="../xproc/xproc.xml" targetptr="namespace-fixup"/>.</para>
+
+<para>If an attribute named
+<tag class="attribute">xml:base</tag> is added or changed, the base URI
+of the element <rfc2119>must</rfc2119> also be amended accordingly.</para>
+
+<section>
+<title>Document properties</title>
+<para feature="add-attribute-preserves-all">All document properties are preserved.</para>
+</section>
+</section>
