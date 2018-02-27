@@ -1,0 +1,132 @@
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>XProc 3.0: Validate with RELAX NG</title><meta charset="utf-8" /><link rel="alternate" title="XML" href="specification.xml" /><link rel="alternate" title="Latest editor's draft" href="http://www.w3.org/XML/XProc/docs/langspec.html" /><link rel="alternate" title="Latest Public Working Draft" href="http://www.w3.org/TR/xproc/" /><meta name="generator" content="DocBook XSL 2.0 Stylesheets V2.1.0" /><meta name="description" content="Abstract This specification describes the p:validate-with-relax-ng&#xA;step for&#xA;XProc 3.0: An XML Pipeline Language." /><link href="css/prism.css" rel="stylesheet" type="text/css" /><link href="css/db-prism.css" rel="stylesheet" type="text/css" /><link rel="stylesheet" type="text/css" href="css/base.css" /><link rel="stylesheet" type="text/css" href="css/xproc.css" /><link rel="stylesheet" type="text/css" href="css/base.css" /><script type="text/javascript" src="js/dbmodnizr.js"></script></head><body><div class="specification"><div class="head" id="spec.head"><h1>XProc 3.0: Validate with RELAX NG</h1><h2>Editor's Draft  <time datetime="2018-02-27T13:27:01Z">27 February 2018 at 13:27 UTC (<a href="https://github.com/xproc/3.0-specification/commit/9bedee9294006aa49cf883fddf8b1ee8b7845d4d">build 236</a>)</time></h2><dl><dt>This Version:</dt><dd><a href="https://xproc.github.io/3.0-specification/master/head/xproc/">https://xproc.github.io/3.0-specification/master/head/xproc</a></dd><dt>Latest Version:</dt><dd><a href="http://spec.xproc.org/master/head/xproc/">http://spec.xproc.org/master/head/xproc/</a></dd><dt>Editors:</dt><dd><span class="personname">Achim Berndzen</span></dd><dd><span class="personname">Gerrit Imsieke</span></dd><dd><span class="personname">Erik Siegel</span></dd><dd><span class="personname">Norman Walsh</span></dd><dt>Repository:</dt><dd><a href="http://github.com/xproc/3.0-specification">This specification on GitHub</a></dd><dd><a href="http://github.com/xproc/3.0-specification/issues">Report an issue</a></dd><dt>Changes:</dt><dd><a href="http://github.com/xproc/3.0-specification/commits/master">Commits for this specification</a></dd></dl><p>This document is also available in these non-normative formats: <a href="specification.xml">XML</a>.</p><p class="copyright"><span class="copyright">Copyright © <span class="years">2018</span> <span class="holders"><span class="holder">@@FIXME:</span></span></span></p><hr /><div class="abstract"><h2>Abstract</h2>
+<p>This specification describes the <code class="code">p:validate-with-relax-ng</code>
+step for
+<em class="citetitle">XProc 3.0: An XML Pipeline Language</em>.</p>
+</div><div class="status"><h2>Status of this Document</h2><p><strong>This document is an editor's  draft that has no official standing.</strong></p>
+
+<p><em>This section describes the status of this document at
+the time of its publication. Other documents may supersede this
+document.</em></p>
+
+<p>This document is derived from
+<a href="https://www.w3.org/TR/2010/REC-xproc-20100511/">XProc:
+An XML Pipeline Language</a> published by the W3C.</p>
+</div></div><hr /><div class="lists-of-titles"><div class="toc"><h2 id="TableOfContents">Table of Contents</h2><ul class="toc"><li><span>1 <a href="#introduction">Introduction</a></span></li><li><span>2 <a href="#step">Validate with RELAX NG</a></span><ul class="toc"><li><span>2.1 <a href="#step.11">Document properties</a></span></li></ul></li><li><span>A <a href="#app.step-errors">Step Errors</a></span></li><li><span>B <a href="#references">References</a></span></li></ul></div></div>
+
+
+<section id="introduction" class="section"><div class="section-titlepage"><h2>1 Introduction</h2></div><div class="content">
+
+
+<p>This specification describes the
+<code class="code">p:validate-with-relax-ng</code> XProc step.
+A machine-readable description of
+these steps may be found in
+<a href="steps.xpl">steps.xpl</a>.
+</p>
+
+<p>Familarity with the
+general nature of [<a href="#xproc30"><span class="abbrev">XProc 3.0</span></a>]
+steps is assumed; for background details, see
+[<a href="#xproc30-steps"><span class="abbrev">XProc 3.0 Steps</span></a>].</p>
+</div></section>
+
+<section id="step" class="section"><div class="section-titlepage"><h2>2 Validate with RELAX NG</h2></div><div class="content">
+
+
+<p>The <code class="tag-element">p:validate-with-relax-ng</code> step applies
+[<a href="#iso19757-2"><span class="abbrev">RELAX NG</span></a>]
+validation to the <code class="port">source</code> document.</p>
+
+<p class="element-syntax element-syntax-declare-step"><span class="decl"><code>&lt;p:declare-step</code> <code class="attr type-attr">type</code><code>="</code><code class="value type-value">p:validate-with-relax-ng</code><code>"</code><code>&gt;</code></span><br />     <span class="input"><code>&lt;p:input</code> <code class="attr port-attr">port</code><code>="</code><code class="value port-value">source</code><code>"</code> <code class="attr primary-attr">primary</code><code>="</code><code class="value primary-value">true</code><code>"</code> <code class="attr content-types-attr">content-types</code><code>="</code><code class="value content-types-value">application/xml text/xml */*+xml</code><code>"</code><code>/&gt;</code></span><br />     <span class="input"><code>&lt;p:input</code> <code class="attr port-attr">port</code><code>="</code><code class="value port-value">schema</code><code>"</code> <code class="attr content-types-attr">content-types</code><code>="</code><code class="value content-types-value">application/xml */*+xml text/*</code><code>"</code><code>/&gt;</code></span><br />     <span class="input"><code>&lt;p:output</code> <code class="attr port-attr">port</code><code>="</code><code class="value port-value">result</code><code>"</code> <code class="attr content-types-attr">content-types</code><code>="</code><code class="value content-types-value">application/xml</code><code>"</code><code>/&gt;</code></span><br />     <span class="opt-opt"><code>&lt;p:option</code> <code class="attr name-attr">name</code><code>="</code><code class="value name-value">dtd-attribute-values</code><code>"</code> <code class="attr select-attr">select</code><code>="</code><code class="value select-value">false()</code><code>"</code> <code class="attr as-attr">as</code><code>="</code><code class="value as-value">xs:boolean</code><code>"</code><code>/&gt;</code><code></code></span><br />     <span class="opt-opt"><code>&lt;p:option</code> <code class="attr name-attr">name</code><code>="</code><code class="value name-value">dtd-id-idref-warnings</code><code>"</code> <code class="attr select-attr">select</code><code>="</code><code class="value select-value">false()</code><code>"</code> <code class="attr as-attr">as</code><code>="</code><code class="value as-value">xs:boolean</code><code>"</code><code>/&gt;</code><code></code></span><br />     <span class="opt-opt"><code>&lt;p:option</code> <code class="attr name-attr">name</code><code>="</code><code class="value name-value">assert-valid</code><code>"</code> <code class="attr select-attr">select</code><code>="</code><code class="value select-value">true()</code><code>"</code> <code class="attr as-attr">as</code><code>="</code><code class="value as-value">xs:boolean</code><code>"</code><code>/&gt;</code><code></code></span><br /><code>&lt;/p:declare-step&gt;</code></p>
+
+<p>The values of the <code class="option">dtd-attribute-values</code> and
+<code class="option">dtd-id-idref-warnings</code> options
+<span class="rfc2119" id="step.4.3">must</span> be booleans.</p>
+
+<p>If the <code class="port">schema</code> document has an XML media type, then
+it <span class="rfc2119" id="step.5.2">must</span> be interpreted as a RELAX NG Grammar. If
+the <code class="port">schema</code> document has the media type
+“<code class="literal">application/relax-ng-compact-syntax</code>” or the media
+type has a “<code class="literal">text</code>” type, then it
+<span class="rfc2119" id="step.5.6">must</span> be interpreted as a [<a href="#relaxng-compact-syntax"><span class="abbrev">RELAX NG
+Compact Syntax</span></a>] document for validation.</p>
+
+<p>If the <code class="option">dtd-attribute-values</code> option is
+<code class="literal">true</code>, then the attribute value defaulting conventions of
+[<a href="#relaxng-dtd-compat"><span class="abbrev">RELAX NG DTD Compatibility</span></a>] are also applied.</p>
+
+<p>If the <code class="option">dtd-id-idref-warnings</code> option is
+<code class="literal">true</code>, then the validator <span class="rfc2119" id="step.7.3">should</span>
+treat a schema that is incompatible with the ID/IDREF/IDREFs feature
+of [<a href="#relaxng-dtd-compat"><span class="abbrev">RELAX NG DTD Compatibility</span></a>] as if the document
+was invalid.
+</p>
+
+<p><a id="err.inline.C0053"></a>It is a <em class="glossterm">dynamic error</em> (<a href="#err.C0053"><code class="errqname">err:XC0053</code></a>)
+if the <code class="option">assert-valid</code> option is <code class="literal">true</code>
+and the input document is not valid.</p>
+
+<p>The output from this step is a copy of the input, possibly
+augmented by application of the
+[<a href="#relaxng-dtd-compat"><span class="abbrev">RELAX NG DTD Compatibility</span></a>]. The output of this step
+<span class="rfc2119" id="step.9.2">may</span> include PSVI annotations.</p>
+
+<p><span id="impl-1">Support for [<a href="#relaxng-dtd-compat"><span class="abbrev">RELAX NG DTD Compatibility</span></a>] is
+<em class="glossterm">implementation defined</em>.</span></p>
+
+<section id="step.11" class="section"><div class="section-titlepage"><h3>2.1 Document properties</h3></div><div class="content">
+
+<p>All document properties on
+the <code class="port">source</code> port are preserved on the <code class="port">result</code> port.
+No document properties on the <code class="port">schemas</code> port are preserved.</p>
+</div></section>
+</div></section>
+
+<article id="app.step-errors" class="appendix"><header class="appendix-titlepage"><h2>A Step Errors</h2></header><div class="content">
+
+<p>The following <em class="glossterm">dynamic errors</em>
+can be raised by the <code class="code">p:validate-with-relax-ng</code> step:</p>
+<div id="step-error-summary"><h5>Step Errors</h5><dl class="errs"><dt id="err.C0053"><code class="errqname">err:XC0053</code></dt><dd><p>It is a dynamic error
+if the assert-valid option is true
+and the input document is not valid.</p><p>See: <a href="#err.inline.C0053">Validate with RELAX NG</a></p></dd></dl></div>
+</div></article>
+
+<article id="references" class="appendix"><header class="appendix-titlepage"><h2>B References</h2></header><div class="content">
+
+<div id="references.2" class="bibliolist">
+<div id="xproc30" class="bibliomixed"><p>[<span class="abbrev">XProc 3.0</span>] 
+<a href="http://spec.xproc.org/"><span class="citetitle"><cite>XProc 3.0:
+An XML Pipeline Language</cite></span></a>.
+Achim Berndzen, Gerrit Imsieke, Erik Seigel and Norman Walsh, editors.
+</p></div>
+<div id="xproc30-steps" class="bibliomixed"><p>[<span class="abbrev">XProc 3.0 Steps</span>] 
+<a href="http://spec.xproc.org/"><span class="citetitle"><cite>XProc 3.0 Steps:
+An Introduction</cite></span></a>.
+Achim Berndzen, Gerrit Imsieke, Erik Seigel and Norman Walsh, editors.
+</p></div>
+<div id="iso19757-2" class="bibliomixed"><p>[<span class="abbrev">RELAX NG</span>] ISO/IEC JTC 1/SC 34.
+<a href="http://www.iso.org/iso/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=52348"><span class="citetitle"><cite>ISO/IEC 19757-2:2008(E)
+Document Schema Definition Language (DSDL) -- Part 2:
+Regular-grammar-based
+validation -- RELAX NG</cite></span></a>
+2008.
+</p></div>
+<div id="relaxng-compact-syntax" class="bibliomixed"><p>[<span class="abbrev">RELAX NG
+Compact Syntax</span>] ISO/IEC JTC 1/SC 34.
+<span class="citetitle"><cite>ISO/IEC 19757-2:2003/Amd 1:2006 Document Schema Definition
+Languages (DSDL) — Part 2: Grammar-based validation — RELAX NG AMENDMENT 1
+Compact Syntax</cite></span>
+2006.
+</p></div>
+<div id="relaxng-dtd-compat" class="bibliomixed"><p>[<span class="abbrev">RELAX NG DTD Compatibility</span>] 
+<span class="citetitle"><cite>RELAX NG DTD Compatibility</cite></span>.
+OASIS Committee Specification.
+3 December 2001.
+</p></div>
+</div>
+</div></article>
+
+
+
+
+</div><script src="js/prism.js"></script></body></html>
