@@ -213,7 +213,7 @@
    </p:declare-step>
    <p:declare-step type="p:store" xml:id="store">
       <p:input port="source" content-types="*/*"/>
-      <p:output port="result" content-types="application/xml"/>
+      <p:output port="result" content-types="application/xml" primary="true"/>
       <p:option name="href" required="true" as="xs:anyURI"/>
       <p:option name="serialization" as="xs:string"/>
    </p:declare-step>
