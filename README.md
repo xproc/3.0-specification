@@ -50,7 +50,7 @@ Within each subproject, the “source” for each specification is in
 `src/main/xml/specification.xml`. There may be other files as well.
 Use XInclude to break specs into pieces if you wish.
 
-** About the workflow
+## About the workflow
 
 It’s all a bit complicated. These are some notes.
 
