@@ -326,15 +326,6 @@
    <p:declare-step type="p:in-scope-names" xml:id="in-scope-names">
       <p:output port="result" primary="false" content-types="application/xml"/>
    </p:declare-step>
-   <p:declare-step type="p:template" xml:id="template">
-      <p:input port="source"
-               sequence="true"
-               primary="true"
-               content-types="application/xml text/xml */*+xml"/>
-      <p:input port="template" content-types="application/xml text/xml */*+xml"/>
-      <p:output port="result" content-types="application/xml"/>
-      <p:option name="parameters" as="xs:string"/>
-   </p:declare-step>
    <p:declare-step type="p:uuid" xml:id="uuid">
       <p:input port="source"
                primary="true"
