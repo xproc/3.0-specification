@@ -12,7 +12,7 @@
 <p:serialization port="result" indent="false" method="xhtml"/>
 <p:option name="style" select="'dbspec.xsl'"/>
 
-<p:import href="../../build/docbook/xslt/base/pipelines/docbook.xpl"/>
+<p:import href="https://cdn.docbook.org/release/latest/xslt/base/pipelines/docbook.xpl"/>
 
 <p:declare-step type="pos:env">
   <p:output port="result"/>
