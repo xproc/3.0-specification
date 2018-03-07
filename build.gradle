@@ -171,14 +171,8 @@ task steps(dependsOn: [ "xproc_schemas", "spec_schemas",
                         "steps:specification", "steps_assets", "steps_src",
                         "steps_xpl" ],
            type: DocBookTask) {
-  inputs.file "steps/build/source.xml"
-  inputs.file "tools/xsl/docbook.xsl"
-  inputs.file "tools/xsl/dbspec.xsl"
-  inputs.file "tools/xsl/xprocns.xsl"
-  inputs.file "tools/xsl/ml-macro.xsl"
-  inputs.file "tools/xsl/rngsyntax.xsl"
-  inputs.file "tools/xpl/formatspec.xpl"
-  outputs.file "build/dist/steps/index.html"
+  inputs.files fileTree(dir: "tools/xsl/")
+  inputs.files fileTree(dir: "tools/xpl/")
   input("source", "steps/build/source.xml")
   output("result", "build/dist/steps/index.html")
 
