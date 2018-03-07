@@ -126,7 +126,7 @@ or any other prefix that resolves to the namespace name
 added explicitly by this step, adding an attribute whose name is in a
 namespace for which there is no namespace declaration in scope on the
 matched element may result in a namespace binding being added by
-<olink targetdoc="../xproc/xproc.xml" targetptr="namespace-fixup"/>.</para>
+namespace fixup.</para>
 
 <para>If an attribute named
 <tag class="attribute">xml:base</tag> is added or changed, the base URI
@@ -221,8 +221,7 @@ a valid media type of the form
 <itemizedlist>
 <listitem>
 <para>Casting from one XML media type to another simply changes the
-“<literal>content-type</literal>” <glossterm baseform="document properties">document
-property</glossterm>.
+“<literal>content-type</literal>” document property.
 </para>
 </listitem>
 <listitem xml:id="c.data">
@@ -241,7 +240,7 @@ representation of the non-XML content.</para>
 <para>Casting from an XML media type to a non-XML media type
 <rfc2119>must</rfc2119> support the case where the input document is
 a <tag>c:data</tag> document. The resulting document will
-have the specified media type and a <glossterm>representation</glossterm> that
+have the specified media type and a representation that
 is the content of the <tag>c:data</tag> element after decoding the base64
 encoded content.</para>
 <para><error code="C0072">It is a <glossterm>dynamic
@@ -518,8 +517,8 @@ The error generated can be caught by a <tag>p:try</tag> just like any
 other dynamic error.</para>
 
 <para>For authoring convenience, the <tag>p:error</tag> step is
-declared with a single, primary output port. With respect to
-<glossterm baseform="connection">connections</glossterm>, this port behaves like
+declared with a single, primary output port. With respect to connections,
+this port behaves like
 any other output port even though nothing can ever
 appear on it since the step always fails.</para>
 
@@ -645,8 +644,7 @@ including an entity body (content) for the request.</para>
 
 <para>The <option>serialization</option> option is provided to control the
 serialization of any content which is sent as part of the request.
-The effect of these options is as specified in
-<link linkend="serialization">Serialization</link>.
+The effect of these options is as specified in <biblioref linkend="xproc30"/>.
 See <link linkend="c.request_body"/> for a discussion of when serialization
 occurs in constructing a request.</para>
 
@@ -733,31 +731,44 @@ challenge contains an authentication method that isn't
 supported.</error> All implementations are required to support "Basic"
 and "Digest" authentication per <biblioref linkend="rfc2617"/>.</para>
 
-<para>The attribute <code>timeout</code> controls the time the XProc processor is 
-waiting for the request to be answered. If a value is given for <code>timeout</code> 
-it is taken as the number of seconds to wait for the response to be delivered. 
-If no response is received after that time, the request is terminated. 
-If <code>fail-on-timeout</code> is <literal>true</literal>, a <glossterm>dynamic 
-error</glossterm> is raised, if it is <literal>false</literal>, a 
-<code>c:response</code> document with <code>status=408</code> 
-is generated. If no value is given for fail-on-timeout, <literal>false</literal> is assumed. 
-If no value for <code>timeout</code> is given, <code>fail-on-timeout</code> is ignored.</para>
+<para>The attribute <code>timeout</code> controls the time the XProc processor is
+waiting for the request to be answered. If a value is given for <code>timeout</code>
+it is taken as the number of seconds to wait for the response to be delivered.
+If no response is received after that time, the request is terminated.</para>
 
-<para><error code="C0078">It is a <glossterm>dynamic error</glossterm> if <option>fail-on-timeout</option>
-is specified as <literal>true</literal> and a value is given for <option>timeout</option> and the
-http-request is not finished in the time specified by <option>timeout</option>.</error>
+<itemizedlist>
+<listitem>
+<para><error code="C0078">It is a <glossterm>dynamic error</glossterm>
+if <option>fail-on-timeout</option> is specified as
+<literal>true</literal> and a value is given for
+<option>timeout</option> and the <tag>p:http-request</tag> is not finished in the
+time specified by <option>timeout</option>.</error>
 </para>
+</listitem>
+<listitem>
+<para>If <code>fail-on-timeout</code> is <literal>false</literal>, a
+<code>c:response</code> document with <code>status=408</code> is
+generated.</para>
+</listitem>
+<listitem>
+<para>If no value is given for <code>fail-on-timeout</code>,
+<literal>false</literal> is assumed. If no value is given for
+<code>timeout</code>, <code>fail-on-timeout</code> is ignored.</para>
+</listitem>
+</itemizedlist>
 
 <note>
 <title>Note</title>
-<para>Please note the difference between option <code>p:timeout</code> on <code>p:http-request</code> and 
-the attribute <code>timeout</code> in combination with <code>fail-on-timeout="true"</code> on <code>c:request</code>. If 
-the step does not finish in the set time, <code>D0053</code> is raised. If the request does not finish in time and 
-fail-on-timeout is true, <code>C0078</code> is raised. The actual times after which a timeout is detected may also 
-differ slightly.
+<para>Please note the difference between option <code>p:timeout</code>
+on <code>p:http-request</code> and the attribute <code>timeout</code>
+in combination with <code>fail-on-timeout="true"</code> on
+<code>c:request</code>. If the step does not finish in the set time,
+<code>D0053</code> is raised. If the request does not finish in time
+and fail-on-timeout is true, <code>C0078</code> is raised. The actual
+times after which a timeout is detected may also differ slightly.
 </para>
 </note>
-  
+
   <para>The <code>c:header</code> element specifies a
 header name and value, either for inclusion in a request, or as received in a response.</para>
 
@@ -1503,7 +1514,7 @@ nodes.</error></para>
 as an IRI reference. If it is relative, it is made absolute against
 the base URI of the element on which it is specified
 (<tag>p:with-option</tag> or <tag>p:make-absolute-uris</tag> in the case of
-a <olink targetdoc="../xproc/xproc.xml" targetptr="option-shortcut">syntactic shortcut</olink>
+a syntactic shortcut
 value).</para>
 
 <para>For every element or attribute in the input document which
@@ -1915,8 +1926,7 @@ If no elements match, the step will not change any elements.</para>
 <para>This step must not copy namespace declarations.  If the attributes
 copied from the <port>attributes</port> use namespaces, prefixes, or
 prefixes bound to different namespaces, the document produced on the
-<port>result</port> output port will require
-<olink targetdoc="../xproc/xproc.xml" targetptr="namespace-fixup"/>.</para>
+<port>result</port> output port will require namespace fixup.</para>
 
 <para>If an attribute named
 <tag class="attribute">xml:base</tag> is added or changed, the base URI
@@ -1930,8 +1940,8 @@ of the element <rfc2119>must</rfc2119> also be amended accordingly.</para>
 <section xml:id="c.set-properties">
 <title>p:set-properties</title>
 
-<para>The <tag>p:set-properties</tag> step sets <glossterm>document
-properties</glossterm> on the source document.</para>
+<para>The <tag>p:set-properties</tag> step sets document
+properties on the source document.</para>
 
 <p:declare-step type="p:set-properties">
    <p:input port="source" content-types="*/*"/>
@@ -1940,7 +1950,7 @@ properties</glossterm> on the source document.</para>
    <p:option name="merge" default="false()" as="xs:boolean"/>
 </p:declare-step>
 
- <para>The <glossterm>document properties</glossterm> of the document
+ <para>The document properties of the document
 on the <port>source</port> port are augmented with the values specified
 in the <option>properties</option> option. The document produced on
 the <port>result</port> port has the same representation but the
@@ -2011,7 +2021,7 @@ documents (which may be empty) to the <port>matched</port> port.
 All other documents are written to the <port>not-matched</port> port,
 irrespective of whether or not they match.</para>
 
-<para>The <olink targetdoc="../xproc/xproc.xml" targetptr="xpath-context">XPath context</olink> for the
+<para>The XPath context for the
 <option>test</option> option changes over time. For each document that
 appears on the <code>source</code> port, the expression is evaluated
 with that document as the context document. The context position
@@ -2054,7 +2064,7 @@ location of the stored document.</para>
 <rfc2119>must</rfc2119> be an <type>anyURI</type>. If it is relative,
 it is made absolute against the base URI of the element on which it is
 specified (<tag>p:with-option</tag> or <tag>p:store</tag> in the case
-of a <olink targetdoc="../xproc/xproc.xml" targetptr="option-shortcut">syntactic shortcut</olink>
+of a syntactic shortcut
 value).</para>
 
 <para>The step attempts to store the XML document to the specified
@@ -2068,7 +2078,7 @@ document stored by the step.</para>
 
 <para>The <option>serialization</option> option is provided to control the
 serialization of content when it is stored. Serialization is described in
-<link linkend="serialization">Serialization</link>.</para>
+<biblioref linkend="xproc30"/>.</para>
 
 <section>
 <title>Document properties</title>
@@ -2368,9 +2378,8 @@ option.</para>
 
 <para>The <option>group-adjacent</option> option can be used to group
 adjacent documents.
-The
-<olink targetdoc="../xproc/xproc.xml" targetptr="xpath-context">XPath
-context</olink> for the
+The XPath context
+for the
 <option>group-adjacent</option> option changes over time. For each document that
 appears on the <code>source</code> port, the expression is evaluated
 with that document as the context document. The context position
@@ -2448,7 +2457,7 @@ option <rfc2119>must</rfc2119> be a <type>QName</type>.</para>
 option <rfc2119>must</rfc2119> be an <type>anyURI</type>. If it is
 relative, it is made absolute against the base URI of the element on
 which it is specified (<tag>p:with-option</tag> or <tag>p:xslt</tag> in the
-case of a <olink targetdoc="../xproc/xproc.xml" targetptr="option-shortcut">syntactic shortcut</olink>
+case of a syntactic shortcut
 value).</para>
 
 <para>If the step specifies a <option>version</option>, then that version
@@ -2516,8 +2525,7 @@ option is specified.</para>
 
 
 <para>The static and initial dynamic contexts of the XSLT processor
-are the contexts defined in
-<olink targetdoc="../xproc/xproc.xml" targetptr="step-xpath-context-20"/>
+are the contexts defined in the step XPath context
 with the following adjustments.</para>
 
 <para>The dynamic context is augmented as follows:</para>
@@ -2670,8 +2678,7 @@ If <option>source-is-xml</option> is true, the value of the
 <option>serialization</option> option is used to convert the input
 into serialized XML which is passed to the command, otherwise the
 XPath string-value of the document is passed. Serialization is
-described in
-<link linkend="serialization">Serialization</link>.</para>
+described in <biblioref linkend="xproc30"/>.</para>
 
 <para>The standard output of the command is read and returned on
 <port>result</port>; the standard error output is read and returned on
@@ -3233,8 +3240,7 @@ port.</para>
 <rfc2119>must</rfc2119> be an <type>anyURI</type>. If it is relative,
 it is made absolute against the base URI of the element on which it is
 specified (<tag>p:with-option</tag> or <tag>p:xsl-formatter</tag> in the
-case of a <olink targetdoc="../xproc/xproc.xml" targetptr="option-shortcut">syntactic shortcut</olink>
-value).</para>
+case of a syntactic shortcut value).</para>
 
 <para>The content-type of the output is controlled by the
 <option>content-type</option> option. This option specifies a media
@@ -3265,42 +3271,69 @@ document stored by the step.</para>
 </section>
 
 <section xml:id="errors">
-<title>Errors</title>
-    <para>Errors in a pipeline can be divided into two classes: static errors and dynamic
-      errors.</para>
-    <section xml:id="static-errors">
-      <title>Static Errors</title>
-      <para><termdef xml:id="dt-static-error">A <firstterm>static error</firstterm> is one which can
-          be detected before pipeline evaluation is even attempted.</termdef> Examples of static
-        errors include cycles and incorrect specification of inputs and outputs. </para>
-      <para>Static errors are fatal and must be detected before any steps are evaluated.</para>
-      <para>For a complete list of static errors, see <xref linkend="app.static-errors"/>.</para>
-    </section>
-    <section xml:id="dynamic-errors">
-      <title>Dynamic Errors</title>
-      <para>A <termdef xml:id="dt-dynamic-error">A <firstterm>dynamic error</firstterm> is one which
-          occurs while a pipeline is being evaluated.</termdef> Examples of dynamic errors include
-        references to URIs that cannot be resolved, steps which fail, and pipelines that exhaust the
-        capacity of an implementation (such as memory or disk space).</para>
-      <para>If a step fails due to a dynamic error, failure propagates upwards until either a
-          <tag>p:try</tag> is encountered or the entire pipeline fails. In other words, outside of a
-          <tag>p:try</tag>, step failure causes the entire pipeline to fail.</para>
-      <para>For a complete list of dynamic errors, see <xref linkend="app.dynamic-errors"/>.</para>
-    </section>
-    <section xml:id="step-errors">
-      <title>Step Errors</title>
-      <para>Several of the steps in the standard and option step library can generate dynamic
-        errors.</para>
-      <para>For a complete list of the dynamic errors raised by builtin pipeline steps, see <xref linkend="app.step-errors"/>.</para>
-    </section>
-  </section>
-<appendix xml:id="app.step-errors">
 <title>Step Errors</title>
 
-<para>The following <glossterm baseform="dynamic-error">dynamic errors</glossterm>
-can be raised by steps in this specification:</para>
+<para>Several of the steps in the standard step library can generate
+<glossterm baseform="dynamic-error">dynamic errors</glossterm>.</para>
 
-<?step-error-list?>
+<para>A <termdef xml:id="dt-dynamic-error">A <firstterm>dynamic
+error</firstterm> is one which occurs while a pipeline is being
+evaluated.</termdef> Examples of dynamic errors include references to
+URIs that cannot be resolved, steps which fail, and pipelines that
+exhaust the capacity of an implementation (such as memory or disk
+space).</para>
+
+<para>If a step fails due to a dynamic error, failure propagates
+upwards until either a <tag>p:try</tag> is encountered or the entire
+pipeline fails. In other words, outside of a <tag>p:try</tag>, step
+failure causes the entire pipeline to fail.</para>
+
+<para>The following errors can be raised by steps in this
+specification:</para>
+
+<?step-error-list level="none"?>
+
+</section>
+<appendix xml:id="conformance">
+<title>Conformance</title>
+
+<para>Conformant processors <rfc2119>must</rfc2119> implement all of the features
+described in this specification except those that are explicitly identified
+as optional.</para>
+
+<para>Some aspects of processor behavior are not completely specified; those
+features are either <glossterm role="unwrapped">implementation-dependent</glossterm> or
+<glossterm role="unwrapped">implementation-defined</glossterm>.</para>
+
+<para><termdef xml:id="dt-implementation-dependent">An
+<firstterm>implementation-dependent</firstterm> feature is one where the
+implementation has discretion in how it is performed.
+Implementations are not required to document or explain
+how <glossterm role="unwrapped">implementation-dependent</glossterm> features are performed.</termdef>
+</para>
+
+<para><termdef xml:id="dt-implementation-defined">An
+<firstterm>implementation-defined</firstterm> feature is one where the
+implementation has discretion in how it is performed.
+Conformant implementations <rfc2119>must</rfc2119> document
+how <glossterm role="unwrapped">implementation-defined</glossterm> features are performed.</termdef>
+</para>
+
+<section xml:id="implementation-defined">
+<title>Implementation-defined features</title>
+
+<para>The following features are implementation-defined:</para>
+
+<?implementation-defined-features?>
+</section>
+
+<section xml:id="implementation-dependent">
+<title>Implementation-dependent features</title>
+
+<para>The following features are implementation-dependent:</para>
+
+<?implementation-dependent-features?>
+</section>
 </appendix>
 <appendix xml:id="uri-globbing" version="5.0-extension w3c-xproc">
 <title>URI globbing</title>
@@ -3741,8 +3774,17 @@ P. Koopman. June 2002.
 </section>
 </appendix>
 
-<appendix xmlns:db="http://docbook.org/ns/docbook" xml:id="glossary"><title>Glossary</title><glosslist><glossentry><glossterm>dynamic error</glossterm><glossdef><para>A <firstterm>dynamic error</firstterm> is one which
-          occurs while a pipeline is being evaluated.</para></glossdef></glossentry><glossentry><glossterm>static error</glossterm><glossdef><para>A <firstterm>static error</firstterm> is one which can
-          be detected before pipeline evaluation is even attempted.</para></glossdef></glossentry></glosslist></appendix>
+<appendix xmlns:db="http://docbook.org/ns/docbook" xml:id="glossary"><title>Glossary</title><glosslist><glossentry><glossterm>dynamic
+error</glossterm><glossdef><para>A <firstterm>dynamic
+error</firstterm> is one which occurs while a pipeline is being
+evaluated.</para></glossdef></glossentry><glossentry><glossterm>implementation-defined</glossterm><glossdef><para>An
+<firstterm>implementation-defined</firstterm> feature is one where the
+implementation has discretion in how it is performed.
+Conformant implementations <rfc2119>must</rfc2119> document
+how <glossterm role="unwrapped">implementation-defined</glossterm> features are performed.</para></glossdef></glossentry><glossentry><glossterm>implementation-dependent</glossterm><glossdef><para>An
+<firstterm>implementation-dependent</firstterm> feature is one where the
+implementation has discretion in how it is performed.
+Implementations are not required to document or explain
+how <glossterm role="unwrapped">implementation-dependent</glossterm> features are performed.</para></glossdef></glossentry></glosslist></appendix>
 
 </specification>
