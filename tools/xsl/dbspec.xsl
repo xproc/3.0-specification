@@ -521,8 +521,21 @@
 </xsl:template>
 
 <xsl:template match="processing-instruction('step-error-list')">
+  <xsl:variable name="level" as="xs:string?" select="f:pi(., 'level')"/>
+
   <div id="step-error-summary">
-    <h5>Step Errors</h5>
+    <xsl:choose>
+      <xsl:when test="$level = 'none'"/>
+      <xsl:when test="empty($level)">
+        <h5>Step Errors</h5>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:element namespace="http://www.w3.org/1999/xhtml"
+                     name="{QName('', $level)}">
+          <xsl:text>Step Errors</xsl:text>
+        </xsl:element>
+      </xsl:otherwise>
+    </xsl:choose>
     <dl class="errs">
       <xsl:call-template name="format-error-list">
 	<xsl:with-param name="errors" select="//db:error[starts-with(@code,'C')]"/>
