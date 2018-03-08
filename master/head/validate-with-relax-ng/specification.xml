@@ -112,11 +112,70 @@ No document properties on the <port>schemas</port> port are preserved.</para>
 </section>
 </section>
 
-<appendix xml:id="app.step-errors">
+<section xml:id="errors">
 <title>Step Errors</title>
-<para>The following <glossterm baseform="dynamic-error">dynamic errors</glossterm>
-can be raised by the <code>p:validate-with-relax-ng</code> step:</para>
-<?step-error-list?>
+
+<para>This step can raise
+<glossterm baseform="dynamic-error">dynamic errors</glossterm>.</para>
+
+<para>A <termdef xml:id="dt-dynamic-error">A <firstterm>dynamic
+error</firstterm> is one which occurs while a pipeline is being
+evaluated.</termdef> Examples of dynamic errors include references to
+URIs that cannot be resolved, steps which fail, and pipelines that
+exhaust the capacity of an implementation (such as memory or disk
+space).</para>
+
+<para>If a step fails due to a dynamic error, failure propagates
+upwards until either a <tag>p:try</tag> is encountered or the entire
+pipeline fails. In other words, outside of a <tag>p:try</tag>, step
+failure causes the entire pipeline to fail.</para>
+
+<para>The following errors can be raised by this step:</para>
+
+<?step-error-list level="none"?>
+
+</section>
+
+<appendix xml:id="conformance">
+<title>Conformance</title>
+
+<para>Conformant processors <rfc2119>must</rfc2119> implement all of the features
+described in this specification except those that are explicitly identified
+as optional.</para>
+
+<para>Some aspects of processor behavior are not completely specified; those
+features are either <glossterm role="unwrapped">implementation-dependent</glossterm> or
+<glossterm role="unwrapped">implementation-defined</glossterm>.</para>
+
+<para><termdef xml:id="dt-implementation-dependent">An
+<firstterm>implementation-dependent</firstterm> feature is one where the
+implementation has discretion in how it is performed.
+Implementations are not required to document or explain
+how <glossterm role="unwrapped">implementation-dependent</glossterm> features are performed.</termdef>
+</para>
+
+<para><termdef xml:id="dt-implementation-defined">An
+<firstterm>implementation-defined</firstterm> feature is one where the
+implementation has discretion in how it is performed.
+Conformant implementations <rfc2119>must</rfc2119> document
+how <glossterm role="unwrapped">implementation-defined</glossterm> features are performed.</termdef>
+</para>
+
+<section xml:id="implementation-defined">
+<title>Implementation-defined features</title>
+
+<para>The following features are implementation-defined:</para>
+
+<?implementation-defined-features?>
+</section>
+
+<section xml:id="implementation-dependent">
+<title>Implementation-dependent features</title>
+
+<para>The following features are implementation-dependent:</para>
+
+<?implementation-dependent-features?>
+</section>
 </appendix>
 
 <appendix xml:id="references">
@@ -156,6 +215,17 @@ OASIS Committee Specification.
 
 <!-- This glossary will automatically be elided if there are no
      terms marked up as 'firstterm's in this specification. -->
-
+<appendix xmlns:db="http://docbook.org/ns/docbook" xml:id="glossary"><title>Glossary</title><glosslist><glossentry><glossterm>dynamic
+error</glossterm><glossdef><para>A <firstterm>dynamic
+error</firstterm> is one which occurs while a pipeline is being
+evaluated.</para></glossdef></glossentry><glossentry><glossterm>implementation-defined</glossterm><glossdef><para>An
+<firstterm>implementation-defined</firstterm> feature is one where the
+implementation has discretion in how it is performed.
+Conformant implementations <rfc2119>must</rfc2119> document
+how <glossterm role="unwrapped">implementation-defined</glossterm> features are performed.</para></glossdef></glossentry><glossentry><glossterm>implementation-dependent</glossterm><glossdef><para>An
+<firstterm>implementation-dependent</firstterm> feature is one where the
+implementation has discretion in how it is performed.
+Implementations are not required to document or explain
+how <glossterm role="unwrapped">implementation-dependent</glossterm> features are performed.</para></glossdef></glossentry></glosslist></appendix>
 
 </specification>
