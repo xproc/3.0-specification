@@ -23,7 +23,6 @@
 	<xsl:attribute name="class" select="'element-syntax element-syntax-declare-step-opt'"/>
       </xsl:when>
       <xsl:otherwise>
-	<xsl:message>p:declare-step in unexpected section: <xsl:value-of select="@type"/></xsl:message>
 	<xsl:attribute name="class" select="'element-syntax element-syntax-declare-step'"/>
       </xsl:otherwise>
     </xsl:choose>
