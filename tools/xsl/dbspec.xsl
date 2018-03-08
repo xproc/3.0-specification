@@ -285,7 +285,6 @@
 	  </a>
 	</xsl:when>
 	<xsl:otherwise>
-	  <xsl:message>Warning: No anchor for <xsl:value-of select="."/></xsl:message>
 	  <xsl:apply-imports/>
 	</xsl:otherwise>
       </xsl:choose>
