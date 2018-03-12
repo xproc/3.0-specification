@@ -8,11 +8,19 @@
                 name="main">
 <p:input port="source"/>
 <p:input port="parameters" kind="parameter"/>
-<p:output port="result"/>
+<p:output port="result">
+  <p:pipe step="format-docbook" port="result"/>
+</p:output>
 <p:serialization port="result" indent="false" method="xhtml"/>
 <p:option name="style" select="'dbspec.xsl'"/>
 
 <p:import href="https://cdn.docbook.org/release/latest/xslt/base/pipelines/docbook.xpl"/>
+
+<p:declare-step type="cx:message">
+  <p:input port="source" sequence="true"/>
+  <p:output port="result" sequence="true"/>
+  <p:option name="message" required="true"/>
+</p:declare-step>
 
 <p:declare-step type="pos:env">
   <p:output port="result"/>
@@ -20,7 +28,7 @@
 
 <pos:env/>
 
-<dbp:docbook format="html">
+<dbp:docbook name="format-docbook" format="html" return-secondary="true">
   <p:input port="source">
     <p:pipe step="main" port="source"/>
   </p:input>
@@ -51,5 +59,14 @@
                 select="string((/c:result/c:env[@name='DELTA_BASE' or @name='DELTA_LOCAL'])[1]/@value)"/>
 -->
 </dbp:docbook>
+
+<p:for-each>
+  <p:iteration-source>
+    <p:pipe step="format-docbook" port="secondary"/>
+  </p:iteration-source>
+  <p:store name="store-chunk" encoding="utf-8" indent="true" method="xml">
+    <p:with-option name="href" select="base-uri(/)"/>
+  </p:store>
+</p:for-each>
 
 </p:declare-step>

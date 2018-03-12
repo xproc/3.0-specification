@@ -22,7 +22,7 @@
 <xsl:include href="rngsyntax.xsl"/>
 <xsl:include href="xprocns.xsl"/>
 
-<xsl:output method="xhtml" indent="no" doctype-public="-//W3C//DTD XHTML 1.0 Strict//EN" doctype-system="http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"/>
+<xsl:output method="xhtml" indent="no"/>
 
 <xsl:output name="library" method="xml" indent="yes"/>
 
@@ -43,6 +43,17 @@
 
 <xsl:param name="resource.root"
            select="''"/> <!-- http://cdn.docbook.org/release/2.0.20/resources/'"/> -->
+
+<xsl:variable name="xspecmap" as="element()">
+  <xspecmap>
+    <map id="xproc" uri="http://spec.xproc.org/master/head/xproc"/>
+    <map id="steps" uri="http://spec.xproc.org/master/head/steps"/>
+    <map id="overview" uri="http://spec.xproc.org/master/head/overview"/>
+    <map id="step-valid-relax-ng" uri="http://spec.xproc.org/master/head/validate-with-relax-ng"/>
+    <map id="step-valid-schematron" uri="http://spec.xproc.org/master/head/validate-with-schematron"/>
+    <map id="step-valid-xml-schema" uri="http://spec.xproc.org/master/head/validate-with-xml-schema"/>
+  </xspecmap>
+</xsl:variable>
 
 <!-- Default macros -->
 <xsl:variable name="ml:defaultMacros" select="document($defaultMacros)"/>
@@ -772,6 +783,71 @@
     <span class="error">@@FIXME:MISSING </span>
   </xsl:if>
   <xsl:next-match/>
+</xsl:template>
+
+<xsl:template match="db:xspecref">
+  <xsl:variable name="spec" select="string(@spec)"/>
+  <xsl:variable name="xref" select="@xref/string()"/>
+  <xsl:variable name="tocfn" select="concat('../../', @spec, '/build/toc.xml')"/>
+ 
+  <xsl:choose>
+    <xsl:when test="doc-available($tocfn)">
+      <xsl:variable name="toc" select="doc($tocfn)/db:toc"/>
+      <xsl:choose>
+        <xsl:when test="@xref">
+          <xsl:variable name="entry" select="$toc//*[@xml:id=$xref]"/>
+          <xsl:choose>
+            <xsl:when test="empty($entry)">
+              <xsl:message>
+                <xsl:text>Error: no toc entry for </xsl:text>
+                <xsl:value-of select="@xref"/>
+                <xsl:text> in xspecref to </xsl:text>
+                <xsl:value-of select="@spec"/>
+              </xsl:message>
+              <xsl:text>[XSPECREF ERROR: </xsl:text>
+              <xsl:value-of select="@spec"/>
+              <xsl:text>/</xsl:text>
+              <xsl:value-of select="@xref"/>
+              <xsl:text>]</xsl:text>
+            </xsl:when>
+            <xsl:otherwise>
+              <cite>
+                <a href="{string($xspecmap/*[@id=$spec]/@uri)}/#{@xref}">
+                  <xsl:choose>
+                    <xsl:when test="$entry/self::db:tocdiv">
+                      <xsl:apply-templates select="$entry/db:title/node()"/>
+                    </xsl:when>
+                    <xsl:otherwise>
+                      <xsl:apply-templates select="$entry/node()"/>
+                    </xsl:otherwise>
+                  </xsl:choose>
+                </a>
+              </cite>
+              <xsl:text> in </xsl:text>
+              <cite>
+                <a href="{string($xspecmap/*[@id=$spec]/@uri)}/">
+                  <xsl:apply-templates select="$toc/db:title/node()"/>
+                </a>
+              </cite>
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:when>
+        <xsl:otherwise>
+          <cite>
+            <a href="{string($xspecmap/*[@id=$spec]/@uri)}/">
+              <xsl:apply-templates select="$toc/db:title/node()"/>
+            </a>
+          </cite>
+        </xsl:otherwise>
+      </xsl:choose>
+    </xsl:when>
+    <xsl:otherwise>
+      <xsl:message>Error: no toc for xspecref to <xsl:value-of select="@spec"/></xsl:message>
+      <xsl:text>[XSPECREF ERROR: </xsl:text>
+      <xsl:value-of select="@spec"/>
+      <xsl:text>]</xsl:text>
+    </xsl:otherwise>
+  </xsl:choose>
 </xsl:template>
 
 </xsl:stylesheet>

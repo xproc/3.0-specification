@@ -23,6 +23,73 @@
 
 <xsl:key name="errcode" match="db:error" use="@code"/>
 
+<xsl:template match="/">
+  <xsl:if test="/*/@xml:id">
+    <xsl:result-document href="{/*/@xml:id}/build/toc.xml" method="xml">
+      <xsl:apply-templates mode="make-toc-xml"/>
+    </xsl:result-document>
+  </xsl:if>
+  <xsl:next-match/>
+</xsl:template>
+
+<!-- ============================================================ -->
+
+<xsl:template match="db:specification" mode="make-toc-xml">
+  <toc xmlns="http://docbook.org/ns/docbook"
+       xmlns:xlink="http://www.w3.org/1999/xlink"
+       xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax"
+       xmlns:xi="http://www.w3.org/2001/XInclude">
+    <xsl:apply-templates mode="make-toc-xml"/>
+  </toc>
+</xsl:template>
+
+<xsl:template match="db:section[db:section|db:appendix]
+                     |db:appendix[db:section|db:appendix]"
+              mode="make-toc-xml" priority="200">
+  <tocdiv xmlns="http://docbook.org/ns/docbook"
+          role="{local-name(.)}">
+    <xsl:sequence select="@xml:id"/>
+    <xsl:apply-templates mode="make-toc-xml"/>
+  </tocdiv>
+</xsl:template>
+
+<xsl:template match="db:section|db:appendix" mode="make-toc-xml" priority="100">
+  <tocentry xmlns="http://docbook.org/ns/docbook"
+            role="{local-name(.)}">
+    <xsl:sequence select="@xml:id"/>
+    <xsl:sequence select="db:info/db:title/node()"/>
+  </tocentry>
+</xsl:template>
+
+<xsl:template match="db:specification/db:info/db:title
+                     |db:section/db:info/db:title
+                     |db:appendix/db:info/db:title"
+              mode="make-toc-xml" priority="100">
+  <xsl:sequence select="."/>
+</xsl:template>
+
+<xsl:template match="db:figure[@xml:id]|db:example[@xml:id]|db:table[@xml:id]"
+              mode="make-toc-xml" priority="100">
+  <xsl:if test="db:info/db:title">
+    <tocentry xmlns="http://docbook.org/ns/docbook"
+              role="{local-name(.)}">
+      <xsl:sequence select="@xml:id"/>
+      <xsl:sequence select="db:info/db:title/node()"/>
+    </tocentry>
+  </xsl:if>
+</xsl:template>
+
+<xsl:template match="element()" mode="make-toc-xml">
+  <xsl:apply-templates mode="make-toc-xml"/>
+</xsl:template>
+
+<xsl:template match="attribute()|text()|comment()|processing-instruction()"
+              mode="make-toc-xml">
+  <!-- nop -->
+</xsl:template>
+
+<!-- ============================================================ -->
+
 <xsl:template match="db:bibliomixed">
   <xsl:param name="label" select="f:biblioentry-label(.)"/>
 

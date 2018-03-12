@@ -42,41 +42,10 @@ apply plugin: 'groovy'
 import org.docbook.DocBookTask
 import com.xmlcalabash.XMLCalabashTask
 
-// ================================================================================
+// ======================================================================
 
 task allspecs() {
   // dependencies are added by the specs
-}
-
-task xproc(dependsOn: [ "xproc_schemas", "spec_schemas",
-                        "xproc:specification", "xproc_assets", "xproc_src" ],
-             type: DocBookTask) {
-  inputs.files fileTree(dir: "tools/xsl/")
-  inputs.files fileTree(dir: "tools/xpl/")
-  input("source", "xproc/build/source.xml")
-  output("result", "build/dist/xproc/index.html")
-
-  param("schemaext.schema", new File("build/schema/dbspec.rng"))
-  option("style", new File("tools/xsl/xproc-specs.xsl"))
-  pipeline "tools/xpl/formatspec.xpl"
-}
-allspecs.dependsOn "xproc"
-
-task xproc_assets(dependsOn: [ "xproc_web_assets" ], type: Copy) {
-  from "xproc/build/graphics"
-  into "build/dist/xproc/graphics/"
-}
-
-task xproc_web_assets(type: Copy) {
-  from "src/main/resources"
-  into "build/dist/xproc/"
-}
-
-task xproc_src(dependsOn: ["xproc:source"], type: Copy) {
-  from "xproc/build/"
-  into "build/dist/xproc/"
-  include "source.xml"
-  rename ("source.xml", "specification.xml")
 }
 
 // ======================================================================
@@ -109,12 +78,46 @@ task overview_src(dependsOn: ["overview:source"], type: Copy) {
   rename ("source.xml", "specification.xml")
 }
 
+// ================================================================================
+
+task xproc(dependsOn: [ "xproc_schemas", "spec_schemas",
+                        "xproc:specification", "xproc_assets", "xproc_src" ],
+             type: DocBookTask) {
+  inputs.files fileTree(dir: "tools/xsl/")
+  inputs.files fileTree(dir: "tools/xpl/")
+  input("source", "xproc/build/source.xml")
+  output("result", "build/dist/xproc/index.html")
+
+  param("schemaext.schema", new File("build/schema/dbspec.rng"))
+  option("style", new File("tools/xsl/xproc-specs.xsl"))
+  pipeline "tools/xpl/formatspec.xpl"
+}
+allspecs.dependsOn "xproc"
+overview.dependsOn "xproc"
+
+task xproc_assets(dependsOn: [ "xproc_web_assets" ], type: Copy) {
+  from "xproc/build/graphics"
+  into "build/dist/xproc/graphics/"
+}
+
+task xproc_web_assets(type: Copy) {
+  from "src/main/resources"
+  into "build/dist/xproc/"
+}
+
+task xproc_src(dependsOn: ["xproc:source"], type: Copy) {
+  from "xproc/build/"
+  into "build/dist/xproc/"
+  include "source.xml"
+  rename ("source.xml", "specification.xml")
+}
+
 // ======================================================================
 // steps-intro
 
 task steps_intro(dependsOn: [ "xproc_schemas", "spec_schemas",
-                                "steps-intro:specification", "steps_intro_assets",
-                                "steps_intro_src" ],
+                              "steps-intro:specification", "steps_intro_assets",
+                              "steps_intro_src" ],
                  type: DocBookTask) {
   inputs.files fileTree(dir: "tools/xsl/")
   inputs.files fileTree(dir: "tools/xpl/")
@@ -126,6 +129,7 @@ task steps_intro(dependsOn: [ "xproc_schemas", "spec_schemas",
   pipeline "tools/xpl/formatspec.xpl"
 }
 allspecs.dependsOn "steps_intro"
+overview.dependsOn "steps_intro"
 
 task steps_intro_assets(type: Copy) {
   from "src/main/resources"
@@ -142,7 +146,7 @@ task steps_intro_src(dependsOn: ["steps-intro:source"], type: Copy) {
 // ======================================================================
 // steps
 
-task steps(dependsOn: [ "xproc_schemas", "spec_schemas",
+task steps(dependsOn: [ "xproc", "xproc_schemas", "spec_schemas",
                         "steps:specification", "steps_assets", "steps_src",
                         "steps_xpl" ],
            type: DocBookTask) {
@@ -156,6 +160,7 @@ task steps(dependsOn: [ "xproc_schemas", "spec_schemas",
   pipeline "tools/xpl/formatspec.xpl"
 }
 allspecs.dependsOn "steps"
+overview.dependsOn "steps"
 
 task steps_assets(type: Copy) {
   from "src/main/resources"
@@ -179,13 +184,14 @@ task steps_xpl(dependsOn: ["steps:library"], type: Copy) {
 // ======================================================================
 // step-validate-relax-ng
 
-task validate_relax_ng(dependsOn: [ "xproc_schemas", "spec_schemas",
+task validate_relax_ng(dependsOn: [ "xproc", "steps", "xproc_schemas", "spec_schemas",
                                     "step-validate-relax-ng:specification",
                                     "validate_relax_ng_assets",
                                     "validate_relax_ng_src", "validate_relax_ng_xpl" ],
                        type: DocBookTask) {
   inputs.files fileTree(dir: "tools/xsl/")
   inputs.files fileTree(dir: "tools/xpl/")
+  inputs.file "xproc/build/toc.xml"
   input("source", "step-validate-relax-ng/build/source.xml")
   output("result", "build/dist/validate-with-relax-ng/index.html")
 
@@ -194,6 +200,7 @@ task validate_relax_ng(dependsOn: [ "xproc_schemas", "spec_schemas",
   pipeline "tools/xpl/formatspec.xpl"
 }
 allspecs.dependsOn "validate_relax_ng"
+overview.dependsOn "validate_relax_ng"
 
 task validate_relax_ng_assets(type: Copy) {
   from "src/main/resources"
@@ -217,7 +224,7 @@ task validate_relax_ng_xpl(dependsOn: ["step-validate-relax-ng:library"], type: 
 // ======================================================================
 // step-validate-xml-schema
 
-task validate_xml_schema(dependsOn: [ "xproc_schemas", "spec_schemas",
+task validate_xml_schema(dependsOn: [ "xproc", "steps", "xproc_schemas", "spec_schemas",
                                       "step-validate-xml-schema:specification",
                                       "validate_xml_schema_assets",
                                       "validate_xml_schema_src", "validate_xml_schema_xpl"],
@@ -232,6 +239,7 @@ task validate_xml_schema(dependsOn: [ "xproc_schemas", "spec_schemas",
   pipeline "tools/xpl/formatspec.xpl"
 }
 allspecs.dependsOn "validate_xml_schema"
+overview.dependsOn "validate_xml_schema"
 
 task validate_xml_schema_assets(type: Copy) {
   from "src/main/resources"
@@ -255,7 +263,7 @@ task validate_xml_schema_xpl(dependsOn: ["step-validate-xml-schema:library"], ty
 // ======================================================================
 // step-validate-schematron
 
-task validate_schematron(dependsOn: [ "xproc_schemas", "spec_schemas",
+task validate_schematron(dependsOn: [ "xproc", "steps", "xproc_schemas", "spec_schemas",
                                       "step-validate-schematron:specification",
                                       "validate_schematron_assets",
                                       "validate_schematron_src","validate_schematron_xpl" ],
@@ -270,6 +278,7 @@ task validate_schematron(dependsOn: [ "xproc_schemas", "spec_schemas",
   pipeline "tools/xpl/formatspec.xpl"
 }
 allspecs.dependsOn "validate_schematron"
+overview.dependsOn "validate_schematron"
 
 task validate_schematron_assets(type: Copy) {
   from "src/main/resources"
@@ -298,6 +307,9 @@ task spec_schemas(dependsOn: [ "spec_rng", "spec_sch" ]) {
 }
 
 task spec_rng(type: JavaExec) {
+  inputs.files fileTree(dir: "schema/")
+  outputs.file "build/schema/dbspec.rng"
+
   classpath = configurations.tools
   main = 'com.thaiopensource.relaxng.translate.Driver'
   args = ["schema/dbspec.rnc", "build/schema/dbspec.rng"]
