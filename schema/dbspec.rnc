@@ -227,6 +227,23 @@ div {
 
 # ======================================================================
 
+db.xspecref.role.attribute = attribute role { text }
+db.xspecref.attlist =
+   db.xspecref.role.attribute?
+ & db.common.attributes
+ & db.common.linking.attributes
+ & attribute spec { xsd:NCName }
+ & attribute xref { xsd:NCName }?
+
+db.xspecref =
+   element xspecref {
+      db.xspecref.attlist, empty
+   }
+
+db.link.inlines |= db.xspecref
+
+# ======================================================================
+
 db.el =
    [ r:remap [ db:tag [ class="tag" ] ] ]
    element db:el {
@@ -240,5 +257,3 @@ db.att =
       db.common.attributes,
       db._text
    }
-
-
