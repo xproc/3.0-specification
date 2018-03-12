@@ -1,4 +1,4 @@
-<specification xmlns="http://docbook.org/ns/docbook" xmlns:cs="http://www.w3.org/XML/XProc/2006/04/components#" xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax" xmlns:p="http://www.w3.org/ns/xproc" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" class="ed" role="step" version="5.0-extension w3c-xproc">
+<specification xmlns="http://docbook.org/ns/docbook" xmlns:cs="http://www.w3.org/XML/XProc/2006/04/components#" xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax" xmlns:p="http://www.w3.org/ns/xproc" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="step-validate-relax-ng" class="ed" role="step" version="5.0-extension w3c-xproc">
 <info>
 <title>XProc 3.0: Validate with RELAX NG</title>
 <!-- defaults to date formatted <pubdate>2014-12-18</pubdate> -->
@@ -116,14 +116,17 @@ No document properties on the <port>schemas</port> port are preserved.</para>
 <title>Step Errors</title>
 
 <para>This step can raise
-<glossterm baseform="dynamic-error">dynamic errors</glossterm>.</para>
+<glossterm baseform="dynamic-error">dynamic errors</glossterm>.
+</para>
 
-<para>A <termdef xml:id="dt-dynamic-error">A <firstterm>dynamic
+<para><termdef xml:id="dt-dynamic-error">A <firstterm>dynamic
 error</firstterm> is one which occurs while a pipeline is being
 evaluated.</termdef> Examples of dynamic errors include references to
 URIs that cannot be resolved, steps which fail, and pipelines that
 exhaust the capacity of an implementation (such as memory or disk
-space).</para>
+space). For a more complete discussion of dynamic errors, see
+<xspecref spec="xproc" xref="dynamic-errors"/>.
+</para>
 
 <para>If a step fails due to a dynamic error, failure propagates
 upwards until either a <tag>p:try</tag> is encountered or the entire
