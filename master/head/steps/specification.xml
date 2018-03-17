@@ -40,22 +40,21 @@ An XML Pipeline Language</link> published by the W3C.</para>
 <section xml:id="introduction">
   <title>Introduction</title>
 
-<para>This specification describes the standard, atomic XProc steps. A
-machine-readable description of these steps may be found in <link xlink:href="steps.xpl">steps.xpl</link>.
+<para>This specification describes the standard, required atomic XProc
+steps. A machine-readable description of these steps may be found in
+<link xlink:href="steps.xpl">steps.xpl</link>.
 </para>
 
 <para>Familarity with the
 general nature of <biblioref linkend="xproc30"/>
 steps is assumed; for background details, see
 <biblioref linkend="xproc30-steps"/>.</para>
-
 </section>
 
-<section xml:id="std-required">
-<title>Required Steps</title>
+<section xml:id="req-steps">
+<title>The required steps</title>
 
-<para>This section describes standard steps that must be supported
-by any conforming processor.</para>
+<para>A conformant processor must support all of these steps.</para>
 
 <section xml:id="c.add-attribute">
 <title>p:add-attribute</title>
@@ -132,10 +131,10 @@ namespace fixup.</para>
 <tag class="attribute">xml:base</tag> is added or changed, the base URI
 of the element <rfc2119>must</rfc2119> also be amended accordingly.</para>
 
-<section>
+<simplesect>
 <title>Document properties</title>
 <para feature="add-attribute-preserves-all">All document properties are preserved.</para>
-</section>
+</simplesect>
 </section>
 <section xml:id="c.add-xml-base">
 
@@ -195,10 +194,10 @@ element's [base URI].</para>
 </listitem>
 </itemizedlist>
 
-<section>
+<simplesect>
 <title>Document properties</title>
 <para feature="add-xml-base-preserves-all">All document properties are preserved.</para>
-</section>
+</simplesect>
 </section>
 <section xml:id="c.cast-content-type">
 <title>p:cast-content-type</title>
@@ -272,12 +271,12 @@ is a <tag>c:data</tag> element, it is a <glossterm>dynamic
 error</glossterm> if the <option>content-type</option> is not supplied.</error>
 </para>
 
-<section>
+<simplesect>
 <title>Document properties</title>
 <para feature="cast-content-type-preserves-some">All document
 properties are preserved except the <code>content-type</code> property
 which is updated accordingly.</para>
-</section>
+</simplesect>
 </section>
 <section xml:id="c.compare">
 <title>p:compare</title>
@@ -325,10 +324,10 @@ documents differ, an <glossterm>implementation-defined</glossterm>
 summary of the differences between the two documents may appear on the
 <port>differences</port> port.</impl></para>
 
-<section>
+<simplesect>
 <title>Document properties</title>
 <para feature="compare-preserves-none">No document properties are preserved.</para>
-</section>
+</simplesect>
 </section>
 <section xml:id="c.count">
 <title>p:count</title>
@@ -353,10 +352,10 @@ for example, if a sequence consists of more than 1 document, without
 requiring every single document to be buffered before processing can
 continue.</para>
 
-<section>
+<simplesect>
 <title>Document properties</title>
 <para feature="count-preserves-none">No document properties are preserved.</para>
-</section>
+</simplesect>
 </section>
 <section xml:id="c.delete">
 <title>p:delete</title>
@@ -385,10 +384,10 @@ Also, note that deleting an attribute named
 <tag class="attribute">xml:base</tag> does not change the base URI
 of the element on which it occurred.</para>
 
-<section>
+<simplesect>
 <title>Document properties</title>
 <para feature="delete-preserves-all">All document properties are preserved.</para>
-</section>
+</simplesect>
 </section>
 <section xml:id="c.directory-list">
 <title>p:directory-list</title>
@@ -481,10 +480,10 @@ directory name.</para>
 <tag>c:file</tag>, <tag>c:directory</tag>, or <tag>c:other</tag>
 are <glossterm>implementation-defined</glossterm>.</impl></para>
 
-<section>
+<simplesect>
 <title>Document properties</title>
 <para feature="directory-list-preserves-none">No document properties are preserved.</para>
-</section>
+</simplesect>
 </section>
 <section xml:id="c.error">
 <title>p:error</title>
@@ -548,10 +547,10 @@ or <tag class="attribute">offset</tag>, might also be present on the
 <tag>c:error</tag> to identify the location of the <tag>p:error</tag>
 element in the pipeline.</para>
 
-<section>
+<simplesect>
 <title>Document properties</title>
 <para feature="error-preserves-none">No document properties are preserved.</para>
-</section>
+</simplesect>
 </section>
 <section xml:id="c.escape-markup">
 <title>p:escape-markup</title>
@@ -599,10 +598,10 @@ from the standard serialization options on this step.</para>
 <para>By default, this step <rfc2119>must not</rfc2119> generate an
 XML declaration in the escaped result.</para>
 
-<section>
+<simplesect>
 <title>Document properties</title>
 <para feature="escape-markup-preserves-none">No document properties are preserved.</para>
-</section>
+</simplesect>
 </section>
 <section xml:id="c.filter">
 <title>p:filter</title>
@@ -620,10 +619,78 @@ based on a (possibly dynamically constructed) XPath select expression.</para>
 a <tag class="attribute">select</tag> expression except that the select
 expression is computed dynamically.</para>
 
-<section>
+<simplesect>
 <title>Document properties</title>
 <para feature="filter-preserves-all">All document properties are preserved.</para>
+</simplesect>
 </section>
+<section xml:id="c.hash">
+<title>p:hash</title>
+
+<para>The <tag>p:hash</tag> step generates a hash, or digital “fingerprint”,
+for some value and injects it into the <port>source</port> document.</para>
+
+<p:declare-step type="p:hash">
+  <p:input port="source" primary="true" content-types="*/*"/>
+  <p:output port="result" content-types="application/xml"/>
+  <p:option name="parameters" as="map(xs:QName,item())"/>
+  <p:option name="value" required="true" as="xs:string"/>
+  <p:option name="algorithm" required="true" as="xs:QName"/>
+  <p:option name="match" select="'/*'" as="xs:string" e:type="XSLTMatchPattern"/>
+  <p:option name="version" as="xs:string"/>
+</p:declare-step>
+
+<para>The value of the <option>algorithm</option> option must be a QName.
+If it does not have a prefix, then it must be one of the following values:
+“crc”, “md”, or “sha”.</para>
+
+<para>If a <tag class="attribute">version</tag> is not specified, the
+default version is algorithm-defined. For “<literal>crc</literal>” it
+is 32, for “<literal>md</literal>” it is 5, for “<literal>sha</literal>”
+it is 1.</para>
+
+<para>A hash is constructed from the string specified in the
+<option>value</option> option using the specified algorithm and version.
+Implementations <rfc2119>must</rfc2119> support
+<biblioref linkend="bib.crc"/>,
+<biblioref linkend="rfc1321"/>, and <biblioref linkend="bib.sha"/>
+hashes. <impl>It is
+<glossterm>implementation-defined</glossterm> what other algorithms are
+supported.</impl>
+The resulting hash <rfc2119>should</rfc2119> be returned as a string of
+hexadecimal characters.
+</para>
+
+<para>The value of the <option>match</option> option must be an
+XSLTMatchPattern.</para>
+
+<para>The hash of the specified value is computed using the algorithm and
+parameters specified. <error code="C0036">It is a
+<glossterm>dynamic error</glossterm> if the requested hash algorithm is not
+one that the processor understands or if the value or parameters are
+not appropriate for that algorithm.</error></para>
+
+<para>The matched nodes are specified with the match pattern in the
+<option>match</option> option. For each matching node, the string
+value of the computed hash is used in the output (if more than one node
+matches, the <emphasis>same</emphasis> hash value is used in each match).
+Nodes that do not
+match are copied without change.</para>
+
+<para>If the expression given in the <option>match</option> option
+matches an <emphasis>attribute</emphasis>, the hash is used as the new
+value of the attribute in the output.
+If the attribute is named “<tag class="attribute">xml:base</tag>”, the base URI
+of the element <rfc2119>must</rfc2119> also be amended accordingly.</para>
+
+<para>If the expression matches any
+other kind of node, the entire node (and <emphasis>not</emphasis> just
+its contents) is replaced by the hash.</para>
+
+<simplesect>
+<title>Document properties</title>
+<para feature="hash-preserves-all">All document properties are preserved.</para>
+</simplesect>
 </section>
 <section xml:id="c.http-request">
 <title>p:http-request</title>
@@ -1223,10 +1290,10 @@ name=W3C&amp;amp;spec=XProc
 &lt;/c:response&gt;</programlisting>
 </section>
 
-<section>
+<simplesect>
 <title>Document properties</title>
 <para feature="http-request-preserves-none">No document properties are preserved.</para>
-</section>
+</simplesect>
 </section>
 <section xml:id="c.identity">
 <title>p:identity</title>
@@ -1243,10 +1310,79 @@ available on its output.</para>
 steps, the <tag>p:identity</tag> step <rfc2119>must</rfc2119> preserve
 any annotations that appear in the input.</para>
 
-<section>
+<simplesect>
 <title>Document properties</title>
 <para feature="identity-preserves-all">All document properties are preserved.</para>
+</simplesect>
 </section>
+<section xml:id="c.in-scope-names">
+<title>p:in-scope-names</title>
+
+<para>The <code>p:in-scope-names</code> step exposes all of the
+in-scope variables and options as a set of parameters in a
+<tag>c:param-set</tag> document.</para>
+
+<p:declare-step type="p:in-scope-names">
+  <p:output port="result" primary="false" content-types="application/xml"/>
+</p:declare-step>
+
+<para>Each in-scope variable and option is converted into a
+<tag>c:param</tag> element.
+The resulting <tag>c:param</tag> elements are wrapped in a 
+<tag>c:param-set</tag> and the parameter set document is written
+to the <port>result</port> port.
+<impl>The
+order in which <tag>c:param</tag> elements occur in the <tag>c:param-set</tag> is
+<glossterm>implementation-dependent</glossterm>.</impl></para>
+
+<para>For consistency and user convenience, if any of the variables or options
+have names that are in a namespace, the
+<tag class="attribute">namespace</tag> attribute on the
+<tag>c:param</tag> element <rfc2119>must</rfc2119> be used. Each
+<tag class="attribute">name</tag> <rfc2119>must</rfc2119> be an NCName.</para>
+
+<para>The base URI of the output document is the URI of the pipeline document
+that contains the step.</para>
+
+<para>For consistency with the <tag>p:parameters</tag> step, the
+<port>result</port> port is not primary.</para>
+
+<simplesect xml:id="ex-in-scope-names" role="tocsuppress">
+<title>Example</title>
+
+<para>This unlikely pipeline demonstrates the behavior of <tag>p:in-scope-names</tag>:
+</para>
+
+<programlisting>&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
+                name="main" version="1.0"&gt;
+&lt;p:output port="result"&gt;
+  &lt;p:pipe step="vars" port="result"/&gt;
+&lt;/p:output&gt;
+
+&lt;p:option name="username" required="true"/&gt;
+&lt;p:option name="password" required="true"/&gt;
+&lt;p:variable name="host" select="'http://example.com/'"/&gt;
+
+&lt;p:in-scope-names name="vars"/&gt;
+
+&lt;/p:declare-step&gt;</programlisting>
+
+<para>Assuming the values supplied for the username and password
+options are “<literal>user</literal>” and “<literal>pass</literal>”,
+respectively, the output would be:</para>
+
+<programlisting>&lt;c:param-set xmlns:c="http://www.w3.org/ns/xproc-step"&gt;
+  &lt;c:param name="username" namespace="" value="user"/&gt;
+  &lt;c:param name="host" namespace="" value="http://example.com/"/&gt;
+  &lt;c:param name="password" namespace="" value="pass"/&gt;
+&lt;/c:param-set&gt;</programlisting>
+
+</simplesect>
+
+<simplesect>
+<title>Document properties</title>
+<para feature="in-scope-names-preserves-none">No document properties are preserved.</para>
+</simplesect>
 </section>
 <section xml:id="c.insert">
 <title>p:insert</title>
@@ -1303,12 +1439,12 @@ are not considered in determining matching elements. If an empty sequence
 appears on the <port>insertion</port> port, the result will be the same
 as the source.</para>
 
-<section>
+<simplesect>
 <title>Document properties</title>
 <para feature="insert-preserves-all">All document properties on the
 <port>source</port> port are preserved. No document properties on the
 <port>insertion</port> port are preserved.</para>
-</section>
+</simplesect>
 </section>
 <section xml:id="c.label-elements">
 <title>p:label-elements</title>
@@ -1375,10 +1511,10 @@ etc.</para>
 attribute labels associated with matched elements.  All other non-matching content
 remains the same.</para>
 
-<section>
+<simplesect>
 <title>Document properties</title>
 <para feature="label-elements-preserves-all">All document properties are preserved.</para>
-</section>
+</simplesect>
 </section>
 <section xml:id="c.load">
 <title>p:load</title>
@@ -1487,12 +1623,12 @@ are <glossterm>implementation-defined</glossterm>.
 </impl></para>
 </section>
 
-<section>
+<simplesect>
 <title>Document properties</title>
 <para feature="load-preserves-none">No document properties are preserved.
 The properties specified in <option>document-properties</option> are applied.
 </para>
-</section>
+</simplesect>
 </section>
 <section xml:id="c.make-absolute-uris">
 <title>p:make-absolute-uris</title>
@@ -1541,10 +1677,10 @@ not valid, or if it is absent and the input document has no base URI,
 the results are <glossterm>implementation-dependent</glossterm>.</impl>
 </para>
 
-<section>
+<simplesect>
 <title>Document properties</title>
 <para feature="make-absolute-uris-preserves-all">All document properties are preserved.</para>
-</section>
+</simplesect>
 </section>
 <section xml:id="c.namespace-rename">
 <title>p:namespace-rename</title>
@@ -1657,10 +1793,10 @@ specifies no namespace, since many attributes are in no namespace.</para>
 <option>to</option> option.  Prefixed names in content, for example QNames and
 XPath expressions, may end up with no appropriate namespace binding.</para></note>
 
-<section>
+<simplesect>
 <title>Document properties</title>
 <para feature="namespace-rename-preserves-all">All document properties are preserved.</para>
-</section>
+</simplesect>
 </section>
 <section xml:id="c.pack">
 <title>p:pack</title>
@@ -1705,10 +1841,10 @@ occur between them may have come from either of the input documents;
 this step does not attempt to distinguish which one.</para>
 </note>
 
-<section>
+<simplesect>
 <title>Document properties</title>
 <para feature="pack-preserves-none">No document properties are preserved.</para>
-</section>
+</simplesect>
 </section>
 <section xml:id="c.parameters">
 <title>p:parameters</title>
@@ -1798,10 +1934,10 @@ names to appear on a <tag>c:param-set</tag>
 element.</error></para>
 </section>
 
-<section>
+<simplesect>
 <title>Document properties</title>
 <para feature="parameters-preserves-none">No document properties are preserved.</para>
-</section>
+</simplesect>
 </section>
 <section xml:id="c.rename">
 <title>p:rename</title>
@@ -1859,10 +1995,10 @@ is a <glossterm>dynamic error</glossterm> if the pattern matches
 a processing instruction and the new name has a non-null namespace.</error>
 </para>
 
-<section>
+<simplesect>
 <title>Document properties</title>
 <para feature="rename-preserves-all">All document properties are preserved.</para>
-</section>
+</simplesect>
 </section>
 <section xml:id="c.replace">
 <title>p:replace</title>
@@ -1891,10 +2027,10 @@ of the <port>replacement</port> document. Only non-nested matches are
 replaced. That is, once a node is replaced, its descendants cannot
 be matched.</para>
 
-<section>
+<simplesect>
 <title>Document properties</title>
 <para feature="replace-preserves-all">All document properties are preserved.</para>
-</section>
+</simplesect>
 </section>
 <section xml:id="c.set-attributes">
 <title>p:set-attributes</title>
@@ -1937,10 +2073,10 @@ prefixes bound to different namespaces, the document produced on the
 <tag class="attribute">xml:base</tag> is added or changed, the base URI
 of the element <rfc2119>must</rfc2119> also be amended accordingly.</para>
 
-<section>
+<simplesect>
 <title>Document properties</title>
 <para feature="set-attributes-preserves-all">All document properties are preserved.</para>
-</section>
+</simplesect>
 </section>
 <section xml:id="c.set-properties">
 <title>p:set-properties</title>
@@ -1971,14 +2107,14 @@ error</glossterm> if the <option>properties</option> map contains
 a key equal to the string “<literal>content-type</literal>”.</error>
 </para>
 
-<section>
+<simplesect>
 <title>Document properties</title>
 <para feature="set-properties-preserves-some">If <option>merge</option> is
 true, document properties not overridden by settings in the <option>properties</option>
 map are  preserved, otherwise the resulting document has the properties specified in
 the <option>properties</option> map.
 </para>
-</section>
+</simplesect>
 </section>
 <section xml:id="c.sink">
 <title>p:sink</title>
@@ -1990,10 +2126,10 @@ discards them. It has no output.</para>
    <p:input port="source" content-types="*/*" sequence="true"/>
 </p:declare-step>
 
-<section>
+<simplesect>
 <title>Document properties</title>
 <para feature="sing-preserves-na">Not applicable.</para>
-</section>
+</simplesect>
 </section>
 <section xml:id="c.split-sequence">
 <title>p:split-sequence</title>
@@ -2046,10 +2182,10 @@ and ignore the context size.</para>
 steps, the <tag>p:split-sequence</tag> step <rfc2119>must</rfc2119> preserve
 any annotations that appear in the input.</para>
 
-<section>
+<simplesect>
 <title>Document properties</title>
 <para feature="split-sequence-preserves-all">All document properties are preserved.</para>
-</section>
+</simplesect>
 </section>
 <section xml:id="c.store">
 <title>p:store</title>
@@ -2085,10 +2221,10 @@ document stored by the step.</para>
 serialization of content when it is stored. Serialization is described in
 <biblioref linkend="xproc30"/>.</para>
 
-<section>
+<simplesect>
 <title>Document properties</title>
 <para feature="store-preserves-none">No document properties are preserved.</para>
-</section>
+</simplesect>
 </section>
 <section xml:id="c.string-replace">
 <title>p:string-replace</title>
@@ -2129,10 +2265,10 @@ of the element <rfc2119>must</rfc2119> also be amended accordingly.</para>
 node (and <emphasis>not</emphasis> just its contents) is replaced by
 the string value of the <option>replace</option> expression.</para>
 
-<section>
+<simplesect>
 <title>Document properties</title>
 <para feature="string-replace-preserves-all">All document properties are preserved.</para>
-</section>
+</simplesect>
 </section>
 <section xml:id="c.unescape-markup">
 <title>p:unescape-markup</title>
@@ -2234,10 +2370,10 @@ namespace, the following input:</para>
 &lt;p xmlns="http://www.w3.org/1999/xhtml"&gt;This is a another chunk.&lt;/p&gt;
 &lt;/description&gt;</programlisting>
 
-<section>
+<simplesect>
 <title>Document properties</title>
 <para feature="unescape-markup-preserves-none">No document properties are preserved.</para>
-</section>
+</simplesect>
 </section>
 <section xml:id="c.unwrap">
 <title>p:unwrap</title>
@@ -2271,10 +2407,119 @@ ones.</para>
 <para>This step produces a single document; if the document element is
 unwrapped, the result might not be well-formed XML.</para>
 
-<section>
+<simplesect>
 <title>Document properties</title>
 <para feature="unwrap-preserves-none">No document properties are preserved.</para>
+</simplesect>
 </section>
+<section xml:id="c.uuid">
+<title>p:uuid</title>
+
+<para>The <tag>p:uuid</tag> step generates a
+<biblioref linkend="bib.uuid"/> and injects it into
+the <port>source</port> document.</para>
+
+<p:declare-step type="p:uuid">
+  <p:input port="source" primary="true" content-types="application/xml text/xml */*+xml"/>
+  <p:output port="result" content-types="application/xml"/>
+  <p:option name="match" select="'/*'" as="xs:string" e:type="XSLTMatchPattern"/>
+  <p:option name="version" as="xs:integer"/>
+</p:declare-step>
+
+<para>The value of the <option>match</option> option must be an
+XSLTMatchPattern. The value of the <option>version</option> option
+must be an integer.</para>
+
+<para>If the <option>version</option> is specified, that version of
+UUID must be computed. <error code="C0060">It is a <glossterm>dynamic
+error</glossterm> if the processor does not support the specified
+<option>version</option> of the UUID algorithm.</error> <impl>If the
+<option>version</option> is not specified, the version of UUID
+computed is
+<glossterm>implementation-defined</glossterm>.</impl></para>
+
+<para>Implementations <rfc2119>must</rfc2119> support version 4 UUIDs.
+<impl>Support for other versions of UUID, and the mechanism by which
+the necessary inputs are made available for computing other versions,
+is <glossterm>implementation-defined</glossterm>.</impl>
+</para>
+
+<para>The matched nodes are specified with the match pattern in the
+<option>match</option> option. For each matching node, the generated
+UUID is used in the output (if more than one node matches, the
+<emphasis>same</emphasis> UUID is used in each match). Nodes that do not
+match are copied without change.</para>
+
+<para>If the expression given in the <option>match</option> option
+matches an <emphasis>attribute</emphasis>, the UUID is used as the new
+value of the attribute in the output. If the attribute is named “<tag class="attribute">xml:base</tag>”, the base URI of the element
+<rfc2119>must</rfc2119> also be amended accordingly.</para>
+
+<para>If the expression matches any
+other kind of node, the entire node (and <emphasis>not</emphasis> just
+its contents) is replaced by the UUID.</para>
+
+<simplesect>
+<title>Document properties</title>
+<para feature="uuid-preserves-all">All document properties are preserved.</para>
+</simplesect>
+</section>
+<section xml:id="c.wrap-sequence">
+<title>p:wrap-sequence</title>
+
+<para>The <tag>p:wrap-sequence</tag> step accepts a sequence of
+documents and produces either a single document or a new sequence of
+documents.</para>
+
+<p:declare-step type="p:wrap-sequence">
+   <p:input port="source" content-types="application/xml text/xml */*+xml" sequence="true"/>
+   <p:output port="result" sequence="true" content-types="application/xml"/>
+   <p:option name="wrapper" required="true" as="xs:QName"/>
+   <p:option name="wrapper-prefix" as="xs:NCName"/>
+   <p:option name="wrapper-namespace" as="xs:anyURI"/>
+   <p:option name="group-adjacent" as="xs:string" e:type="XPathExpression"/>
+</p:declare-step>
+
+<para>The value of the <option>wrapper</option> option
+<rfc2119>must</rfc2119> be a <type>QName</type>. If the lexical value
+does not contain a colon, then the <tag class="attribute">wrapper-namespace</tag>
+may be used to specify the namespace of the wrapper. In that case, the
+<tag class="attribute">wrapper-prefix</tag> may be specified to suggest a
+prefix for the wrapper element.
+<error code="D0034">It is a <glossterm>dynamic error</glossterm>
+to specify a new namespace or prefix if the lexical value of the specified
+name contains a colon.</error></para>
+
+<para>The value of the <option>group-adjacent</option> option
+<rfc2119>must</rfc2119> be an XPathExpression.</para>
+
+<para>In its simplest form, <tag>p:wrap-sequence</tag> takes a
+sequence of documents and produces a single, new document by placing
+each document in the <port>source</port> sequence inside a new
+document element as sequential siblings. The name of the document
+element is the value specified in the <option>wrapper</option>
+option.</para>
+
+<para>The <option>group-adjacent</option> option can be used to group
+adjacent documents.
+The XPath context
+for the
+<option>group-adjacent</option> option changes over time. For each document that
+appears on the <code>source</code> port, the expression is evaluated
+with that document as the context document. The context position
+(<code>position()</code>) is the position of that document within the
+sequence and the context size (<code>last()</code>) is the total
+number of documents in the sequence.
+Whenever
+two or more sequentially adjacent documents have the same “group
+adjacent” value, they are wrapped together in a single wrapper
+element.
+</para>
+
+<simplesect>
+<title>Document properties</title>
+<para feature="wrap-sequence-preserves-none">No document properties are preserved.</para>
+</simplesect>
 </section>
 <section xml:id="c.wrap">
 <title>p:wrap</title>
@@ -2340,67 +2585,96 @@ are siblings and either there are no nodes between them or all
 intervening, non-matching nodes are whitespace text, comment, or processing
 instruction nodes.</para>
 
-<section>
+<simplesect>
 <title>Document properties</title>
 <para feature="wrap-preserves-none">No document properties are preserved.</para>
+</simplesect>
 </section>
-</section>
-<section xml:id="c.wrap-sequence">
-<title>p:wrap-sequence</title>
+<section xml:id="c.www-form-urldecode">
+<title>p:www-form-urldecode</title>
 
-<para>The <tag>p:wrap-sequence</tag> step accepts a sequence of
-documents and produces either a single document or a new sequence of
-documents.</para>
+<para>The <tag>p:www-form-urldecode</tag> step decodes a
+<literal>x-www-form-urlencoded</literal> string into an XML representation.</para>
 
-<p:declare-step type="p:wrap-sequence">
-   <p:input port="source" content-types="application/xml text/xml */*+xml" sequence="true"/>
-   <p:output port="result" sequence="true" content-types="application/xml"/>
-   <p:option name="wrapper" required="true" as="xs:QName"/>
-   <p:option name="wrapper-prefix" as="xs:NCName"/>
-   <p:option name="wrapper-namespace" as="xs:anyURI"/>
-   <p:option name="group-adjacent" as="xs:string" e:type="XPathExpression"/>
+<p:declare-step type="p:www-form-urldecode">
+  <p:output port="result" content-types="application/xml"/>
+  <p:option name="value" required="true" as="xs:string"/>
 </p:declare-step>
 
-<para>The value of the <option>wrapper</option> option
-<rfc2119>must</rfc2119> be a <type>QName</type>. If the lexical value
-does not contain a colon, then the <tag class="attribute">wrapper-namespace</tag>
-may be used to specify the namespace of the wrapper. In that case, the
-<tag class="attribute">wrapper-prefix</tag> may be specified to suggest a
-prefix for the wrapper element.
-<error code="D0034">It is a <glossterm>dynamic error</glossterm>
-to specify a new namespace or prefix if the lexical value of the specified
-name contains a colon.</error></para>
+<para>The <option>value</option> option is interpreted as a string of
+parameter values encoded using the
+<literal>x-www-form-urlencoded</literal> algorithm. Each name/value
+pair is written in a <tag>c:param</tag> element.
+The entire set of parameters
+is written (as a <tag>c:param-set</tag>) on the <port>result</port>
+output port.</para>
 
-<para>The value of the <option>group-adjacent</option> option
-<rfc2119>must</rfc2119> be an XPathExpression.</para>
-
-<para>In its simplest form, <tag>p:wrap-sequence</tag> takes a
-sequence of documents and produces a single, new document by placing
-each document in the <port>source</port> sequence inside a new
-document element as sequential siblings. The name of the document
-element is the value specified in the <option>wrapper</option>
-option.</para>
-
-<para>The <option>group-adjacent</option> option can be used to group
-adjacent documents.
-The XPath context
-for the
-<option>group-adjacent</option> option changes over time. For each document that
-appears on the <code>source</code> port, the expression is evaluated
-with that document as the context document. The context position
-(<code>position()</code>) is the position of that document within the
-sequence and the context size (<code>last()</code>) is the total
-number of documents in the sequence.
-Whenever
-two or more sequentially adjacent documents have the same “group
-adjacent” value, they are wrapped together in a single wrapper
-element.
+<para><error code="C0037">It is a
+<glossterm>dynamic error</glossterm> if the <option>value</option> provided
+is not a properly
+<literal>x-www-form-urlencoded</literal> value.</error>
+<error code="C0061">It is a
+<glossterm>dynamic error</glossterm> if the name of any encoded parameter
+name is not a valid <type>xs:NCName</type>.</error> In other words, this
+step can only decode simple name/value pairs where the names do not contain
+colons or any characters that cannot be used in XML names.
 </para>
 
-<section>
+<para>The order of the <tag>c:param</tag> elements in the result is the same
+as the order of the encoded parameters, reading from left to right.</para>
+
+<para>If any parameter name occurs more than once in the encoded string,
+the resulting parameter set will contain a <tag>c:param</tag> for
+each instance.</para>
+
+<simplesect>
 <title>Document properties</title>
-<para feature="wrap-sequence-preserves-none">No document properties are preserved.</para>
+<para feature="www-form-urldecode-preserves-none">No document properties are preserved.</para>
+</simplesect>
 </section>
+<section xml:id="c.www-form-urlencode">
+<title>p:www-form-urlencode</title>
+
+<para>The <tag>p:www-form-urlencode</tag> step encodes a set of parameter
+values as a <literal>x-www-form-urlencoded</literal> string and
+injects it into the <port>source</port> document.</para>
+
+<p:declare-step type="p:www-form-urlencode">
+  <p:input port="source" primary="true" content-types="application/xml text/xml */*+xml"/>
+  <p:output port="result" content-types="application/xml"/>
+  <p:option name="parameters" as="map(xs:QName,item())"/>
+  <p:option name="match" required="true" as="xs:string" e:type="XSLTMatchPattern"/>
+</p:declare-step>
+
+<para>The value of the <option>match</option> option must be an
+XSLTMatchPattern.</para>
+
+<para>The set of parameters is encoded as a single
+<literal>x-www-form-urlencoded</literal> string of name/value pairs.
+When parameters are encoded into name/value pairs,
+<emphasis>only</emphasis> the local name of each parameter is used.
+The namespace name is ignored and no prefix or colon appears in the name.
+</para>
+
+<para><impl>The order of the parameters is
+is <glossterm>implementation-dependent</glossterm>.</impl></para>
+
+<para>The matched nodes are specified with the match pattern in the
+<option>match</option> option. For each matching node, the encoded
+string is used in the output. Nodes that do not
+match are copied without change.</para>
+
+<para>If the expression given in the <option>match</option> option
+matches an <emphasis>attribute</emphasis>, the encoded
+string is used as the new value of the attribute in the output.
+If the expression matches any other kind of node, the entire
+node (and <emphasis>not</emphasis> just its contents) is replaced by
+the encoded string.</para>
+
+<simplesect>
+<title>Document properties</title>
+<para feature="www-form-urlencode-preserves-none">No document properties are preserved.</para>
+</simplesect>
 </section>
 <section xml:id="c.xinclude">
 <title>p:xinclude</title>
@@ -2428,10 +2702,10 @@ input document and are not provided as input to the step.</para>
 <para><error code="C0029">It is a <glossterm>dynamic error</glossterm>
 if an XInclude error occurs during processing.</error> </para>
 
-<section>
+<simplesect>
 <title>Document properties</title>
 <para feature="xinclude-preserves-all">All document properties are preserved.</para>
-</section>
+</simplesect>
 </section>
 <section xml:id="c.xslt">
 <title>p:xslt</title>
@@ -2566,299 +2840,10 @@ to the XSLT processor.</para>
 </varlistentry>
 </variablelist>
 
-<section>
+<simplesect>
 <title>Document properties</title>
 <para feature="xslt-preserves-none">No document properties are preserved.</para>
-</section>
-</section>
-</section>
-
-<section xml:id="std-optional">
-<title>Optional Steps</title>
-
-<note><para>N.B. The plan is that these will all be described
-in separate specifications. That work hasn’t been done yet.</para>
-</note>
-
-<para>The following steps are optional. If they are supported by a
-processor, they must conform to the semantics outlined here, but a
-conformant processor is not required to support all (or any) of these
-steps.</para>
-
-<section xml:id="c.hash">
-<title>p:hash</title>
-
-<para>The <tag>p:hash</tag> step generates a hash, or digital “fingerprint”,
-for some value and injects it into the <port>source</port> document.</para>
-
-<p:declare-step type="p:hash">
-  <p:input port="source" primary="true" content-types="*/*"/>
-  <p:output port="result" content-types="application/xml"/>
-  <p:option name="parameters" as="map(xs:QName,item())"/>
-  <p:option name="value" required="true" as="xs:string"/>
-  <p:option name="algorithm" required="true" as="xs:QName"/>
-  <p:option name="match" select="'/*'" as="xs:string" e:type="XSLTMatchPattern"/>
-  <p:option name="version" as="xs:string"/>
-</p:declare-step>
-
-<para>The value of the <option>algorithm</option> option must be a QName.
-If it does not have a prefix, then it must be one of the following values:
-“crc”, “md”, or “sha”.</para>
-
-<para>If a <tag class="attribute">version</tag> is not specified, the
-default version is algorithm-defined. For “<literal>crc</literal>” it
-is 32, for “<literal>md</literal>” it is 5, for “<literal>sha</literal>”
-it is 1.</para>
-
-<para>A hash is constructed from the string specified in the
-<option>value</option> option using the specified algorithm and version.
-Implementations <rfc2119>must</rfc2119> support
-<biblioref linkend="bib.crc"/>,
-<biblioref linkend="rfc1321"/>, and <biblioref linkend="bib.sha"/>
-hashes. <impl>It is
-<glossterm>implementation-defined</glossterm> what other algorithms are
-supported.</impl>
-The resulting hash <rfc2119>should</rfc2119> be returned as a string of
-hexadecimal characters.
-</para>
-
-<para>The value of the <option>match</option> option must be an
-XSLTMatchPattern.</para>
-
-<para>The hash of the specified value is computed using the algorithm and
-parameters specified. <error code="C0036">It is a
-<glossterm>dynamic error</glossterm> if the requested hash algorithm is not
-one that the processor understands or if the value or parameters are
-not appropriate for that algorithm.</error></para>
-
-<para>The matched nodes are specified with the match pattern in the
-<option>match</option> option. For each matching node, the string
-value of the computed hash is used in the output (if more than one node
-matches, the <emphasis>same</emphasis> hash value is used in each match).
-Nodes that do not
-match are copied without change.</para>
-
-<para>If the expression given in the <option>match</option> option
-matches an <emphasis>attribute</emphasis>, the hash is used as the new
-value of the attribute in the output.
-If the attribute is named “<tag class="attribute">xml:base</tag>”, the base URI
-of the element <rfc2119>must</rfc2119> also be amended accordingly.</para>
-
-<para>If the expression matches any
-other kind of node, the entire node (and <emphasis>not</emphasis> just
-its contents) is replaced by the hash.</para>
-
-<section>
-<title>Document properties</title>
-<para feature="hash-preserves-all">All document properties are preserved.</para>
-</section>
-</section>
-<section xml:id="c.in-scope-names">
-<title>p:in-scope-names</title>
-
-<para>The <code>p:in-scope-names</code> step exposes all of the
-in-scope variables and options as a set of parameters in a
-<tag>c:param-set</tag> document.</para>
-
-<p:declare-step type="p:in-scope-names">
-  <p:output port="result" primary="false" content-types="application/xml"/>
-</p:declare-step>
-
-<para>Each in-scope variable and option is converted into a
-<tag>c:param</tag> element.
-The resulting <tag>c:param</tag> elements are wrapped in a 
-<tag>c:param-set</tag> and the parameter set document is written
-to the <port>result</port> port.
-<impl>The
-order in which <tag>c:param</tag> elements occur in the <tag>c:param-set</tag> is
-<glossterm>implementation-dependent</glossterm>.</impl></para>
-
-<para>For consistency and user convenience, if any of the variables or options
-have names that are in a namespace, the
-<tag class="attribute">namespace</tag> attribute on the
-<tag>c:param</tag> element <rfc2119>must</rfc2119> be used. Each
-<tag class="attribute">name</tag> <rfc2119>must</rfc2119> be an NCName.</para>
-
-<para>The base URI of the output document is the URI of the pipeline document
-that contains the step.</para>
-
-<para>For consistency with the <tag>p:parameters</tag> step, the
-<port>result</port> port is not primary.</para>
-
-<section xml:id="ex-in-scope-names" role="tocsuppress">
-<title>Example</title>
-
-<para>This unlikely pipeline demonstrates the behavior of <tag>p:in-scope-names</tag>:
-</para>
-
-<programlisting>&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
-                name="main" version="1.0"&gt;
-&lt;p:output port="result"&gt;
-  &lt;p:pipe step="vars" port="result"/&gt;
-&lt;/p:output&gt;
-
-&lt;p:option name="username" required="true"/&gt;
-&lt;p:option name="password" required="true"/&gt;
-&lt;p:variable name="host" select="'http://example.com/'"/&gt;
-
-&lt;p:in-scope-names name="vars"/&gt;
-
-&lt;/p:declare-step&gt;</programlisting>
-
-<para>Assuming the values supplied for the username and password
-options are “<literal>user</literal>” and “<literal>pass</literal>”,
-respectively, the output would be:</para>
-
-<programlisting>&lt;c:param-set xmlns:c="http://www.w3.org/ns/xproc-step"&gt;
-  &lt;c:param name="username" namespace="" value="user"/&gt;
-  &lt;c:param name="host" namespace="" value="http://example.com/"/&gt;
-  &lt;c:param name="password" namespace="" value="pass"/&gt;
-&lt;/c:param-set&gt;</programlisting>
-
-</section>
-
-<section>
-<title>Document properties</title>
-<para feature="in-scope-names-preserves-none">No document properties are preserved.</para>
-</section>
-</section>
-<section xml:id="c.uuid">
-<title>p:uuid</title>
-
-<para>The <tag>p:uuid</tag> step generates a
-<biblioref linkend="bib.uuid"/> and injects it into
-the <port>source</port> document.</para>
-
-<p:declare-step type="p:uuid">
-  <p:input port="source" primary="true" content-types="application/xml text/xml */*+xml"/>
-  <p:output port="result" content-types="application/xml"/>
-  <p:option name="match" select="'/*'" as="xs:string" e:type="XSLTMatchPattern"/>
-  <p:option name="version" as="xs:integer"/>
-</p:declare-step>
-
-<para>The value of the <option>match</option> option must be an
-XSLTMatchPattern. The value of the <option>version</option> option
-must be an integer.</para>
-
-<para>If the <option>version</option> is specified, that version of
-UUID must be computed. <error code="C0060">It is a <glossterm>dynamic
-error</glossterm> if the processor does not support the specified
-<option>version</option> of the UUID algorithm.</error> <impl>If the
-<option>version</option> is not specified, the version of UUID
-computed is
-<glossterm>implementation-defined</glossterm>.</impl></para>
-
-<para>Implementations <rfc2119>must</rfc2119> support version 4 UUIDs.
-<impl>Support for other versions of UUID, and the mechanism by which
-the necessary inputs are made available for computing other versions,
-is <glossterm>implementation-defined</glossterm>.</impl>
-</para>
-
-<para>The matched nodes are specified with the match pattern in the
-<option>match</option> option. For each matching node, the generated
-UUID is used in the output (if more than one node matches, the
-<emphasis>same</emphasis> UUID is used in each match). Nodes that do not
-match are copied without change.</para>
-
-<para>If the expression given in the <option>match</option> option
-matches an <emphasis>attribute</emphasis>, the UUID is used as the new
-value of the attribute in the output. If the attribute is named “<tag class="attribute">xml:base</tag>”, the base URI of the element
-<rfc2119>must</rfc2119> also be amended accordingly.</para>
-
-<para>If the expression matches any
-other kind of node, the entire node (and <emphasis>not</emphasis> just
-its contents) is replaced by the UUID.</para>
-
-<section>
-<title>Document properties</title>
-<para feature="uuid-preserves-all">All document properties are preserved.</para>
-</section>
-</section>
-<section xml:id="c.www-form-urldecode">
-<title>p:www-form-urldecode</title>
-
-<para>The <tag>p:www-form-urldecode</tag> step decodes a
-<literal>x-www-form-urlencoded</literal> string into an XML representation.</para>
-
-<p:declare-step type="p:www-form-urldecode">
-  <p:output port="result" content-types="application/xml"/>
-  <p:option name="value" required="true" as="xs:string"/>
-</p:declare-step>
-
-<para>The <option>value</option> option is interpreted as a string of
-parameter values encoded using the
-<literal>x-www-form-urlencoded</literal> algorithm. Each name/value
-pair is written in a <tag>c:param</tag> element.
-The entire set of parameters
-is written (as a <tag>c:param-set</tag>) on the <port>result</port>
-output port.</para>
-
-<para><error code="C0037">It is a
-<glossterm>dynamic error</glossterm> if the <option>value</option> provided
-is not a properly
-<literal>x-www-form-urlencoded</literal> value.</error>
-<error code="C0061">It is a
-<glossterm>dynamic error</glossterm> if the name of any encoded parameter
-name is not a valid <type>xs:NCName</type>.</error> In other words, this
-step can only decode simple name/value pairs where the names do not contain
-colons or any characters that cannot be used in XML names.
-</para>
-
-<para>The order of the <tag>c:param</tag> elements in the result is the same
-as the order of the encoded parameters, reading from left to right.</para>
-
-<para>If any parameter name occurs more than once in the encoded string,
-the resulting parameter set will contain a <tag>c:param</tag> for
-each instance.</para>
-
-<section>
-<title>Document properties</title>
-<para feature="www-form-urldecode-preserves-none">No document properties are preserved.</para>
-</section>
-</section>
-<section xml:id="c.www-form-urlencode">
-<title>p:www-form-urlencode</title>
-
-<para>The <tag>p:www-form-urlencode</tag> step encodes a set of parameter
-values as a <literal>x-www-form-urlencoded</literal> string and
-injects it into the <port>source</port> document.</para>
-
-<p:declare-step type="p:www-form-urlencode">
-  <p:input port="source" primary="true" content-types="application/xml text/xml */*+xml"/>
-  <p:output port="result" content-types="application/xml"/>
-  <p:option name="parameters" as="map(xs:QName,item())"/>
-  <p:option name="match" required="true" as="xs:string" e:type="XSLTMatchPattern"/>
-</p:declare-step>
-
-<para>The value of the <option>match</option> option must be an
-XSLTMatchPattern.</para>
-
-<para>The set of parameters is encoded as a single
-<literal>x-www-form-urlencoded</literal> string of name/value pairs.
-When parameters are encoded into name/value pairs,
-<emphasis>only</emphasis> the local name of each parameter is used.
-The namespace name is ignored and no prefix or colon appears in the name.
-</para>
-
-<para><impl>The order of the parameters is
-is <glossterm>implementation-dependent</glossterm>.</impl></para>
-
-<para>The matched nodes are specified with the match pattern in the
-<option>match</option> option. For each matching node, the encoded
-string is used in the output. Nodes that do not
-match are copied without change.</para>
-
-<para>If the expression given in the <option>match</option> option
-matches an <emphasis>attribute</emphasis>, the encoded
-string is used as the new value of the attribute in the output.
-If the expression matches any other kind of node, the entire
-node (and <emphasis>not</emphasis> just its contents) is replaced by
-the encoded string.</para>
-
-<section>
-<title>Document properties</title>
-<para feature="www-form-urlencode-preserves-none">No document properties are preserved.</para>
-</section>
+</simplesect>
 </section>
 </section>
 

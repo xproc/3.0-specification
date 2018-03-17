@@ -72,6 +72,18 @@
                 as="xs:string"
                 e:type="XPathExpression"/>
    </p:declare-step>
+   <p:declare-step type="p:hash" xml:id="hash">
+      <p:input port="source" primary="true" content-types="*/*"/>
+      <p:output port="result" content-types="application/xml"/>
+      <p:option name="parameters" as="xs:string"/>
+      <p:option name="value" required="true" as="xs:string"/>
+      <p:option name="algorithm" required="true" as="xs:QName"/>
+      <p:option name="match"
+                select="'/*'"
+                as="xs:string"
+                e:type="XSLTMatchPattern"/>
+      <p:option name="version" as="xs:string"/>
+   </p:declare-step>
    <p:declare-step type="p:http-request" xml:id="http-request">
       <p:input port="source" content-types="*/*"/>
       <p:output port="result" sequence="true" content-types="*/*"/>
@@ -80,6 +92,9 @@
    <p:declare-step type="p:identity" xml:id="identity">
       <p:input port="source" content-types="*/*" sequence="true"/>
       <p:output port="result" sequence="true" content-types="*/*"/>
+   </p:declare-step>
+   <p:declare-step type="p:in-scope-names" xml:id="in-scope-names">
+      <p:output port="result" primary="false" content-types="application/xml"/>
    </p:declare-step>
    <p:declare-step type="p:insert" xml:id="insert">
       <p:input port="source"
@@ -245,6 +260,27 @@
                 as="xs:string"
                 e:type="XSLTMatchPattern"/>
    </p:declare-step>
+   <p:declare-step type="p:uuid" xml:id="uuid">
+      <p:input port="source"
+               primary="true"
+               content-types="application/xml text/xml */*+xml"/>
+      <p:output port="result" content-types="application/xml"/>
+      <p:option name="match"
+                select="'/*'"
+                as="xs:string"
+                e:type="XSLTMatchPattern"/>
+      <p:option name="version" as="xs:integer"/>
+   </p:declare-step>
+   <p:declare-step type="p:wrap-sequence" xml:id="wrap-sequence">
+      <p:input port="source"
+               content-types="application/xml text/xml */*+xml"
+               sequence="true"/>
+      <p:output port="result" sequence="true" content-types="application/xml"/>
+      <p:option name="wrapper" required="true" as="xs:QName"/>
+      <p:option name="wrapper-prefix" as="xs:NCName"/>
+      <p:option name="wrapper-namespace" as="xs:anyURI"/>
+      <p:option name="group-adjacent" as="xs:string" e:type="XPathExpression"/>
+   </p:declare-step>
    <p:declare-step type="p:wrap" xml:id="wrap">
       <p:input port="source" content-types="application/xml text/xml */*+xml"/>
       <p:output port="result" content-types="application/xml"/>
@@ -257,15 +293,20 @@
                 e:type="XSLTMatchPattern"/>
       <p:option name="group-adjacent" as="xs:string" e:type="XPathExpression"/>
    </p:declare-step>
-   <p:declare-step type="p:wrap-sequence" xml:id="wrap-sequence">
+   <p:declare-step type="p:www-form-urldecode" xml:id="www-form-urldecode">
+      <p:output port="result" content-types="application/xml"/>
+      <p:option name="value" required="true" as="xs:string"/>
+   </p:declare-step>
+   <p:declare-step type="p:www-form-urlencode" xml:id="www-form-urlencode">
       <p:input port="source"
-               content-types="application/xml text/xml */*+xml"
-               sequence="true"/>
-      <p:output port="result" sequence="true" content-types="application/xml"/>
-      <p:option name="wrapper" required="true" as="xs:QName"/>
-      <p:option name="wrapper-prefix" as="xs:NCName"/>
-      <p:option name="wrapper-namespace" as="xs:anyURI"/>
-      <p:option name="group-adjacent" as="xs:string" e:type="XPathExpression"/>
+               primary="true"
+               content-types="application/xml text/xml */*+xml"/>
+      <p:output port="result" content-types="application/xml"/>
+      <p:option name="parameters" as="xs:string"/>
+      <p:option name="match"
+                required="true"
+                as="xs:string"
+                e:type="XSLTMatchPattern"/>
    </p:declare-step>
    <p:declare-step type="p:xinclude" xml:id="xinclude">
       <p:input port="source" content-types="application/xml text/xml */*+xml"/>
@@ -289,46 +330,5 @@
       <p:option name="template-name" as="xs:QName"/>
       <p:option name="output-base-uri" as="xs:anyURI"/>
       <p:option name="version" as="xs:string"/>
-   </p:declare-step>
-   <p:declare-step type="p:hash" xml:id="hash">
-      <p:input port="source" primary="true" content-types="*/*"/>
-      <p:output port="result" content-types="application/xml"/>
-      <p:option name="parameters" as="xs:string"/>
-      <p:option name="value" required="true" as="xs:string"/>
-      <p:option name="algorithm" required="true" as="xs:QName"/>
-      <p:option name="match"
-                select="'/*'"
-                as="xs:string"
-                e:type="XSLTMatchPattern"/>
-      <p:option name="version" as="xs:string"/>
-   </p:declare-step>
-   <p:declare-step type="p:in-scope-names" xml:id="in-scope-names">
-      <p:output port="result" primary="false" content-types="application/xml"/>
-   </p:declare-step>
-   <p:declare-step type="p:uuid" xml:id="uuid">
-      <p:input port="source"
-               primary="true"
-               content-types="application/xml text/xml */*+xml"/>
-      <p:output port="result" content-types="application/xml"/>
-      <p:option name="match"
-                select="'/*'"
-                as="xs:string"
-                e:type="XSLTMatchPattern"/>
-      <p:option name="version" as="xs:integer"/>
-   </p:declare-step>
-   <p:declare-step type="p:www-form-urldecode" xml:id="www-form-urldecode">
-      <p:output port="result" content-types="application/xml"/>
-      <p:option name="value" required="true" as="xs:string"/>
-   </p:declare-step>
-   <p:declare-step type="p:www-form-urlencode" xml:id="www-form-urlencode">
-      <p:input port="source"
-               primary="true"
-               content-types="application/xml text/xml */*+xml"/>
-      <p:output port="result" content-types="application/xml"/>
-      <p:option name="parameters" as="xs:string"/>
-      <p:option name="match"
-                required="true"
-                as="xs:string"
-                e:type="XSLTMatchPattern"/>
    </p:declare-step>
 </p:library>
