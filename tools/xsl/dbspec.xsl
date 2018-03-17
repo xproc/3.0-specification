@@ -44,20 +44,6 @@
 <xsl:param name="resource.root"
            select="''"/> <!-- http://cdn.docbook.org/release/2.0.20/resources/'"/> -->
 
-<xsl:variable name="xspecmap" as="element()">
-  <xspecmap>
-    <map id="xproc" uri="xproc"/>
-    <map id="steps" uri="steps"/>
-    <map id="overview" uri=""/>
-    <map id="step-validate-relax-ng" uri="validate-with-relax-ng"/>
-    <map id="step-validate-schematron" uri="validate-with-schematron"/>
-    <map id="step-validate-xml-schema" uri="validate-with-xml-schema"/>
-    <map id="step-exec" uri="exec"/>
-    <map id="step-xquery" uri="xquery"/>
-    <map id="step-xsl-formatter" uri="xsl-formatter"/>
-  </xspecmap>
-</xsl:variable>
-
 <!-- Default macros -->
 <xsl:variable name="ml:defaultMacros" select="document($defaultMacros)"/>
 <ml:collection xml:id="macros">
@@ -800,6 +786,17 @@
   <xsl:choose>
     <xsl:when test="doc-available($tocfn)">
       <xsl:variable name="toc" select="doc($tocfn)/db:toc"/>
+      <xsl:variable name="href" as="xs:string">
+        <xsl:choose>
+          <xsl:when test="starts-with(@spec, 'step-')">
+            <xsl:value-of select="substring-after(@spec, 'step-')"/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:value-of select="@spec"/>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:variable>
+
       <xsl:choose>
         <xsl:when test="@xref">
           <xsl:variable name="entry" select="$toc//*[@xml:id=$xref]"/>
@@ -819,7 +816,7 @@
             </xsl:when>
             <xsl:otherwise>
               <cite>
-                <a href="{string($xspecmap/*[@id=$spec]/@uri)}/#{@xref}">
+                <a href="{$href}/#{@xref}">
                   <xsl:choose>
                     <xsl:when test="$entry/self::db:tocdiv">
                       <xsl:apply-templates select="$entry/db:title/node()"/>
@@ -832,7 +829,7 @@
               </cite>
               <xsl:text> in </xsl:text>
               <cite>
-                <a href="{string($xspecmap/*[@id=$spec]/@uri)}/">
+                <a href="{$href}/">
                   <xsl:apply-templates select="$toc/db:title/node()"/>
                 </a>
               </cite>
@@ -841,7 +838,7 @@
         </xsl:when>
         <xsl:otherwise>
           <cite>
-            <a href="{string($xspecmap/*[@id=$spec]/@uri)}/">
+            <a href="{$href}/">
               <xsl:apply-templates select="$toc/db:title/node()"/>
             </a>
           </cite>
