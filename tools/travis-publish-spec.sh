@@ -5,10 +5,11 @@ set | grep TRAVIS
 if [ "$TRAVIS_REPO_SLUG" == "$GIT_PUB_REPO" ]; then
     echo -e "Setting up for publication...\n"
 
-    pwd
-
     mkdir $HOME/pubroot
     cp -R build/dist/* $HOME/pubroot
+
+    mkdir $HOME/tools
+    cp -R tools/* $HOME/tools
 
     cd $HOME
     git config --global user.email ${GIT_EMAIL}
@@ -28,6 +29,8 @@ if [ "$TRAVIS_REPO_SLUG" == "$GIT_PUB_REPO" ]; then
         if [ "$GITHUB_CNAME" != "" ]; then
             echo $GITHUB_CNAME > CNAME
         fi
+
+        perl $HOME/tools/make-index.pl
 
         git add -f .
         git commit -m "Successful travis build $TRAVIS_BUILD_NUMBER"
