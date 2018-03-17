@@ -32,6 +32,8 @@
                    then xs:string(processing-instruction(latest-version))
 		   else ()"/>
 
+<xsl:param name="section.label.includes.component.label" as="xs:boolean" select="true()"/>
+
 <!-- ============================================================ -->
 
 <xsl:variable name="pubdate"
@@ -173,7 +175,7 @@
             <xsl:variable name="tip" select="if ($travis-tag = '')
                                              then 'head'
                                              else $travis-tag"/>
-            <a href="https://{$travis-user}.github.io/{$travis-repo}/{$travis-branch}/{$tip}/{$spec}/">
+            <a href="https://{$travis-user}.github.io/{$travis-repo}/{$travis-branch}/{$tip}/{$spec}">
               <xsl:value-of select="concat('https://',
                                            $travis-user,
                                            '.github.io/',
@@ -189,8 +191,8 @@
 
       <dt>Latest Version:</dt>
       <dd>
-        <a href="http://spec.xproc.org/master/head/{$spec}/">
-          <xsl:value-of select="concat('http://spec.xproc.org/master/head/', $spec, '/')" />
+        <a href="http://spec.xproc.org/master/head/{$spec}">
+          <xsl:value-of select="concat('http://spec.xproc.org/master/head/', $spec)" />
         </a>
 <!--
 	<xsl:choose>

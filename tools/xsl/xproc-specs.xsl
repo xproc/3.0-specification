@@ -19,7 +19,19 @@
 
 <xsl:key name="linkend" match="*" use="@linkend"/>
 
-<xsl:param name="spec" select="'???'"/>
+<xsl:variable name="spec" as="xs:string">
+  <xsl:choose>
+    <xsl:when test="/*/@xml:id = 'overview'">
+      <xsl:value-of select="''"/>
+    </xsl:when>
+    <xsl:when test="starts-with(/*/@xml:id, 'step-')">
+      <xsl:value-of select="concat(substring-after(/*/@xml:id, 'step-'), '/')"/>
+    </xsl:when>
+    <xsl:otherwise>
+      <xsl:value-of select="concat(/*/@xml:id, '/')"/>
+    </xsl:otherwise>
+  </xsl:choose>
+</xsl:variable>
 
 <xsl:key name="errcode" match="db:error" use="@code"/>
 

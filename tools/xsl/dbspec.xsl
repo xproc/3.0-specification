@@ -779,10 +779,6 @@
   <xsl:variable name="xref" select="@xref/string()"/>
   <xsl:variable name="tocfn" select="concat('../../', @spec, '/build/toc.xml')"/>
 
-  <!--
-  <xsl:message><xsl:value-of select="$spec"/>, <xsl:value-of select="$xref"/>, <xsl:value-of select="$tocfn"/></xsl:message>
-  -->
-
   <xsl:choose>
     <xsl:when test="doc-available($tocfn)">
       <xsl:variable name="toc" select="doc($tocfn)/db:toc"/>

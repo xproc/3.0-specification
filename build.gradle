@@ -48,6 +48,14 @@ task allspecs() {
   // dependencies are added by the specs
 }
 
+def getenv(String name) {
+  if (System.getenv(name) == null) {
+    return ""
+  } else {
+    return System.getenv(name)
+  }
+}
+
 // ======================================================================
 // overview
 
@@ -61,6 +69,14 @@ task overview(dependsOn: [ "xproc_schemas", "spec_schemas",
   output("result", "build/dist/index.html")
 
   param("schemaext.schema", new File("build/schema/dbspec.rng"))
+  param("travis", getenv("TRAVIS"))
+  param("travis-commit", getenv("TRAVIS_COMMIT"))
+  param("travis-build-number", getenv("TRAVIS_BUILD_NUMBER"))
+  param("travis-user", getenv("TRAVIS_USER"))
+  param("travis-repo", getenv("TRAVIS_REPO"))
+  param("travis-branch", getenv("TRAVIS_BRANCH"))
+  param("travis-tag", getenv("TRAVIS_TAG"))
+
   option("style", new File("tools/xsl/xproc-specs.xsl"))
   pipeline "tools/xpl/formatspec.xpl"
 }
@@ -89,6 +105,14 @@ task xproc(dependsOn: [ "xproc_schemas", "spec_schemas",
   output("result", "build/dist/xproc/index.html")
 
   param("schemaext.schema", new File("build/schema/dbspec.rng"))
+  param("travis", getenv("TRAVIS"))
+  param("travis-commit", getenv("TRAVIS_COMMIT"))
+  param("travis-build-number", getenv("TRAVIS_BUILD_NUMBER"))
+  param("travis-user", getenv("TRAVIS_USER"))
+  param("travis-repo", getenv("TRAVIS_REPO"))
+  param("travis-branch", getenv("TRAVIS_BRANCH"))
+  param("travis-tag", getenv("TRAVIS_TAG"))
+
   option("style", new File("tools/xsl/xproc-specs.xsl"))
   pipeline "tools/xpl/formatspec.xpl"
 }
@@ -125,6 +149,14 @@ task steps_intro(dependsOn: [ "xproc_schemas", "spec_schemas",
   output("result", "build/dist/steps-intro/index.html")
 
   param("schemaext.schema", new File("build/schema/dbspec.rng"))
+  param("travis", getenv("TRAVIS"))
+  param("travis-commit", getenv("TRAVIS_COMMIT"))
+  param("travis-build-number", getenv("TRAVIS_BUILD_NUMBER"))
+  param("travis-user", getenv("TRAVIS_USER"))
+  param("travis-repo", getenv("TRAVIS_REPO"))
+  param("travis-branch", getenv("TRAVIS_BRANCH"))
+  param("travis-tag", getenv("TRAVIS_TAG"))
+
   option("style", new File("tools/xsl/xproc-specs.xsl"))
   pipeline "tools/xpl/formatspec.xpl"
 }
@@ -156,6 +188,14 @@ task steps(dependsOn: [ "xproc", "xproc_schemas", "spec_schemas",
   output("result", "build/dist/steps/index.html")
 
   param("schemaext.schema", new File("build/schema/dbspec.rng"))
+  param("travis", getenv("TRAVIS"))
+  param("travis-commit", getenv("TRAVIS_COMMIT"))
+  param("travis-build-number", getenv("TRAVIS_BUILD_NUMBER"))
+  param("travis-user", getenv("TRAVIS_USER"))
+  param("travis-repo", getenv("TRAVIS_REPO"))
+  param("travis-branch", getenv("TRAVIS_BRANCH"))
+  param("travis-tag", getenv("TRAVIS_TAG"))
+
   option("style", new File("tools/xsl/xproc-specs.xsl"))
   pipeline "tools/xpl/formatspec.xpl"
 }
@@ -196,6 +236,14 @@ task step_validation(type: DocBookTask,
   output("result", "build/dist/validation/index.html")
 
   param("schemaext.schema", new File("build/schema/dbspec.rng"))
+  param("travis", getenv("TRAVIS"))
+  param("travis-commit", getenv("TRAVIS_COMMIT"))
+  param("travis-build-number", getenv("TRAVIS_BUILD_NUMBER"))
+  param("travis-user", getenv("TRAVIS_USER"))
+  param("travis-repo", getenv("TRAVIS_REPO"))
+  param("travis-branch", getenv("TRAVIS_BRANCH"))
+  param("travis-tag", getenv("TRAVIS_TAG"))
+
   option("style", new File("tools/xsl/xproc-specs.xsl"))
   pipeline "tools/xpl/formatspec.xpl"
 }
@@ -236,6 +284,14 @@ task step_exec(type: DocBookTask,
   output("result", "build/dist/exec/index.html")
 
   param("schemaext.schema", new File("build/schema/dbspec.rng"))
+  param("travis", getenv("TRAVIS"))
+  param("travis-commit", getenv("TRAVIS_COMMIT"))
+  param("travis-build-number", getenv("TRAVIS_BUILD_NUMBER"))
+  param("travis-user", getenv("TRAVIS_USER"))
+  param("travis-repo", getenv("TRAVIS_REPO"))
+  param("travis-branch", getenv("TRAVIS_BRANCH"))
+  param("travis-tag", getenv("TRAVIS_TAG"))
+
   option("style", new File("tools/xsl/xproc-specs.xsl"))
   pipeline "tools/xpl/formatspec.xpl"
 }
@@ -276,6 +332,14 @@ task step_xquery(type: DocBookTask,
   output("result", "build/dist/xquery/index.html")
 
   param("schemaext.schema", new File("build/schema/dbspec.rng"))
+  param("travis", getenv("TRAVIS"))
+  param("travis-commit", getenv("TRAVIS_COMMIT"))
+  param("travis-build-number", getenv("TRAVIS_BUILD_NUMBER"))
+  param("travis-user", getenv("TRAVIS_USER"))
+  param("travis-repo", getenv("TRAVIS_REPO"))
+  param("travis-branch", getenv("TRAVIS_BRANCH"))
+  param("travis-tag", getenv("TRAVIS_TAG"))
+
   option("style", new File("tools/xsl/xproc-specs.xsl"))
   pipeline "tools/xpl/formatspec.xpl"
 }
@@ -316,6 +380,14 @@ task step_xsl_formatter(type: DocBookTask,
   output("result", "build/dist/xsl-formatter/index.html")
 
   param("schemaext.schema", new File("build/schema/dbspec.rng"))
+  param("travis", getenv("TRAVIS"))
+  param("travis-commit", getenv("TRAVIS_COMMIT"))
+  param("travis-build-number", getenv("TRAVIS_BUILD_NUMBER"))
+  param("travis-user", getenv("TRAVIS_USER"))
+  param("travis-repo", getenv("TRAVIS_REPO"))
+  param("travis-branch", getenv("TRAVIS_BRANCH"))
+  param("travis-tag", getenv("TRAVIS_TAG"))
+
   option("style", new File("tools/xsl/xproc-specs.xsl"))
   pipeline "tools/xpl/formatspec.xpl"
 }
