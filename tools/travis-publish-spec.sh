@@ -5,6 +5,8 @@ set | grep TRAVIS
 if [ "$TRAVIS_REPO_SLUG" == "$GIT_PUB_REPO" ]; then
     echo -e "Setting up for publication...\n"
 
+    pwd
+
     mkdir $HOME/pubroot
     cp -R build/dist/* $HOME/pubroot
 
