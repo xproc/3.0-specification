@@ -1,0 +1,320 @@
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>XProc 3.0: XQuery</title><meta charset="utf-8" /><link rel="alternate" title="XML" href="specification.xml" /><link rel="alternate" title="Latest editor's draft" href="http://www.w3.org/XML/XProc/docs/langspec.html" /><link rel="alternate" title="Latest Public Working Draft" href="http://www.w3.org/TR/xproc/" /><meta name="generator" content="DocBook XSL 2.0 Stylesheets V2.3.2" /><meta name="description" content="Abstract This specification describes the p:xquery&#xA;step for&#xA;XProc 3.0: An XML Pipeline Language." /><link href="css/prism.css" rel="stylesheet" type="text/css" /><link href="css/db-prism.css" rel="stylesheet" type="text/css" /><link rel="stylesheet" type="text/css" href="css/base.css" /><link rel="stylesheet" type="text/css" href="css/xproc.css" /><link rel="stylesheet" type="text/css" href="css/base.css" /><script type="text/javascript" src="js/dbmodnizr.js"></script></head><body><div class="specification"><div class="head" id="spec.head"><h1>XProc 3.0: XQuery</h1><h2>Editor's Draft  <time datetime="2018-03-17T12:32:41Z">17 March 2018 at 12:32 UTC (<a href="https://github.com/xproc/3.0-specification/commit/499d188052bdf84876590bc7178cc42344781b79">build 266</a>)</time></h2><dl><dt>This Version:</dt><dd><a href="https://xproc.github.io/3.0-specification/master/head/???/">https://xproc.github.io/3.0-specification/master/head/???</a></dd><dt>Latest Version:</dt><dd><a href="http://spec.xproc.org/master/head/???/">http://spec.xproc.org/master/head/???/</a></dd><dt>Editors:</dt><dd><span class="personname">Achim Berndzen</span></dd><dd><span class="personname">Gerrit Imsieke</span></dd><dd><span class="personname">Erik Siegel</span></dd><dd><span class="personname">Norman Walsh</span></dd><dt>Repository:</dt><dd><a href="http://github.com/xproc/3.0-specification">This specification on GitHub</a></dd><dd><a href="http://github.com/xproc/3.0-specification/issues">Report an issue</a></dd><dt>Changes:</dt><dd><a href="http://github.com/xproc/3.0-specification/commits/master">Commits for this specification</a></dd></dl><p>This document is also available in these non-normative formats: <a href="specification.xml">XML</a>.</p><p class="copyright"><span class="copyright">Copyright © <span class="years">2018</span> <span class="holders"><span class="holder">@@FIXME:</span></span></span></p><hr /><div class="abstract"><h2>Abstract</h2>
+<p>This specification describes the <code class="code">p:xquery</code>
+step for
+<em class="citetitle">XProc 3.0: An XML Pipeline Language</em>.</p>
+</div><div class="status"><h2>Status of this Document</h2><p><strong>This document is an editor's  draft that has no official standing.</strong></p>
+
+<p><em>This section describes the status of this document at
+the time of its publication. Other documents may supersede this
+document.</em></p>
+
+<p>This document is derived from
+<a href="https://www.w3.org/TR/2010/REC-xproc-20100511/">XProc:
+An XML Pipeline Language</a> published by the W3C.</p>
+</div></div><hr /><div class="lists-of-titles"><div class="toc"><h2 id="TableOfContents">Table of Contents</h2><ul class="toc"><li><span>1 <a href="#introduction">Introduction</a></span></li><li><span>2 <a href="#c.xquery">p:xquery</a></span><ul class="toc"><li><span>2.1 <a href="#example-xquery">Example</a></span></li><li><span>2.2 <a href="#c.xquery.17">Document properties</a></span></li></ul></li><li><span>3 <a href="#errors">Step Errors</a></span></li><li><span>A <a href="#conformance">Conformance</a></span><ul class="toc"><li><span>1 <a href="#implementation-defined">Implementation-defined features</a></span></li><li><span>2 <a href="#implementation-dependent">Implementation-dependent features</a></span></li></ul></li><li><span>B <a href="#references">References</a></span></li><li><span>C <a href="#glossary">Glossary</a></span></li></ul></div></div>
+
+
+<section id="introduction" class="section"><div class="section-titlepage"><h2>1 Introduction</h2></div><div class="content">
+
+
+<p>This specification describes the
+<code class="code">p:xquery</code> XProc step.
+A machine-readable description of
+these steps may be found in
+<a href="steps.xpl">steps.xpl</a>.
+</p>
+
+<p>Familarity with the
+general nature of [<a href="#xproc30"><span class="abbrev">XProc 3.0</span></a>]
+steps is assumed; for background details, see
+[<a href="#xproc30-steps"><span class="abbrev">XProc 3.0 Steps</span></a>].</p>
+</div></section>
+
+<section id="c.xquery" class="section"><div class="section-titlepage"><h2>2 p:xquery</h2></div><div class="content">
+
+
+<p>The <code class="tag-element">p:xquery</code> step applies an
+[<a href="#xquery10"><span class="abbrev">XQuery 1.0</span></a>] query to the sequence of documents
+provided on the <code class="port">source</code> port.</p>
+
+<p class="element-syntax element-syntax-declare-step"><span class="decl"><code>&lt;p:declare-step</code> <code class="attr type-attr">type</code><code>="</code><code class="value type-value">p:xquery</code><code>"</code><code>&gt;</code></span><br />     <span class="input"><code>&lt;p:input</code> <code class="attr port-attr">port</code><code>="</code><code class="value port-value">source</code><code>"</code> <code class="attr content-types-attr">content-types</code><code>="</code><code class="value content-types-value">application/xml text/xml */*+xml</code><code>"</code> <code class="attr sequence-attr">sequence</code><code>="</code><code class="value sequence-value">true</code><code>"</code> <code class="attr primary-attr">primary</code><code>="</code><code class="value primary-value">true</code><code>"</code><code>/&gt;</code></span><br />     <span class="input"><code>&lt;p:input</code> <code class="attr port-attr">port</code><code>="</code><code class="value port-value">query</code><code>"</code> <code class="attr content-types-attr">content-types</code><code>="</code><code class="value content-types-value">application/xml */*+xml text/*</code><code>"</code><code>/&gt;</code></span><br />     <span class="input"><code>&lt;p:output</code> <code class="attr port-attr">port</code><code>="</code><code class="value port-value">result</code><code>"</code> <code class="attr sequence-attr">sequence</code><code>="</code><code class="value sequence-value">true</code><code>"</code> <code class="attr content-types-attr">content-types</code><code>="</code><code class="value content-types-value">*/*</code><code>"</code><code>/&gt;</code></span><br />     <span class="opt-opt"><code>&lt;p:option</code> <code class="attr name-attr">name</code><code>="</code><code class="value name-value">parameters</code><code>"</code> <code class="attr as-attr">as</code><code>="</code><code class="value as-value">map(xs:QName,item())</code><code>"</code><code>/&gt;</code><code>       </code></span><br />     <span class="opt-opt"><code>&lt;p:option</code> <code class="attr name-attr">name</code><code>="</code><code class="value name-value">version</code><code>"</code> <code class="attr as-attr">as</code><code>="</code><code class="value as-value">xs:string</code><code>"</code><code>/&gt;</code><code>                     </code></span><br /><code>&lt;/p:declare-step&gt;</code></p>
+
+<p>If a sequence of documents is provided on the
+<code class="port">source</code> port, the first document is used as the
+initial context item. The whole sequence is also the default
+collection. If no documents are provided on the <code class="port">source</code> port,
+the initial context item is undefined and the default collection
+is empty.</p>
+
+<p>The <code class="port">query</code> port must receive a single document:</p>
+
+<div class="itemizedlist">
+
+
+
+
+
+
+
+<ul><li>
+<p>If the document root element is <a href="#cv.query"><code id="cv.query" class="tag-element">c:query</code></a>, the text
+descendants of this element are considered the query.</p>
+<p id="d196e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:query&gt;<br />    <var>string</var><br />&lt;/c:query&gt;</code></p>
+</li><li>
+<p>If the document root element is in the XQueryX namespace, the
+document is treated as an XQueryX-encoded query. <span id="impl-1">Support for
+XQueryX is <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em>.</span>
+</p>
+</li><li>
+<p>If the <code class="port">query</code> document has an XML media type, then
+the string value of the document <span class="rfc2119" id="c.xquery.6.3.1.2">must</span> be treated as
+the query. If the media type has a “<code class="literal">text</code>” type,
+then it <span class="rfc2119" id="c.xquery.6.3.1.4">must</span> be interpreted as the query.</p>
+</li><li>
+<p><span id="impl-2">Otherwise, the interpretation of the query
+is <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em>.</span>
+</p>
+</li></ul></div>
+
+<p>If the step specifies a <code class="option">version</code>, then that version
+of XQuery <span class="rfc2119" id="c.xquery.7.2">must</span> be used to process the transformation.
+<a id="err.inline.C0038"></a>It is a
+<em class="glossterm"><a href="#dt-dynamic-error">dynamic error</a></em> (<a href="#err.C0038"><code class="errqname">err:XC0038</code></a>) if the specified version
+is not available. If the step does not specify a version, the
+implementation may use any version it has available and may use any means
+to determine what version to use, including, but not limited to,
+examining the version of the query.</p>
+
+<p>The result of the <code class="tag-element">p:xquery</code> step must be a sequence of
+documents. <a id="err.inline.C0057"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic
+error</a></em> (<a href="#err.C0057"><code class="errqname">err:XC0057</code></a>) if the sequence that results from evaluating the XQuery contains
+items other than documents and elements. Any elements that appear
+in the result sequence will be treated as documents with the element as their
+document element.</p>
+
+<p>For example:</p>
+<pre class="programlisting language-markup line-numbers"><code>
+&lt;c:query&gt;
+declare namespace atom="http://www.w3.org/2005/Atom";
+/atom:feed/atom:entry
+&lt;/c:query&gt;
+
+</code></pre>
+
+<p>The output of this step
+<span class="rfc2119" id="c.xquery.11.1">may</span> include PSVI annotations.</p>
+
+<p>The static context of the XQuery processor is augmented in the following
+way:</p>
+
+<div class="variablelist">
+
+
+<dl><dt><span class="term">Statically known default collection type</span></dt><dd>
+<p><code class="literal">document()*</code></p>
+</dd><dt><span class="term">Statically known namespaces:</span></dt><dd>
+<p>Unchanged from the implementation defaults. No namespace declarations
+in the XProc pipeline are automatically exposed in the static context.
+</p>
+</dd></dl></div>
+
+<p>The dynamic context of the XQuery processor is augmented in the following
+way:</p>
+
+<div class="variablelist">
+
+
+
+
+
+
+
+
+
+
+<dl><dt><span class="term">Context item</span></dt><dd>
+<p>The first document that appears on the <code class="port">source</code> port.
+</p>
+</dd><dt><span class="term">Context position</span></dt><dd>
+<p><code class="literal">1</code>
+</p>
+</dd><dt><span class="term">Context size</span></dt><dd>
+<p><code class="literal">1</code>
+</p>
+</dd><dt><span class="term">Variable values</span></dt><dd>
+<p>Any parameters passed in the <code class="option">parameters</code> option
+augment any implementation-defined variable bindings known to the XQuery
+processor.
+</p>
+</dd><dt><span class="term">Function implementations</span></dt><dd>
+<p>The function implementations provided by the XQuery processor.</p>
+</dd><dt><span class="term">Current dateTime</span></dt><dd>
+<p><span id="impl-3">The point in time returned as the current dateTime is
+<em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em>.</span></p>
+</dd><dt><span class="term">Implicit timezone</span></dt><dd>
+<p><span id="impl-4">The implicit timezone is <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em>.
+</span>
+</p>
+</dd><dt><span class="term">Available documents</span></dt><dd>
+<p><span id="impl-5">The set of available documents (those that may be retrieved with a URI)
+is <em class="glossterm"><a href="#dt-implementation-dependent">implementation-dependent</a></em>.</span>
+</p>
+</dd><dt><span class="term">Available collections</span></dt><dd>
+<p><span id="impl-6">The set of available collections
+is <em class="glossterm"><a href="#dt-implementation-dependent">implementation-dependent</a></em>.</span>
+</p>
+</dd><dt><span class="term">Default collection</span></dt><dd>
+<p>The sequence of documents provided on the <code class="port">source</code> port.
+</p>
+</dd></dl></div>
+
+<section id="example-xquery" class="section tocsuppress"><div class="section-titlepage"><h3>2.1 Example</h3></div><div class="content">
+
+
+<p>The following pipeline applies XInclude processing and schema
+validation before using XQuery:</p>
+
+<figure id="ex.c.xquery" class="example-wrapper"><div class="title">Example 1. A Sample Pipeline Document</div><div class="example"><pre class="programlisting language-markup line-numbers"><code>&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
+                version="3.0"&gt;
+&lt;p:input port="source"/&gt;
+&lt;p:output port="result"/&gt;
+
+&lt;p:xinclude/&gt;
+
+&lt;p:validate-with-xml-schema name="validate"&gt;
+  &lt;p:with-input port="schema" href="http://example.com/path/to/schema.xsd"/&gt;
+&lt;/p:validate-with-xml-schema&gt;
+
+&lt;p:xquery&gt;
+   &lt;p:with-input port="query" href="countp.xq"/&gt;
+&lt;/p:xquery&gt;
+
+&lt;/p:declare-step&gt;</code></pre></div></figure>
+
+<p>Where <code class="filename">countp.xq</code> might contain:</p>
+
+<pre class="programlisting language-markup"><code>&lt;count&gt;{count(.//p)}&lt;/count&gt;</code></pre>
+
+</div></section>
+
+<section id="c.xquery.17" class="section"><div class="section-titlepage"><h3>2.2 Document properties</h3></div><div class="content">
+
+<p>No document properties are preserved.</p>
+</div></section>
+</div></section>
+
+
+<section id="errors" class="section"><div class="section-titlepage"><h2>3 Step Errors</h2></div><div class="content">
+
+
+<p>This step can raise
+<em class="glossterm"><a href="#dt-dynamic-error">dynamic errors</a></em>.
+</p>
+
+<p><span id="dt-dynamic-error" class="termdef">[Definition: A <em class="glossterm">dynamic
+error</em> is one which occurs while a pipeline is being
+evaluated.]</span> Examples of dynamic errors include references to
+URIs that cannot be resolved, steps which fail, and pipelines that
+exhaust the capacity of an implementation (such as memory or disk
+space). For a more complete discussion of dynamic errors, see
+<cite><a href="xproc/#dynamic-errors">Dynamic Errors</a></cite> in <cite><a href="xproc/">XProc 3.0: An XML Pipeline Language</a></cite>.
+</p>
+
+<p>If a step fails due to a dynamic error, failure propagates
+upwards until either a <code class="tag-element">p:try</code> is encountered or the entire
+pipeline fails. In other words, outside of a <code class="tag-element">p:try</code>, step
+failure causes the entire pipeline to fail.</p>
+
+<p>The following errors can be raised by this step:</p>
+
+<div id="step-error-summary"><dl class="errs"><dt id="err.C0038"><code class="errqname">err:XC0038</code></dt><dd><p>It is a
+dynamic error if the specified version
+is not available.</p><p>See: <a href="#err.inline.C0038">p:xquery</a></p></dd><dt id="err.C0057"><code class="errqname">err:XC0057</code></dt><dd><p>It is a dynamic
+error if the sequence that results from evaluating the XQuery contains
+items other than documents and elements.</p><p>See: <a href="#err.inline.C0057">p:xquery</a></p></dd></dl></div>
+
+</div></section>
+
+<article id="conformance" class="appendix"><header class="appendix-titlepage"><h2>A Conformance</h2></header><div class="content">
+
+
+<p>Conformant processors <span class="rfc2119" id="conformance.2.1">must</span> implement all of the features
+described in this specification except those that are explicitly identified
+as optional.</p>
+
+<p>Some aspects of processor behavior are not completely specified; those
+features are either <em class="glossterm"><a href="#dt-implementation-dependent">implementation-dependent</a></em> or
+<em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em>.</p>
+
+<p><span id="dt-implementation-dependent" class="termdef">[Definition: An
+<em class="glossterm">implementation-dependent</em> feature is one where the
+implementation has discretion in how it is performed.
+Implementations are not required to document or explain
+how <em class="glossterm"><a href="#dt-implementation-dependent">implementation-dependent</a></em> features are performed.]</span>
+</p>
+
+<p><span id="dt-implementation-defined" class="termdef">[Definition: An
+<em class="glossterm">implementation-defined</em> feature is one where the
+implementation has discretion in how it is performed.
+Conformant implementations <span class="rfc2119" id="dt-implementation-defined.2">must</span> document
+how <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em> features are performed.]</span>
+</p>
+
+<section id="implementation-defined" class="section"><div class="section-titlepage"><h2>1 Implementation-defined features</h2></div><div class="content">
+
+
+<p>The following features are implementation-defined:</p>
+
+<ol class="features"><li>Support for
+XQueryX is implementation-defined. See <a href="#c.xquery" title="p:xquery">Section 2, “p:xquery”</a>.</li><li>Otherwise, the interpretation of the query
+is implementation-defined. See <a href="#c.xquery" title="p:xquery">Section 2, “p:xquery”</a>.</li><li>The point in time returned as the current dateTime is
+implementation-defined. See <a href="#c.xquery" title="p:xquery">Section 2, “p:xquery”</a>.</li><li>The implicit timezone is implementation-defined.
+ See <a href="#c.xquery" title="p:xquery">Section 2, “p:xquery”</a>.</li></ol>
+</div></section>
+
+<section id="implementation-dependent" class="section"><div class="section-titlepage"><h2>2 Implementation-dependent features</h2></div><div class="content">
+
+
+<p>The following features are implementation-dependent:</p>
+
+<ol class="features"><li>The set of available documents (those that may be retrieved with a URI)
+is implementation-dependent. See <a href="#c.xquery" title="p:xquery">Section 2, “p:xquery”</a>.</li><li>The set of available collections
+is implementation-dependent. See <a href="#c.xquery" title="p:xquery">Section 2, “p:xquery”</a>.</li></ol>
+</div></section>
+</div></article>
+
+<article id="references" class="appendix"><header class="appendix-titlepage"><h2>B References</h2></header><div class="content">
+
+<div id="references.2" class="bibliolist">
+<div id="xproc30" class="bibliomixed"><p>[<span class="abbrev">XProc 3.0</span>] 
+<a href="http://spec.xproc.org/"><span class="citetitle"><cite>XProc 3.0:
+An XML Pipeline Language</cite></span></a>.
+Achim Berndzen, Gerrit Imsieke, Erik Siegel and Norman Walsh, editors.
+</p></div>
+<div id="xproc30-steps" class="bibliomixed"><p>[<span class="abbrev">XProc 3.0 Steps</span>] 
+<a href="http://spec.xproc.org/"><span class="citetitle"><cite>XProc 3.0 Steps:
+An Introduction</cite></span></a>.
+Achim Berndzen, Gerrit Imsieke, Erik Siegel and Norman Walsh, editors.
+</p></div>
+<div id="xquery10" class="bibliomixed"><p>[<span class="abbrev">XQuery 1.0</span>] 
+<a href="http://www.w3.org/TR/xquery/"><span class="citetitle"><cite>XQuery 1.0: An XML
+Query Language</cite></span></a>. Scott Boag, Don Chamberlin, Mary Fernández, et. al.,
+editors. W3C Recommendation. 23 January 2007.</p></div>
+</div>
+</div></article>
+
+
+<article id="glossary" class="appendix"><header class="appendix-titlepage"><h2>C Glossary</h2></header><div class="content"><div class="glosslist"><dl><dt id="glossary.2.1" class="glossentry"><em class="glossterm"><a href="#dt-dynamic-error">dynamic
+error</a></em></dt><dd class="glossdef"><p>A <em class="firstterm">dynamic
+error</em> is one which occurs while a pipeline is being
+evaluated.</p></dd><dt id="glossary.2.2" class="glossentry"><em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em></dt><dd class="glossdef"><p>An
+<em class="firstterm">implementation-defined</em> feature is one where the
+implementation has discretion in how it is performed.
+Conformant implementations <span class="rfc2119" id="glossary.2.2.2.1.2">must</span> document
+how <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em> features are performed.</p></dd><dt id="glossary.2.3" class="glossentry"><em class="glossterm"><a href="#dt-implementation-dependent">implementation-dependent</a></em></dt><dd class="glossdef"><p>An
+<em class="firstterm">implementation-dependent</em> feature is one where the
+implementation has discretion in how it is performed.
+Implementations are not required to document or explain
+how <em class="glossterm"><a href="#dt-implementation-dependent">implementation-dependent</a></em> features are performed.</p></dd></dl></div></div></article>
+
+</div><script src="js/prism.js"></script></body></html>

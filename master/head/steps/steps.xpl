@@ -290,27 +290,6 @@
       <p:option name="output-base-uri" as="xs:anyURI"/>
       <p:option name="version" as="xs:string"/>
    </p:declare-step>
-   <p:declare-step type="p:exec" xml:id="exec">
-      <p:input port="source"
-               primary="true"
-               sequence="true"
-               content-types="*/*"/>
-      <p:output port="result" primary="true" content-types="*/*"/>
-      <p:output port="errors"/>
-      <p:output port="exit-status"/>
-      <p:option name="command" required="true" as="xs:string"/>
-      <p:option name="args" select="''" as="xs:string"/>
-      <p:option name="cwd" as="xs:string"/>
-      <p:option name="source-is-xml" select="true()" as="xs:boolean"/>
-      <p:option name="result-is-xml" select="true()" as="xs:boolean"/>
-      <p:option name="wrap-result-lines" select="false()" as="xs:boolean"/>
-      <p:option name="errors-is-xml" select="false()" as="xs:boolean"/>
-      <p:option name="wrap-error-lines" select="false()" as="xs:boolean"/>
-      <p:option name="path-separator" as="xs:string"/>
-      <p:option name="failure-threshold" as="xs:integer"/>
-      <p:option name="arg-separator" select="' '" as="xs:string"/>
-      <p:option name="serialization" as="xs:string"/>
-   </p:declare-step>
    <p:declare-step type="p:hash" xml:id="hash">
       <p:input port="source" primary="true" content-types="*/*"/>
       <p:output port="result" content-types="application/xml"/>
@@ -351,22 +330,5 @@
                 required="true"
                 as="xs:string"
                 e:type="XSLTMatchPattern"/>
-   </p:declare-step>
-   <p:declare-step type="p:xquery" xml:id="xquery">
-      <p:input port="source"
-               content-types="application/xml text/xml */*+xml"
-               sequence="true"
-               primary="true"/>
-      <p:input port="query" content-types="application/xml */*+xml text/*"/>
-      <p:output port="result" sequence="true" content-types="*/*"/>
-      <p:option name="parameters" as="xs:string"/>
-      <p:option name="version" as="xs:string"/>
-   </p:declare-step>
-   <p:declare-step type="p:xsl-formatter" xml:id="xsl-formatter">
-      <p:input port="source" content-types="application/xml text/xml */*+xml"/>
-      <p:output port="result" content-types="*/*"/>
-      <p:option name="parameters" as="xs:string"/>
-      <p:option name="href" required="true" as="xs:anyURI"/>
-      <p:option name="content-type" as="xs:string"/>
    </p:declare-step>
 </p:library>
