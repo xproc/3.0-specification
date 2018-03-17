@@ -42,6 +42,16 @@ PropertyMap = text
 ]
 SerializationMap = text
 
+[
+   sa:model = "EQName*"
+]
+ListOfEQName = text
+
+[
+   sa:model = "char"
+]
+Char = text
+
 name.ncname.attr = attribute name { xsd:NCName }
 name.qname.attr = attribute name { xsd:QName }
 as.attr = attribute as { XPathSequenceType }
@@ -50,6 +60,7 @@ required.attr = attribute required { xsd:boolean }
 sequence.attr = attribute sequence { xsd:boolean }
 primary.attr = attribute primary { xsd:boolean }
 select.attr = attribute select { XPathExpression }
+use-character-maps.attr = attribute use-character-maps { ListOfEQName }
 xpath-version.attr = attribute xpath-version { text }
 psvi-required.attr = attribute psvi-required { xsd:boolean }
 document-properties.attr = attribute document-properties { PropertyMap }
@@ -130,7 +141,7 @@ Library =
       decl.attributes,
       common.attributes,
       use-when.attr?,
-      (Import|DeclareStep|Documentation|PipeInfo)*
+      (Import|CharacterMap|DeclareStep|Documentation|PipeInfo)*
    }
 
 [
@@ -376,7 +387,7 @@ DeclareStep =
       common.attributes,
       use-when.attr?,
       (Input|Output|Option|Documentation|PipeInfo)*,
-      ((DeclareStep|Import|Documentation|PipeInfo)*,Subpipeline)?
+      ((CharacterMap|DeclareStep|Import|Documentation|PipeInfo)*,Subpipeline)?
    }
 
 # ============================================================
@@ -530,6 +541,29 @@ Finally =
       use-when.attr?,
       ((Documentation|PipeInfo)*, Subpipeline)
    }
+
+# ============================================================
+
+[
+   sa:class = "language-construct"
+]
+CharacterMap =
+    element character-map {
+        name.qname.attr,
+        common.attributes,
+        use-character-maps.attr?,
+        (OutputCharacter*)
+    }
+
+[
+   sa:class = "language-construct"
+]
+OutputCharacter =
+    element output-character {
+        attribute character { Char },
+        attribute string { text },
+        empty
+    }
 
 # ============================================================
 
