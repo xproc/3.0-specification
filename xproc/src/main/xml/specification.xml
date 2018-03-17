@@ -4324,6 +4324,19 @@ boolean.</para>
 </varlistentry>
 
 <varlistentry>
+<term><option>use-character-maps</option></term>
+<listitem>
+<para>The value of this option <rfc2119>must</rfc2119> be a list of
+<type>EQName</type>s. For each name provided, there must be a matching
+<tag>p:character-map</tag> with that name.
+<error code="D0100">It is a <glossterm>dynamic error</glossterm> if
+<option>use-character-maps</option> includes a name for which there
+is not a corresponding <tag>p:character-map</tag>.</error>
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
 <term><option>version</option></term>
 <listitem>
 <para>The value of this option <rfc2119>must</rfc2119> be a
@@ -5392,12 +5405,32 @@ output</emphasis> on that port. </para>
           <glossterm>empty sequence</glossterm> of documents.</para>
       <e:rng-pattern name="Empty"/>
     </section>
+
+<section xml:id="p.character-map">
+<title>p:character-map</title>
+
+<e:rng-pattern name="CharacterMap"/>
+
+<para>When character maps are used during serialization, each occurrence of
+the identified character is replaced by the specified string.</para>
+
+<section xml:id="p.output-character">
+<title>p:output-character</title>
+
+<e:rng-pattern name="OutputCharacter"/>
+
+<para>Maps a single character to a string at serialization time.</para>
+
+</section>
+</section>
+
     <section xml:id="p.documentation"><title>p:documentation</title><para>A
           <tag>p:documentation</tag> contains human-readable documentation.</para>
       <e:rng-pattern name="Documentation"/>
       <para>There are no constraints on the content of the <tag>p:documentation</tag> element.
         Documentation is ignored by pipeline processors. See <xref linkend="documentation"/>.
       </para></section>
+
     <section xml:id="p.pipeinfo"><title>p:pipeinfo</title><para>A <tag>p:pipeinfo</tag> contains
         ancillary information for steps in the pipeline.</para>
       <e:rng-pattern name="PipeInfo"/>
