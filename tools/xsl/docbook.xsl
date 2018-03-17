@@ -32,6 +32,8 @@
                    then xs:string(processing-instruction(latest-version))
 		   else ()"/>
 
+<xsl:param name="section.label.includes.component.label" as="xs:boolean" select="true()"/>
+
 <!-- ============================================================ -->
 
 <xsl:variable name="pubdate"
