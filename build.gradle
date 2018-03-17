@@ -384,9 +384,11 @@ task xproc_rng(type: XMLCalabashTask,
                             "steps:rng", "step-validation:rng",
                             "step-exec:rng", "step-xquery:rng",
                             "step-xsl-formatter:rng" ]) {
+  println("Searching for steps: ")
   FileTree tree = fileTree(dir: ".").include("**/steps.rng")
   String files = ""
   tree.each { file ->
+    println("Found steps: " + file.getAbsolutePath())
     files = files + " " + file.getAbsolutePath()
   }
 
