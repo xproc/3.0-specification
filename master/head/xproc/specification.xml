@@ -3455,10 +3455,6 @@ the recovery (or “catch”) pipelines are identified with
 <tag>p:catch</tag> elements. The <tag>p:finally</tag> pipeline always
 runs after the <tag>p:try</tag>.</para>
 
-<para><error code="S0075">It is a <glossterm>static error</glossterm>
-if a <tag>p:try</tag> does not have exactly one <tag>p:group</tag> and
-at least one <tag>p:catch</tag> or exactly one <tag>p:finally</tag>.</error></para>
-
 <para>The <tag>p:try</tag> step evaluates the initial subpipeline and,
 if no errors occur, the outputs of that pipeline are the outputs of
 the <tag>p:try</tag> step. However, if any errors occur, the
@@ -3471,20 +3467,23 @@ order. All except the last <rfc2119>must</rfc2119> have a
 <tag class="attribute">code</tag> attribute. If any of the specified error
 codes matches the error that was raised in the <tag>p:group</tag>, then
 that <tag>p:catch</tag> is selected as the recovery pipeline.
-The last <tag>p:catch</tag>
-<rfc2119>must not</rfc2119> have a <tag class="attribute">code</tag>
-attribute; it is selected if no preceding <tag>p:catch</tag> has a
+If the last <tag>p:catch</tag> does not have a <tag class="attribute">code</tag>
+attribute, it is selected if no preceding <tag>p:catch</tag> has a
 matching error code.
+If there is no matching <tag>p:catch</tag>, the <tag>p:try</tag> fails.
 <error code="S0064">It is a <glossterm>static error</glossterm>
 if the <tag class="attribute">code</tag> attribute is missing from
-any but the last <tag>p:catch</tag>, if the last <tag>p:catch</tag>
-has a <tag class="attribute">code</tag>, or if any error code is
-repeated.</error>.</para>
+any but the last <tag>p:catch</tag> or if any error code is
+repeated.</error></para>
 
 <para>If the recovery subpipeline is evaluated, the outputs of the
 recovery subpipeline are the outputs of the <tag>p:try</tag> step. If
 the recovery subpipeline is evaluated and a step within that
-subpipeline fails, the <tag>p:try</tag> fails.</para>
+subpipeline fails, the <tag>p:try</tag> fails.
+Irrespective of whether the initial subpipeline succeeds or fails,
+if any recovery pipelines are selected, and whether they succeed or fail,
+the <tag>p:finally</tag> block is <emphasis>always</emphasis> run after
+all other processing of the <tag>p:try</tag> has finished.</para>
 
 <para>The outputs of the <tag>p:try</tag> are taken from the
 outputs of the initial <glossterm>subpipeline</glossterm> or the recovery
