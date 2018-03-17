@@ -384,17 +384,15 @@ task xproc_rng(type: XMLCalabashTask,
                             "steps:rng", "step-validation:rng",
                             "step-exec:rng", "step-xquery:rng",
                             "step-xsl-formatter:rng" ]) {
-  println("Searching for steps: ")
-  FileTree tree = fileTree(dir: ".").include("**/steps.rng")
+  // This is bogus; I'm having trouble getting the filesystem read to
+  // happen at the right time:
+  // https://discuss.gradle.org/t/controlling-order-of-execution-of-statements-wrt-execution-of-a-task/26291
   String files = ""
-  tree.each { file ->
-    println("Found steps: " + file.getAbsolutePath())
-    files = files + " " + file.getAbsolutePath()
+  ["step-exec", "step-xsl-formatter", "steps",
+   "step-validation", "step-xquery"].each { s ->
+    files = files + " ../../" + s + "/build/steps.rng"
   }
 
-this is an intentional syntax error
-
-  inputs.files tree
   inputs.file "build/core.rng"
   inputs.file "tools/xpl/make-rng.xpl"
   inputs.file "tools/xsl/make-rng.xsl"
