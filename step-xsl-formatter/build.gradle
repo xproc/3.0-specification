@@ -16,10 +16,10 @@ defaultTasks 'specification'
 apply plugin: 'com.xmlcalabash.task'
 
 import com.xmlcalabash.XMLCalabashTask
-import com.nwalsh.tasks.StripAmblesTask
 
-task xinclude(dependsOn: [ ":spec_schemas" ], type: XMLCalabashTask) {
-  inputs.files fileTree(dir: "src/main/xml/")
+task xinclude(dependsOn: [":spec_schemas"], type: XMLCalabashTask) {
+  inputs.file "src/main/xml/specification.xml"
+  outputs.file "build/xinclude.xml"
   input("source", "src/main/xml/specification.xml")
   output("result", "build/xinclude.xml")
   pipeline "../tools/xpl/validate.xpl"
@@ -28,8 +28,7 @@ xinclude.doFirst {
   mkdir("build")
 }
 
-task source(dependsOn: ["xinclude", "glossary"], type: XMLCalabashTask) {
-  inputs.files fileTree(dir: "src/main/xml/")
+task source(dependsOn: ["glossary"], type: XMLCalabashTask) {
   inputs.file "../tools/xsl/masterbib.xsl"
   inputs.file "../src/main/xml/bibliography.xml"
   inputs.file "src/main/xml/specification.xml"
@@ -41,8 +40,7 @@ task source(dependsOn: ["xinclude", "glossary"], type: XMLCalabashTask) {
 }
 
 task glossary(dependsOn: ["xinclude"], type: XMLCalabashTask) {
-  inputs.files fileTree(dir: "src/main/xml/")
-  inputs.file "../src/main/xml/bibliography.xml"
+  inputs.file "build/xinclude.xml"
   inputs.file "../tools/xpl/makeglossary.xpl"
   inputs.file "../tools/xsl/makeglossary.xsl"
   outputs.file "build/glossary.xml"
@@ -81,25 +79,6 @@ task rng(dependsOn: ["rnc"], type: JavaExec) {
 
 task specification(dependsOn: [ "source", "library", "rng" ]) {
   // nop
-}
-
-// ================================================================================
-// Process the examples
-
-def copyFiles = [ "serialize.input.ex.xml", "serialize.output.ex.xml",
-                  "form.post.xml", "form.response.xml",
-                  "parse.input.ex.xml", "parse.output.ex.xml",
-                  "doctemp-1.xml", "doctemp-2.xml", "doctemp-3.xml", "doctemp-3-result.xml", ]
-
-copyFiles.each { String name ->
-  String newname = name.substring(0, name.lastIndexOf(".")) + ".txt"
-
-  task "copy_$name"(type: Copy) {
-    from "src/main/examples/$name"
-    into "$buildDir/examples"
-    rename (name, newname)
-  }
-  xinclude.dependsOn "copy_$name"
 }
 
 task clean() {

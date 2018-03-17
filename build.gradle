@@ -300,6 +300,126 @@ task validate_schematron_xpl(dependsOn: ["step-validate-schematron:library"], ty
 }
 
 // ======================================================================
+// step-exec
+
+task step_exec(type: DocBookTask,
+               dependsOn: [ "xproc", "steps", "xproc_schemas", "spec_schemas",
+                            "step-validate-relax-ng:specification",
+                            "step_exec_assets",
+                            "step_exec_src", "step_exec_xpl" ]) {
+  inputs.files fileTree(dir: "tools/xsl/")
+  inputs.files fileTree(dir: "tools/xpl/")
+  inputs.file "xproc/build/toc.xml"
+  input("source", "step-exec/build/source.xml")
+  output("result", "build/dist/exec/index.html")
+
+  param("schemaext.schema", new File("build/schema/dbspec.rng"))
+  option("style", new File("tools/xsl/xproc-specs.xsl"))
+  pipeline "tools/xpl/formatspec.xpl"
+}
+allspecs.dependsOn "step_exec"
+overview.dependsOn "step_exec"
+
+task step_exec_assets(type: Copy) {
+  from "src/main/resources"
+  into "build/dist/exec/"
+}
+
+task step_exec_src(dependsOn: ["step-exec:source"], type: Copy) {
+  from "step-exec/build/"
+  into "build/dist/exec/"
+  include "source.xml"
+  rename ("source.xml", "specification.xml")
+}
+
+task step_exec_xpl(dependsOn: ["step-exec:library"], type: Copy) {
+  from "step-exec/build/"
+  into "build/dist/exec/"
+  include "library.xml"
+  rename ("library.xml", "steps.xpl")
+}
+
+// ======================================================================
+// step-xquery
+
+task step_xquery(type: DocBookTask,
+               dependsOn: [ "xproc", "steps", "xproc_schemas", "spec_schemas",
+                            "step-validate-relax-ng:specification",
+                            "step_xquery_assets",
+                            "step_xquery_src", "step_xquery_xpl" ]) {
+  inputs.files fileTree(dir: "tools/xsl/")
+  inputs.files fileTree(dir: "tools/xpl/")
+  inputs.file "xproc/build/toc.xml"
+  input("source", "step-xquery/build/source.xml")
+  output("result", "build/dist/xquery/index.html")
+
+  param("schemaext.schema", new File("build/schema/dbspec.rng"))
+  option("style", new File("tools/xsl/xproc-specs.xsl"))
+  pipeline "tools/xpl/formatspec.xpl"
+}
+allspecs.dependsOn "step_xquery"
+overview.dependsOn "step_xquery"
+
+task step_xquery_assets(type: Copy) {
+  from "src/main/resources"
+  into "build/dist/xquery/"
+}
+
+task step_xquery_src(dependsOn: ["step-xquery:source"], type: Copy) {
+  from "step-xquery/build/"
+  into "build/dist/xquery/"
+  include "source.xml"
+  rename ("source.xml", "specification.xml")
+}
+
+task step_xquery_xpl(dependsOn: ["step-xquery:library"], type: Copy) {
+  from "step-xquery/build/"
+  into "build/dist/xquery/"
+  include "library.xml"
+  rename ("library.xml", "steps.xpl")
+}
+
+// ======================================================================
+// step-xsl-formatter
+
+task step_xsl_formatter(type: DocBookTask,
+               dependsOn: [ "xproc", "steps", "xproc_schemas", "spec_schemas",
+                            "step-validate-relax-ng:specification",
+                            "step_xsl_formatter_assets",
+                            "step_xsl_formatter_src", "step_xsl_formatter_xpl" ]) {
+  inputs.files fileTree(dir: "tools/xsl/")
+  inputs.files fileTree(dir: "tools/xpl/")
+  inputs.file "xproc/build/toc.xml"
+  input("source", "step-xsl-formatter/build/source.xml")
+  output("result", "build/dist/xsl-formatter/index.html")
+
+  param("schemaext.schema", new File("build/schema/dbspec.rng"))
+  option("style", new File("tools/xsl/xproc-specs.xsl"))
+  pipeline "tools/xpl/formatspec.xpl"
+}
+allspecs.dependsOn "step_xsl_formatter"
+overview.dependsOn "step_xsl_formatter"
+
+task step_xsl_formatter_assets(type: Copy) {
+  from "src/main/resources"
+  into "build/dist/xsl-formatter/"
+}
+
+task step_xsl_formatter_src(dependsOn: ["step-xsl-formatter:source"], type: Copy) {
+  from "step-xsl-formatter/build/"
+  into "build/dist/xsl-formatter/"
+  include "source.xml"
+  rename ("source.xml", "specification.xml")
+}
+
+task step_xsl_formatter_xpl(dependsOn: ["step-xsl-formatter:library"], type: Copy) {
+  from "step-xsl-formatter/build/"
+  into "build/dist/xsl-formatter/"
+  include "library.xml"
+  rename ("library.xml", "steps.xpl")
+}
+
+// ======================================================================
 // Specification schemas
 
 task spec_schemas(dependsOn: [ "spec_rng", "spec_sch" ]) {

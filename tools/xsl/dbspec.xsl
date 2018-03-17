@@ -46,12 +46,15 @@
 
 <xsl:variable name="xspecmap" as="element()">
   <xspecmap>
-    <map id="xproc" uri="http://spec.xproc.org/master/head/xproc"/>
-    <map id="steps" uri="http://spec.xproc.org/master/head/steps"/>
-    <map id="overview" uri="http://spec.xproc.org/master/head/overview"/>
-    <map id="step-valid-relax-ng" uri="http://spec.xproc.org/master/head/validate-with-relax-ng"/>
-    <map id="step-valid-schematron" uri="http://spec.xproc.org/master/head/validate-with-schematron"/>
-    <map id="step-valid-xml-schema" uri="http://spec.xproc.org/master/head/validate-with-xml-schema"/>
+    <map id="xproc" uri="xproc"/>
+    <map id="steps" uri="steps"/>
+    <map id="overview" uri=""/>
+    <map id="step-validate-relax-ng" uri="validate-with-relax-ng"/>
+    <map id="step-validate-schematron" uri="validate-with-schematron"/>
+    <map id="step-validate-xml-schema" uri="validate-with-xml-schema"/>
+    <map id="step-exec" uri="exec"/>
+    <map id="step-xquery" uri="xquery"/>
+    <map id="step-xsl-formatter" uri="xsl-formatter"/>
   </xspecmap>
 </xsl:variable>
 
@@ -789,7 +792,11 @@
   <xsl:variable name="spec" select="string(@spec)"/>
   <xsl:variable name="xref" select="@xref/string()"/>
   <xsl:variable name="tocfn" select="concat('../../', @spec, '/build/toc.xml')"/>
- 
+
+  <!--
+  <xsl:message><xsl:value-of select="$spec"/>, <xsl:value-of select="$xref"/>, <xsl:value-of select="$tocfn"/></xsl:message>
+  -->
+
   <xsl:choose>
     <xsl:when test="doc-available($tocfn)">
       <xsl:variable name="toc" select="doc($tocfn)/db:toc"/>
