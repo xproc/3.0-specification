@@ -1502,7 +1502,7 @@ system properties, which are all in the XProc namespace:</para>
           <varlistentry>
             <term><varname>p:locale</varname></term>
             <listitem>
-              <para>Returns a string which identifies the current environment (usually the OS) 
+              <para>Returns a string which identifies the current environment (usually the OS)
                 language. This is useful for, for example, message
                 localization purposes. <impl>The exact format of the language string is
                     <glossterm>implementation-defined</glossterm> but <rfc2119>should</rfc2119> be
@@ -3377,6 +3377,10 @@ arise within it from being exposed to the rest of the pipeline.</para>
 the recovery (or “catch”) pipelines are identified with
 <tag>p:catch</tag> elements. The <tag>p:finally</tag> pipeline always
 runs after the <tag>p:try</tag>.</para>
+
+<para><error code="S0075">It is a <glossterm>static error</glossterm>
+if a <tag>p:try</tag> does not have exactly one <tag>p:group</tag> and
+at least one <tag>p:catch</tag> or exactly one <tag>p:finally</tag>.</error></para>
 
 <para>The <tag>p:try</tag> step evaluates the initial subpipeline and,
 if no errors occur, the outputs of that pipeline are the outputs of
