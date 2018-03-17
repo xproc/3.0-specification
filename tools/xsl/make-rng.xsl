@@ -5,11 +5,13 @@
 		exclude-result-prefixes="xs rng"
                 version="2.0">
 
-<xsl:variable name="steps"
-              select="(doc('../../steps/build/steps.rng'),
-                       doc('../../step-validate-relax-ng/build/steps.rng'),
-                       doc('../../step-validate-xml-schema/build/steps.rng'),
-                       doc('../../step-validate-schematron/build/steps.rng'))"/>
+<xsl:param name="libraries" required="yes" as="xs:string"/>
+
+<xsl:variable name="steps" as="document-node()+">
+  <xsl:for-each select="tokenize(normalize-space($libraries), '\s+')">
+    <xsl:sequence select="doc(.)"/>
+  </xsl:for-each>
+</xsl:variable>
 
 <xsl:template match="rng:grammar">
   <xsl:copy>

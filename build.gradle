@@ -182,119 +182,41 @@ task steps_xpl(dependsOn: ["steps:library"], type: Copy) {
 }
 
 // ======================================================================
-// step-validate-relax-ng
+// step-validation
 
-task validate_relax_ng(dependsOn: [ "xproc", "steps", "xproc_schemas", "spec_schemas",
-                                    "step-validate-relax-ng:specification",
-                                    "validate_relax_ng_assets",
-                                    "validate_relax_ng_src", "validate_relax_ng_xpl" ],
-                       type: DocBookTask) {
+task step_validation(type: DocBookTask,
+                     dependsOn: [ "xproc", "steps", "xproc_schemas", "spec_schemas",
+                                  "step-validation:specification",
+                                  "step_validation_assets", "step_validation_src",
+                                  "step_validation_xpl" ]) {
   inputs.files fileTree(dir: "tools/xsl/")
   inputs.files fileTree(dir: "tools/xpl/")
   inputs.file "xproc/build/toc.xml"
-  input("source", "step-validate-relax-ng/build/source.xml")
-  output("result", "build/dist/validate-with-relax-ng/index.html")
+  input("source", "step-validation/build/source.xml")
+  output("result", "build/dist/validation/index.html")
 
   param("schemaext.schema", new File("build/schema/dbspec.rng"))
   option("style", new File("tools/xsl/xproc-specs.xsl"))
   pipeline "tools/xpl/formatspec.xpl"
 }
-allspecs.dependsOn "validate_relax_ng"
-overview.dependsOn "validate_relax_ng"
+allspecs.dependsOn "step_validation"
+overview.dependsOn "step_validation"
 
-task validate_relax_ng_assets(type: Copy) {
+task step_validation_assets(type: Copy) {
   from "src/main/resources"
-  into "build/dist/validate-with-relax-ng/"
+  into "build/dist/validation/"
 }
 
-task validate_relax_ng_src(dependsOn: ["step-validate-relax-ng:source"], type: Copy) {
-  from "step-validate-relax-ng/build/"
-  into "build/dist/validate-with-relax-ng/"
+task step_validation_src(dependsOn: ["step-validation:source"], type: Copy) {
+  from "step-validation/build/"
+  into "build/dist/validation/"
   include "source.xml"
   rename ("source.xml", "specification.xml")
 }
 
-task validate_relax_ng_xpl(dependsOn: ["step-validate-relax-ng:library"], type: Copy) {
-  from "step-validate-relax-ng/build/"
-  into "build/dist/validate-with-relax-ng/"
-  include "library.xml"
-  rename ("library.xml", "steps.xpl")
-}
-
-// ======================================================================
-// step-validate-xml-schema
-
-task validate_xml_schema(dependsOn: [ "xproc", "steps", "xproc_schemas", "spec_schemas",
-                                      "step-validate-xml-schema:specification",
-                                      "validate_xml_schema_assets",
-                                      "validate_xml_schema_src", "validate_xml_schema_xpl"],
-                         type: DocBookTask) {
-  inputs.files fileTree(dir: "tools/xsl/")
-  inputs.files fileTree(dir: "tools/xpl/")
-  input("source", "step-validate-xml-schema/build/source.xml")
-  output("result", "build/dist/validate-with-xml-schema/index.html")
-
-  param("schemaext.schema", new File("build/schema/dbspec.rng"))
-  option("style", new File("tools/xsl/xproc-specs.xsl"))
-  pipeline "tools/xpl/formatspec.xpl"
-}
-allspecs.dependsOn "validate_xml_schema"
-overview.dependsOn "validate_xml_schema"
-
-task validate_xml_schema_assets(type: Copy) {
-  from "src/main/resources"
-  into "build/dist/validate-with-xml-schema/"
-}
-
-task validate_xml_schema_src(dependsOn: ["step-validate-xml-schema:source"], type: Copy) {
-  from "step-validate-xml-schema/build/"
-  into "build/dist/validate-with-xml-schema/"
-  include "source.xml"
-  rename ("source.xml", "specification.xml")
-}
-
-task validate_xml_schema_xpl(dependsOn: ["step-validate-xml-schema:library"], type: Copy) {
-  from "step-validate-xml-schema/build/"
-  into "build/dist/validate-with-xml-schema/"
-  include "library.xml"
-  rename ("library.xml", "steps.xpl")
-}
-
-// ======================================================================
-// step-validate-schematron
-
-task validate_schematron(dependsOn: [ "xproc", "steps", "xproc_schemas", "spec_schemas",
-                                      "step-validate-schematron:specification",
-                                      "validate_schematron_assets",
-                                      "validate_schematron_src","validate_schematron_xpl" ],
-                         type: DocBookTask) {
-  inputs.files fileTree(dir: "tools/xsl/")
-  inputs.files fileTree(dir: "tools/xpl/")
-  input("source", "step-validate-schematron/build/source.xml")
-  output("result", "build/dist/validate-with-schematron/index.html")
-
-  param("schemaext.schema", new File("build/schema/dbspec.rng"))
-  option("style", new File("tools/xsl/xproc-specs.xsl"))
-  pipeline "tools/xpl/formatspec.xpl"
-}
-allspecs.dependsOn "validate_schematron"
-overview.dependsOn "validate_schematron"
-
-task validate_schematron_assets(type: Copy) {
-  from "src/main/resources"
-  into "build/dist/validate-with-schematron/"
-}
-
-task validate_schematron_src(dependsOn: ["step-validate-schematron:source"], type: Copy) {
-  from "step-validate-schematron/build/"
-  into "build/dist/validate-with-schematron/"
-  include "source.xml"
-  rename ("source.xml", "specification.xml")
-}
-
-task validate_schematron_xpl(dependsOn: ["step-validate-schematron:library"], type: Copy) {
-  from "step-validate-schematron/build/"
-  into "build/dist/validate-with-schematron/"
+task step_validation_xpl(dependsOn: ["step-validation:library"], type: Copy) {
+  from "step-validation/build/"
+  into "build/dist/validation/"
   include "library.xml"
   rename ("library.xml", "steps.xpl")
 }
@@ -304,7 +226,7 @@ task validate_schematron_xpl(dependsOn: ["step-validate-schematron:library"], ty
 
 task step_exec(type: DocBookTask,
                dependsOn: [ "xproc", "steps", "xproc_schemas", "spec_schemas",
-                            "step-validate-relax-ng:specification",
+                            "step-exec:specification",
                             "step_exec_assets",
                             "step_exec_src", "step_exec_xpl" ]) {
   inputs.files fileTree(dir: "tools/xsl/")
@@ -344,7 +266,7 @@ task step_exec_xpl(dependsOn: ["step-exec:library"], type: Copy) {
 
 task step_xquery(type: DocBookTask,
                dependsOn: [ "xproc", "steps", "xproc_schemas", "spec_schemas",
-                            "step-validate-relax-ng:specification",
+                            "step-xquery:specification",
                             "step_xquery_assets",
                             "step_xquery_src", "step_xquery_xpl" ]) {
   inputs.files fileTree(dir: "tools/xsl/")
@@ -384,7 +306,7 @@ task step_xquery_xpl(dependsOn: ["step-xquery:library"], type: Copy) {
 
 task step_xsl_formatter(type: DocBookTask,
                dependsOn: [ "xproc", "steps", "xproc_schemas", "spec_schemas",
-                            "step-validate-relax-ng:specification",
+                            "step-xsl-formatter:specification",
                             "step_xsl_formatter_assets",
                             "step_xsl_formatter_src", "step_xsl_formatter_xpl" ]) {
   inputs.files fileTree(dir: "tools/xsl/")
@@ -457,21 +379,27 @@ core_rng.doFirst {
   mkdir("build")
 }
 
-task xproc_rng(dependsOn: [ "core_rng",
-                            "steps:rng", "step-validate-relax-ng:rng",
-                            "step-validate-xml-schema:rng",
-                            "step-validate-schematron:rng" ],
-               type: XMLCalabashTask) {
+task xproc_rng(type: XMLCalabashTask,
+               dependsOn: [ "core_rng",
+                            "steps:rng", "step-validation:rng",
+                            "step-exec:rng", "step-xquery:rng",
+                            "step-xsl-formatter:rng" ]) {
+  // This is bogus; I'm having trouble getting the filesystem read to
+  // happen at the right time:
+  // https://discuss.gradle.org/t/controlling-order-of-execution-of-statements-wrt-execution-of-a-task/26291
+  String files = ""
+  ["step-exec", "step-xsl-formatter", "steps",
+   "step-validation", "step-xquery"].each { s ->
+    files = files + " ../../" + s + "/build/steps.rng"
+  }
+
   inputs.file "build/core.rng"
-  inputs.file "steps/build/library.xml"
-  inputs.file "step-validate-relax-ng/build/library.xml"
-  inputs.file "step-validate-xml-schema/build/library.xml"
-  inputs.file "step-validate-schematron/build/library.xml"
   inputs.file "tools/xpl/make-rng.xpl"
   inputs.file "tools/xsl/make-rng.xsl"
   outputs.file "build/xproc.rng"
   input("source", "build/core.rng")
   output("result", "build/xproc.rng")
+  param("libraries", files)
   pipeline "tools/xpl/make-rng.xpl"
 }
 

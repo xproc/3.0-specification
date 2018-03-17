@@ -5,12 +5,12 @@
                xmlns:p="http://www.w3.org/ns/xproc"
                xmlns:xi="http://www.w3.org/2001/XInclude"
                xmlns:xlink="http://www.w3.org/1999/xlink"
-               xml:id='step-validate-xml-schema'
+               xml:id='step-validation'
                class="ed" role="step"
                version="5.0-extension w3c-xproc">
 <info>
-<title>XProc 3.0: Validate with XML Schema</title>
-
+<title>XProc 3.0: Optional Validation Steps</title>
+<!-- defaults to date formatted <pubdate>2014-12-18</pubdate> -->
 <copyright><year>2018</year><holder>@@FIXME:</holder></copyright>
 
 <bibliorelation type="isformatof" xlink:href="specification.xml">XML</bibliorelation>
@@ -30,7 +30,8 @@
 </authorgroup>
 
 <abstract>
-<para>This specification describes the <code>p:validate-with-xml-schema</code>
+<para>This specification describes the <code>p:validate-with-relax-ng</code>,
+<code>p:validate-with-schematron</code>, and <code>p:validate-with-xml-schema</code>
 step for
 <citetitle>XProc 3.0: An XML Pipeline Language</citetitle>.</para>
 </abstract>
@@ -50,11 +51,13 @@ An XML Pipeline Language</link> published by the W3C.</para>
 <section xml:id="introduction">
 <title>Introduction</title>
 
-<para>This specification describes the
-<code>p:validate-with-xml-schema</code> XProc step.
+<para>This specification describes the <code>p:validate-with-relax-ng</code>,
+<code>p:validate-with-schematron</code>, and <code>p:validate-with-xml-schema</code>
+steps. Each is independently optional.
 A machine-readable description of
 these steps may be found in
-<link xlink:href="steps.xpl">steps.xpl</link>.</para>
+<link xlink:href="steps.xpl">steps.xpl</link>.
+</para>
 
 <para>Familarity with the
 general nature of <biblioref linkend="xproc30"/>
@@ -62,7 +65,112 @@ steps is assumed; for background details, see
 <biblioref linkend="xproc30-steps"/>.</para>
 </section>
 
-<section xml:id="step">
+<section xml:id="step-relax-ng">
+<title>Validate with RELAX NG</title>
+
+<para>The <tag>p:validate-with-relax-ng</tag> step applies
+<biblioref linkend="iso19757-2"/>
+validation to the <port>source</port> document.</para>
+
+<p:declare-step type="p:validate-with-relax-ng">
+  <p:input port="source" primary="true"  content-types="application/xml text/xml */*+xml"/>
+  <p:input port="schema" content-types="application/xml */*+xml text/*"/>
+  <p:output port="result" content-types="application/xml"/>
+  <p:option name="dtd-attribute-values" select="false()" as="xs:boolean"/>
+  <p:option name="dtd-id-idref-warnings" select="false()" as="xs:boolean"/>
+  <p:option name="assert-valid" select="true()" as="xs:boolean"/>
+</p:declare-step>
+
+<para>The values of the <option>dtd-attribute-values</option> and
+<option>dtd-id-idref-warnings</option> options
+<rfc2119>must</rfc2119> be booleans.</para>
+
+<para>If the <port>schema</port> document has an XML media type, then
+it <rfc2119>must</rfc2119> be interpreted as a RELAX NG Grammar. If
+the <port>schema</port> document has the media type
+“<literal>application/relax-ng-compact-syntax</literal>” or the media
+type has a “<literal>text</literal>” type, then it
+<rfc2119>must</rfc2119> be interpreted as a <biblioref linkend="relaxng-compact-syntax"/> document for validation.</para>
+
+<para>If the <option>dtd-attribute-values</option> option is
+<literal>true</literal>, then the attribute value defaulting conventions of
+<biblioref linkend="relaxng-dtd-compat"/> are also applied.</para>
+
+<para>If the <option>dtd-id-idref-warnings</option> option is
+<literal>true</literal>, then the validator <rfc2119>should</rfc2119>
+treat a schema that is incompatible with the ID/IDREF/IDREFs feature
+of <biblioref linkend="relaxng-dtd-compat"/> as if the document
+was invalid.
+</para>
+
+<para><error code="C0053">It is a <glossterm>dynamic error</glossterm>
+if the <option>assert-valid</option> option is <literal>true</literal>
+and the input document is not valid.</error></para>
+
+<para>The output from this step is a copy of the input, possibly
+augmented by application of the
+<biblioref linkend="relaxng-dtd-compat"/>. The output of this step
+<rfc2119>may</rfc2119> include PSVI annotations.</para>
+
+<para><impl>Support for <biblioref linkend="relaxng-dtd-compat"/> is
+<glossterm>implementation defined</glossterm>.</impl></para>
+
+<section>
+<title>Document properties</title>
+<para feature="validate-with-relax-ng-preserves-all">All document properties on
+the <port>source</port> port are preserved on the <port>result</port> port.
+No document properties on the <port>schemas</port> port are preserved.</para>
+</section>
+</section>
+
+<section xml:id="step-schematron">
+<title>Validate with Schematron</title>
+
+<para>The <tag>p:validate-with-schematron</tag> step applies
+<biblioref linkend="iso19757-3"/>
+processing to the <port>source</port> document.</para>
+
+<p:declare-step type="p:validate-with-schematron">
+  <p:input port="source" primary="true" content-types="application/xml text/xml */*+xml"/>
+  <p:input port="schema" content-types="application/xml text/xml */*+xml"/>
+  <p:output port="result" primary="true" content-types="application/xml"/>
+  <p:output port="report" sequence="true" content-types="application/xml"/>
+  <p:option name="parameters" as="map(xs:QName,item())"/>
+  <p:option name="phase" select="'#ALL'" as="xs:string"/>
+  <p:option name="assert-valid" select="true()" as="xs:boolean"/>
+</p:declare-step>
+
+<para><error code="C0054">It is a <glossterm>dynamic error</glossterm>
+if the <option>assert-valid</option> option is <literal>true</literal>
+and any Schematron assertions fail.</error></para>
+
+<para>The value of the <option>phase</option> option identifies the
+Schematron validation phase with which validation begins.</para>
+
+<para>The <option>parameters</option> option provides name/value pairs which
+correspond to Schematron external variables.</para>
+
+<para>The <port>result</port> output from this step is a copy of the
+input.</para>
+
+<para>Schematron assertions and reports, if any,
+<rfc2119>must</rfc2119> appear on the <port>report</port> port. The
+output <rfc2119>should</rfc2119> be in <citetitle>Schematron
+Validation Report Language</citetitle> (SVRL).</para>
+
+<para>The output of this step
+<rfc2119>may</rfc2119> include PSVI annotations.</para>
+
+<section>
+<title>Document properties</title>
+<para feature="validate-with-schematron-preserves-all">All document properties
+on the <port>source</port> port are preserved on the <port>result</port> port.
+No document properties on the <port>schemas</port> port are preserved. No document
+properties are preserved on the <port>report</port> port.</para>
+</section>
+</section>
+
+<section xml:id="step-xml-schema">
 <title>Validate with XML Schema</title>
 
 <para>The <tag>p:validate-with-xml-schema</tag> step applies
@@ -181,14 +289,17 @@ No document properties on the <port>schemas</port> port are preserved.</para>
 <title>Step Errors</title>
 
 <para>This step can raise
-<glossterm baseform="dynamic-error">dynamic errors</glossterm>.</para>
+<glossterm baseform="dynamic-error">dynamic errors</glossterm>.
+</para>
 
-<para>A <termdef xml:id="dt-dynamic-error">A <firstterm>dynamic
+<para><termdef xml:id="dt-dynamic-error">A <firstterm>dynamic
 error</firstterm> is one which occurs while a pipeline is being
 evaluated.</termdef> Examples of dynamic errors include references to
 URIs that cannot be resolved, steps which fail, and pipelines that
 exhaust the capacity of an implementation (such as memory or disk
-space).</para>
+space). For a more complete discussion of dynamic errors, see
+<xspecref spec="xproc" xref="dynamic-errors"/>.
+</para>
 
 <para>If a step fails due to a dynamic error, failure propagates
 upwards until either a <tag>p:try</tag> is encountered or the entire
@@ -208,6 +319,10 @@ failure causes the entire pipeline to fail.</para>
 <bibliolist>
 <bibliomixed xml:id="xproc30"/>
 <bibliomixed xml:id="xproc30-steps"/>
+<bibliomixed xml:id="iso19757-2"/>
+<bibliomixed xml:id="iso19757-3"/>
+<bibliomixed xml:id="relaxng-compact-syntax"/>
+<bibliomixed xml:id="relaxng-dtd-compat"/>
 <bibliomixed xml:id="xmlschema-1"/>
 </bibliolist>
 </appendix>
