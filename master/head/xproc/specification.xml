@@ -5278,11 +5278,9 @@ non-XML.</para>
 <para>If the <tag class="attribute">document-properties</tag> is not
 specified or the map does not contain a key "content-type" or specifies
 an <glossterm>XML media type</glossterm>, then
-the content is XML. <error code="S0024">It is a <glossterm>static
-error</glossterm> if the content of the <tag>p:inline</tag> element
-does not consist of exactly one element, optionally preceded and/or
-followed by any number of processing instructions, comments or
-whitespace characters.</error></para>
+the content is XML. A new XML document is created by wrapping a document node
+around the nodes which appear as children of <tag>p:inline</tag>. Any preceding or 
+following whitespace-only text nodes will be discarded.</para>
 
 <para>The in-scope namespaces of the inline document differ from the
 in-scope namespace of the content of the <tag>p:inline</tag> element
