@@ -4642,6 +4642,21 @@ default value.</error></para>
 the <tag class="attribute">select</tag> expression makes reference to
 the context node, size, or position.</error></para>
 
+  <para>An option may declare itself tunneling by specifying the value
+    <literal>true</literal> for the <tag class="attribute">tunnel</tag>
+    attribute. If a called step has declared an option as tunneling and
+    the calling step does not specify a value for that option using
+    <tag>p:with-option</tag>, the in-scope value from the calling step
+    is inherited. This allows passing often used options
+    implicitly.</para>
+  
+  <para><error code="S0088">It is a <glossterm>static error</glossterm> to
+    specify that an option as tunneling with a different type than
+    declared in the calling step. Option types are considered different
+    when the values of their <tag class="attribute">as</tag> attributes
+    differ after space normalization. </error>
+  </para>
+  
 </section>
 
 <!-- ============================================================ -->
