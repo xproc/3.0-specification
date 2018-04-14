@@ -273,7 +273,7 @@
    </p:declare-step>
    <p:declare-step type="p:wrap-sequence" xml:id="wrap-sequence">
       <p:input port="source"
-               content-types="application/xml text/xml */*+xml"
+               content-types="application/xml */*+xml text/*"
                sequence="true"/>
       <p:output port="result" sequence="true" content-types="application/xml"/>
       <p:option name="wrapper" required="true" as="xs:QName"/>
