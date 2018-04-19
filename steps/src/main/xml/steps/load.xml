@@ -98,7 +98,19 @@ in <biblioref linkend="xpath-functions"/>
 <rfc2119>must</rfc2119> be supported.
 <impl>Additional JSON parameters are <glossterm>implementation-defined</glossterm>.
 </impl></para>
+<para><error code="D0057">It is a <glossterm>dynamic error</glossterm> if the loaded content 
+does not conform to the JSON grammar, unless the parameter <option>liberal</option> is 
+<literal>true</literal> and the processor chooses to accept the deviation.</error></para>
 
+<para><error code="D0058">It is a <glossterm>dynamic error</glossterm> if the parameter 
+<option>duplicates</option> is <literal>reject</literal> and the value of 
+loaded content contains a JSON object with duplicate keys.</error></para>
+  
+<para><error code="D0059">It is a <glossterm>dynamic error</glossterm> if the parameter 
+map contains an entry whose key is defined in the specification of 
+<code>fn:parse-json</code> and whose value is not valid for that key, or if it contains 
+an entry with the key fallback when the parameter <option>escape</option> with 
+<literal>true()</literal> is also present.</error></para>
 </section>
 <section xml:id="c.load.binary">
 <title>Loading binary data</title>
