@@ -1,4 +1,4 @@
-<html xmlns="http://www.w3.org/1999/xhtml"><head><title>XProc 3.0: Standard Step Library</title><meta charset="utf-8" /><link rel="alternate" title="XML" href="specification.xml" /><link rel="alternate" title="Latest editor's draft" href="http://www.w3.org/XML/XProc/docs/langspec.html" /><link rel="alternate" title="Latest Public Working Draft" href="http://www.w3.org/TR/xproc/" /><meta name="generator" content="DocBook XSL 2.0 Stylesheets V2.3.2" /><meta name="description" content="Abstract This specification describes the standard step vocabulary of&#xA;  XProc 3.0: An XML Pipeline Language." /><link href="css/prism.css" rel="stylesheet" type="text/css" /><link href="css/db-prism.css" rel="stylesheet" type="text/css" /><link rel="stylesheet" type="text/css" href="css/base.css" /><link rel="stylesheet" type="text/css" href="css/xproc.css" /><link rel="stylesheet" type="text/css" href="css/base.css" /><script type="text/javascript" src="js/dbmodnizr.js"></script></head><body><div class="specification"><div class="head" id="spec.head"><h1>XProc 3.0: Standard Step Library</h1><h2>Editor's Draft  <time datetime="2018-04-14T12:24:01Z">14 April 2018 at 12:24 UTC (<a href="https://github.com/xproc/3.0-specification/commit/78610744445fe76ce8b8ff082009771bc1b94fed">build 308</a>)</time></h2><dl><dt>This Version:</dt><dd><a href="https://xproc.github.io/3.0-specification/master/head/steps/">https://xproc.github.io/3.0-specification/master/head/steps/</a></dd><dt>Latest Version:</dt><dd><a href="http://spec.xproc.org/master/head/steps/">http://spec.xproc.org/master/head/steps/</a></dd><dt>Editors:</dt><dd><span class="personname">Achim Berndzen</span></dd><dd><span class="personname">Gerrit Imsieke</span></dd><dd><span class="personname">Erik Siegel</span></dd><dd><span class="personname">Norman Walsh</span></dd><dt>Repository:</dt><dd><a href="http://github.com/xproc/3.0-specification">This specification on GitHub</a></dd><dd><a href="http://github.com/xproc/3.0-specification/issues">Report an issue</a></dd><dt>Changes:</dt><dd><a href="http://github.com/xproc/3.0-specification/commits/master">Commits for this specification</a></dd></dl><p>This document is also available in these non-normative formats: <a href="specification.xml">XML</a>.</p><p class="copyright"><span class="copyright">Copyright © <span class="years">2018</span> <span class="holders"><span class="holder">@@FIXME:</span></span></span></p><hr /><div class="abstract"><h2>Abstract</h2>
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>XProc 3.0: Standard Step Library</title><meta charset="utf-8" /><link rel="alternate" title="XML" href="specification.xml" /><link rel="alternate" title="Latest editor's draft" href="http://www.w3.org/XML/XProc/docs/langspec.html" /><link rel="alternate" title="Latest Public Working Draft" href="http://www.w3.org/TR/xproc/" /><meta name="generator" content="DocBook XSL 2.0 Stylesheets V2.3.2" /><meta name="description" content="Abstract This specification describes the standard step vocabulary of&#xA;  XProc 3.0: An XML Pipeline Language." /><link href="css/prism.css" rel="stylesheet" type="text/css" /><link href="css/db-prism.css" rel="stylesheet" type="text/css" /><link rel="stylesheet" type="text/css" href="css/base.css" /><link rel="stylesheet" type="text/css" href="css/xproc.css" /><link rel="stylesheet" type="text/css" href="css/base.css" /><script type="text/javascript" src="js/dbmodnizr.js"></script></head><body><div class="specification"><div class="head" id="spec.head"><h1>XProc 3.0: Standard Step Library</h1><h2>Editor's Draft  <time datetime="2018-04-19T06:12:21Z">19 April 2018 at 06:12 UTC (<a href="https://github.com/xproc/3.0-specification/commit/49622e71cb3a655093742ef5f13a4c7dd06599e3">build 312</a>)</time></h2><dl><dt>This Version:</dt><dd><a href="https://xproc.github.io/3.0-specification/master/head/steps/">https://xproc.github.io/3.0-specification/master/head/steps/</a></dd><dt>Latest Version:</dt><dd><a href="http://spec.xproc.org/master/head/steps/">http://spec.xproc.org/master/head/steps/</a></dd><dt>Editors:</dt><dd><span class="personname">Achim Berndzen</span></dd><dd><span class="personname">Gerrit Imsieke</span></dd><dd><span class="personname">Erik Siegel</span></dd><dd><span class="personname">Norman Walsh</span></dd><dt>Repository:</dt><dd><a href="http://github.com/xproc/3.0-specification">This specification on GitHub</a></dd><dd><a href="http://github.com/xproc/3.0-specification/issues">Report an issue</a></dd><dt>Changes:</dt><dd><a href="http://github.com/xproc/3.0-specification/commits/master">Commits for this specification</a></dd></dl><p>This document is also available in these non-normative formats: <a href="specification.xml">XML</a>.</p><p class="copyright"><span class="copyright">Copyright © <span class="years">2018</span> <span class="holders"><span class="holder">@@FIXME:</span></span></span></p><hr /><div class="abstract"><h2>Abstract</h2>
   <p>This specification describes the standard step vocabulary of
   <em class="citetitle">XProc 3.0: An XML Pipeline Language</em>.</p>
 </div><div class="status"><h2>Status of this Document</h2><p><strong>This document is an editor's  draft that has no official standing.</strong></p>
@@ -1506,7 +1506,19 @@ Functions and Operators 3.1</span></a>]
 <span class="rfc2119" id="c.load.json.3.3">must</span> be supported.
 <span id="impl-18">Additional JSON parameters are <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em>.
 </span></p>
+<p><a id="err.inline.D0057"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic error</a></em> (<a href="#err.D0057"><code class="errqname">err:XD0057</code></a>) if the loaded content 
+does not conform to the JSON grammar, unless the parameter <code class="option">liberal</code> is 
+<code class="literal">true</code> and the processor chooses to accept the deviation.</p>
 
+<p><a id="err.inline.D0058"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic error</a></em> (<a href="#err.D0058"><code class="errqname">err:XD0058</code></a>) if the parameter 
+<code class="option">duplicates</code> is <code class="literal">reject</code> and the value of 
+loaded content contains a JSON object with duplicate keys.</p>
+  
+<p><a id="err.inline.D0059"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic error</a></em> (<a href="#err.D0059"><code class="errqname">err:XD0059</code></a>) if the parameter 
+map contains an entry whose key is defined in the specification of 
+<code class="code">fn:parse-json</code> and whose value is not valid for that key, or if it contains 
+an entry with the key fallback when the parameter <code class="option">escape</code> with 
+<code class="literal">true()</code> is also present.</p>
 </div></section>
 <section id="c.load.binary" class="section"><div class="section-titlepage"><h4>2.17.4 Loading binary data</h4></div><div class="content">
 
@@ -1756,7 +1768,7 @@ that contains the step.</p>
 <p>A <code class="tag-element">c:param</code> represents a parameter on a parameter
 input.</p>
 
-<p id="d1349e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:param<br />  <strong>name</strong> = <var>EQName</var><br />  namespace? = <var>anyURI</var><br />  <strong>value</strong> = <var>string</var> /&gt;</code></p>
+<p id="d1356e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:param<br />  <strong>name</strong> = <var>EQName</var><br />  namespace? = <var>anyURI</var><br />  <strong>value</strong> = <var>string</var> /&gt;</code></p>
 
 <p>The <code class="tag-attribute">name</code> attribute of the
 <code class="tag-element">c:param</code> must have the lexical form of a QName.</p>
@@ -1795,7 +1807,7 @@ appear on a <code class="tag-element">c:param</code> element.</p>
 <p>A <code class="tag-element">c:param-set</code> represents a set of parameters on a
 parameter input.</p>
 
-<p id="d1376e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:param-set&gt;<br />    <a href="#cv.param">c:param</a>*<br />&lt;/c:param-set&gt;</code></p>
+<p id="d1383e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:param-set&gt;<br />    <a href="#cv.param">c:param</a>*<br />&lt;/c:param-set&gt;</code></p>
 
 <p>The <code class="tag-element">c:param-set</code> contains zero or more
 <a href="#cv.param"><code class="tag-element">c:param</code></a> elements. <a id="err.inline.D0018"></a>It is a
