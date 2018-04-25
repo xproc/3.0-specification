@@ -209,6 +209,7 @@ of its input.</para>
    <p:input port="source" content-types="*/*"/>
    <p:output port="result" content-types="*/*"/>
    <p:option name="content-type" as="xs:string"/>
+   <p:option name="parameters" as="map(*)"/>   
 </p:declare-step>
 
 <para>The input document is transformed from one media type to another.
@@ -217,6 +218,14 @@ error</glossterm> if the supplied <option>content-type</option> is not
 a valid media type of the form
 “<literal><replaceable>type</replaceable>/<replaceable>subtype</replaceable>+<replaceable>ext</replaceable></literal>”.</error></para>
 
+   
+<para>The <option>parameters</option> can be used to supply parameters to
+control casting. <impl>The semantics of the keys and the allowed values for 
+these keys are <glossterm>implementation-defined</glossterm>.</impl>
+<error code="C0079">It is a <glossterm>dynamic error</glossterm> if the map 
+<option>parameters</option> contains an entry whose key is defined by the 
+implementation and whose value is not valid for that key.</error></para>
+   
 <itemizedlist>
 <listitem>
 <para>Casting from one XML media type to another simply changes the
