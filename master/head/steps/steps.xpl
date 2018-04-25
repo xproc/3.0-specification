@@ -102,7 +102,7 @@
                content-types="application/xml text/xml */*+xml"/>
       <p:input port="insertion"
                sequence="true"
-               content-types="application/xml text/xml */*+xml"/>
+               content-types="application/xml text/* */*+xml"/>
       <p:output port="result" content-types="application/xml"/>
       <p:option name="match"
                 select="'/*'"
