@@ -1,0 +1,292 @@
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>XProc 3.0 Steps: An Introduction</title><meta charset="utf-8" /><link rel="alternate" title="XML" href="specification.xml" /><link rel="alternate" title="Latest editor's draft" href="http://www.w3.org/XML/XProc/docs/langspec.html" /><link rel="alternate" title="Latest Public Working Draft" href="http://www.w3.org/TR/xproc/" /><meta name="generator" content="DocBook XSL 2.0 Stylesheets V2.3.2" /><meta name="description" content="Abstract This specification describes general features of the step vocabulary of&#xA;  XProc 3.0: An XML Pipeline Language." /><link href="css/prism.css" rel="stylesheet" type="text/css" /><link href="css/db-prism.css" rel="stylesheet" type="text/css" /><link rel="stylesheet" type="text/css" href="css/base.css" /><link rel="stylesheet" type="text/css" href="css/xproc.css" /><link rel="stylesheet" type="text/css" href="css/base.css" /><script type="text/javascript" src="js/dbmodnizr.js"></script></head><body><div class="specification"><div class="head" id="spec.head"><h1>XProc 3.0 Steps: An Introduction</h1><h2>Editor's Draft  <time datetime="2018-04-25T16:15:56Z">25 April 2018 at 16:15 UTC (<a href="https://github.com/xproc/3.0-specification/commit/0b1ae019f6a4151cd9ab8e33461c3f4f3f8456b4">build 321</a>)</time></h2><dl><dt>This Version:</dt><dd><a href="https://xproc.github.io/3.0-specification/fix-380/head/steps-intro/">https://xproc.github.io/3.0-specification/fix-380/head/steps-intro/</a></dd><dt>Latest Version:</dt><dd><a href="http://spec.xproc.org/master/head/steps-intro/">http://spec.xproc.org/master/head/steps-intro/</a></dd><dt>Editors:</dt><dd><span class="personname">Achim Berndzen</span></dd><dd><span class="personname">Gerrit Imsieke</span></dd><dd><span class="personname">Erik Siegel</span></dd><dd><span class="personname">Norman Walsh</span></dd><dt>Repository:</dt><dd><a href="http://github.com/xproc/3.0-specification">This specification on GitHub</a></dd><dd><a href="http://github.com/xproc/3.0-specification/issues">Report an issue</a></dd><dt>Changes:</dt><dd><a href="http://github.com/xproc/3.0-specification/commits/fix-380">Commits for this specification</a></dd></dl><p>This document is also available in these non-normative formats: <a href="specification.xml">XML</a>.</p><p class="copyright"><span class="copyright">Copyright © <span class="years">2018</span> <span class="holders"><span class="holder">@@FIXME:</span></span></span></p><hr /><div class="abstract"><h2>Abstract</h2>
+  <p>This specification describes general features of the step vocabulary of
+  <em class="citetitle">XProc 3.0: An XML Pipeline Language</em>.</p>
+</div><div class="status"><h2>Status of this Document</h2><p><strong>This document is an editor's  draft that has no official standing.</strong></p>
+
+<p><em>This section describes the status of this document at
+the time of its publication. Other documents may supersede this
+document.</em></p>
+
+<p>This document is derived from
+<a href="https://www.w3.org/TR/2010/REC-xproc-20100511/">XProc:
+An XML Pipeline Language</a> published by the W3C.
+See also
+<a href="#credits" title="Credits">Appendix D, <i>Credits</i></a>.</p>
+</div></div><hr /><div class="lists-of-titles"><div class="toc"><h2 id="TableOfContents">Table of Contents</h2><ul class="toc"><li><span>1 <a href="#introduction">Introduction</a></span><ul class="toc"><li><span>1.1 <a href="#common-options">Common options</a></span></li></ul></li><li><span>2 <a href="#errors">Step Errors</a></span></li><li><span>A <a href="#conformance">Conformance</a></span><ul class="toc"><li><span>A.1 <a href="#implementation-defined">Implementation-defined features</a></span></li><li><span>A.2 <a href="#implementation-dependent">Implementation-dependent features</a></span></li></ul></li><li><span>B <a href="#references">References</a></span></li><li><span>C <a href="#glossary">Glossary</a></span></li><li><span>D <a href="#credits">Credits</a></span></li></ul></div></div>
+
+
+<section id="introduction" class="section"><div class="section-titlepage"><h2>1 Introduction</h2></div><div class="content">
+
+
+<p>Many atomic steps are available for [<a href="#xproc30"><span class="abbrev">XProc 3.0</span></a>].
+They are described in several specifications.
+A conformant processor <span class="rfc2119" id="introduction.2.2">must</span> implement all of the steps
+in [<a href="#steps30"><span class="abbrev">Steps 3.0</span></a>]. Additional steps may also be implemented.
+</p>
+
+<p>This specification describes the general background common to all
+steps.</p>
+
+<p>The types given for options should be understood as follows:</p>
+<div class="itemizedlist">
+  
+  
+  
+  
+  
+  
+<ul><li>
+    <p>Types in the XML Schema namespace, identified as QNames with the
+    <code class="code">xs:</code> prefix, as per the XML Schema specification with one
+    exception. Anywhere an <code class="code">xs:QName</code> is specified,
+    an
+    <a href="https://www.w3.org/TR/xquery-30/#doc-xquery30-EQName">EQName</a>
+    is allowed.</p>
+  </li><li>
+    <p><code class="type">XPathExpression</code>:
+    As a string per [<a href="#xmlschema-2"><span class="abbrev">W3C XML Schema: Part 2</span></a>], including
+    whitespace normalization, and the further requirement to be a
+    conformant Expression per [<a href="#xpath31"><span class="abbrev">XPath 3.1</span></a>].
+    </p>
+  </li><li>
+    <p><code class="type">XSLTMatchPattern</code>: An XSLT pattern.
+    </p>
+  </li><li>
+    <p><code class="type">XPathSequenceType</code>: An XPath
+    <a href="https://www.w3.org/TR/xpath-31/#id-types">sequence type</a>.
+    </p>
+  </li><li>
+    <p><code class="type">ContentType</code>: A media type as defined in
+    [<a href="#rfc2046"><span class="abbrev">Media Types</span></a>].
+    </p>
+  </li><li>
+    <p><code class="type">ContentTypes</code>:
+    As a whitespace separated list of media types as defined in
+    [<a href="#rfc2046"><span class="abbrev">Media Types</span></a>].
+    </p>
+  </li></ul></div>
+
+<p>Option values are often expressed using the shortcut syntax. In
+these cases, the option shortcuts are generally treated as value
+templates. However, for options of type <code class="code">map()</code> or
+<code class="code">array()</code>, an expression is <em>required</em>
+(there is no non-expression string which can ever be a legal value for
+a map or array). Given that every value entered this way will have to
+be a value template, and consequently every curly brace contained
+within the expression will have to be escaped, values of type map or
+array are defined to be expressions directly.</p>
+
+<p>Some aspects of documents are generally unchanged by steps:</p>
+
+<div class="itemizedlist">
+
+
+<ul><li>
+<p>When a step in this library produces an output document,
+the base URI of the output is the base URI of the step's primary
+input document unless the step's process explicitly sets an
+<code class="tag-attribute">xml:base</code> attribute or the step's
+description explicitly states how the base URI is constructed.</p>
+</li><li>
+<p>Each step describes how it modifies the document properties of
+the documents that flow through it.</p>
+<p>A great many steps indicate that they preserve some or all of
+the properties of the input document. It should be noted that in some
+cases the transformation performed by the step will violate the
+condition associated with some property. In general, the steps cannot
+know this and the pipeline author is responsible for managing the
+properties with greater care in this case.
+</p>
+</li></ul></div>
+
+<p id="cv.result">Also, in this specification, several steps use this
+element for result information:</p>
+
+<p id="d203e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:result&gt;<br />    <var>string</var><br />&lt;/c:result&gt;</code></p>
+
+<p>When a step uses an XPath to compute an option value, the XPath
+context is as defined in [<a href="#xproc30"><span class="abbrev">XProc 3.0</span></a>].</p>
+
+<p>When a step specifies a particular version of a technology,
+implementations <span class="rfc2119" id="introduction.12.1">must</span> implement that
+version or a subsequent version that is backwards compatible with that
+version. At user-option, they may implement other non-backwards
+compatible versions.</p>
+
+<section id="common-options" class="section"><div class="section-titlepage"><h3>1.1 Common options</h3></div><div class="content">
+
+<p>All XProc steps <span class="rfc2119" id="common-options.2.1">must</span> accept the option 
+<code class="option">p:timeout</code>. As a debugging tool this option can be used 
+to tell the XProc processor that a step with such an option should be terminated 
+if its execution does take more time than expected. The value of the 
+<code class="option">p:timeout</code> option must be a <code class="type">xs:positiveInteger</code>. 
+It is interpreted as the maximal number of seconds the step is expected to run. The 
+measurement of time starts after all bindings for input ports and all options are evaluated. 
+If the XProc processor realizes a longer runtime, it should terminate the execution of the step 
+as soon as possible, do cleanup to ensure proper execution of other steps in 
+the pipeline and then raise a dynamic error.</p>
+
+<p><a id="err.inline.D0053"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic error</a></em> (<a href="#err.D0053"><code class="errqname">err:XD0053</code></a>) if a step runs 
+longer than its timeout value. <span id="impl-1">It is
+<em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em> whether a processor supports
+timeouts, and if it does, how precisely and precisely how the
+execution time of a step is measured.</span>
+</p>
+
+<div class="note admonition"><h3>Note</h3><div class="admonition-body">
+
+<p>Since the exact time a step takes to perform its task depends on the used computer, 
+the XProc processor's execution strategy, the system load etc., this feature can not 
+be used as an exact timing tool in XProc. Execution times may vary on different executions 
+of the same pipeline on the same computer and the same XProc processor due to  
+execution contingencies. Developers are advised to calculate the value for p:timeout 
+generously, so the dynamic error is raised only in extreme cases.</p>
+</div></div>
+
+<div class="note admonition"><h3>Note</h3><div class="admonition-body">
+
+<p>Note that the name of this option is <code class="option">p:timeout</code>
+even on steps in the XProc namespace. This limits the extent to which the
+option restricts the space of available option names for steps.
+(If the option name wasn’t in a namespace, then no step could have an option
+named “<code class="literal">timeout</code>” which seems unreasonable.)
+</p>
+</div></div>
+</div></section>
+</div></section>
+
+<section id="errors" class="section"><div class="section-titlepage"><h2>2 Step Errors</h2></div><div class="content">
+
+
+<p>Several of the steps in the standard step library can generate
+<em class="glossterm"><a href="#dt-dynamic-error">dynamic errors</a></em>.</p>
+
+<p>A <span id="dt-dynamic-error" class="termdef">[Definition: A <em class="glossterm">dynamic
+error</em> is one which occurs while a pipeline is being
+evaluated.]</span> Examples of dynamic errors include references to
+URIs that cannot be resolved, steps which fail, and pipelines that
+exhaust the capacity of an implementation (such as memory or disk
+space).</p>
+
+<p>If a step fails due to a dynamic error, failure propagates
+upwards until either a <code class="tag-element">p:try</code> is encountered or the entire
+pipeline fails. In other words, outside of a <code class="tag-element">p:try</code>, step
+failure causes the entire pipeline to fail.</p>
+
+<p>The following errors can be raised by steps in this
+specification:</p>
+
+<div id="step-error-summary"><dl class="errs"></dl></div>
+
+</div></section>
+
+<article id="conformance" class="appendix"><header class="appendix-titlepage"><h2>A Conformance</h2></header><div class="content">
+
+
+<p>Conformant processors <span class="rfc2119" id="conformance.2.1">must</span> implement all of the features
+described in this specification except those that are explicitly identified
+as optional.</p>
+
+<p>Some aspects of processor behavior are not completely specified; those
+features are either <em class="glossterm"><a href="#dt-implementation-dependent">implementation-dependent</a></em> or
+<em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em>.</p>
+
+<p><span id="dt-implementation-dependent" class="termdef">[Definition: An
+<em class="glossterm">implementation-dependent</em> feature is one where the
+implementation has discretion in how it is performed.
+Implementations are not required to document or explain
+how <em class="glossterm"><a href="#dt-implementation-dependent">implementation-dependent</a></em> features are performed.]</span>
+</p>
+
+<p><span id="dt-implementation-defined" class="termdef">[Definition: An
+<em class="glossterm">implementation-defined</em> feature is one where the
+implementation has discretion in how it is performed.
+Conformant implementations <span class="rfc2119" id="dt-implementation-defined.2">must</span> document
+how <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em> features are performed.]</span>
+</p>
+
+<section id="implementation-defined" class="section"><div class="section-titlepage"><h2>A.1 Implementation-defined features</h2></div><div class="content">
+
+
+<p>The following features are implementation-defined:</p>
+
+<ol class="features"><li>It is
+implementation-defined whether a processor supports
+timeouts, and if it does, how precisely and precisely how the
+execution time of a step is measured. See <a href="#common-options" title="Common options">Section 1.1, “Common options”</a>.</li></ol>
+</div></section>
+
+<section id="implementation-dependent" class="section"><div class="section-titlepage"><h2>A.2 Implementation-dependent features</h2></div><div class="content">
+
+
+<p>The following features are implementation-dependent:</p>
+
+<ol class="features"></ol>
+</div></section>
+</div></article>
+
+<article id="references" class="appendix"><header class="appendix-titlepage"><h2>B References</h2></header><div class="content">
+
+
+<div id="references.2" class="bibliolist">
+  <div id="rfc2119" class="bibliomixed"><p class="error">@@FIXME:UNREFERENCED [<span class="abbrev">RFC 2119</span>] 
+<a href="http://www.ietf.org/rfc/rfc2119.txt"><span class="citetitle"><cite>Key words for use in RFCs to Indicate Requirement Levels</cite></span></a>.
+S. Bradner.
+Network Working Group, IETF,
+Mar 1997.
+</p></div>
+  <div id="xproc30" class="bibliomixed"><p>[<span class="abbrev">XProc 3.0</span>] 
+<a href="http://spec.xproc.org/"><span class="citetitle"><cite>XProc 3.0:
+An XML Pipeline Language</cite></span></a>.
+Achim Berndzen, Gerrit Imsieke, Erik Siegel and Norman Walsh, editors.
+</p></div>
+  <div id="steps30" class="bibliomixed"><p>[<span class="abbrev">Steps 3.0</span>] 
+<a href="http://spec.xproc.org/"><span class="citetitle"><cite>XProc 3.0: Standard
+Step Library</cite></span></a>.
+Achim Berndzen, Gerrit Imsieke, Erik Siegel and Norman Walsh, editors.
+</p></div>
+  <div id="xmlschema-2" class="bibliomixed"><p>[<span class="abbrev">W3C XML Schema: Part 2</span>] 
+<a href="http://www.w3.org/TR/xmlschema-2/"><span class="citetitle"><cite>XML Schema Part 2:
+Datatypes Second Edition</cite></span></a>.
+Paul V. Biron and Ashok Malhotra, editors.
+World Wide Web Consortium, 28 October 2004.
+</p></div>
+  <div id="xpath31" class="bibliomixed"><p>[<span class="abbrev">XPath 3.1</span>] 
+<a href="http://www.w3.org/TR/xpath31/"><span class="citetitle"><cite>XML Path Language (XPath)
+	3.1</cite></span></a>. Jonathan Robie, Michael Dyck, Josh Spiegel, editors.
+W3C Recommendation. 21 March 2017.</p></div>
+  <div id="rfc2046" class="bibliomixed"><p>[<span class="abbrev">Media Types</span>] 
+<a href="http://www.ietf.org/rfc/rfc2046.txt"><span class="citetitle"><cite>RFC 2046:
+Multipurpose Internet Mail Extensions (MIME) Part Two: Media Types</cite></span></a>.
+N. Freed, et. al.. Network Working Group, IETF,
+November, 1996.</p></div>
+</div>
+</div></article>
+
+<article id="glossary" class="appendix"><header class="appendix-titlepage"><h2>C Glossary</h2></header><div class="content"><div class="glosslist"><dl><dt id="glossary.2.1" class="glossentry"><em class="glossterm"><a href="#dt-dynamic-error">dynamic
+error</a></em></dt><dd class="glossdef"><p>A <em class="firstterm">dynamic
+error</em> is one which occurs while a pipeline is being
+evaluated.</p></dd><dt id="glossary.2.2" class="glossentry"><em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em></dt><dd class="glossdef"><p>An
+<em class="firstterm">implementation-defined</em> feature is one where the
+implementation has discretion in how it is performed.
+Conformant implementations <span class="rfc2119" id="glossary.2.2.2.1.2">must</span> document
+how <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em> features are performed.</p></dd><dt id="glossary.2.3" class="glossentry"><em class="glossterm"><a href="#dt-implementation-dependent">implementation-dependent</a></em></dt><dd class="glossdef"><p>An
+<em class="firstterm">implementation-dependent</em> feature is one where the
+implementation has discretion in how it is performed.
+Implementations are not required to document or explain
+how <em class="glossterm"><a href="#dt-implementation-dependent">implementation-dependent</a></em> features are performed.</p></dd></dl></div></div></article>
+
+<article id="credits" class="appendix"><header class="appendix-titlepage"><h2>D Credits</h2></header><div class="content">
+
+
+<p>This document is derived from
+<a href="https://www.w3.org/TR/2010/REC-xproc-20100511/">XProc:
+An XML Pipeline Language</a> published by the W3C. It was developed
+by the <em class="citetitle">XML Processing Model Working Group</em> and edited by
+Norman Walsh, Alex Miłowski, and Henry Thompson.</p>
+
+<p>The editors of this specification extend their gratitude to everyone
+who contributed to this document and all of the versions that came before it.</p>
+</div></article>
+
+</div><script src="js/prism.js"></script></body></html>
