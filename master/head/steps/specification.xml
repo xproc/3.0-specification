@@ -1412,7 +1412,7 @@ port's document relative to the matching elements in the
 <para>The value of the <option>match</option> option
 <rfc2119>must</rfc2119> be an XSLTMatchPattern. <error code="C0023">It
 is a <glossterm>dynamic error</glossterm> if that pattern matches
-anything other than element, text, processing-instruction, or comment nodes.</error>
+an attribute or a namespace node.</error>
 Multiple matches are
 allowed, in which case multiple copies of the <port>insertion</port>
 documents will occur. If no elements match, then the document is
@@ -1438,10 +1438,13 @@ the following list:
 </itemizedlist>
 
 <para><error code="C0025">It is a <glossterm>dynamic error</glossterm>
-if the match pattern matches anything other than an element node and
-the value of the <option>position</option> option is
+if the match pattern matches anything other than an element or a document
+node and the value of the <option>position</option> option is
 “<literal>first-child</literal>” or
-“<literal>last-child</literal>”.</error></para>
+“<literal>last-child</literal>”.</error> <error code="C0024">It is a 
+<glossterm>dynamic error</glossterm> if the match pattern matches a document 
+node and the value of the <option>position</option> is “<literal>before</literal>” or
+“<literal>after</literal>”.</error></para>
 
 <para>As the inserted elements are part of the output of the step they
 are not considered in determining matching elements. If an empty sequence
