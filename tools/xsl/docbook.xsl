@@ -548,4 +548,14 @@
   </span>
 </xsl:template>
 
+<xsl:template match="db:assert">
+  <span class="assert">
+    <xsl:sequence select="f:html-attributes(., f:node-id(.))"/>
+    <xsl:if test="@lang or @xml:lang">
+      <xsl:call-template name="lang-attribute"/>
+    </xsl:if>
+    <xsl:call-template name="t:xlink"/>
+  </span>
+</xsl:template>
+
 </xsl:stylesheet>
