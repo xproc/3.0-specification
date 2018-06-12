@@ -135,3 +135,30 @@ div {
       }
 }
 
+# ======================================================================
+
+db.technical.inlines |= db.assert
+
+[
+   db:refname [ "assert" ]
+   db:refpurpose [ "A testable assertion" ]
+]
+
+div {
+   db.assert.role.attribute = attribute role { text }
+   db.assert.xrefstyle.attribute = db.xrefstyle.attribute
+   db.assert.endterm.attribute = db.endterm.attribute
+
+   db.assert.attlist =
+      db.assert.role.attribute?
+    & db.common.idreq.attributes
+    & db.common.linking.attributes
+    & db.assert.xrefstyle.attribute?
+    & db.assert.endterm.attribute?
+
+   db.assert =
+      element assert {
+         db.assert.attlist,
+         db.all.inlines*
+      }
+}
