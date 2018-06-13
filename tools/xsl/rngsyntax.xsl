@@ -40,7 +40,7 @@
 
   <xsl:variable name="pattern" select="@name"/>
 
-  <xsl:variable name="schemafile" select="'../../build/xproc.rng'"/>
+  <xsl:variable name="schemafile" select="'../../build/xproc30.rng'"/>
 
   <xsl:variable name="theschema" as="document-node()">
     <xsl:choose>
