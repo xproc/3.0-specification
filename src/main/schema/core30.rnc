@@ -132,7 +132,7 @@ start = Library | DeclareStep
  | VocabHeader | VocabMultipart | VocabBody | VocabHttpResponse | VocabQuery
  | VocabLine | VocabData | VocabDirectory | Errors | StandardStep | ExtraStep
 
-StandardStep = notAllowed
+# StandardStep is explicitly unspecified because this is not a complete schema
 ExtraStep = notAllowed
 
 # ============================================================
@@ -627,7 +627,7 @@ _any.attr =
    attribute * { text }
 
 option.attr =
-   attribute (local:* - local:name) { text }
+   attribute (local:* - (local:name | local:expand-text)) { text }
 
 extension.attr =
    attribute (* - (local:*|xml:*|p:*)) { text }
