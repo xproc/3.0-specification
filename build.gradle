@@ -445,13 +445,13 @@ task spec_sch(type: Copy) {
 task core_rng(type: JavaExec) {
   classpath = configurations.tools
   main = 'com.thaiopensource.relaxng.translate.Driver'
-  args = ["src/main/schema/xproc.rnc", "build/core.rng"]
+  args = ["src/main/schema/core30.rnc", "build/core30.rng"]
 }
 core_rng.doFirst {
   mkdir("build")
 }
 
-task xproc_rng(type: XMLCalabashTask,
+task xproc30_rng(type: XMLCalabashTask,
                dependsOn: [ "core_rng",
                             "steps:rng", "step-validation:rng",
                             "step-exec:rng", "step-xquery:rng",
@@ -465,26 +465,62 @@ task xproc_rng(type: XMLCalabashTask,
     files = files + " ../../" + s + "/build/steps.rng"
   }
 
-  inputs.file "build/core.rng"
+  inputs.file "build/core30.rng"
   inputs.file "tools/xpl/make-rng.xpl"
   inputs.file "tools/xsl/make-rng.xsl"
-  outputs.file "build/xproc.rng"
-  input("source", "build/core.rng")
-  output("result", "build/xproc.rng")
+  outputs.file "build/xproc30.rng"
+  input("source", "build/core30.rng")
+  output("result", "build/xproc30.rng")
   param("libraries", files)
   pipeline "tools/xpl/make-rng.xpl"
 }
 
-task xproc_rnc(dependsOn: [ "xproc_rng" ], type: JavaExec) {
+task xproc30_rnc(dependsOn: [ "xproc30_rng" ], type: JavaExec) {
   classpath = configurations.tools
   main = 'com.thaiopensource.relaxng.translate.Driver'
-  args = ["build/xproc.rng", "build/xproc.rnc"]
+  args = ["build/xproc30.rng", "build/xproc30.rnc"]
+}
+xproc30_rnc.doFirst {
+  mkdir("build")
+}
+
+task xproc10_rnc(type: Copy) {
+  from "src/main/schema/"
+  into "build/"
+  include "xproc10.rnc"
+}
+xproc10_rnc.doFirst {
+  mkdir("build")
+}
+
+task xproc_rnc(type: Copy) {
+  from "src/main/schema/"
+  into "build/"
+  include "xproc.rnc"
 }
 xproc_rnc.doFirst {
   mkdir("build")
 }
 
-task xproc_schemas(dependsOn: [ "xproc_rnc", "xproc_rng" ]) {
+task xproc10_rng(dependsOn: [ "xproc10_rnc" ], type: JavaExec) {
+  inputs.file "build/xproc10.rnc"
+  outputs.file "build/xproc10.rng"
+
+  classpath = configurations.tools
+  main = 'com.thaiopensource.relaxng.translate.Driver'
+  args = ["build/xproc10.rnc", "build/xproc10.rng"]
+}
+
+task xproc_rng(dependsOn: [ "xproc_rnc" ], type: JavaExec) {
+  inputs.file "build/xproc.rnc"
+  outputs.file "build/xproc.rng"
+
+  classpath = configurations.tools
+  main = 'com.thaiopensource.relaxng.translate.Driver'
+  args = ["build/xproc.rnc", "build/xproc.rng"]
+}
+
+task xproc_schemas(dependsOn: [ "xproc30_rnc", "xproc30_rng", "xproc10_rng", "xproc_rng" ]) {
   // nop
 }
 
