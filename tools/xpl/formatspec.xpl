@@ -14,7 +14,7 @@
 <p:serialization port="result" indent="false" method="xhtml"/>
 <p:option name="style" select="'dbspec.xsl'"/>
 
-<p:import href="https://cdn.docbook.org/release/latest/xslt/base/pipelines/docbook.xpl"/>
+<p:import href="https://cdn.docbook.org/release/2.3.2/xslt/base/pipelines/docbook.xpl"/>
 
 <p:declare-step type="cx:message">
   <p:input port="source" sequence="true"/>
