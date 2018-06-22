@@ -5576,7 +5576,7 @@ possible set of parameter values.</para>
     </section>
   </section>
 
-  <appendix xml:id="conformance">
+<appendix xml:id="conformance">
 <title>Conformance</title>
 
 <para>Conformant processors <rfc2119>must</rfc2119> implement all of the features
@@ -5674,7 +5674,7 @@ additional information items and properties, particularly those made available
 in the PSVI, are preserved between steps.</impl></para>
 </section>
 </appendix>
-  <appendix xml:id="references" version="5.0-extension w3c-xproc">
+<appendix xml:id="references" version="5.0-extension w3c-xproc">
 <title>References</title>
 <section xml:id="normative-references">
   <title>Normative References</title>
@@ -5783,7 +5783,7 @@ November, 1996.</bibliomixed>
   </bibliolist>
 </section>
 </appendix>
-  <appendix xmlns:db="http://docbook.org/ns/docbook" xml:id="glossary"><title>Glossary</title><glosslist><glossentry><glossterm>Namespaces
+<appendix xmlns:db="http://docbook.org/ns/docbook" xml:id="glossary"><title>Glossary</title><glosslist><glossentry><glossterm>Namespaces
           in XML</glossterm><glossdef><para>Unless otherwise noted, the term <firstterm>Namespaces
           in XML</firstterm> refers equally to <biblioref linkend="xmlns10"/> and <biblioref linkend="xmlns11"/>.</para></glossdef></glossentry><glossentry><glossterm>XML</glossterm><glossdef><para>XProc is intended to work equally well with <biblioref linkend="xml10"/> and
           <biblioref linkend="xml11"/>. Unless otherwise noted, the term
@@ -5911,7 +5911,7 @@ is a name/value pair. The name <rfc2119>must</rfc2119> be an <link xlink:href="h
 name</link>. The value may be any XDM value.</para></glossdef></glossentry><glossentry><glossterm>visible</glossterm><glossdef><para>If two names are in the same scope, we say that
 they are <firstterm>visible</firstterm> to each other.
 </para></glossdef></glossentry></glosslist></appendix>
-  <appendix xml:id="language-summary">
+<appendix xml:id="language-summary">
 <title>Pipeline Language Summary</title>
 
 <para>This appendix summarizes the XProc pipeline language. Machine readable
@@ -5938,7 +5938,7 @@ and
 <?step-vocabulary-summary?>
 
 </appendix>
-  <appendix xml:id="errors-list">
+<appendix xml:id="errors-list">
 <title>List of Error Codes</title>
 
 <para>The following error codes are defined by this specification.</para>
@@ -5970,7 +5970,7 @@ can be raised by steps in this specification:</para>
 <?step-error-list?>
 </section>
 </appendix>
-  <appendix xml:id="namespace-fixup-guidance">
+<appendix xml:id="namespace-fixup-guidance">
 <title>Guidance on Namespace Fixup (Non-Normative)</title>
 
 <para>An XProc processor may find it necessary to add missing
@@ -6092,9 +6092,10 @@ the same prefix or declares a new default namespace.</para>
 </orderedlist>
 
 </appendix>
-  <appendix xml:id="handling-imports">
-    <title>Handling Circular and Re-entrant Library Imports (Non-Normative)</title>
-    <para>When handling imports, an implementation needs to be able to detect the following
+<appendix version="5.0-extension w3c-xproc" xml:id="handling-imports">
+<title>Handling Circular and Re-entrant Library Imports (Non-Normative)</title>
+
+<para>When handling imports, an implementation needs to be able to detect the following
       situations, and distinguish them from cases where multiple import chains produce genuinely
       conflicting step definitions:</para>
     <orderedlist>
@@ -6179,8 +6180,8 @@ the same prefix or declares a new default namespace.</para>
         contain duplicates) is a bag constructed by starting with an empty bag and adding each
         member of each of the input bags in turn to it. It follows that the cardinality of the
         result is the sum of the cardinality of all the input bags.</termdef></para>
-  </appendix>
-  <appendix version="5.0-extension w3c-xproc" xml:id="parallelism">
+</appendix>
+<appendix version="5.0-extension w3c-xproc" xml:id="parallelism">
 <title>Sequential steps, parallelism, and side-effects</title>
 
 <para>XProc imposes as few constraints on the order in which steps
@@ -6226,7 +6227,7 @@ using <tag>p:pipeinfo</tag> and
 greater control over parallelism in their implementations.</para>
 
 </appendix>
-  <appendix version="5.0-extension w3c-xproc" xml:id="xproc-media-type">
+<appendix version="5.0-extension w3c-xproc" xml:id="xproc-media-type">
 <title>The <code>application/xproc+xml</code> media type</title>
 
 <para>This appendix registers a new MIME media type,
@@ -6411,6 +6412,43 @@ identifier notation is exactly that for
 <quote><code>application/xml</code></quote>,
 as specified in <biblioref linkend="rfc3023"/> or its successors.</para>
 </section>
+</appendix>
+<appendix version="5.0-extension w3c-xproc" xml:id="ancillary-files">
+<title>Ancillary files</title>
+
+<para>This specification includes by reference a number of
+ancillary files.</para>
+
+<variablelist>
+<varlistentry>
+<term><link xlink:href="xproc30.rnc"/>, <link xlink:href="xproc30.rng"/></term>
+<listitem>
+<para>A RELAX NG Schema for XProc 3.0 pipelines, in compact or XML form.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><link xlink:href="xproc10.rnc"/>, <link xlink:href="xproc10.rng"/></term>
+<listitem>
+<para>A RELAX NG Schema for XProc 1.0 pipelines, in compact or XML form.
+</para>
+</listitem>
+</varlistentry>
+
+<varlistentry>
+<term><link xlink:href="xproc.rnc"/>, <link xlink:href="xproc.rng"/></term>
+<listitem>
+<para>A RELAX NG Schema for XProc pipelines, in compact or XML form.
+It will validate either XProc 1.0 pipelines or XProc 3.0 pipelines,
+depending on the value of the version attribute.
+</para>
+<para>In order to use this schema, you must also download the 1.0 and 3.0
+schemas; they are included into this one.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
 </appendix>
 
 <appendix xml:id="changelog">
