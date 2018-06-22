@@ -12,14 +12,7 @@ import com.nwalsh.tasks.StripAmblesTask
 // XInclude the sources
 
 task xinclude(dependsOn: [ ":spec_schemas" ], type: XMLCalabashTask) {
-  inputs.file "src/main/xml/specification.xml"
-  inputs.file "src/main/xml/conformance.xml"
-  inputs.file "src/main/xml/error-codes.xml"
-  inputs.file "src/main/xml/language-summary.xml"
-  inputs.file "src/main/xml/mediatype.xml"
-  inputs.file "src/main/xml/namespace-fixup.xml"
-  inputs.file "src/main/xml/parallel.xml"
-  inputs.file "src/main/xml/references.xml"
+  inputs.files fileTree(dir: "src/main/xml/")
   outputs.file "build/xinclude.xml"
   input("source", "src/main/xml/specification.xml")
   output("result", "build/xinclude.xml")
@@ -29,7 +22,7 @@ xinclude.doFirst {
   mkdir("build")
 }
 
-task source(dependsOn: ["glossary"], type: XMLCalabashTask) {
+task source(dependsOn: ["glossary", "xinclude"], type: XMLCalabashTask) {
   inputs.file "../tools/xsl/masterbib.xsl"
   inputs.file "../src/main/xml/bibliography.xml"
   inputs.file "src/main/xml/specification.xml"
