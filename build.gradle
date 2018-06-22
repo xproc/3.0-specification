@@ -98,7 +98,8 @@ task overview_src(dependsOn: ["overview:source"], type: Copy) {
 // ================================================================================
 
 task xproc(dependsOn: [ "xproc_schemas", "spec_schemas",
-                        "xproc:specification", "xproc_assets", "xproc_src" ],
+                        "xproc:specification", "xproc_assets", "xproc_src",
+                        "xproc_ancillary", "xproc_library"],
              type: DocBookTask) {
   inputs.files fileTree(dir: "tools/xsl/")
   inputs.files fileTree(dir: "tools/xpl/")
@@ -119,6 +120,25 @@ task xproc(dependsOn: [ "xproc_schemas", "spec_schemas",
 }
 allspecs.dependsOn "xproc"
 overview.dependsOn "xproc"
+
+task xproc_ancillary(dependsOn: [ "xproc10_rng", "xproc30_rnc", "xproc_rng" ], type: Copy) {
+  from "build/"
+  into "build/dist/xproc/"
+  include "xproc*.rnc"
+  include "xproc*.rng"
+}
+xproc_ancillary.doFirst {
+  mkdir("build/dist/xproc")
+}
+
+task xproc_library(dependsOn: [ "steps_xpl", "step_validation_xpl",
+                                "step_exec_xpl", "step_xquery_xpl",
+                                "step_xsl_formatter_xpl"]) {
+  println "FIXME: build a combined library.xpl file for xproc"
+}
+xproc_library.doFirst {
+  mkdir("build/dist/xproc")
+}
 
 task xproc_assets(dependsOn: [ "xproc_web_assets" ], type: Copy) {
   from "xproc/build/graphics"
