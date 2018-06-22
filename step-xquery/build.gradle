@@ -19,7 +19,7 @@ import com.xmlcalabash.XMLCalabashTask
 import com.nwalsh.tasks.StripAmblesTask
 
 task xinclude(dependsOn: [":spec_schemas"], type: XMLCalabashTask) {
-  inputs.file "src/main/xml/specification.xml"
+  inputs.files fileTree(dir: "src/main/xml/")
   outputs.file "build/xinclude.xml"
   input("source", "src/main/xml/specification.xml")
   output("result", "build/xinclude.xml")

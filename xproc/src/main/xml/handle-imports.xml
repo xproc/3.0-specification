@@ -1,0 +1,94 @@
+<appendix xmlns="http://docbook.org/ns/docbook"
+	  xmlns:xlink="http://www.w3.org/1999/xlink"
+	  xmlns:xi="http://www.w3.org/2001/XInclude"
+	  version="5.0-extension w3c-xproc"
+	  xml:id="handling-imports">
+<title>Handling Circular and Re-entrant Library Imports (Non-Normative)</title>
+
+<para>When handling imports, an implementation needs to be able to detect the following
+      situations, and distinguish them from cases where multiple import chains produce genuinely
+      conflicting step definitions:</para>
+    <orderedlist>
+      <listitem>
+        <para>Circular imports: A imports B, B imports A.</para>
+      </listitem>
+      <listitem>
+        <para>Re-entrant imports: A imports B and C, B imports D, C imports D.</para>
+      </listitem>
+    </orderedlist>
+    <para>One way to achieve this is as follows:</para>
+    <para><termdef xml:id="dt-step-type-exports">The <firstterm>step type exports</firstterm> of an
+        XProc element, against the background of a set of URIs of resources already visited (call
+        this set <emphasis>Visited</emphasis>), are defined by cases.</termdef></para>
+    <para>The <link linkend="dt-step-type-exports">step type exports</link> of an XProc element are
+      as follows:</para>
+    <variablelist>
+      <varlistentry>
+        <term>p:declare-step</term>
+        <listitem>
+          <para>A singleton bag containing the <code>type</code> of the element</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>p:library</term>
+        <listitem>
+          <para>The <glossterm>bag-merger</glossterm> of the <glossterm>step type
+              exports</glossterm> of all the element's children</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>p:import</term>
+        <listitem>
+          <para>Let <emphasis>RU</emphasis> be the actual resolved URI of the resource identified by
+            the <code>href</code> of the element. If <emphasis>RU</emphasis> is a member of
+              <emphasis>Visited</emphasis>, then an empty bag, otherwise update
+              <emphasis>Visited</emphasis> by adding <emphasis>RU</emphasis> to it, and return the
+              <glossterm>step type exports</glossterm> of the document element of the retrieved
+            representation</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>all other elements</term>
+        <listitem>
+          <para>An empty bag</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+    <para>The changes to <emphasis>Visited</emphasis> mandated by the <code>p:import</code> case
+      above are persistent, not scoped. That is, not only the recursive processing of the imported
+      resource but also subsequent processing of siblings and ancestors must be against the
+      background of the updated value. In practice this means either using a side-effected global
+      variable, or not only passing <emphasis>Visited</emphasis> as an argument to any recursive or
+      iterative processing, but also <emphasis>returning</emphasis> its updated value for subsequent
+      use, along with the bag of step types.</para>
+    <para>Given a pipeline library document with actual resolved URI <emphasis>DU</emphasis>, <error
+        code="S0036">it is a <glossterm>static error</glossterm> if the <glossterm>step type
+          exports</glossterm> of the document element of the retrieved representation, against the
+        background of a singleton set containing <emphasis>DU</emphasis> as the initial
+          <emphasis>Visited</emphasis> set, contains any duplicates.</error></para>
+    <para>Given a top-level pipeline document with actual resolved URI <emphasis>DU</emphasis>,
+        <error code="S0036">it is a <glossterm>static error</glossterm> if the
+          <glossterm>bag-merger</glossterm> of the <glossterm>step type exports</glossterm> of the
+        document element of the retrieved representation with the <glossterm>step type
+          exports</glossterm> of its children, against the background of a singleton set containing
+          <emphasis>DU</emphasis> as the initial <emphasis>Visited</emphasis> set, contains any
+        duplicates.</error></para>
+    <para>Given a non-top-level <code>p:declare-step</code> element,
+        <error code="S0036">it is a <glossterm>static error</glossterm> if the
+          <glossterm>bag-merger</glossterm> of the <glossterm>step type exports</glossterm> of its
+        parent with the <glossterm>step type exports</glossterm> of its children, against the
+        background of a copy of the <emphasis>Visited</emphasis> set of its parent as the initial
+          <emphasis>Visited</emphasis> set, contains any duplicates.</error></para>
+    <para>The phrase "a copy of the <emphasis>Visited</emphasis> set" in the preceding paragraph is
+      meant to indicate that checking of non-top-level
+        <code>p:declare-step</code> elements does <emphasis>not</emphasis> have a persistent impact
+      on the checking of its parent. The contrast is that whereas changes to
+        <emphasis>Visited</emphasis> pass both up <emphasis>and</emphasis> down through
+        <code>p:import</code>, they pass only <emphasis>down</emphasis> through
+        <emphasis>p:declare-step</emphasis>.</para>
+    <para><termdef xml:id="dt-bag-merger">The <firstterm>bag-merger</firstterm> of two or more bags
+        (where a bag is an unordered list or, equivalently, something like a set except that it may
+        contain duplicates) is a bag constructed by starting with an empty bag and adding each
+        member of each of the input bags in turn to it. It follows that the cardinality of the
+        result is the sum of the cardinality of all the input bags.</termdef></para>
+</appendix>
