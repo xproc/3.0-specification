@@ -155,6 +155,7 @@
       <p:output port="result" sequence="true" content-types="*/*"/>
       <p:option name="href" required="true" as="xs:anyURI"/>
       <p:option name="parameters" as="xs:string"/>
+      <p:option name="content-type" as="xs:string"/>
       <p:option name="document-properties" as="xs:string"/>
    </p:declare-step>
    <p:declare-step type="p:make-absolute-uris" xml:id="make-absolute-uris">
