@@ -11,6 +11,7 @@ shortcut value).</para>
   <p:output port="result" sequence="true" content-types="*/*"/>
   <p:option name="href" required="true" as="xs:anyURI"/>
   <p:option name="parameters" as="map(xs:QName,item())"/>
+  <p:option name="content-type" as="xs:string" />
   <p:option name="document-properties" as="map(xs:QName, item())"/>
 </p:declare-step>
 
@@ -33,8 +34,10 @@ determined as follows:</para>
 <orderedlist>
 <listitem>
 <para>If a <property>content-type</property> property is specified
-in <option>document-properties</option>, then each document
-<rfc2119>must</rfc2119> be interpreted according to that content type.
+in <option>document-properties</option> or <option>content-type</option> is present, 
+then each document <rfc2119>must</rfc2119> be interpreted according to 
+that content type. <error code="D0062">It is a <glossterm>dynamic error</glossterm> 
+if content-type is specified and document-properties has an entry for "content-type".</error>
 </para>
 </listitem>
 <listitem>
