@@ -14,7 +14,7 @@
 <xsl:template match="/">
   <xsl:comment> $Id: pipeline-library.xsl,v 1.5 2009/11/06 17:09:59 NormanWalsh Exp $ </xsl:comment>
   <xsl:text>&#10;</xsl:text>
-  <p:library version='1.0'>
+  <p:library version='3.0'>
     <xsl:for-each select="key('id','std-required')//p:declare-step">
       <xsl:apply-templates select="." mode="copystep"/>
     </xsl:for-each>
