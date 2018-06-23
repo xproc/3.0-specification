@@ -131,10 +131,22 @@ xproc_ancillary.doFirst {
   mkdir("build/dist/xproc")
 }
 
-task xproc_library(dependsOn: [ "steps_xpl", "step_validation_xpl",
+task xproc_library(type: XMLCalabashTask,
+                   dependsOn: [ "steps_xpl", "step_validation_xpl",
                                 "step_exec_xpl", "step_xquery_xpl",
                                 "step_xsl_formatter_xpl"]) {
-  println "FIXME: build a combined library.xpl file for xproc"
+  String steps = ""
+  fileTree(dir: 'build').include("**/steps.xpl").each { file ->
+    steps = steps + " " + file.toURI().toASCIIString()
+  }
+
+  inputs.files(fileTree(dir: 'build').include("**/steps.xpl"))
+  inputs.file "tools/xpl/make-library.xpl"
+  inputs.file "tools/xsl/make-library.xsl"
+  input("source", "build/core30.rng")
+  output("result", "build/dist/xproc/library.xpl")
+  param("libraries", steps)
+  pipeline "tools/xpl/make-library.xpl"
 }
 xproc_library.doFirst {
   mkdir("build/dist/xproc")
