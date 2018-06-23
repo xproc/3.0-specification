@@ -2080,10 +2080,62 @@ element or the attribute has a preceding sibling that it not an attribute.</erro
 
 <note>
 <para>The treatment of attribute nodes within text value templates in XProc 3.0 is
-in line with the concept of element constructors in XQuery, so that an attributes
-only sequence needs to be at the beginning of the XDM sequence to be added.
-</para>
+in line with the concept of element constructors in XQuery; a sequence of attributes
+may occur as the children of an element if and only if there are the very first
+children.</para>
 </note>
+
+<para>If the media type of the inline content is not an
+<glossterm>XML media type</glossterm>, then the result of the text value
+template is the concatentation of the string value of each node in the
+sequence.</para>
+
+<simplesect>
+<title>Examples</title>
+
+<para>Consider the following examples. In each case:</para>
+
+<itemizedlist>
+<listitem>
+<para>The variable <code>$name</code>
+is bound to the following XML element:</para>
+
+<programlisting language="xml"
+><![CDATA[  <name><given>Mary</given> <surname>Smith</surname></name>]]></programlisting>
+</listitem>
+<listitem>
+<para>The result of evaluating the text value template
+“<code>{$name/node()}</code>” is a sequence of three nodes, the given
+name element, a text node containing a single space, and the surname
+element.</para>
+</listitem>
+</itemizedlist>
+
+<para>If the media type is an XML media type:</para>
+
+<programlisting
+><![CDATA[  <p:inline content-type="application/xml">
+    <attribution>{$name/node()}</attribution>
+  </p:inline>]]></programlisting>
+
+<para>the result is that sequence of nodes:</para>
+
+<programlisting
+><![CDATA[  <attribution><given>Mary</given> <surname>Smith</surname></attribution>]]></programlisting>
+
+<para>If the media type is not an XML media type:</para>
+
+<programlisting
+><![CDATA[  <p:inline content-type="application/json">
+    {{ "name": "{$name/node()}" }}
+  </p:inline>]]></programlisting>
+
+<para>the result is the concatentation of the string values of the nodes:</para>
+
+<programlisting
+><![CDATA[  { "name": "Mary Smith" }]]></programlisting>
+
+</simplesect>
 </section>
 </section>
 
