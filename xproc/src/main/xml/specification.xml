@@ -1796,10 +1796,10 @@ non-XML document.</para>
         <title>Force QName keys</title>
         
         <para>This function forces a <type>map(*)</type> into a
-          <type>map(xs:QName, item())</type></para>
+          <type>map(xs:QName, item()*)</type>.</para>
         
         <methodsynopsis>
-          <type>map(xs:Qname, item())</type>
+          <type>map(xs:Qname, item()*)</type>
           <methodname>p:force-qname-keys</methodname>
           <methodparam>
             <type>map(*)</type>
@@ -1809,8 +1809,8 @@ non-XML document.</para>
         
         <para>The <function>p:force-qname-keys()</function> takes as its input a
           map of type <type>map(*)</type> (so any map) and forces this into a
-          map with <type>xs:Qname</type> keys. Every key/value entry in in
-          <code>$map</code> is processed as follows:</para>
+          map with <type>xs:Qname</type> keys. Every key/value entry in
+            <code>$map</code> is processed as follows:</para>
         <itemizedlist>
           <listitem>
             <para>If the entry's key is of type <type>xs:QName</type>, the entry
@@ -1840,7 +1840,7 @@ non-XML document.</para>
         <note>
           <para>This function is <emphasis>forced</emphasis> on any step options that have a
             <type>map()</type> datatype with <type>xs:QName</type> keys
-            (<code>as="map(xs:QName, ...)</code>. This allows
+            (<code>as="map(xs:QName, ...)</code>). This allows
             passing maps with (easier to specify) <type>xs:string</type> type
             keys that are converted automatically into the required
             <type>xs:QName</type> keys. See also <xref linkend="p.option"/>.</para>
@@ -4654,7 +4654,7 @@ name.</error></para>
     </listitem>
     <listitem>
       <para>If the type is declared as a map with <type>xs:QName</type>
-        keys (<type>map(xs:Qname, ...)</type>), the
+        keys (<type>map(xs:QName, ...)</type>), the
         <function>p:force-qname-keys()</function> (<xref
           linkend="f.force-qname-keys"/>) function is automatically applied to
         the map passed with <code>p:with-option</code>. This makes
