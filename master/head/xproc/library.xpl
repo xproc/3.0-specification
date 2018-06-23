@@ -65,6 +65,27 @@
       <p:output port="result" content-types="application/xml"/>
       <p:option name="serialization" as="xs:string"/>
    </p:declare-step>
+   <p:declare-step type="p:exec" xml:id="exec">
+      <p:input port="source"
+               primary="true"
+               sequence="true"
+               content-types="*/*"/>
+      <p:output port="result" primary="true" content-types="*/*"/>
+      <p:output port="errors"/>
+      <p:output port="exit-status"/>
+      <p:option name="command" required="true" as="xs:string"/>
+      <p:option name="args" select="''" as="xs:string"/>
+      <p:option name="cwd" as="xs:string"/>
+      <p:option name="source-is-xml" select="true()" as="xs:boolean"/>
+      <p:option name="result-is-xml" select="true()" as="xs:boolean"/>
+      <p:option name="wrap-result-lines" select="false()" as="xs:boolean"/>
+      <p:option name="errors-is-xml" select="false()" as="xs:boolean"/>
+      <p:option name="wrap-error-lines" select="false()" as="xs:boolean"/>
+      <p:option name="path-separator" as="xs:string"/>
+      <p:option name="failure-threshold" as="xs:integer"/>
+      <p:option name="arg-separator" select="' '" as="xs:string"/>
+      <p:option name="serialization" as="xs:string"/>
+   </p:declare-step>
    <p:declare-step type="p:filter" xml:id="filter">
       <p:input port="source" content-types="application/xml text/xml */*+xml"/>
       <p:output port="result" sequence="true" content-types="application/xml"/>
@@ -272,15 +293,40 @@
                 e:type="XSLTMatchPattern"/>
       <p:option name="version" as="xs:integer"/>
    </p:declare-step>
-   <p:declare-step type="p:wrap-sequence" xml:id="wrap-sequence">
+   <p:declare-step type="p:validate-with-relax-ng" xml:id="validate-with-relax-ng">
       <p:input port="source"
-               content-types="application/xml */*+xml text/*"
-               sequence="true"/>
-      <p:output port="result" sequence="true" content-types="application/xml"/>
-      <p:option name="wrapper" required="true" as="xs:QName"/>
-      <p:option name="wrapper-prefix" as="xs:NCName"/>
-      <p:option name="wrapper-namespace" as="xs:anyURI"/>
-      <p:option name="group-adjacent" as="xs:string" e:type="XPathExpression"/>
+               primary="true"
+               content-types="application/xml text/xml */*+xml"/>
+      <p:input port="schema" content-types="application/xml */*+xml text/*"/>
+      <p:output port="result" content-types="application/xml"/>
+      <p:option name="dtd-attribute-values" select="false()" as="xs:boolean"/>
+      <p:option name="dtd-id-idref-warnings" select="false()" as="xs:boolean"/>
+      <p:option name="assert-valid" select="true()" as="xs:boolean"/>
+   </p:declare-step>
+   <p:declare-step type="p:validate-with-schematron" xml:id="validate-with-schematron">
+      <p:input port="source"
+               primary="true"
+               content-types="application/xml text/xml */*+xml"/>
+      <p:input port="schema" content-types="application/xml text/xml */*+xml"/>
+      <p:output port="result" primary="true" content-types="application/xml"/>
+      <p:output port="report" sequence="true" content-types="application/xml"/>
+      <p:option name="parameters" as="xs:string"/>
+      <p:option name="phase" select="'#ALL'" as="xs:string"/>
+      <p:option name="assert-valid" select="true()" as="xs:boolean"/>
+   </p:declare-step>
+   <p:declare-step type="p:validate-with-xml-schema" xml:id="validate-with-xml-schema">
+      <p:input port="source"
+               primary="true"
+               content-types="application/xml text/xml */*+xml"/>
+      <p:input port="schema"
+               sequence="true"
+               content-types="application/xml text/xml */*+xml"/>
+      <p:output port="result" content-types="application/xml"/>
+      <p:option name="use-location-hints" select="false()" as="xs:boolean"/>
+      <p:option name="try-namespaces" select="false()" as="xs:boolean"/>
+      <p:option name="assert-valid" select="true()" as="xs:boolean"/>
+      <p:option name="mode" select="'strict'" as="xs:token" e:type="strict|lax"/>
+      <p:option name="version" as="xs:string"/>
    </p:declare-step>
    <p:declare-step type="p:wrap" xml:id="wrap">
       <p:input port="source" content-types="application/xml text/xml */*+xml"/>
@@ -292,6 +338,16 @@
                 required="true"
                 as="xs:string"
                 e:type="XSLTMatchPattern"/>
+      <p:option name="group-adjacent" as="xs:string" e:type="XPathExpression"/>
+   </p:declare-step>
+   <p:declare-step type="p:wrap-sequence" xml:id="wrap-sequence">
+      <p:input port="source"
+               content-types="application/xml */*+xml text/*"
+               sequence="true"/>
+      <p:output port="result" sequence="true" content-types="application/xml"/>
+      <p:option name="wrapper" required="true" as="xs:QName"/>
+      <p:option name="wrapper-prefix" as="xs:NCName"/>
+      <p:option name="wrapper-namespace" as="xs:anyURI"/>
       <p:option name="group-adjacent" as="xs:string" e:type="XPathExpression"/>
    </p:declare-step>
    <p:declare-step type="p:www-form-urldecode" xml:id="www-form-urldecode">
@@ -314,6 +370,23 @@
       <p:output port="result" content-types="application/xml text/xml */*+xml"/>
       <p:option name="fixup-xml-base" select="'false'" as="xs:boolean"/>
       <p:option name="fixup-xml-lang" select="'false'" as="xs:boolean"/>
+   </p:declare-step>
+   <p:declare-step type="p:xquery" xml:id="xquery">
+      <p:input port="source"
+               content-types="application/xml text/xml */*+xml"
+               sequence="true"
+               primary="true"/>
+      <p:input port="query" content-types="application/xml */*+xml text/*"/>
+      <p:output port="result" sequence="true" content-types="*/*"/>
+      <p:option name="parameters" as="xs:string"/>
+      <p:option name="version" as="xs:string"/>
+   </p:declare-step>
+   <p:declare-step type="p:xsl-formatter" xml:id="xsl-formatter">
+      <p:input port="source" content-types="application/xml text/xml */*+xml"/>
+      <p:output port="result" content-types="*/*"/>
+      <p:option name="parameters" as="xs:string"/>
+      <p:option name="href" required="true" as="xs:anyURI"/>
+      <p:option name="content-type" as="xs:string"/>
    </p:declare-step>
    <p:declare-step type="p:xslt" xml:id="xslt">
       <p:input port="source"

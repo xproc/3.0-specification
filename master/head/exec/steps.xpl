@@ -1,6 +1,6 @@
 <p:library xmlns:p="http://www.w3.org/ns/xproc"
            xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax"
-           version="1.0">
+           version="3.0">
    <p:declare-step type="p:exec" xml:id="exec">
       <p:input port="source"
                primary="true"
