@@ -1774,6 +1774,60 @@ empty document node for this purpose and for maintaining the
 association between that empty document node and the corresponding
 non-XML document.</para>
 </section>
+      
+      <section xml:id="f.force-qname-keys">
+        <title>Force QName keys</title>
+        
+        <para>This function forces a <type>map(*)</type> into a
+          <type>map(xs:QName, item()*)</type>.</para>
+        
+        <methodsynopsis>
+          <type>map(xs:Qname, item()*)</type>
+          <methodname>p:force-qname-keys</methodname>
+          <methodparam>
+            <type>map(*)</type>
+            <parameter>map</parameter>
+          </methodparam>
+        </methodsynopsis>
+        
+        <para>The <function>p:force-qname-keys()</function> takes as its input a
+          map of type <type>map(*)</type> (so any map) and forces this into a
+          map with <type>xs:Qname</type> keys. Every key/value entry in
+            <code>$map</code> is processed as follows:</para>
+        <itemizedlist>
+          <listitem>
+            <para>If the entry's key is of type <type>xs:QName</type>, the entry
+              is copied to the function's result map, unchanged.</para>
+          </listitem>
+          <listitem>
+            <para>If the entry's key is of type <type>xs:string</type> it is
+              forced into an <type>xs:Qname</type> using the <link xlink:href="https://www.w3.org/TR/xpath-31/#doc-xpath31-EQName">XPath EQName production rules</link>. That is, it can be written
+              as a local-name only, as a prefix plus local-name or as a URI plus
+              local-name (using the <code>Q{}</code> syntax). An entry with this
+              QName as key and the original entry's value is added to the
+              function's result map.</para>
+            <para>
+              <error code="D0057">It is a <glossterm>dynamic error</glossterm>
+                if a string key cannot be converted into a QName.</error>
+            </para>
+          </listitem>
+          <listitem>
+            <para>If the entry's key is of any other type, the entry is ignored
+              and will <emphasis>not</emphasis> be copied to the function's
+              result map.</para>
+          </listitem>
+        </itemizedlist>
+        
+        <note>
+          <para>This function is <emphasis>forced</emphasis> on any step options that have a
+            <type>map()</type> datatype with <type>xs:QName</type> keys
+            (<code>as="map(xs:QName, ...)</code>). This allows
+            passing maps with (easier to specify) <type>xs:string</type> type
+            keys that are converted automatically into the required
+            <type>xs:QName</type> keys. See also <xref linkend="p.option"/>.</para>
+        </note>
+      </section>
+      
 
       <section xml:id="other-xpath-extension-functions">
         <title>Other XPath Extension Functions</title>
@@ -4667,17 +4721,30 @@ name.</error></para>
 
 <e:rng-pattern name="OptionDeclaration"/>
 
-<para>An option may declare its type. The type is specified in the
-<tag class="attribute">as</tag> attribute using an XPath Sequence
-Type<superscript>[citation needed]</superscript>. If an atomic type,
-or sequence of atomic types, is specified, the value provided for the
-option will be atomized according to the standard XPath rules.
-<error code="D0049">It is a <glossterm>dynamic error</glossterm> if
-the sequence type is not syntactically valid.</error>
-<error code="D0036">It is a <glossterm>dynamic error</glossterm> if
-the computed value does not match the specified sequence
-type.</error></para>
-
+  <para>An option may declare its type. The type is specified in the <tag class="attribute">as</tag> attribute using an XPath Sequence
+    Type<superscript>[citation needed]</superscript>. The following rules apply:</para>
+  <itemizedlist>
+    <listitem>
+      <para>If an atomic type,
+        or sequence of atomic types, is specified, the value provided for the
+        option will be atomized according to the standard XPath rules. <error code="D0049">It is a <glossterm>dynamic error</glossterm> if
+          the sequence type is not syntactically valid.</error>
+        <error code="D0036">It is a <glossterm>dynamic error</glossterm> if
+          the computed value does not match the specified sequence
+          type.</error></para>
+    </listitem>
+    <listitem>
+      <para>If the type is declared as a map with <type>xs:QName</type>
+        keys (<type>map(xs:QName, ...)</type>), the
+        <function>p:force-qname-keys()</function> (<xref linkend="f.force-qname-keys"/>) function is automatically applied to
+        the map passed with <code>p:with-option</code>. This makes
+        it possible to pass in maps using (easier to write)
+        <type>xs:string</type> type keys that are converted
+        automatically into the required <type>xs:QName</type>
+        keys.</para>
+    </listitem>   
+  </itemizedlist>
+  
 <para>An option may declare that it is required by specifying
 the value <literal>true</literal> for the
 <tag class="attribute">required</tag> attribute. <error code="S0018">If an
