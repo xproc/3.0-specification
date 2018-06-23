@@ -7,7 +7,7 @@ namespace xs = "http://www.w3.org/2001/XMLSchema"
 
 # This schema neither supports nor requires the use of RELAX NG DTD Compatibility
 [ sa:model = "XPathExpression" ] XPathExpression = text
-[ sa:model = "XSLTMatchPattern" ] XSLTMatchPattern = text
+[ sa:model = "XSLTSelectionPattern" ] XSLTSelectionPattern = text
 [ sa:model = "XPathSequenceType" ] XPathSequenceType = text
 [ sa:model = "ContentType" ] ContentType = text
 [ sa:model = "ContentTypes" ] ContentTypes = text
@@ -297,7 +297,7 @@ ForEach =
 Viewport =
   element viewport {
     name.ncname.attr?,
-    [ sa:avt = "true" ] attribute match { XSLTMatchPattern },
+    [ sa:avt = "true" ] attribute match { XSLTSelectionPattern },
     common.attributes,
     expand-text.attr?,
     use-when.attr?,
@@ -639,7 +639,7 @@ Step-add-attribute =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
-    attribute match { XSLTMatchPattern }?,
+    attribute match { XSLTSelectionPattern }?,
     attribute attribute-name { xsd:QName }?,
     attribute attribute-prefix { xsd:NCName }?,
     attribute attribute-namespace { xsd:anyURI }?,
@@ -687,7 +687,7 @@ Step-delete =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
-    attribute match { XSLTMatchPattern }?,
+    attribute match { XSLTSelectionPattern }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
   }
 Step-directory-list =
@@ -734,7 +734,7 @@ Step-hash =
     attribute parameters { xsd:string }?,
     attribute value { xsd:string }?,
     attribute algorithm { xsd:QName }?,
-    attribute match { XSLTMatchPattern }?,
+    attribute match { XSLTSelectionPattern }?,
     attribute version { xsd:string }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
   }
@@ -765,7 +765,7 @@ Step-insert =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
-    attribute match { XSLTMatchPattern }?,
+    attribute match { XSLTSelectionPattern }?,
     attribute position {
       "first-child" | "last-child" | "before" | "after"
     }?,
@@ -780,7 +780,7 @@ Step-label-elements =
     attribute attribute-prefix { xsd:NCName }?,
     attribute attribute-namespace { xsd:anyURI }?,
     attribute label { XPathExpression }?,
-    attribute match { XSLTMatchPattern }?,
+    attribute match { XSLTSelectionPattern }?,
     attribute replace { xsd:boolean }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
   }
@@ -800,7 +800,7 @@ Step-make-absolute-uris =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
-    attribute match { XSLTMatchPattern }?,
+    attribute match { XSLTSelectionPattern }?,
     attribute base-uri { xsd:anyURI }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
   }
@@ -837,7 +837,7 @@ Step-rename =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
-    attribute match { XSLTMatchPattern }?,
+    attribute match { XSLTSelectionPattern }?,
     attribute new-name { xsd:QName }?,
     attribute new-prefix { xsd:NCName }?,
     attribute new-namespace { xsd:anyURI }?,
@@ -848,7 +848,7 @@ Step-replace =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
-    attribute match { XSLTMatchPattern }?,
+    attribute match { XSLTSelectionPattern }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
   }
 Step-set-attributes =
@@ -856,7 +856,7 @@ Step-set-attributes =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
-    attribute match { XSLTMatchPattern }?,
+    attribute match { XSLTSelectionPattern }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
   }
 Step-set-properties =
@@ -898,7 +898,7 @@ Step-string-replace =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
-    attribute match { XSLTMatchPattern }?,
+    attribute match { XSLTSelectionPattern }?,
     attribute replace { XPathExpression }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
   }
@@ -918,7 +918,7 @@ Step-unwrap =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
-    attribute match { XSLTMatchPattern }?,
+    attribute match { XSLTSelectionPattern }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
   }
 Step-uuid =
@@ -926,7 +926,7 @@ Step-uuid =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
-    attribute match { XSLTMatchPattern }?,
+    attribute match { XSLTSelectionPattern }?,
     attribute version { xsd:integer }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
   }
@@ -949,7 +949,7 @@ Step-wrap =
     attribute wrapper { xsd:QName }?,
     attribute wrapper-prefix { xsd:NCName }?,
     attribute wrapper-namespace { xsd:anyURI }?,
-    attribute match { XSLTMatchPattern }?,
+    attribute match { XSLTSelectionPattern }?,
     attribute group-adjacent { XPathExpression }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
   }
@@ -967,7 +967,7 @@ Step-www-form-urlencode =
     common.attributes,
     use-when.attr?,
     attribute parameters { xsd:string }?,
-    attribute match { XSLTMatchPattern }?,
+    attribute match { XSLTSelectionPattern }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
   }
 Step-xinclude =

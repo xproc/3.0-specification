@@ -7,7 +7,7 @@
       <p:option name="match"
                 select="'/*'"
                 as="xs:string"
-                e:type="XSLTMatchPattern"/>
+                e:type="XSLTSelectionPattern"/>
       <p:option name="attribute-name" required="true" as="xs:QName"/>
       <p:option name="attribute-prefix" as="xs:NCName"/>
       <p:option name="attribute-namespace" as="xs:anyURI"/>
@@ -45,7 +45,7 @@
       <p:option name="match"
                 required="true"
                 as="xs:string"
-                e:type="XSLTMatchPattern"/>
+                e:type="XSLTSelectionPattern"/>
    </p:declare-step>
    <p:declare-step type="p:directory-list" xml:id="directory-list">
       <p:output port="result" content-type="application/xml"/>
@@ -103,7 +103,7 @@
       <p:option name="match"
                 select="'/*'"
                 as="xs:string"
-                e:type="XSLTMatchPattern"/>
+                e:type="XSLTSelectionPattern"/>
       <p:option name="version" as="xs:string"/>
    </p:declare-step>
    <p:declare-step type="p:http-request" xml:id="http-request">
@@ -129,7 +129,7 @@
       <p:option name="match"
                 select="'/*'"
                 as="xs:string"
-                e:type="XSLTMatchPattern"/>
+                e:type="XSLTSelectionPattern"/>
       <p:option name="position"
                 required="true"
                 as="xs:token"
@@ -148,7 +148,7 @@
       <p:option name="match"
                 select="'*'"
                 as="xs:string"
-                e:type="XSLTMatchPattern"/>
+                e:type="XSLTSelectionPattern"/>
       <p:option name="replace" select="'true'" as="xs:boolean"/>
    </p:declare-step>
    <p:declare-step type="p:load" xml:id="load">
@@ -164,7 +164,7 @@
       <p:option name="match"
                 required="true"
                 as="xs:string"
-                e:type="XSLTMatchPattern"/>
+                e:type="XSLTSelectionPattern"/>
       <p:option name="base-uri" as="xs:anyURI"/>
    </p:declare-step>
    <p:declare-step type="p:namespace-rename" xml:id="namespace-rename">
@@ -198,7 +198,7 @@
       <p:option name="match"
                 select="'/*'"
                 as="xs:string"
-                e:type="XSLTMatchPattern"/>
+                e:type="XSLTSelectionPattern"/>
       <p:option name="new-name" required="true" as="xs:QName"/>
       <p:option name="new-prefix" as="xs:NCName"/>
       <p:option name="new-namespace" as="xs:anyURI"/>
@@ -212,7 +212,7 @@
       <p:option name="match"
                 required="true"
                 as="xs:string"
-                e:type="XSLTMatchPattern"/>
+                e:type="XSLTSelectionPattern"/>
    </p:declare-step>
    <p:declare-step type="p:set-attributes" xml:id="set-attributes">
       <p:input port="source"
@@ -223,7 +223,7 @@
       <p:option name="match"
                 select="'/*'"
                 as="xs:string"
-                e:type="XSLTMatchPattern"/>
+                e:type="XSLTSelectionPattern"/>
    </p:declare-step>
    <p:declare-step type="p:set-properties" xml:id="set-properties">
       <p:input port="source" content-types="*/*"/>
@@ -261,7 +261,7 @@
       <p:option name="match"
                 required="true"
                 as="xs:string"
-                e:type="XSLTMatchPattern"/>
+                e:type="XSLTSelectionPattern"/>
       <p:option name="replace"
                 required="true"
                 as="xs:string"
@@ -281,7 +281,7 @@
       <p:option name="match"
                 select="'/*'"
                 as="xs:string"
-                e:type="XSLTMatchPattern"/>
+                e:type="XSLTSelectionPattern"/>
    </p:declare-step>
    <p:declare-step type="p:uuid" xml:id="uuid">
       <p:input port="source"
@@ -291,7 +291,7 @@
       <p:option name="match"
                 select="'/*'"
                 as="xs:string"
-                e:type="XSLTMatchPattern"/>
+                e:type="XSLTSelectionPattern"/>
       <p:option name="version" as="xs:integer"/>
    </p:declare-step>
    <p:declare-step type="p:validate-with-relax-ng" xml:id="validate-with-relax-ng">
@@ -338,7 +338,7 @@
       <p:option name="match"
                 required="true"
                 as="xs:string"
-                e:type="XSLTMatchPattern"/>
+                e:type="XSLTSelectionPattern"/>
       <p:option name="group-adjacent" as="xs:string" e:type="XPathExpression"/>
    </p:declare-step>
    <p:declare-step type="p:wrap-sequence" xml:id="wrap-sequence">
@@ -364,7 +364,7 @@
       <p:option name="match"
                 required="true"
                 as="xs:string"
-                e:type="XSLTMatchPattern"/>
+                e:type="XSLTSelectionPattern"/>
    </p:declare-step>
    <p:declare-step type="p:xinclude" xml:id="xinclude">
       <p:input port="source" content-types="application/xml text/xml */*+xml"/>

@@ -78,7 +78,7 @@ with the specified value.
 <p:declare-step type="p:add-attribute">
   <p:input port="source" content-types="application/xml text/xml */*+xml"/>
   <p:output port="result" content-types="application/xml"/>
-  <p:option name="match" select="'/*'" as="xs:string" e:type="XSLTMatchPattern"/>
+  <p:option name="match" select="'/*'" as="xs:string" e:type="XSLTSelectionPattern"/>
   <p:option name="attribute-name" required="true" as="xs:QName"/>
   <p:option name="attribute-prefix" as="xs:NCName"/>
   <p:option name="attribute-namespace" as="xs:anyURI"/>
@@ -86,7 +86,7 @@ with the specified value.
 </p:declare-step>
 
 <para>The value of the <option>match</option> option
-<rfc2119>must</rfc2119> be an XSLTMatchPattern. <error code="C0023">It
+<rfc2119>must</rfc2119> be an XSLTSelectionPattern. <error code="C0023">It
 is a <glossterm>dynamic error</glossterm> if the match pattern matches a node
 which is not an element.</error></para>
 
@@ -377,11 +377,11 @@ with the deleted items removed, on the <port>result</port> port.</para>
 <p:declare-step type="p:delete">
    <p:input port="source" content-types="application/xml text/xml */*+xml"/>
    <p:output port="result" content-types="application/xml"/>
-   <p:option name="match" required="true" as="xs:string" e:type="XSLTMatchPattern"/>
+   <p:option name="match" required="true" as="xs:string" e:type="XSLTSelectionPattern"/>
 </p:declare-step>
 
 <para>The value of the <option>match</option> option <rfc2119>must</rfc2119> be an
-XSLTMatchPattern. A match pattern may match multiple items to be
+XSLTSelectionPattern. A match pattern may match multiple items to be
 deleted.</para>
 
 <para>If an element is selected by the <option>match</option> option, the
@@ -645,7 +645,7 @@ for some value and injects it into the <port>source</port> document.</para>
   <p:option name="parameters" as="map(xs:QName,item())"/>
   <p:option name="value" required="true" as="xs:string"/>
   <p:option name="algorithm" required="true" as="xs:QName"/>
-  <p:option name="match" select="'/*'" as="xs:string" e:type="XSLTMatchPattern"/>
+  <p:option name="match" select="'/*'" as="xs:string" e:type="XSLTSelectionPattern"/>
   <p:option name="version" as="xs:string"/>
 </p:declare-step>
 
@@ -671,7 +671,7 @@ hexadecimal characters.
 </para>
 
 <para>The value of the <option>match</option> option must be an
-XSLTMatchPattern.</para>
+XSLTSelectionPattern.</para>
 
 <para>The hash of the specified value is computed using the algorithm and
 parameters specified. <error code="C0036">It is a
@@ -1405,12 +1405,12 @@ port's document relative to the matching elements in the
    <p:input port="source" primary="true" content-types="application/xml text/xml */*+xml"/>
    <p:input port="insertion" sequence="true" content-types="application/xml text/* */*+xml"/>
    <p:output port="result" content-types="application/xml"/>
-   <p:option name="match" select="'/*'" as="xs:string" e:type="XSLTMatchPattern"/>
+   <p:option name="match" select="'/*'" as="xs:string" e:type="XSLTSelectionPattern"/>
    <p:option name="position" required="true" as="xs:token" e:type="first-child|last-child|before|after"/>
 </p:declare-step>
 
 <para>The value of the <option>match</option> option
-<rfc2119>must</rfc2119> be an XSLTMatchPattern. <error code="C0023">It
+<rfc2119>must</rfc2119> be an XSLTSelectionPattern. <error code="C0023">It
 is a <glossterm>dynamic error</glossterm> if that pattern matches
 an attribute or a namespace node.</error>
 Multiple matches are
@@ -1471,7 +1471,7 @@ element and stores that label in the specified attribute.</para>
   <p:option name="attribute-prefix" as="xs:NCName"/>
   <p:option name="attribute-namespace" as="xs:anyURI"/>
   <p:option name="label" select="'concat(&#34;_&#34;,$p:index)'" as="xs:string" e:type="XPathExpression"/>
-  <p:option name="match" select="'*'" as="xs:string" e:type="XSLTMatchPattern"/>
+  <p:option name="match" select="'*'" as="xs:string" e:type="XSLTSelectionPattern"/>
   <p:option name="replace" select="'true'" as="xs:boolean"/>
 </p:declare-step>
 
@@ -1489,7 +1489,7 @@ colon.</error>
 expression used to generate the value of the attribute label.</para>
 
 <para>The value of the <option>match</option> option
-<rfc2119>must</rfc2119> be an XSLTMatchPattern. <error code="C0023">It
+<rfc2119>must</rfc2119> be an XSLTSelectionPattern. <error code="C0023">It
 is a <glossterm>dynamic error</glossterm> if that expression matches
 anything other than element nodes.</error></para>
 
@@ -1677,12 +1677,12 @@ result document.</para>
 <p:declare-step type="p:make-absolute-uris">
   <p:input port="source" content-types="application/xml text/xml */*+xml"/>
   <p:output port="result" content-types="application/xml"/>
-  <p:option name="match" required="true" as="xs:string" e:type="XSLTMatchPattern"/>
+  <p:option name="match" required="true" as="xs:string" e:type="XSLTSelectionPattern"/>
   <p:option name="base-uri" as="xs:anyURI"/>
 </p:declare-step>
 
 <para>The value of the <option>match</option> option <rfc2119>must</rfc2119> be an
-XSLTMatchPattern.
+XSLTSelectionPattern.
 <error code="C0023">It is a <glossterm>dynamic error</glossterm> if
 the pattern matches anything other than element or attribute
 nodes.</error></para>
@@ -1985,14 +1985,14 @@ processing-instruction targets in a document.</para>
 <p:declare-step type="p:rename">
   <p:input port="source" content-types="application/xml text/xml */*+xml"/>
   <p:output port="result" content-types="application/xml"/>
-  <p:option name="match" select="'/*'" as="xs:string" e:type="XSLTMatchPattern"/>
+  <p:option name="match" select="'/*'" as="xs:string" e:type="XSLTSelectionPattern"/>
   <p:option name="new-name" required="true" as="xs:QName"/>
   <p:option name="new-prefix" as="xs:NCName"/>
   <p:option name="new-namespace" as="xs:anyURI"/>
 </p:declare-step>
 
 <para>The value of the <option>match</option> option must be an
-XSLTMatchPattern. <error code="C0023">It is a <glossterm>dynamic
+XSLTSelectionPattern. <error code="C0023">It is a <glossterm>dynamic
 error</glossterm> if the pattern matches anything other than element,
 attribute or processing instruction nodes.</error></para>
 
@@ -2048,11 +2048,11 @@ its primary input with the document element of the
    <p:input port="source" primary="true" content-types="application/xml text/xml */*+xml"/>
    <p:input port="replacement" content-types="application/xml text/xml */*+xml"/>
    <p:output port="result" content-types="application/xml"/>
-   <p:option name="match" required="true" as="xs:string" e:type="XSLTMatchPattern"/>
+   <p:option name="match" required="true" as="xs:string" e:type="XSLTSelectionPattern"/>
 </p:declare-step>
 
 <para>The value of the <option>match</option> option
-<rfc2119>must</rfc2119> be an XSLTMatchPattern. <error code="C0023">It
+<rfc2119>must</rfc2119> be an XSLTSelectionPattern. <error code="C0023">It
 is a <glossterm>dynamic error</glossterm> if that pattern matches
 anything other than element, text, processing-instruction, or comment
 nodes. </error> Multiple matches are allowed, in which case multiple
@@ -2079,11 +2079,11 @@ matching elements.</para>
    <p:input port="source" primary="true" content-types="application/xml text/xml */*+xml"/>
    <p:input port="attributes" content-types="application/xml text/xml */*+xml"/>
    <p:output port="result" content-types="application/xml"/>
-   <p:option name="match" select="'/*'" as="xs:string" e:type="XSLTMatchPattern"/>
+   <p:option name="match" select="'/*'" as="xs:string" e:type="XSLTSelectionPattern"/>
 </p:declare-step>
 
  <para>The value of the <option>match</option> option <rfc2119>must</rfc2119> be an
- XSLTMatchPattern. <error code="C0023">It is a <glossterm>dynamic
+ XSLTSelectionPattern. <error code="C0023">It is a <glossterm>dynamic
  error</glossterm> if that pattern matches anything other than element
  nodes.</error></para>
 
@@ -2273,12 +2273,12 @@ with the string result of evaluating an XPath expression.</para>
 <p:declare-step type="p:string-replace">
    <p:input port="source" content-types="application/xml text/xml */*+xml"/>
    <p:output port="result" content-types="application/xml"/>
-   <p:option name="match" required="true" as="xs:string" e:type="XSLTMatchPattern"/>
+   <p:option name="match" required="true" as="xs:string" e:type="XSLTSelectionPattern"/>
    <p:option name="replace" required="true" as="xs:string" e:type="XPathExpression"/>
 </p:declare-step>
 
 <para>The value of the <option>match</option> option <rfc2119>must</rfc2119> be an
-XSLTMatchPattern.</para>
+XSLTSelectionPattern.</para>
 
 <para>The value of the <option>replace</option> option <rfc2119>must</rfc2119> be an
 XPathExpression.</para>
@@ -2421,11 +2421,11 @@ children.</para>
 <p:declare-step type="p:unwrap">
    <p:input port="source" content-types="application/xml text/xml */*+xml"/>
    <p:output port="result" content-types="application/xml"/>
-   <p:option name="match" select="'/*'" as="xs:string" e:type="XSLTMatchPattern"/>
+   <p:option name="match" select="'/*'" as="xs:string" e:type="XSLTSelectionPattern"/>
 </p:declare-step>
 
  <para>The value of the <option>match</option> option <rfc2119>must</rfc2119> be an
- XSLTMatchPattern. <error code="C0023">It is a <glossterm>dynamic
+ XSLTSelectionPattern. <error code="C0023">It is a <glossterm>dynamic
  error</glossterm> if that pattern matches anything other than element
  nodes.</error></para>
 
@@ -2459,12 +2459,12 @@ the <port>source</port> document.</para>
 <p:declare-step type="p:uuid">
   <p:input port="source" primary="true" content-types="application/xml text/xml */*+xml"/>
   <p:output port="result" content-types="application/xml"/>
-  <p:option name="match" select="'/*'" as="xs:string" e:type="XSLTMatchPattern"/>
+  <p:option name="match" select="'/*'" as="xs:string" e:type="XSLTSelectionPattern"/>
   <p:option name="version" as="xs:integer"/>
 </p:declare-step>
 
 <para>The value of the <option>match</option> option must be an
-XSLTMatchPattern. The value of the <option>version</option> option
+XSLTSelectionPattern. The value of the <option>version</option> option
 must be an integer.</para>
 
 <para>If the <option>version</option> is specified, that version of
@@ -2570,7 +2570,7 @@ element.
    <p:option name="wrapper" required="true" as="xs:QName"/>
    <p:option name="wrapper-prefix" as="xs:NCName"/>
    <p:option name="wrapper-namespace" as="xs:anyURI"/>
-   <p:option name="match" required="true" as="xs:string" e:type="XSLTMatchPattern"/>
+   <p:option name="match" required="true" as="xs:string" e:type="XSLTSelectionPattern"/>
    <p:option name="group-adjacent" as="xs:string" e:type="XPathExpression"/>
 </p:declare-step>
 
@@ -2585,7 +2585,7 @@ to specify a new namespace or prefix if the lexical value of the specified
 name contains a colon.</error></para>
 
 <para>The value of the <option>match</option> option
-<rfc2119>must</rfc2119> be an XSLTMatchPattern. <error code="C0023">It
+<rfc2119>must</rfc2119> be an XSLTSelectionPattern. <error code="C0023">It
 is a <glossterm>dynamic error</glossterm> if the pattern matches
 anything other than document, element, text, processing instruction, and comment
 nodes.</error>
@@ -2680,11 +2680,11 @@ injects it into the <port>source</port> document.</para>
   <p:input port="source" primary="true" content-types="application/xml text/xml */*+xml"/>
   <p:output port="result" content-types="application/xml"/>
   <p:option name="parameters" as="map(xs:QName,item())"/>
-  <p:option name="match" required="true" as="xs:string" e:type="XSLTMatchPattern"/>
+  <p:option name="match" required="true" as="xs:string" e:type="XSLTSelectionPattern"/>
 </p:declare-step>
 
 <para>The value of the <option>match</option> option must be an
-XSLTMatchPattern.</para>
+XSLTSelectionPattern.</para>
 
 <para>The set of parameters is encoded as a single
 <literal>x-www-form-urlencoded</literal> string of name/value pairs.
@@ -2747,9 +2747,7 @@ if an XInclude error occurs during processing.</error> </para>
 <section xml:id="c.xslt">
 <title>p:xslt</title>
 
-<para>The <tag>p:xslt</tag> step applies an
-<biblioref linkend="xslt10"/> or
-<biblioref linkend="xslt20"/> stylesheet to a document.</para>
+<para>The <tag>p:xslt</tag> step applies an XSLT stylesheet to a document.</para>
 
 <p:declare-step type="p:xslt">
   <p:input port="source" content-types="application/xml text/xml */*+xml" sequence="true" primary="true"/>
@@ -3148,20 +3146,12 @@ Achim Berndzen, Gerrit Imsieke, Erik Siegel and Norman Walsh, editors.
 An Introduction</citetitle>.
 Achim Berndzen, Gerrit Imsieke, Erik Siegel and Norman Walsh, editors.
 </bibliomixed>
-    <bibliomixed xml:id="xslt10"><abbrev>XSLT 1.0</abbrev>
-<citetitle xlink:href="http://www.w3.org/TR/xslt">XSL Transformations (XSLT)
-Version 1.0</citetitle>. James Clark, editor.
-W3C Recommendation. 16 November 1999.</bibliomixed>
     <bibliomixed xml:id="xpath-functions"><abbrev>XPath and XQuery
 Functions and Operators 3.1</abbrev>
 <citetitle xlink:href="https://www.w3.org/TR/xpath-functions-31/">XPath and XQuery
 Functions and Operators 3.1</citetitle>.
 Michael Kay, editors
 W3C Recommendation. 21 March 2017.</bibliomixed>
-    <bibliomixed xml:id="xslt20"><abbrev>XSLT 2.0</abbrev>
-<citetitle xlink:href="http://www.w3.org/TR/xslt20/">XSL Transformations (XSLT)
-Version 2.0</citetitle>. Michael Kay, editor.
-W3C Recommendation. 23 January 2007.</bibliomixed>
     <bibliomixed xml:id="xinclude"><abbrev>XInclude</abbrev>
 <citetitle xlink:href="http://www.w3.org/TR/xinclude/">XML Inclusions
 (XInclude) Version 1.0 (Second Edition)</citetitle>. Jonathan Marsh,
