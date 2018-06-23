@@ -131,10 +131,24 @@ xproc_ancillary.doFirst {
   mkdir("build/dist/xproc")
 }
 
-task xproc_library(dependsOn: [ "steps_xpl", "step_validation_xpl",
+task xproc_library(type: XMLCalabashTask,
+                   dependsOn: [ "steps_xpl", "step_validation_xpl",
                                 "step_exec_xpl", "step_xquery_xpl",
                                 "step_xsl_formatter_xpl"]) {
-  println "FIXME: build a combined library.xpl file for xproc"
+  // N.B. Because Travis jobs cannot see the filesystem, we have
+  // to list the dependencies twice. :-(
+  String steps = ""
+  ["steps", "validation", "exec", "xquery", "xsl-formatter"].each { s->
+    steps = steps + " ../../build/dist/" + s + "/steps.xpl"
+  }
+
+  inputs.files(fileTree(dir: 'build').include("**/steps.xpl"))
+  inputs.file "tools/xpl/make-library.xpl"
+  inputs.file "tools/xsl/make-library.xsl"
+  input("source", "build/dist/steps/steps.xpl")
+  output("result", "build/dist/xproc/library.xpl")
+  param("libraries", steps)
+  pipeline "tools/xpl/make-library.xpl"
 }
 xproc_library.doFirst {
   mkdir("build/dist/xproc")
