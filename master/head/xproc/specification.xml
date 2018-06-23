@@ -1530,8 +1530,8 @@ system properties, which are all in the XProc namespace:</para>
               <para>Returns the version(s) of XProc implemented by the processor
                 as a space-separated list. For example, a processor that
                 supports XProc 1.0 would return “1.0”; a processor that supports
-                XProc 1.0 and 2.0 would return “1.0 2.0”; a processor that
-                supports only XProc 2.0 would return “2.0”.</para>
+                XProc 1.0 and 3.0 would return “1.0 3.0”; a processor that
+                supports only XProc 3.0 would return “3.0”.</para>
             </listitem>
           </varlistentry>
           <varlistentry>
@@ -1540,10 +1540,9 @@ system properties, which are all in the XProc namespace:</para>
               <para>Returns the version(s) of XPath implemented by the processor
                 for evaluating XPath expressions on XProc elements. The result
                 is a space-separated list of versions supported. For example, a
-                processor that only supports XPath 2.0 would return “2.0”; a
-                processor that supports XPath 2.0 and XPath 3.0 could return
-                “2.0 3.0”; a processor that supports only XPath 2.0 would return
-                “2.0”.</para>
+                processor that only supports XPath 3.1 would return “3.1”; a
+                processor that supports XPath 3.0 and XPath 3.1 could return
+                “3.0 3.1”.</para>
             </listitem>
           </varlistentry>
           <varlistentry>
@@ -1653,8 +1652,8 @@ specified.</para>
 <methodparam><type>xs:string</type><parameter>version</parameter></methodparam>
 </methodsynopsis>
 
-<para>A processor that supports XPath 2.0 will return <literal>true()</literal> when
-<code>p:xpath-version-available('2.0')</code> is evaluated.</para>
+<para>A processor that supports XPath 3.1 will return <literal>true()</literal> when
+<code>p:xpath-version-available('3.1')</code> is evaluated.</para>
 
 </section>
 
@@ -1889,7 +1888,7 @@ non-XML document.</para>
               <rfc2119>must not</rfc2119> contain any PSVI properties.</para>
         </listitem>
         <listitem>
-          <para>If an implementation supports XPath 2.0, the data model constructed with which to
+          <para>If an implementation supports XPath 2.0 or later, the data model constructed with which to
             evaluate XPath expressions and match patterns <rfc2119>should</rfc2119> take advantage
             of as much PSVI information as possible. </para>
         </listitem>
@@ -2702,7 +2701,7 @@ for steps not in the XProc namespace in a
 <para>The steps available and possibly other aspects of the expression may
 depend on the version specified for a pipeline, see
 <xref linkend="versioning-considerations"/>. For example, in a “1.0” pipeline,
-the processor <rfc2119>should not</rfc2119> report that “2.0” steps are
+the processor <rfc2119>should not</rfc2119> report that “3.0” steps are
 available.</para>
 </listitem>
 </itemizedlist>
