@@ -143,8 +143,6 @@ task xproc_library(type: XMLCalabashTask,
     steps = steps + " ../../build/dist/" + s + "/steps.xpl"
   }
 
-  println "Steps: " + steps
-
   inputs.files(fileTree(dir: 'build').include("**/steps.xpl"))
   inputs.file "tools/xpl/make-library.xpl"
   inputs.file "tools/xsl/make-library.xsl"
@@ -155,6 +153,14 @@ task xproc_library(type: XMLCalabashTask,
 }
 xproc_library.doFirst {
   println "Dir: " + System.getProperty("user.dir")
+
+  String steps = ""
+  ["steps", "validation", "exec", "xquery", "xsl-formatter"].each { s->
+    steps = steps + " ../../build/dist/" + s + "/steps.xpl"
+  }
+
+  println "Steps: " + steps
+
   mkdir("build/dist/xproc")
 }
 
