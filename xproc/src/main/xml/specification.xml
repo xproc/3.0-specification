@@ -1546,8 +1546,8 @@ system properties, which are all in the XProc namespace:</para>
               <para>Returns the version(s) of XProc implemented by the processor
                 as a space-separated list. For example, a processor that
                 supports XProc 1.0 would return “1.0”; a processor that supports
-                XProc 1.0 and 2.0 would return “1.0 2.0”; a processor that
-                supports only XProc 2.0 would return “2.0”.</para>
+                XProc 1.0 and 3.0 would return “1.0 3.0”; a processor that
+                supports only XProc 3.0 would return “3.0”.</para>
             </listitem>
           </varlistentry>
           <varlistentry>
@@ -1556,10 +1556,9 @@ system properties, which are all in the XProc namespace:</para>
               <para>Returns the version(s) of XPath implemented by the processor
                 for evaluating XPath expressions on XProc elements. The result
                 is a space-separated list of versions supported. For example, a
-                processor that only supports XPath 2.0 would return “2.0”; a
-                processor that supports XPath 2.0 and XPath 3.0 could return
-                “2.0 3.0”; a processor that supports only XPath 2.0 would return
-                “2.0”.</para>
+                processor that only supports XPath 3.1 would return “3.1”; a
+                processor that supports XPath 3.0 and XPath 3.1 could return
+                “3.0 3.1”.</para>
             </listitem>
           </varlistentry>
           <varlistentry>
@@ -1669,8 +1668,8 @@ specified.</para>
 <methodparam><type>xs:string</type><parameter>version</parameter></methodparam>
 </methodsynopsis>
 
-<para>A processor that supports XPath 2.0 will return <literal>true()</literal> when
-<code>p:xpath-version-available('2.0')</code> is evaluated.</para>
+<para>A processor that supports XPath 3.1 will return <literal>true()</literal> when
+<code>p:xpath-version-available('3.1')</code> is evaluated.</para>
 
 </section>
 
@@ -1913,7 +1912,7 @@ non-XML document.</para>
               <rfc2119>must not</rfc2119> contain any PSVI properties.</para>
         </listitem>
         <listitem>
-          <para>If an implementation supports XPath 2.0, the data model constructed with which to
+          <para>If an implementation supports XPath 2.0 or later, the data model constructed with which to
             evaluate XPath expressions and match patterns <rfc2119>should</rfc2119> take advantage
             of as much PSVI information as possible. </para>
         </listitem>
@@ -2833,7 +2832,7 @@ for steps not in the XProc namespace in a
 <para>The steps available and possibly other aspects of the expression may
 depend on the version specified for a pipeline, see
 <xref linkend="versioning-considerations"/>. For example, in a “1.0” pipeline,
-the processor <rfc2119>should not</rfc2119> report that “2.0” steps are
+the processor <rfc2119>should not</rfc2119> report that “3.0” steps are
 available.</para>
 </listitem>
 </itemizedlist>
@@ -2991,11 +2990,11 @@ the summaries:</para><itemizedlist>
     </para>
   </listitem>
   <listitem>
-    <para><type>XPathExpression</type>, <type>XSLTMatchPattern</type>:
+    <para><type>XPathExpression</type>, <type>XSLTSelectionPattern</type>:
     As a string per <biblioref linkend="xmlschema-2"/>, including
     whitespace normalization, and the further requirement to be a
-    conformant Expression per <biblioref linkend="xpath31"/> or Match
-    pattern per <biblioref linkend="xslt20"/>.
+    conformant Expression per <biblioref linkend="xpath31"/> or selection
+    pattern per <biblioref linkend="xslt30"/>.
     </para>
   </listitem>
   <listitem>
@@ -5158,7 +5157,8 @@ attribute">extension
           port.</error></para>
         <para>The requested <tag class="attribute">xpath-version</tag>
           <rfc2119>must</rfc2119> be used to evaluate XPath expressions subject to the constraints
-          outlined in <xref linkend="xpath-context"/>.</para>
+          outlined in <xref linkend="xpath-context"/>. If the attribute is not specified, the value
+          “<literal>3.1</literal>” is assumed. </para>
         <para>The <tag class="attribute">psvi-required</tag> attribute allows the author to declare
           that a step relies on the processor's ability to pass PSVI annotations between steps, see
             <xref linkend="psvi-support"/>. If the attribute is not specified, the value
@@ -5177,6 +5177,14 @@ has no ancestors in the XProc namespace, then it <rfc2119>must</rfc2119>
 have a <tag class="attribute">version</tag> attribute.
 See <xref linkend="versioning-considerations"/>.</para>
 
+<para>The requested <tag class="attribute">xpath-version</tag>
+          <rfc2119>must</rfc2119> be used to evaluate XPath expressions subject to the constraints
+          outlined in <xref linkend="xpath-context"/>. If the attribute is not specified, the value
+          “<literal>3.1</literal>” is assumed. </para>
+        <para>The <tag class="attribute">psvi-required</tag> attribute allows the author to declare
+          that a step relies on the processor's ability to pass PSVI annotations between steps, see
+            <xref linkend="psvi-support"/>. If the attribute is not specified, the value
+            “<literal>false</literal>” is assumed. </para>
       <para>For a description of <tag class="attribute">psvi-required</tag>, see <xref
           linkend="psvi-support"/>; for <tag class="attribute">xpath-version</tag>, see <xref
           linkend="xpath-context"/>; for <tag class="attribute">exclude-inline-prefixes</tag>, see
