@@ -2031,8 +2031,7 @@ expression is evaluated with an undefined context node.</para>
 non-string atomic values are converted to strings by taking their
 string value. Strings are converted into text nodes.</para>
 
-<para>The result of the text value template is this sequence of nodes.
-Adjacent text nodes are combined into a single text node.</para>
+<para>The result of the text value template is this sequence of nodes.</para>
 
 <note xml:id="unlike-xslt-tvts">
 <para>Unlike XSLT, in XProc, text value templates are not atomized
@@ -2041,21 +2040,142 @@ text value templates in XProc, for example, if the XPath
 expressions refer to variables that have node content.</para>
 </note>
 
-<para>If the node to be inserted with a text value template is a document
-node, all children of the document node are inserted. If the node is an attribute
+<para>If a node to be inserted with a text value template is a document
+node, all the children of the document node are inserted.</para>
+
+<para>How the nodes are inserted depends on the content type of the
+<tag>p:inline</tag>.</para>
+
+<orderedlist>
+<listitem>
+<para>If the content type is an <glossterm>XML media type</glossterm>,
+the nodes are added to the XML document where they occur. This is analagous
+to the way element constructors work in <biblioref linkend="xquery10"/>.
+</para>
+<para>If the node is an attribute
 it is added to an element parent if and only if the attribute either has
 no siblings in the XDM sequence or has only attributes as preceding siblings.
 <error code="D0052">It is a <glossterm>dynamic error</glossterm> if the XPath
 expression in a TVT evaluates to an attribute and either the parent is not an
 element or the attribute has a preceding sibling that it not an attribute.</error>
 </para>
+</listitem>
+<listitem>
+<para>If the content type is not an <glossterm>XML media
+type</glossterm>, each text value template is replaced by the
+concatentation of the serialization of the nodes that result from
+evaluating the template.</para>
+<para>This serialization is performed with the following serialization parameters:</para>
 
-<note>
-<para>The treatment of attribute nodes within text value templates in XProc 3.0 is
-in line with the concept of element constructors in XQuery, so that an attributes
-only sequence needs to be at the beginning of the XDM sequence to be added.
-</para>
-</note>
+<itemizedlist>
+<listitem>
+<para><option>byte-order-mark</option>: false</para>
+</listitem>
+<listitem>
+<para><option>cdata-section-elements</option>: ()</para>
+</listitem>
+<listitem>
+<para><option>doctype-public</option>: ()</para>
+</listitem>
+<listitem>
+<para><option>doctype-system</option>: ()</para>
+</listitem>
+<listitem>
+<para><option>encoding</option>: “utf-8”</para>
+</listitem>
+<listitem>
+<para><option>escape-uri-attributes</option>: false</para>
+</listitem>
+<listitem>
+<para><option>include-content-type</option>: false</para>
+</listitem>
+<listitem>
+<para><option>indent</option>: false</para>
+</listitem>
+<listitem>
+<para><option>media-type</option>: “application/xml”</para>
+</listitem>
+<listitem>
+<para><option>method</option>: “xml”</para>
+</listitem>
+<listitem>
+<para><option>normalization-form</option>: ()</para>
+</listitem>
+<listitem>
+<para><option>omit-xml-declaration</option>: true</para>
+</listitem>
+<listitem>
+<para><option>standalone</option>: false</para>
+</listitem>
+<listitem>
+<para><option>undeclare-prefixes</option>: false</para>
+</listitem>
+<listitem>
+<para><option>use-character-maps</option>: ()</para>
+</listitem>
+<listitem>
+<para><option>version</option>: 1.0</para>
+</listitem>
+</itemizedlist>
+</listitem>
+</orderedlist>
+
+<para>Interpretation of the character content of the <tag>p:inline</tag>
+according to the media type occurs after text value templates have been
+replaced.</para>
+
+<simplesect>
+<title>Examples</title>
+
+<para>Consider the following examples. In each case:</para>
+
+<itemizedlist>
+<listitem>
+<para>The variable <code>$name</code>
+is bound to the following XML element:</para>
+
+<programlisting language="xml">  &lt;name&gt;&lt;given&gt;Mary&lt;/given&gt; &lt;surname&gt;Smith&lt;/surname&gt;&lt;/name&gt;</programlisting>
+</listitem>
+<listitem>
+<para>The result of evaluating the text value template
+“<code>{$name/node()}</code>” is a sequence of three nodes, the given
+name element, a text node containing a single space, and the surname
+element.</para>
+</listitem>
+</itemizedlist>
+
+<para>If the media type is an XML media type:</para>
+
+<programlisting>  &lt;p:inline content-type="application/xml"&gt;
+    &lt;attribution&gt;{$name/node()}&lt;/attribution&gt;
+  &lt;/p:inline&gt;</programlisting>
+
+<para>the result is that sequence of nodes:</para>
+
+<programlisting>  &lt;attribution&gt;&lt;given&gt;Mary&lt;/given&gt; &lt;surname&gt;Smith&lt;/surname&gt;&lt;/attribution&gt;</programlisting>
+
+<para>If the media type is not an XML media type:</para>
+
+<programlisting>  &lt;p:inline content-type="application/json"&gt;
+    {{ "name": "{$name/node()}" }}
+  &lt;/p:inline&gt;</programlisting>
+
+<para>the result is the concatentation of the serialization of the nodes:</para>
+
+<programlisting>  { "name": "&lt;given&gt;Mary&lt;/given&gt; &lt;surname&gt;Smith&lt;/surname&gt;" }</programlisting>
+
+<para>If the string value is desired, instead of escaped markup, write the
+expression such that it returns the string values:</para>
+
+<programlisting>  &lt;p:inline content-type="application/json"&gt;
+    {{ "name": "{$name/node()/string()}" }}
+  &lt;/p:inline&gt;</programlisting>
+
+<para>To produce:</para>
+
+<programlisting>  { "name": "Mary Smith" }</programlisting>
+
+</simplesect>
 </section>
 </section>
 
@@ -5251,62 +5371,29 @@ step.</error>
 <e:rng-pattern name="Inline"/>
 
 <para>The <tag class="attribute">content-type</tag> attribute can be used
-to set the content type of the provided document.</para>
-<para>The <tag class="attribute">document-properties</tag> attribute
+to set the content type of the provided document;
+the <tag class="attribute">document-properties</tag> attribute
 can be used to set the <glossterm>document properties</glossterm> of
 the provided document.</para>
-<para>The document's content type is determined by either by the value of
-<tag class="attribute">content-type</tag> or the value of the "content-type" 
-key in the map provided by <tag class="attribute">document-properties</tag>. 
-If no attribute <tag class="attribute">content-type</tag> is provided and no
-attribute <tag class="attribute">document-properties</tag> is provided
-or the provided map does not contain a "content-type" key, the value
-"<literal>application/xml</literal>" is assumed. <error code="D0062">It is a 
-<glossterm>dynamic error</glossterm> if <tag class="attribute">content-type</tag> is
-specified and <tag class="attribute">document-properties</tag> has a key "content-type".</error>
+
+<para>The document's content type is determined statically.
+If a <tag class="attribute">content-type</tag> is specified, that is the
+content type. Otherwise, the content type is
+“<literal>application/xml</literal>”.
 </para>
 
-<para>The base URI of the document is the base URI of the p:inline element. 
-How the content of a <tag>p:inline</tag> element is interpreted
-depends on the document's content type and the <tag class="attribute">encoding</tag> attribute.
-</para>
+<para><error code="D0062">It is a <glossterm>dynamic error</glossterm> if
+the <tag class="attribute">document-properties</tag> map contains a
+<literal>content-type</literal> key and that key has a value that differs
+from the statically determined content type.</error></para>
 
-<!--
-<informaltable>
-<thead>
-<tr>
-<td colspan="4"><tag class="attribute">content-type</tag></td>
-</tr>
-<tr>
-<td></td>
-<td><glossterm>XML media type</glossterm></td>
-<td><glossterm>text media type</glossterm></td>
-<td>Other media types</td>
-</tr>
-</thead>
-<tbody>
-<tr>
-<th align="left"><tag class="attribute">encoding</tag> absent</th>
-<td>OK</td>
-<td>OK</td>
-<td>error</td>
-</tr>
-<tr>
-<th align="left"><tag class="attribute">encoding</tag>
-is “<literal>base64</literal>”.</th>
-<td>error</td>
-<td>OK</td>
-<td>OK</td>
-</tr>
-<tr>
-<th align="left"><tag class="attribute">encoding</tag> is something else.</th>
-<td>error</td>
-<td>implementation-defined</td>
-<td>implementation-defined</td>
-</tr>
-</tbody>
-</informaltable>
--->
+<para>The base URI of the document is the base URI of the
+<tag>p:inline</tag> element.</para>
+
+<para>How the content of a <tag>p:inline</tag>
+element is interpreted depends on the document's content type and the
+<tag class="attribute">encoding</tag> attribute.
+</para>
 
 <para><error code="D0054">It is a
 <glossterm>dynamic error</glossterm> if an encoding is specified
@@ -5317,15 +5404,19 @@ and the content type is an <glossterm>XML media type</glossterm>.</error>
 if the content type value specifies a character set and the <tag class="attribute">encoding</tag> attribute is absent.</error>
 </para>
 
-<para><error code="D0039">It is a <glossterm>dynamic error</glossterm> if the 
-<tag class="attribute">encoding</tag> attribute is 
-present and content type value specifies a character set that is not supported 
-by the implementation.</error>  
+<para><error code="D0039">It is a <glossterm>dynamic error</glossterm>
+if the <tag class="attribute">encoding</tag> attribute is present and
+content type value specifies a character set that is not supported by
+the implementation.</error>
 </para>
-  
+
 <para><error code="D0056">It is a <glossterm>dynamic error</glossterm>
 if an encoding is specified and the content of the <tag>p:inline</tag>
-contains any XML markup.</error> In other words, the entire content
+contains any XML markup.</error>
+<error code="D0063">It is a <glossterm>dynamic error</glossterm>
+if the <tag>p:inline</tag> contains any XML markup and has a
+content type that is not an <glossterm>XML media type</glossterm>.</error>
+In other words, in these cases, the entire content
 must be a single text node. CDATA sections and character references do
 not count as markup for this purpose because they will already have
 been replaced by the XML parser that read the pipeline.</para>
@@ -5344,6 +5435,10 @@ encoding specified is not supported by the implementation.</error>
 the body is not correctly encoded per the value of the <tag class="attribute">encoding</tag> attribute.</error>
 </para>
 
+<para><error code="S0088">It is a <glossterm>static error</glossterm>
+if an <tag class="attribute">encoding</tag> is specified on <tag>p:inline</tag> and
+<tag class="attribute">expand-text</tag> is true.</error></para>
+
 <para>The interpretation of the (possibily decoded) content
 depends on the document's content type.
 </para>
@@ -5351,12 +5446,18 @@ depends on the document's content type.
 <section xml:id="inline-non-xml">
 <title>Inline non-XML content</title>
 
-<para>If the document's content type is not
-an <glossterm>XML media type</glossterm>, then the content is
-non-XML.</para>
+<para>If the document's content type is not an <glossterm>XML media
+type</glossterm>, then the content is non-XML.</para>
 
 <para><impl>The representation of non-XML content is
 <glossterm>implementation-dependent</glossterm></impl>.</para>
+
+<note>
+<para>In the presence of <glossterm baseform="text value template">text value templates</glossterm>, it is not possible to
+interpret the non-XML characters until the templates have been
+expanded.</para>
+</note>
+
 </section>
 
 <section xml:id="inline-xml-content">
@@ -5817,6 +5918,10 @@ W3C Recommendation. 21 March 2017</bibliomixed>
 <citetitle xlink:href="http://www.w3.org/TR/xslt-30/">XSL Transformations (XSLT)
 Version 3.0</citetitle>. Michael Kay, editor.
 W3C Recommendation. 8 June 2017.</bibliomixed>
+    <bibliomixed xml:id="xquery10"><abbrev>XQuery 1.0</abbrev>
+<citetitle xlink:href="http://www.w3.org/TR/xquery/">XQuery 1.0: An XML
+Query Language</citetitle>. Scott Boag, Don Chamberlin, Mary Fernández, et. al.,
+editors. W3C Recommendation. 23 January 2007.</bibliomixed>
     <bibliomixed xml:id="xmlschema-1"><abbrev>W3C XML Schema: Part 1</abbrev>
 <citetitle xlink:href="http://www.w3.org/TR/xmlschema-1/">XML Schema Part 1:
 Structures Second Edition</citetitle>.
