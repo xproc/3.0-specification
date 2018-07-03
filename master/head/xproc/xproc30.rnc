@@ -580,6 +580,7 @@ StandardStep =
   | Step-insert
   | Step-label-elements
   | Step-load
+  | Step-load-directory-list
   | Step-make-absolute-uris
   | Step-namespace-rename
   | Step-pack
@@ -793,6 +794,16 @@ Step-load =
     attribute parameters { xsd:string }?,
     attribute content-type { xsd:string }?,
     attribute document-properties { xsd:string }?,
+    (WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-load-directory-list =
+  element load-directory-list {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    attribute path { xsd:anyURI }?,
+    attribute include-filter { RegularExpression }?,
+    attribute exclude-filter { RegularExpression }?,
     (WithOption* & (Documentation | PipeInfo)*)
   }
 Step-make-absolute-uris =
