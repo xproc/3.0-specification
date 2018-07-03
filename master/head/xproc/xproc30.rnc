@@ -562,6 +562,7 @@ NormalizationForm =
 ListOfQNames = text
 StandardStep =
   Step-exec
+  | Step-run
   | Step-xsl-formatter
   | Step-add-attribute
   | Step-add-xml-base
@@ -624,6 +625,13 @@ Step-exec =
     attribute arg-separator { xsd:string }?,
     attribute serialization { xsd:string }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-run =
+  element run {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    (WithInput* & (Documentation | PipeInfo)*)
   }
 Step-xsl-formatter =
   element xsl-formatter {

@@ -220,6 +220,13 @@
                 as="xs:string"
                 e:type="XSLTSelectionPattern"/>
    </p:declare-step>
+   <p:declare-step type="p:run" xml:id="run">
+      <p:input port="source"
+               primary="true"
+               sequence="true"
+               content-types="*/*"/>
+      <p:output port="result" primary="true" content-types="*/*"/>
+   </p:declare-step>
    <p:declare-step type="p:set-attributes" xml:id="set-attributes">
       <p:input port="source"
                primary="true"
