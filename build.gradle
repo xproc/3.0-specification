@@ -133,12 +133,12 @@ xproc_ancillary.doFirst {
 
 task xproc_library(type: XMLCalabashTask,
                    dependsOn: [ "steps_xpl", "step_validation_xpl",
-                                "step_exec_xpl", "step_xquery_xpl",
+                                "step_exec_xpl", "step_run_xpl", "step_xquery_xpl",
                                 "step_xsl_formatter_xpl"]) {
   // N.B. Because Travis jobs cannot see the filesystem, we have
   // to list the dependencies twice. :-(
   String steps = ""
-  ["steps", "validation", "exec", "xquery", "xsl-formatter"].each { s->
+  ["steps", "validation", "exec", "run", "xquery", "xsl-formatter"].each { s->
     steps = steps + " ../../build/dist/" + s + "/steps.xpl"
   }
 
@@ -353,6 +353,54 @@ task step_exec_xpl(dependsOn: ["step-exec:library"], type: Copy) {
 }
 
 // ======================================================================
+// step-run
+
+task step_run(type: DocBookTask,
+               dependsOn: [ "xproc", "steps", "xproc_schemas", "spec_schemas",
+                            "step-run:specification",
+                            "step_run_assets",
+                            "step_run_src", "step_run_xpl" ]) {
+  inputs.files fileTree(dir: "tools/xsl/")
+  inputs.files fileTree(dir: "tools/xpl/")
+  inputs.file "xproc/build/toc.xml"
+  input("source", "step-run/build/source.xml")
+  output("result", "build/dist/run/index.html")
+
+  param("schemaext.schema", new File("build/schema/dbspec.rng"))
+  param("travis", getenv("TRAVIS"))
+  param("travis-commit", getenv("TRAVIS_COMMIT"))
+  param("travis-build-number", getenv("TRAVIS_BUILD_NUMBER"))
+  param("travis-user", getenv("TRAVIS_USER"))
+  param("travis-repo", getenv("TRAVIS_REPO"))
+  param("travis-branch", getenv("TRAVIS_BRANCH"))
+  param("travis-tag", getenv("TRAVIS_TAG"))
+
+  option("style", new File("tools/xsl/xproc-specs.xsl"))
+  pipeline "tools/xpl/formatspec.xpl"
+}
+allspecs.dependsOn "step_run"
+overview.dependsOn "step_run"
+
+task step_run_assets(type: Copy) {
+  from "src/main/resources"
+  into "build/dist/run/"
+}
+
+task step_run_src(dependsOn: ["step-run:source"], type: Copy) {
+  from "step-run/build/"
+  into "build/dist/run/"
+  include "source.xml"
+  rename ("source.xml", "specification.xml")
+}
+
+task step_run_xpl(dependsOn: ["step-run:library"], type: Copy) {
+  from "step-run/build/"
+  into "build/dist/run/"
+  include "library.xml"
+  rename ("library.xml", "steps.xpl")
+}
+
+// ======================================================================
 // step-xquery
 
 task step_xquery(type: DocBookTask,
@@ -492,13 +540,13 @@ core_rng.doFirst {
 task xproc30_rng(type: XMLCalabashTask,
                dependsOn: [ "core_rng",
                             "steps:rng", "step-validation:rng",
-                            "step-exec:rng", "step-xquery:rng",
+                            "step-exec:rng", "step-run:rng", "step-xquery:rng",
                             "step-xsl-formatter:rng" ]) {
   // This is bogus; I'm having trouble getting the filesystem read to
   // happen at the right time:
   // https://discuss.gradle.org/t/controlling-order-of-execution-of-statements-wrt-execution-of-a-task/26291
   String files = ""
-  ["step-exec", "step-xsl-formatter", "steps",
+  ["step-exec", "step-run", "step-xsl-formatter", "steps",
    "step-validation", "step-xquery"].each { s ->
     files = files + " ../../" + s + "/build/steps.rng"
   }
