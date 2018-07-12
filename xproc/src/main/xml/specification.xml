@@ -4105,11 +4105,15 @@ empty sequence.</error></para>
 <listitem>
 <para>The <tag class="attribute">href</tag> attribute is a shortcut for one
 or more <tag>p:document</tag> children. The attribute value is a whitespace-separated list
-of URIs. Each URI is a shortcut for a <tag>p:document</tag> child element with the
-<tag class="attribute">href</tag> attribute containing the URI. If more than one URI
-is present, the URIs are processed left-to-right and the effective sequence of
-<tag>p:document</tag> children preserves this order. If the value is empty, it is
-treated as a single, empty URI.</para>
+of URIs (if the value includes
+<glossterm baseform="attribute value template">attribute value templates</glossterm>,
+each template is taken as a single “URI”). Each URI is a shortcut for
+a <tag>p:document</tag> child element with the
+<tag class="attribute">href</tag> attribute containing the URI. If more
+than one URI is present, the URIs are processed left-to-right and the
+effective sequence of <tag>p:document</tag> children preserves this
+order. If the value is empty, it is treated as a single, empty
+URI.</para>
 
 <para><error code="S0081">If <tag class="attribute">href</tag> is specified,
 it is a <glossterm>static error</glossterm> if
@@ -5507,10 +5511,16 @@ that would be treated as an implicit inline.</error>
 
 <e:rng-pattern name="Document"/>
 
-<para>The value of the <tag class="attribute">href</tag> attribute
-<rfc2119>must</rfc2119> be an <type>anyURI</type>. It is interpreted
+<para>The value of the <tag class="attribute">href</tag> attribute,
+after expanding any
+<glossterm baseform="attribute value template">attribute value templates</glossterm>,
+<rfc2119>must</rfc2119> be an <type>anyURI</type>.
+<error code="D0064">It is a <glossterm>dynamic error</glossterm>
+if the value is not a valid <type>xs:anyURI</type>.</error>
+The URI is interpreted
 as an IRI reference. If it is relative, it is made absolute against
-the base URI of the <tag>p:document</tag> element.</para>
+the base URI of the <tag>p:document</tag> element.
+</para>
 
 <para>The semantics of <tag>p:document</tag> are the same as a the
 semantics of <tag>p:load</tag> where the <option>href</option> option
