@@ -3978,15 +3978,9 @@ document.</simpara>
 <link linkend="media-type-match">match</link> the allowed content types.</para>
 </listitem>
 </varlistentry>
-
 <varlistentry><term><tag class="attribute">href</tag></term>
 <listitem>
-<para>The <tag class="attribute">href</tag> attribute is a shortcut for a
-<tag>p:document</tag> child element with the specified
-<tag class="attribute">href</tag> attribute. <error code="S0081">If
-<tag class="attribute">href</tag> is specified, it is a <glossterm>static error</glossterm>
-if <tag>p:input</tag> has any child elements other than <tag>p:documentation</tag> and
-<tag>p:pipeinfo</tag>.</error></para>
+<para>As described in <tag>p:with-input</tag>.</para>
 </listitem>
 </varlistentry>
 <varlistentry><term><tag class="attribute">exclude-inline-prefixes</tag></term>
@@ -4103,35 +4097,45 @@ empty sequence.</error></para>
 </varlistentry>
 <varlistentry><term><tag class="attribute">href</tag></term>
 <listitem>
-<para>The <tag class="attribute">href</tag> attribute is a shortcut for a
-<tag>p:document</tag> child element with the specified
-<tag class="attribute">href</tag> attribute. <error code="S0081">If
-<tag class="attribute">href</tag> is specified, it is a <glossterm>static error</glossterm>
-if <tag>p:with-input</tag> has any child elements other than <tag>p:documentation</tag> and
-<tag>p:pipeinfo</tag>.</error></para>
-<para><error code="S0085">It is a <glossterm>static error</glossterm> if a <tag>p:with-input</tag>
-has a <tag class="attribute">href</tag> attribute and a <tag class="attribute">pipe</tag>
-attribute.</error></para>
+<para>The <tag class="attribute">href</tag> attribute is a shortcut for
+a <tag>p:document</tag> child with an <tag class="attribute">href</tag> attribute
+having the same value as this <tag class="attribute">href</tag> attribute.
+</para>
+
+<para><error code="S0081">If <tag class="attribute">href</tag> is specified,
+it is a <glossterm>static error</glossterm> if
+any child elements other than <tag>p:documentation</tag> and
+<tag>p:pipeinfo</tag> are present.</error></para>
+
+<para><error code="S0085">It is a <glossterm>static error</glossterm> if both
+a <tag class="attribute">href</tag> attribute and a
+<tag class="attribute">pipe</tag> attribute are present.</error></para>
 </listitem>
 </varlistentry>
 <varlistentry><term><tag class="attribute">pipe</tag></term>
 <listitem>
 <para>The <tag class="attribute">pipe</tag> attribute is a shortcut for one or
 more <tag>p:pipe</tag> children. The attribute value <rfc2119>must</rfc2119> be
-space-separated list of port@step pairs of the form
-“<replaceable>port-name</replaceable>@<replaceable>step-name</replaceable>”.
-If “port-name” is omitted, the connection is to the primary output port of
-the step named “step-name”. If the “@step-name” is omitted, the connection is
-to the specified port on the same step as the step associated with the
-current default readable port. An empty or all whitespace attribute value is a shortcut
-for the binding to the default readable port.</para>
-<para><error code="S0082">If
-<tag class="attribute">pipe</tag> is specified, it is a <glossterm>static error</glossterm>
-if <tag>p:with-input</tag> has any child elements other than <tag>p:documentation</tag> and
-<tag>p:pipeinfo</tag>.</error></para>
-<para><error code="S0085">It is a <glossterm>static error</glossterm> if a <tag>p:with-input</tag>
-has a <tag class="attribute">href</tag> attribute and a <tag class="attribute">pipe</tag>
-attribute.</error></para>
+whitespace-separated list of tokens or empty.
+<error code="S0090">It is a <glossterm>static error</glossterm> if the value
+of the <tag class="attribute">pipe</tag> attribute contains any tokens not
+of the form <replaceable>port-name</replaceable>,
+<replaceable>port-name@step-name</replaceable>, or <replaceable>@step-name</replaceable>.
+</error>
+If “<replaceable>port-name</replaceable>” is omitted,
+the connection is to the primary output port of
+the step named “<replaceable>step-name</replaceable>”.
+If “<literal>@<replaceable>step-name</replaceable></literal>” is omitted,
+the connection is to the specified port on the same step as the step associated with the
+default readable port. If the value is empty, the connection is to
+the default readable port.</para>
+<para><error code="S0082">If <tag class="attribute">pipe</tag> is specified,
+it is a <glossterm>static error</glossterm>
+any child elements other than <tag>p:documentation</tag> and
+<tag>p:pipeinfo</tag> are present.</error></para>
+<para><error code="S0085">It is a <glossterm>static error</glossterm> if both
+an <tag class="attribute">href</tag> attribute and a <tag class="attribute">pipe</tag>
+attribute are present.</error></para>
 </listitem>
 </varlistentry>
 <varlistentry><term><tag class="attribute">exclude-inline-prefixes</tag></term>
@@ -4265,35 +4269,12 @@ are:</para>
 <variablelist>
 <varlistentry><term><tag class="attribute">href</tag></term>
 <listitem>
-<para>The <tag class="attribute">href</tag> attribute is a shortcut for a
-<tag>p:document</tag> child element with the specified
-<tag class="attribute">href</tag> attribute. <error code="S0081">If
-<tag class="attribute">href</tag> is specified, it is a <glossterm>static error</glossterm>
-if <tag>p:output</tag> has any child elements other than <tag>p:documentation</tag> and
-<tag>p:pipeinfo</tag>.</error></para>
-<para><error code="S0085">It is a <glossterm>static error</glossterm> if a <tag>p:output</tag>
-has a <tag class="attribute">href</tag> attribute and a <tag class="attribute">pipe</tag>
-attribute.</error></para>
+<para>As described in <tag>p:with-input</tag>.</para>
 </listitem>
 </varlistentry>
 <varlistentry><term><tag class="attribute">pipe</tag></term>
 <listitem>
-  <para>The <tag class="attribute">pipe</tag> attribute is a shortcut for one or
-    more <tag>p:pipe</tag> children. The attribute value <rfc2119>must</rfc2119> be
-    space-separated list of port@step pairs of the form
-    “<replaceable>port-name</replaceable>@<replaceable>step-name</replaceable>”.
-    If “port-name” is omitted, the connection is to the primary output port of
-    the step named “step-name”. If the “@step-name” is omitted, the connection is
-    to the specified port on the same step as the step associated with the
-    current default readable port. An empty or all whitespace attribute value is a shortcut
-    for the binding to the default readable port.</para>
-<para><error code="S0082">If
-<tag class="attribute">pipe</tag> is specified, it is a <glossterm>static error</glossterm>
-if <tag>p:output</tag> has any child elements other than <tag>p:documentation</tag> and
-<tag>p:pipeinfo</tag>.</error></para>
-<para><error code="S0085">It is a <glossterm>static error</glossterm> if a <tag>p:output</tag>
-has a <tag class="attribute">href</tag> attribute and a <tag class="attribute">pipe</tag>
-attribute.</error></para>
+<para>As described in <tag>p:with-input</tag>.</para>
 </listitem>
 </varlistentry>
 <varlistentry><term><tag class="attribute">exclude-inline-prefixes</tag></term>
@@ -4689,35 +4670,12 @@ undefined.</error></para>
 </varlistentry>
 <varlistentry><term><tag class="attribute">href</tag></term>
 <listitem>
-<para>The <tag class="attribute">href</tag> attribute is a shortcut for a
-<tag>p:document</tag> child element with the specified
-<tag class="attribute">href</tag> attribute. <error code="S0081">If
-<tag class="attribute">href</tag> is specified, it is a <glossterm>static error</glossterm>
-if <tag>p:variable</tag> has any child elements other than <tag>p:documentation</tag> and
-<tag>p:pipeinfo</tag>.</error></para>
-<para><error code="S0085">It is a <glossterm>static error</glossterm> if a <tag>p:variable</tag>
-has a <tag class="attribute">href</tag> attribute and a <tag class="attribute">pipe</tag>
-attribute.</error></para>
+<para>As described in <tag>p:with-input</tag>.</para>
 </listitem>
 </varlistentry>
 <varlistentry><term><tag class="attribute">pipe</tag></term>
 <listitem>
-  <para>The <tag class="attribute">pipe</tag> attribute is a shortcut for one or
-    more <tag>p:pipe</tag> children. The attribute value <rfc2119>must</rfc2119> be
-    space-separated list of port@step pairs of the form
-    “<replaceable>port-name</replaceable>@<replaceable>step-name</replaceable>”.
-    If “port-name” is omitted, the connection is to the primary output port of
-    the step named “step-name”. If the “@step-name” is omitted, the connection is
-    to the specified port on the same step as the step associated with the
-    current default readable port. An empty or all whitespace attribute value is a shortcut
-    for the binding to the default readable port.</para>
-<para><error code="S0082">If
-<tag class="attribute">pipe</tag> is specified, it is a <glossterm>static error</glossterm>
-if <tag>p:variable</tag> has any child elements other than <tag>p:documentation</tag> and
-<tag>p:pipeinfo</tag>.</error></para>
-<para><error code="S0085">It is a <glossterm>static error</glossterm> if a <tag>p:variable</tag>
-has a <tag class="attribute">href</tag> attribute and a <tag class="attribute">pipe</tag>
-attribute.</error></para>
+  <para>As described in <tag>p:with-input</tag>.</para>
 </listitem>
 </varlistentry>
 <varlistentry><term><tag class="attribute">exclude-inline-prefixes</tag></term>
@@ -4936,35 +4894,12 @@ undefined.</error></para>
 </varlistentry>
 <varlistentry><term><tag class="attribute">href</tag></term>
 <listitem>
-<para>The <tag class="attribute">href</tag> attribute is a shortcut for a
-<tag>p:document</tag> child element with the specified
-<tag class="attribute">href</tag> attribute. <error code="S0081">If
-<tag class="attribute">href</tag> is specified, it is a <glossterm>static error</glossterm>
-if <tag>p:with-option</tag> has any child elements other than <tag>p:documentation</tag> and
-<tag>p:pipeinfo</tag>.</error></para>
-<para><error code="S0085">It is a <glossterm>static error</glossterm> if a <tag>p:with-option</tag>
-has a <tag class="attribute">href</tag> attribute and a <tag class="attribute">pipe</tag>
-attribute.</error></para>
+<para>As described in <tag>p:with-input</tag>.</para>
 </listitem>
 </varlistentry>
 <varlistentry><term><tag class="attribute">pipe</tag></term>
 <listitem>
-  <para>The <tag class="attribute">pipe</tag> attribute is a shortcut for one or
-    more <tag>p:pipe</tag> children. The attribute value <rfc2119>must</rfc2119> be
-    space-separated list of port@step pairs of the form
-    “<replaceable>port-name</replaceable>@<replaceable>step-name</replaceable>”.
-    If “port-name” is omitted, the connection is to the primary output port of
-    the step named “step-name”. If the “@step-name” is omitted, the connection is
-    to the specified port on the same step as the step associated with the
-    current default readable port. An empty or all whitespace attribute value is a shortcut
-    for the binding to the default readable port.</para>
-<para><error code="S0082">If
-<tag class="attribute">pipe</tag> is specified, it is a <glossterm>static error</glossterm>
-if <tag>p:with-option</tag> has any child elements other than <tag>p:documentation</tag> and
-<tag>p:pipeinfo</tag>.</error></para>
-<para><error code="S0085">It is a <glossterm>static error</glossterm> if a <tag>p:with-option</tag>
-has a <tag class="attribute">href</tag> attribute and a <tag class="attribute">pipe</tag>
-attribute.</error></para>
+  <para>As described in <tag>p:with-input</tag>.</para>
 </listitem>
 </varlistentry>
 <varlistentry><term><tag class="attribute">exclude-inline-prefixes</tag></term>
@@ -5563,14 +5498,22 @@ that would be treated as an implicit inline.</error>
 
 <e:rng-pattern name="Document"/>
 
-<para>The value of the <tag class="attribute">href</tag> attribute
-<rfc2119>must</rfc2119> be an <type>anyURI</type>. It is interpreted
+<para>The value of the <tag class="attribute">href</tag> attribute,
+after expanding any
+<glossterm baseform="attribute value template">attribute value templates</glossterm>,
+is a whitespace-separated list of URIs. Each URI
+<rfc2119>must</rfc2119> be an <type>anyURI</type>.
+<error code="D0064">It is a <glossterm>dynamic error</glossterm>
+if any URI is not a valid <type>xs:anyURI</type>.</error>
+The URI is interpreted
 as an IRI reference. If it is relative, it is made absolute against
-the base URI of the <tag>p:document</tag> element.</para>
+the base URI of the <tag>p:document</tag> element.
+</para>
 
-<para>The semantics of <tag>p:document</tag> are the same as a the
+<para>The semantics of <tag>p:document</tag>, with respect to each URI,
+taken in order from left to right, are the same as a the
 semantics of <tag>p:load</tag> where the <option>href</option> option
-comes from the <tag class="attribute">href</tag> attribute, the 
+is the URI, the 
 <option>content-type</option> option comes from 
 <tag class="attribute">content-type</tag> attribute, the
 <option>document-properties</option> option comes from the
@@ -5578,6 +5521,15 @@ comes from the <tag class="attribute">href</tag> attribute, the
 <option>parameters</option> option comes from the
 <tag class="attribute">parameters</tag> attribute.
 </para>
+
+<note>
+<para>If the <tag class="attribute">href</tag> attribute is a list of
+more than one URI, it follows from the way that the URIs in that sequence are
+processed that they will have same <option>content-type</option>,
+<option>document-properties</option>, and <option>parameters</option>.
+Use different <tag>p:document</tag> elements if different values are
+required.</para>
+</note>
 
 <para><error code="D0011">It is a <glossterm>dynamic error</glossterm>
 if the resource referenced by a <tag>p:document</tag> element does not
