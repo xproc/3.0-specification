@@ -69,6 +69,7 @@ content-types.attr = attribute content-types { ContentTypes }
 collection.attr = attribute collection { xsd:boolean }
 pipe.attr = attribute pipe { text }
 expand-text.attr= attribute expand-text { xsd:boolean }
+static.attr = attribute static { xsd:boolean }
 
 exclude-inline-prefixes.attr =
    attribute exclude-inline-prefixes { ExcludeInlinePrefixes }
@@ -145,7 +146,8 @@ Library =
       decl.attributes,
       common.attributes,
       use-when.attr?,
-      (Import|DeclareStep|Documentation|PipeInfo)*
+      (Import|ImportFunctions|Documentation|PipeInfo)*,
+      (DeclareStep, (Documentation|PipeInfo)*)*
    }
 
 [
@@ -153,6 +155,17 @@ Library =
 ]
 Import =
    element import {
+      common.attributes,
+      use-when.attr?,
+      href.attr,
+      (Documentation|PipeInfo)*
+   }
+
+[
+   sa:class = "language-construct"
+]
+ImportFunctions =
+   element import-functions {
       common.attributes,
       use-when.attr?,
       href.attr,
@@ -319,7 +332,22 @@ OptionSelect =
    element option {
       name.qname.attr,
       as.attr?,
-      required.attr?,
+      static.attr?,
+      attribute required { "false" }?,
+      select.attr,
+      common.attributes,
+      use-when.attr?,
+      (Documentation|PipeInfo)*
+   }
+
+[
+   sa:class = "language-construct"
+]
+StaticOption =
+   element option {
+      name.qname.attr,
+      as.attr?,
+      attribute static { "true" },
       select.attr,
       common.attributes,
       use-when.attr?,
@@ -363,16 +391,17 @@ WithOption = WithOptionSelect
 [
    sa:class = "language-construct"
 ]
-VariableSelect =
+GeneralVariable =
    element variable {
       name.qname.attr,
       as.attr?,
+      static.attr?,
       select.attr,
       [ sa:avt = "true" ]
          collection.attr?,
       [ sa:avt = "true" ]
          href.attr?,
-         pipe.attr?,
+      pipe.attr?,
       common.attributes,
       expand-text.attr?,
       inline.attributes,
@@ -381,9 +410,50 @@ VariableSelect =
    }
 
 [
+   sa:class = "language-construct"
+]
+DynamicVariable =
+   element variable {
+      name.qname.attr,
+      attribute static { "false" }?,
+      as.attr?,
+      select.attr,
+      [ sa:avt = "true" ]
+         collection.attr?,
+      [ sa:avt = "true" ]
+         href.attr?,
+       pipe.attr?,
+      common.attributes,
+      expand-text.attr?,
+      inline.attributes,
+      use-when.attr?,
+      ( ( (\Empty | (Document|Pipe|Inline)*) & (Documentation|PipeInfo)* ) | AnyElement* )
+   }
+
+[
+   sa:class = "language-construct"
+]
+StaticVariable =
+   element variable {
+      name.qname.attr,
+      attribute static { "true" },
+      as.attr?,
+      select.attr,
+      [ sa:avt = "true" ]
+         collection.attr?,
+      [ sa:avt = "true" ]
+         href.attr?,
+      common.attributes,
+      expand-text.attr?,
+      inline.attributes,
+      use-when.attr?,
+      ( ( (\Empty | (Document|Inline)*) & (Documentation|PipeInfo)* ) | AnyElement* )
+   }
+
+[
    sa:element = "variable"
 ]
-Variable = VariableSelect
+Variable = DynamicVariable | StaticVariable
 
 # ============================================================
 
@@ -398,8 +468,9 @@ DeclareStep =
       attribute visibility { "private" | "public"  }?,
       common.attributes,
       use-when.attr?,
-      (Input|Output|Option|Documentation|PipeInfo)*,
-      ((DeclareStep|Import|Documentation|PipeInfo)*,Subpipeline)?
+      (Import|ImportFunctions|Documentation|PipeInfo)*,
+      (Input|Output|StaticOption|StaticVariable|Documentation|PipeInfo)*,
+      (DeclareStep|Documentation|PipeInfo)*,Subpipeline?
    }
 
 # ============================================================
