@@ -50,8 +50,8 @@
    <p:declare-step type="p:directory-list" xml:id="directory-list">
       <p:output port="result" content-type="application/xml"/>
       <p:option name="path" required="true" as="xs:anyURI"/>
-      <p:option name="include-filter" as="xs:string" e:type="RegularExpression"/>
-      <p:option name="exclude-filter" as="xs:string" e:type="RegularExpression"/>
+      <p:option name="include-filter" as="xs:string*" e:type="RegularExpression"/>
+      <p:option name="exclude-filter" as="xs:string*" e:type="RegularExpression"/>
    </p:declare-step>
    <p:declare-step type="p:error" xml:id="error">
       <p:input port="source" sequence="true" content-types="*/*"/>
@@ -140,8 +140,8 @@
    <p:declare-step type="p:load-directory-list" xml:id="load-directory-list">
       <p:output port="result" content-type="application/xml"/>
       <p:option name="path" required="true" as="xs:anyURI"/>
-      <p:option name="include-filter" as="xs:string" e:type="RegularExpression"/>
-      <p:option name="exclude-filter" as="xs:string" e:type="RegularExpression"/>
+      <p:option name="include-filter" as="xs:string*" e:type="RegularExpression"/>
+      <p:option name="exclude-filter" as="xs:string*" e:type="RegularExpression"/>
    </p:declare-step>
    <p:declare-step type="p:make-absolute-uris" xml:id="make-absolute-uris">
       <p:input port="source" content-types="application/xml text/xml */*+xml"/>
