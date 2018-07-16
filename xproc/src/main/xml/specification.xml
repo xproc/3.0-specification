@@ -4633,7 +4633,10 @@ class="attribute">select</tag> attribute. The <tag
 class="attribute">select</tag> attribute <rfc2119>must</rfc2119> be
 specified. The content of the <tag class="attribute">select</tag>
 attribute is an XPath expression which will be evaluated to provide
-the value of the variable.</para>
+the value of the variable.
+<error code="S0094">It is a <glossterm>static error</glossterm> if
+a <tag>p:variable</tag> does not have a select attribute.</error>
+</para>
 <para>The <tag class="attribute">select</tag> expression
 is evaluated as an XPath expression using the appropriate context as
 described in <xref linkend="xpath-context"/>, for the enclosing
@@ -4786,7 +4789,11 @@ a default value for the option.</para>
 <para>A <tag>p:option</tag> with a <tag class="attribute">select</tag> attribute
 may be declared “static”. See <link linkend="statics"/>.
 If <tag class="attribute">static</tag> is not specified, it
-defaults to “<code>false</code>”.</para>
+defaults to “<code>false</code>”.
+<error code="S0093">It is a <glossterm>static error</glossterm> if
+a <tag>p:option</tag> is declared static and does not have a select
+attribute.</error>
+</para>
 
 <para>The <tag class="attribute">select</tag> expression is only
 evaluated when its actual value is needed by an instance of the step
