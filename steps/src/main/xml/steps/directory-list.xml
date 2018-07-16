@@ -1,15 +1,14 @@
 <section xmlns="http://docbook.org/ns/docbook" xmlns:cs="http://www.w3.org/XML/XProc/2006/04/components#" xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax" xmlns:p="http://www.w3.org/ns/xproc" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="c.directory-list">
 <title>p:directory-list</title>
 
-<para>The <code>p:directory-list</code> step produces a list of the
-contents of a specified
-directory.</para>
+  <para>The <code>p:directory-list</code> step produces a list of the contents
+    of a specified directory.</para>
 
 <p:declare-step type="p:directory-list">
   <p:output port="result" content-type="application/xml"/>
   <p:option name="path" required="true" as="xs:anyURI"/>
-  <p:option name="include-filter" as="xs:string" e:type="RegularExpression"/>
-  <p:option name="exclude-filter" as="xs:string" e:type="RegularExpression"/>
+  <p:option name="include-filter" as="xs:string*" e:type="RegularExpression"/>
+  <p:option name="exclude-filter" as="xs:string*" e:type="RegularExpression"/>
 </p:declare-step>
 
 <para><impl>Conformant processors <rfc2119>must</rfc2119> support directory paths whose
@@ -17,9 +16,7 @@ scheme is <code>file</code>. It is
 <glossterm>implementation-defined</glossterm> what other schemes are
 supported by <tag>p:directory-list</tag>, and what the interpretation
 of 'directory', 'file' and 'contents' is for those schemes.</impl>
-Implementations
-<rfc2119>should</rfc2119> support “globbing”. See
-<xref linkend="uri-globbing"/>.</para>
+</para>
 
 <para><error code="C0017">It is a
 <glossterm>dynamic error</glossterm> if the absolute path does not
@@ -33,11 +30,14 @@ or <option>exclude-filter</option>
 option <rfc2119>must</rfc2119> be a regular expression as specified in <biblioref linkend="xpath-functions"/>, section 7.61 “<literal>Regular Expression
 Syntax</literal>”.</para>
 
-<para>If the <option>include-filter</option> pattern matches a
-directory entry's name, the entry is included in the output. If the
-<option>exclude-filter</option> pattern matches a directory entry's name,
-the entry is excluded in the output. If both options are provided, the
-include filter is processed first, then the exclude filter.</para>
+  <para>If the <option>include-filter</option> pattern matches a directory
+    entry's name, the entry is included in the output. If the
+      <option>exclude-filter</option> pattern matches a directory entry's name,
+    the entry is excluded in the output. If both options are provided, the
+    include filter is processed first, then the exclude filter. As a result: An
+    item is included if it matches (at least) one of the
+      <option>include-filter</option> values and none of the
+      <option>exclude-filter</option> values.</para>
 
 <para xml:id="cv.directory">The result document produced for
 the specified directory path has a <tag>c:directory</tag> document
