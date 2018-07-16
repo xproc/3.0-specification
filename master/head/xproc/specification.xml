@@ -4661,9 +4661,11 @@ specified in the declaration.</para>
 <para>A <tag>p:variable</tag> declares a variable and associates a
 value with it. Variable declarations may optionally specify the type
 of the variable using an
-XPath Sequence Type<superscript>[citation needed]</superscript>.</para>
+<biblioref linkend="xpath31"/>
+<link xlink:href="https://www.w3.org/TR/xpath-31/#dt-sequence-type">Sequence Type</link>.
+</para>
 
-<e:rng-pattern name="VariableSelect"/>
+<e:rng-pattern name="GeneralVariable"/>
 
 <para>The attributes that can appear on <tag>p:variable</tag> are
 <link linkend="common-attr">the common attributes</link> and:</para>
@@ -4693,12 +4695,26 @@ the computed value does not match the specified sequence
 type.</error></para>
 </listitem>
 </varlistentry>
+<varlistentry><term><tag class="attribute">static</tag></term>
+<listitem>
+<para>An indication of whether the variable is to be evaluated
+statically or not. See <link linkend="statics"/>.
+If <tag class="attribute">static</tag> is not specified, it
+defaults to “<code>false</code>”.</para>
+<para>A variable that is declared static cannot have a
+<tag class="attribute">pipe</tag> attribute or <tag>p:pipe</tag> children.
+</para>
+</listitem>
+</varlistentry>
 <varlistentry><term><tag class="attribute">select</tag></term>
 <listitem>
 <para>The variable's value is specified with a <tag class="attribute">select</tag> attribute. The <tag class="attribute">select</tag> attribute <rfc2119>must</rfc2119> be
 specified. The content of the <tag class="attribute">select</tag>
 attribute is an XPath expression which will be evaluated to provide
-the value of the variable.</para>
+the value of the variable.
+<error code="S0094">It is a <glossterm>static error</glossterm> if
+a <tag>p:variable</tag> does not have a select attribute.</error>
+</para>
 <para>The <tag class="attribute">select</tag> expression
 is evaluated as an XPath expression using the appropriate context as
 described in <xref linkend="xpath-context"/>, for the enclosing
@@ -4841,8 +4857,16 @@ specified with a <tag class="attribute">select</tag> attribute.</para>
 
 <para>If a <tag class="attribute">select</tag> attribute is specified,
 its content is an XPath expression which will be evaluated to provide
-the value of the option, which may differ from one instance of the
-step type to another.</para>
+a default value for the option.</para>
+
+<para>A <tag>p:option</tag> with a <tag class="attribute">select</tag> attribute
+may be declared “static”. See <link linkend="statics"/>.
+If <tag class="attribute">static</tag> is not specified, it
+defaults to “<code>false</code>”.
+<error code="S0093">It is a <glossterm>static error</glossterm> if
+a <tag>p:option</tag> is declared static and does not have a select
+attribute.</error>
+</para>
 
 <para>The <tag class="attribute">select</tag> expression is only
 evaluated when its actual value is needed by an instance of the step
@@ -4850,19 +4874,20 @@ type being declared. In this case, it is evaluated as described in
 <xref linkend="p.with-option"/> except that</para>
 
 <itemizedlist>
-          <listitem>
-            <para>The
-              context item is undefined.</para>
-          </listitem>
-          <listitem>
-            <para>the variable bindings consist only of bindings for options whose declaration
-              precedes the <tag>p:option</tag> itself in the surrounding step
-                <glossterm>signature</glossterm>;</para>
-          </listitem>
-          <listitem>
-            <para>the in-scope namespaces are the in-scope namespaces of the <tag>p:option</tag>
-              itself.</para>
-          </listitem>
+  <listitem>
+    <para>The
+    context item is undefined.</para>
+  </listitem>
+  <listitem>
+    <para>The variable bindings consist only of bindings for options whose declaration
+    precedes the <tag>p:option</tag> itself in the surrounding step
+    <glossterm>signature</glossterm>. If the option is declared static, only in-scope
+    options and variables also declared static are available.</para>
+  </listitem>
+  <listitem>
+    <para>The in-scope namespaces are the in-scope namespaces of the <tag>p:option</tag>
+    itself.</para>
+  </listitem>
 </itemizedlist>
 
 <para><error code="S0017">It is a <glossterm>static error</glossterm>
@@ -4874,6 +4899,25 @@ the <tag class="attribute">select</tag> expression makes reference to
 the context node, size, or position.</error></para>
 
 </section>
+
+<section xml:id="statics">
+<title>Static Options and Variables</title>
+
+<para>A <tag>p:option</tag> or <tag>p:variable</tag> that is a
+<emphasis>direct child</emphasis> of <tag>p:declare-step</tag> may be
+declared “static”:</para>
+
+<para>The values of static options and variables are computed during the static
+analysis phase<superscript>[citation needed]</superscript> of the pipeline.
+</para>
+
+<para>[FIXME: describe the context for evaluating static variables.
+Basically: no context item or type, no schema types, only references
+to other static options and variables. No forward references. See XSLT
+3.0 static variables and parameters.]
+</para>
+</section>
+
 
 <!-- ============================================================ -->
 
@@ -4978,6 +5022,11 @@ author to exclude some namespace declarations in inline content, see <tag>p:inli
 </listitem>
 </varlistentry>
 </variablelist>
+
+<para><error code="S0092">It is a <glossterm>static
+error</glossterm> if a <tag>p:with-option</tag> refers to an option that
+is declared static.</error>
+See <xref linkend="statics"/>.</para>
 </section>
 
 <!-- ============================================================ -->
@@ -5078,7 +5127,7 @@ not be in scope.</para>
 step</glossterm> or pipeline. It declares the inputs, outputs, and
 options for all steps of that type.</para>
 
-      <e:rng-pattern name="DeclareStep"/>
+<e:rng-pattern name="DeclareStep"/>
 
 <para>The value of the <tag class="attribute">type</tag> can be from
 any namespace provided that the expanded-QName of the value has a
@@ -5126,6 +5175,11 @@ attribute is ignored.</para>
 <para>For a description of <tag class="attribute">psvi-required</tag>,
 see <xref linkend="psvi-support"/>. For <tag class="attribute">xpath-version</tag>, see <xref linkend="xpath-context"/>. For <tag class="attribute">exclude-inline-prefixes</tag>, see
 <tag>p:inline</tag>.</para>
+
+<para><error code="S0091">It is a <glossterm>static
+error</glossterm> if a <tag>p:variable</tag> or <tag>p:option</tag> that
+occurs before the subpipeline is not declared static.</error>
+See <xref linkend="statics"/>.</para>
 
 <section xml:id="declare-atomic-steps">
         <title>Declaring atomic steps</title>
@@ -5208,8 +5262,10 @@ See <xref linkend="versioning-considerations"/>.</para>
           mechanism for instantiating it or referring to it. It is effectively invisible.</para>
       </note><para>Libraries can import pipelines and/or other libraries.
 See also <xref linkend="handling-imports"/>.</para></section>
-    <!-- ============================================================ -->
-    <section xml:id="p.import"><title>p:import</title><para>An <tag>p:import</tag> loads a pipeline
+
+<!-- ============================================================ -->
+
+<section xml:id="p.import"><title>p:import</title><para>An <tag>p:import</tag> loads a pipeline
         or pipeline library, making it available in the pipeline or library which contains the
           <tag>p:import</tag>.</para>
       <e:rng-pattern name="Import"/>
@@ -5242,6 +5298,13 @@ See also <xref linkend="handling-imports"/>.</para></section>
         resolve to the same resource, they must not be considered the same imported
         library.</para>
 
+</section>
+
+<section xml:id="p.import-functions"><title>p:import-functions</title>
+
+<para>FIXME: T.B.D.</para>
+
+<e:rng-pattern name="ImportFunctions"/>
 </section>
 
 <!-- ============================================================ -->
