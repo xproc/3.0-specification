@@ -1,0 +1,19 @@
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" version="3.0" name="main">
+  <p:option name="bname" as="xs:integer" select="1"/>
+
+  <p:message message="NAME1={$bname}">
+    <p:input port="source">
+      <p:empty/>
+    </p:input>
+  </p:message>
+
+  <p:variable name="bname" as="$opt + 1"/>
+
+  <p:message message="NAME2={$bname}"/>
+
+  <p:variable name="bname" as="7"/>
+
+  <p:message message="NAME3={$bname}"/>
+
+  <p:sink/>
+</p:declare-step>
