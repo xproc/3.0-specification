@@ -2,9 +2,9 @@
 <title>p:load</title>
 
 <para>The <code>p:load</code> step has no inputs but produces as its
-result a document (or documents) specified by an IRI. If it is relative, it is 
-made absolute against the base URI of the element on which it is specified 
-(<tag>p:with-option</tag> or <tag>p:load</tag> in the case of a syntactic 
+result a document (or documents) specified by an IRI. If it is relative, it is
+made absolute against the base URI of the element on which it is specified
+(<tag>p:with-option</tag> or <tag>p:load</tag> in the case of a syntactic
 shortcut value).</para>
 
 <p:declare-step type="p:load">
@@ -17,12 +17,12 @@ shortcut value).</para>
 
   <para>The document or documents identified by the <option>href</option> URI are loaded and returned. If the URI
     protocol supports redirection, then redirects <rfc2119>must</rfc2119> be followed.</para>
-  
 
-<para><error code="D0011">It is a <glossterm>dynamic error</glossterm> 
-if the resource referenced by a <code>p:load</code> element does not exist, 
-cannot be accessed, or has an XML content type and is not a well-formed 
-XML document.</error></para>  
+
+<para><error code="D0011">It is a <glossterm>dynamic error</glossterm>
+if the resource referenced by a <code>p:load</code> element does not exist,
+cannot be accessed, or has an XML content type and is not a well-formed
+XML document.</error></para>
 
 <para>The behavior of this step depends on the content type of the
 document or documents loaded. The content type of each document is
@@ -31,9 +31,9 @@ determined as follows:</para>
 <orderedlist>
 <listitem>
 <para>If a <property>content-type</property> property is specified
-in <option>document-properties</option> or <option>content-type</option> is present, 
-then each document <rfc2119>must</rfc2119> be interpreted according to 
-that content type. <error code="D0062">It is a <glossterm>dynamic error</glossterm> 
+in <option>document-properties</option> or <option>content-type</option> is present,
+then each document <rfc2119>must</rfc2119> be interpreted according to
+that content type. <error code="D0062">It is a <glossterm>dynamic error</glossterm>
 if content-type is specified and document-properties has an entry for "content-type".</error>
 </para>
 </listitem>
@@ -83,10 +83,10 @@ the processor does not support DTD validation.</error></para>
 <title>Loading text data</title>
 <para>For a text media type, the content is loaded as a text document.</para>
 
-<para><error code="D0060">It is a <glossterm>dynamic error</glossterm> if the 
-<option>content-type</option> specifies an encoding, which is not supported 
+<para><error code="D0060">It is a <glossterm>dynamic error</glossterm> if the
+<option>content-type</option> specifies an encoding, which is not supported
 by the processor.</error></para>
-  
+
 <para><impl>Text parameters are <glossterm>implementation-defined</glossterm>.
 </impl></para>
 
@@ -102,18 +102,18 @@ in <biblioref linkend="xpath-functions"/>
 <rfc2119>must</rfc2119> be supported.
 <impl>Additional JSON parameters are <glossterm>implementation-defined</glossterm>.
 </impl></para>
-<para><error code="D0057">It is a <glossterm>dynamic error</glossterm> if the loaded content 
-does not conform to the JSON grammar, unless the parameter <option>liberal</option> is 
+<para><error code="D0057">It is a <glossterm>dynamic error</glossterm> if the loaded content
+does not conform to the JSON grammar, unless the parameter <option>liberal</option> is
 <literal>true</literal> and the processor chooses to accept the deviation.</error></para>
 
-<para><error code="D0058">It is a <glossterm>dynamic error</glossterm> if the parameter 
-<option>duplicates</option> is <literal>reject</literal> and the value of 
+<para><error code="D0058">It is a <glossterm>dynamic error</glossterm> if the parameter
+<option>duplicates</option> is <literal>reject</literal> and the value of
 loaded content contains a JSON object with duplicate keys.</error></para>
-  
-<para><error code="D0059">It is a <glossterm>dynamic error</glossterm> if the parameter 
-map contains an entry whose key is defined in the specification of 
-<code>fn:parse-json</code> and whose value is not valid for that key, or if it contains 
-an entry with the key fallback when the parameter <option>escape</option> with 
+
+<para><error code="D0059">It is a <glossterm>dynamic error</glossterm> if the parameter
+map contains an entry whose key is defined in the specification of
+<code>fn:parse-json</code> and whose value is not valid for that key, or if it contains
+an entry with the key fallback when the parameter <option>escape</option> with
 <literal>true()</literal> is also present.</error></para>
 </section>
 <section xml:id="c.load.binary">
