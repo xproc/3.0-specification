@@ -33,9 +33,10 @@ collection.attr = attribute collection { xsd:boolean }
 pipe.attr = attribute pipe { text }
 expand-text.attr = attribute expand-text { xsd:boolean }
 static.attr = attribute static { xsd:boolean }
+visibility.attr = attribute visibility { "private" | "public" }
 exclude-inline-prefixes.attr =
   attribute exclude-inline-prefixes { ExcludeInlinePrefixes }
-# Bah, humbug. The ExcludeInlinePrefixes pattern should 
+# Bah, humbug. The ExcludeInlinePrefixes pattern should
 # really be ("#all" | (PrefixList & "#default"?)) or
 # maybe ("#all" | (PrefixList | "#default")+), but neither
 # one of those is allowed by RELAX NG.
@@ -87,7 +88,11 @@ Library =
     common.attributes,
     use-when.attr?,
     (Import | ImportFunctions | Documentation | PipeInfo)*,
-    (DeclareStep, (Documentation | PipeInfo)*)*
+    (DeclareStep
+     | StaticVariable
+     | StaticOption
+     | Documentation
+     | PipeInfo)*
   }
 [ sa:class = "language-construct" ]
 Import =
@@ -219,24 +224,15 @@ Inline =
 Empty = element empty { (Documentation | PipeInfo)* }
 # ============================================================
 [ sa:class = "language-construct" ]
-OptionDeclaration =
-  element option {
-    name.qname.attr,
-    as.attr?,
-    required.attr?,
-    common.attributes,
-    use-when.attr?,
-    (Documentation | PipeInfo)*
-  }
-[ sa:class = "language-construct" ]
-OptionSelect =
+Option =
   element option {
     name.qname.attr,
     as.attr?,
     static.attr?,
-    attribute required { "false" }?,
-    select.attr,
+    required.attr?,
+    select.attr?,
     common.attributes,
+    visibility.attr?,
     use-when.attr?,
     (Documentation | PipeInfo)*
   }
@@ -248,13 +244,13 @@ StaticOption =
     attribute static { "true" },
     select.attr,
     common.attributes,
+    visibility.attr?,
     use-when.attr?,
     (Documentation | PipeInfo)*
   }
-[ sa:element = "option" ] Option = OptionDeclaration | OptionSelect
 # ============================================================
 [ sa:class = "language-construct" ]
-WithOptionSelect =
+WithOption =
   element with-option {
     name.qname.attr,
     as.attr?,
@@ -270,7 +266,6 @@ WithOptionSelect =
       & (Documentation | PipeInfo)*)
      | AnyElement*)
   }
-[ sa:element = "with-option" ] WithOption = WithOptionSelect
 # ============================================================
 [ sa:class = "language-construct" ]
 GeneralVariable =
@@ -285,6 +280,7 @@ GeneralVariable =
     common.attributes,
     expand-text.attr?,
     inline.attributes,
+    visibility.attr?,
     use-when.attr?,
     (((Empty | (Document | Pipe | Inline)*)
       & (Documentation | PipeInfo)*)
@@ -320,6 +316,7 @@ StaticVariable =
     common.attributes,
     expand-text.attr?,
     inline.attributes,
+    visibility.attr?,
     use-when.attr?,
     (((Empty | (Document | Inline)*)
       & (Documentation | PipeInfo)*)
@@ -333,7 +330,7 @@ DeclareStep =
     name.ncname.attr?,
     attribute type { xsd:QName }?,
     decl.attributes,
-    attribute visibility { "private" | "public" }?,
+    visibility.attr?,
     common.attributes,
     use-when.attr?,
     (Import | ImportFunctions | Documentation | PipeInfo)*,
