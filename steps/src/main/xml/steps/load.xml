@@ -54,11 +54,13 @@ parameters that may influence the way that content is loaded. The interpretation
 of this map varies according to the content type. Parameter names that are in
 no namespace are treated as strings using only the local-name where appropriate.</para>
 
-<para>Broadly speaking, there are four categories of data that might
+<para>Broadly speaking, there are five categories of data that might
 be loaded:
 <link linkend="c.load.xml">XML</link>,
 <link linkend="c.load.text">text</link>,
-<link linkend="c.load.json">JSON</link>, and “other”
+<link linkend="c.load.json">JSON</link>,
+<link linkend="c.load.html">HTML</link>,
+and “other”
 <link linkend="c.load.binary">binary</link> data.</para>
 
 <section xml:id="c.load.xml">
@@ -81,7 +83,8 @@ the processor does not support DTD validation.</error></para>
 
 <section xml:id="c.load.text">
 <title>Loading text data</title>
-<para>For a text media type, the content is loaded as a text document.</para>
+<para>For a text media type, the content is loaded as a text document. (A text
+document is an XPath data model document consisting of a single text node.)</para>
 
 <para><error code="D0060">It is a <glossterm>dynamic error</glossterm> if the
 <option>content-type</option> specifies an encoding, which is not supported
@@ -116,13 +119,31 @@ map contains an entry whose key is defined in the specification of
 an entry with the key fallback when the parameter <option>escape</option> with
 <literal>true()</literal> is also present.</error></para>
 </section>
+
+<section xml:id="c.load.html">
+<title>Loading HTML data</title>
+
+<para>For an HTML media type, the content is loaded and parsed into an
+XPath data model
+document that contains a tree of elements, attributes, and other nodes.</para>
+
+<para><impl>The precise way in which HTML documents are parsed into the
+XPath data model is <glossterm>implementation-defined</glossterm>.</impl>
+</para>
+
+<para><impl>HTML parameters are <glossterm>implementation-defined</glossterm>.
+</impl></para>
+</section>
+
 <section xml:id="c.load.binary">
 <title>Loading binary data</title>
 
 <para>An XProc processor may load other, arbitrary data types. <impl>How a
 processor interprets other media types is <glossterm>implementation-defined</glossterm>.
 </impl>
-<impl>Parameters for other media types
+</para>
+
+<para><impl>Parameters for other media types
 are <glossterm>implementation-defined</glossterm>.
 </impl></para>
 </section>
