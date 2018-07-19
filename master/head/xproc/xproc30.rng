@@ -104,11 +104,6 @@
   <define name="pipe.attr">
     <attribute name="pipe"/>
   </define>
-  <define name="expand-text.attr">
-    <attribute name="expand-text">
-      <data type="boolean"/>
-    </attribute>
-  </define>
   <define name="static.attr">
     <attribute name="static">
       <data type="boolean"/>
@@ -167,6 +162,16 @@
       <ref name="XPathExpression"/>
     </attribute>
   </define>
+  <define name="expand-text.attr" sa:ignore="yes">
+    <attribute name="expand-text">
+      <data type="boolean"/>
+    </attribute>
+  </define>
+  <define name="p_expand-text.attr" sa:ignore="yes">
+    <attribute name="p:expand-text">
+      <data type="boolean"/>
+    </attribute>
+  </define>
   <define name="version.attr">
     <attribute name="version">
       <value>3.0</value>
@@ -182,6 +187,22 @@
     <zeroOrMore>
       <ref name="extension.attr"/>
     </zeroOrMore>
+  </define>
+  <define name="global.attributes">
+    <optional>
+      <ref name="use-when.attr"/>
+    </optional>
+    <optional>
+      <ref name="expand-text.attr"/>
+    </optional>
+  </define>
+  <define name="p_global.attributes">
+    <optional>
+      <ref name="p_use-when.attr"/>
+    </optional>
+    <optional>
+      <ref name="p_expand-text.attr"/>
+    </optional>
   </define>
   <define name="inline.attributes">
     <optional>
@@ -200,9 +221,6 @@
     </optional>
     <optional>
       <ref name="version.attr"/>
-    </optional>
-    <optional>
-      <ref name="expand-text.attr"/>
     </optional>
   </define>
   <!-- ============================================================ -->
@@ -236,9 +254,7 @@
     <element name="library">
       <ref name="decl.attributes"/>
       <ref name="common.attributes"/>
-      <optional>
-        <ref name="use-when.attr"/>
-      </optional>
+      <ref name="global.attributes"/>
       <zeroOrMore>
         <choice>
           <ref name="Import"/>
@@ -261,9 +277,7 @@
   <define name="Import" sa:class="language-construct">
     <element name="import">
       <ref name="common.attributes"/>
-      <optional>
-        <ref name="use-when.attr"/>
-      </optional>
+      <ref name="global.attributes"/>
       <ref name="href.attr"/>
       <zeroOrMore>
         <choice>
@@ -276,9 +290,7 @@
   <define name="ImportFunctions" sa:class="language-construct">
     <element name="import-functions">
       <ref name="common.attributes"/>
-      <optional>
-        <ref name="use-when.attr"/>
-      </optional>
+      <ref name="global.attributes"/>
       <ref name="href.attr"/>
       <zeroOrMore>
         <choice>
@@ -324,13 +336,8 @@
         <ref name="href.attr" sa:avt="true"/>
       </optional>
       <ref name="common.attributes"/>
-      <optional>
-        <ref name="expand-text.attr"/>
-      </optional>
+      <ref name="global.attributes"/>
       <ref name="inline.attributes"/>
-      <optional>
-        <ref name="use-when.attr"/>
-      </optional>
       <choice>
         <interleave>
           <choice>
@@ -370,13 +377,8 @@
         <ref name="pipe.attr"/>
       </optional>
       <ref name="common.attributes"/>
-      <optional>
-        <ref name="expand-text.attr"/>
-      </optional>
+      <ref name="global.attributes"/>
       <ref name="inline.attributes"/>
-      <optional>
-        <ref name="use-when.attr"/>
-      </optional>
       <choice>
         <interleave>
           <choice>
@@ -418,12 +420,7 @@
         <ref name="content-types.attr"/>
       </optional>
       <ref name="common.attributes"/>
-      <optional>
-        <ref name="expand-text.attr"/>
-      </optional>
-      <optional>
-        <ref name="use-when.attr"/>
-      </optional>
+      <ref name="global.attributes"/>
       <optional>
         <ref name="serialization.attr"/>
       </optional>
@@ -459,13 +456,8 @@
         <ref name="pipe.attr"/>
       </optional>
       <ref name="common.attributes"/>
-      <optional>
-        <ref name="expand-text.attr"/>
-      </optional>
+      <ref name="global.attributes"/>
       <ref name="inline.attributes"/>
-      <optional>
-        <ref name="use-when.attr"/>
-      </optional>
       <choice>
         <interleave>
           <choice>
@@ -508,9 +500,7 @@
         <ref name="port.attr"/>
       </optional>
       <ref name="common.attributes"/>
-      <optional>
-        <ref name="use-when.attr"/>
-      </optional>
+      <ref name="global.attributes"/>
       <zeroOrMore>
         <choice>
           <ref name="Documentation"/>
@@ -534,9 +524,7 @@
         </attribute>
       </optional>
       <ref name="common.attributes"/>
-      <optional>
-        <ref name="use-when.attr"/>
-      </optional>
+      <ref name="global.attributes"/>
       <zeroOrMore>
         <choice>
           <ref name="Documentation"/>
@@ -548,6 +536,7 @@
   <define name="Inline" sa:class="language-construct">
     <element name="inline">
       <ref name="common.attributes"/>
+      <ref name="global.attributes"/>
       <ref name="inline.attributes"/>
       <optional>
         <attribute name="content-type"/>
@@ -558,12 +547,6 @@
       <optional>
         <attribute name="encoding"/>
       </optional>
-      <optional>
-        <ref name="use-when.attr"/>
-      </optional>
-      <optional>
-        <ref name="expand-text.attr"/>
-      </optional>
       <zeroOrMore>
         <ref name="Any"/>
       </zeroOrMore>
@@ -571,6 +554,8 @@
   </define>
   <define name="Empty" sa:class="language-construct">
     <element name="empty">
+      <ref name="common.attributes"/>
+      <ref name="global.attributes"/>
       <zeroOrMore>
         <choice>
           <ref name="Documentation"/>
@@ -596,11 +581,9 @@
         <ref name="select.attr"/>
       </optional>
       <ref name="common.attributes"/>
+      <ref name="global.attributes"/>
       <optional>
         <ref name="visibility.attr"/>
-      </optional>
-      <optional>
-        <ref name="use-when.attr"/>
       </optional>
       <zeroOrMore>
         <choice>
@@ -621,11 +604,9 @@
       </attribute>
       <ref name="select.attr"/>
       <ref name="common.attributes"/>
+      <ref name="global.attributes"/>
       <optional>
         <ref name="visibility.attr"/>
-      </optional>
-      <optional>
-        <ref name="use-when.attr"/>
       </optional>
       <zeroOrMore>
         <choice>
@@ -653,13 +634,8 @@
         <ref name="pipe.attr"/>
       </optional>
       <ref name="common.attributes"/>
-      <optional>
-        <ref name="expand-text.attr"/>
-      </optional>
+      <ref name="global.attributes"/>
       <ref name="inline.attributes"/>
-      <optional>
-        <ref name="use-when.attr"/>
-      </optional>
       <choice>
         <interleave>
           <choice>
@@ -706,15 +682,10 @@
         <ref name="pipe.attr"/>
       </optional>
       <ref name="common.attributes"/>
-      <optional>
-        <ref name="expand-text.attr"/>
-      </optional>
+      <ref name="global.attributes"/>
       <ref name="inline.attributes"/>
       <optional>
         <ref name="visibility.attr"/>
-      </optional>
-      <optional>
-        <ref name="use-when.attr"/>
       </optional>
       <choice>
         <interleave>
@@ -763,13 +734,8 @@
         <ref name="pipe.attr"/>
       </optional>
       <ref name="common.attributes"/>
-      <optional>
-        <ref name="expand-text.attr"/>
-      </optional>
+      <ref name="global.attributes"/>
       <ref name="inline.attributes"/>
-      <optional>
-        <ref name="use-when.attr"/>
-      </optional>
       <choice>
         <interleave>
           <choice>
@@ -812,15 +778,10 @@
         <ref name="href.attr" sa:avt="true"/>
       </optional>
       <ref name="common.attributes"/>
-      <optional>
-        <ref name="expand-text.attr"/>
-      </optional>
+      <ref name="global.attributes"/>
       <ref name="inline.attributes"/>
       <optional>
         <ref name="visibility.attr"/>
-      </optional>
-      <optional>
-        <ref name="use-when.attr"/>
       </optional>
       <choice>
         <interleave>
@@ -868,9 +829,7 @@
         <ref name="visibility.attr"/>
       </optional>
       <ref name="common.attributes"/>
-      <optional>
-        <ref name="use-when.attr"/>
-      </optional>
+      <ref name="global.attributes"/>
       <zeroOrMore>
         <choice>
           <ref name="Import"/>
@@ -908,12 +867,7 @@
         <ref name="name.ncname.attr"/>
       </optional>
       <ref name="common.attributes"/>
-      <optional>
-        <ref name="expand-text.attr"/>
-      </optional>
-      <optional>
-        <ref name="use-when.attr"/>
-      </optional>
+      <ref name="global.attributes"/>
       <group>
         <interleave>
           <optional>
@@ -941,12 +895,7 @@
         <ref name="XSLTSelectionPattern"/>
       </attribute>
       <ref name="common.attributes"/>
-      <optional>
-        <ref name="expand-text.attr"/>
-      </optional>
-      <optional>
-        <ref name="use-when.attr"/>
-      </optional>
+      <ref name="global.attributes"/>
       <group>
         <interleave>
           <optional>
@@ -973,12 +922,7 @@
         <ref name="name.ncname.attr"/>
       </optional>
       <ref name="common.attributes"/>
-      <optional>
-        <ref name="expand-text.attr"/>
-      </optional>
-      <optional>
-        <ref name="use-when.attr"/>
-      </optional>
+      <ref name="global.attributes"/>
       <group>
         <zeroOrMore>
           <choice>
@@ -1049,12 +993,7 @@
         <ref name="collection.attr" sa:avt="true"/>
       </optional>
       <ref name="common.attributes"/>
-      <optional>
-        <ref name="expand-text.attr"/>
-      </optional>
-      <optional>
-        <ref name="use-when.attr"/>
-      </optional>
+      <ref name="global.attributes"/>
       <group>
         <zeroOrMore>
           <choice>
@@ -1079,12 +1018,7 @@
   <define name="Otherwise" sa:class="language-construct">
     <element name="otherwise">
       <ref name="common.attributes"/>
-      <optional>
-        <ref name="expand-text.attr"/>
-      </optional>
-      <optional>
-        <ref name="use-when.attr"/>
-      </optional>
+      <ref name="global.attributes"/>
       <group>
         <zeroOrMore>
           <choice>
@@ -1107,12 +1041,7 @@
         <ref name="collection.attr" sa:avt="true"/>
       </optional>
       <ref name="common.attributes"/>
-      <optional>
-        <ref name="expand-text.attr"/>
-      </optional>
-      <optional>
-        <ref name="use-when.attr"/>
-      </optional>
+      <ref name="global.attributes"/>
       <group>
         <zeroOrMore>
           <choice>
@@ -1141,12 +1070,7 @@
         <ref name="name.ncname.attr"/>
       </optional>
       <ref name="common.attributes"/>
-      <optional>
-        <ref name="expand-text.attr"/>
-      </optional>
-      <optional>
-        <ref name="use-when.attr"/>
-      </optional>
+      <ref name="global.attributes"/>
       <group>
         <zeroOrMore>
           <choice>
@@ -1166,12 +1090,7 @@
         <ref name="name.ncname.attr"/>
       </optional>
       <ref name="common.attributes"/>
-      <optional>
-        <ref name="expand-text.attr"/>
-      </optional>
-      <optional>
-        <ref name="use-when.attr"/>
-      </optional>
+      <ref name="global.attributes"/>
       <interleave>
         <group>
           <ref name="TryGroup"/>
@@ -1204,12 +1123,7 @@
   <define name="TryGroup" sa:class="language-construct">
     <element name="group">
       <ref name="common.attributes"/>
-      <optional>
-        <ref name="expand-text.attr"/>
-      </optional>
-      <optional>
-        <ref name="use-when.attr"/>
-      </optional>
+      <ref name="global.attributes"/>
       <group>
         <zeroOrMore>
           <choice>
@@ -1233,12 +1147,7 @@
         </attribute>
       </optional>
       <ref name="common.attributes"/>
-      <optional>
-        <ref name="expand-text.attr"/>
-      </optional>
-      <optional>
-        <ref name="use-when.attr"/>
-      </optional>
+      <ref name="global.attributes"/>
       <group>
         <zeroOrMore>
           <choice>
@@ -1257,12 +1166,7 @@
         <ref name="name.ncname.attr"/>
       </optional>
       <ref name="common.attributes"/>
-      <optional>
-        <ref name="expand-text.attr"/>
-      </optional>
-      <optional>
-        <ref name="use-when.attr"/>
-      </optional>
+      <ref name="global.attributes"/>
       <group>
         <zeroOrMore>
           <choice>
@@ -1289,12 +1193,7 @@
         <ref name="option.attr"/>
       </zeroOrMore>
       <ref name="common.attributes"/>
-      <optional>
-        <ref name="expand-text.attr"/>
-      </optional>
-      <optional>
-        <ref name="p_use-when.attr"/>
-      </optional>
+      <ref name="p_global.attributes"/>
       <zeroOrMore>
         <choice>
           <ref name="WithInput"/>
@@ -1316,12 +1215,7 @@
         <ref name="name.ncname.attr"/>
       </optional>
       <ref name="common.attributes"/>
-      <optional>
-        <ref name="expand-text.attr"/>
-      </optional>
-      <optional>
-        <ref name="p_use-when.attr"/>
-      </optional>
+      <ref name="p_global.attributes"/>
       <group>
         <zeroOrMore>
           <choice>
@@ -1345,9 +1239,7 @@
   <define name="Documentation" sa:ignore="yes" sa:class="language-construct">
     <element name="documentation">
       <ref name="common.attributes"/>
-      <optional>
-        <ref name="use-when.attr"/>
-      </optional>
+      <ref name="global.attributes"/>
       <zeroOrMore>
         <ref name="DocContent"/>
       </zeroOrMore>
@@ -1360,9 +1252,7 @@
   <define name="PipeInfo" sa:ignore="yes" sa:class="language-construct">
     <element name="pipeinfo">
       <ref name="common.attributes"/>
-      <optional>
-        <ref name="use-when.attr"/>
-      </optional>
+      <ref name="global.attributes"/>
       <zeroOrMore>
         <ref name="DocContent"/>
       </zeroOrMore>
@@ -1380,6 +1270,7 @@
         <except>
           <name>name</name>
           <name>expand-text</name>
+          <name>use-when</name>
         </except>
       </nsName>
     </attribute>

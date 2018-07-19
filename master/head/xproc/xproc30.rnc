@@ -31,7 +31,6 @@ content-type.attr = attribute content-type { ContentType }
 content-types.attr = attribute content-types { ContentTypes }
 collection.attr = attribute collection { xsd:boolean }
 pipe.attr = attribute pipe { text }
-expand-text.attr = attribute expand-text { xsd:boolean }
 static.attr = attribute static { xsd:boolean }
 visibility.attr = attribute visibility { "private" | "public" }
 exclude-inline-prefixes.attr =
@@ -50,15 +49,20 @@ href.attr = attribute href { xsd:anyURI }
 use-when.attr = attribute use-when { XPathExpression }
 [ sa:ignore = "yes" ]
 p_use-when.attr = attribute p:use-when { XPathExpression }
+[ sa:ignore = "yes" ]
+expand-text.attr = attribute expand-text { xsd:boolean }
+[ sa:ignore = "yes" ]
+p_expand-text.attr = attribute p:expand-text { xsd:boolean }
 version.attr = attribute version { "3.0" }
 common.attributes = xmlid.attr?, xmlbase.attr?, extension.attr*
+global.attributes = use-when.attr?, expand-text.attr?
+p_global.attributes = p_use-when.attr?, p_expand-text.attr?
 inline.attributes = exclude-inline-prefixes.attr?
 decl.attributes =
   psvi-required.attr?,
   xpath-version.attr?,
   exclude-inline-prefixes.attr?,
-  version.attr?,
-  expand-text.attr?
+  version.attr?
 # ============================================================
 start =
   Library
@@ -86,7 +90,7 @@ Library =
   element library {
     decl.attributes,
     common.attributes,
-    use-when.attr?,
+    global.attributes,
     (Import | ImportFunctions | Documentation | PipeInfo)*,
     (DeclareStep
      | StaticVariable
@@ -98,7 +102,7 @@ Library =
 Import =
   element import {
     common.attributes,
-    use-when.attr?,
+    global.attributes,
     href.attr,
     (Documentation | PipeInfo)*
   }
@@ -106,7 +110,7 @@ Import =
 ImportFunctions =
   element import-functions {
     common.attributes,
-    use-when.attr?,
+    global.attributes,
     href.attr,
     (Documentation | PipeInfo)*
   }
@@ -133,9 +137,8 @@ Input =
     content-types.attr?,
     [ sa:avt = "true" ] href.attr?,
     common.attributes,
-    expand-text.attr?,
+    global.attributes,
     inline.attributes,
-    use-when.attr?,
     (((Empty | (Document | Inline)*)
       & (Documentation | PipeInfo)*)
      | AnyElement*)
@@ -148,9 +151,8 @@ WithInput =
     [ sa:avt = "true" ] href.attr?,
     pipe.attr?,
     common.attributes,
-    expand-text.attr?,
+    global.attributes,
     inline.attributes,
-    use-when.attr?,
     (((Empty | (Document | Pipe | Inline)*)
       & (Documentation | PipeInfo)*)
      | AnyElement*)
@@ -164,8 +166,7 @@ OutputDeclaration =
     primary.attr?,
     content-types.attr?,
     common.attributes,
-    expand-text.attr?,
-    use-when.attr?,
+    global.attributes,
     serialization.attr?,
     (Documentation | PipeInfo)*
   }
@@ -180,9 +181,8 @@ OutputConnection =
     [ sa:avt = "true" ] href.attr?,
     pipe.attr?,
     common.attributes,
-    expand-text.attr?,
+    global.attributes,
     inline.attributes,
-    use-when.attr?,
     (((Empty | (Document | Pipe | Inline)*)
       & (Documentation | PipeInfo)*)
      | AnyElement*)
@@ -194,7 +194,7 @@ Pipe =
     attribute step { xsd:NCName }?,
     port.attr?,
     common.attributes,
-    use-when.attr?,
+    global.attributes,
     (Documentation | PipeInfo)*
   }
 [ sa:class = "language-construct" ]
@@ -205,23 +205,25 @@ Document =
     document-properties.attr?,
     attribute parameters { PropertyMap }?,
     common.attributes,
-    use-when.attr?,
+    global.attributes,
     (Documentation | PipeInfo)*
   }
 [ sa:class = "language-construct" ]
 Inline =
   element inline {
     common.attributes,
+    global.attributes,
     inline.attributes,
     attribute content-type { text }?,
     document-properties.attr?,
     attribute encoding { text }?,
-    use-when.attr?,
-    expand-text.attr?,
     Any*
   }
 [ sa:class = "language-construct" ]
-Empty = element empty { (Documentation | PipeInfo)* }
+Empty =
+  element empty {
+    common.attributes, global.attributes, (Documentation | PipeInfo)*
+  }
 # ============================================================
 [ sa:class = "language-construct" ]
 Option =
@@ -232,8 +234,8 @@ Option =
     required.attr?,
     select.attr?,
     common.attributes,
+    global.attributes,
     visibility.attr?,
-    use-when.attr?,
     (Documentation | PipeInfo)*
   }
 [ sa:class = "language-construct" ]
@@ -244,8 +246,8 @@ StaticOption =
     attribute static { "true" },
     select.attr,
     common.attributes,
+    global.attributes,
     visibility.attr?,
-    use-when.attr?,
     (Documentation | PipeInfo)*
   }
 # ============================================================
@@ -259,9 +261,8 @@ WithOption =
     [ sa:avt = "true" ] href.attr?,
     pipe.attr?,
     common.attributes,
-    expand-text.attr?,
+    global.attributes,
     inline.attributes,
-    use-when.attr?,
     (((Empty | (Document | Pipe | Inline)*)
       & (Documentation | PipeInfo)*)
      | AnyElement*)
@@ -278,10 +279,9 @@ GeneralVariable =
     [ sa:avt = "true" ] href.attr?,
     pipe.attr?,
     common.attributes,
-    expand-text.attr?,
+    global.attributes,
     inline.attributes,
     visibility.attr?,
-    use-when.attr?,
     (((Empty | (Document | Pipe | Inline)*)
       & (Documentation | PipeInfo)*)
      | AnyElement*)
@@ -297,9 +297,8 @@ DynamicVariable =
     [ sa:avt = "true" ] href.attr?,
     pipe.attr?,
     common.attributes,
-    expand-text.attr?,
+    global.attributes,
     inline.attributes,
-    use-when.attr?,
     (((Empty | (Document | Pipe | Inline)*)
       & (Documentation | PipeInfo)*)
      | AnyElement*)
@@ -314,10 +313,9 @@ StaticVariable =
     [ sa:avt = "true" ] collection.attr?,
     [ sa:avt = "true" ] href.attr?,
     common.attributes,
-    expand-text.attr?,
+    global.attributes,
     inline.attributes,
     visibility.attr?,
-    use-when.attr?,
     (((Empty | (Document | Inline)*)
       & (Documentation | PipeInfo)*)
      | AnyElement*)
@@ -332,7 +330,7 @@ DeclareStep =
     decl.attributes,
     visibility.attr?,
     common.attributes,
-    use-when.attr?,
+    global.attributes,
     (Import | ImportFunctions | Documentation | PipeInfo)*,
     (Input
      | Output
@@ -349,8 +347,7 @@ ForEach =
   element for-each {
     name.ncname.attr?,
     common.attributes,
-    expand-text.attr?,
-    use-when.attr?,
+    global.attributes,
     ((WithInput? & (Output | Documentation | PipeInfo)*),
      Subpipeline)
   }
@@ -361,8 +358,7 @@ Viewport =
     name.ncname.attr?,
     [ sa:avt = "true" ] attribute match { XSLTSelectionPattern },
     common.attributes,
-    expand-text.attr?,
-    use-when.attr?,
+    global.attributes,
     ((WithInput? & Output? & Documentation* & PipeInfo*), Subpipeline)
   }
 # ============================================================
@@ -371,8 +367,7 @@ Choose =
   element choose {
     name.ncname.attr?,
     common.attributes,
-    expand-text.attr?,
-    use-when.attr?,
+    global.attributes,
     ((Documentation | PipeInfo)*,
      WithInput?,
      ((((Documentation | PipeInfo)*, When)+,
@@ -387,8 +382,7 @@ When =
     attribute test { XPathExpression },
     [ sa:avt = "true" ] collection.attr?,
     common.attributes,
-    expand-text.attr?,
-    use-when.attr?,
+    global.attributes,
     ((Documentation | PipeInfo)*,
      WithInput?,
      (Output | Documentation | PipeInfo)*,
@@ -398,8 +392,7 @@ When =
 Otherwise =
   element otherwise {
     common.attributes,
-    expand-text.attr?,
-    use-when.attr?,
+    global.attributes,
     ((Output | Documentation | PipeInfo)*, Subpipeline)
   }
 # ============================================================
@@ -409,8 +402,7 @@ If =
     attribute test { XPathExpression },
     [ sa:avt = "true" ] collection.attr?,
     common.attributes,
-    expand-text.attr?,
-    use-when.attr?,
+    global.attributes,
     ((Documentation | PipeInfo)*,
      WithInput?,
      (Output | Documentation | PipeInfo)*,
@@ -422,8 +414,7 @@ Group =
   element group {
     name.ncname.attr?,
     common.attributes,
-    expand-text.attr?,
-    use-when.attr?,
+    global.attributes,
     ((Output | Documentation | PipeInfo)*, Subpipeline)
   }
 # ============================================================
@@ -432,8 +423,7 @@ Try =
   element try {
     name.ncname.attr?,
     common.attributes,
-    expand-text.attr?,
-    use-when.attr?,
+    global.attributes,
     ((TryGroup,
       ((Catch+, Finally?) | (Catch*, Finally)))
      & (Documentation | PipeInfo)*)
@@ -442,8 +432,7 @@ Try =
 TryGroup =
   element group {
     common.attributes,
-    expand-text.attr?,
-    use-when.attr?,
+    global.attributes,
     ((Output | Documentation | PipeInfo)*, Subpipeline)
   }
 [ sa:class = "language-construct" ]
@@ -452,8 +441,7 @@ Catch =
     name.ncname.attr?,
     attribute code { QNameList }?,
     common.attributes,
-    expand-text.attr?,
-    use-when.attr?,
+    global.attributes,
     ((Output | Documentation | PipeInfo)*, Subpipeline)
   }
 [ sa:class = "language-construct" ]
@@ -461,8 +449,7 @@ Finally =
   element finally {
     name.ncname.attr?,
     common.attributes,
-    expand-text.attr?,
-    use-when.attr?,
+    global.attributes,
     ((Documentation | PipeInfo)*, Subpipeline)
   }
 # ============================================================
@@ -472,8 +459,7 @@ OtherAtomicStep =
     name.ncname.attr?,
     option.attr*,
     common.attributes,
-    expand-text.attr?,
-    p_use-when.attr?,
+    p_global.attributes,
     (WithInput | WithOption | Documentation | PipeInfo)*
   }
 [ sa:class = "language-construct" ]
@@ -481,8 +467,7 @@ OtherCompoundStep =
   element * - p:* {
     name.ncname.attr?,
     common.attributes,
-    expand-text.attr?,
-    p_use-when.attr?,
+    p_global.attributes,
     ((Output | Documentation | PipeInfo)*, Subpipeline)
   }
 OtherStep = StandardStep | OtherAtomicStep | OtherCompoundStep
@@ -490,16 +475,17 @@ OtherStep = StandardStep | OtherAtomicStep | OtherCompoundStep
 [ sa:ignore = "yes" sa:class = "language-construct" ]
 Documentation =
   element documentation {
-    common.attributes, use-when.attr?, DocContent*
+    common.attributes, global.attributes, DocContent*
   }
 [ sa:model = "any-well-formed-content" ] DocContent = Any
 # ============================================================
 [ sa:ignore = "yes" sa:class = "language-construct" ]
 PipeInfo =
-  element pipeinfo { common.attributes, use-when.attr?, DocContent* }
+  element pipeinfo { common.attributes, global.attributes, DocContent* }
 # ============================================================
 _any.attr = attribute * { text }
-option.attr = attribute local:* - (name | expand-text) { text }
+option.attr =
+  attribute local:* - (name | expand-text | use-when) { text }
 extension.attr = attribute * - (local:* | xml:* | p:*) { text }
 [ sa:model = "anyElement" ]
 AnyElement = element * { (_any.attr | text | AnyElement)* }
