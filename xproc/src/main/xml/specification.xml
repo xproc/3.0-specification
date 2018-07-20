@@ -818,14 +818,19 @@ the input and output connections must not form a cycle in the graph.
 <title>Initiating a pipeline</title>
 
 <para>Initiating a pipeline necessarily involves two activities:
-static analysis and dynamic evaluation. Static analysis consists of
+static analysis and dynamic evaluation.
+<termdef xml:id="dt-static-analysis"><firstterm baseform="static analysis">Static
+analysis</firstterm>
+consists of
 those tasks that can be performed by inspection of the pipeline
 alone, including the binding of
 <link linkend="statics">static options and variables</link>,
 computation of serialization properties and document-properties,
 <link linkend="use-when">evaluation of <code>use-when</code> expressions</link>,
-and detecting static errors. Dynamic evaluation consists of tasks which, in general,
-cannot be performed out until a source document is available.</para>
+and detecting static errors.</termdef>
+<termdef xml:id="dt-dynamic-evaluation"><firstterm baseform="dynamic evaluation">Dynamic
+evaluation</firstterm> consists of tasks which, in general,
+cannot be performed out until a source document is available.</termdef></para>
 
 <para>There may be an <glossterm>implementation-defined</glossterm>
 mechanism for providing default values for static
@@ -5649,20 +5654,18 @@ that would be treated as an implicit inline.</error>
 
 <e:rng-pattern name="Document"/>
 
-<para>The value of the <tag class="attribute">href</tag> attribute,
-after expanding any
+<para>The value of the <tag class="attribute">href</tag> attribute
+is a URI. If the <tag class="attribute">href</tag> contains
 <glossterm baseform="attribute value template">attribute value templates</glossterm>,
-is a whitespace-separated list of URIs. Each URI
-<rfc2119>must</rfc2119> be an <type>anyURI</type>.
-<error code="D0064">It is a <glossterm>dynamic error</glossterm>
-if any URI is not a valid <type>xs:anyURI</type>.</error>
+they are evaluated during <glossterm>static analysis</glossterm>.
+<error code="S0070">It is a <glossterm>static error</glossterm>
+if the URI is not a valid <type>xs:anyURI</type>.</error>
 The URI is interpreted
 as an IRI reference. If it is relative, it is made absolute against
 the base URI of the <tag>p:document</tag> element.
 </para>
 
-<para>The semantics of <tag>p:document</tag>, with respect to each URI,
-taken in order from left to right, are the same as a the
+<para>The semantics of <tag>p:document</tag> are the same as a the
 semantics of <tag>p:load</tag> where the <option>href</option> option
 is the URI, the
 <option>content-type</option> option comes from
@@ -5672,15 +5675,6 @@ is the URI, the
 <option>parameters</option> option comes from the
 <tag class="attribute">parameters</tag> attribute.
 </para>
-
-<note>
-<para>If the <tag class="attribute">href</tag> attribute is a list of
-more than one URI, it follows from the way that the URIs in that sequence are
-processed that they will have same <option>content-type</option>,
-<option>document-properties</option>, and <option>parameters</option>.
-Use different <tag>p:document</tag> elements if different values are
-required.</para>
-</note>
 
 <para><error code="D0011">It is a <glossterm>dynamic error</glossterm>
 if the resource referenced by a <tag>p:document</tag> element does not
