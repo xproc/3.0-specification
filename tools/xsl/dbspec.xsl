@@ -33,7 +33,7 @@
 <xsl:param name="travis-repo" select="''" as="xs:string"/>
 <xsl:param name="travis-branch" select="''" as="xs:string"/>
 <xsl:param name="travis-tag" select="''" as="xs:string"/>
-<xsl:param name="auto-diff" select="''" as="xs:string"/>
+<xsl:param name="auto-diff" select="false()" as="xs:boolean"/>
 
 <xsl:param name="syntax.highlight.map" as="element()*">
   <map key="xml" value="markup"/>
