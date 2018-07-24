@@ -235,6 +235,9 @@ task steps(dependsOn: [ "xproc", "xproc_schemas", "spec_schemas",
   param("travis-tag", getenv("TRAVIS_TAG"))
 
   option("style", new File("tools/xsl/xproc-specs.xsl"))
+  option("diffkey", getenv("DELTAXML_DIFF_KEY"))
+  option("diffloc", new File("build/dist/steps/diff.html").getAbsolutePath())
+
   pipeline "tools/xpl/formatspec.xpl"
 }
 allspecs.dependsOn "steps"
