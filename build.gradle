@@ -116,6 +116,10 @@ task xproc(dependsOn: [ "xproc_schemas", "spec_schemas",
   param("travis-tag", getenv("TRAVIS_TAG"))
 
   option("style", new File("tools/xsl/xproc-specs.xsl"))
+  option("diffkey", getenv("DELTAXML_DIFF_KEY"))
+  option("webid", "xproc")
+  option("diffloc", new File("build/dist/xproc/diff.html").getAbsolutePath())
+
   pipeline "tools/xpl/formatspec.xpl"
 }
 allspecs.dependsOn "xproc"
@@ -154,7 +158,7 @@ xproc_library.doFirst {
   mkdir("build/dist/xproc")
 }
 
-task xproc_assets(dependsOn: [ "xproc_web_assets" ], type: Copy) {
+task xproc_assets(dependsOn: [ "xproc:images", "xproc_web_assets" ], type: Copy) {
   from "xproc/build/graphics"
   into "build/dist/xproc/graphics/"
 }
@@ -232,6 +236,10 @@ task steps(dependsOn: [ "xproc", "xproc_schemas", "spec_schemas",
   param("travis-tag", getenv("TRAVIS_TAG"))
 
   option("style", new File("tools/xsl/xproc-specs.xsl"))
+  option("diffkey", getenv("DELTAXML_DIFF_KEY"))
+  option("webid", "steps")
+  option("diffloc", new File("build/dist/steps/diff.html").getAbsolutePath())
+
   pipeline "tools/xpl/formatspec.xpl"
 }
 allspecs.dependsOn "steps"

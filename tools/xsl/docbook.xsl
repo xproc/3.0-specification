@@ -276,9 +276,9 @@
           </a>
         </dd>
 
-        <xsl:if test="$travis-build-number != '' or $auto-diff != ''">
+        <xsl:if test="$travis-build-number != '' or $auto-diff">
           <dt>Changes:</dt>
-          <xsl:if test="$auto-diff != ''">
+          <xsl:if test="$auto-diff">
             <dd>
               <a href="diff.html">Diff against current “status quo” draft</a>
             </dd>
@@ -313,7 +313,7 @@
 	  <xsl:if test="position() &lt; last()">, </xsl:if>
 	</xsl:for-each>
 
-        <xsl:if test="$auto-diff != ''">
+        <xsl:if test="$auto-diff">
           <xsl:text>, </xsl:text>
 	  automatic <a href="diff.html">change markup</a> from the previous draft
           courtesy of <a href="http://www.deltaxml.com/">DeltaXML</a>
