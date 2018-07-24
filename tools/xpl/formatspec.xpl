@@ -14,6 +14,7 @@
 <p:serialization port="result" indent="false" method="xhtml"/>
 <p:option name="style" select="'dbspec.xsl'"/>
 <p:option name="diffkey" select="''"/>
+<p:option name="webid" select="'xproc'"/>
 <p:option name="diffloc" select="'/tmp/diff.html'"/>
 
 <p:import href="https://cdn.docbook.org/release/2.3.2/xslt/base/pipelines/docbook.xpl"/>
@@ -70,7 +71,7 @@
 <p:add-attribute match="/c:request" attribute-name="href">
   <p:with-option name="attribute-value"
                  select="concat('https://dataapi.nwalsh.com/dxml/cgi-bin/deltaxml.pl?',
-                                'key=', $diffkey, '&amp;webid=xproc')"/>
+                                'key=', $diffkey, '&amp;webid=', $webid)"/>
 </p:add-attribute>
 
 <p:choose>
