@@ -1169,19 +1169,18 @@ refer to that variable will raise an error.</para>
             <varlistentry>
               <term>context item</term>
               <listitem>
-<para>A document. The document is either specified with a
+<para>The context item. The context item is either specified with a
 <glossterm>connection</glossterm> or is taken from the
 <glossterm>default readable port</glossterm>. <error code="D0008">It
-is a <glossterm>dynamic error</glossterm> if a document sequence
-appears where a document to be used as the context node is
+is a <glossterm>dynamic error</glossterm> if a sequence of items
+appears where an item to be used as the context item is
 expected.</error>
 </para>
 
-<para>When the context node has a non-XML content type, XPath
-expressions are evaluated in the context of the corresponding
-<glossterm>proxy document</glossterm>.
-<termdef xml:id="dt-proxy-document">A <firstterm>proxy document</firstterm> is
-an empty document node.</termdef>.</para>
+<para>The context item used for an XML, text, or JSON document is
+the XDM representation of that item.
+<impl>The context item used for binary documents is
+<glossterm>implementation-defined</glossterm>.</impl></para>
 
 <para>If there is no explicit connection and there is no default
 readable port then the context node is undefined.</para>
@@ -1795,21 +1794,14 @@ normally during static anlaysis.</para>
 of a document as a map.</para>
 
 <methodsynopsis>
-<type>map(xs:QName,item())</type>
+<type>map(xs:QName,item()*)</type>
 <methodname>p:document-properties</methodname>
-<methodparam><type>document-node()</type><parameter>doc</parameter></methodparam>
+<methodparam><type>item()</type><parameter>doc</parameter></methodparam>
 </methodsynopsis>
 
 <para>The map returned contains (exclusively) the document properties
-associated with the <parameter>doc</parameter> specified.</para>
-
-<para feature="document-properties-non-xml-document">The context node
-for the <function>p:document-properties</function> function must be an
-XPath document node. In order to access the document properties of a
-non-XML document, the processor is responsible for manufacturing an
-empty document node for this purpose and for maintaining the
-association between that empty document node and the corresponding
-non-XML document.</para>
+associated with the <parameter>doc</parameter> specified. If the item
+is not associated with a document, the resulting map will be empty.</para>
 
 <para>The <function>p:document-properties</function> function behaves
 normally during static anlaysis.</para>
@@ -1824,23 +1816,16 @@ of a document as an XML document.</para>
 <methodsynopsis>
 <type>document-node()</type>
 <methodname>p:document-properties-document</methodname>
-<methodparam><type>document-node()</type><parameter>doc</parameter></methodparam>
+<methodparam><type>item()</type><parameter>doc</parameter></methodparam>
 </methodsynopsis>
 
 <para>The document returned is a <code>p:document-properties</code>
 document that contains (exclusively) the document properties
 associated with the <parameter>doc</parameter> specified. Each key in the
 properties becomes an element, each value becomes the content of that element.
-For atomic values other than string, an <tag class="attribute">xsi:type</tag> attribute is added to identify the
+For atomic values other than string, an
+<tag class="attribute">xsi:type</tag> attribute is added to identify the
 type of the value.</para>
-
-<para feature="document-properties-non-xml-document">The context node
-for the <function>p:document-properties-document</function> function must be an
-XPath document node. In order to access the document properties of a
-non-XML document, the processor is responsible for manufacturing an
-empty document node for this purpose and for maintaining the
-association between that empty document node and the corresponding
-non-XML document.</para>
 
 <para>The <function>p:document-properties-document</function> function behaves
 normally during static anlaysis.</para>
@@ -6202,8 +6187,7 @@ name</link>. The value may be any XPath data model value.</para></glossdef></glo
           explicitly marked “<code>primary='true'</code>”, or if it has exactly one document output
           port and that port is <emphasis>not</emphasis> explicitly marked
             “<code>primary='false'</code>”, then that output port is the <firstterm>primary output
-            port</firstterm> of the step.</para></glossdef></glossentry><glossentry><glossterm>proxy document</glossterm><glossdef><para>A <firstterm>proxy document</firstterm> is
-an empty document node.</para></glossdef></glossentry><glossentry><glossterm>readable
+            port</firstterm> of the step.</para></glossdef></glossentry><glossentry><glossterm>readable
                 ports</glossterm><glossdef><para>The <firstterm>readable
                 ports</firstterm> are a set of step name/port name pairs.</para></glossdef></glossentry><glossentry><glossterm>representation</glossterm><glossdef><para>A <firstterm>representation</firstterm>
 is a data structure used by an XProc processor to refer to the actual

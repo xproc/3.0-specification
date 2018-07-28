@@ -1,4 +1,4 @@
-<html xmlns="http://www.w3.org/1999/xhtml"><head><title>XProc 3.0: An XML Pipeline Language</title><meta charset="utf-8" /><link rel="alternate" title="XML" href="specification.xml" /><link rel="alternate" title="Latest editor's draft" href="http://www.w3.org/XML/XProc/docs/langspec.html" /><link rel="alternate" title="Latest Public Working Draft" href="http://www.w3.org/TR/xproc/" /><meta name="generator" content="DocBook XSL 2.0 Stylesheets V2.3.2" /><meta name="description" content="Abstract This specification describes the syntax and semantics of&#xA;XProc 3.0: An XML Pipeline Language, a language for&#xA;describing operations to be performed on documents. An XML Pipeline specifies a sequence of operations to be&#xA;performed on documents. Pipelines generally accept&#xA;documents as input and produce documents as output.&#xA;Pipelines are made up of simple steps which&#xA;perform atomic operations on documents and constructs similar to&#xA;conditionals, iteration, and exception handlers which control which&#xA;steps are executed." /><link href="css/prism.css" rel="stylesheet" type="text/css" /><link href="css/db-prism.css" rel="stylesheet" type="text/css" /><link rel="stylesheet" type="text/css" href="css/base.css" /><link rel="stylesheet" type="text/css" href="css/xproc.css" /><link rel="stylesheet" type="text/css" href="css/base.css" /><script type="text/javascript" src="js/dbmodnizr.js"></script></head><body><div class="specification"><div class="head" id="spec.head"><h1>XProc 3.0: An XML Pipeline Language</h1><h2>Editor's Draft  <time datetime="2018-07-24T13:14:29Z">24 July 2018 at 13:14 UTC (<a href="https://github.com/xproc/3.0-specification/commit/27c8ddfb65259a84cc2b76dd91946db61b9c5818">build 420</a>)</time></h2><dl><dt>This Version:</dt><dd><a href="https://xproc.github.io/3.0-specification/master/head/xproc/">https://xproc.github.io/3.0-specification/master/head/xproc/</a></dd><dt>Latest Version:</dt><dd><a href="http://spec.xproc.org/master/head/xproc/">http://spec.xproc.org/master/head/xproc/</a></dd><dt>Editors:</dt><dd><span class="personname">Achim Berndzen</span></dd><dd><span class="personname">Gerrit Imsieke</span></dd><dd><span class="personname">Erik Siegel</span></dd><dd><span class="personname">Norman Walsh</span></dd><dt>Repository:</dt><dd><a href="http://github.com/xproc/3.0-specification">This specification on GitHub</a></dd><dd><a href="http://github.com/xproc/3.0-specification/issues">Report an issue</a></dd><dt>Changes:</dt><dd><a href="diff.html">Diff against current “status quo” draft</a></dd><dd><a href="http://github.com/xproc/3.0-specification/commits/master">Commits for this specification</a></dd></dl><p>This document is also available in these non-normative formats: <a href="specification.xml">XML</a>, 
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>XProc 3.0: An XML Pipeline Language</title><meta charset="utf-8" /><link rel="alternate" title="XML" href="specification.xml" /><link rel="alternate" title="Latest editor's draft" href="http://www.w3.org/XML/XProc/docs/langspec.html" /><link rel="alternate" title="Latest Public Working Draft" href="http://www.w3.org/TR/xproc/" /><meta name="generator" content="DocBook XSL 2.0 Stylesheets V2.3.2" /><meta name="description" content="Abstract This specification describes the syntax and semantics of&#xA;XProc 3.0: An XML Pipeline Language, a language for&#xA;describing operations to be performed on documents. An XML Pipeline specifies a sequence of operations to be&#xA;performed on documents. Pipelines generally accept&#xA;documents as input and produce documents as output.&#xA;Pipelines are made up of simple steps which&#xA;perform atomic operations on documents and constructs similar to&#xA;conditionals, iteration, and exception handlers which control which&#xA;steps are executed." /><link href="css/prism.css" rel="stylesheet" type="text/css" /><link href="css/db-prism.css" rel="stylesheet" type="text/css" /><link rel="stylesheet" type="text/css" href="css/base.css" /><link rel="stylesheet" type="text/css" href="css/xproc.css" /><link rel="stylesheet" type="text/css" href="css/base.css" /><script type="text/javascript" src="js/dbmodnizr.js"></script></head><body><div class="specification"><div class="head" id="spec.head"><h1>XProc 3.0: An XML Pipeline Language</h1><h2>Editor's Draft  <time datetime="2018-07-28T16:26:48Z">28 July 2018 at 16:26 UTC (<a href="https://github.com/xproc/3.0-specification/commit/7cc8e71cb9978b234d0fe3e3da0fd3e3f7b5e123">build 422</a>)</time></h2><dl><dt>This Version:</dt><dd><a href="https://xproc.github.io/3.0-specification/master/head/xproc/">https://xproc.github.io/3.0-specification/master/head/xproc/</a></dd><dt>Latest Version:</dt><dd><a href="http://spec.xproc.org/master/head/xproc/">http://spec.xproc.org/master/head/xproc/</a></dd><dt>Editors:</dt><dd><span class="personname">Achim Berndzen</span></dd><dd><span class="personname">Gerrit Imsieke</span></dd><dd><span class="personname">Erik Siegel</span></dd><dd><span class="personname">Norman Walsh</span></dd><dt>Repository:</dt><dd><a href="http://github.com/xproc/3.0-specification">This specification on GitHub</a></dd><dd><a href="http://github.com/xproc/3.0-specification/issues">Report an issue</a></dd><dt>Changes:</dt><dd><a href="diff.html">Diff against current “status quo” draft</a></dd><dd><a href="http://github.com/xproc/3.0-specification/commits/master">Commits for this specification</a></dd></dl><p>This document is also available in these non-normative formats: <a href="specification.xml">XML</a>, 
 	  automatic <a href="diff.html">change markup</a> from the previous draft
           courtesy of <a href="http://www.deltaxml.com/">DeltaXML</a>.</p><p class="copyright"><span class="copyright">Copyright © <span class="years">2018</span> <span class="holders"><span class="holder">@@FIXME:</span></span></span></p><hr /><div class="abstract"><h2>Abstract</h2>
 <p>This specification describes the syntax and semantics of
@@ -1067,19 +1067,18 @@ refer to that variable will raise an error.</p>
             
             
           <dl><dt><span class="term">context item</span></dt><dd>
-<p>A document. The document is either specified with a
+<p>The context item. The context item is either specified with a
 <em class="glossterm"><a href="#dt-connection">connection</a></em> or is taken from the
 <em class="glossterm"><a href="#dt-default-readable-port">default readable port</a></em>. <a id="err.inline.D0008"></a>It
-is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic error</a></em> (<a href="#err.D0008"><code class="errqname">err:XD0008</code></a>) if a document sequence
-appears where a document to be used as the context node is
+is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic error</a></em> (<a href="#err.D0008"><code class="errqname">err:XD0008</code></a>) if a sequence of items
+appears where an item to be used as the context item is
 expected.
 </p>
 
-<p>When the context node has a non-XML content type, XPath
-expressions are evaluated in the context of the corresponding
-<em class="glossterm"><a href="#dt-proxy-document">proxy document</a></em>.
-<span id="dt-proxy-document" class="termdef">[Definition: A <em class="glossterm">proxy document</em> is
-an empty document node.]</span>.</p>
+<p>The context item used for an XML, text, or JSON document is
+the XDM representation of that item.
+<span id="impl-14">The context item used for binary documents is
+<em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em>.</span></p>
 
 <p>If there is no explicit connection and there is no default
 readable port then the context node is undefined.</p>
@@ -1091,35 +1090,35 @@ readable port then the context node is undefined.</p>
               </dd><dt><span class="term">Named functions</span></dt><dd>
                 <p>The [<a href="#xpath31-functions"><span class="abbrev">XPath and XQuery Functions and Operators 3.1</span></a>] and the <a href="#xpath-extension-functions" title="XPath Extension Functions">Section 8, “XPath Extension Functions”</a>. </p>
               </dd><dt><span class="term">Current dateTime</span></dt><dd>
-                <p><span id="impl-14">The point in time returned as the current dateTime is
+                <p><span id="impl-15">The point in time returned as the current dateTime is
                       <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em>.</span>
                 </p>
               </dd><dt><span class="term">Implicit timezone</span></dt><dd>
-                <p><span id="impl-15">The implicit timezone is
+                <p><span id="impl-16">The implicit timezone is
                     <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em>.</span></p>
               </dd><dt><span class="term">Default language</span></dt><dd>
-                <p><span id="impl-16">The default language is <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em>.</span></p>
+                <p><span id="impl-17">The default language is <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em>.</span></p>
               </dd><dt><span class="term">Default calendar</span></dt><dd>
-                <p><span id="impl-17">The default calendar is <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em>.</span></p>
+                <p><span id="impl-18">The default calendar is <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em>.</span></p>
               </dd><dt><span class="term">Default place</span></dt><dd>
-                <p><span id="impl-18">The default place is <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em>.</span></p>
+                <p><span id="impl-19">The default place is <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em>.</span></p>
               </dd><dt><span class="term">Available documents</span></dt><dd>
-                <p><span id="impl-19">The set of available documents (those that may be retrieved with a URI)
+                <p><span id="impl-20">The set of available documents (those that may be retrieved with a URI)
                     is <em class="glossterm"><a href="#dt-implementation-dependent">implementation-dependent</a></em>.</span></p>
               </dd><dt><span class="term">Available text resources</span></dt><dd>
-                <p><span id="impl-20">The set of available text resources (those that may be retrieved with a URI)
+                <p><span id="impl-21">The set of available text resources (those that may be retrieved with a URI)
                 is <em class="glossterm"><a href="#dt-implementation-dependent">implementation-dependent</a></em>.</span></p>
               </dd><dt><span class="term">Available collections</span></dt><dd>
-                <p><span id="impl-21">The set of available collections is
+                <p><span id="impl-22">The set of available collections is
                       <em class="glossterm"><a href="#dt-implementation-dependent">implementation-dependent</a></em>.</span></p>
               </dd><dt><span class="term">Default collection</span></dt><dd>
                 <p>None. </p>
               </dd><dt><span class="term">Available URI collections</span></dt><dd>
-                <p><span id="impl-22">The set of available URI collections is <em class="glossterm"><a href="#dt-implementation-dependent">implementation-dependent</a></em>.</span></p>
+                <p><span id="impl-23">The set of available URI collections is <em class="glossterm"><a href="#dt-implementation-dependent">implementation-dependent</a></em>.</span></p>
               </dd><dt><span class="term">Default URI collection</span></dt><dd>
-                <p><span id="impl-23">The default URI collection is <em class="glossterm"><a href="#dt-implementation-dependent">implementation-dependent</a></em>.</span></p>
+                <p><span id="impl-24">The default URI collection is <em class="glossterm"><a href="#dt-implementation-dependent">implementation-dependent</a></em>.</span></p>
               </dd><dt><span class="term">Environment variables</span></dt><dd>
-                <p><span id="impl-24">The list of available environment variables is <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em>.</span></p>
+                <p><span id="impl-25">The list of available environment variables is <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em>.</span></p>
               </dd></dl></div>
         </div></section>
         <section id="step-xpath-context-31" class="section"><div class="section-titlepage"><h5>7.2.2.2 Step XPath Context</h5></div><div class="content">
@@ -1213,30 +1212,30 @@ readable port then the context node is undefined.</p>
               </dd><dt><span class="term">Current dateTime</span></dt><dd>
                 <p>An implementation-defined point in time. </p>
               </dd><dt><span class="term">Implicit timezone</span></dt><dd>
-                <p><span id="impl-25">The implicit timezone is
+                <p><span id="impl-26">The implicit timezone is
                     <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em>.</span></p>
               </dd><dt><span class="term">Default language</span></dt><dd>
-                <p><span id="impl-26">The default language is <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em>.</span></p>
+                <p><span id="impl-27">The default language is <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em>.</span></p>
               </dd><dt><span class="term">Default calendar</span></dt><dd>
-                <p><span id="impl-27">The default calendar is <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em>.</span></p>
+                <p><span id="impl-28">The default calendar is <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em>.</span></p>
               </dd><dt><span class="term">Default place</span></dt><dd>
-                <p><span id="impl-28">The defualt place is <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em>.</span></p>
+                <p><span id="impl-29">The defualt place is <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em>.</span></p>
               </dd><dt><span class="term">Available documents</span></dt><dd>
-                <p><span id="impl-29">The set of available documents (those that may be retrieved with a URI)
+                <p><span id="impl-30">The set of available documents (those that may be retrieved with a URI)
                     is <em class="glossterm"><a href="#dt-implementation-dependent">implementation-dependent</a></em>.</span></p>
               </dd><dt><span class="term">Available text resources</span></dt><dd>
-                <p><span id="impl-30">The set of available text resources (those that may be retrieved with a URI)
+                <p><span id="impl-31">The set of available text resources (those that may be retrieved with a URI)
                   is <em class="glossterm"><a href="#dt-implementation-dependent">implementation-dependent</a></em>.</span></p>
               </dd><dt><span class="term">Available collections</span></dt><dd>
                 <p>None. </p>
               </dd><dt><span class="term">Default collection</span></dt><dd>
                 <p>None. </p>
               </dd><dt><span class="term">Available URI collections</span></dt><dd>
-                <p><span id="impl-31">The set of available URI collections is <em class="glossterm"><a href="#dt-implementation-dependent">implementation-dependent</a></em>.</span></p>
+                <p><span id="impl-32">The set of available URI collections is <em class="glossterm"><a href="#dt-implementation-dependent">implementation-dependent</a></em>.</span></p>
               </dd><dt><span class="term">Default URI collection</span></dt><dd>
-                <p><span id="impl-32">The default URI collection is <em class="glossterm"><a href="#dt-implementation-dependent">implementation-dependent</a></em>.</span></p>
+                <p><span id="impl-33">The default URI collection is <em class="glossterm"><a href="#dt-implementation-dependent">implementation-dependent</a></em>.</span></p>
               </dd><dt><span class="term">Environment variables</span></dt><dd>
-                <p><span id="impl-33">The list of available environment variables is <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em>.</span></p>
+                <p><span id="impl-34">The list of available environment variables is <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em>.</span></p>
               </dd></dl></div>
           <div id="note-amendments" class="note admonition"><h3>Note</h3><div class="admonition-body">
             <p>Some steps may also provide for implementation-defined or implementation-dependent
@@ -1305,7 +1304,7 @@ system properties, which are all in the XProc namespace:</p>
             </dd><dt><span class="term"><code class="varname">p:locale</code></span></dt><dd>
               <p>Returns a string which identifies the current environment (usually the OS)
                 language. This is useful for, for example, message
-                localization purposes. <span id="impl-34">The exact format of the language string is
+                localization purposes. <span id="impl-35">The exact format of the language string is
                     <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em> but <span class="rfc2119" id="f.system-property.6.2.2.1.1.2">should</span> be
                   consistent with the <code class="tag-attribute">xml:lang</code> attribute.</span></p>
             </dd><dt><span class="term"><code class="varname">p:product-name</code></span></dt><dd>
@@ -1345,7 +1344,7 @@ system properties, which are all in the XProc namespace:</p>
 <span class="rfc2119" id="f.system-property.7.1">must</span> be in a namespace and <span class="rfc2119" id="f.system-property.7.2">must not</span> be
 in the XProc namespace.</p>
 
-<p><span id="impl-35">The value of the <code class="function">p:system-propety</code> function during
+<p><span id="impl-36">The value of the <code class="function">p:system-propety</code> function during
 static analysis is <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em>.</span></p>
 
       </div></section>
@@ -1365,7 +1364,7 @@ scope for the expression. The
 only if the processor knows how to evaluate steps of the specified
 type.</p>
 
-<p><span id="impl-36">The value of the <a href="#f.step-available"><code class="function">p:step-available</code></a> function during
+<p><span id="impl-37">The value of the <a href="#f.step-available"><code class="function">p:step-available</code></a> function during
 static analysis is <em class="glossterm"><a href="#dt-implementation-dependent">implementation-dependent</a></em>.</span></p>
 </div></section>
 
@@ -1482,18 +1481,11 @@ normally during static anlaysis.</p>
 <p>This function retrieves the <em class="glossterm"><a href="#dt-document-properties">document properties</a></em>
 of a document as a map.</p>
 
-<div class="funcsynopsis"><span class="funcname">p:document-properties</span><span class="funcparen">(</span><span class="paramname">$doc</span><span class="typeas"> as </span><span class="type">document-node()</span><span class="funcparen">)</span><span class="typeas"> as </span><span class="type">map(xs:QName,item())</span></div>
+<div class="funcsynopsis"><span class="funcname">p:document-properties</span><span class="funcparen">(</span><span class="paramname">$doc</span><span class="typeas"> as </span><span class="type">item()</span><span class="funcparen">)</span><span class="typeas"> as </span><span class="type">map(xs:QName,item()*)</span></div>
 
 <p>The map returned contains (exclusively) the document properties
-associated with the <em class="parameter"><code>$doc</code></em> specified.</p>
-
-<p>The context node
-for the <a href="#f.document-properties"><code class="function">p:document-properties</code></a> function must be an
-XPath document node. In order to access the document properties of a
-non-XML document, the processor is responsible for manufacturing an
-empty document node for this purpose and for maintaining the
-association between that empty document node and the corresponding
-non-XML document.</p>
+associated with the <em class="parameter"><code>$doc</code></em> specified. If the item
+is not associated with a document, the resulting map will be empty.</p>
 
 <p>The <a href="#f.document-properties"><code class="function">p:document-properties</code></a> function behaves
 normally during static anlaysis.</p>
@@ -1505,22 +1497,15 @@ normally during static anlaysis.</p>
 <p>This function retrieves the <em class="glossterm"><a href="#dt-document-properties">document properties</a></em>
 of a document as an XML document.</p>
 
-<div class="funcsynopsis"><span class="funcname">p:document-properties-document</span><span class="funcparen">(</span><span class="paramname">$doc</span><span class="typeas"> as </span><span class="type">document-node()</span><span class="funcparen">)</span><span class="typeas"> as </span><span class="type">document-node()</span></div>
+<div class="funcsynopsis"><span class="funcname">p:document-properties-document</span><span class="funcparen">(</span><span class="paramname">$doc</span><span class="typeas"> as </span><span class="type">item()</span><span class="funcparen">)</span><span class="typeas"> as </span><span class="type">document-node()</span></div>
 
 <p>The document returned is a <code class="code">p:document-properties</code>
 document that contains (exclusively) the document properties
 associated with the <em class="parameter"><code>$doc</code></em> specified. Each key in the
 properties becomes an element, each value becomes the content of that element.
-For atomic values other than string, an <code class="tag-attribute">xsi:type</code> attribute is added to identify the
+For atomic values other than string, an
+<code class="tag-attribute">xsi:type</code> attribute is added to identify the
 type of the value.</p>
-
-<p>The context node
-for the <a href="#f.document-properties-document"><code class="function">p:document-properties-document</code></a> function must be an
-XPath document node. In order to access the document properties of a
-non-XML document, the processor is responsible for manufacturing an
-empty document node for this purpose and for maintaining the
-association between that empty document node and the corresponding
-non-XML document.</p>
 
 <p>The <a href="#f.document-properties-document"><code class="function">p:document-properties-document</code></a> function behaves
 normally during static anlaysis.</p>
@@ -1602,11 +1587,11 @@ normally during static anlaysis.</p>
 
 <section id="other-xpath-extension-functions" class="section"><div class="section-titlepage"><h3>8.12 Other XPath Extension Functions</h3></div><div class="content">
   
-  <p><span id="impl-37">It is <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em> if the processor supports
+  <p><span id="impl-38">It is <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em> if the processor supports
   any other XPath extension functions.</span> Additional extension functions, if any,
   <span class="rfc2119" id="other-xpath-extension-functions.2.2">must not</span> use any of the XProc namespaces. </p>
 
-<p><span id="impl-38">The value of the any other XPath extension functions during
+<p><span id="impl-39">The value of the any other XPath extension functions during
 static analysis is <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em>.</span></p>
 </div></section>
 </div></section>
@@ -1616,9 +1601,9 @@ static analysis is <em class="glossterm"><a href="#dt-implementation-defined">im
       <p>XML documents flow between steps in an XProc pipeline. <a href="#infoset-conformance" title="Infoset Conformance">Section A.3, “Infoset Conformance”</a> identifies the properties of those documents that
           <span class="rfc2119" id="psvi-support.2.2">must</span> be available. Implementations <span class="rfc2119" id="psvi-support.2.3">may</span> also have the
         ability to pass PSVI annotations between steps.</p>
-      <p><span id="impl-39">Whether or not the pipeline processor supports passing PSVI annotations between
+      <p><span id="impl-40">Whether or not the pipeline processor supports passing PSVI annotations between
           steps is <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em>.</span>
-        <span id="impl-40">The exact PSVI properties that are preserved when documents are passed between steps
+        <span id="impl-41">The exact PSVI properties that are preserved when documents are passed between steps
           is <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em>.</span></p>
       <p>A pipeline can use the <code class="varname">p:psvi-supported</code> system property to determine
         whether or not PSVI properties can be passed between steps.</p>
@@ -1672,7 +1657,7 @@ static analysis is <em class="glossterm"><a href="#dt-implementation-defined">im
         </li><li>
           <p>Except as specified above, or in the descriptions of individual steps,
             implementations <span class="rfc2119" id="psvi-support.10.5.1.1">must not</span> include PSVI properties in the outputs of
-            steps defined by this specification. <span id="impl-41">It is
+            steps defined by this specification. <span id="impl-42">It is
                 <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em> what PSVI properties, if any, are
               produced by extension steps.</span></p>
           <p>The exceptions in the standard XProc steps are the
@@ -1753,7 +1738,7 @@ templates</a></em>]</span>.</p>
 in an XProc pipeline unless the attribute is specifically designated
 as one that permits an attribute value template. Option shortcuts
 permit attribute value templates.
-<span id="impl-42">Whether or not an extension attribute permits attribute value
+<span id="impl-43">Whether or not an extension attribute permits attribute value
 templates is <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em>.</span>
 In an element
 syntax summary, the value of an attribute that allows attribute value
@@ -2007,7 +1992,7 @@ name</a>. The value may be any XPath data model value.]</span>
 Option names are always expressed as literal values, pipelines cannot
 construct option names dynamically. </p>
 
-<p><span id="impl-43">How outside values are specified for pipeline options on
+<p><span id="impl-44">How outside values are specified for pipeline options on
 the pipeline initially invoked by the processor is
 <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em>.</span> In other words,
 the command line options, APIs, or other mechanisms available to
@@ -2084,7 +2069,7 @@ the pipeline will produce three messages: “NAME1=1”, “NAME2=2”, and “N
       <p><a id="err.inline.D0021"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic error</a></em> (<a href="#err.D0021"><code class="errqname">err:XD0021</code></a>) for a pipeline to
           attempt to access a resource for which it has insufficient privileges or perform a step
           which is forbidden.
-        <span id="impl-44">Which steps are forbidden, what privileges are needed to access resources, and under
+        <span id="impl-45">Which steps are forbidden, what privileges are needed to access resources, and under
           what circumstances these security constraints apply is
             <em class="glossterm"><a href="#dt-implementation-dependent">implementation-dependent</a></em>.</span>
       </p>
@@ -2252,7 +2237,7 @@ appear on the <code class="code">messages</code> port.</p>
         “<em class="glossterm">XML</em>” refers equally to both versions.]</span>
       <span id="dt-Namespaces-in-XML" class="termdef">[Definition: Unless otherwise noted, the term <em class="glossterm">Namespaces
           in XML</em> refers equally to [<a href="#xmlns10"><span class="abbrev">Namespaces 1.0</span></a>] and [<a href="#xmlns11"><span class="abbrev">Namespaces 1.1</span></a>].]</span>
-      <span id="impl-45">Support for pipeline documents written in XML 1.1 and pipeline inputs and outputs that
+      <span id="impl-46">Support for pipeline documents written in XML 1.1 and pipeline inputs and outputs that
         use XML 1.1 is <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em>.</span>
     </p>
     <p>Elements in a pipeline document represent the pipeline, the steps it contains, the
@@ -2542,7 +2527,7 @@ documents by URI.</p>
     <section id="annotations" class="section"><div class="section-titlepage"><h3>15.7 Processor annotations</h3></div><div class="content">
       
       <p>Pipeline authors may add annotations to their pipeline documents with the
-          <a href="#p.pipeinfo"><code class="tag-element">p:pipeinfo</code></a> element. <span id="impl-46">The semantics of <a href="#p.pipeinfo"><code class="tag-element">p:pipeinfo</code></a> elements are
+          <a href="#p.pipeinfo"><code class="tag-element">p:pipeinfo</code></a> element. <span id="impl-47">The semantics of <a href="#p.pipeinfo"><code class="tag-element">p:pipeinfo</code></a> elements are
             <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em>.</span> Processors
           <span class="rfc2119" id="annotations.2.3">should</span> specify a way for their annotations to be identified, perhaps
         with <a href="#extension-attributes">extension attributes</a>.</p>
@@ -2608,7 +2593,7 @@ descendant of a <a href="#p.inline"><code class="tag-element">p:inline</code></a
 accompanied by a syntactic summary that provides a quick overview of
 the element's syntax:</p>
 
-      <p id="d1750e0" class="element-syntax element-syntax-language-example"><code>&lt;p:some-element<br />  <strong>reqd-attribute</strong> = <var>some-type</var><br />  some-attribute? = <var>some-type</var><br />  avt-attribute? = { <var>some-type</var> }&gt;<br />    (<var>some</var> | <br />     <var>elements</var> | <br />     <var>allowed</var>)*,<br />    <var>other-elements?</var><br />&lt;/p:some-element&gt;</code></p>
+      <p id="d1748e0" class="element-syntax element-syntax-language-example"><code>&lt;p:some-element<br />  <strong>reqd-attribute</strong> = <var>some-type</var><br />  some-attribute? = <var>some-type</var><br />  avt-attribute? = { <var>some-type</var> }&gt;<br />    (<var>some</var> | <br />     <var>elements</var> | <br />     <var>allowed</var>)*,<br />    <var>other-elements?</var><br />&lt;/p:some-element&gt;</code></p>
       <p>The content model fragments in these tableaux are presented in a simple, compact
         notation. In brief:</p><div class="itemizedlist">
         
@@ -2786,7 +2771,7 @@ the summaries:</p><div class="itemizedlist">
               made to dereference a URI where the scheme of the URI reference is not
               supported. Implementations are encouraged to support as many schemes as is
             practical and, in particular, they <span class="rfc2119" id="common-errors.3.10.1.2">should</span> support both the
-              <code class="literal">file:</code> and <code class="literal">http(s):</code> schemes. <span id="impl-47">The set of URI
+              <code class="literal">file:</code> and <code class="literal">http(s):</code> schemes. <span id="impl-48">The set of URI
               schemes actually supported is <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em>.</span>
           </p>
         </li><li>
@@ -2921,7 +2906,7 @@ is a <em class="glossterm"><a href="#dt-compound-step">compound step</a></em> th
 documents, applying its <em class="glossterm"><a href="#dt-subpipeline">subpipeline</a></em> to each
 document in turn.</p>
 
-<p id="d1891e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:for-each<br />  name? = <var>NCName</var>&gt;<br />    ((<a href="#p.with-input">p:with-input</a>? &amp; <br />      <a href="#p.output">p:output</a>*),<br />     <var>subpipeline</var>)<br />&lt;/p:for-each&gt;</code></p>
+<p id="d1889e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:for-each<br />  name? = <var>NCName</var>&gt;<br />    ((<a href="#p.with-input">p:with-input</a>? &amp; <br />      <a href="#p.output">p:output</a>*),<br />     <var>subpipeline</var>)<br />&lt;/p:for-each&gt;</code></p>
 
 <p>When a pipeline needs to process a sequence of documents using a
 subpipeline that only processes a single document, the
@@ -3028,7 +3013,7 @@ is a <em class="glossterm"><a href="#dt-compound-step">compound step</a></em> th
 document, applying its <em class="glossterm"><a href="#dt-subpipeline">subpipeline</a></em> to one or
 more subtrees of the document. </p>
 
-<p id="d1968e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:viewport<br />  name? = <var>NCName</var><br />  <strong>match</strong> = { <var>XSLTSelectionPattern</var> }&gt;<br />    ((<a href="#p.with-input">p:with-input</a>? &amp; <br />      <a href="#p.output">p:output</a>?),<br />     <var>subpipeline</var>)<br />&lt;/p:viewport&gt;</code></p>
+<p id="d1966e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:viewport<br />  name? = <var>NCName</var><br />  <strong>match</strong> = { <var>XSLTSelectionPattern</var> }&gt;<br />    ((<a href="#p.with-input">p:with-input</a>? &amp; <br />      <a href="#p.output">p:output</a>?),<br />     <var>subpipeline</var>)<br />&lt;/p:viewport&gt;</code></p>
 
 <p>The result of the <code class="tag-element">p:viewport</code> is a copy of the
 original document where the selected subtrees have been replaced by
@@ -3133,7 +3118,7 @@ a <em class="glossterm"><a href="#dt-multi-container-step">multi-container step<
 of a list of alternative <em class="glossterm"><a href="#dt-subpipeline">subpipelines</a></em> based on the evaluation of XPath
 expressions.</p>
 
-      <p id="d2052e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:choose<br />  name? = <var>NCName</var>&gt;<br />    (<a href="#p.with-input">p:with-input</a>?,<br />     ((<a href="#p.when">p:when</a>+,<br />       <a href="#p.otherwise">p:otherwise</a>?) | <br />      (<a href="#p.when">p:when</a>*,<br />       <a href="#p.otherwise">p:otherwise</a>)))<br />&lt;/p:choose&gt;</code></p>
+      <p id="d2050e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:choose<br />  name? = <var>NCName</var>&gt;<br />    (<a href="#p.with-input">p:with-input</a>?,<br />     ((<a href="#p.when">p:when</a>+,<br />       <a href="#p.otherwise">p:otherwise</a>?) | <br />      (<a href="#p.when">p:when</a>*,<br />       <a href="#p.otherwise">p:otherwise</a>)))<br />&lt;/p:choose&gt;</code></p>
 
 <p>A <code class="tag-element">p:choose</code> contains an arbitrary number of
 alternative <em class="glossterm"><a href="#dt-subpipeline">subpipelines</a></em>, exactly one of which
@@ -3202,7 +3187,7 @@ represented by a <a href="#p.otherwise"><code class="tag-element">p:otherwise</c
 
 <section id="p.when" class="section"><div class="section-titlepage"><h4>16.4.1 p:when</h4></div><div class="content"><p>A
           when specifies one subpipeline guarded by a test expression. </p>
-        <p id="d2080e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:when<br />  <strong>test</strong> = <var>XPathExpression</var><br />  collection? = { <var>boolean</var> }&gt;<br />    (<a href="#p.with-input">p:with-input</a>?,<br />     <a href="#p.output">p:output</a>*,<br />     <var>subpipeline</var>)<br />&lt;/p:when&gt;</code></p>
+        <p id="d2078e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:when<br />  <strong>test</strong> = <var>XPathExpression</var><br />  collection? = { <var>boolean</var> }&gt;<br />    (<a href="#p.with-input">p:with-input</a>?,<br />     <a href="#p.output">p:output</a>*,<br />     <var>subpipeline</var>)<br />&lt;/p:when&gt;</code></p>
         <p>Each <code class="tag-element">p:when</code> branch of the <a href="#p.choose"><code class="tag-element">p:choose</code></a> has a <code class="tag-attribute">test</code> attribute which <span class="rfc2119" id="p.when.4.4">must</span> contain an XPath expression. That
           XPath expression's effective boolean value is the guard for the
             <em class="glossterm"><a href="#dt-subpipeline">subpipeline</a></em> contained within that
@@ -3228,7 +3213,7 @@ on that input and the context item will be undefined.
 branch; the subpipeline selected if no test expression on any
 preceding <a href="#p.when"><code class="tag-element">p:when</code></a> evaluates to true.</p>
 
-        <p id="d2102e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:otherwise&gt;<br />    (<a href="#p.output">p:output</a>*,<br />     <var>subpipeline</var>)<br />&lt;/p:otherwise&gt;</code></p>
+        <p id="d2100e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:otherwise&gt;<br />    (<a href="#p.output">p:output</a>*,<br />     <var>subpipeline</var>)<br />&lt;/p:otherwise&gt;</code></p>
       </div></section><section id="example-choose" class="section tocsuppress"><div class="section-titlepage"><h4>16.4.3 Example</h4></div><div class="content">
         
         <p>A <a href="#p.choose"><code class="tag-element">p:choose</code></a> might test the version attribute of the document element and
@@ -3267,7 +3252,7 @@ preceding <a href="#p.when"><code class="tag-element">p:when</code></a> evaluate
 
 <p>A <code class="tag-element">p:if</code> specifies a single subpipeline guarded by a test expression.</p>
 
-<p id="d2133e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:if<br />  <strong>test</strong> = <var>XPathExpression</var><br />  collection? = { <var>boolean</var> }&gt;<br />    (<a href="#p.with-input">p:with-input</a>?,<br />     <a href="#p.output">p:output</a>*,<br />     <var>subpipeline</var>)<br />&lt;/p:if&gt;</code></p>
+<p id="d2131e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:if<br />  <strong>test</strong> = <var>XPathExpression</var><br />  collection? = { <var>boolean</var> }&gt;<br />    (<a href="#p.with-input">p:with-input</a>?,<br />     <a href="#p.output">p:output</a>*,<br />     <var>subpipeline</var>)<br />&lt;/p:if&gt;</code></p>
 
 <p>The <code class="tag-element">p:if</code> has a <code class="tag-attribute">test</code>
 attribute which <span class="rfc2119" id="p.if.4.3">must</span> contain an XPath expression.
@@ -3300,7 +3285,7 @@ on the <code class="tag-element">p:if</code> will produce any documents.</p>
           <code class="tag-element">p:group</code> element. In a <a href="#p.try"><code class="tag-element">p:try</code></a>, it is a non-step wrapper, everywhere
         else, it is a <em class="glossterm"><a href="#dt-compound-step">compound step</a></em>. A group encapsulates the behavior of its
           <em class="glossterm"><a href="#dt-subpipeline">subpipeline</a></em>.</p>
-      <p id="d2155e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:group<br />  name? = <var>NCName</var>&gt;<br />    (<a href="#p.output">p:output</a>*,<br />     <var>subpipeline</var>)<br />&lt;/p:group&gt;</code></p>
+      <p id="d2153e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:group<br />  name? = <var>NCName</var>&gt;<br />    (<a href="#p.output">p:output</a>*,<br />     <var>subpipeline</var>)<br />&lt;/p:group&gt;</code></p>
       <p>A <code class="tag-element">p:group</code> is a convenience wrapper for a collection of steps. </p><section id="example-group" class="section tocsuppress"><div class="section-titlepage"><h4>16.6.1 Example</h4></div><div class="content">
         
         <figure id="ex.p.group" class="example-wrapper"><div class="title">Example 8. An Example Group</div><div class="example"><pre class="programlisting language-markup line-numbers"><code>&lt;p:group&gt;
@@ -3338,7 +3323,7 @@ a <em class="glossterm"><a href="#dt-multi-container-step">multi-container step<
 <em class="glossterm"><a href="#dt-subpipeline">subpipeline</a></em>, preventing any dynamic errors that
 arise within it from being exposed to the rest of the pipeline.</p>
 
-<p id="d2186e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:try<br />  name? = <var>NCName</var>&gt;<br />    (<a href="#p.group">p:group</a>,<br />      ((<a href="#p.catch">p:catch</a>+,<br />        <a href="#p.finally">p:finally</a>?) | <br />       (<a href="#p.catch">p:catch</a>*,<br />        <a href="#p.finally">p:finally</a>)))<br />&lt;/p:try&gt;</code></p>
+<p id="d2184e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:try<br />  name? = <var>NCName</var>&gt;<br />    (<a href="#p.group">p:group</a>,<br />      ((<a href="#p.catch">p:catch</a>+,<br />        <a href="#p.finally">p:finally</a>?) | <br />       (<a href="#p.catch">p:catch</a>*,<br />        <a href="#p.finally">p:finally</a>)))<br />&lt;/p:try&gt;</code></p>
 
 <p>The <a href="#p.group"><code class="tag-element">p:group</code></a> represents the initial subpipeline and
 the recovery (or “catch”) pipelines are identified with
@@ -3414,7 +3399,7 @@ declared to produce a sequence in either of its subpipelines.</p>
 <p>The recovery subpipeline of a <code class="tag-element">p:try</code> is identified
 with a <a href="#p.catch"><code id="p.catch" class="tag-element">p:catch</code></a>:</p>
 
-<p id="d2225e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:catch<br />  name? = <var>NCName</var><br />  code? = <var>QNameList</var>&gt;<br />    (<a href="#p.output">p:output</a>*,<br />     <var>subpipeline</var>)<br />&lt;/p:catch&gt;</code></p>
+<p id="d2223e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:catch<br />  name? = <var>NCName</var><br />  code? = <var>QNameList</var>&gt;<br />    (<a href="#p.output">p:output</a>*,<br />     <var>subpipeline</var>)<br />&lt;/p:catch&gt;</code></p>
 
 <p>The environment inherited by the <em class="glossterm"><a href="#dt-contained-steps">contained
 steps</a></em> of the <a href="#p.catch"><code class="tag-element">p:catch</code></a> is the
@@ -3444,7 +3429,7 @@ the <code class="tag-element">p:try</code> step does is evaluate the
 pipeline. This happens <em>even if</em> the <code class="tag-element">p:try</code>
 fails.</p>
 
-<p id="d2238e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:finally<br />  name? = <var>NCName</var>&gt;<br />    <var>subpipeline</var><br />&lt;/p:finally&gt;</code></p>
+<p id="d2236e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:finally<br />  name? = <var>NCName</var>&gt;<br />    <var>subpipeline</var><br />&lt;/p:finally&gt;</code></p>
 
 <p>The <a href="#p.finally"><code class="tag-element">p:finally</code></a> has no inputs and no outputs. It exists
 only to handle recovery and resource cleanup tasks. If cleanup tasks
@@ -3475,7 +3460,7 @@ interoperability among processors, errors that are reported on the
 <code class="tag-element">c:errors</code> which contains zero or more <a href="#cv.error"><code class="tag-element">c:error</code></a>
 elements.</p>
 
-<p id="d2264e0" class="element-syntax element-syntax-error-vocabulary"><code>&lt;c:errors&gt;<br />    <a href="#cv.error">c:error</a>*<br />&lt;/c:errors&gt;</code></p>
+<p id="d2262e0" class="element-syntax element-syntax-error-vocabulary"><code>&lt;c:errors&gt;<br />    <a href="#cv.error">c:error</a>*<br />&lt;/c:errors&gt;</code></p>
 
 </div></section>
 
@@ -3485,7 +3470,7 @@ elements.</p>
 <p>Each specific error is represented by an <code class="tag-element">c:error</code>
 element:</p>
 
-<p id="d2281e0" class="element-syntax element-syntax-error-vocabulary"><code>&lt;c:error<br />  name? = <var>NCName</var><br />  type? = <var>EQName</var><br />  code? = <var>EQName</var><br />  href? = <var>anyURI</var><br />  line? = <var>integer</var><br />  column? = <var>integer</var><br />  offset? = <var>integer</var>&gt;<br />    <var>anyNode</var>*<br />&lt;/c:error&gt;</code></p>
+<p id="d2279e0" class="element-syntax element-syntax-error-vocabulary"><code>&lt;c:error<br />  name? = <var>NCName</var><br />  type? = <var>EQName</var><br />  code? = <var>EQName</var><br />  href? = <var>anyURI</var><br />  line? = <var>integer</var><br />  column? = <var>integer</var><br />  offset? = <var>integer</var>&gt;<br />    <var>anyNode</var>*<br />&lt;/c:error&gt;</code></p>
 
 <p>The <code class="tag-attribute">name</code> and <code class="tag-attribute">type</code> attributes identify the name and type,
 respectively, of the step which failed.</p>
@@ -3578,7 +3563,7 @@ can provide some sort of default for the rest of the pipeline.</p>
         described in the preceding sections, XProc provides a standard library of atomic step types.
         The full vocabulary of standards steps is described in [<a href="#std-components"><span class="abbrev">XProc 2.0: Standard Step Library</span></a>].</p>
 <p>All of the standard, atomic steps are invoked in the same way:</p>
-      <p id="d2330e0" class="element-syntax element-syntax-language-construct"><code>&lt;<var>p:atomic-step</var><br />  name? = <var>NCName</var>&gt;<br />    (<a href="#p.with-input">p:with-input</a> | <br />     <a href="#p.with-option">p:with-option</a>)*<br />&lt;/<var>p:atomic-step</var>&gt;</code></p>
+      <p id="d2328e0" class="element-syntax element-syntax-language-construct"><code>&lt;<var>p:atomic-step</var><br />  name? = <var>NCName</var>&gt;<br />    (<a href="#p.with-input">p:with-input</a> | <br />     <a href="#p.with-option">p:with-option</a>)*<br />&lt;/<var>p:atomic-step</var>&gt;</code></p>
       <p>Where “<em class="replaceable"><code>p:atomic-step</code></em>” <span class="rfc2119" id="p.atomic.5.2">must</span> be in the XProc
         namespace and <span class="rfc2119" id="p.atomic.5.3">must</span> be declared in either the standard library for the
         XProc version supported by the processor or explicitly imported by the surrounding pipeline
@@ -3586,7 +3571,7 @@ can provide some sort of default for the rest of the pipeline.</p>
     <section id="p.extension" class="section"><div class="section-titlepage"><h3>16.9 Extension Steps</h3></div><div class="content"><p>Pipeline authors may also have
         access to additional steps not defined or described by this specification. Atomic extension
         steps are invoked just like standard steps:</p>
-      <p id="d2350e0" class="element-syntax element-syntax-language-construct"><code>&lt;<var>pfx:atomic-step</var><br />  name? = <var>NCName</var>&gt;<br />    (<a href="#p.with-input">p:with-input</a> | <br />     <a href="#p.with-option">p:with-option</a>)*<br />&lt;/<var>pfx:atomic-step</var>&gt;</code></p>
+      <p id="d2348e0" class="element-syntax element-syntax-language-construct"><code>&lt;<var>pfx:atomic-step</var><br />  name? = <var>NCName</var>&gt;<br />    (<a href="#p.with-input">p:with-input</a> | <br />     <a href="#p.with-option">p:with-option</a>)*<br />&lt;/<var>pfx:atomic-step</var>&gt;</code></p>
       <p>Extension steps <span class="rfc2119" id="p.extension.4.1">must not</span> be in the XProc namespace and there
           <span class="rfc2119" id="p.extension.4.2">must</span> be a <em class="glossterm"><a href="#dt-visible">visible</a></em> step declaration at the point
         of use (see <a href="#scoping" title="Scoping of Names">Section 15.2, “Scoping of Names”</a>).</p>
@@ -3605,7 +3590,7 @@ can provide some sort of default for the rest of the pipeline.</p>
 <p><a id="err.inline.D0017"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic
             error</a></em> (<a href="#err.D0017"><code class="errqname">err:XD0017</code></a>) if the running pipeline attempts to invoke a step which the processor
           does not know how to perform.</p>
-<p><span id="impl-48">The presence of other <em class="glossterm"><a href="#dt-compound-step">compound steps</a></em> is
+<p><span id="impl-49">The presence of other <em class="glossterm"><a href="#dt-compound-step">compound steps</a></em> is
             <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em>; XProc provides no standard mechanism for
           defining them or describing what they can contain.</span>
         <a id="err.inline.S0048"></a>It is a <em class="glossterm"><a href="#dt-static-error">static error</a></em> (<a href="#err.S0048"><code class="errqname">err:XS0048</code></a>) to use a declared step as a
@@ -3680,7 +3665,7 @@ default connection for the port.</p>
 <p>An input <em>declaration</em> has the following
 form:</p>
 
-<p id="d2399e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:input<br />  <strong>port</strong> = <var>NCName</var><br />  sequence? = <var>boolean</var><br />  primary? = <var>boolean</var><br />  select? = <var>XPathExpression</var><br />  content-types? = <var>ContentTypes</var><br />  href? = { <var>anyURI</var> }<br />  exclude-inline-prefixes? = <var>ExcludeInlinePrefixes</var>&gt;<br />    ((<a href="#p.empty">p:empty</a> | <br />       (<a href="#p.document">p:document</a> | <br />        <a href="#p.inline">p:inline</a>)*) | <br />     <var>anyElement</var>*)<br />&lt;/p:input&gt;</code></p>
+<p id="d2397e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:input<br />  <strong>port</strong> = <var>NCName</var><br />  sequence? = <var>boolean</var><br />  primary? = <var>boolean</var><br />  select? = <var>XPathExpression</var><br />  content-types? = <var>ContentTypes</var><br />  href? = { <var>anyURI</var> }<br />  exclude-inline-prefixes? = <var>ExcludeInlinePrefixes</var>&gt;<br />    ((<a href="#p.empty">p:empty</a> | <br />       (<a href="#p.document">p:document</a> | <br />        <a href="#p.inline">p:inline</a>)*) | <br />     <var>anyElement</var>*)<br />&lt;/p:input&gt;</code></p>
 
 <p>The attributes that can appear on <code class="tag-element">p:input</code> are
 <a href="#common-attr">the common attributes</a> and:</p>
@@ -3791,7 +3776,7 @@ on <code class="tag-element">p:input</code> nor on a <a href="#p.document"><code
 <p>An input <em>connection</em> has the following
 form:</p>
 
-<p id="d2484e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:with-input<br />  port? = <var>NCName</var><br />  select? = <var>XPathExpression</var><br />  href? = { <var>anyURI</var> }<br />  pipe? = <var>string</var><br />  exclude-inline-prefixes? = <var>ExcludeInlinePrefixes</var>&gt;<br />    ((<a href="#p.empty">p:empty</a> | <br />       (<a href="#p.document">p:document</a> | <br />        <a href="#p.pipe">p:pipe</a> | <br />        <a href="#p.inline">p:inline</a>)*) | <br />     <var>anyElement</var>*)<br />&lt;/p:with-input&gt;</code></p>
+<p id="d2482e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:with-input<br />  port? = <var>NCName</var><br />  select? = <var>XPathExpression</var><br />  href? = { <var>anyURI</var> }<br />  pipe? = <var>string</var><br />  exclude-inline-prefixes? = <var>ExcludeInlinePrefixes</var>&gt;<br />    ((<a href="#p.empty">p:empty</a> | <br />       (<a href="#p.document">p:document</a> | <br />        <a href="#p.pipe">p:pipe</a> | <br />        <a href="#p.inline">p:inline</a>)*) | <br />     <var>anyElement</var>*)<br />&lt;/p:with-input&gt;</code></p>
 
 <p>The attributes that can appear on <code class="tag-element">p:with-input</code> are
 <a href="#common-attr">the common attributes</a> and:</p>
@@ -3961,7 +3946,7 @@ port.</p>
 <p>A <code class="tag-element">p:output</code> identifies an output port, optionally
 connecting an input for it, if necessary.</p>
 
-<p id="d2569e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:output<br />  port? = <var>NCName</var><br />  sequence? = <var>boolean</var><br />  primary? = <var>boolean</var><br />  content-types? = <var>ContentTypes</var><br />  serialization? = <var>map(xs:QName,xs:anyAtomicValue)</var> /&gt;</code></p>
+<p id="d2567e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:output<br />  port? = <var>NCName</var><br />  sequence? = <var>boolean</var><br />  primary? = <var>boolean</var><br />  content-types? = <var>ContentTypes</var><br />  serialization? = <var>map(xs:QName,xs:anyAtomicValue)</var> /&gt;</code></p>
 
 <p>The attributes that can appear on <code class="tag-element">p:output</code> are
 <a href="#common-attr">the common attributes</a> and:</p>
@@ -4022,7 +4007,7 @@ steps</a></em>, the declaration <span class="rfc2119" id="p.output.6.2">may</spa
 accompanied by a <em class="glossterm"><a href="#dt-connection">connection</a></em> for the
 output.</p>
 
-<p id="d2619e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:output<br />  port? = <var>NCName</var><br />  sequence? = <var>boolean</var><br />  primary? = <var>boolean</var><br />  content-types? = <var>ContentTypes</var><br />  serialization? = <var>map(xs:QName,xs:anyAtomicValue)</var><br />  href? = { <var>anyURI</var> }<br />  pipe? = <var>string</var><br />  exclude-inline-prefixes? = <var>ExcludeInlinePrefixes</var>&gt;<br />    ((<a href="#p.empty">p:empty</a> | <br />       (<a href="#p.document">p:document</a> | <br />        <a href="#p.pipe">p:pipe</a> | <br />        <a href="#p.inline">p:inline</a>)*) | <br />     <var>anyElement</var>*)<br />&lt;/p:output&gt;</code></p>
+<p id="d2617e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:output<br />  port? = <var>NCName</var><br />  sequence? = <var>boolean</var><br />  primary? = <var>boolean</var><br />  content-types? = <var>ContentTypes</var><br />  serialization? = <var>map(xs:QName,xs:anyAtomicValue)</var><br />  href? = { <var>anyURI</var> }<br />  pipe? = <var>string</var><br />  exclude-inline-prefixes? = <var>ExcludeInlinePrefixes</var>&gt;<br />    ((<a href="#p.empty">p:empty</a> | <br />       (<a href="#p.document">p:document</a> | <br />        <a href="#p.pipe">p:pipe</a> | <br />        <a href="#p.inline">p:inline</a>)*) | <br />     <var>anyElement</var>*)<br />&lt;/p:output&gt;</code></p>
 
 <p>The additional attributes that can appear on an output connection
 are:</p>
@@ -4073,7 +4058,7 @@ example, the pipeline has been called from another pipeline), then the
 <span class="rfc2119" id="serialization.3.3">must</span> be
 ignored.</p>
 
-<p><span id="impl-49">The default value of any serialization parameters not
+<p><span id="impl-50">The default value of any serialization parameters not
 specified on a particular output is
 <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em>.</span>
 <a id="err.inline.D0020"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic error</a></em> (<a href="#err.D0020"><code class="errqname">err:XD0020</code></a>) if
@@ -4144,7 +4129,7 @@ The public identifier of the doctype.</p>
 <code class="type">anyURI</code>. The system identifier of the doctype. It need not
 be absolute, and is not resolved.</p>
 </dd><dt><span class="term"><code class="option">encoding</code></span></dt><dd>
-<p>A character set name. <span id="impl-50">If no <code class="option">encoding</code> is
+<p>A character set name. <span id="impl-51">If no <code class="option">encoding</code> is
 specified, the encoding used is <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em>.
 If the <code class="option">method</code> is
 “<code class="literal">xml</code>” or “<code class="literal">xhtml</code>”, the
@@ -4173,7 +4158,7 @@ default varies according to the <code class="option">method</code>:</p>
 
 <dl><dt><span class="term"><code class="literal">xml</code></span></dt><dd><p><code class="literal">application/xml</code></p></dd><dt><span class="term"><code class="literal">html</code></span></dt><dd><p><code class="literal">text/html</code></p></dd><dt><span class="term"><code class="literal">xhtml</code></span></dt><dd><p><code class="literal">application/xhtml+xml</code></p></dd><dt><span class="term"><code class="literal">text</code></span></dt><dd><p><code class="literal">text/plain</code></p></dd></dl></div>
 
-<p><span id="impl-51">For methods other than <code class="literal">xml</code>, <code class="literal">html</code>,
+<p><span id="impl-52">For methods other than <code class="literal">xml</code>, <code class="literal">html</code>,
 <code class="literal">xhtml</code>, and <code class="literal">text</code>; the
 <code class="option">media-type</code> is <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em>.
 </span></p>
@@ -4221,7 +4206,7 @@ method used by this component with standard values of 'html', 'xml',
 supported. The interpretation of the remaining options is as
 specified in [<a href="#xml-serialization"><span class="abbrev">Serialization</span></a>].</p>
 
-<p><span id="impl-52">Implementations may support other method values but their
+<p><span id="impl-53">Implementations may support other method values but their
 results are <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em>.</span>
 </p>
 
@@ -4245,7 +4230,7 @@ it must conform to the semantics defined in the [<a href="#xml-serialization"><s
 <section id="non-xml-serialization" class="section"><div class="section-titlepage"><h5>17.3.1.2 Non-XML serialization</h5></div><div class="content">
 
 
-<p><span id="impl-53">The names and values of non-XML serialization parameters are
+<p><span id="impl-54">The names and values of non-XML serialization parameters are
 <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em>.</span></p>
 </div></section>
 
@@ -4279,7 +4264,7 @@ of the variable using an
 <a href="https://www.w3.org/TR/xpath-31/#dt-sequence-type">sequence Type</a>.
 </p>
 
-<p id="d2814e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:variable<br />  <strong>name</strong> = <var>EQName</var><br />  as? = <var>XPathSequenceType</var><br />  static? = <var>boolean</var><br />  <strong>select</strong> = <var>XPathExpression</var><br />  collection? = { <var>boolean</var> }<br />  href? = { <var>anyURI</var> }<br />  pipe? = <var>string</var><br />  exclude-inline-prefixes? = <var>ExcludeInlinePrefixes</var><br />  visibility? = <var>private|public</var>&gt;<br />    ((<a href="#p.empty">p:empty</a> | <br />       (<a href="#p.document">p:document</a> | <br />        <a href="#p.pipe">p:pipe</a> | <br />        <a href="#p.inline">p:inline</a>)*) | <br />     <var>anyElement</var>*)<br />&lt;/p:variable&gt;</code></p>
+<p id="d2812e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:variable<br />  <strong>name</strong> = <var>EQName</var><br />  as? = <var>XPathSequenceType</var><br />  static? = <var>boolean</var><br />  <strong>select</strong> = <var>XPathExpression</var><br />  collection? = { <var>boolean</var> }<br />  href? = { <var>anyURI</var> }<br />  pipe? = <var>string</var><br />  exclude-inline-prefixes? = <var>ExcludeInlinePrefixes</var><br />  visibility? = <var>private|public</var>&gt;<br />    ((<a href="#p.empty">p:empty</a> | <br />       (<a href="#p.document">p:document</a> | <br />        <a href="#p.pipe">p:pipe</a> | <br />        <a href="#p.inline">p:inline</a>)*) | <br />     <var>anyElement</var>*)<br />&lt;/p:variable&gt;</code></p>
 
 <p>The attributes that can appear on <code class="tag-element">p:variable</code> are
 <a href="#common-attr">the common attributes</a> and:</p>
@@ -4336,7 +4321,7 @@ a <code class="tag-element">p:variable</code> does not have a select attribute.
 is evaluated as an XPath expression using the appropriate context as
 described in <a href="#xpath-context" title="XPath in XProc">Section 7.2.2, “XPath in XProc”</a>, for the enclosing
 <em class="glossterm"><a href="#dt-container">container</a></em>.
-<span id="impl-54">The precise details about what XPath expressions are allowed
+<span id="impl-55">The precise details about what XPath expressions are allowed
 (for example, can the expression declare a function) is
 <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em>.</span>
 </p>
@@ -4426,7 +4411,7 @@ has a prefix which is not bound to a namespace.</p>
 to declare two or more options on the same step with the same
 name.</p>
 
-<p id="d2917e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:option<br />  <strong>name</strong> = <var>EQName</var><br />  as? = <var>XPathSequenceType</var><br />  static? = <var>boolean</var><br />  required? = <var>boolean</var><br />  select? = <var>XPathExpression</var><br />  visibility? = <var>private|public</var> /&gt;</code></p>
+<p id="d2915e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:option<br />  <strong>name</strong> = <var>EQName</var><br />  as? = <var>XPathSequenceType</var><br />  static? = <var>boolean</var><br />  required? = <var>boolean</var><br />  select? = <var>XPathExpression</var><br />  visibility? = <var>private|public</var> /&gt;</code></p>
 
   <p>An option may declare its type. The type is specified in the <code class="tag-attribute">as</code> attribute using an
 [<a href="#xpath31"><span class="abbrev">XPath 3.1</span></a>]
@@ -4527,7 +4512,7 @@ declared “static”:</p>
 <p>A <code class="tag-element">p:with-option</code> provides an actual value for an
 option when a step is invoked.</p>
 
-<p id="d3001e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:with-option<br />  <strong>name</strong> = <var>EQName</var><br />  as? = <var>XPathSequenceType</var><br />  <strong>select</strong> = <var>XPathExpression</var><br />  collection? = { <var>boolean</var> }<br />  href? = { <var>anyURI</var> }<br />  pipe? = <var>string</var><br />  exclude-inline-prefixes? = <var>ExcludeInlinePrefixes</var>&gt;<br />    ((<a href="#p.empty">p:empty</a> | <br />       (<a href="#p.document">p:document</a> | <br />        <a href="#p.pipe">p:pipe</a> | <br />        <a href="#p.inline">p:inline</a>)*) | <br />     <var>anyElement</var>*)<br />&lt;/p:with-option&gt;</code></p>
+<p id="d2999e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:with-option<br />  <strong>name</strong> = <var>EQName</var><br />  as? = <var>XPathSequenceType</var><br />  <strong>select</strong> = <var>XPathExpression</var><br />  collection? = { <var>boolean</var> }<br />  href? = { <var>anyURI</var> }<br />  pipe? = <var>string</var><br />  exclude-inline-prefixes? = <var>ExcludeInlinePrefixes</var>&gt;<br />    ((<a href="#p.empty">p:empty</a> | <br />       (<a href="#p.document">p:document</a> | <br />        <a href="#p.pipe">p:pipe</a> | <br />        <a href="#p.inline">p:inline</a>)*) | <br />     <var>anyElement</var>*)<br />&lt;/p:with-option&gt;</code></p>
 
 <p>The attributes that can appear on <code class="tag-element">p:with-option</code> are
 <a href="#common-attr">the common attributes</a> and:</p>
@@ -4715,7 +4700,7 @@ not be in scope.</p>
 step</a></em> or pipeline. It declares the inputs, outputs, and
 options for all steps of that type.</p>
 
-<p id="d3115e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:declare-step<br />  name? = <var>NCName</var><br />  type? = <var>EQName</var><br />  psvi-required? = <var>boolean</var><br />  xpath-version? = <var>string</var><br />  exclude-inline-prefixes? = <var>ExcludeInlinePrefixes</var><br />  version? = "3.0"<br />  visibility? = <var>private|public</var>&gt;<br />    (<a href="#p.import">p:import</a> | <br />     <a href="#p.import-functions">p:import-functions</a>)*,<br />    (<a href="#p.input">p:input</a> | <br />     <a href="#p.output">p:output</a> | <br />     <a href="#p.option">p:option</a> | <br />     <a href="#p.variable">p:variable</a>)*,<br />    <a href="#p.declare-step">p:declare-step</a>*,<br />    <var>subpipeline</var>?<br />&lt;/p:declare-step&gt;</code></p>
+<p id="d3113e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:declare-step<br />  name? = <var>NCName</var><br />  type? = <var>EQName</var><br />  psvi-required? = <var>boolean</var><br />  xpath-version? = <var>string</var><br />  exclude-inline-prefixes? = <var>ExcludeInlinePrefixes</var><br />  version? = "3.0"<br />  visibility? = <var>private|public</var>&gt;<br />    (<a href="#p.import">p:import</a> | <br />     <a href="#p.import-functions">p:import-functions</a>)*,<br />    (<a href="#p.input">p:input</a> | <br />     <a href="#p.output">p:output</a> | <br />     <a href="#p.option">p:option</a> | <br />     <a href="#p.variable">p:variable</a>)*,<br />    <a href="#p.declare-step">p:declare-step</a>*,<br />    <var>subpipeline</var>?<br />&lt;/p:declare-step&gt;</code></p>
 
 <p>The value of the <code class="tag-attribute">type</code> can be from
 any namespace provided that the expanded-QName of the value has a
@@ -4730,7 +4715,7 @@ namespace.</p>
 a <code class="tag-element">p:declare-step</code> are limited to the lexically preceding,
 statically declared options and variables.</p>
 
-<p><span id="impl-55">When a declared step is evaluated directly by the XProc
+<p><span id="impl-56">When a declared step is evaluated directly by the XProc
 processor (as opposed to occurring as an atomic step in some
 <em class="glossterm"><a href="#dt-container">container</a></em>), how the input and output ports are
 connected to documents is
@@ -4774,7 +4759,7 @@ begins shadows another option or variable declared within the same
         <p>When declaring an atomic step, the subpipeline in the declaration
             <span class="rfc2119" id="declare-atomic-steps.2.1">must</span> be empty. And, conversely, if the subpipeline in a declaration
           is empty, the declaration <span class="rfc2119" id="declare-atomic-steps.2.2">must</span> be for an atomic step.</p>
-        <p><span id="impl-56">Implementations may use <em class="glossterm"><a href="#dt-extension-attribute">extension
+        <p><span id="impl-57">Implementations may use <em class="glossterm"><a href="#dt-extension-attribute">extension
               attributes</a></em> to provide <em class="glossterm"><a href="#dt-implementation-dependent">implementation-dependent</a></em>
             information about a declared step.</span> For example, such an attribute might identify
           the code which implements steps of this type.</p>
@@ -4786,7 +4771,7 @@ begins shadows another option or variable declared within the same
         <p>When a <a href="#p.declare-step"><code class="tag-element">p:declare-step</code></a> declares a pipeline, that pipeline encapsulates the
           behavior of the specified <em class="glossterm"><a href="#dt-subpipeline">subpipeline</a></em>. Its children declare inputs,
           outputs, and options that the pipeline exposes and identify the steps in its subpipeline. </p>
-        <p><span id="impl-57">The subpipeline may include declarations of additional steps (e.g., other
+        <p><span id="impl-58">The subpipeline may include declarations of additional steps (e.g., other
             pipelines or other step types that are provided by a particular implementation or in
             some <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em> way) and import other
             pipelines.</span> If a pipeline has been imported, it may be invoked as a step within
@@ -4828,7 +4813,7 @@ begins shadows another option or variable declared within the same
 <p>A <code class="tag-element">p:library</code> is a collection of static variables, static options,
 and step declarations.</p>
 
-<p id="d3224e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:library<br />  psvi-required? = <var>boolean</var><br />  xpath-version? = <var>string</var><br />  exclude-inline-prefixes? = <var>ExcludeInlinePrefixes</var><br />  version? = "3.0"&gt;<br />    (<a href="#p.import">p:import</a> | <br />     <a href="#p.import-functions">p:import-functions</a>)*,<br />    (<a href="#p.declare-step">p:declare-step</a> | <br />     <a href="#p.variable">p:variable</a> | <br />     <a href="#p.option">p:option</a>)*<br />&lt;/p:library&gt;</code></p>
+<p id="d3222e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:library<br />  psvi-required? = <var>boolean</var><br />  xpath-version? = <var>string</var><br />  exclude-inline-prefixes? = <var>ExcludeInlinePrefixes</var><br />  version? = "3.0"&gt;<br />    (<a href="#p.import">p:import</a> | <br />     <a href="#p.import-functions">p:import-functions</a>)*,<br />    (<a href="#p.declare-step">p:declare-step</a> | <br />     <a href="#p.variable">p:variable</a> | <br />     <a href="#p.option">p:option</a>)*<br />&lt;/p:library&gt;</code></p>
 
 <p>The <code class="tag-attribute">version</code> attribute identifies the version
 of XProc for which this library was authored. If the
@@ -4860,7 +4845,7 @@ See also <a href="#handling-imports" title="Handling Circular and Re-entrant Lib
 <section id="p.import" class="section"><div class="section-titlepage"><h3>17.7 p:import</h3></div><div class="content"><p>An <code class="tag-element">p:import</code> loads a pipeline
         or pipeline library, making it available in the pipeline or library which contains the
           <code class="tag-element">p:import</code>.</p>
-      <p id="d3296e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:import<br />  <strong>href</strong> = <var>anyURI</var> /&gt;</code></p>
+      <p id="d3294e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:import<br />  <strong>href</strong> = <var>anyURI</var> /&gt;</code></p>
       <p>An import statement loads the specified IRI and makes any pipelines declared within it
         available to the current pipeline. </p>
 <p><a id="err.inline.S0052"></a>It is a
@@ -4896,7 +4881,7 @@ See also <a href="#handling-imports" title="Handling Circular and Re-entrant Lib
 
 <p>FIXME: T.B.D.</p>
 
-<p id="d3317e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:import-functions<br />  <strong>href</strong> = <var>anyURI</var> /&gt;</code></p>
+<p id="d3315e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:import-functions<br />  <strong>href</strong> = <var>anyURI</var> /&gt;</code></p>
 </div></section>
 
 
@@ -4906,7 +4891,7 @@ See also <a href="#handling-imports" title="Handling Circular and Re-entrant Lib
 <p>A <code class="tag-element">p:pipe</code> connects an input to a port on another
 step.</p>
 
-<p id="d3328e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:pipe<br />  step? = <var>NCName</var><br />  port? = <var>NCName</var> /&gt;</code></p>
+<p id="d3326e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:pipe<br />  step? = <var>NCName</var><br />  port? = <var>NCName</var> /&gt;</code></p>
 
 <p>The <code class="tag-element">p:pipe</code> element connects to a readable port of
 another step. It identifies the readable port to which it connects
@@ -4959,7 +4944,7 @@ step.
 
 <p>A <code class="tag-element">p:inline</code> provides a document inline.</p>
 
-<p id="d3358e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:inline<br />  exclude-inline-prefixes? = <var>ExcludeInlinePrefixes</var><br />  content-type? = <var>string</var><br />  document-properties? = <var>map(xs:QName,item())</var><br />  encoding? = <var>string</var>&gt;<br />    <var>anyNode</var>*<br />&lt;/p:inline&gt;</code></p>
+<p id="d3356e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:inline<br />  exclude-inline-prefixes? = <var>ExcludeInlinePrefixes</var><br />  content-type? = <var>string</var><br />  document-properties? = <var>map(xs:QName,item())</var><br />  encoding? = <var>string</var>&gt;<br />    <var>anyNode</var>*<br />&lt;/p:inline&gt;</code></p>
 
 <p>The <code class="tag-attribute">content-type</code> attribute can be used
 to set the content type of the provided document;
@@ -5016,7 +5001,7 @@ been replaced by the XML parser that read the pipeline.</p>
 present, the content must be decoded. The encoding value
 “<code class="literal">base64</code>” <span class="rfc2119" id="p.inline.13.3">must</span> be supported and
 identifies the content as being base64-encoded.
-<span id="impl-58">An implementation may
+<span id="impl-59">An implementation may
 support encodings other than <code class="literal">base64</code>, but these
 encodings and their names are
 <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em>.</span>
@@ -5041,7 +5026,7 @@ depends on the document's content type.
 <p>If the document's content type is not an <em class="glossterm"><a href="#dt-XML-media-type">XML media
 type</a></em>, then the content is non-XML.</p>
 
-<p><span id="impl-59">The representation of non-XML content is
+<p><span id="impl-60">The representation of non-XML content is
 <em class="glossterm"><a href="#dt-implementation-dependent">implementation-dependent</a></em></span>.</p>
 
 <div class="note admonition"><h3>Note</h3><div class="admonition-body">
@@ -5203,7 +5188,7 @@ that would be treated as an implicit inline.
 
 <p>A <code class="tag-element">p:document</code> reads a document from a URI.</p>
 
-<p id="d3454e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:document<br />  <strong>href</strong> = { <var>anyURI</var> }<br />  content-type? = <var>string</var><br />  document-properties? = <var>map(xs:QName,item())</var><br />  parameters? = <var>map(xs:QName,item())</var> /&gt;</code></p>
+<p id="d3452e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:document<br />  <strong>href</strong> = { <var>anyURI</var> }<br />  content-type? = <var>string</var><br />  document-properties? = <var>map(xs:QName,item())</var><br />  parameters? = <var>map(xs:QName,item())</var> /&gt;</code></p>
 
 <p>The value of the <code class="tag-attribute">href</code> attribute,
 after expanding any
@@ -5266,7 +5251,7 @@ output</em> on that port. </p>
 <p>A <code class="tag-element">p:empty</code> connects to an <em class="glossterm"><a href="#dt-empty-sequence">empty
 sequence</a></em> of documents.</p>
 
-<p id="d3500e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:empty /&gt;</code></p>
+<p id="d3498e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:empty /&gt;</code></p>
 
 <p>If an empty binding is used, it must be the only binding for the
 port. <a id="err.inline.S0089"></a>It is a <em class="glossterm"><a href="#dt-static-error">static error</a></em> (<a href="#err.S0089"><code class="errqname">err:XS0089</code></a>)
@@ -5276,14 +5261,14 @@ including itself.</p>
 
     <section id="p.documentation" class="section"><div class="section-titlepage"><h3>17.13 p:documentation</h3></div><div class="content"><p>A
           <code class="tag-element">p:documentation</code> contains human-readable documentation.</p>
-      <p id="d3511e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:documentation&gt;<br />    <var>any-well-formed-content</var>*<br />&lt;/p:documentation&gt;</code></p>
+      <p id="d3509e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:documentation&gt;<br />    <var>any-well-formed-content</var>*<br />&lt;/p:documentation&gt;</code></p>
       <p>There are no constraints on the content of the <code class="tag-element">p:documentation</code> element.
         Documentation is ignored by pipeline processors. See <a href="#documentation" title="Documentation">Section 15.6, “Documentation”</a>.
       </p></div></section>
 
     <section id="p.pipeinfo" class="section"><div class="section-titlepage"><h3>17.14 p:pipeinfo</h3></div><div class="content"><p>A <code class="tag-element">p:pipeinfo</code> contains
         ancillary information for steps in the pipeline.</p>
-      <p id="d3529e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:pipeinfo&gt;<br />    <var>any-well-formed-content</var>*<br />&lt;/p:pipeinfo&gt;</code></p>
+      <p id="d3527e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:pipeinfo&gt;<br />    <var>any-well-formed-content</var>*<br />&lt;/p:pipeinfo&gt;</code></p>
       <p>There are no constraints on the content of the <code class="tag-element">p:pipeinfo</code> element, see <a href="#annotations" title="Processor annotations">Section 15.7, “Processor annotations”</a>.</p></div></section>
     </div></section>
   <section id="errors" class="section"><div class="section-titlepage"><h2>18 Errors</h2></div><div class="content">
@@ -5315,7 +5300,7 @@ according to the rules of this specification, but they may choose to
 optimize pipeline execution in different ways. This may cause steps to
 be evaluated in different orders which consequently has an impact on
 error detection.
-<span id="impl-60">The detection of dynamic errors is somewhat
+<span id="impl-61">The detection of dynamic errors is somewhat
 <em class="glossterm"><a href="#dt-implementation-dependent">implementation-dependent</a></em> because the order of
 step execution may vary.</span> In cases where an implementation
 is able to run a pipeline without evaluating a particular expression,
@@ -5399,7 +5384,8 @@ implementation-defined. See <a href="#input-output" title="Inputs and Outputs">S
             outputs which cannot be serialized, are performed on intermediate outputs is
               implementation-defined. See <a href="#namespace-fixup" title="Namespace Fixup on XML Outputs">Section 6.2, “Namespace Fixup on XML Outputs”</a>.</li><li>The version of Unicode supported is
                       implementation-defined, but it is recommended that the
-                    most recent version of Unicode be used. See <a href="#xproc-xpath-context-31" title="Processor XPath Context">Section 7.2.2.1, “Processor XPath Context”</a>.</li><li>The point in time returned as the current dateTime is
+                    most recent version of Unicode be used. See <a href="#xproc-xpath-context-31" title="Processor XPath Context">Section 7.2.2.1, “Processor XPath Context”</a>.</li><li>The context item used for binary documents is
+implementation-defined. See <a href="#xproc-xpath-context-31" title="Processor XPath Context">Section 7.2.2.1, “Processor XPath Context”</a>.</li><li>The point in time returned as the current dateTime is
                       implementation-defined. See <a href="#xproc-xpath-context-31" title="Processor XPath Context">Section 7.2.2.1, “Processor XPath Context”</a>.</li><li>The implicit timezone is
                     implementation-defined. See <a href="#xproc-xpath-context-31" title="Processor XPath Context">Section 7.2.2.1, “Processor XPath Context”</a>.</li><li>The default language is implementation-defined. See <a href="#xproc-xpath-context-31" title="Processor XPath Context">Section 7.2.2.1, “Processor XPath Context”</a>.</li><li>The default calendar is implementation-defined. See <a href="#xproc-xpath-context-31" title="Processor XPath Context">Section 7.2.2.1, “Processor XPath Context”</a>.</li><li>The default place is implementation-defined. See <a href="#xproc-xpath-context-31" title="Processor XPath Context">Section 7.2.2.1, “Processor XPath Context”</a>.</li><li>The list of available environment variables is implementation-defined. See <a href="#xproc-xpath-context-31" title="Processor XPath Context">Section 7.2.2.1, “Processor XPath Context”</a>.</li><li>The implicit timezone is
                     implementation-defined. See <a href="#step-xpath-context-31" title="Step XPath Context">Section 7.2.2.2, “Step XPath Context”</a>.</li><li>The default language is implementation-defined. See <a href="#step-xpath-context-31" title="Step XPath Context">Section 7.2.2.2, “Step XPath Context”</a>.</li><li>The default calendar is implementation-defined. See <a href="#step-xpath-context-31" title="Step XPath Context">Section 7.2.2.2, “Step XPath Context”</a>.</li><li>The defualt place is implementation-defined. See <a href="#step-xpath-context-31" title="Step XPath Context">Section 7.2.2.2, “Step XPath Context”</a>.</li><li>The list of available environment variables is implementation-defined. See <a href="#step-xpath-context-31" title="Step XPath Context">Section 7.2.2.2, “Step XPath Context”</a>.</li><li>The exact format of the language string is
@@ -5528,7 +5514,7 @@ processor for the documents that flow through the pipeline.</p>
            <code class="literal infoset-property">[prefix]</code> and
            <code class="literal infoset-property">[namespace name]</code> properties.</p></li></ul></div>
 
-<p><span id="impl-61">It is <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em> whether
+<p><span id="impl-62">It is <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em> whether
 additional information items and properties, particularly those made available
 in the PSVI, are preserved between steps.</span></p>
 </div></section>
@@ -5743,34 +5729,33 @@ name</a>. The value may be any XPath data model value.</p></dd><dt id="glossary.
           explicitly marked “<code class="code">primary='true'</code>”, or if it has exactly one document output
           port and that port is <em>not</em> explicitly marked
             “<code class="code">primary='false'</code>”, then that output port is the <em class="firstterm">primary output
-            port</em> of the step.</p></dd><dt id="glossary.2.38" class="glossentry"><em class="glossterm"><a href="#dt-proxy-document">proxy document</a></em></dt><dd class="glossdef"><p>A <em class="firstterm">proxy document</em> is
-an empty document node.</p></dd><dt id="glossary.2.39" class="glossentry"><em class="glossterm"><a href="#dt-readable-ports">readable
+            port</em> of the step.</p></dd><dt id="glossary.2.38" class="glossentry"><em class="glossterm"><a href="#dt-readable-ports">readable
                 ports</a></em></dt><dd class="glossdef"><p>The <em class="firstterm">readable
-                ports</em> are a set of step name/port name pairs.</p></dd><dt id="glossary.2.40" class="glossentry"><em class="glossterm"><a href="#dt-representation">representation</a></em></dt><dd class="glossdef"><p>A <em class="firstterm">representation</em>
+                ports</em> are a set of step name/port name pairs.</p></dd><dt id="glossary.2.39" class="glossentry"><em class="glossterm"><a href="#dt-representation">representation</a></em></dt><dd class="glossdef"><p>A <em class="firstterm">representation</em>
 is a data structure used by an XProc processor to refer to the actual
-document content.</p></dd><dt id="glossary.2.41" class="glossentry"><em class="glossterm"><a href="#dt-shadow">shadow</a></em></dt><dd class="glossdef"><p>We say that a variable
+document content.</p></dd><dt id="glossary.2.40" class="glossentry"><em class="glossterm"><a href="#dt-shadow">shadow</a></em></dt><dd class="glossdef"><p>We say that a variable
 <em class="firstterm">shadows</em> another variable
 (or option) if it has the same name and appears later in the same lexical
-scope.</p></dd><dt id="glossary.2.42" class="glossentry"><em class="glossterm"><a href="#dt-signature">signature</a></em></dt><dd class="glossdef"><p>The <em class="firstterm">signature</em> of a step is the set
-          of inputs, outputs, and options that it is declared to accept.</p></dd><dt id="glossary.2.43" class="glossentry"><em class="glossterm"><a href="#dt-static-error">static error</a></em></dt><dd class="glossdef"><p>A <em class="firstterm">static error</em> is one which can
-          be detected before pipeline evaluation is even attempted.</p></dd><dt id="glossary.2.44" class="glossentry"><em class="glossterm"><a href="#dt-step">step</a></em></dt><dd class="glossdef"><p>A <em class="firstterm">step</em> is the basic computational unit
-          of a pipeline.</p></dd><dt id="glossary.2.45" class="glossentry"><em class="glossterm"><a href="#dt-step-type-exports">step type exports</a></em></dt><dd class="glossdef"><p>The <em class="firstterm">step type exports</em> of an
+scope.</p></dd><dt id="glossary.2.41" class="glossentry"><em class="glossterm"><a href="#dt-signature">signature</a></em></dt><dd class="glossdef"><p>The <em class="firstterm">signature</em> of a step is the set
+          of inputs, outputs, and options that it is declared to accept.</p></dd><dt id="glossary.2.42" class="glossentry"><em class="glossterm"><a href="#dt-static-error">static error</a></em></dt><dd class="glossdef"><p>A <em class="firstterm">static error</em> is one which can
+          be detected before pipeline evaluation is even attempted.</p></dd><dt id="glossary.2.43" class="glossentry"><em class="glossterm"><a href="#dt-step">step</a></em></dt><dd class="glossdef"><p>A <em class="firstterm">step</em> is the basic computational unit
+          of a pipeline.</p></dd><dt id="glossary.2.44" class="glossentry"><em class="glossterm"><a href="#dt-step-type-exports">step type exports</a></em></dt><dd class="glossdef"><p>The <em class="firstterm">step type exports</em> of an
         XProc element, against the background of a set of URIs of resources already visited (call
-        this set <em>Visited</em>), are defined by cases.</p></dd><dt id="glossary.2.46" class="glossentry"><em class="glossterm"><a href="#dt-subpipeline">subpipeline</a></em></dt><dd class="glossdef"><p>Sibling steps (and the connections between them) form a
-            <em class="firstterm">subpipeline</em>.</p></dd><dt id="glossary.2.47" class="glossentry"><em class="glossterm"><a href="#dt-text-media-type">text media type</a></em></dt><dd class="glossdef"><p>Media types of the form
+        this set <em>Visited</em>), are defined by cases.</p></dd><dt id="glossary.2.45" class="glossentry"><em class="glossterm"><a href="#dt-subpipeline">subpipeline</a></em></dt><dd class="glossdef"><p>Sibling steps (and the connections between them) form a
+            <em class="firstterm">subpipeline</em>.</p></dd><dt id="glossary.2.46" class="glossentry"><em class="glossterm"><a href="#dt-text-media-type">text media type</a></em></dt><dd class="glossdef"><p>Media types of the form
 “<code class="literal">text/<em class="replaceable"><code>something</code></em></code>”
 are <em class="firstterm">text media types</em> with the
 exception of “<code class="literal">text/xml</code>” which is an XML media type.
-</p></dd><dt id="glossary.2.48" class="glossentry"><em class="glossterm"><a href="#dt-text-value-template">text value template</a></em></dt><dd class="glossdef"><p>In a text node that is
+</p></dd><dt id="glossary.2.47" class="glossentry"><em class="glossterm"><a href="#dt-text-value-template">text value template</a></em></dt><dd class="glossdef"><p>In a text node that is
 designated as a <em class="firstterm">text value template</em>,
 expressions can be used by surrounding each expression with curly
 brackets (<code class="code">{}</code>), following the
 general rules for <em class="glossterm"><a href="#dt-value-template">value
-templates</a></em>.</p></dd><dt id="glossary.2.49" class="glossentry"><em class="glossterm"><a href="#dt-value-template">value template</a></em></dt><dd class="glossdef"><p>Collectively,
+templates</a></em>.</p></dd><dt id="glossary.2.48" class="glossentry"><em class="glossterm"><a href="#dt-value-template">value template</a></em></dt><dd class="glossdef"><p>Collectively,
 attribute value templates and text value templates are referred to as
-<em class="firstterm">value templates</em>.</p></dd><dt id="glossary.2.50" class="glossentry"><em class="glossterm"><a href="#dt-variable">variable</a></em></dt><dd class="glossdef"><p>A <em class="firstterm">variable</em>
-is a name/value pair. The name <span class="rfc2119" id="glossary.2.50.2.1.2">must</span> be an <a href="http://www.w3.org/TR/REC-xml-names/#dt-expname">expanded
-name</a>. The value may be any XPath data model value.</p></dd><dt id="glossary.2.51" class="glossentry"><em class="glossterm"><a href="#dt-visible">visible</a></em></dt><dd class="glossdef"><p>If two names are in the same scope, we say that
+<em class="firstterm">value templates</em>.</p></dd><dt id="glossary.2.49" class="glossentry"><em class="glossterm"><a href="#dt-variable">variable</a></em></dt><dd class="glossdef"><p>A <em class="firstterm">variable</em>
+is a name/value pair. The name <span class="rfc2119" id="glossary.2.49.2.1.2">must</span> be an <a href="http://www.w3.org/TR/REC-xml-names/#dt-expname">expanded
+name</a>. The value may be any XPath data model value.</p></dd><dt id="glossary.2.50" class="glossentry"><em class="glossterm"><a href="#dt-visible">visible</a></em></dt><dd class="glossdef"><p>If two names are in the same scope, we say that
 they are <em class="firstterm">visible</em> to each other.
 </p></dd></dl></div></div></article>
 <article id="language-summary" class="appendix"><header class="appendix-titlepage"><h2>D Pipeline Language Summary</h2></header><div class="content">
@@ -5785,7 +5770,7 @@ RELAX NG
 and 
 <a href="schemas/xproc.dtd">DTD</a> syntaxes.</p>
 
-<p id="d4283e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:for-each<br />  name? = <var>NCName</var>&gt;<br />    ((<a href="#p.with-input">p:with-input</a>? &amp; <br />      <a href="#p.output">p:output</a>*),<br />     <var>subpipeline</var>)<br />&lt;/p:for-each&gt;</code></p><p id="d4287e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:viewport<br />  name? = <var>NCName</var><br />  <strong>match</strong> = { <var>XSLTSelectionPattern</var> }&gt;<br />    ((<a href="#p.with-input">p:with-input</a>? &amp; <br />      <a href="#p.output">p:output</a>?),<br />     <var>subpipeline</var>)<br />&lt;/p:viewport&gt;</code></p><p id="d4292e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:choose<br />  name? = <var>NCName</var>&gt;<br />    (<a href="#p.with-input">p:with-input</a>?,<br />     ((<a href="#p.when">p:when</a>+,<br />       <a href="#p.otherwise">p:otherwise</a>?) | <br />      (<a href="#p.when">p:when</a>*,<br />       <a href="#p.otherwise">p:otherwise</a>)))<br />&lt;/p:choose&gt;</code></p><p id="d4297e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:when<br />  <strong>test</strong> = <var>XPathExpression</var><br />  collection? = { <var>boolean</var> }&gt;<br />    (<a href="#p.with-input">p:with-input</a>?,<br />     <a href="#p.output">p:output</a>*,<br />     <var>subpipeline</var>)<br />&lt;/p:when&gt;</code></p><p id="d4300e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:otherwise&gt;<br />    (<a href="#p.output">p:output</a>*,<br />     <var>subpipeline</var>)<br />&lt;/p:otherwise&gt;</code></p><p id="d4305e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:if<br />  <strong>test</strong> = <var>XPathExpression</var><br />  collection? = { <var>boolean</var> }&gt;<br />    (<a href="#p.with-input">p:with-input</a>?,<br />     <a href="#p.output">p:output</a>*,<br />     <var>subpipeline</var>)<br />&lt;/p:if&gt;</code></p><p id="d4309e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:group<br />  name? = <var>NCName</var>&gt;<br />    (<a href="#p.output">p:output</a>*,<br />     <var>subpipeline</var>)<br />&lt;/p:group&gt;</code></p><p id="d4314e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:try<br />  name? = <var>NCName</var>&gt;<br />    (<a href="#p.group">p:group</a>,<br />      ((<a href="#p.catch">p:catch</a>+,<br />        <a href="#p.finally">p:finally</a>?) | <br />       (<a href="#p.catch">p:catch</a>*,<br />        <a href="#p.finally">p:finally</a>)))<br />&lt;/p:try&gt;</code></p><p id="d4319e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:catch<br />  name? = <var>NCName</var><br />  code? = <var>QNameList</var>&gt;<br />    (<a href="#p.output">p:output</a>*,<br />     <var>subpipeline</var>)<br />&lt;/p:catch&gt;</code></p><p id="d4322e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:finally<br />  name? = <var>NCName</var>&gt;<br />    <var>subpipeline</var><br />&lt;/p:finally&gt;</code></p><p id="d4336e0" class="element-syntax element-syntax-language-construct"><code>&lt;<var>p:atomic-step</var><br />  name? = <var>NCName</var>&gt;<br />    (<a href="#p.with-input">p:with-input</a> | <br />     <a href="#p.with-option">p:with-option</a>)*<br />&lt;/<var>p:atomic-step</var>&gt;</code></p><p id="d4341e0" class="element-syntax element-syntax-language-construct"><code>&lt;<var>pfx:atomic-step</var><br />  name? = <var>NCName</var>&gt;<br />    (<a href="#p.with-input">p:with-input</a> | <br />     <a href="#p.with-option">p:with-option</a>)*<br />&lt;/<var>pfx:atomic-step</var>&gt;</code></p><p id="d4356e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:input<br />  <strong>port</strong> = <var>NCName</var><br />  sequence? = <var>boolean</var><br />  primary? = <var>boolean</var><br />  select? = <var>XPathExpression</var><br />  content-types? = <var>ContentTypes</var><br />  href? = { <var>anyURI</var> }<br />  exclude-inline-prefixes? = <var>ExcludeInlinePrefixes</var>&gt;<br />    ((<a href="#p.empty">p:empty</a> | <br />       (<a href="#p.document">p:document</a> | <br />        <a href="#p.inline">p:inline</a>)*) | <br />     <var>anyElement</var>*)<br />&lt;/p:input&gt;</code></p><p id="d4370e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:with-input<br />  port? = <var>NCName</var><br />  select? = <var>XPathExpression</var><br />  href? = { <var>anyURI</var> }<br />  pipe? = <var>string</var><br />  exclude-inline-prefixes? = <var>ExcludeInlinePrefixes</var>&gt;<br />    ((<a href="#p.empty">p:empty</a> | <br />       (<a href="#p.document">p:document</a> | <br />        <a href="#p.pipe">p:pipe</a> | <br />        <a href="#p.inline">p:inline</a>)*) | <br />     <var>anyElement</var>*)<br />&lt;/p:with-input&gt;</code></p><p id="d4376e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:output<br />  port? = <var>NCName</var><br />  sequence? = <var>boolean</var><br />  primary? = <var>boolean</var><br />  content-types? = <var>ContentTypes</var><br />  serialization? = <var>map(xs:QName,xs:anyAtomicValue)</var> /&gt;</code></p><p id="d4393e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:output<br />  port? = <var>NCName</var><br />  sequence? = <var>boolean</var><br />  primary? = <var>boolean</var><br />  content-types? = <var>ContentTypes</var><br />  serialization? = <var>map(xs:QName,xs:anyAtomicValue)</var><br />  href? = { <var>anyURI</var> }<br />  pipe? = <var>string</var><br />  exclude-inline-prefixes? = <var>ExcludeInlinePrefixes</var>&gt;<br />    ((<a href="#p.empty">p:empty</a> | <br />       (<a href="#p.document">p:document</a> | <br />        <a href="#p.pipe">p:pipe</a> | <br />        <a href="#p.inline">p:inline</a>)*) | <br />     <var>anyElement</var>*)<br />&lt;/p:output&gt;</code></p><p id="d4411e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:variable<br />  <strong>name</strong> = <var>EQName</var><br />  as? = <var>XPathSequenceType</var><br />  static? = <var>boolean</var><br />  <strong>select</strong> = <var>XPathExpression</var><br />  collection? = { <var>boolean</var> }<br />  href? = { <var>anyURI</var> }<br />  pipe? = <var>string</var><br />  exclude-inline-prefixes? = <var>ExcludeInlinePrefixes</var><br />  visibility? = <var>private|public</var>&gt;<br />    ((<a href="#p.empty">p:empty</a> | <br />       (<a href="#p.document">p:document</a> | <br />        <a href="#p.pipe">p:pipe</a> | <br />        <a href="#p.inline">p:inline</a>)*) | <br />     <var>anyElement</var>*)<br />&lt;/p:variable&gt;</code></p><p id="d4418e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:option<br />  <strong>name</strong> = <var>EQName</var><br />  as? = <var>XPathSequenceType</var><br />  static? = <var>boolean</var><br />  required? = <var>boolean</var><br />  select? = <var>XPathExpression</var><br />  visibility? = <var>private|public</var> /&gt;</code></p><p id="d4434e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:with-option<br />  <strong>name</strong> = <var>EQName</var><br />  as? = <var>XPathSequenceType</var><br />  <strong>select</strong> = <var>XPathExpression</var><br />  collection? = { <var>boolean</var> }<br />  href? = { <var>anyURI</var> }<br />  pipe? = <var>string</var><br />  exclude-inline-prefixes? = <var>ExcludeInlinePrefixes</var>&gt;<br />    ((<a href="#p.empty">p:empty</a> | <br />       (<a href="#p.document">p:document</a> | <br />        <a href="#p.pipe">p:pipe</a> | <br />        <a href="#p.inline">p:inline</a>)*) | <br />     <var>anyElement</var>*)<br />&lt;/p:with-option&gt;</code></p><p id="d4453e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:declare-step<br />  name? = <var>NCName</var><br />  type? = <var>EQName</var><br />  psvi-required? = <var>boolean</var><br />  xpath-version? = <var>string</var><br />  exclude-inline-prefixes? = <var>ExcludeInlinePrefixes</var><br />  version? = "3.0"<br />  visibility? = <var>private|public</var>&gt;<br />    (<a href="#p.import">p:import</a> | <br />     <a href="#p.import-functions">p:import-functions</a>)*,<br />    (<a href="#p.input">p:input</a> | <br />     <a href="#p.output">p:output</a> | <br />     <a href="#p.option">p:option</a> | <br />     <a href="#p.variable">p:variable</a>)*,<br />    <a href="#p.declare-step">p:declare-step</a>*,<br />    <var>subpipeline</var>?<br />&lt;/p:declare-step&gt;</code></p><p id="d4465e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:library<br />  psvi-required? = <var>boolean</var><br />  xpath-version? = <var>string</var><br />  exclude-inline-prefixes? = <var>ExcludeInlinePrefixes</var><br />  version? = "3.0"&gt;<br />    (<a href="#p.import">p:import</a> | <br />     <a href="#p.import-functions">p:import-functions</a>)*,<br />    (<a href="#p.declare-step">p:declare-step</a> | <br />     <a href="#p.variable">p:variable</a> | <br />     <a href="#p.option">p:option</a>)*<br />&lt;/p:library&gt;</code></p><p id="d4467e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:import<br />  <strong>href</strong> = <var>anyURI</var> /&gt;</code></p><p id="d4469e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:import-functions<br />  <strong>href</strong> = <var>anyURI</var> /&gt;</code></p><p id="d4472e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:pipe<br />  step? = <var>NCName</var><br />  port? = <var>NCName</var> /&gt;</code></p><p id="d4478e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:inline<br />  exclude-inline-prefixes? = <var>ExcludeInlinePrefixes</var><br />  content-type? = <var>string</var><br />  document-properties? = <var>map(xs:QName,item())</var><br />  encoding? = <var>string</var>&gt;<br />    <var>anyNode</var>*<br />&lt;/p:inline&gt;</code></p><p id="d4483e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:document<br />  <strong>href</strong> = { <var>anyURI</var> }<br />  content-type? = <var>string</var><br />  document-properties? = <var>map(xs:QName,item())</var><br />  parameters? = <var>map(xs:QName,item())</var> /&gt;</code></p><p id="d4484e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:empty /&gt;</code></p><p id="d4486e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:documentation&gt;<br />    <var>any-well-formed-content</var>*<br />&lt;/p:documentation&gt;</code></p><p id="d4488e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:pipeinfo&gt;<br />    <var>any-well-formed-content</var>*<br />&lt;/p:pipeinfo&gt;</code></p>
+<p id="d4288e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:for-each<br />  name? = <var>NCName</var>&gt;<br />    ((<a href="#p.with-input">p:with-input</a>? &amp; <br />      <a href="#p.output">p:output</a>*),<br />     <var>subpipeline</var>)<br />&lt;/p:for-each&gt;</code></p><p id="d4292e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:viewport<br />  name? = <var>NCName</var><br />  <strong>match</strong> = { <var>XSLTSelectionPattern</var> }&gt;<br />    ((<a href="#p.with-input">p:with-input</a>? &amp; <br />      <a href="#p.output">p:output</a>?),<br />     <var>subpipeline</var>)<br />&lt;/p:viewport&gt;</code></p><p id="d4297e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:choose<br />  name? = <var>NCName</var>&gt;<br />    (<a href="#p.with-input">p:with-input</a>?,<br />     ((<a href="#p.when">p:when</a>+,<br />       <a href="#p.otherwise">p:otherwise</a>?) | <br />      (<a href="#p.when">p:when</a>*,<br />       <a href="#p.otherwise">p:otherwise</a>)))<br />&lt;/p:choose&gt;</code></p><p id="d4302e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:when<br />  <strong>test</strong> = <var>XPathExpression</var><br />  collection? = { <var>boolean</var> }&gt;<br />    (<a href="#p.with-input">p:with-input</a>?,<br />     <a href="#p.output">p:output</a>*,<br />     <var>subpipeline</var>)<br />&lt;/p:when&gt;</code></p><p id="d4305e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:otherwise&gt;<br />    (<a href="#p.output">p:output</a>*,<br />     <var>subpipeline</var>)<br />&lt;/p:otherwise&gt;</code></p><p id="d4310e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:if<br />  <strong>test</strong> = <var>XPathExpression</var><br />  collection? = { <var>boolean</var> }&gt;<br />    (<a href="#p.with-input">p:with-input</a>?,<br />     <a href="#p.output">p:output</a>*,<br />     <var>subpipeline</var>)<br />&lt;/p:if&gt;</code></p><p id="d4314e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:group<br />  name? = <var>NCName</var>&gt;<br />    (<a href="#p.output">p:output</a>*,<br />     <var>subpipeline</var>)<br />&lt;/p:group&gt;</code></p><p id="d4319e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:try<br />  name? = <var>NCName</var>&gt;<br />    (<a href="#p.group">p:group</a>,<br />      ((<a href="#p.catch">p:catch</a>+,<br />        <a href="#p.finally">p:finally</a>?) | <br />       (<a href="#p.catch">p:catch</a>*,<br />        <a href="#p.finally">p:finally</a>)))<br />&lt;/p:try&gt;</code></p><p id="d4324e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:catch<br />  name? = <var>NCName</var><br />  code? = <var>QNameList</var>&gt;<br />    (<a href="#p.output">p:output</a>*,<br />     <var>subpipeline</var>)<br />&lt;/p:catch&gt;</code></p><p id="d4327e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:finally<br />  name? = <var>NCName</var>&gt;<br />    <var>subpipeline</var><br />&lt;/p:finally&gt;</code></p><p id="d4341e0" class="element-syntax element-syntax-language-construct"><code>&lt;<var>p:atomic-step</var><br />  name? = <var>NCName</var>&gt;<br />    (<a href="#p.with-input">p:with-input</a> | <br />     <a href="#p.with-option">p:with-option</a>)*<br />&lt;/<var>p:atomic-step</var>&gt;</code></p><p id="d4346e0" class="element-syntax element-syntax-language-construct"><code>&lt;<var>pfx:atomic-step</var><br />  name? = <var>NCName</var>&gt;<br />    (<a href="#p.with-input">p:with-input</a> | <br />     <a href="#p.with-option">p:with-option</a>)*<br />&lt;/<var>pfx:atomic-step</var>&gt;</code></p><p id="d4361e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:input<br />  <strong>port</strong> = <var>NCName</var><br />  sequence? = <var>boolean</var><br />  primary? = <var>boolean</var><br />  select? = <var>XPathExpression</var><br />  content-types? = <var>ContentTypes</var><br />  href? = { <var>anyURI</var> }<br />  exclude-inline-prefixes? = <var>ExcludeInlinePrefixes</var>&gt;<br />    ((<a href="#p.empty">p:empty</a> | <br />       (<a href="#p.document">p:document</a> | <br />        <a href="#p.inline">p:inline</a>)*) | <br />     <var>anyElement</var>*)<br />&lt;/p:input&gt;</code></p><p id="d4375e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:with-input<br />  port? = <var>NCName</var><br />  select? = <var>XPathExpression</var><br />  href? = { <var>anyURI</var> }<br />  pipe? = <var>string</var><br />  exclude-inline-prefixes? = <var>ExcludeInlinePrefixes</var>&gt;<br />    ((<a href="#p.empty">p:empty</a> | <br />       (<a href="#p.document">p:document</a> | <br />        <a href="#p.pipe">p:pipe</a> | <br />        <a href="#p.inline">p:inline</a>)*) | <br />     <var>anyElement</var>*)<br />&lt;/p:with-input&gt;</code></p><p id="d4381e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:output<br />  port? = <var>NCName</var><br />  sequence? = <var>boolean</var><br />  primary? = <var>boolean</var><br />  content-types? = <var>ContentTypes</var><br />  serialization? = <var>map(xs:QName,xs:anyAtomicValue)</var> /&gt;</code></p><p id="d4398e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:output<br />  port? = <var>NCName</var><br />  sequence? = <var>boolean</var><br />  primary? = <var>boolean</var><br />  content-types? = <var>ContentTypes</var><br />  serialization? = <var>map(xs:QName,xs:anyAtomicValue)</var><br />  href? = { <var>anyURI</var> }<br />  pipe? = <var>string</var><br />  exclude-inline-prefixes? = <var>ExcludeInlinePrefixes</var>&gt;<br />    ((<a href="#p.empty">p:empty</a> | <br />       (<a href="#p.document">p:document</a> | <br />        <a href="#p.pipe">p:pipe</a> | <br />        <a href="#p.inline">p:inline</a>)*) | <br />     <var>anyElement</var>*)<br />&lt;/p:output&gt;</code></p><p id="d4416e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:variable<br />  <strong>name</strong> = <var>EQName</var><br />  as? = <var>XPathSequenceType</var><br />  static? = <var>boolean</var><br />  <strong>select</strong> = <var>XPathExpression</var><br />  collection? = { <var>boolean</var> }<br />  href? = { <var>anyURI</var> }<br />  pipe? = <var>string</var><br />  exclude-inline-prefixes? = <var>ExcludeInlinePrefixes</var><br />  visibility? = <var>private|public</var>&gt;<br />    ((<a href="#p.empty">p:empty</a> | <br />       (<a href="#p.document">p:document</a> | <br />        <a href="#p.pipe">p:pipe</a> | <br />        <a href="#p.inline">p:inline</a>)*) | <br />     <var>anyElement</var>*)<br />&lt;/p:variable&gt;</code></p><p id="d4423e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:option<br />  <strong>name</strong> = <var>EQName</var><br />  as? = <var>XPathSequenceType</var><br />  static? = <var>boolean</var><br />  required? = <var>boolean</var><br />  select? = <var>XPathExpression</var><br />  visibility? = <var>private|public</var> /&gt;</code></p><p id="d4439e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:with-option<br />  <strong>name</strong> = <var>EQName</var><br />  as? = <var>XPathSequenceType</var><br />  <strong>select</strong> = <var>XPathExpression</var><br />  collection? = { <var>boolean</var> }<br />  href? = { <var>anyURI</var> }<br />  pipe? = <var>string</var><br />  exclude-inline-prefixes? = <var>ExcludeInlinePrefixes</var>&gt;<br />    ((<a href="#p.empty">p:empty</a> | <br />       (<a href="#p.document">p:document</a> | <br />        <a href="#p.pipe">p:pipe</a> | <br />        <a href="#p.inline">p:inline</a>)*) | <br />     <var>anyElement</var>*)<br />&lt;/p:with-option&gt;</code></p><p id="d4458e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:declare-step<br />  name? = <var>NCName</var><br />  type? = <var>EQName</var><br />  psvi-required? = <var>boolean</var><br />  xpath-version? = <var>string</var><br />  exclude-inline-prefixes? = <var>ExcludeInlinePrefixes</var><br />  version? = "3.0"<br />  visibility? = <var>private|public</var>&gt;<br />    (<a href="#p.import">p:import</a> | <br />     <a href="#p.import-functions">p:import-functions</a>)*,<br />    (<a href="#p.input">p:input</a> | <br />     <a href="#p.output">p:output</a> | <br />     <a href="#p.option">p:option</a> | <br />     <a href="#p.variable">p:variable</a>)*,<br />    <a href="#p.declare-step">p:declare-step</a>*,<br />    <var>subpipeline</var>?<br />&lt;/p:declare-step&gt;</code></p><p id="d4470e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:library<br />  psvi-required? = <var>boolean</var><br />  xpath-version? = <var>string</var><br />  exclude-inline-prefixes? = <var>ExcludeInlinePrefixes</var><br />  version? = "3.0"&gt;<br />    (<a href="#p.import">p:import</a> | <br />     <a href="#p.import-functions">p:import-functions</a>)*,<br />    (<a href="#p.declare-step">p:declare-step</a> | <br />     <a href="#p.variable">p:variable</a> | <br />     <a href="#p.option">p:option</a>)*<br />&lt;/p:library&gt;</code></p><p id="d4472e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:import<br />  <strong>href</strong> = <var>anyURI</var> /&gt;</code></p><p id="d4474e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:import-functions<br />  <strong>href</strong> = <var>anyURI</var> /&gt;</code></p><p id="d4477e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:pipe<br />  step? = <var>NCName</var><br />  port? = <var>NCName</var> /&gt;</code></p><p id="d4483e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:inline<br />  exclude-inline-prefixes? = <var>ExcludeInlinePrefixes</var><br />  content-type? = <var>string</var><br />  document-properties? = <var>map(xs:QName,item())</var><br />  encoding? = <var>string</var>&gt;<br />    <var>anyNode</var>*<br />&lt;/p:inline&gt;</code></p><p id="d4488e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:document<br />  <strong>href</strong> = { <var>anyURI</var> }<br />  content-type? = <var>string</var><br />  document-properties? = <var>map(xs:QName,item())</var><br />  parameters? = <var>map(xs:QName,item())</var> /&gt;</code></p><p id="d4489e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:empty /&gt;</code></p><p id="d4491e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:documentation&gt;<br />    <var>any-well-formed-content</var>*<br />&lt;/p:documentation&gt;</code></p><p id="d4493e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:pipeinfo&gt;<br />    <var>any-well-formed-content</var>*<br />&lt;/p:pipeinfo&gt;</code></p>
 
 <p>The core steps are also summarized here.</p>
 
@@ -5971,8 +5956,8 @@ port.</p><p>See: <a href="#err.inline.D0006">p:input</a></p></dd><dt id="err.D00
 p:output, or has the value false, then it is a
 dynamic error if the step does not produce
 exactly one document on the declared port.</p><p>See: <a href="#err.inline.D0007">p:output</a></p></dd><dt id="err.D0008"><code class="errqname">err:XD0008</code></dt><dd><p>It
-is a dynamic error if a document sequence
-appears where a document to be used as the context node is
+is a dynamic error if a sequence of items
+appears where an item to be used as the context item is
 expected.</p><p>See: <a href="#err.inline.D0008">Processor XPath Context</a>, <a href="#err.inline.D0008.1">p:variable</a>, <a href="#err.inline.D0008.2">p:with-option</a></p></dd><dt id="err.D0010"><code class="errqname">err:XD0010</code></dt><dd><p>It is a dynamic error if the
             match expression on p:viewport does not match an
           element or document.</p><p>See: <a href="#err.inline.D0010">p:viewport</a></p></dd><dt id="err.D0011"><code class="errqname">err:XD0011</code></dt><dd><p>It is a dynamic error
