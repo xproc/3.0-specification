@@ -818,14 +818,19 @@ the input and output connections must not form a cycle in the graph.
 <title>Initiating a pipeline</title>
 
 <para>Initiating a pipeline necessarily involves two activities:
-static analysis and dynamic evaluation. Static analysis consists of
+static analysis and dynamic evaluation.
+<termdef xml:id="dt-static-analysis"><firstterm baseform="static analysis">Static
+analysis</firstterm>
+consists of
 those tasks that can be performed by inspection of the pipeline
 alone, including the binding of
 <link linkend="statics">static options and variables</link>,
 computation of serialization properties and document-properties,
 <link linkend="use-when">evaluation of <code>use-when</code> expressions</link>,
-and detecting static errors. Dynamic evaluation consists of tasks which, in general,
-cannot be performed out until a source document is available.</para>
+and detecting static errors.</termdef>
+<termdef xml:id="dt-dynamic-evaluation"><firstterm baseform="dynamic evaluation">Dynamic
+evaluation</firstterm> consists of tasks which, in general,
+cannot be performed out until a source document is available.</termdef></para>
 
 <para>There may be an <glossterm>implementation-defined</glossterm>
 mechanism for providing default values for static
@@ -1648,7 +1653,7 @@ system properties, which are all in the XProc namespace:</para>
 <rfc2119>must</rfc2119> be in a namespace and <rfc2119>must not</rfc2119> be
 in the XProc namespace.</para>
 
-<para><impl>The value of the <function>p:system-propety</function> function during
+<para><impl>The value of the <function>p:system-property</function> function during
 static analysis is <glossterm>implementation-defined</glossterm>.</impl></para>
 
       </section>
@@ -1891,7 +1896,7 @@ normally during static anlaysis.</para>
   </methodparam>
 </methodsynopsis>
 
-<para>The <function>p:force-qname-keys()</function> takes as its input a
+<para>The <function>p:force-qname-keys</function> takes as its input a
 map of type <type>map(*)</type> (so any map) and forces this into a
 map with <type>xs:Qname</type> keys. Every key/value entry in
 <code>$map</code> is processed as follows:</para>
@@ -4866,7 +4871,7 @@ The following rules apply:</para>
     <listitem>
       <para>If the type is declared as a map with <type>xs:QName</type>
         keys (<type>map(xs:QName, ...)</type>), the
-        <function>p:force-qname-keys()</function> (<xref
+        <function>p:force-qname-keys</function> (<xref
           linkend="f.force-qname-keys"/>) function is automatically applied to
         the map passed with <code>p:with-option</code>. This makes
         it possible to pass in maps using (easier to write)
@@ -5638,17 +5643,15 @@ that would be treated as an implicit inline.</error>
 <para>The value of the <tag class="attribute">href</tag> attribute,
 after expanding any
 <glossterm baseform="attribute value template">attribute value templates</glossterm>,
-is a whitespace-separated list of URIs. Each URI
-<rfc2119>must</rfc2119> be an <type>anyURI</type>.
+is a URI.
 <error code="D0064">It is a <glossterm>dynamic error</glossterm>
-if any URI is not a valid <type>xs:anyURI</type>.</error>
+if the URI is not a valid <type>xs:anyURI</type>.</error>
 The URI is interpreted
 as an IRI reference. If it is relative, it is made absolute against
 the base URI of the <tag>p:document</tag> element.
 </para>
 
-<para>The semantics of <tag>p:document</tag>, with respect to each URI,
-taken in order from left to right, are the same as a the
+<para>The semantics of <tag>p:document</tag> are the same as a the
 semantics of <tag>p:load</tag> where the <option>href</option> option
 is the URI, the
 <option>content-type</option> option comes from
@@ -5675,20 +5678,6 @@ well-formed XML document.</error> <error code="D0023">It is a
 <glossterm>dynamic error</glossterm> if a DTD validation is performed
 and the document is not valid.</error>
 </para>
-
-<note xml:id="note-document">
-<para>A <tag>p:document</tag> always <emphasis>reads</emphasis> from
-the specified IRI. In the context of a <tag>p:input</tag> or <tag>p:with-input</tag>,
-this seems
-perfectly natural. In the context of a <tag>p:output</tag>, this may
-seem a little asymmetrical. Putting a <tag>p:document</tag> in a
-<tag>p:output</tag> causes the pipeline to <emphasis>read</emphasis>
-from the specified IRI and provide that document <emphasis>as an
-output</emphasis> on that port. </para>
-
-<para>Use <tag>p:store</tag> to store the results that appear on a
-<tag>p:output</tag>.</para>
-</note>
 </section>
 
 <section xml:id="p.empty">
