@@ -209,29 +209,70 @@ of its input.</para>
    <p:input port="source" content-types="*/*"/>
    <p:output port="result" content-types="*/*"/>
    <p:option name="content-type" as="xs:string"/>
-   <p:option name="parameters" as="map(*)"/>   
+   <p:option name="parameters" as="map(*)"/>
 </p:declare-step>
 
 <para>The input document is transformed from one media type to another.
 <error code="C0070">It is a <glossterm>dynamic
 error</glossterm> if the supplied <option>content-type</option> is not
 a valid media type of the form
-“<literal><replaceable>type</replaceable>/<replaceable>subtype</replaceable>+<replaceable>ext</replaceable></literal>”.</error></para>
+“<literal><replaceable>type</replaceable>/<replaceable>subtype</replaceable>+<replaceable>ext</replaceable></literal>”.</error>
+<error code="C0071">It is a <glossterm>dynamic
+error</glossterm> if the <tag>p:cast-content-type</tag> step
+cannot perform the requested cast.</error>
+</para>
 
-   
 <para>The <option>parameters</option> can be used to supply parameters to
-control casting. <impl>The semantics of the keys and the allowed values for 
+control casting. <impl>The semantics of the keys and the allowed values for
 these keys are <glossterm>implementation-defined</glossterm>.</impl>
-<error code="C0079">It is a <glossterm>dynamic error</glossterm> if the map 
-<option>parameters</option> contains an entry whose key is defined by the 
+<error code="C0079">It is a <glossterm>dynamic error</glossterm> if the map
+<option>parameters</option> contains an entry whose key is defined by the
 implementation and whose value is not valid for that key.</error></para>
-   
+
 <itemizedlist>
 <listitem>
 <para>Casting from one XML media type to another simply changes the
 “<literal>content-type</literal>” document property.
 </para>
 </listitem>
+
+<listitem>
+<para>Casting from an HTML media type to an XML media type, if the input
+document is already an XPath data model document, simply changes the
+“<literal>content-type</literal>” document property.
+<impl>Casting an HTML document that isn’t already an XPath data
+model document into XML is
+<glossterm>implementation-defined</glossterm>.</impl>
+</para>
+</listitem>
+
+<listitem>
+<para>Casting from an XML media type to an HTML media type, simply changes the
+“<literal>content-type</literal>” document property.
+</para>
+</listitem>
+
+<listitem>
+<para>Casting from a JSON media type to an XML media type, converts the
+JSON into XML. <impl>The precise nature of the conversion from JSON to XML
+is <glossterm>implementation-defined</glossterm>.</impl>
+If the input document is a text node or other string representation,
+implementations <rfc2119>should</rfc2119> use <function>fn:json-to-xml</function>
+by default.
+</para>
+</listitem>
+
+<listitem>
+<para>Casting from an XML media type to a JSON media type, converts the
+XML into JSON. <impl>The precise nature of the conversion from XML to JSON
+is <glossterm>implementation-defined</glossterm>.</impl>
+If the input document is an XML representation of JSON as defined in
+<biblioref linkend="xpath31-functions"/>,
+implementations <rfc2119>should</rfc2119> use <function>fn:xml-to-json</function>
+by default.
+</para>
+</listitem>
+
 <listitem xml:id="c.data">
 <para>Casting from a non-XML media type to an XML media type produces an
 XML document with a <tag>c:data</tag> document element. The original
@@ -244,6 +285,7 @@ media type will be preserved in the
 <para>The content of the <tag>c:data</tag> element is the base64 encoded
 representation of the non-XML content.</para>
 </listitem>
+
 <listitem>
 <para>Casting from an XML media type to a non-XML media type
 <rfc2119>must</rfc2119> support the case where the input document is
@@ -267,11 +309,9 @@ the input document is not a <tag>c:data</tag> document is
 <glossterm>implementation-defined</glossterm>.</impl></para>
 </listitem>
 <listitem>
-<para><impl>What happens when one non-XML media type is cast to another
+<para><impl>Casting from one non-XML media type to another
 non-XML media type is <glossterm>implementation-defined</glossterm>.</impl>
-<error code="C0071">It is a <glossterm>dynamic
-error</glossterm> if the <tag>p:cast-content-type</tag> step
-cannot perform the requested cast.</error></para>
+</para>
 </listitem>
 </itemizedlist>
 
@@ -3028,6 +3068,9 @@ Functions and Operators 3.1</abbrev>
 Functions and Operators 3.1</citetitle>.
 Michael Kay, editors
 W3C Recommendation. 21 March 2017.</bibliomixed>
+    <bibliomixed xml:id="xpath31-functions"><abbrev>XPath and XQuery Functions and Operators 3.1</abbrev>
+<citetitle xlink:href="https://www.w3.org/TR/xpath-functions-31/">XPath and XQuery Functions and  Operators 3.1</citetitle>. Michael Kay, editor.
+W3C Recommendation. 21 March 2017</bibliomixed>
     <bibliomixed xml:id="xinclude"><abbrev>XInclude</abbrev>
 <citetitle xlink:href="http://www.w3.org/TR/xinclude/">XML Inclusions
 (XInclude) Version 1.0 (Second Edition)</citetitle>. Jonathan Marsh,
