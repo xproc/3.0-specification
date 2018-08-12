@@ -5656,15 +5656,6 @@ is the URI, the
 <tag class="attribute">parameters</tag> attribute.
 </para>
 
-<note>
-<para>If the <tag class="attribute">href</tag> attribute is a list of
-more than one URI, it follows from the way that the URIs in that sequence are
-processed that they will have same <option>content-type</option>,
-<option>document-properties</option>, and <option>parameters</option>.
-Use different <tag>p:document</tag> elements if different values are
-required.</para>
-</note>
-
 <para><error code="D0011">It is a <glossterm>dynamic error</glossterm>
 if the resource referenced by a <tag>p:document</tag> element does not
 exist, cannot be accessed, or has an XML content type and is not a
@@ -5672,6 +5663,16 @@ well-formed XML document.</error> <error code="D0023">It is a
 <glossterm>dynamic error</glossterm> if a DTD validation is performed
 and the document is not valid.</error>
 </para>
+
+<note xml:id="note-document"><para>A <tag>p:document</tag> always <emphasis>reads</emphasis> from
+the specified IRI. In the context of a <tag>p:input</tag> or <tag>p:with-input</tag>,
+this seems
+perfectly natural. In the context of a <tag>p:output</tag>, this may
+seem a little asymmetrical. Putting a <tag>p:document</tag> in a
+<tag>p:output</tag> causes the pipeline to <emphasis>read</emphasis>
+from the specified IRI and provide that document <emphasis>as an
+output</emphasis> on that port. </para><para>Use <tag>p:store</tag> to store the results that appear on a
+<tag>p:output</tag>.</para></note>
 </section>
 
 <section xml:id="p.empty">
