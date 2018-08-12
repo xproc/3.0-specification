@@ -832,11 +832,11 @@ and detecting static errors.</termdef>
 evaluation</firstterm> consists of tasks which, in general,
 cannot be performed out until a source document is available.</termdef></para>
 
-<para>There may be an <glossterm>implementation-defined</glossterm>
+<para><impl>There may be an <glossterm>implementation-defined</glossterm>
 mechanism for providing default values for static
 <tag>p:option</tag>s. If such a mechanism exists, the values provided
 must match the sequence type declared for the option, if such a
-declaration exists.</para>
+declaration exists.</impl></para>
 
 <section xml:id="static-expressions">
 <title>Evaluating expressions during static analysis</title>
@@ -846,21 +846,12 @@ declaration exists.</para>
 <orderedlist>
 <listitem>
 <para>The <tag class="attribute">select</tag> expressions on static
-<tag>p:option</tag>s, unless a static default value has been provided.</para>
+options and variables.</para>
 </listitem>
 <listitem>
-<para>The <tag class="attribute">select</tag> expressions on static
-<tag>p:variable</tag>s.
-</para>
-</listitem>
-<listitem>
-<para>The <tag class="attribute">document-properties</tag> of
-<tag>p:inline</tag> and <tag>p:document</tag> elements.
-</para>
-</listitem>
-<listitem>
-<para>The <tag class="attribute">serialization</tag> properties
-on <tag>p:output</tag>.
+<para>
+<link linkend="value-templates">Value templates</link> in the attributes
+or descendants of <tag>p:input</tag> and <tag>p:output</tag>.
 </para>
 </listitem>
 <listitem>
@@ -4695,14 +4686,8 @@ bound to a namespace.</error>
 class="attribute">as</tag> attribute using an
 <biblioref linkend="xpath31"/>
 <link xlink:href="https://www.w3.org/TR/xpath-31/#dt-sequence-type">sequence Type</link>.
-If an atomic type,
-or sequence of atomic types, is specified, the value provided for the
-option will be atomized according to the standard XPath rules.
-<error code="S0096">It is a <glossterm>static error</glossterm> if
-the sequence type is not syntactically valid.</error>
-<error code="D0036">It is a <glossterm>dynamic error</glossterm> if
-the computed value does not match the specified sequence
-type.</error></para>
+See <xref linkend="varopt-types"/>.
+</para>
 </listitem>
 </varlistentry>
 <varlistentry><term><tag class="attribute">static</tag></term>
@@ -4784,8 +4769,11 @@ the variable is visible to an importing pipeline. If
 <tag class="attribute">visibility</tag> is set to “<literal>private</literal>”,
 the variable is visible inside the <tag>p:library</tag> but not visible to
 any pipeline importing the <tag>p:library</tag>. If the visibility attribute is
-missing, “<literal>public</literal>” is assumed. If the <tag>p:variable</tag>
-is not a child of a <tag>p:library</tag> the attribute is ignored.</para>
+missing, “<literal>public</literal>” is assumed.
+<error code="S0093">It is a <glossterm>static error</glossterm> if
+<tag class="attribute">visibility</tag> is specified on a <tag>p:option</tag>
+or <tag>p:variable</tag> that is not a child of <tag>p:library</tag>.</error>
+</para>
 </listitem>
 </varlistentry>
 
@@ -4826,87 +4814,108 @@ node for the expression that defines the value of the variable.</error>
 <section xml:id="p.option">
 <title>p:option</title>
 
-<para>A <tag>p:option</tag> declares an option and associates a
-default value with it. This value may be overridden by the caller of a step.
-The <tag>p:option</tag> tag can only be used in
-a <tag>p:declare-step</tag> or a <tag>p:library</tag>.</para>
-
-<para>The name of the option <rfc2119>must</rfc2119> be an EQName. If it
-does not contain a prefix then it is in no namespace. <error
-code="S0028">It is a <glossterm>static error</glossterm> to declare an
-option or variable in the XProc namespace.</error></para>
-
-<para><error code="S0087">It is a <glossterm>static error</glossterm>
-if the name attribute on <tag>p:option</tag> or <tag>p:variable</tag>
-has a prefix which is not bound to a namespace.</error></para>
-
-<para><error code="S0004">It is a <glossterm>static error</glossterm>
-to declare two or more options on the same step with the same
-name.</error></para>
+<para>A <tag>p:option</tag> declares a variable and associates a
+default value with it. Option declarations may optionally specify the type
+of the option using an
+<biblioref linkend="xpath31"/>
+<link xlink:href="https://www.w3.org/TR/xpath-31/#dt-sequence-type">sequence Type</link>.
+</para>
 
 <e:rng-pattern name="Option"/>
 
-  <para>An option may declare its type. The type is specified in the <tag
-    class="attribute">as</tag> attribute using an
+<para>The attributes that can appear on <tag>p:option</tag> are
+<link linkend="common-attr">the common attributes</link> and:</para>
+
+<variablelist>
+<varlistentry><term><tag class="attribute">name</tag></term>
+<listitem>
+<para>The name of the option <rfc2119>must</rfc2119> be an EQName. If
+it does not contain a prefix then it is in no namespace.
+<error code="S0028">It is a <glossterm>static error</glossterm> to declare an
+option or variable in the XProc namespace.</error> <error code="S0087">It is
+a <glossterm>static error</glossterm> if the name attribute on
+<tag>p:option</tag> or <tag>p:variable</tag> has a prefix which is not
+bound to a namespace.</error>
+</para>
+</listitem>
+</varlistentry>
+<varlistentry><term><tag class="attribute">as</tag></term>
+<listitem>
+<para>The type of the value may be specified in the <tag
+class="attribute">as</tag> attribute using an
 <biblioref linkend="xpath31"/>
 <link xlink:href="https://www.w3.org/TR/xpath-31/#dt-sequence-type">sequence Type</link>.
-The following rules apply:</para>
-  <itemizedlist>
-    <listitem>
-      <para>If an atomic type,
-        or sequence of atomic types, is specified, the value provided for the
-        option will be atomized according to the standard XPath rules. 
-        <error code="S0096">It is a <glossterm>static error</glossterm> if
-          the sequence type is not syntactically valid.</error>
-        <error code="D0036">It is a <glossterm>dynamic error</glossterm> if
-          the computed value does not match the specified sequence
-          type.</error></para>
-    </listitem>
-    <listitem>
-      <para>If the type is declared as a map with <type>xs:QName</type>
-        keys (<type>map(xs:QName, ...)</type>), the
-        <function>p:force-qname-keys</function> (<xref
-          linkend="f.force-qname-keys"/>) function is automatically applied to
-        the map passed with <code>p:with-option</code>. This makes
-        it possible to pass in maps using (easier to write)
-        <type>xs:string</type> type keys that are converted
-        automatically into the required <type>xs:QName</type>
-        keys.</para>
-    </listitem>
-  </itemizedlist>
-
+See <xref linkend="varopt-types"/>
+</para>
+</listitem>
+</varlistentry>
+<varlistentry><term><tag class="attribute">static</tag></term>
+<listitem>
+<para>An indication of whether the option is to be evaluated
+statically or not. See <link linkend="statics"/>.
+If <tag class="attribute">static</tag> is not specified, it
+defaults to “<code>false</code>”.</para>
+</listitem>
+</varlistentry>
+<varlistentry><term><tag class="attribute">required</tag></term>
+<listitem>
 <para>An option may declare that it is required by specifying
 the value <literal>true</literal> for the
 <tag class="attribute">required</tag> attribute. <error code="S0018">If an
 option is required, it is a <glossterm>static error</glossterm> to
 invoke the step without specifying a value for that
-option.</error> Options are only required if they are specifically
-declared to be so; in other words, the default value for the
-<tag class="attribute">required</tag> attribute is <code>false</code>.
+option.</error> If <tag class="attribute">required</tag> is not specified,
+it defaults to “<code>false</code>”.</para>
+</listitem>
+</varlistentry>
+<varlistentry><term><tag class="attribute">select</tag></term>
+<listitem>
+<para>If an option is not required, its default value may be specified with a
+<tag class="attribute">select</tag> attribute.
+If no default value is specified, the default value is the empty sequence.
 </para>
 
-<para>If an option is not declared to be required, it
-<rfc2119>may</rfc2119> be given a default value. The default value is
-specified with a <tag class="attribute">select</tag> attribute
-containing an XPath expression which will be evaluated to provide
-a default value for the option. If no default value is explicitly provided,
-the default value of an option is the empty sequence.</para>
+<para>If specified, the content of the
+<tag class="attribute">select</tag> attribute is an XPath expression
+which will be evaluated to provide the default value for the option.
+</para>
 
-<para>A <tag>p:option</tag> with a may be declared “static”.
-See <link linkend="statics"/>. If <tag class="attribute">static</tag> is not
-specified, it defaults to “<code>false</code>”.</para>
+<para>The default value of an option is specified with an XPath
+expression on the <tag>p:declare-step</tag> that defines the step
+signature. It must be a statically valid expression at that point.
+Consequently, if it contains variable references, they can only be
+references to preceding options on the step.
+<error code="D0026">It is a <glossterm>dynamic error</glossterm> if
+the <tag class="attribute">select</tag> expression makes reference to
+the context node, size, or position.</error></para>
 
-<para>The <tag class="attribute">select</tag> expression is evaluated
-during static analysis.</para>
+<para><impl>The precise details about what XPath expressions are allowed
+(for example, can the expression declare a function) is
+<glossterm>implementation-defined</glossterm>.</impl>
+</para>
+</listitem>
+</varlistentry>
 
+<varlistentry><term><tag class="attribute">visibility</tag></term>
+<listitem>
 <para>If the <tag>p:option</tag> is a child of a <tag>p:library</tag>,
 the <tag class="attribute">visibility</tag> attribute controls whether
-the option is visible to an importing pipeline. If
+the variable is visible to an importing pipeline. If
 <tag class="attribute">visibility</tag> is set to “<literal>private</literal>”,
 the option is visible inside the <tag>p:library</tag> but not visible to
 any pipeline importing the <tag>p:library</tag>. If the visibility attribute is
-missing, “<literal>public</literal>” is assumed. If the <tag>p:option</tag>
-is not a child of a <tag>p:library</tag> the attribute is ignored.</para>
+missing, “<literal>public</literal>” is assumed.
+<error code="S0093">It is a <glossterm>static error</glossterm> if
+<tag class="attribute">visibility</tag> is specified on a <tag>p:option</tag>
+or <tag>p:variable</tag> that is not a child of <tag>p:library</tag>.</error>
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+<para><error code="S0004">It is a <glossterm>static error</glossterm>
+to declare two or more options on the same step with the same
+name.</error></para>
 
 <para>The following errors apply to options:</para>
 
@@ -4921,23 +4930,11 @@ to specify that an option is both <tag class="attribute">required</tag>
 to specify that an option is both <tag class="attribute">required</tag>
 <emphasis>and</emphasis> static.</error></para>
 </listitem>
-<listitem>
-<para><error code="D0026">It is a <glossterm>dynamic error</glossterm> if
-the <tag class="attribute">select</tag> expression makes reference to
-the context node, size, or position.</error></para>
-</listitem>
 </itemizedlist>
-</section>
 
-<section xml:id="statics">
-<title>Static Options and Variables</title>
-
-<para>A <tag>p:option</tag> or <tag>p:variable</tag> that is a
-<emphasis>direct child</emphasis> of <tag>p:declare-step</tag> may be
-declared “static”:</para>
-
-<para>The values of static options and variables are computed during
-<link linkend="initiating">static analysis</link>.</para>
+<para>The pipeline author may use <tag>p:with-option</tag> on a step
+when it is invoked. Values specified with <tag>p:with-option</tag>
+override any default values specified.</para>
 </section>
 
 <!-- ============================================================ -->
@@ -4976,14 +4973,8 @@ name as part of the same step invocation.</error></para>
 class="attribute">as</tag> attribute using an
 <biblioref linkend="xpath31"/>
 <link xlink:href="https://www.w3.org/TR/xpath-31/#dt-sequence-type">sequence Type</link>.
-If an atomic type,
-or sequence of atomic types, is specified, the value provided for the
-option will be atomized according to the standard XPath rules.
-<error code="S0096">It is a <glossterm>static error</glossterm> if
-the sequence type is not syntactically valid.</error>
-<error code="D0036">It is a <glossterm>dynamic error</glossterm> if
-the computed value does not match the specified sequence
-type.</error></para>
+See <xref linkend="varopt-types"/>
+</para>
 </listitem>
 </varlistentry>
 <varlistentry><term><tag class="attribute">select</tag></term>
@@ -5054,6 +5045,40 @@ author to exclude some namespace declarations in inline content, see <tag>p:inli
 error</glossterm> if a <tag>p:with-option</tag> attempts to change
 the value of an option that is declared static.</error>
 See <xref linkend="statics"/>.</para>
+</section>
+
+<section xml:id="statics">
+<title>Static Options and Variables</title>
+
+<para>A <tag>p:option</tag> or <tag>p:variable</tag> that is a
+<emphasis>direct child</emphasis> of <tag>p:declare-step</tag> may be
+declared “static”. Options and variables that are the direct
+children of <tag>p:library</tag> <rfc2119>must</rfc2119> be declared
+static.</para>
+
+<para>The values of static options and variables are computed during
+<link linkend="initiating">static analysis</link>.</para>
+</section>
+
+<section xml:id="varopt-types">
+<title>Variable and option types</title>
+
+<para>Variables and options may declare that they have a sequence type.
+<error code="S0096">It is a <glossterm>static error</glossterm> if
+the sequence type is not syntactically valid.</error></para>
+
+<para>If a variable or option declares a type, the value provided for the
+variable or option will be atomized according to the standard XPath rules.
+<error code="D0036">It is a <glossterm>dynamic error</glossterm> if
+the computed value does not match the specified sequence
+type.</error></para>
+
+<para>If the sequence type is a map with <type>xs:QName</type> keys
+(<type>map(xs:QName, ...)</type>), the
+<function>p:force-qname-keys</function> function is automatically applied to
+the value. This makes it possible to pass in maps using (easier to
+write) <type>xs:string</type> type keys that are converted
+automatically into the required <type>xs:QName</type> keys.</para>
 </section>
 
 <!-- ============================================================ -->
@@ -5644,6 +5669,10 @@ The URI is interpreted
 as an IRI reference. If it is relative, it is made absolute against
 the base URI of the <tag>p:document</tag> element.
 </para>
+
+<para>The document's content type is determined statically. If a
+content-type is specified, that is the content type. Otherwise, the
+content type is “application/xml”.</para>
 
 <para>The semantics of <tag>p:document</tag> are the same as a the
 semantics of <tag>p:load</tag> where the <option>href</option> option
