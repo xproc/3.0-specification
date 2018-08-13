@@ -7,6 +7,7 @@
 <p:declare-step type="p:directory-list">
   <p:output port="result" content-type="application/xml"/>
   <p:option name="path" required="true" as="xs:anyURI"/>
+  <p:option name="detailed" select="false()" as="xs:boolean"/>
   <p:option name="include-filter" as="xs:string*" e:type="RegularExpression"/>
   <p:option name="exclude-filter" as="xs:string*" e:type="RegularExpression"/>
 </p:declare-step>
@@ -24,6 +25,10 @@ identify a directory.</error> <error code="C0012">It is a
 <glossterm>dynamic error</glossterm> if the contents of the directory
 path are not available to the step due to access restrictions in the
 environment in which the pipeline is run.</error></para>
+
+<para>If the <option>detailed</option> option is true, the pipeline
+author is requesting additional information about the matching entries,
+see <xref linkend="dir-list-details"/>.</para>
 
 <para>If present, the value of the <option>include-filter</option>
 or <option>exclude-filter</option>
@@ -85,9 +90,55 @@ appears within the top-level <tag>c:directory</tag> element, whose
 value is a relative IRI reference, giving the (local) file or
 directory name.</para>
 
-<para><impl>Any attributes other than <tag class="attribute">name</tag> on
+<section xml:id="dir-list-details">
+<title>Directory list details</title>
+
+<para>If <option>detailed</option> is false, then only the
+<tag class="attribute">name</tag> attribute is expected on
+<tag>c:file</tag>, <tag>c:directory</tag>, or <tag>c:other</tag>
+elements.
+<impl>Any other attributes on
 <tag>c:file</tag>, <tag>c:directory</tag>, or <tag>c:other</tag>
 are <glossterm>implementation-defined</glossterm>.</impl></para>
+
+<para>If <option>detailed</option> is true, then the pipeline author
+is expecting additional details about each entry. The following attributes
+<rfc2119>should</rfc2119> be provided by the implementation:</para>
+
+<variablelist>
+<varlistentry><term><tag class="attribute">readable</tag></term>
+<listitem><para>“<code>true</code>” if the entry is readable.</para>
+</listitem>
+</varlistentry>
+<varlistentry><term><tag class="attribute">writable</tag></term>
+<listitem><para>“<code>true</code>” if the entry is writable.</para>
+</listitem>
+</varlistentry>
+<varlistentry><term><tag class="attribute">hidden</tag></term>
+<listitem><para>“<code>true</code>” if the entry is hidden.</para>
+</listitem>
+</varlistentry>
+<varlistentry><term><tag class="attribute">last-modified</tag></term>
+<listitem><para>The last modification time of the entry, expressed as a lexical
+<code>xs:dateTime</code> in UTC.</para>
+</listitem>
+</varlistentry>
+<varlistentry><term><tag class="attribute">size</tag></term>
+<listitem><para>The size of the entry in bytes.</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+<para><impl>The precise meaning of these properties are
+<glossterm>implementation-defined</glossterm> and may vary according
+to the URI scheme of the <option>path</option>.</impl>
+If the value of an attribute is “<code>false</code>” or if it has no
+meaningful value, the attribute may be omitted.</para>
+
+<para><impl>Any other attributes on
+<tag>c:file</tag>, <tag>c:directory</tag>, or <tag>c:other</tag>
+are <glossterm>implementation-defined</glossterm>.</impl></para>
+</section>
 
 <simplesect>
 <title>Document properties</title>
