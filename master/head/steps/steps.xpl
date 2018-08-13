@@ -50,6 +50,7 @@
    <p:declare-step type="p:directory-list" xml:id="directory-list">
       <p:output port="result" content-type="application/xml"/>
       <p:option name="path" required="true" as="xs:anyURI"/>
+      <p:option name="detailed" select="false()" as="xs:boolean"/>
       <p:option name="include-filter" as="xs:string*" e:type="RegularExpression"/>
       <p:option name="exclude-filter" as="xs:string*" e:type="RegularExpression"/>
    </p:declare-step>
