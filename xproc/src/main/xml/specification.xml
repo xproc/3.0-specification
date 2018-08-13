@@ -4412,14 +4412,14 @@ serialized implementations
 <rfc2119>may</rfc2119> but are not required to check that the
 specified options are allowed.</para>
 
-<para>For XML outputs, see <xref linkend="xml-serialization"/>.
-For non-XML outputs, see <xref linkend="non-xml-serialization"/>.</para>
+<para>For XML outputs, see <xref linkend="xproc-xml-serialization"/>.
+For non-XML outputs, see <xref linkend="xproc-non-xml-serialization"/>.</para>
 
-<section xml:id="xproc-serialization">
+<section xml:id="xproc-xml-serialization">
 <title>XML serialization</title>
 
 <para>The names and values of XML serialization parameters are defined
-by <biblioref linkend="xml-serialization"/>.</para>
+by <biblioref linkend="xml-serialization-31"/>.</para>
 
 <para>The following parameters may be present in the serialization
 map:</para>
@@ -4572,12 +4572,10 @@ boolean.</para>
 <varlistentry>
 <term><option>use-character-maps</option></term>
 <listitem>
-<para>The value of this option <rfc2119>must</rfc2119> be a list of
-<type>EQName</type>s. For each name provided, there must be a matching
-<tag>p:character-map</tag> with that name.
-<error code="D0100">It is a <glossterm>dynamic error</glossterm> if
-<option>use-character-maps</option> includes a name for which there
-is not a corresponding <tag>p:character-map</tag>.</error>
+<para>The value of this option <rfc2119>must</rfc2119> be a map
+(<code>map(xs:string, xs:string)</code>). The keys are the characters
+to be mapped (as <code>xs:string</code> instances). The corresponding
+value for each key is the string to be substituted for that character.
 </para>
 </listitem>
 </varlistentry>
@@ -4594,7 +4592,7 @@ string.</para>
 <para>In order to be consistent with the rest of this specification,
 boolean values for the serialization parameters must use one of the
 XML Schema lexical forms for boolean: "true", "false", "1", or "0".
-This is different from the <biblioref linkend="xml-serialization"/>
+This is different from the <biblioref linkend="xml-serialization-31"/>
 specification which uses “yes” and “no”. No change in
 semantics is implied by this different spelling.</para>
 
@@ -4602,7 +4600,7 @@ semantics is implied by this different spelling.</para>
 method used by this component with standard values of 'html', 'xml',
 'xhtml', and 'text' but only the 'xml' value is required to be
 supported. The interpretation of the remaining options is as
-specified in <biblioref linkend="xml-serialization"/>.</para>
+specified in <biblioref linkend="xml-serialization-31"/>.</para>
 
 <para><impl>Implementations may support other method values but their
 results are <glossterm>implementation-defined</glossterm>.</impl>
@@ -4623,10 +4621,10 @@ output method.</para>
 
 <para>If a processor chooses to implement an option for serialization,
 it must conform to the semantics defined in the <biblioref
-linkend="xml-serialization"/> specification.</para>
+linkend="xml-serialization-31"/> specification.</para>
 
 </section>
-<section xml:id="non-xml-serialization">
+<section xml:id="xproc-non-xml-serialization">
 <title>Non-XML serialization</title>
 
 <para><impl>The names and values of non-XML serialization parameters are
