@@ -4725,10 +4725,11 @@ described in <xref linkend="xpath-context"/>, for the enclosing
 <para>Since all <glossterm>in-scope bindings</glossterm> are present
 in the Processor XPath Context as variable bindings, <tag
 class="attribute">select</tag> expressions may refer to the value of
-<glossterm>in-scope bindings</glossterm> by variable reference. If a
-variable reference uses an QName that is not the name of an <glossterm
-baseform="in-scope bindings">in-scope binding</glossterm>, an XPath
-evaluation error will occur.</para>
+<glossterm>in-scope bindings</glossterm> by variable reference.
+<error code="S0071">It is a <glossterm>static error</glossterm>
+if the XPath expression refers to the name of a variable that is
+not present in the <glossterm>in-scope bindings</glossterm>.</error>
+</para>
 
 <para>If a <tag class="attribute">select</tag> expression is given,
 the <glossterm>readable ports</glossterm> available for document
@@ -4886,6 +4887,9 @@ expression on the <tag>p:declare-step</tag> that defines the step
 signature. It must be a statically valid expression at that point.
 Consequently, if it contains variable references, they can only be
 references to preceding options on the step.
+<error code="S0071">It is a <glossterm>static error</glossterm>
+if the XPath expression refers to the name of a variable that is
+not present in the <glossterm>in-scope bindings</glossterm>.</error>
 <error code="D0026">It is a <glossterm>dynamic error</glossterm> if
 the <tag class="attribute">select</tag> expression makes reference to
 the context node, size, or position.</error></para>
