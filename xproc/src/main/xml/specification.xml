@@ -2255,6 +2255,29 @@ templates. If it has the value “<code>true</code>”, or if no
 <code>expand-text</code> attribute is present among the text node’s
 ancestors, then the text nodes are text value templates.</para>
 
+<para>When an <tag class="attribute">expand-text</tag> or
+<tag class="attribute">p:expand-text</tag> attribute occurs on elements
+that are descendants of a <tag>p:inline</tag> (explicit or implicit),
+they control the expand text behavior of thier descendants, but are removed
+from the elements on which they occur.</para>
+
+<para>The following step:</para>
+
+<programlisting language="xml"><xi:include href="../../../build/examples/expand-text.txt" parse="text"/></programlisting>
+
+<para>produces the following result document:</para>
+
+<programlisting language="xml"><![CDATA[<doc sum="10">
+  <inner sum="{2+4}"/>
+</doc>]]></programlisting>
+
+<para>If a pipeline requires explicit 
+<tag class="attribute">expand-text</tag> or
+<tag class="attribute">p:expand-text</tag> 
+attributes in a result that is constructed with a <tag>p:inline</tag>,
+add them in a different namespace and then use <tag>p:rename</tag>
+to rename them.</para>
+
 <!-- feature="no-p-expand-text-on-p"-->
 <para><error code="S0084">It is a <glossterm>static error</glossterm> if the
 <tag class="attribute">p:expand-text</tag> attribute appears on any element
