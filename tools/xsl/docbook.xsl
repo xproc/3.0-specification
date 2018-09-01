@@ -12,7 +12,7 @@
 		exclude-result-prefixes="f h db m t xlink xs tp"
                 version="2.0">
 
-<xsl:import href="https://cdn.docbook.org/release/2.3.2/xslt/base/html/final-pass.xsl"/>
+<xsl:import href="https://cdn.docbook.org/release/2.3.6/xslt/base/html/final-pass.xsl"/>
 
 <xsl:param name="js-navigation" select="false()"/>
 

@@ -17,7 +17,7 @@
 <p:option name="webid" select="'xproc'"/>
 <p:option name="diffloc" select="'/tmp/diff.html'"/>
 
-<p:import href="https://cdn.docbook.org/release/2.3.2/xslt/base/pipelines/docbook.xpl"/>
+<p:import href="https://cdn.docbook.org/release/2.3.6/xslt/base/pipelines/docbook.xpl"/>
 
 <p:declare-step type="cx:message">
   <p:input port="source" sequence="true"/>
