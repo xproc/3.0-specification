@@ -3960,8 +3960,7 @@ and extension atomic steps.</para>
 <para>The declaration of an input identifies the name of the
 port, whether or not the port accepts a sequence, whether or not the
 port is a <glossterm>primary input port</glossterm>, what content types it
-accepts, and may provide a
-default connection for the port.</para>
+accepts, and may provide a connection to default inputs for the port.</para>
 
 <para>An input <emphasis>declaration</emphasis> has the following
 form:</para>
@@ -4073,17 +4072,17 @@ author to exclude some namespace declarations in inline content, see <tag>p:inli
 </variablelist>
 
 <para>On a <tag>p:declare-step</tag> for an atomic step, the
-<tag>p:input</tag> simply declares the input port. <error
+<tag>p:input</tag> can only declare the input port. <error
 code="S0042">It is a <glossterm>static error</glossterm> to attempt to
 provide a connection for an input port on the declaration of an atomic
 step.</error></para>
 
-<para xml:id="note-pipe-excl">The <tag>p:pipe</tag> element is explicitly excluded from a
-declaration because it would make the default value of an input
-dependent on the execution of some part of the pipeline. Default
-values are designed so that they can be computed statically. For the very
-same reason <tag class="attribute">href</tag> is neither an attribute value template
-on <tag>p:input</tag> nor on a <tag>p:document</tag> within a <tag>p:input</tag>.</para>
+<para xml:id="note-pipe-excl">The <tag>p:pipe</tag> element is
+explicitly excluded from a declaration because it would make the
+default value of an input dependent on the execution of some part of
+the pipeline. If a runtime binding is provided for an input port, implementations
+<rfc2119>must not</rfc2119> attempt to dereference the default
+bindings.</para>
 
 </section>
 <section xml:id="p.with-input">
