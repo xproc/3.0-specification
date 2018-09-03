@@ -5166,7 +5166,23 @@ options for all steps of that type.</para>
 
 <e:rng-pattern name="DeclareStep"/>
 
-<para>The value of the <tag class="attribute">type</tag> can be from
+<para>The attributes that can appear on <tag>p:declare-step</tag> are
+<link linkend="common-attr">the common attributes</link> and:</para>
+
+<variablelist>
+<varlistentry><term><tag class="attribute">name</tag></term>
+<listitem>
+<para>The <tag class="attribute">name</tag> attribute provides a
+name for the step. This name can be used within the subpipeline to
+refer back to the declaration, for example, to read from its inputs.
+</para>
+</listitem>
+</varlistentry>
+<varlistentry><term><tag class="attribute">type</tag></term>
+<listitem>
+<para>The <tag class="attribute">type</tag> attribute provides
+a type for the step. 
+The value of the <tag class="attribute">type</tag> can be from
 any namespace provided that the expanded-QName of the value has a
 non-null namespace URI. <error code="S0025">It is a <glossterm>static
 error</glossterm> if the expanded-QName value of the <tag
@@ -5175,11 +5191,70 @@ XProc namespace.</error> Except as described in <xref
 linkend="versioning-considerations"/>, the XProc namespace
 <rfc2119>must not</rfc2119> be used in the type of steps. Neither
 users nor implementers may define additional steps in the XProc
-namespace.</para>
+namespace.
+</para>
+</listitem>
+</varlistentry>
+<varlistentry><term><tag class="attribute">psvi-required</tag></term>
+<listitem>
+<para>The <tag class="attribute">psvi-required</tag> attribute allows
+the author to declare that a step relies on the processor's ability to
+pass PSVI annotations between steps,
+see <xref linkend="psvi-support"/>.
+If the attribute is not specified, the value
+“<literal>false</literal>” is assumed. </para>
+</listitem>
+</varlistentry>
+<varlistentry><term><tag class="attribute">xpath-version</tag></term>
+<listitem>
+<para>The requested <tag class="attribute">xpath-version</tag>
+<rfc2119>must</rfc2119> be used to evaluate XPath expressions subject
+to the constraints outlined in <xref linkend="xpath-context"/>. If the
+attribute is not specified, the value “<literal>3.1</literal>” is
+assumed.</para>
+</listitem>
+</varlistentry>
+<varlistentry><term><tag class="attribute">exclude-inline-prefixes</tag></term>
+<listitem>
+<para>The a description of <tag class="attribute">exclude-inline-prefixes</tag>,
+see <tag>p:inline</tag>.
+</para>
+</listitem>
+</varlistentry>
+<varlistentry><term><tag class="attribute">version</tag></term>
+<listitem>
+<para>The <tag class="attribute">version</tag> attribute identifies
+the version of XProc for which this step declaration was authored. If
+the <tag>p:declare-step</tag> has no ancestors in the XProc namespace,
+then it <rfc2119>must</rfc2119> have a
+<tag class="attribute">version</tag> attribute.
+<error code="S0062">It is a <glossterm>static error</glossterm> if
+a required version attribute is not present.</error>
+See <xref linkend="versioning-considerations"/>.</para>
+</listitem>
+</varlistentry>
+<varlistentry><term><tag class="attribute">visibility</tag></term>
+<listitem>
 
-<para>The <glossterm>in-scope bindings</glossterm> at the beginning of
-a <tag>p:declare-step</tag> are limited to the lexically preceding,
-statically declared options and variables.</para>
+<para>If the <tag>p:declare-step</tag> is a child of a <tag>p:library</tag>
+the <tag class="attribute">visibility</tag> attribute controls whether
+the step is visible to an importing pipeline.
+If <tag class="attribute">visibility</tag> is set to
+<literal>private</literal>, the step type is only visible inside the
+<tag>p:library</tag> and is not visible to any pipeline importing the
+<tag>p:library</tag>. If the <tag class="attribute">visibility</tag>
+attribute is missing, <literal>public</literal> is assumed. If the
+<tag>p:declare-step</tag> is not a child of a <tag>p:library</tag> the
+attribute has no effect and is ignored.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+<para>A <tag>p:declare-step</tag> declares either an atomic step
+or a pipeline. Atomic steps have an implementation defined elsewhere
+in some implementation-defined way. Pipelines contain a subpipeline
+which defines what they do.</para>
 
 <para><impl>When a declared step is evaluated directly by the XProc
 processor (as opposed to occurring as an atomic step in some
@@ -5187,96 +5262,109 @@ processor (as opposed to occurring as an atomic step in some
 connected to documents is
 <glossterm>implementation-defined</glossterm>.</impl></para>
 
-<para>A step declaration is not a <link
-linkend="step-concept">step</link> in its own right. Sibling steps
-cannot refer to the inputs or outputs of a <tag>p:declare-step</tag>
-using <tag>p:pipe</tag>; only instances of the type can be
-referenced.</para>
-
-<para>The <tag class="attribute">version</tag> attribute identifies the version
-of XProc for which this step declaration was authored. If the
-<tag>p:declare-step</tag>
-has no ancestors in the XProc namespace, then it <rfc2119>must</rfc2119>
-have a <tag class="attribute">version</tag> attribute.
-See <xref linkend="versioning-considerations"/>.</para>
-
-<para>If the <tag>p:declare-step</tag> is a child of a <tag>p:library</tag> the
-<tag class="attribute">visibility</tag> attribute controls whether the step is
-visible to an importing pipeline. If <tag class="attribute">visibility</tag> is set to
-<literal>private</literal>, the step type is only visible inside the <tag>p:library</tag>
-but not visible to any pipeline importing the <tag>p:library</tag>. If the
-<tag class="attribute">visibility</tag> attribute is missing, <literal>public</literal>
-is assumed. If the <tag>p:declare-step</tag> is not a child of a <tag>p:library</tag> the
-attribute is ignored.</para>
-
-<para>For a description of <tag class="attribute">psvi-required</tag>,
-see <xref linkend="psvi-support" />. For <tag
-class="attribute">xpath-version</tag>, see <xref
-linkend="xpath-context"/>. For <tag
-class="attribute">exclude-inline-prefixes</tag>, see
-<tag>p:inline</tag>.</para>
-
-<para>In a <tag>p:declare-step</tag>, variables and options can be
-declared before the subpipline and variables can be declared (and redeclared)
-within the subpipeline. <error code="S0091">It is a <glossterm>static error</glossterm>
-if a <tag>p:option</tag> or <tag>p:variable</tag> declared before the subpipeline
-begins shadows another option or variable declared within the same
-<tag>p:declare-step</tag>.</error>
-</para>
+<para>A step declaration is not a
+<link linkend="step-concept">step</link> in its own right. Sibling
+steps cannot refer to the inputs or outputs of a
+<tag>p:declare-step</tag> using <tag>p:pipe</tag>; only instances of
+the type can be referenced.</para>
 
 <section xml:id="declare-atomic-steps">
-        <title>Declaring atomic steps</title>
-        <para>When declaring an atomic step, the subpipeline in the declaration
-            <rfc2119>must</rfc2119> be empty. And, conversely, if the subpipeline in a declaration
-          is empty, the declaration <rfc2119>must</rfc2119> be for an atomic step.</para>
-        <para><impl>Implementations may use <glossterm baseform="extension
-attribute">extension
-              attributes</glossterm> to provide <glossterm>implementation-dependent</glossterm>
-            information about a declared step.</impl> For example, such an attribute might identify
-          the code which implements steps of this type.</para>
-        <para>It is not an error for a pipeline to include declarations for steps that a particular
-          processor does not know how to implement. It is, of course, an error to attempt to
-          evaluate such steps.</para>
-      </section><section xml:id="declare-pipelines">
-        <title>Declaring pipelines</title>
-        <para>When a <tag>p:declare-step</tag> declares a pipeline, that pipeline encapsulates the
-          behavior of the specified <glossterm>subpipeline</glossterm>. Its children declare inputs,
-          outputs, and options that the pipeline exposes and identify the steps in its subpipeline. </para>
-        <para><impl>The subpipeline may include declarations of additional steps (e.g., other
-            pipelines or other step types that are provided by a particular implementation or in
-            some <glossterm>implementation-defined</glossterm> way) and import other
-            pipelines.</impl> If a pipeline has been imported, it may be invoked as a step within
-          the subpipeline that imported it.</para>
-        <para>The environment inherited by the <glossterm>subpipeline</glossterm> is the
-            <glossterm>empty environment</glossterm> with these modifications:</para>
-        <itemizedlist>
-          <listitem>
-            <para>All of the declared inputs are added to the <glossterm>readable ports</glossterm>
-              in the environment.</para>
-          </listitem>
-          <listitem>
-            <para>If a <glossterm>primary input port</glossterm> is declared, that port is the
-                <glossterm>default readable port</glossterm>, otherwise the default readable port is
-              undefined.</para>
-          </listitem>
-        </itemizedlist>
-        <para>If a <glossterm>primary output port</glossterm> is declared and that port has no
-            <glossterm>connection</glossterm>, then it is connected to the <glossterm>primary output
-            port</glossterm> of the <glossterm>last step</glossterm> in the
-            <glossterm>subpipeline</glossterm>. <error code="S0006">It is a <glossterm>static
-              error</glossterm> if the primary output port is unconnected and the <glossterm>last
-              step</glossterm> in the subpipeline does not have a primary output
-          port.</error></para>
-        <para>The requested <tag class="attribute">xpath-version</tag>
-          <rfc2119>must</rfc2119> be used to evaluate XPath expressions subject to the constraints
-          outlined in <xref linkend="xpath-context"/>. If the attribute is not specified, the value
-          “<literal>3.1</literal>” is assumed. </para>
-        <para>The <tag class="attribute">psvi-required</tag> attribute allows the author to declare
-          that a step relies on the processor's ability to pass PSVI annotations between steps, see
-            <xref linkend="psvi-support"/>. If the attribute is not specified, the value
-            “<literal>false</literal>” is assumed. </para>
-      </section></section>
-    <!-- ============================================================ -->
+<title>Declaring atomic steps</title>
+
+<para>The distinction between an atomic step declaration and a
+pipeline declaration hinges on the presence or absense of a
+subpipeline. An atomic step declaration does not have a subpipeline.
+</para>
+
+<para>Atomic step declarations may not import other pipelines or
+functions, may not declare static variables, and may not declare
+additional steps. In other words, the content of an atomic step
+declaration consists exclusively of <tag>p:input</tag>,
+<tag>p:output</tag>, and <tag>p:option</tag> elements.</para>
+
+<para><impl>Implementations may use
+<glossterm baseform="extension attribute">extension
+attributes</glossterm> to provide
+<glossterm>implementation-dependent</glossterm> information about a
+declared step.</impl> For example, such an attribute might identify
+the code which implements steps of this type.</para>
+
+<para>It is not an error for a pipeline to include declarations for
+steps that a particular processor does not know how to implement. It
+is, of course, an error to attempt to evaluate such steps.</para>
+
+<note>
+<para>Atomic step declarations are relatively uncommon and are usually
+provided by the implementor of a pipelne processor. In ordinary usage,
+pipeline declarations are much more common.</para>
+</note>
+
+</section>
+<section xml:id="declare-pipelines">
+<title>Declaring pipelines</title>
+
+<para>When a <tag>p:declare-step</tag> declares a pipeline, that
+pipeline encapsulates the behavior of the specified
+<glossterm>subpipeline</glossterm>. Its children declare inputs,
+outputs, and options that the pipeline exposes and identify the steps
+in its subpipeline. </para>
+
+<para>Informally, the content of a step declaration can be divided
+into three sections: imports, a prologue, and a subpipeline. The
+<tag>p:import</tag> and <tag>p:import-functions</tag> elements, if
+they appear, must come first. After that, the prologue consists of
+<tag>p:input</tag>, <tag>p:output</tag>, <tag>p:option</tag>, and
+<tag>p:variable</tag> elements. Any variables declared in the prologue
+must be static.</para>
+
+<para>Neither options nor variables in the prologue may shadow
+each other. <error code="S0091">It is a <glossterm>static
+error</glossterm> if a <tag>p:option</tag> or <tag>p:variable</tag>
+declared before the subpipeline begins shadows another option or
+variable declared within the same <tag>p:declare-step</tag>.</error>
+(Within the subpipeline, variables may shadow options and lexically
+preceding variables, including those in the prologue.)
+</para>
+
+<para>The prologue ends with additional <tag>p:declare-step</tag>
+elements, if any, and is followed by the subpipeline. Any step
+imported or declared in the prologue of a pipeine may be invoked as a
+step within the subpipeline of that pipeline.</para>
+
+<para>The environment inherited by the
+<glossterm>subpipeline</glossterm> is the <glossterm>empty
+environment</glossterm> with these modifications:</para>
+
+<itemizedlist>
+<listitem>
+<para>All of the declared inputs are added to the <glossterm>readable
+ports</glossterm> in the environment.</para>
+</listitem>
+<listitem>
+<para>If a <glossterm>primary input port</glossterm> is declared, that
+port is the <glossterm>default readable port</glossterm>, otherwise
+the default readable port is undefined.</para>
+</listitem>
+<listitem>
+<para>The <glossterm>in-scope bindings</glossterm> at the beginning of
+a <tag>p:declare-step</tag> are limited to the lexically preceding,
+statically declared options and variables.</para>
+</listitem>
+</itemizedlist>
+
+<para>If a <glossterm>primary output port</glossterm> is declared and
+that port has no <glossterm>connection</glossterm>, then it is
+connected to the <glossterm>primary output port</glossterm> of the
+<glossterm>last step</glossterm> in the
+<glossterm>subpipeline</glossterm>. <error code="S0006">It is a
+<glossterm>static error</glossterm> if the primary output port is
+unconnected and the <glossterm>last step</glossterm> in the
+subpipeline does not have a primary output port.</error></para>
+
+</section>
+</section>
+
+<!-- ============================================================ -->
 
 <section xml:id="p.library">
 <title>p:library</title>
