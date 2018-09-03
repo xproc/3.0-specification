@@ -120,6 +120,20 @@ error)
 <glossterm baseform="dynamic-error">dynamic errors</glossterm>.
 </para>
 
+<para><termdef xml:id="dt-dynamic-error">A <firstterm>dynamic
+error</firstterm> is one which occurs while a pipeline is being
+evaluated.</termdef> Examples of dynamic errors include references to
+URIs that cannot be resolved, steps which fail, and pipelines that
+exhaust the capacity of an implementation (such as memory or disk
+space). For a more complete discussion of dynamic errors, see
+<xspecref spec="xproc" xref="dynamic-errors"/>.
+</para>
+
+<para>If a step fails due to a dynamic error, failure propagates
+upwards until either a <tag>p:try</tag> is encountered or the entire
+pipeline fails. In other words, outside of a <tag>p:try</tag>, step
+failure causes the entire pipeline to fail.</para>
+
 <para>The following errors can be raised by this step:</para>
 
 <?step-error-list level="none"?>
@@ -186,7 +200,10 @@ Achim Berndzen, Gerrit Imsieke, Erik Siegel and Norman Walsh, editors.
 
 <!-- This glossary will automatically be elided if there are no
      terms marked up as 'firstterm's in this specification. -->
-<appendix xmlns:db="http://docbook.org/ns/docbook" xml:id="glossary"><title>Glossary</title><glosslist><glossentry><glossterm>implementation-defined</glossterm><glossdef><para>An
+<appendix xmlns:db="http://docbook.org/ns/docbook" xml:id="glossary"><title>Glossary</title><glosslist><glossentry><glossterm>dynamic
+error</glossterm><glossdef><para>A <firstterm>dynamic
+error</firstterm> is one which occurs while a pipeline is being
+evaluated.</para></glossdef></glossentry><glossentry><glossterm>implementation-defined</glossterm><glossdef><para>An
 <firstterm>implementation-defined</firstterm> feature is one where the
 implementation has discretion in how it is performed.
 Conformant implementations <rfc2119>must</rfc2119> document
