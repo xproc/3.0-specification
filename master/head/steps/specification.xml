@@ -1643,9 +1643,8 @@ shortcut value).</para>
 
 
 <para><error code="D0011">It is a <glossterm>dynamic error</glossterm>
-if the resource referenced by a <code>p:load</code> element does not exist,
-cannot be accessed, or has an XML content type and is not a well-formed
-XML document.</error></para>
+if the resource referenced by a <code>p:load</code> element does not exist
+or cannot be accessed.</error></para>
 
 <para>The behavior of this step depends on the content type of the
 document or documents loaded. The content type of each document is
@@ -1657,7 +1656,9 @@ determined as follows:</para>
 in <option>document-properties</option> or <option>content-type</option> is present,
 then each document <rfc2119>must</rfc2119> be interpreted according to
 that content type. <error code="D0062">It is a <glossterm>dynamic error</glossterm>
-if content-type is specified and document-properties has an entry for "content-type".</error>
+if the <tag class="attribute">content-type</tag> is specified and the
+document-properties has a “<code>content-type</code>” that is not the
+same.</error>
 </para>
 </listitem>
 <listitem>
@@ -1690,6 +1691,9 @@ and “other”
 <title>Loading XML data</title>
 
 <para>For an XML media type, the content is loaded and parsed as XML.</para>
+
+<para><error code="D0049">It is a <glossterm>dynamic error</glossterm> if
+the loaded content is not a well-formed XML document.</error></para>
 
 <para>If the <option>dtd-validate</option> parameter is <literal>true</literal>
 and the document has a <literal>doctype</literal> declaration,
