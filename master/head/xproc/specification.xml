@@ -3722,13 +3722,13 @@ arise within it from being exposed to the rest of the pipeline.</para>
 
 <e:rng-pattern name="Try"/>
 
-<para>The <tag>p:group</tag> represents the initial subpipeline and
+<para>The step begins with the initial subpipeline;
 the recovery (or “catch”) pipelines are identified with
 <tag>p:catch</tag> elements. The <tag>p:finally</tag> pipeline always
 runs after the <tag>p:try</tag>.</para>
 
 <para><error code="S0075">It is a <glossterm>static error</glossterm>
-if a <tag>p:try</tag> does not have exactly one <tag>p:group</tag> and
+if a <tag>p:try</tag> does not have at least one subpipeline step and
 at least one <tag>p:catch</tag> or exactly one <tag>p:finally</tag>.</error></para>
 
 <para>The <tag>p:try</tag> step evaluates the initial subpipeline and,
@@ -3741,7 +3741,7 @@ subpipelines.</para>
 <para>Each <tag>p:catch</tag> pipeline is considered in document
 order. All except the last <rfc2119>must</rfc2119> have a
 <tag class="attribute">code</tag> attribute. If any of the specified error
-codes matches the error that was raised in the <tag>p:group</tag>, then
+codes matches the error that was raised in the initial subpipeline, then
 that <tag>p:catch</tag> is selected as the recovery pipeline.
 If the last <tag>p:catch</tag> does not have a <tag class="attribute">code</tag>
 attribute, it is selected if no preceding <tag>p:catch</tag> has a
