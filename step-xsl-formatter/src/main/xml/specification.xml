@@ -75,15 +75,8 @@ port.</para>
   <p:input port="source" content-types="application/xml text/xml */*+xml"/>
   <p:output port="result" content-types="*/*"/>
   <p:option name="parameters" as="map(xs:QName,item())"/>
-  <p:option name="href" required="true" as="xs:anyURI"/>
   <p:option name="content-type" as="xs:string"/>
 </p:declare-step>
-
-<para>The value of the <option>href</option> option
-<rfc2119>must</rfc2119> be an <type>anyURI</type>. If it is relative,
-it is made absolute against the base URI of the element on which it is
-specified (<tag>p:with-option</tag> or <tag>p:xsl-formatter</tag> in the
-case of a syntactic shortcut value).</para>
 
 <para>The content-type of the output is controlled by the
 <option>content-type</option> option. This option specifies a media
@@ -102,9 +95,8 @@ parameters via the step's <option>parameters</option>; such parameters
 are defined by the XSL implementation used and are
 <glossterm>implementation-defined</glossterm>.</impl></para>
 
-<para>The output of this step is a document containing a single
-<tag>c:result</tag> element whose content is the absolute URI of the
-document stored by the step.</para>
+<para>The output of this step is a document containing the result of
+processing. This is often, but not necessarily, a PDF document.</para>
 
 <section>
 <title>Document properties</title>
