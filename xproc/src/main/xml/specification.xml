@@ -2255,12 +2255,28 @@ templates. If it has the value “<code>true</code>”, or if no
 <code>expand-text</code> attribute is present among the text node’s
 ancestors, then the text nodes are text value templates.</para>
 
-<!--feature="p-inline-no-nesting"-->
-<para>If a <tag>p:inline</tag> occurs as a descendant of another
-<tag>p:inline</tag>, any <tag class="attribute">expand-text</tag>
-within the inner <tag>p:inline</tag> is treated like an ordinary
-attribute; that is, neither will its value influence text expansion
-nor will it be removed from the descendant.</para>
+<para>When an <tag class="attribute">expand-text</tag> or
+<tag class="attribute">p:expand-text</tag> attribute occurs on elements
+that are descendants of a <tag>p:inline</tag> (explicit or implicit),
+they control the expand text behavior of thier descendants, but are removed
+from the elements on which they occur.</para>
+
+<para>The following step:</para>
+
+<programlisting language="xml"><xi:include href="../../../build/examples/expand-text.txt" parse="text"/></programlisting>
+
+<para>produces the following result document:</para>
+
+<programlisting language="xml"><![CDATA[<doc sum="10">
+  <inner sum="{2+4}"/>
+</doc>]]></programlisting>
+
+<para>If a pipeline requires explicit 
+<tag class="attribute">expand-text</tag> or
+<tag class="attribute">p:expand-text</tag> 
+attributes in a result that is constructed with a <tag>p:inline</tag>,
+add them in a different namespace and then use <tag>p:rename</tag>
+to rename them.</para>
 
 <!-- feature="no-p-expand-text-on-p"-->
 <para><error code="S0084">It is a <glossterm>static error</glossterm> if the
@@ -5533,12 +5549,23 @@ element is interpreted depends on the document's content type and the
 <tag class="attribute">encoding</tag> attribute.
 </para>
 
-<para><error code="D0054">It is a
-<glossterm>dynamic error</glossterm> if an encoding is specified
-and the content type is an <glossterm>XML media type</glossterm>.</error>
-</para>
+<para>The <tag class="attribute">encoding</tag> attribute allows you
+to include text that is not in Unicode or contains characters that for
+some reason you cannot or do not wish to include literally. Consider this
+example:</para>
 
-<para><error code="D0055">It is a <glossterm>dynamic error</glossterm>
+<example xml:id="encoding-attr">
+<title>A p:inline with an encoding</title>
+<programlisting language="xml"><![CDATA[<p:inline content-type="text/plain; charset=iso-8859-1"
+          encoding="base64">VGjvcyDucyBz8m1lIHTpeHQuCg==</p:inline>]]></programlisting>
+</example>
+
+<para>(This example encodes the silly sentence “Thïs îs sòme téxt.” in
+the ISO Latin 1 character set. It would be more easily represented by
+simply converting it to Unicode, but the principle remains.)</para>
+
+<para>An XML document must be in a single, uniform character set.
+<error code="D0055">It is a <glossterm>dynamic error</glossterm>
 if the content type value specifies a character set and the <tag
 class="attribute">encoding</tag> attribute is absent.</error>
 </para>
@@ -5549,16 +5576,32 @@ content type value specifies a character set that is not supported by
 the implementation.</error>
 </para>
 
-<para><error code="D0056">It is a <glossterm>dynamic error</glossterm>
-if an encoding is specified and the content of the <tag>p:inline</tag>
-contains any XML markup.</error>
-<error code="D0063">It is a <glossterm>dynamic error</glossterm>
-if the <tag>p:inline</tag> contains any XML markup and has a
-content type that is not an <glossterm>XML media type</glossterm>.</error>
-In other words, in these cases, the entire content
+<para>If the content type is an <glossterm>XML media type</glossterm>,
+an <tag class="attribute">encoding</tag> <rfc2119>must not</rfc2119> be specified.
+(The XML markup characters must occur literally in the element; they
+cannot be encoded.) <error code="D0054">It is a
+<glossterm>dynamic error</glossterm> if an encoding is specified
+and the content type is an <glossterm>XML media type</glossterm>.</error>
+</para>
+
+<para>If the content type is not an <glossterm>XML media type</glossterm>,
+it must not contain any XML markup.
+<error code="D0063">It is a <glossterm>dynamic error</glossterm> if
+the <tag>p:inline</tag> element contains XML markup but has a content type
+that is not an <glossterm>XML media type</glossterm>.</error>
+In other words, for non-XML media types, the entire content
 must be a single text node. CDATA sections and character references do
 not count as markup for this purpose because they will already have
 been replaced by the XML parser that read the pipeline.</para>
+
+<note xml:id="errd56-redundant" role="editorial">
+<para>I think <code>err:XD0056</code> is redundant with 
+<code>err:XD0063</code>.
+<error code="D0056">It is a <glossterm>dynamic error</glossterm>
+if an encoding is specified and the content of the <tag>p:inline</tag>
+contains any XML markup.</error>
+</para>
+</note>
 
 <para>If the <tag class="attribute">encoding</tag> attribute is
 present, the content must be decoded. The encoding value
