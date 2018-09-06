@@ -231,7 +231,7 @@ WithInput =
 [
    sa:class = "language-construct"
 ]
-OutputDeclaration =
+AtomicOutputDeclaration =
    element output {
       port.attr?,
       sequence.attr?,
@@ -239,20 +239,18 @@ OutputDeclaration =
       content-types.attr?,
       common.attributes,
       global.attributes,
-      serialization.attr?,
       (Documentation|PipeInfo)*
    }
 
 [
    sa:class = "language-construct"
 ]
-OutputConnection =
+CompoundOutputDeclaration =
    element output {
       port.attr?,
       sequence.attr?,
       primary.attr?,
       content-types.attr?,
-      serialization.attr?,
       [ sa:avt = "true" ]
          href.attr?,
       pipe.attr?,
@@ -263,9 +261,27 @@ OutputConnection =
    }
 
 [
+   sa:class = "language-construct"
+]
+PipelineOutputDeclaration =
+   element output {
+      port.attr?,
+      sequence.attr?,
+      primary.attr?,
+      [ sa:avt = "true" ]
+         href.attr?,
+      pipe.attr?,
+      common.attributes,
+      global.attributes,
+      inline.attributes,
+      serialization.attr?,
+      ( ( (\Empty | (Document|Pipe|Inline)*) & (Documentation|PipeInfo)* ) | AnyElement* )
+   }
+
+[
    sa:element = "output"
 ]
-Output = OutputDeclaration | OutputConnection
+Output = CompoundOutputDeclaration | AtomicOutputDeclaration | PipelineOutputDeclaration
 
 [
    sa:class = "language-construct"
@@ -445,7 +461,7 @@ Variable = DynamicVariable | StaticVariable
 [
    sa:class = "language-construct"
 ]
-DeclareStep =
+DeclarePipelineStep =
    element declare-step {
       name.ncname.attr?,
       attribute type { xsd:QName }?,
@@ -454,9 +470,28 @@ DeclareStep =
       common.attributes,
       global.attributes,
       (Import|ImportFunctions|Documentation|PipeInfo)*,
-      (Input|Output|StaticOption|StaticVariable|Documentation|PipeInfo)*,
+      (Input|Output|Option|StaticVariable|Documentation|PipeInfo)*,
       (DeclareStep|Documentation|PipeInfo)*,Subpipeline?
    }
+
+[
+   sa:class = "language-construct"
+]
+DeclareAtomicStep =
+   element declare-step {
+      name.ncname.attr?,
+      attribute type { xsd:QName }?,
+      decl.attributes,
+      visibility.attr?,
+      common.attributes,
+      global.attributes,
+      (Input|AtomicOutputDeclaration|Option|Documentation|PipeInfo)*
+   }
+
+[
+   sa:element = "declare-step"
+]
+DeclareStep = DeclarePipelineStep | DeclareAtomicStep
 
 # ============================================================
 
