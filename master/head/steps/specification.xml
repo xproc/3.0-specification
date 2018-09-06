@@ -1625,10 +1625,7 @@ remains the same.</para>
 <title>p:load</title>
 
 <para>The <code>p:load</code> step has no inputs but produces as its
-result a document (or documents) specified by an IRI. If it is relative, it is
-made absolute against the base URI of the element on which it is specified
-(<tag>p:with-option</tag> or <tag>p:load</tag> in the case of a syntactic
-shortcut value).</para>
+result a document (or documents) specified by an IRI.</para>
 
 <p:declare-step type="p:load">
   <p:output port="result" sequence="true" content-types="*/*"/>
@@ -1638,9 +1635,17 @@ shortcut value).</para>
   <p:option name="document-properties" as="map(xs:QName, item())"/>
 </p:declare-step>
 
-  <para>The document or documents identified by the <option>href</option> URI are loaded and returned. If the URI
-    protocol supports redirection, then redirects <rfc2119>must</rfc2119> be followed.</para>
+<para><error code="D0064">It is a <glossterm>dynamic error</glossterm> if
+the <option>href</option> URI is not a valid <type>xs:anyURI</type>.</error> 
+If the <option>href</option> is relative, it is made absolute
+against the base URI of the element on which it is specified
+(<tag>p:with-option</tag> or <tag>p:load</tag> in the case of a
+syntactic shortcut value).</para>
 
+<para>The document or documents identified by the
+<option>href</option> URI are loaded and returned. If the URI protocol
+supports redirection, then redirects <rfc2119>must</rfc2119> be
+followed.</para>
 
 <para><error code="D0011">It is a <glossterm>dynamic error</glossterm>
 if the resource referenced by a <code>p:load</code> element does not exist
