@@ -159,7 +159,7 @@ WithInput =
   }
 # ============================================================
 [ sa:class = "language-construct" ]
-OutputDeclaration =
+AtomicOutputDeclaration =
   element output {
     port.attr?,
     sequence.attr?,
@@ -167,17 +167,15 @@ OutputDeclaration =
     content-types.attr?,
     common.attributes,
     global.attributes,
-    serialization.attr?,
     (Documentation | PipeInfo)*
   }
 [ sa:class = "language-construct" ]
-OutputConnection =
+CompoundOutputDeclaration =
   element output {
     port.attr?,
     sequence.attr?,
     primary.attr?,
     content-types.attr?,
-    serialization.attr?,
     [ sa:avt = "true" ] href.attr?,
     pipe.attr?,
     common.attributes,
@@ -187,7 +185,27 @@ OutputConnection =
       & (Documentation | PipeInfo)*)
      | AnyElement*)
   }
-[ sa:element = "output" ] Output = OutputDeclaration | OutputConnection
+[ sa:class = "language-construct" ]
+PipelineOutputDeclaration =
+  element output {
+    port.attr?,
+    sequence.attr?,
+    primary.attr?,
+    [ sa:avt = "true" ] href.attr?,
+    pipe.attr?,
+    common.attributes,
+    global.attributes,
+    inline.attributes,
+    serialization.attr?,
+    (((Empty | (Document | Pipe | Inline)*)
+      & (Documentation | PipeInfo)*)
+     | AnyElement*)
+  }
+[ sa:element = "output" ]
+Output =
+  CompoundOutputDeclaration
+  | AtomicOutputDeclaration
+  | PipelineOutputDeclaration
 [ sa:class = "language-construct" ]
 Pipe =
   element pipe {
@@ -323,7 +341,7 @@ StaticVariable =
 [ sa:element = "variable" ] Variable = DynamicVariable | StaticVariable
 # ============================================================
 [ sa:class = "language-construct" ]
-DeclareStep =
+DeclarePipelineStep =
   element declare-step {
     name.ncname.attr?,
     attribute type { xsd:QName }?,
@@ -334,13 +352,30 @@ DeclareStep =
     (Import | ImportFunctions | Documentation | PipeInfo)*,
     (Input
      | Output
-     | StaticOption
+     | Option
      | StaticVariable
      | Documentation
      | PipeInfo)*,
     (DeclareStep | Documentation | PipeInfo)*,
     Subpipeline?
   }
+[ sa:class = "language-construct" ]
+DeclareAtomicStep =
+  element declare-step {
+    name.ncname.attr?,
+    attribute type { xsd:QName }?,
+    decl.attributes,
+    visibility.attr?,
+    common.attributes,
+    global.attributes,
+    (Input
+     | AtomicOutputDeclaration
+     | Option
+     | Documentation
+     | PipeInfo)*
+  }
+[ sa:element = "declare-step" ]
+DeclareStep = DeclarePipelineStep | DeclareAtomicStep
 # ============================================================
 [ sa:class = "language-construct" ]
 ForEach =

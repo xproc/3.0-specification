@@ -4366,10 +4366,9 @@ port.</para>
 <section xml:id="p.output">
 <title>p:output</title>
 
-<para>A <tag>p:output</tag> identifies an output port, optionally
-connecting an input for it, if necessary.</para>
+<para>A <tag>p:output</tag> identifies an output port.</para>
 
-<e:rng-pattern name="OutputDeclaration"/>
+<e:rng-pattern name="AtomicOutputDeclaration"/>
 
 <para>The attributes that can appear on <tag>p:output</tag> are
 <link linkend="common-attr">the common attributes</link> and:</para>
@@ -4424,14 +4423,6 @@ error statically.
 
 </listitem>
 </varlistentry>
-<varlistentry><term><tag class="attribute">serialization</tag></term>
-<listitem>
-<para>The <tag class="attribute">serialization</tag> attribute can
-be used to provide <link linkend="serialization">serialization
-parameters</link>.
-</para>
-</listitem>
-</varlistentry>
 </variablelist>
 
 <para>On <glossterm baseform="compound step">compound
@@ -4439,10 +4430,10 @@ steps</glossterm>, the declaration <rfc2119>may</rfc2119> be
 accompanied by a <glossterm>connection</glossterm> for the
 output.</para>
 
-<e:rng-pattern name="OutputConnection"/>
+<e:rng-pattern name="CompoundOutputDeclaration"/>
 
-<para>The additional attributes that can appear on an output connection
-are:</para>
+<para>The additional attributes that can appear on an output declaration
+on a compound step are:</para>
 
 <variablelist>
 <varlistentry><term><tag class="attribute">href</tag></term>
@@ -4463,6 +4454,24 @@ author to exclude some namespace declarations in inline content, see <tag>p:inli
 </listitem>
 </varlistentry>
 </variablelist>
+
+<para>Finally, on a <tag>p:declare-step</tag> that declares a pipeline,
+the <tag>p:output</tag> can specify serialization options.
+</para>
+
+<e:rng-pattern name="PipelineOutputDeclaration"/>
+
+<variablelist>
+<varlistentry><term><tag class="attribute">serialization</tag></term>
+<listitem>
+<para>The <tag class="attribute">serialization</tag> attribute can
+be used to provide <link linkend="serialization">serialization
+parameters</link>.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
 
 <para><error code="S0029">It is a <glossterm>static error</glossterm>
 to specify a connection for a <tag>p:output</tag> inside a
@@ -5264,11 +5273,37 @@ not be in scope.</para>
 <title>p:declare-step</title>
 
 <para>A <tag>p:declare-step</tag> provides the type and
-<glossterm>signature</glossterm> of an <glossterm>atomic
-step</glossterm> or pipeline. It declares the inputs, outputs, and
-options for all steps of that type.</para>
+<glossterm>signature</glossterm> of a pipeline or
+an <glossterm>atomic step</glossterm>.
+Pipelines contain a subpipeline which defines what the declared
+step does. Atomic steps have an implementation defined elsewhere in some
+other way.</para>
 
-<e:rng-pattern name="DeclareStep"/>
+<para><impl>When a declared step is evaluated directly by the XProc
+processor (as opposed to occurring as an atomic step in some
+<glossterm>container</glossterm>), how the input and output ports are
+connected to documents is
+<glossterm>implementation-defined</glossterm>.</impl></para>
+
+<para>A step declaration is not a
+<link linkend="step-concept">step</link> in its own right. Sibling
+steps cannot refer to the inputs or outputs of a
+<tag>p:declare-step</tag> using <tag>p:pipe</tag>; only instances of
+the type can be referenced.</para>
+
+<para>Most pipeline authors use the <tag>p:declare-step</tag> element
+to declare a pipeline.</para>
+
+<section xml:id="declare-pipelines">
+<title>Declaring pipelines</title>
+
+<para>When a <tag>p:declare-step</tag> declares a pipeline, that
+pipeline encapsulates the behavior of the specified
+<glossterm>subpipeline</glossterm>. Its children declare inputs,
+outputs, and options that the pipeline exposes and identify the steps
+in its subpipeline.</para>
+
+<e:rng-pattern name="DeclarePipelineStep"/>
 
 <para>The attributes that can appear on <tag>p:declare-step</tag> are
 <link linkend="common-attr">the common attributes</link> and:</para>
@@ -5353,68 +5388,10 @@ attribute has no effect and is ignored.
 </varlistentry>
 </variablelist>
 
-<para>A <tag>p:declare-step</tag> declares either an atomic step
-or a pipeline. Atomic steps have an implementation defined elsewhere
-in some implementation-defined way. Pipelines contain a subpipeline
-which defines what they do.</para>
-
-<para><impl>When a declared step is evaluated directly by the XProc
-processor (as opposed to occurring as an atomic step in some
-<glossterm>container</glossterm>), how the input and output ports are
-connected to documents is
-<glossterm>implementation-defined</glossterm>.</impl></para>
-
-<para>A step declaration is not a
-<link linkend="step-concept">step</link> in its own right. Sibling
-steps cannot refer to the inputs or outputs of a
-<tag>p:declare-step</tag> using <tag>p:pipe</tag>; only instances of
-the type can be referenced.</para>
-
-<section xml:id="declare-atomic-steps">
-<title>Declaring atomic steps</title>
-
-<para>The distinction between an atomic step declaration and a
-pipeline declaration hinges on the presence or absense of a
-subpipeline. An atomic step declaration does not have a subpipeline.
-</para>
-
-<para>Atomic step declarations may not import other pipelines or
-functions, may not declare static variables, and may not declare
-additional steps. In other words, the content of an atomic step
-declaration consists exclusively of <tag>p:input</tag>,
-<tag>p:output</tag>, and <tag>p:option</tag> elements.</para>
-
-<para><impl>Implementations may use
-<glossterm baseform="extension attribute">extension
-attributes</glossterm> to provide
-<glossterm>implementation-dependent</glossterm> information about a
-declared step.</impl> For example, such an attribute might identify
-the code which implements steps of this type.</para>
-
-<para>It is not an error for a pipeline to include declarations for
-steps that a particular processor does not know how to implement. It
-is, of course, an error to attempt to evaluate such steps.</para>
-
-<note>
-<para>Atomic step declarations are relatively uncommon and are usually
-provided by the implementor of a pipelne processor. In ordinary usage,
-pipeline declarations are much more common.</para>
-</note>
-
-</section>
-<section xml:id="declare-pipelines">
-<title>Declaring pipelines</title>
-
-<para>When a <tag>p:declare-step</tag> declares a pipeline, that
-pipeline encapsulates the behavior of the specified
-<glossterm>subpipeline</glossterm>. Its children declare inputs,
-outputs, and options that the pipeline exposes and identify the steps
-in its subpipeline. </para>
-
 <para>Informally, the content of a step declaration can be divided
-into three sections: imports, a prologue, and a subpipeline. The
-<tag>p:import</tag> and <tag>p:import-functions</tag> elements, if
-they appear, must come first. After that, the prologue consists of
+into two sections: a prologue and a subpipeline. The
+<tag>p:import</tag> and <tag>p:import-functions</tag> elements occur
+at the start of the prologue. After that, the prologue consists of
 <tag>p:input</tag>, <tag>p:output</tag>, <tag>p:option</tag>, and
 <tag>p:variable</tag> elements. Any variables declared in the prologue
 must be static.</para>
@@ -5425,7 +5402,7 @@ error</glossterm> if a <tag>p:option</tag> or <tag>p:variable</tag>
 declared before the subpipeline begins shadows another option or
 variable declared within the same <tag>p:declare-step</tag>.</error>
 (Within the subpipeline, variables may shadow options and lexically
-preceding variables, including those in the prologue.)
+preceding (non-static) variables.)
 </para>
 
 <para>The prologue ends with additional <tag>p:declare-step</tag>
@@ -5462,7 +5439,34 @@ connected to the <glossterm>primary output port</glossterm> of the
 <glossterm>static error</glossterm> if the primary output port is
 unconnected and the <glossterm>last step</glossterm> in the
 subpipeline does not have a primary output port.</error></para>
+</section>
 
+<section xml:id="declare-atomic-steps">
+<title>Declaring atomic steps</title>
+
+<para>The distinction between an atomic step declaration and a
+pipeline declaration hinges on the presence or absense of a
+subpipeline. An atomic step declaration does not have a subpipeline.
+</para>
+
+<para>Atomic step declarations may not import other pipelines or
+functions, may not declare static variables, and may not declare
+additional steps. In other words, the content of an atomic step
+declaration consists exclusively of <tag>p:input</tag>,
+<tag>p:output</tag>, and <tag>p:option</tag> elements.</para>
+
+<e:rng-pattern name="DeclareAtomicStep"/>
+
+<para><impl>Implementations may use
+<glossterm baseform="extension attribute">extension
+attributes</glossterm> to provide
+<glossterm>implementation-dependent</glossterm> information about a
+declared step.</impl> For example, such an attribute might identify
+the code which implements steps of this type.</para>
+
+<para>It is not an error for a pipeline to include declarations for
+steps that a particular processor does not know how to implement. It
+is, of course, an error to attempt to evaluate such steps.</para>
 </section>
 </section>
 

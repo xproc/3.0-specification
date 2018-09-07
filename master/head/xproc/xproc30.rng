@@ -405,7 +405,7 @@
     </element>
   </define>
   <!-- ============================================================ -->
-  <define name="OutputDeclaration" sa:class="language-construct">
+  <define name="AtomicOutputDeclaration" sa:class="language-construct">
     <element name="output">
       <optional>
         <ref name="port.attr"/>
@@ -421,9 +421,6 @@
       </optional>
       <ref name="common.attributes"/>
       <ref name="global.attributes"/>
-      <optional>
-        <ref name="serialization.attr"/>
-      </optional>
       <zeroOrMore>
         <choice>
           <ref name="Documentation"/>
@@ -432,7 +429,7 @@
       </zeroOrMore>
     </element>
   </define>
-  <define name="OutputConnection" sa:class="language-construct">
+  <define name="CompoundOutputDeclaration" sa:class="language-construct">
     <element name="output">
       <optional>
         <ref name="port.attr"/>
@@ -445,9 +442,6 @@
       </optional>
       <optional>
         <ref name="content-types.attr"/>
-      </optional>
-      <optional>
-        <ref name="serialization.attr"/>
       </optional>
       <optional>
         <ref name="href.attr" sa:avt="true"/>
@@ -483,10 +477,59 @@
       </choice>
     </element>
   </define>
+  <define name="PipelineOutputDeclaration" sa:class="language-construct">
+    <element name="output">
+      <optional>
+        <ref name="port.attr"/>
+      </optional>
+      <optional>
+        <ref name="sequence.attr"/>
+      </optional>
+      <optional>
+        <ref name="primary.attr"/>
+      </optional>
+      <optional>
+        <ref name="href.attr" sa:avt="true"/>
+      </optional>
+      <optional>
+        <ref name="pipe.attr"/>
+      </optional>
+      <ref name="common.attributes"/>
+      <ref name="global.attributes"/>
+      <ref name="inline.attributes"/>
+      <optional>
+        <ref name="serialization.attr"/>
+      </optional>
+      <choice>
+        <interleave>
+          <choice>
+            <ref name="Empty"/>
+            <zeroOrMore>
+              <choice>
+                <ref name="Document"/>
+                <ref name="Pipe"/>
+                <ref name="Inline"/>
+              </choice>
+            </zeroOrMore>
+          </choice>
+          <zeroOrMore>
+            <choice>
+              <ref name="Documentation"/>
+              <ref name="PipeInfo"/>
+            </choice>
+          </zeroOrMore>
+        </interleave>
+        <zeroOrMore>
+          <ref name="AnyElement"/>
+        </zeroOrMore>
+      </choice>
+    </element>
+  </define>
   <define name="Output" sa:element="output">
     <choice>
-      <ref name="OutputDeclaration"/>
-      <ref name="OutputConnection"/>
+      <ref name="CompoundOutputDeclaration"/>
+      <ref name="AtomicOutputDeclaration"/>
+      <ref name="PipelineOutputDeclaration"/>
     </choice>
   </define>
   <define name="Pipe" sa:class="language-construct">
@@ -814,7 +857,7 @@
     </choice>
   </define>
   <!-- ============================================================ -->
-  <define name="DeclareStep" sa:class="language-construct">
+  <define name="DeclarePipelineStep" sa:class="language-construct">
     <element name="declare-step">
       <optional>
         <ref name="name.ncname.attr"/>
@@ -842,7 +885,7 @@
         <choice>
           <ref name="Input"/>
           <ref name="Output"/>
-          <ref name="StaticOption"/>
+          <ref name="Option"/>
           <ref name="StaticVariable"/>
           <ref name="Documentation"/>
           <ref name="PipeInfo"/>
@@ -859,6 +902,39 @@
         <ref name="Subpipeline"/>
       </optional>
     </element>
+  </define>
+  <define name="DeclareAtomicStep" sa:class="language-construct">
+    <element name="declare-step">
+      <optional>
+        <ref name="name.ncname.attr"/>
+      </optional>
+      <optional>
+        <attribute name="type">
+          <data type="QName"/>
+        </attribute>
+      </optional>
+      <ref name="decl.attributes"/>
+      <optional>
+        <ref name="visibility.attr"/>
+      </optional>
+      <ref name="common.attributes"/>
+      <ref name="global.attributes"/>
+      <zeroOrMore>
+        <choice>
+          <ref name="Input"/>
+          <ref name="AtomicOutputDeclaration"/>
+          <ref name="Option"/>
+          <ref name="Documentation"/>
+          <ref name="PipeInfo"/>
+        </choice>
+      </zeroOrMore>
+    </element>
+  </define>
+  <define name="DeclareStep" sa:element="declare-step">
+    <choice>
+      <ref name="DeclarePipelineStep"/>
+      <ref name="DeclareAtomicStep"/>
+    </choice>
   </define>
   <!-- ============================================================ -->
   <define name="ForEach" sa:class="language-construct">
