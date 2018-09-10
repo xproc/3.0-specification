@@ -5034,25 +5034,18 @@ See <xref linkend="statics"/>.</para>
     <itemizedlist>
       <listitem>
               <para><termdef xml:id="dt-map-attribute">A <firstterm>map attribute</firstterm> is an option's syntactic
-                  shortcut attribute for which the option's datatype is a map or array.</termdef> The attribute's value
+                  shortcut attribute for which the option's sequence type is a map or array.</termdef> The attribute's value
                 is interpreted directly as an XPath expression, which must result in a value of the applicable
                 datatype.</para>
         
       </listitem>
       <listitem>
-        <para>For any other option's datatype:</para>
-        <itemizedlist>
-          <listitem>
-            <para> If the attribute's value includes curly braces, these are treated as <glossterm>attribute value
-              template(s)</glossterm>. The context node for these attribute value templates comes from the default
-              readable port for the step on which they occur. If there is no such port, the context node is
-              undefined.</para>
-          </listitem>
-          <listitem>
-            <para>The attribute's string value, after the expansion of optional attribute value templates, is used as
-              the value of the option. It must be possible to convert this string to the option's datatype.</para>
-          </listitem>
-        </itemizedlist>
+        <para>For any other option's sequence type it is considered an <glossterm>attribute value template</glossterm>.
+                The context node for the attribute value template comes from the default readable port for the step on
+                which they occur. If there is no such port, the context node is undefined.</para>
+       
+            <para>The attribute's string value, after the attribute value template expansion, is used as
+              the value of the option. It must be possible to convert this string to the option's sequence type.</para>
       </listitem>
     </itemizedlist>
     
