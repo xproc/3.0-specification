@@ -2237,23 +2237,22 @@ replaced.</para>
 <section xml:id="expand-text-attribute">
 <title>The [p:]expand-text attribute</title>
 
-<para>The <code>expand-text</code> attribute controls
-whether or not its descendant text nodes are designated as text value
-templates. On elements in the XProc namespace, the attribute is
-named <tag class="attribute">expand-text</tag>. On elements that are
-not in the XProc namespace, the attribute is named
-<tag class="attribute">p:expand-text</tag>.</para>
+        <para>The <code>expand-text</code> attribute controls whether or not descendant text nodes
+            <emphasize>and</emphasize> attribute nodes within <tag>p:inline</tag> elements are designated as value
+          templates. On elements in the XProc namespace, the attribute is named <tag class="attribute"
+          >expand-text</tag>. On elements that are not in the XProc namespace, the attribute is named <tag
+            class="attribute">p:expand-text</tag>.</para>
 
 <para>If the <code>expand-text</code> attribute appears on more than one
-element among the ancestors of a text node, only the value on the nearest
+element among the ancestors of the <tag>p:inline</tag>, only the value on the nearest
 ancestor is considered. (An <code>expand-text</code> attribute on an element overrides
 the value on all of its ancestors.)</para>
 
 <para>If the nearest <code>expand-text</code> attribute has the value
-“<code>false</code>”, then the text nodes are not text value
+“<code>false</code>”, then the text and attribute nodes are not value
 templates. If it has the value “<code>true</code>”, or if no
-<code>expand-text</code> attribute is present among the text node’s
-ancestors, then the text nodes are text value templates.</para>
+<code>expand-text</code> attribute is present among the <tag>p:inline</tag>'s
+ancestors, then the text and attribute nodes are value templates.</para>
 
 <!--feature="p-inline-no-nesting"-->
 <para>If a <tag>p:inline</tag> occurs as a descendant of another
