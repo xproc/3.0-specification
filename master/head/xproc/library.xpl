@@ -400,7 +400,6 @@
       <p:input port="source" content-types="application/xml text/xml */*+xml"/>
       <p:output port="result" content-types="*/*"/>
       <p:option name="parameters" as="xs:string"/>
-      <p:option name="href" required="true" as="xs:anyURI"/>
       <p:option name="content-type" as="xs:string"/>
    </p:declare-step>
    <p:declare-step type="p:xslt" xml:id="xslt">

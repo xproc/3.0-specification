@@ -3997,57 +3997,7 @@ can provide some sort of default for the rest of the pipeline.</para>
         <error code="S0048">It is a <glossterm>static error</glossterm> to use a declared step as a
             <glossterm>compound step</glossterm>.</error></para>
 
-<section xml:id="option-shortcut">
-<title>Syntactic Shortcut for Option Values</title>
 
-<para>Namespace qualified attributes on a step are <glossterm baseform="extension attribute">extension attributes</glossterm>.
-Attributes, other than <tag class="attribute">name</tag>, that are
-not namespace qualified are treated as a syntactic shortcut for
-specifying the value of an option. In other words, the following two
-steps are equivalent:</para>
-
-<para>The first step uses the standard <tag>p:with-option</tag>
-syntax:</para>
-
-<programlisting language="xml">&lt;ex:stepType&gt;
-  &lt;p:with-option name="option-name" select="'some value'"/&gt;
-&lt;/ex:stepType&gt;</programlisting>
-
-<para>The second step uses the syntactic shortcut:</para>
-
-<programlisting language="xml">&lt;ex:stepType option-name="some value"/&gt;</programlisting>
-
-<para>There are some limitations to this shortcut
-syntax:</para>
-
-<orderedlist>
-<listitem>
-<para>It only applies to option names that are not in a
-namespace.</para>
-</listitem>
-<listitem>
-<para>It only applies to option names that are not otherwise used on
-the step, such as “<literal>name</literal>”.</para>
-</listitem>
-</orderedlist>
-
-<para>If the option value includes curly braces, it is treated as
-an <glossterm>attribute value template</glossterm>. The context node for
-attribute value templates in an option shortcut value comes from the
-default readable port for the step on which they occur. If there is no
-such port, the context node is undefined.</para>
-
-<para><error code="S0027">It is a <glossterm>static error</glossterm> if an
-option is specified with both the shortcut form and the long
-form.</error>
-<error code="S0031">It is a <glossterm>static error</glossterm> to use
-an option on an <glossterm>atomic step</glossterm> that is not
-declared on steps of that type.</error>
-</para>
-
-<para>The syntactic shortcuts apply equally to standard atomic steps
-and extension atomic steps.</para>
-</section>
 </section>
 </section>
 
@@ -5144,6 +5094,72 @@ author to exclude some namespace declarations in inline content, see <tag>p:inli
 error</glossterm> if a <tag>p:with-option</tag> attempts to change
 the value of an option that is declared static.</error>
 See <xref linkend="statics"/>.</para>
+  
+  <section xml:id="option-shortcut">
+    <title>Syntactic Shortcut for Option Values</title>
+    
+    <para>Namespace qualified attributes on a step are <glossterm baseform="extension attribute">extension attributes</glossterm>.
+      Attributes, other than <tag class="attribute">name</tag>, that are
+      not namespace qualified are treated as a syntactic shortcut for
+      specifying the value of an option. In other words, the following two
+      steps are equivalent:</para>
+    
+    <para>The first step uses the standard <tag>p:with-option</tag>
+      syntax:</para>
+    
+    <programlisting language="xml">&lt;ex:stepType&gt;
+  &lt;p:with-option name="option-name" select="'some value'"/&gt;
+&lt;/ex:stepType&gt;</programlisting>
+    
+    <para>The second step uses the syntactic shortcut:</para>
+    
+    <programlisting language="xml">&lt;ex:stepType option-name="some value"/&gt;</programlisting>
+    
+    <para>There are some limitations to this shortcut
+      syntax:</para>
+    
+    <orderedlist>
+      <listitem>
+        <para>It only applies to option names that are not in a
+          namespace.</para>
+      </listitem>
+      <listitem>
+        <para>It only applies to option names that are not otherwise used on
+          the step, such as “<literal>name</literal>”.</para>
+      </listitem>
+    </orderedlist>
+    
+    <para>For the value of an option's syntactic shortcut attribute, the following applies:</para>
+    <itemizedlist>
+      <listitem>
+              <para><termdef xml:id="dt-map-attribute">A <firstterm>map attribute</firstterm> is an option's syntactic
+                  shortcut attribute for which the option's sequence type is a map or array.</termdef> The attribute's value
+                is interpreted directly as an XPath expression, which must result in a value of the applicable
+                datatype.</para>
+        
+      </listitem>
+      <listitem>
+        <para>For any other option's sequence type it is considered an <glossterm>attribute value template</glossterm>.
+                The context node for the attribute value template comes from the default readable port for the step on
+                which they occur. If there is no such port, the context node is undefined.</para>
+       
+            <para>The attribute's string value, after the attribute value template expansion, is used as
+              the value of the option. It must be possible to convert this string to the option's sequence type.</para>
+      </listitem>
+    </itemizedlist>
+    
+    
+    <para><error code="S0027">It is a <glossterm>static error</glossterm> if an
+      option is specified with both the shortcut form and the long
+      form.</error>
+      <error code="S0031">It is a <glossterm>static error</glossterm> to use
+        an option on an <glossterm>atomic step</glossterm> that is not
+        declared on steps of that type.</error>
+    </para>
+    
+    <para>The syntactic shortcuts apply equally to standard atomic steps
+      and extension atomic steps.</para>
+  </section>
 </section>
 
 <section xml:id="statics">
@@ -5265,6 +5281,8 @@ on namespace bindings:</para>
 <para>In this example, the expression will match “<literal>p</literal>”
 elements in the XHTML namespace irrespective of any bindings that may or may
 not be in scope.</para>
+  
+  
 
 </section>
     </section>
@@ -6266,7 +6284,8 @@ how <glossterm role="unwrapped">implementation-dependent</glossterm> features ar
                      <glossterm>readable ports</glossterm> and a set of option bindings used to
                   construct the <glossterm>in-scope bindings</glossterm>.</para></glossdef></glossentry><glossentry><glossterm>inline document</glossterm><glossdef><para>An <firstterm>inline document</firstterm> is
                 specified directly in the body of the element to which it connects.</para></glossdef></glossentry><glossentry><glossterm>last step</glossterm><glossdef><para>The <firstterm>last step</firstterm> in a subpipeline is its
-          last step in document order.</para></glossdef></glossentry><glossentry><glossterm>matches</glossterm><glossdef><para>A step <firstterm>matches</firstterm> its signature if and
+          last step in document order.</para></glossdef></glossentry><glossentry><glossterm>map attribute</glossterm><glossdef><para>A <firstterm>map attribute</firstterm> is an option's syntactic
+                  shortcut attribute for which the option's sequence type is a map or array.</para></glossdef></glossentry><glossentry><glossterm>matches</glossterm><glossdef><para>A step <firstterm>matches</firstterm> its signature if and
           only if it specifies an input for each declared input, it specifies no inputs that are not
           declared, it specifies an option for each option that is declared to be required, and it
           specifies no options that are not declared.</para></glossdef></glossentry><glossentry><glossterm>multi-container
