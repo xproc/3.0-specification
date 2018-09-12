@@ -14,12 +14,9 @@ version of) its input to a URI. The step outputs its input unchanged.</para>
     <p:option name="enable" as="xs:boolean" select="true()"/>   
   </p:declare-step>
 
-<para>The value of the <option>href</option> option
-<rfc2119>must</rfc2119> be an <type>anyURI</type>. If it is relative,
-it is made absolute against the base URI of the element on which it is
-specified (<tag>p:with-option</tag> or <tag>p:store</tag> in the case
-of a syntactic shortcut
-value).</para>
+<para>The value of the <option>href</option> option <rfc2119>must</rfc2119> be an <type>anyURI</type>. If it is
+    relative, it is made absolute against the base URI of the element on which it is specified (<tag>p:with-option</tag>
+    or <tag>p:tee</tag> in the case of a syntactic shortcut value).</para>
 
 <para>The step attempts to store the document to the specified
 URI. <error code="C0050">It is a <glossterm>dynamic error</glossterm>
@@ -32,7 +29,7 @@ specified location.</error></para>
 serialization of content when it is stored. Serialization is described in
 <biblioref linkend="xproc30"/>.</para>
   
-  <para>If the <option>enabled</option> option is false, no attempt to store the document will be done. The step will
+  <para>If the <option>enabled</option> option is false, no attempt to store the document will be made. The step will
     act exactly like a <tag>p:identity</tag> step. The values for <option>href</option> and
       <option>serialization</option> will be ignored.</para>
 
