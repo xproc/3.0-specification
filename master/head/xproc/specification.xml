@@ -2073,9 +2073,8 @@ sequence of zero or more “fixed” (non-expression) parts and expression
 parts. Each expression is evaluated with an undefined context
 node.</para>
 
-<para>The result of the attribute value template is the concatentation
-of the fixed parts and the string-value of the result of evaluating
-each expression part.</para>
+<para>The result of the attribute value template is the concatenation of the fixed parts and the string-value of the
+        result of evaluating each expression part.</para>
 
 <note xml:id="note-dynerr">
 <para>This process can generate dynamic errors, for example if the
@@ -2097,7 +2096,7 @@ element node in an implicit inline may be text value templates. No
 other text node is a text value template.</para>
 
 <para>Whether or not a text node that may be a text value template is
-designated one is determined by the <code>expand-text</code> attribute,
+designated one is determined by <code>expand-text</code> and <code>p:inline-expand-text</code> attributes,
 see <xref linkend="expand-text-attribute"/>.</para>
 
 <para><termdef xml:id="dt-text-value-template">In a text node that is
@@ -2147,10 +2146,8 @@ element or the attribute has a preceding sibling that it not an attribute.</erro
 </para>
 </listitem>
 <listitem>
-<para>If the content type is not an <glossterm>XML media
-type</glossterm>, each text value template is replaced by the
-concatentation of the serialization of the nodes that result from
-evaluating the template.</para>
+<para>If the content type is not an <glossterm>XML media type</glossterm>, each text value template is replaced by the
+            concatenation of the serialization of the nodes that result from evaluating the template.</para>
 <para>This serialization is performed with the following serialization parameters:</para>
 
 <itemizedlist>
@@ -2211,37 +2208,37 @@ according to the media type occurs after text value templates have been
 replaced.</para>
 
 <section xml:id="expand-text-attribute">
-<title>The [p:]expand-text attribute</title>
+<title>The [p:]expand-text and p:inline-expand-text attributes</title>
 
-<para>The <code>expand-text</code> attribute controls
-whether or not its descendant text nodes are designated as text value
-templates. On elements in the XProc namespace, the attribute is
-named <tag class="attribute">expand-text</tag>. On elements that are
-not in the XProc namespace, the attribute is named
-<tag class="attribute">p:expand-text</tag>.</para>
+        <para>The <tag class="attribute">[p:]expand-text</tag> and <tag class="attribute">p:inline-expand-text</tag>
+          attributes control whether or not text and attribute nodes in descendant <tag>p:inline</tag> elements and
+          implicit inlines are designated as value templates. Note that it controls both text <emphasis>and</emphasis> attribute value
+          templates.</para>
+  
+        <para>The <tag class="attribute">[p:]expand-text</tag> attribute can appear on all elements in the pipeline. On
+          elements in the XProc namespace, the attribute is named <tag class="attribute">expand-text</tag>. On elements
+          that are not in the XProc namespace, the attribute is named <tag class="attribute">p:expand-text</tag>. As a
+          descendant of a <tag>p:inline</tag> or implicit inline it carries no special meaning and is treated as an
+          ordinary attribute.</para>
+  
+        <para>The <tag class="attribute">p:inline-expand-text</tag> attribute appearing as descendant of a
+            <tag>p:inline</tag> or in an implicit inline is treated as a special attribute, with the same semantics as
+          the <tag class="attribute">[p:]expand-text</tag> attribute. The attribute will not be part of the result of
+          the <tag>p:inline</tag> or implicit inline.</para>
 
-<para>If the <code>expand-text</code> attribute appears on more than one
-element among the ancestors of a text node, only the value on the nearest
-ancestor is considered. (An <code>expand-text</code> attribute on an element overrides
-the value on all of its ancestors.)</para>
+        <para>If the <tag class="attribute">[p:]expand-text</tag> or <tag class="attribute">p:inline-expand-text</tag>
+          attribute appears on more than one element among the ancestors of a text or attribute node in a
+            <tag>p:inline</tag> element or implicit inline, only the value on the nearest ancestor is considered.</para>
 
-<para>If the nearest <code>expand-text</code> attribute has the value
-“<code>false</code>”, then the text nodes are not text value
-templates. If it has the value “<code>true</code>”, or if no
-<code>expand-text</code> attribute is present among the text node’s
-ancestors, then the text nodes are text value templates.</para>
-
-<!--feature="p-inline-no-nesting"-->
-<para>If a <tag>p:inline</tag> occurs as a descendant of another
-<tag>p:inline</tag>, any <tag class="attribute">expand-text</tag>
-within the inner <tag>p:inline</tag> is treated like an ordinary
-attribute; that is, neither will its value influence text expansion
-nor will it be removed from the descendant.</para>
+        <para>If the nearest <tag class="attribute">[p:]expand-text</tag> or <tag class="attribute">p:inline-expand-text</tag> attribute has the value “<code>false</code>”, then the text and attribute nodes
+          in a <tag>p:inline</tag> element or implicit inline are not value templates. If it has the value
+            “<code>true</code>”, or if no such attribute is present among ancestors, then the text and attribute nodes
+            <emphasis>are</emphasis> value templates.</para>
 
 <!-- feature="no-p-expand-text-on-p"-->
 <para><error code="S0084">It is a <glossterm>static error</glossterm> if the
 <tag class="attribute">p:expand-text</tag> attribute appears on any element
-in the XProc namespace.</error>
+  in the XProc namespace outside a <tag>p:inline</tag> element or implicit inline.</error>
 </para>
 </section>
 
@@ -5823,7 +5820,10 @@ as defined below, are removed:</para>
               prefix had been used.</para>
 
 <para>The text-node descendants of a <tag>p:inline</tag> may be
-<link linkend="text-value-templates">text value templates</link>.</para>
+  <link linkend="text-value-templates">text value templates</link>. Attribute descendants may be <link linkend="attribute-value-templates">attribute value templates</link>. This is controlled by the
+  <tag class="attribute">[p:]expand-text</tag> and the <tag class="attribute">p:inline-expand-text</tag> attribute. See
+  <xref linkend="expand-text-attribute"/>.</para>
+  
 </section>
 
 <section xml:id="implicit-inlines">
