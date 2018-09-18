@@ -2476,6 +2476,44 @@ the string value of the <option>replace</option> expression.</para>
 <para feature="string-replace-preserves-all">All document properties are preserved.</para>
 </simplesect>
 </section>
+<section xml:id="c.tee">
+<title>p:tee</title>
+
+<para>The <tag>p:tee</tag> step stores (a possibly serialized
+version of) its input to a URI. The step outputs its input unchanged.</para>
+
+  <p:declare-step type="p:tee">
+    <p:input port="source" content-types="*/*" sequence="true"/>
+    <p:output port="result" sequence="true" content-types="*/*"/>
+    <p:option name="href" required="true" as="xs:anyURI"/>        
+    <p:option name="serialization" as="map(xs:QName,item()*)?"/>
+    <p:option name="enable" as="xs:boolean" select="true()"/>   
+  </p:declare-step>
+
+<para>The value of the <option>href</option> option <rfc2119>must</rfc2119> be an <type>anyURI</type>. If it is
+    relative, it is made absolute against the base URI of the element on which it is specified (<tag>p:with-option</tag>
+    or <tag>p:tee</tag> in the case of a syntactic shortcut value).</para>
+
+<para>The step attempts to store the document to the specified
+URI. <error code="C0050">It is a <glossterm>dynamic error</glossterm>
+if the URI scheme is not supported or the step cannot store to the
+specified location.</error></para>
+
+<para>The output of this step is what appears on its input port, unchanged.</para>
+
+<para>The <option>serialization</option> option is provided to control the
+serialization of content when it is stored. Serialization is described in
+<biblioref linkend="xproc30"/>.</para>
+  
+  <para>If the <option>enabled</option> option is false, no attempt to store the document will be made. The step will
+    act exactly like a <tag>p:identity</tag> step. The values for <option>href</option> and
+      <option>serialization</option> will be ignored.</para>
+
+<simplesect>
+<title>Document properties</title>
+  <para feature="tee-preserves-all">All document properties are preserved.</para>
+</simplesect>
+</section>
 <section xml:id="c.unescape-markup">
 <title>p:unescape-markup</title>
 

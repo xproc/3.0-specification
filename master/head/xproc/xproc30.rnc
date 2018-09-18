@@ -670,6 +670,7 @@ StandardStep =
   | Step-split-sequence
   | Step-store
   | Step-string-replace
+  | Step-tee
   | Step-unescape-markup
   | Step-unwrap
   | Step-uuid
@@ -995,6 +996,16 @@ Step-string-replace =
     use-when.attr?,
     attribute match { XSLTSelectionPattern }?,
     attribute replace { XPathExpression }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-tee =
+  element tee {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    attribute href { xsd:anyURI }?,
+    attribute serialization { xsd:string }?,
+    attribute enable { xsd:boolean }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
   }
 Step-unescape-markup =
