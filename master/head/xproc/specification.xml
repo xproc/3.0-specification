@@ -3820,10 +3820,30 @@ fails.</para>
 
 <e:rng-pattern name="Finally"/>
 
-<para>The <tag>p:finally</tag> has no inputs and no outputs. It exists
-only to handle recovery and resource cleanup tasks. If cleanup tasks
-require access to readable ports, put them in the <tag>p:catch</tag>
-block of an enclosing <tag>p:try</tag>.</para>
+<para>The environment inherited by the <glossterm>contained
+steps</glossterm> of the <tag>p:finally</tag> is the
+<glossterm>inherited environment</glossterm> with this
+modification:</para>
+
+<itemizedlist>
+<listitem>
+<para>The port named “<port>error</port>” on the <tag>p:finally</tag> is
+added to the <glossterm>readable ports</glossterm>.</para>
+</listitem>
+</itemizedlist>
+
+<para>If no error occurred, there will be no documents on the
+<port>error</port> port.
+</para>
+
+<para>The <tag>p:finally</tag> exists only to handle recovery and
+resource cleanup tasks. Because the <tag>p:finally</tag> will always
+be evaluated, it must not have output ports that might conflict with
+the output ports of either the initial subpipline or any <tag>p:catch</tag>.
+<error code="S0072">It is a <glossterm>static error</glossterm>
+if the name of any output port on the <tag>p:finally</tag> is the same
+as the name of any other output port in the <tag>p:try</tag> or any
+of its sibling <tag>p:catch</tag> elements.</error></para>
 
 <section xml:id="err-vocab">
 <title>The Error Vocabulary</title>
