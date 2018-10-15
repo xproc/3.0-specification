@@ -679,11 +679,13 @@ content types, that they accept. Input documents must
                </para>
             </listitem>
          </itemizedlist>
-         <para>When an input accepts a sequence of documents, the documents can come from any
-            combination of these locations.</para>
-         <para>In contrast, output ports are connected when they are referenced by another input
-            port, <glossterm baseform="declared outputs">declared output</glossterm> or other
-            expression and may be connected to:</para>
+
+<para>When an input accepts a sequence of documents, the documents can
+come from any combination of these locations.</para>
+
+<para>In contrast, output ports are connected when they are referenced
+by another input port, <glossterm baseform="declared outputs">declared
+output</glossterm> or other expression and may be connected to:</para>
 
 <itemizedlist>
 <listitem>
@@ -692,6 +694,14 @@ content types, that they accept. Input documents must
 <listitem>
   <para>An option assigned with <tag>p:with-option</tag> or a
 <tag>p:variable</tag> in a compound step.</para>
+</listitem>
+<listitem>
+  <para>A <glossterm>value template</glossterm> in an immediately following step.
+This can be an AVT in an
+<link xlink:href="#option-shortcut">option shortcut</link>,
+an AVT on a <tag>p:document</tag> element, or a
+value template in a <tag>p:inline</tag>.
+  </para>
 </listitem>
 <listitem>
   <para>One of the outputs declared on its container. </para>
@@ -1998,7 +2008,7 @@ static analysis is <glossterm>implementation-defined</glossterm>.</impl></para>
 circumstances, contain embedded expressions enclosed between curly
 brackets. Attributes and text nodes that use (or are permitted to use)
 this mechanism are referred to respectively as <glossterm baseform="attribute value template">attribute value
-templates</glossterm> and <glossterm baseform="text value template">text value templates.</glossterm>.</para>
+templates</glossterm> (AVTs) and <glossterm baseform="text value template">text value templates.</glossterm> (TVTs).</para>
 
 <para><termdef xml:id="dt-value-template">Collectively,
 attribute value templates and text value templates are referred to as
@@ -2031,7 +2041,7 @@ XPath error code.</para>
 
 <para>
 <error code="D0050">It is a <glossterm>dynamic error</glossterm> if the
-XPath expression in an AVT or TVT can not be evaluated.</error>
+XPath expression in a value template can not be evaluated.</error>
 </para>
 
 <para>
@@ -2040,6 +2050,13 @@ expression in an AVT or TVT evaluates to something to other than a sequence
 containing atomic values or nodes.</error> Function, array and map items are
 explicitly excluded here because they do not have a string representation.
 </para>
+
+<para>The context item used for evaluating value templates comes from
+the <glossterm>default readable port</glossterm>.
+<error code="D0065">It is a <glossterm>dynamic error</glossterm>
+if the context item for a value template is a sequence of more than one
+item.</error> If the value template appears in a context where no default
+readable port exists, then the context item is undefined.</para>
 
 <section xml:id="attribute-value-templates">
 <title>Attribute Value Templates</title>
