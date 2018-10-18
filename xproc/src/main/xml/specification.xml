@@ -2076,10 +2076,11 @@ explicitly excluded here because they do not have a string representation.
 </para>
 
 <para>The context item used for evaluating value templates comes from
-the <glossterm>default readable port</glossterm>.
+the <glossterm>default readable port</glossterm>. 
 <error code="D0065">It is a <glossterm>dynamic error</glossterm>
-if the context item for a value template is a sequence of more than one
-item.</error> If the value template appears in a context where no default
+to refer to the context item, size, or position in a value template if a sequence of documents
+appears on the default readable port.</error>
+If the value template appears in a context where no default
 readable port exists, then the context item is undefined.</para>
 
 <section xml:id="attribute-value-templates">
@@ -4688,9 +4689,9 @@ children.</error></para>
 </varlistentry>
 <varlistentry><term><tag class="attribute">select</tag></term>
 <listitem>
-<para>The variable's value is specified with a <tag
-class="attribute">select</tag> attribute. The <tag
-class="attribute">select</tag> attribute <rfc2119>must</rfc2119> be
+<para>The variable's value is specified with a
+<tag class="attribute">select</tag> attribute. The
+<tag class="attribute">select</tag> attribute <rfc2119>must</rfc2119> be
 specified. The content of the <tag class="attribute">select</tag>
 attribute is an XPath expression which will be evaluated to provide
 the value of the variable.
@@ -4705,44 +4706,19 @@ described in <xref linkend="xpath-context"/>, for the enclosing
 (for example, can the expression declare a function) is
 <glossterm>implementation-defined</glossterm>.</impl>
 </para>
-<para>Since all <glossterm>in-scope bindings</glossterm> are present
-in the Processor XPath Context as variable bindings, <tag
-class="attribute">select</tag> expressions may refer to the value of
-<glossterm>in-scope bindings</glossterm> by variable reference.
-<error code="S0071">It is a <glossterm>static error</glossterm>
-if the XPath expression refers to the name of a variable that is
-not present in the <glossterm>in-scope bindings</glossterm>.</error>
-</para>
-
-<para>If a <tag class="attribute">select</tag> expression is given,
-the <glossterm>readable ports</glossterm> available for document
-connections are computed as if <tag>p:variable</tag> was an atomic step.</para>
-
-<para>If a <tag class="attribute">select</tag> expression is given but
-no document connection is provided, the implicit connection is to the
-<glossterm>default readable port</glossterm> computed as if <tag>p:variable</tag>
-was an atomic step. If there is no default readable port, the
-connection is treated as if <tag>p:empty</tag> was specified.</para>
 </listitem>
 </varlistentry>
 <varlistentry><term><tag class="attribute">collection</tag></term>
 <listitem>
-<para><error code="D0008">If <tag class="attribute">collection</tag> is
-unspecified or has the value <literal>false</literal>,
-it is a <glossterm>dynamic error</glossterm>
-if a sequence of more than one document appears on the connection for
-a <tag>p:variable</tag>.</error>
+<para>If <tag class="attribute">collection</tag> is
+unspecified or has the value <literal>false</literal>, then it has
+no effect.
 </para>
 
 <para>If <tag class="attribute">collection</tag> is <literal>true</literal>,
 the context item is undefined. All of the documents that appear on the
 connection for the <tag>p:variable</tag> will be available as the
 default collection within <tag class="attribute">select</tag> expression.</para>
-
-<para><error code="D0026">It is a <glossterm>dynamic error</glossterm> if
-the <tag class="attribute">select</tag> expression makes reference to
-the context node, size, or position when the context item is
-undefined.</error></para>
 </listitem>
 </varlistentry>
 
@@ -4791,6 +4767,33 @@ there are any loops in the connections between steps and variables:
 no step can refer to a variable if there is any sequence of connections
 from that step that leads back to the input that provides the context
 node for the expression that defines the value of the variable.</error>
+</para>
+
+<para>If <tag class="attribute">collection</tag> is true, the context
+item for the expression is undefined. Otherwise, the context item for
+the expression comes from the document connections, if they are
+specified. If they are not specified, the context item comes from the
+<glossterm>default readable port</glossterm> (computed as if
+<tag>p:variable</tag> was an atomic step). If no <glossterm>default
+readable port</glossterm> exists, the context item is
+undefined.</para>
+
+<para><error code="D0026">It is a <glossterm>dynamic error</glossterm> if
+the <tag class="attribute">select</tag> expression makes reference to
+the context node, size, or position when the context item is
+undefined.</error>
+<error code="D0065">It is a <glossterm>dynamic error</glossterm>
+to refer to the context item, size, or position if a sequence of documents
+appears on the connection that provides the context.</error>
+</para>
+
+<para>Since all <glossterm>in-scope bindings</glossterm> are present
+in the Processor XPath Context as variable bindings, <tag
+class="attribute">select</tag> expressions may refer to the value of
+<glossterm>in-scope bindings</glossterm> by variable reference.
+<error code="S0071">It is a <glossterm>static error</glossterm>
+if the XPath expression refers to the name of a variable that is
+not present in the <glossterm>in-scope bindings</glossterm>.</error>
 </para>
 </section>
 
@@ -4967,47 +4970,23 @@ See <xref linkend="varopt-types"/>
 </varlistentry>
 <varlistentry><term><tag class="attribute">select</tag></term>
 <listitem>
-<para>The actual value is specified with a <tag
-class="attribute">select</tag> attribute. The <tag
-class="attribute">select</tag> attribute <rfc2119>must</rfc2119> be
+<para>The actual value is specified with a
+<tag class="attribute">select</tag> attribute. The
+<tag class="attribute">select</tag> attribute <rfc2119>must</rfc2119> be
 specified. The value of the <tag class="attribute">select</tag>
 attribute is an XPath expression which will be evaluated to provide
 the value of the variable.</para>
-
-<para>All <glossterm>in-scope bindings</glossterm> for the step
-instance itself are present in the Processor XPath Context as variable
-bindings, so <tag class="attribute">select</tag> expressions may refer
-to any option or variable bound in those <glossterm>in-scope
-bindings</glossterm> by variable reference. If a variable reference
-uses a QName that is not the name of an <glossterm
-baseform="in-scope-bindings">in-scope binding</glossterm> or preceding
-sibling option, an XPath evaluation error will occur.</para>
-
-<para>If a <tag class="attribute">select</tag> expression is used but
-no document connection is provided, the implicit connection is to the
-<glossterm>default readable port</glossterm>. If there is no default
-readable port, the connection is treated as if <tag>p:empty</tag> was
-specified.</para>
 </listitem>
 </varlistentry>
 <varlistentry><term><tag class="attribute">collection</tag></term>
 <listitem>
-<para><error code="D0008">If <tag class="attribute">collection</tag> is
-unspecified or has the value <literal>false</literal>,
-it is a <glossterm>dynamic error</glossterm>
-if a sequence of more than one document appears on the connection for
-the <tag>p:with-option</tag>.</error>
-</para>
-
+<para>If <tag class="attribute">collection</tag> is
+unspecified or has the value <literal>false</literal>, then it has
+no effect.</para>
 <para>If <tag class="attribute">collection</tag> is <literal>true</literal>,
 the context item is undefined. All of the documents that appear on the
 connection for the <tag>p:with-option</tag> will be available as the
 default collection within <tag class="attribute">select</tag> expression.</para>
-
-<para><error code="D0026">It is a <glossterm>dynamic error</glossterm> if
-the <tag class="attribute">select</tag> expression makes reference to
-the context node, size, or position when the context item is
-undefined.</error></para>
 </listitem>
 </varlistentry>
 <varlistentry><term><tag class="attribute">href</tag></term>
@@ -5028,6 +5007,43 @@ author to exclude some namespace declarations in inline content, see <tag>p:inli
 </listitem>
 </varlistentry>
 </variablelist>
+
+<para>Any <tag>p:with-option</tag> which contains a reference to a variable
+effectively consumes the “output” of the <tag>p:variable</tag> or
+<tag>p:option</tag> that defines that variable.
+<error code="S0076">It is a <glossterm>static error</glossterm> if
+there are any loops in the connections between steps and variables:
+no step can refer to a variable if there is any sequence of connections
+from that step that leads back to the input that provides the context
+node for the expression that defines the value of the variable.</error>
+</para>
+
+<para>If <tag class="attribute">collection</tag> is true, the context
+item for the expression is undefined. Otherwise, the context item for
+the expression comes from the document connections, if they are
+specified. If they are not specified, the context item comes from the
+<glossterm>default readable port</glossterm> of the step.
+If no <glossterm>default
+readable port</glossterm> exists, the context item is
+undefined.</para>
+
+<para><error code="D0026">It is a <glossterm>dynamic error</glossterm> if
+the <tag class="attribute">select</tag> expression makes reference to
+the context node, size, or position when the context item is
+undefined.</error>
+<error code="D0065">It is a <glossterm>dynamic error</glossterm>
+to refer to the context item, size, or position if a sequence of documents
+appears on the connection that provides the context.</error>
+</para>
+
+<para>Since all <glossterm>in-scope bindings</glossterm> are present
+in the Processor XPath Context as variable bindings, <tag
+class="attribute">select</tag> expressions may refer to the value of
+<glossterm>in-scope bindings</glossterm> by variable reference.
+<error code="S0071">It is a <glossterm>static error</glossterm>
+if the XPath expression refers to the name of a variable that is
+not present in the <glossterm>in-scope bindings</glossterm>.</error>
+</para>
 
 <para><error code="S0092">It is a <glossterm>static
 error</glossterm> if a <tag>p:with-option</tag> attempts to change
