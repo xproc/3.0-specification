@@ -151,6 +151,53 @@ compatible versions.</para>
         <rfc2119>recommended</rfc2119> are to be interpreted as described in <biblioref
 linkend="rfc2119"/>.</para>
 </section>
+  
+<section xml:id="qname-options">
+<title>QNames as option values</title>
+<para>A number of steps in the standard library and beyond need QNames as option values. E.g.
+        <tag>p:add-attribute</tag> requires a name (<option>attribute-name</option>) for the new
+      attribute which needs to be a QName. As a convenience for pipeline authors, the required type
+      of these options is not <type>xs:QName</type>, but <type>xs:anyAtomicType</type>. As a
+      consequence the respective step might be called either by explicitly giving an instance of
+        <type>xs:QName</type> or by just supplying an instance of <type>xs:string</type>. The
+      required QName is manufactured from the given string value and two other options on the same
+      step, one optionally supplying a prefix for the QName (e.g.
+      <option>attribute-prefix</option>), and the other optionally holding the namespace URI (e.g.
+      <option>attribute-namespace</option>). To construct the required QName, the following rules
+      are used: </para>
+<orderedlist>
+  <listitem>
+	<para>If the value supplied for the option is an instance of <type>xs:QName</type> then this value
+          is used. <error code="D0066">It is a <glossterm>dynamic error</glossterm> if an instance
+            of <type>xs:QName</type> is provided and the value of the prefix supplying option and
+            the namespace supplying option are not both empty sequences.</error>
+        </para>
+  </listitem>
+  <listitem>
+    <para>If the value supplied for the option is an instance of 
+    <type>xs:string</type> (or a type 
+    derived from <type>xs:string</type>) the QName is constructed using the <link
+    xlink:href="https://www.w3.org/TR/xpath-31/#doc-xpath31-EQName"
+    >XPath EQName production rules</link>. That is, it can be written
+    as a local-name only, as a prefix plus local-name or as a URI plus
+    local-name (using the <code>Q{}</code> syntax). <error code="D0061">It is a 
+    <glossterm>dynamic error</glossterm> if the string value cannot be converted 
+    into a QName.</error> <error code="D0034">It is a <glossterm>dynamic 
+    error</glossterm> to specify a new namespace or prefix if the lexical value 
+    of the specified name contains a colon.</error> The corresponding expanded name 
+    is used to construct the attribute. <error code="D0067">It is a 
+    <glossterm>dynamic error</glossterm> to specify a namespace using the namespace
+    supplying option if the <code>Q{}</code> syntax is used.</error>
+    </para>
+  </listitem>
+  <listitem>
+  	<para><error code="D0067">It is a <glossterm>dynamic error</glossterm> if
+  	the supplied value is neither an instance of <type>xs:QName</type> nor an
+  	instance of <type>xs:string</type>.</error>
+  	</para>
+  </listitem>
+</orderedlist> 
+</section>
 
 <section xmlns="http://docbook.org/ns/docbook" xml:id="errors">
 <title>Step Errors</title>
