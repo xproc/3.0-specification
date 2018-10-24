@@ -53,10 +53,26 @@ p_use-when.attr = attribute p:use-when { XPathExpression }
 expand-text.attr = attribute expand-text { xsd:boolean }
 [ sa:ignore = "yes" ]
 p_expand-text.attr = attribute p:expand-text { xsd:boolean }
+[ sa:ignore = "yes" ]
+inline-expand-text.attr = attribute inline-expand-text { xsd:boolean }
+[ sa:ignore = "yes" ]
+p_inline-expand-text.attr =
+  attribute p:inline-expand-text { xsd:boolean }
+[ sa:ignore = "yes" ] depends.attr = attribute depends { xsd:NMTOKENS }
+[ sa:ignore = "yes" ]
+p_depends.attr = attribute p:depends { xsd:NMTOKENS }
+[ sa:ignore = "yes" ]
+timeout.attr = attribute timeout { xsd:nonNegativeInteger }
+[ sa:ignore = "yes" ]
+p_timeout.attr = attribute p:timeout { xsd:nonNegativeInteger }
+[ sa:ignore = "yes" ] message.attr = attribute message { text }
+[ sa:ignore = "yes" ] p_message.attr = attribute p:message { text }
 version.attr = attribute version { "3.0" }
 common.attributes = xmlid.attr?, xmlbase.attr?, extension.attr*
 global.attributes = use-when.attr?, expand-text.attr?
 p_global.attributes = p_use-when.attr?, p_expand-text.attr?
+step.attributes = depends.attr?, timeout.attr?, message.attr?
+p_step.attributes = p_depends.attr?, p_timeout.attr?, p_message.attr?
 inline.attributes = exclude-inline-prefixes.attr?
 decl.attributes =
   psvi-required.attr?,
@@ -383,6 +399,7 @@ ForEach =
     name.ncname.attr?,
     common.attributes,
     global.attributes,
+    step.attributes,
     ((WithInput? & (Output | Documentation | PipeInfo)*),
      Subpipeline)
   }
@@ -394,6 +411,7 @@ Viewport =
     [ sa:avt = "true" ] attribute match { XSLTSelectionPattern },
     common.attributes,
     global.attributes,
+    step.attributes,
     ((WithInput? & Output? & Documentation* & PipeInfo*), Subpipeline)
   }
 # ============================================================
@@ -403,6 +421,7 @@ Choose =
     name.ncname.attr?,
     common.attributes,
     global.attributes,
+    step.attributes,
     ((Documentation | PipeInfo)*,
      WithInput?,
      ((((Documentation | PipeInfo)*, When)+,
@@ -438,6 +457,7 @@ If =
     [ sa:avt = "true" ] collection.attr?,
     common.attributes,
     global.attributes,
+    step.attributes,
     ((Documentation | PipeInfo)*,
      WithInput?,
      (Output | Documentation | PipeInfo)*,
@@ -450,6 +470,7 @@ Group =
     name.ncname.attr?,
     common.attributes,
     global.attributes,
+    step.attributes,
     ((Output | Documentation | PipeInfo)*, Subpipeline)
   }
 # ============================================================
@@ -459,6 +480,7 @@ Try =
     name.ncname.attr?,
     common.attributes,
     global.attributes,
+    step.attributes,
     ((Output*,
       Subpipeline,
       ((Catch+, Finally?) | (Catch*, Finally)))
@@ -489,6 +511,7 @@ OtherAtomicStep =
     option.attr*,
     common.attributes,
     p_global.attributes,
+    p_step.attributes,
     (WithInput | WithOption | Documentation | PipeInfo)*
   }
 [ sa:class = "language-construct" ]
@@ -497,6 +520,7 @@ OtherCompoundStep =
     name.ncname.attr?,
     common.attributes,
     p_global.attributes,
+    p_step.attributes,
     ((Output | Documentation | PipeInfo)*, Subpipeline)
   }
 OtherStep = StandardStep | OtherAtomicStep | OtherCompoundStep

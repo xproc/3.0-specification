@@ -172,6 +172,42 @@
       <data type="boolean"/>
     </attribute>
   </define>
+  <define name="inline-expand-text.attr" sa:ignore="yes">
+    <attribute name="inline-expand-text">
+      <data type="boolean"/>
+    </attribute>
+  </define>
+  <define name="p_inline-expand-text.attr" sa:ignore="yes">
+    <attribute name="p:inline-expand-text">
+      <data type="boolean"/>
+    </attribute>
+  </define>
+  <define name="depends.attr" sa:ignore="yes">
+    <attribute name="depends">
+      <data type="NMTOKENS"/>
+    </attribute>
+  </define>
+  <define name="p_depends.attr" sa:ignore="yes">
+    <attribute name="p:depends">
+      <data type="NMTOKENS"/>
+    </attribute>
+  </define>
+  <define name="timeout.attr" sa:ignore="yes">
+    <attribute name="timeout">
+      <data type="nonNegativeInteger"/>
+    </attribute>
+  </define>
+  <define name="p_timeout.attr" sa:ignore="yes">
+    <attribute name="p:timeout">
+      <data type="nonNegativeInteger"/>
+    </attribute>
+  </define>
+  <define name="message.attr" sa:ignore="yes">
+    <attribute name="message"/>
+  </define>
+  <define name="p_message.attr" sa:ignore="yes">
+    <attribute name="p:message"/>
+  </define>
   <define name="version.attr">
     <attribute name="version">
       <value>3.0</value>
@@ -202,6 +238,28 @@
     </optional>
     <optional>
       <ref name="p_expand-text.attr"/>
+    </optional>
+  </define>
+  <define name="step.attributes">
+    <optional>
+      <ref name="depends.attr"/>
+    </optional>
+    <optional>
+      <ref name="timeout.attr"/>
+    </optional>
+    <optional>
+      <ref name="message.attr"/>
+    </optional>
+  </define>
+  <define name="p_step.attributes">
+    <optional>
+      <ref name="p_depends.attr"/>
+    </optional>
+    <optional>
+      <ref name="p_timeout.attr"/>
+    </optional>
+    <optional>
+      <ref name="p_message.attr"/>
     </optional>
   </define>
   <define name="inline.attributes">
@@ -944,6 +1002,7 @@
       </optional>
       <ref name="common.attributes"/>
       <ref name="global.attributes"/>
+      <ref name="step.attributes"/>
       <group>
         <interleave>
           <optional>
@@ -972,6 +1031,7 @@
       </attribute>
       <ref name="common.attributes"/>
       <ref name="global.attributes"/>
+      <ref name="step.attributes"/>
       <group>
         <interleave>
           <optional>
@@ -999,6 +1059,7 @@
       </optional>
       <ref name="common.attributes"/>
       <ref name="global.attributes"/>
+      <ref name="step.attributes"/>
       <group>
         <zeroOrMore>
           <choice>
@@ -1118,6 +1179,7 @@
       </optional>
       <ref name="common.attributes"/>
       <ref name="global.attributes"/>
+      <ref name="step.attributes"/>
       <group>
         <zeroOrMore>
           <choice>
@@ -1147,6 +1209,7 @@
       </optional>
       <ref name="common.attributes"/>
       <ref name="global.attributes"/>
+      <ref name="step.attributes"/>
       <group>
         <zeroOrMore>
           <choice>
@@ -1167,6 +1230,7 @@
       </optional>
       <ref name="common.attributes"/>
       <ref name="global.attributes"/>
+      <ref name="step.attributes"/>
       <interleave>
         <group>
           <zeroOrMore>
@@ -1258,6 +1322,7 @@
       </zeroOrMore>
       <ref name="common.attributes"/>
       <ref name="p_global.attributes"/>
+      <ref name="p_step.attributes"/>
       <zeroOrMore>
         <choice>
           <ref name="WithInput"/>
@@ -1280,6 +1345,7 @@
       </optional>
       <ref name="common.attributes"/>
       <ref name="p_global.attributes"/>
+      <ref name="p_step.attributes"/>
       <group>
         <zeroOrMore>
           <choice>
