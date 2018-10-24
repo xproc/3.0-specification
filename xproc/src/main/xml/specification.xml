@@ -725,37 +725,6 @@ value template in a <tag>p:inline</tag>.
             within the current <glossterm>environment</glossterm>.</para>
 
 
-<section xml:id="depends">
-<title>Additional dependent connections</title>
-
-<para>The connections between input and output ports form the basis
-of the pipeline graph. Any step that depends on the output of another step
-is guaranteed to be run after the step on which it depends.</para>
-
-<para>However, it is sometimes the case that one step depends on
-another in ways that are not apparent in the input and output
-connections. Consider, for example, a pipeline that interacts with two
-different web services. It may very well be the case that one web
-service has to run before the other, even though the latter does not
-consume any output from the former.</para>
-
-<para>In these cases, the pipeline author can add an explicit
-dependency with the <tag class="attribute">depends</tag> attribute.
-The <tag class="attribute">depends</tag> attribute is allowed on any
-step element. The value of the attribute is a space separated list of step names.
-<error code="S0073">It is a <glossterm>static error</glossterm> if any
-specified name is not the name of an in-scope step.</error>
-</para>
-
-<para>The connections specified by the
-<tag class="attribute">depends</tag> attribute taken together with
-the input and output connections must not form a cycle in the graph.
-</para>
-
-</section>
-
-
-
       <section xml:id="namespace-fixup">
         <title>Namespace Fixup on XML Outputs</title>
         <para>XProc processors are expected, and sometimes required, to perform <glossterm>namespace
@@ -2246,42 +2215,6 @@ element or the attribute has a preceding sibling that it not an attribute.</erro
 according to the media type occurs after text value templates have been
 replaced.</para>
 
-<section xml:id="expand-text-attribute">
-<title>The [p:]expand-text and p:inline-expand-text attributes</title>
-
-        <para>The <tag class="attribute">[p:]expand-text</tag> and <tag class="attribute">p:inline-expand-text</tag>
-          attributes control whether or not text and attribute nodes in descendant <tag>p:inline</tag> elements and
-          implicit inlines are designated as value templates. Note that it controls both text <emphasis>and</emphasis> attribute value
-          templates.</para>
-  
-        <para>The <tag class="attribute">[p:]expand-text</tag> attribute can appear on all elements in the pipeline. On
-          elements in the XProc namespace, the attribute is named <tag class="attribute">expand-text</tag>. On elements
-          that are not in the XProc namespace, the attribute is named <tag class="attribute">p:expand-text</tag>. As a
-          descendant of a <tag>p:inline</tag> or implicit inline it carries no special meaning and is treated as an
-          ordinary attribute.</para>
-  
-        <para>The <tag class="attribute">p:inline-expand-text</tag> attribute appearing as descendant of a
-            <tag>p:inline</tag> or in an implicit inline is treated as a special attribute, with the same semantics as
-          the <tag class="attribute">[p:]expand-text</tag> attribute. The attribute will not be part of the result of
-          the <tag>p:inline</tag> or implicit inline.</para>
-
-        <para>If the <tag class="attribute">[p:]expand-text</tag> or <tag class="attribute">p:inline-expand-text</tag>
-          attribute appears on more than one element among the ancestors of a text or attribute node in a
-            <tag>p:inline</tag> element or implicit inline, only the value on the nearest ancestor is considered.</para>
-
-        <para>If the nearest <tag class="attribute">[p:]expand-text</tag> or <tag class="attribute"
-            >p:inline-expand-text</tag> attribute has the value “<code>false</code>”, then the text and attribute nodes
-          in a <tag>p:inline</tag> element or implicit inline are not value templates. If it has the value
-            “<code>true</code>”, or if no such attribute is present among ancestors, then the text and attribute nodes
-            <emphasis>are</emphasis> value templates.</para>
-
-<!-- feature="no-p-expand-text-on-p"-->
-<para><error code="S0084">It is a <glossterm>static error</glossterm> if the
-<tag class="attribute">p:expand-text</tag> attribute appears on any element
-  in the XProc namespace outside a <tag>p:inline</tag> element or implicit inline.</error>
-</para>
-</section>
-
 <simplesect>
 <title>Examples</title>
 
@@ -2888,6 +2821,7 @@ documents by URI.</para>
         of the document to be provided on that port. The <tag>p:pipeinfo</tag> element has no
         special semantics when it appears in documents that flow through the pipeline. </para>
     </section>
+
     <section xml:id="extension-attributes">
       <title>Extension attributes</title>
       <para><termdef xml:id="dt-extension-attribute">An element from the XProc namespace
@@ -2903,38 +2837,190 @@ documents by URI.</para>
           <rfc2119>must</rfc2119> behave as if the attribute was not present.</para>
     </section>
 
+<section xml:id="common-attr">
+<title>Common Attributes</title>
+
+<para>Several attributes can be used on any XProc step, or even any element in a pipeline.
+For convenience, they are all summarized here.</para>
+
+<para>Attributes from the XML namespace are allowed anywhere. In particular:</para>
+
+<itemizedlist>
+<listitem>
+  <para>An <tag class="attribute">xml:id</tag> attribute is allowed on any element. It has
+  the semantics of <biblioref linkend="xml-id"/>.</para>
+</listitem>
+<listitem>
+  <para>An <tag class="attribute">xml:base</tag> attribute is allowed on any element. It has
+  the semantics of <biblioref linkend="xml-base"/>.</para>
+</listitem>
+</itemizedlist>
+
+<para>The remaining elements are sometimes in no namespace and sometimes
+explicitly in the XProc namespace. They are in no namespace when they
+appear on an XProc element; they are in the XProc namespace when they
+are on an element in any other namespace. In this way, they do not
+conflict with the names used in other vocabularies.
+</para>
+
+<section xml:id="expand-text-attribute">
+<title>Expand text attributes</title>
+
+<para>The <tag class="attribute">[p:]expand-text</tag> and
+<tag class="attribute">[p:]inline-expand-text</tag> attributes control
+whether or not text and attribute nodes in descendant
+<tag>p:inline</tag> elements and implicit inlines are designated as
+value templates. Note that they control both text
+<emphasis>and</emphasis> attribute value templates.</para>
+  
+<para>The <tag class="attribute">[p:]expand-text</tag> attribute can
+appear on all elements in the pipeline. It controls whether or not
+descendant inlines are designated as value templates. If the
+attribute <emphasis>itself</emphasis> appears
+among the descendants of a <tag>p:inline</tag> (or implicit inline), then
+it is a regular attribute and has no special semantics. In this case,
+the <tag class="attribute">[p:]inline-expand-text</tag> attribute comes
+into play.
+</para>
+  
+<para>The <tag class="attribute">[p:]inline-expand-text</tag> attribute
+appearing as descendant of a <tag>p:inline</tag> or in an implicit
+inline is treated as a special attribute, with the same semantics as
+the <tag class="attribute">[p:]expand-text</tag> attribute. The
+attribute will not be part of the result of the <tag>p:inline</tag> or
+implicit inline.</para>
+
+<para>If the <tag class="attribute">[p:]expand-text</tag> or
+<tag class="attribute">[p:]inline-expand-text</tag> attribute appears on more
+than one element among the ancestors of a text or attribute node in a
+<tag>p:inline</tag> element or implicit inline, only the value on the
+nearest ancestor is considered.</para>
+
+<para>If the nearest <tag class="attribute">[p:]expand-text</tag> or
+<tag class="attribute" >[p:]inline-expand-text</tag> attribute has the
+value “<code>false</code>”, then the text and attribute nodes in a
+<tag>p:inline</tag> element or implicit inline are not value
+templates. If it has the value “<code>true</code>”, or if no such
+attribute is present among ancestors, then the text and attribute
+nodes <emphasis>are</emphasis> value templates.</para>
+
+<!-- feature="no-p-expand-text-on-p"-->
+<para><error code="S0084">It is a <glossterm>static error</glossterm>
+if the <tag class="attribute">p:inline-expand-text</tag> attribute appears on
+any element in the XProc namespace that is not a descendant of a
+<tag>p:inline</tag> element or implicit inline.</error>
+</para>
+</section>
+
 <section xml:id="use-when">
 <title>Conditional Element Exclusion</title>
 
-<para>Any element in the XProc namespace may have a
-<tag class="attribute">use-when</tag> attribute which
-<rfc2119>must</rfc2119> contain an XPath expression that can be
-evaluated statically. If the attribute is present and the effective boolean
-value of the expression is false, then the element and all of its descendants
-are effectively excluded from the pipeline document. If a node is effectively
-excluded, the processor <rfc2119>must</rfc2119> behave as if the element
-was not present in the document.</para>
+<para xml:id="p.use-when">The
+<tag class="attribute">[p:]use-when</tag> attribute controls whether
+or not an element (and its decendants) appear in the pipeline. The
+value of the attribute <rfc2119>must</rfc2119> contain an XPath
+expression that can be evaluated statically (See
+<link linkend="statics"/>.) If the attribute is present and the
+effective boolean value of the expression is false, then the element
+and all of its descendants are effectively excluded from the pipeline document. If
+a node is effectively excluded, the processor <rfc2119>must</rfc2119>
+behave as if the element was not present in the document.
+</para>
 
-<para xml:id="p.use-when">Elements that are not in the XProc namespace
-<rfc2119>may</rfc2119> also have a <tag
-class="attribute">use-when</tag> attribute, but the attribute must be
-in the XProc namespace. The semantics of a <tag
-class="attribute">p:use-when</tag> attribute on an element not in the
-XProc namespace are the same as the semantics of a <tag
-class="attribute">use-when</tag> attribute on an element in the XProc
-namespace.</para>
-
-<para>Conditional element exclusion occurs during
-<link linkend="initiating">static analysis</link>
-of the pipeline.</para>
+<para>Conditional element exclusion occurs during <link
+linkend="initiating">static analysis</link> of the pipeline.</para>
 
 <note xml:id="note-excl-use-when">
-<para>The effective exclusion of <tag class="attribute">use-when</tag>
+<para>The effective exclusion of <tag class="attribute">[p:]use-when</tag>
 processing occurs after XML parsing and has no effect on well-formedness
-or validation errors which will be reported in the usual way. Note also that
-<tag class="attribute">use-when</tag> is not performed when it occurs on the
-descendant of a <tag>p:inline</tag> element.</para>
+or validation errors which will be reported in the usual way.</para>
 </note>
+</section>
+
+<section xml:id="depends">
+<title>Additional dependent connections</title>
+
+<para xml:id="p.depends">The <tag class="attribute">[p:]depends</tag>
+attribute can appear on any step invocation. It adds an explicit
+dependency between steps. The value of the attribute is a space
+separated list of step names. <error code="S0073">It is a
+<glossterm>static error</glossterm> if any specified name is not the
+name of an in-scope step.</error></para>
+
+<para>In most pipelines, the dependencies that arise naturally
+from the connections between steps are sufficient. If step “B”
+consumes the output of step “A”, then clearly “A” must run before “B”.
+However, it is sometimes the case that one step depends on
+another in ways that are not apparent in the connections. Consider,
+for example, a pipeline that interacts with two different web
+services. It may very well be the case that one web service has to run
+before the other, even though the latter does not consume any output
+from the former.</para>
+
+<para>When <tag class="attribute">[p:]depends</tag> is used, if step
+“Y” depends on step “X”, then “X” must run before “Y”.
+</para>
+
+<para>The connections specified by the
+<tag class="attribute">[p:]depends</tag> attribute apply
+<emphasis>in addition to</emphasis> the dependencies that arise
+naturally from connections between steps. Taken together with the
+input and output connections, the graph must not contain any loops.
+</para>
+</section>
+
+<section xml:id="timeout">
+<title>Controlling long running steps</title>
+
+<para xml:id="p.timeout">The <tag class="attribute">[p:]timeout</tag>
+attribute allows a pipeline author to suggest a length of time beyond
+which the pipeline processor should consider that a step has taken
+an excessive amount of time.</para>
+
+<para>The value of the <option>[p:]timeout</option> option must be a
+<type>xs:nonNegativeInteger</type>. It is interpreted as a number of
+seconds. The value zero may be used to indicate that no limit is
+expressed (this is the same as omitting the attribute, but may
+sometimes be more convenient for pipeline authors).
+</para>
+
+<para><error code="D0053">It is a <glossterm>dynamic error</glossterm>
+if a step runs longer than its timeout value.</error></para>
+
+<para>The precise amount of time a step takes to perform its task
+depends on many factors (the hardware running the processor, the
+processor's execution strategy, the system load etc.) This feature can
+not be used as an exact timing tool in XProc. Developers are advised
+to calculate the value for <tag class="attribute">[p:]timeout</tag>
+generously, so the dynamic error is raised only in extreme cases.</para>
+
+<para><impl>It is
+<glossterm>implementation-defined</glossterm> whether a processor
+supports timeouts, and if it does, how precisely and precisely how the
+execution time of a step is measured.</impl>
+</para>
+</section>
+
+<section xml:id="messages">
+<title>Status and debugging output</title>
+
+<para xml:id="p.message">The <tag class="attribute">[p:]message</tag>
+attribute can appear on any step invocation. It’s value is treated
+as an attribute value template (irrespective of any enclosing
+<tag class="attribute">[p:]expand-text</tag> setting) and the
+computed value is made available.</para>
+
+<para><impl>Precisely what “made available” means is
+<glossterm>implementation-defined</glossterm>.</impl> It will often
+be as simple as printing the message on some output channel. But for
+embedded systems or other environments where “print it for the user”
+is meaningless or inconvenient, some other mechanism may be used.
+</para>
+
+<para>If a processor can make the message available, it
+<rfc2119>should</rfc2119> do so before execution of the step
+begins.</para>
+</section>
 </section>
 
 <section xml:id="syntax-summaries"><title>Syntax Summaries</title>
@@ -3021,32 +3107,12 @@ the element's syntax:</para>
 
 </itemizedlist>
 
-<para xml:id="common-attr">For clarity of exposition,
-some attributes and elements are elided from
-the summaries:</para><itemizedlist>
-<listitem>
-  <para>An <tag class="attribute">xml:id</tag> attribute is allowed on any element. It has
-  the semantics of <biblioref linkend="xml-id"/>.</para>
-</listitem>
-<listitem>
-  <para>An <tag class="attribute">xml:base</tag> attribute is allowed on any element. It has
-  the semantics of <biblioref linkend="xml-base"/>.</para>
-</listitem>
-<listitem>
-  <para>A <tag class="attribute">use-when</tag> attribute is allowed on any element, see <xref linkend="use-when"/>.</para>
-</listitem>
-<listitem>
-  <para>A <tag class="attribute">depends</tag> attribute is allowed on any step element, see <xref linkend="depends"/>.</para>
-</listitem>
-<listitem>
-  <para>The <tag>p:documentation</tag> and <tag>p:pipeinfo</tag> elements are not shown, but
-  they are allowed anywhere.</para>
-</listitem>
-<listitem>
-  <para>Attributes that are <link linkend="option-shortcut">syntactic shortcuts for option
-  values</link> are not shown.</para>
-</listitem>
-</itemizedlist>
+<para>For clarity of exposition, the common attributes (see <xref
+linkend="common-attr"/>) are elided from the summaries as are the
+<tag>p:documentation</tag> and <tag>p:pipeinfo</tag> elements, which
+are allowed anywhere, and attributes that are
+<link linkend="option-shortcut">syntactic shortcuts for option values</link>.
+</para>
 
 <para>The types given for attributes should be understood as follows:</para>
 <itemizedlist>
