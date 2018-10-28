@@ -168,15 +168,34 @@ compatible versions.</para>
     <type>xs:string</type> (or a type 
     derived from <type>xs:string</type>) the QName is constructed using the <link xlink:href="https://www.w3.org/TR/xpath-31/#doc-xpath31-EQName">XPath EQName production rules</link>. That is, it can be written
     as a local-name only, as a prefix plus local-name or as a URI plus
-    local-name (using the <code>Q{}</code> syntax). <error code="D0061">It is a 
-    <glossterm>dynamic error</glossterm> if the string value cannot be converted 
-    into a QName.</error> <error code="D0034">It is a <glossterm>dynamic 
-    error</glossterm> to specify a new namespace or prefix if the lexical value 
-    of the specified name contains a colon.</error> The corresponding expanded name 
-    is used to construct the attribute. <error code="D0067">It is a 
-    <glossterm>dynamic error</glossterm> to specify a namespace using the namespace
-    supplying option if the <code>Q{}</code> syntax is used.</error>
-    </para>
+    local-name (using the <code>Q{}</code> syntax). The following errors may occur:</para>
+    <itemizedlist>
+      <listitem>
+        <para><error code="D0061">It is a 
+          <glossterm>dynamic error</glossterm> if the string value cannot be converted 
+          into a QName.</error></para>
+      </listitem>
+      <listitem>
+        <para><error code="D0034">It is a <glossterm>dynamic 
+          error</glossterm> to specify a new namespace or prefix if the lexical value 
+          of the specified name contains a colon.</error> The corresponding expanded name 
+          is used to construct the attribute.</para>
+      </listitem>
+      <listitem>
+        <para><error code="D0069">It is a <glossterm>dynamic
+          error</glossterm> if the lexical value of the specified name contains a colon and the
+          prefix is not bound to a namespace URI.</error> </para>
+      </listitem>
+      <listitem>
+        <para><error code="D0070">It is a <glossterm>dynamic error</glossterm> if a prefix suggestion
+        is supplied, but no namespace URI is provided.</error></para>
+      </listitem>
+      <listitem>
+        <para><error code="D0067">It is a 
+          <glossterm>dynamic error</glossterm> to specify a namespace using the namespace
+          supplying option if the <code>Q{}</code> syntax is used.</error></para>
+      </listitem>
+    </itemizedlist>
   </listitem>
   <listitem>
   	<para><error code="D0068">It is a <glossterm>dynamic error</glossterm> if
