@@ -2927,7 +2927,7 @@ any element in the XProc namespace that is not a descendant of a
 
 <para xml:id="p.use-when">The
 <tag class="attribute">[p:]use-when</tag> attribute controls whether
-or not an element (and its decendants) appear in the pipeline. The
+or not an element (and its descendants) appear in the pipeline. The
 value of the attribute <rfc2119>must</rfc2119> contain an XPath
 expression that can be evaluated statically (See
 <link linkend="statics"/>.) If the attribute is present and the
@@ -2936,6 +2936,10 @@ and all of its descendants are effectively excluded from the pipeline document. 
 a node is effectively excluded, the processor <rfc2119>must</rfc2119>
 behave as if the element was not present in the document.
 </para>
+  
+  <para>Exception: <tag class="attribute">[p:]use-when</tag> attributes on descendant
+    <tag>p:inline</tag> elements and in implicit inlines carry no special meaning and are considered part of the inlined
+    contents.</para>
 
 <para>Conditional element exclusion occurs during <link linkend="initiating">static analysis</link> of the pipeline.</para>
 
