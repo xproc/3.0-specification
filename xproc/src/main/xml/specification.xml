@@ -1819,15 +1819,36 @@ normally during static analysis.</para>
 <glossterm>document properties</glossterm> of a document.</para>
 
 <methodsynopsis>
-<type>item()</type>
+<type>item()*</type>
 <methodname>p:document-property</methodname>
 <methodparam><type>document-node()</type><parameter>doc</parameter></methodparam>
-<methodparam><type>xs:QName</type><parameter>key</parameter></methodparam>
+<methodparam><type>item()</type><parameter>key</parameter></methodparam>
 </methodsynopsis>
 
-<para>The item returned is the value of the “<code>$key</code>” property
+  <para>The item returned is the value of the property named <code>$key</code> 
 in the document properties. An empty sequence is returned if no such key
-exists.</para>
+exists. <code>$key</code> is interpreted as follows:</para>
+  
+  <itemizedlist>
+    <listitem>
+      <para>If <code>$key</code> is of type <type>xs:QName</type>, its value is used unchanged.</para>
+    </listitem>
+    <listitem>
+      <para>If <code>$key</code> is of type <type>xs:string</type> its value is
+        transformed into a <type>xs:Qname</type> using the <link
+          xlink:href="https://www.w3.org/TR/xpath-31/#doc-xpath31-EQName"
+          >XPath EQName production rules</link>. That is, it can be written
+        as a local-name only, as a prefix plus local-name or as a URI plus
+        local-name (using the <code>Q{}</code> syntax).</para>
+      <para>
+        <error code="D0061">It is a <glossterm>dynamic error</glossterm>
+          if <code>$key</code> is of type <type>xs:string</type> and cannot be converted into a <type>xs:Qname</type>.</error>
+      </para>
+    </listitem>
+    <listitem>
+      <para>If <code>$key</code> is of any other type, the function returns the empty sequence.</para>
+    </listitem>
+  </itemizedlist>
 
 <para feature="document-properties-non-xml-document">The context node
 for the <function>p:document-property</function> function must be an
@@ -1877,7 +1898,7 @@ map with <type>xs:Qname</type> keys. Every key/value entry in
     function's result map.</para>
     <para>
       <error code="D0061">It is a <glossterm>dynamic error</glossterm>
-      if a string key cannot be converted into a QName.</error>
+        if <code>$key</code> is of type <type>xs:string</type> and cannot be converted into a <type>xs:Qname</type>.</error>
     </para>
   </listitem>
   <listitem>
