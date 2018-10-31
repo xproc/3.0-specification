@@ -68,7 +68,7 @@ and have no substructure as far as the pipeline is concerned. Compound
 steps and multi-container steps control the execution of other steps,
 which they include in the form of one or more subpipelines.</para>
 
-<para><biblioref linkend="xproc30-steps"/>
+<para><biblioref linkend="steps30"/>
 defines a standard library of steps. Pipeline implementations
 <rfc2119>may</rfc2119> support additional types of steps as well.
 </para>
@@ -207,7 +207,7 @@ performs XSLT processing; a Validate with XML Schema step validates
 one input with respect to some set of XML Schemas, etc.</para>
 
       <para>There are many <emphasis>types</emphasis> of atomic steps. The standard library of
-        atomic steps is described in <biblioref linkend="std-components"/>, but implementations
+        atomic steps is described in <biblioref linkend="steps30"/>, but implementations
           <rfc2119>may</rfc2119> provide others as well. <impl>It is
             <glossterm>implementation-defined</glossterm> what additional step types, if any, are
           provided. </impl> Each use, or instance, of an atomic step invokes the processing defined
@@ -758,7 +758,7 @@ value template in a <tag>p:inline</tag>.
           for <glossterm>namespace fixup</glossterm>. In particular, processors are encouraged to
           take account of prefix information in creating new namespace bindings, to minimize
           negative impact on prefixed names in content.</para>
-        <para><impl>Except for cases which are specifically called out in <biblioref linkend="std-components"/>, the extent to which namespace fixup, and other checks for
+        <para><impl>Except for cases which are specifically called out in <biblioref linkend="steps30"/>, the extent to which namespace fixup, and other checks for
             outputs which cannot be serialized, are performed on intermediate outputs is
               <glossterm>implementation-defined</glossterm>.</impl></para>
         <para>Whenever an implementation serializes pipeline contents, for example for pipeline
@@ -3282,7 +3282,7 @@ are allowed anywhere, and attributes that are
     <title>Steps</title>
     <para>This section describes the core language steps of XProc; the full
 vocabulary of standard, atomic steps is described in
-<biblioref linkend="std-components"/>.</para>
+<biblioref linkend="steps30"/>.</para>
 
 <para>The following dynamic errors are described in the atomic step vocabulary.
 They are repeated here so that the list of dynamic errors is wholly contained
@@ -4085,7 +4085,7 @@ can provide some sort of default for the rest of the pipeline.</para>
 
 <section xml:id="p.atomic"><title>Atomic Steps</title><para>In addition to the six step types
         described in the preceding sections, XProc provides a standard library of atomic step types.
-        The full vocabulary of standards steps is described in <biblioref linkend="std-components"/>.</para>
+        The full vocabulary of standards steps is described in <biblioref linkend="steps30"/>.</para>
 <para>All of the standard, atomic steps are invoked in the same way:</para>
       <e:rng-pattern name="OtherAtomicStep"/>
       <para>Where “<replaceable>p:atomic-step</replaceable>” <rfc2119>must</rfc2119> be in the XProc
@@ -6247,11 +6247,10 @@ in the PSVI, are preserved between steps.</impl></para>
 <section xml:id="normative-references">
   <title>Normative References</title>
   <bibliolist>
-    <bibliomixed xml:id="std-components"><abbrev>XProc 2.0: Standard Step Library</abbrev>
-<citetitle xlink:href="http://www.w3.org/TR/xproc20-steps/">XProc 2.0:
-Standard Step Library</citetitle>.
-Alex Milowski, Henry Thompson, and Norman Walsh editors.
-W3C Working Group Note 21 July 2016.
+    <bibliomixed xml:id="steps30"><abbrev>Steps 3.0</abbrev>
+<citetitle xlink:href="http://spec.xproc.org/">XProc 3.0: Standard
+Step Library</citetitle>.
+Norman Walsh, Achim Berndzen, Gerrit Imsieke and Erik Siegel, editors.
 </bibliomixed>
     <bibliomixed xml:id="xml-infoset-rec"><abbrev>Infoset</abbrev>
 <citetitle xlink:href="http://www.w3.org/TR/xml-infoset/">XML
@@ -6278,9 +6277,6 @@ editors. W3C Recommendation 16 August 2006.</bibliomixed>
 in XML 1.1 (Second Edition)</citetitle>. Tim Bray,
 Dave Hollander, Andrew Layman, et. al.,
 editors. W3C Recommendation 16 August 2006.</bibliomixed>
-    <bibliomixed xml:id="lastcall-xslt30"><abbrev>XSLT 3.0</abbrev>
-   <citetitle xlink:href="http://www.w3.org/TR/xslt-30/">XSL Transformations (XSLT) Version 3.0</citetitle>. Michael Kay,
-   W3C Recommendation 8 June 2017</bibliomixed>
     <bibliomixed xml:id="xpath31"><abbrev>XPath 3.1</abbrev>
 <citetitle xlink:href="http://www.w3.org/TR/xpath31/">XML Path Language (XPath)
 	3.1</citetitle>. Jonathan Robie, Michael Dyck, Josh Spiegel, editors.
@@ -6291,7 +6287,10 @@ Model (XDM)</abbrev>
 XPath 2.0 Data Model (XDM)</citetitle>.
 Mary Fernández, Ashok Malhotra, Jonathan Marsh, <foreignphrase>et. al.</foreignphrase>, editors.
 W3C Recommendation. 23 January 2007.</bibliomixed>
-    <bibliomixed role="error" xml:id="xml-serialization-31">@@FIXME:MISSING </bibliomixed>
+    <bibliomixed xml:id="xml-serialization-31"><abbrev>Serialization</abbrev>
+<citetitle xlink:href="https://www.w3.org/TR/xslt-xquery-serialization-31/">XSLT
+and XQuery Serialization 3.1</citetitle>.
+Andrew Coleman and C. M. Sperberg-McQueen, editors. W3C Recommendation. 21 March 2017.</bibliomixed>
     <bibliomixed xml:id="xpath31-functions"><abbrev>XPath and XQuery Functions and Operators 3.1</abbrev>
 <citetitle xlink:href="https://www.w3.org/TR/xpath-functions-31/">XPath and XQuery Functions and  Operators 3.1</citetitle>. Michael Kay, editor.
 W3C Recommendation. 21 March 2017</bibliomixed>
