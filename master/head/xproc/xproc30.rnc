@@ -41,7 +41,7 @@ exclude-inline-prefixes.attr =
 # one of those is allowed by RELAX NG.
 [ sa:model = "ExcludeInlinePrefixes" ] ExcludeInlinePrefixes = text
 [ sa:model = "PrefixList" ] PrefixList = xsd:NMTOKENS
-[ sa:model = "QNameList" ] QNameList = xsd:NMTOKENS
+[ sa:model = "EQNameList" ] EQNameList = xsd:NMTOKENS
 [ sa:ignore = "yes" ] xmlid.attr = attribute xml:id { xsd:ID }
 [ sa:ignore = "yes" ] xmlbase.attr = attribute xml:base { xsd:anyURI }
 href.attr = attribute href { xsd:anyURI }
@@ -490,7 +490,7 @@ Try =
 Catch =
   element catch {
     name.ncname.attr?,
-    attribute code { QNameList }?,
+    attribute code { EQNameList }?,
     common.attributes,
     global.attributes,
     ((Output | Documentation | PipeInfo)*, Subpipeline)
