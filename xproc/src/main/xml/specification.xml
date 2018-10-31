@@ -365,55 +365,39 @@ defined properties.</para>
 <title>Document Types</title>
 
 <para>XProc 3.0 has been designed to make it possible to process any kind of
-document. Practically speaking, there are five kinds of documents:</para>
+document. Each document has a representation in the <biblioref linkend="xpath-datamodel"/>.
+This is necessary so that any kind of document can be passed as an argument to XPath functions,
+such as <tag>p:document-properties</tag>.
+Practically speaking, there are five kinds of documents:</para>
 
-<variablelist>
-<varlistentry><term>XML documents</term>
+<orderedlist>
 <listitem>
-<para>These are XML documents, instances of the <biblioref linkend="xpath-datamodel"/>.
-They are accessible via XPath expressions in the pipeline (for example, in the
-<tag class="attribute">select</tag> expression of a variable declaration).
+<para><link linkend="xml-documents">XML documents</link>
 </para>
 </listitem>
-</varlistentry>
-<varlistentry><term>HTML documents</term>
 <listitem>
-<para>Within XProc, these are XML documents, instances of the <biblioref linkend="xpath-datamodel"/>.
-They are accessible via XPath expressions in the pipeline. HTML documents are
-parsed with an HTML parser to produce their tree model in the XDM.
+<para><link linkend="html-documents">HTML documents</link>
 </para>
 </listitem>
-</varlistentry>
-<varlistentry><term>Text documents</term>
 <listitem>
-<para>Text documents are represented as a single text node in the XDM.
-They are accessible via XPath expressions in the pipeline.
+<para><link linkend="text-documents">Text documents</link>
 </para>
 </listitem>
-</varlistentry>
-<varlistentry><term>JSON documents</term>
 <listitem>
-<para>JSON documents are represented as maps, arrays, or atomic values in the XDM.
-They are accessible via XPath expressions in the pipeline.
+<para><link linkend="json-documents">JSON documents</link>
 </para>
 </listitem>
-</varlistentry>
-<varlistentry><term>Other documents</term>
 <listitem>
-<para>Other documents (JPEG images, ZIP files, CSV documents, etc.) are represented
-as empty document nodes in the XDM. They aren’t generally accessible in XPath expressions,
-although the <tag>p:document-properties</tag> family of functions can be used to access
-their document properties.
+<para><link linkend="other-documents">Other documents</link>
 </para>
 </listitem>
-</varlistentry>
-</variablelist>
+</orderedlist>
 
 <section xml:id="xml-documents">
 <title>XML Documents</title>
 
-<para>Representations of XML documents are instances of the <biblioref
-linkend="xpath-datamodel"/>. They are documents that contain a mixture
+<para>Representations of XML documents are general instances of the XDM.
+They are documents that contain a mixture
 of other node types (elements, text, comments, and processing
 instructions). This definition is intentionally broader than the
 definition of a well-formed XML document because it is often
@@ -446,8 +430,8 @@ in an XProc pipeline is <glossterm>implementation-defined</glossterm>.</impl>
 <section xml:id="html-documents">
 <title>HTML Documents</title>
 
-<para>Representations of HTML documents are instances of the <biblioref
-linkend="xpath-datamodel"/>. The must conform to the constraints of
+<para>Representations of HTML documents are general instances of the XDM.
+Within XProc, they are
 <xref linkend="xml-documents"/>.
 HTML documents are identified by an HTML media type.
 <termdef xml:id="dt-HTML-media-type">The
@@ -457,16 +441,36 @@ are <firstterm baseform="HTML media type">HTML media types</firstterm>.
 </termdef>
 </para>
 
-<para>When a document with an HTML media type is parsed, an
-HTML parser <rfc2119>must</rfc2119> be used.</para>
+<para>The distinction between XML documents and HTML documents is apparent
+in two places:</para>
+
+<orderedlist>
+<listitem>
+<para>When an HTML document is <emphasis>parsed</emphasis>, for example when it
+is the result of querying a web service or is loaded from a file on disk, an
+HTML parser <rfc2119>must</rfc2119> be used. An HTML parser will construct a
+balanced tree even if the HTML document would not be seen as
+well-formed XML if it was parsed by an XML parser.  An HTML parser may also
+add elements not found in the original (for example table body elements inside tables).
+</para>
+<note xml:id="inline-html">
+<para>The HTML parsing rules only apply when the content is parsed. HTML content
+in an unencoded <tag>p:inline</tag> must be well-formed XML (because it is literally
+in the pipeline) and will not be transformed in any way.</para>
+</note>
+</listitem>
+<listitem>
+<para>When an HTML document is serialized, it may be serialized using the
+HTML serializer (see <xref linkend="xml-serializer-31"/>) by default.
+</para>
+</listitem>
+</orderedlist>
 </section>
 
 <section xml:id="text-documents">
 <title>Text Documents</title>
 
-<para>Representations of text documents are instances of
-the <biblioref linkend="xpath-datamodel"/>. They are documents that
-contain a single text node.
+<para>Representations of text documents are XDM documents that contain a single text node.
 Text documents are identified by a
 text media type.
 <termdef xml:id="dt-text-media-type">Media types of the form
@@ -481,8 +485,8 @@ and “<literal>text/html</literal>” which is an HTML media type.
 <section xml:id="json-documents">
 <title>JSON Documents</title>
 
-<para>Representations of JSON documents are instances of
-the <biblioref linkend="xpath-datamodel"/>. They are maps, arrays, or
+<para>Representations of JSON documents are instances of the XDM.
+They are maps, arrays, or
 atomic values.
 JSON documents are identified by a
 JSON media type.
@@ -505,8 +509,7 @@ can’t contain maps or arrays). Can we get away with that?</para>
 <section xml:id="other-documents">
 <title>Other documents</title>
 
-<para>Representations of other kinds of documents are instances of the
-<biblioref linkend="xpath-datamodel"/>. They are empty document nodes.
+<para>Representations of other kinds of documents are empty XDM documents.
 <impl>The <emphasis>underlying</emphasis> representations of other
 kinds of documents are
 <glossterm>implementation-defined</glossterm>.</impl>
