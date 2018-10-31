@@ -652,12 +652,19 @@ content types, that they accept. Input documents must
         does not apply to <tag>p:declare-step</tag>; step declarations must provide explicit names
         for all of their outputs.</para>
     </section>
-    <section xml:id="connections">
-      <title>Connections</title>
-      <para>Steps are connected together by their input ports and output ports. <error code="S0001"
-          >It is a <glossterm>static error</glossterm> if there are any loops in the connections
-          between steps: no step can be connected to itself nor can there be any sequence of
-          connections through other steps that leads back to itself.</error></para>
+
+<section xml:id="connections">
+<title>Connections</title>
+
+<para>Steps are connected together by their input ports, output
+ports, and bindings to variables and options. Variables and options
+are also steps by the output ports from which they receive
+context.
+<error code="S0001" >It is a <glossterm>static error</glossterm>
+if there are any loops in the connections between steps, variables,
+and options: no step, variable, or option can be connected to itself
+nor can there be any sequence of connections through other steps that
+leads back to itself.</error></para>
 
          <para><termdef xml:id="dt-connection">A <firstterm>connection</firstterm> associates an
                input or output port with some data source.</termdef>  Such a connection represents a
