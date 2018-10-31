@@ -55,11 +55,15 @@
       <p:option name="exclude-filter" as="xs:string*" e:type="RegularExpression"/>
    </p:declare-step>
    <p:declare-step type="p:error" xml:id="error">
-      <p:input port="source" sequence="true" content-types="*/*"/>
-      <p:output port="result" sequence="true" content-types="*/*"/>
-      <p:option name="code" required="true" as="xs:QName"/>
-      <p:option name="code-prefix" as="xs:NCName"/>
-      <p:option name="code-namespace" as="xs:anyURI"/>
+      <p:input port="source"
+               sequence="true"
+               content-types="application/xml text/xml */*+xml text/*"/>
+      <p:output port="result"
+                sequence="true"
+                content-types="application/xml text/xml */*+xml text/*"/>
+      <p:option name="code" required="true" as="xs:anyAtomicType"/>
+      <p:option name="code-prefix" as="xs:NCName?"/>
+      <p:option name="code-namespace" as="xs:anyURI?"/>
    </p:declare-step>
    <p:declare-step type="p:escape-markup" xml:id="escape-markup">
       <p:input port="source" content-types="application/xml text/xml */*+xml"/>
