@@ -5,21 +5,17 @@
 to the step.</para>
 
 <p:declare-step type="p:error">
-  <p:input port="source" sequence="true" content-types="*/*"/>
-  <p:output port="result" sequence="true" content-types="*/*"/>
-  <p:option name="code" required="true" as="xs:QName"/>
-  <p:option name="code-prefix" as="xs:NCName"/>
-  <p:option name="code-namespace" as="xs:anyURI"/>
+    <p:input port="source" sequence="true" content-types="application/xml text/xml */*+xml text/*"/>
+    <p:output port="result" sequence="true" content-types="application/xml text/xml */*+xml text/*"/>
+    <p:option name="code" required="true" as="xs:anyAtomicType"/>
+    <p:option name="code-prefix" as="xs:NCName?"/>
+    <p:option name="code-namespace" as="xs:anyURI?"/>
 </p:declare-step>
 
-<para>The value of the <option>code</option> option
-<rfc2119>must</rfc2119> be a <type>QName</type>.
-If the lexical value does not contain a colon, then the <tag class="attribute">code-namespace</tag> may be used to specify the
-namespace of the code. In that case, the <tag class="attribute">code-prefix</tag> may be specified to suggest a
-prefix for the code. <error code="D0034">It is a
-<glossterm>dynamic error</glossterm> to specify a new namespace or
-prefix if the lexical value of the specified name contains a
-colon.</error></para>
+<para>The error code raised by this step is manufactured from <option>code</option>, 
+<option>code-prefix</option>, and <option>code-namespace</option> as explained in
+<biblioref linkend="xproc30-steps"/>.  
+</para>
 
 <para>This step uses the document provided on its input as the content
 of the error raised. An instance of the

@@ -75,7 +75,7 @@ and have no substructure as far as the pipeline is concerned. Compound
 steps and multi-container steps control the execution of other steps,
 which they include in the form of one or more subpipelines.</para>
 
-<para><biblioref linkend="xproc30-steps"/>
+<para><biblioref linkend="steps30"/>
 defines a standard library of steps. Pipeline implementations
 <rfc2119>may</rfc2119> support additional types of steps as well.
 </para>
@@ -202,7 +202,7 @@ performs XSLT processing; a Validate with XML Schema step validates
 one input with respect to some set of XML Schemas, etc.</para>
 
       <para>There are many <emphasis>types</emphasis> of atomic steps. The standard library of
-        atomic steps is described in <biblioref linkend="std-components"/>, but implementations
+        atomic steps is described in <biblioref linkend="steps30"/>, but implementations
           <rfc2119>may</rfc2119> provide others as well. <impl>It is
             <glossterm>implementation-defined</glossterm> what additional step types, if any, are
           provided. </impl> Each use, or instance, of an atomic step invokes the processing defined
@@ -869,7 +869,7 @@ value template in a <tag>p:inline</tag>.
           take account of prefix information in creating new namespace bindings, to minimize
           negative impact on prefixed names in content.</para>
         <para><impl>Except for cases which are specifically called out in <biblioref
-              linkend="std-components"/>, the extent to which namespace fixup, and other checks for
+              linkend="steps30"/>, the extent to which namespace fixup, and other checks for
             outputs which cannot be serialized, are performed on intermediate outputs is
               <glossterm>implementation-defined</glossterm>.</impl></para>
         <para>Whenever an implementation serializes pipeline contents, for example for pipeline
@@ -3252,8 +3252,8 @@ are allowed anywhere, and attributes that are
     </para>
   </listitem>
   <listitem>
-    <para><type>QNameList</type>: As a whitespace separated list of
-    QNames, per the definition above.
+    <para><type>EQNameList</type>: As a whitespace separated list of
+    EQNames, per the definition above.
     </para>
   </listitem>
   <listitem>
@@ -3378,7 +3378,7 @@ attribute">extension attributes</glossterm>.</error>
     <title>Steps</title>
     <para>This section describes the core language steps of XProc; the full
 vocabulary of standard, atomic steps is described in
-<biblioref linkend="std-components"/>.</para>
+<biblioref linkend="steps30"/>.</para>
 
 <para>The following dynamic errors are described in the atomic step vocabulary.
 They are repeated here so that the list of dynamic errors is wholly contained
@@ -3865,9 +3865,9 @@ If there is no matching <tag>p:catch</tag>, the <tag>p:try</tag> fails.
 <error code="S0064">It is a <glossterm>static error</glossterm>
 if the <tag class="attribute">code</tag> attribute is missing from
 any but the last <tag>p:catch</tag> or if any error code is
-repeated.</error> <error code="XS0083">It is a <glossterm>static 
+repeated.</error> <error code="S0083">It is a <glossterm>static 
 error</glossterm> if the value of the <tag class="attribute">code</tag>
-attribute is not a whitespace separated list of QNames.</error></para>
+attribute is not a whitespace separated list of EQNames.</error></para>
 
 <para>If the recovery subpipeline is evaluated, the outputs of the
 recovery subpipeline are the outputs of the <tag>p:try</tag> step. If
@@ -4080,8 +4080,7 @@ can provide some sort of default for the rest of the pipeline.</para>
 
 <section xml:id="p.atomic"><title>Atomic Steps</title><para>In addition to the six step types
         described in the preceding sections, XProc provides a standard library of atomic step types.
-        The full vocabulary of standards steps is described in <biblioref linkend="std-components"
-        />.</para>
+        The full vocabulary of standards steps is described in <biblioref linkend="steps30"/>.</para>
 <para>All of the standard, atomic steps are invoked in the same way:</para>
       <e:rng-pattern name="OtherAtomicStep"/>
       <para>Where “<replaceable>p:atomic-step</replaceable>” <rfc2119>must</rfc2119> be in the XProc
