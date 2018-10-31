@@ -1797,16 +1797,47 @@ of a document as an XML document.</para>
 <methodparam><type>item()</type><parameter>doc</parameter></methodparam>
 </methodsynopsis>
 
-<para>The document returned is a <code>c:document-properties</code>
+<para>The document returned is a <tag>c:document-properties</tag>
 document that contains (exclusively) the document properties
-associated with the <parameter>doc</parameter> specified. Each key in the
-properties becomes an element, each value becomes the content of that element.
-For atomic values other than string, an
-<tag class="attribute">xsi:type</tag> attribute is added to identify the
-type of the value.</para>
+associated with the <parameter>doc</parameter> specified.
+If the item is not associated with a document, the <tag>c:document-properties</tag>
+element will be empty.</para>
 
-<para>If the item is not associated with a document, the resulting document
-will be empty.</para>
+<para>The underlying properties are serialized as follows:</para>
+
+<itemizedlist>
+<listitem>
+<para>Each property/value pair in the map becomes an element in the
+document. The property name is used as the name of the element and the
+value becomes the element content.
+</para>
+</listitem>
+<listitem>
+<para>If the property value is a sequence, then the element is
+repeated for each item in the sequence.
+</para>
+</listitem>
+<listitem>
+<para>If a value is a map, the element content is the JSON serialization
+of that map.
+</para>
+</listitem>
+<listitem>
+<para>If a value is an array, the element content is the JSON serialization
+of that array.
+</para>
+</listitem>
+<listitem>
+<para>For atomic values other than maps, arrays, and strings, an <tag
+class="attribute">xsi:type</tag> attribute is added to the element to
+identify the type of the value.
+</para>
+</listitem>
+</itemizedlist>
+
+<para>If any values in the properties map cannot be serialized, an empty string
+is used for their value. Construction of the <tag>c:document-properties</tag> document
+never fails.</para>
 
 <para>The <function>p:document-properties-document</function> function behaves
 normally during static analysis.</para>
