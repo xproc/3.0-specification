@@ -364,21 +364,69 @@ defined properties.</para>
 <section xml:id="document-types">
 <title>Document Types</title>
 
-<para>From an XProc perspective, there are two kinds of documents: XML
-documents and non-XML documents. Non-XML documents can be further subdivided
-into text documents and binary documents. Text documents are called
-out specially because they can be easily represented inline within a
-pipeline.</para>
+<para>XProc 3.0 has been designed to make it possible to process any kind of
+document. Practically speaking, there are five kinds of documents:</para>
+
+<variablelist>
+<varlistentry><term>XML documents</term>
+<listitem>
+<para>These are XML documents, instances of the <biblioref linkend="xpath-datamodel"/>.
+They are accessible via XPath expressions in the pipeline (for example, in the
+<tag class="attribute">select</tag> expression of a variable declaration).
+</para>
+</listitem>
+</varlistentry>
+<varlistentry><term>HTML documents</term>
+<listitem>
+<para>Within XProc, these are XML documents, instances of the <biblioref linkend="xpath-datamodel"/>.
+They are accessible via XPath expressions in the pipeline. HTML documents are
+parsed with an HTML parser to produce their tree model in the XDM.
+</para>
+</listitem>
+</varlistentry>
+<varlistentry><term>Text documents</term>
+<listitem>
+<para>Text documents are represented as a single text node in the XDM.
+They are accessible via XPath expressions in the pipeline.
+</para>
+</listitem>
+</varlistentry>
+<varlistentry><term>JSON documents</term>
+<listitem>
+<para>JSON documents are represented as maps, arrays, or atomic values in the XDM.
+They are accessible via XPath expressions in the pipeline.
+</para>
+</listitem>
+</varlistentry>
+<varlistentry><term>Other documents</term>
+<listitem>
+<para>Other documents (JPEG images, ZIP files, CSV documents, etc.) are represented
+as empty document nodes in the XDM. They aren’t generally accessible in XPath expressions,
+although the <tag>p:document-properties</tag> family of functions can be used to access
+their document properties.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
 
 <section xml:id="xml-documents">
 <title>XML Documents</title>
 
-<para>Representations of XML documents are instances of
-the <biblioref linkend="xpath-datamodel"/>. They are identified by
-an XML media type. <termdef xml:id="dt-XML-media-type">The
+<para>Representations of XML documents are instances of the <biblioref
+linkend="xpath-datamodel"/>. They are documents that contain a mixture
+of other node types (elements, text, comments, and processing
+instructions). This definition is intentionally broader than the
+definition of a well-formed XML document because it is often
+convenient for intermediate stages in a pipeline to produce
+more-or-less arbitrary fragments of XML that can be combined together
+by later stages.
+XML documents are identified by an XML media type.
+<termdef xml:id="dt-XML-media-type">The
 “<literal>application/xml</literal>” and “<literal>text/xml</literal>
 media types and all media types of the form
 “<literal>application/<replaceable>something</replaceable>+xml</literal>”
+(except for “<literal>application/xhtml+xml</literal>” which is explicitly
+an <glossterm>HTML media type</glossterm>)
 are <firstterm baseform="XML media type">XML media types</firstterm>.
 </termdef>
 </para>
@@ -395,34 +443,80 @@ in an XProc pipeline is <glossterm>implementation-defined</glossterm>.</impl>
 </para>
 </section>
 
+<section xml:id="html-documents">
+<title>HTML Documents</title>
+
+<para>Representations of HTML documents are instances of the <biblioref
+linkend="xpath-datamodel"/>. The must conform to the constraints of
+<xref linkend="xml-documents"/>.
+HTML documents are identified by an HTML media type.
+<termdef xml:id="dt-HTML-media-type">The
+“<literal>text/html</literal>” and “<literal>application/xhtml+xml</literal>
+media types
+are <firstterm baseform="HTML media type">HTML media types</firstterm>.
+</termdef>
+</para>
+
+<para>When a document with an HTML media type is parsed, an
+HTML parser <rfc2119>must</rfc2119> be used.</para>
+</section>
+
 <section xml:id="text-documents">
 <title>Text Documents</title>
 
-<para>Text documents are non-XML documents. A text document is represented by
-a single text node wrapped in a document node as instances of the
-<biblioref linkend="xpath-datamodel"/>.</para>
-
-<para>Text documents are identified by a text media type.
+<para>Representations of text documents are instances of
+the <biblioref linkend="xpath-datamodel"/>. They are documents that
+contain a single text node.
+Text documents are identified by a
+text media type.
 <termdef xml:id="dt-text-media-type">Media types of the form
 “<literal>text/<replaceable>something</replaceable></literal>”
 are <firstterm baseform="text media type">text media types</firstterm> with the
 exception of “<literal>text/xml</literal>” which is an XML media type.
+and “<literal>text/html</literal>” which is an HTML media type.
 </termdef>
 </para>
 </section>
 
-<section xml:id="non-xml-documents">
-<title>Non-XML Documents</title>
+<section xml:id="json-documents">
+<title>JSON Documents</title>
 
-<para><impl>Representations of non-XML documents are
-are <glossterm>implementation-dependent</glossterm>.</impl>
-They are identified by media types that are not
-<glossterm baseform="XML media type">XML media types</glossterm>.
+<para>Representations of JSON documents are instances of
+the <biblioref linkend="xpath-datamodel"/>. They are maps, arrays, or
+atomic values.
+JSON documents are identified by a
+JSON media type.
+<termdef xml:id="dt-JSON-media-type">The
+“<literal>application/json</literal>”
+media type and all media types of the form
+“<literal>application/<replaceable>something</replaceable>+json</literal>”
+are <firstterm baseform="JSON media type">JSON media types</firstterm>.
+</termdef>
 </para>
 
-<para>Implementors are free to optimize by storing them in convenient
-formats, caching them on disk, etc.</para>
+<note xml:id="json-documents-xdm" role="editorial">
+<title>Editorial Note</title>
+<para>This definition doesn’t say that JSON documents are represented by
+<emphasis>document nodes</emphasis> that contain something (because document nodes
+can’t contain maps or arrays). Can we get away with that?</para>
+</note>
+</section>
 
+<section xml:id="other-documents">
+<title>Other documents</title>
+
+<para>Representations of other kinds of documents are instances of the
+<biblioref linkend="xpath-datamodel"/>. They are empty document nodes.
+<impl>The <emphasis>underlying</emphasis> representations of other
+kinds of documents are
+<glossterm>implementation-defined</glossterm>.</impl>
+Other kinds of documents are identified by media types that are not
+<glossterm baseform="XML media type">XML media types</glossterm>,
+<glossterm baseform="HTML media type">HTML media types</glossterm>,
+<glossterm baseform="text media type">text media types</glossterm>,
+or
+<glossterm baseform="JSON media type">JSON media types</glossterm>.
+</para>
 </section>
 </section>
 
