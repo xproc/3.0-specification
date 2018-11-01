@@ -5146,6 +5146,12 @@ is operating in
 <para><error code="S0080">It is a <glossterm>static error</glossterm>
 to include more than one <tag>p:with-option</tag> with the same option
 name as part of the same step invocation.</error></para>
+
+<para><error code="S0099">It is a <glossterm>static error</glossterm> to use an
+option name in <tag>p:with-option</tag> if the step type being invoked
+has declared that the option is static.</error> (See <xref linkend="static-expressions"/>.)
+</para>
+
 </listitem>
 </varlistentry>
 <varlistentry><term><tag class="attribute">as</tag></term>
@@ -5298,6 +5304,8 @@ See <xref linkend="statics"/>.</para>
       <error code="S0031">It is a <glossterm>static error</glossterm> to use
         an option on an <glossterm>atomic step</glossterm> that is not
         declared on steps of that type.</error>
+        <error code="S0099">It is a <glossterm>static error</glossterm> to use an
+option that has been declared static.</error>
     </para>
     
     <para>The syntactic shortcuts apply equally to standard atomic steps
