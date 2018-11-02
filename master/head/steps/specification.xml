@@ -45,10 +45,103 @@ steps. A machine-readable description of these steps may be found in
 <link xlink:href="steps.xpl">steps.xpl</link>.
 </para>
 
-<para>Familarity with the
-general nature of <biblioref linkend="xproc30"/>
-steps is assumed; for background details, see
-<biblioref linkend="xproc30-steps"/>.</para>
+<para>Many atomic steps are available for <biblioref linkend="xproc30"/>. They are described in several specifications.
+This specification describes the general background common to all
+steps. A conformant processor <rfc2119>must</rfc2119> implement all of
+the steps in this specification. Additional steps may also be
+implemented.
+</para>
+
+<para>The types given for options should be understood as follows:</para>
+<itemizedlist>
+  <listitem>
+    <para>Types in the XML Schema namespace, identified as QNames with the
+    <code>xs:</code> prefix, as per the XML Schema specification with one
+    exception. Anywhere an <code>xs:QName</code> is specified,
+    an
+    <link xlink:href="https://www.w3.org/TR/xquery-30/#doc-xquery30-EQName">EQName</link>
+    is allowed.</para>
+  </listitem>
+  <listitem>
+    <para><type>XPathExpression</type>:
+    As a string per <biblioref linkend="xmlschema-2"/>, including
+    whitespace normalization, and the further requirement to be a
+    conformant Expression per <biblioref linkend="xpath31"/>.
+    </para>
+  </listitem>
+  <listitem>
+    <para><type>XSLTSelectionPattern</type>: An XSLT pattern.
+    </para>
+  </listitem>
+  <listitem>
+    <para><type>XPathSequenceType</type>: An XPath
+    <link xlink:href="https://www.w3.org/TR/xpath-31/#id-types">sequence type</link>.
+    </para>
+  </listitem>
+  <listitem>
+    <para><type>ContentType</type>: A media type as defined in
+    <biblioref linkend="rfc2046"/>.
+    </para>
+  </listitem>
+  <listitem>
+    <para><type>ContentTypes</type>:
+    As a whitespace separated list of media types as defined in
+    <biblioref linkend="rfc2046"/>.
+    </para>
+  </listitem>
+</itemizedlist>
+
+<para>Option values are often expressed using the shortcut syntax. In
+these cases, the option shortcuts are generally treated as value
+templates. However, for options of type <code>map()</code> or
+<code>array()</code>, an expression is <emphasis>required</emphasis>
+(there is no non-expression string which can ever be a legal value for
+a map or array). Given that every value entered this way will have to
+be a value template, and consequently every curly brace contained
+within the expression will have to be escaped, values of type map or
+array are defined to be expressions directly.</para>
+
+<para>Some aspects of documents are generally unchanged by steps:</para>
+
+<itemizedlist>
+<listitem>
+<para>When a step in this library produces an output document,
+the base URI of the output is the base URI of the step's primary
+input document unless the step's process explicitly sets an
+<tag class="attribute">xml:base</tag> attribute or the step's
+description explicitly states how the base URI is constructed.</para>
+</listitem>
+<listitem>
+<para>Each step describes how it modifies the document properties of
+the documents that flow through it.</para>
+<para>A great many steps indicate that they preserve some or all of
+the properties of the input document. It should be noted that in some
+cases the transformation performed by the step will violate the
+condition associated with some property. In general, the steps cannot
+know this and the pipeline author is responsible for managing the
+properties with greater care in this case.
+</para>
+</listitem>
+</itemizedlist>
+
+<para xml:id="cv.result">Also, in this specification, several steps use this
+element for result information:</para>
+
+<e:rng-pattern name="VocabResult"/>
+
+<para>When a step uses an XPath to compute an option value, the XPath
+context is as defined in <biblioref linkend="xproc30"/>.</para>
+
+<para>When a step specifies a particular version of a technology,
+implementations <rfc2119>must</rfc2119> implement that
+version or a subsequent version that is backwards compatible with that
+version. At user-option, they may implement other non-backwards
+compatible versions.</para>
+  
+<para>In this specification the words <rfc2119>must</rfc2119>, <rfc2119>must not</rfc2119>,
+        <rfc2119>should</rfc2119>, <rfc2119>should not</rfc2119>, <rfc2119>may</rfc2119> and
+        <rfc2119>recommended</rfc2119> are to be interpreted as described in <biblioref linkend="rfc2119"/>.</para>
+
 </section>
 
 <section xml:id="req-steps">
@@ -346,7 +439,8 @@ equality.</para>
 <para>This step takes single documents on each of two ports and
 compares them. If <option>method</option> is not specified, or if
 <code>deep-equal</code> is specified, the comparison
-uses <function>fn:deep-equal</function> (as defined in <biblioref linkend="xpath-functions"/>). <impl>Implementations of <tag>p:compare</tag>
+uses <function>fn:deep-equal</function>
+(as defined in <biblioref linkend="xpath31-functions"/>). <impl>Implementations of <tag>p:compare</tag>
 <rfc2119>must</rfc2119> support the <code>deep-equal</code> <option>method</option>;
 other supported methods are <glossterm>implementation-defined</glossterm>.</impl>
 <error code="C0076">It is a <glossterm>dynamic error</glossterm> if
@@ -472,7 +566,8 @@ see <xref linkend="dir-list-details"/>.</para>
 
 <para>If present, the value of the <option>include-filter</option>
 or <option>exclude-filter</option>
-option <rfc2119>must</rfc2119> be a list of regular expression as specified in <biblioref linkend="xpath-functions"/>, section 7.61 “<literal>Regular Expression
+option <rfc2119>must</rfc2119> be a list of regular expression as specified in
+<biblioref linkend="xpath31-functions"/>, section 7.61 “<literal>Regular Expression
 Syntax</literal>”.</para>
 
 <para>If any <option>include-filter</option> pattern matches a
@@ -608,11 +703,6 @@ to the step.</para>
     <p:option name="code-prefix" as="xs:NCName?"/>
     <p:option name="code-namespace" as="xs:anyURI?"/>
 </p:declare-step>
-
-<para>The error code raised by this step is manufactured from <option>code</option>, 
-<option>code-prefix</option>, and <option>code-namespace</option> as explained in
-<biblioref linkend="xproc30-steps"/>.  
-</para>
 
 <para>This step uses the document provided on its input as the content
 of the error raised. An instance of the
@@ -1728,7 +1818,7 @@ by the processor.</error></para>
 <para>For a JSON media type, the content is loaded and parsed as JSON.</para>
 
 <para>The parameters specified for the <code>fn:parse-json</code> function
-in <biblioref linkend="xpath-functions"/>
+in <biblioref linkend="xpath31-functions"/>
 <rfc2119>must</rfc2119> be supported.
 <impl>Additional JSON parameters are <glossterm>implementation-defined</glossterm>.
 </impl></para>
@@ -1814,7 +1904,7 @@ environment in which the pipeline is run.</error></para>
 <para>If present, the value of the <option>include-filter</option>
 or <option>exclude-filter</option>
 option <rfc2119>must</rfc2119> be a regular expression as specified in 
-    <biblioref linkend="xpath-functions"/>,section 7.61 “<literal>Regular Expression
+    <biblioref linkend="xpath31-functions"/>,section 7.61 “<literal>Regular Expression
 Syntax</literal>”.</para>
 
 <para>If the <option>include-filter</option> pattern matches a
@@ -3160,16 +3250,15 @@ how <glossterm role="unwrapped">implementation-defined</glossterm> features are 
 An XML Pipeline Language</citetitle>.
 Norman Walsh, Achim Berndzen, Gerrit Imsieke and Erik Siegel, editors.
 </bibliomixed>
-    <bibliomixed xml:id="xproc30-steps"><abbrev>XProc 3.0 Steps</abbrev>
-<citetitle xlink:href="http://spec.xproc.org/">XProc 3.0 Steps:
-An Introduction</citetitle>.
-Norman Walsh, Achim Berndzen, Gerrit Imsieke and Erik Siegel, editors.
+    <bibliomixed xml:id="xmlschema-2"><abbrev>W3C XML Schema: Part 2</abbrev>
+<citetitle xlink:href="http://www.w3.org/TR/xmlschema-2/">XML Schema Part 2:
+Datatypes Second Edition</citetitle>.
+Paul V. Biron and Ashok Malhotra, editors.
+World Wide Web Consortium, 28 October 2004.
 </bibliomixed>
-    <bibliomixed xml:id="xpath-functions"><abbrev>XPath and XQuery
-Functions and Operators 3.1</abbrev>
-<citetitle xlink:href="https://www.w3.org/TR/xpath-functions-31/">XPath and XQuery
-Functions and Operators 3.1</citetitle>.
-Michael Kay, editors
+    <bibliomixed xml:id="xpath31"><abbrev>XPath 3.1</abbrev>
+<citetitle xlink:href="http://www.w3.org/TR/xpath31/">XML Path Language (XPath)
+	3.1</citetitle>. Jonathan Robie, Michael Dyck, Josh Spiegel, editors.
 W3C Recommendation. 21 March 2017.</bibliomixed>
     <bibliomixed xml:id="xpath31-functions"><abbrev>XPath and XQuery Functions and Operators 3.1</abbrev>
 <citetitle xlink:href="https://www.w3.org/TR/xpath-functions-31/">XPath and XQuery Functions and  Operators 3.1</citetitle>. Michael Kay, editor.
@@ -3192,6 +3281,11 @@ MIME (Multipurpose Internet Mail Extensions) Part One: Mechanisms for
 Specifying and Describing the Format of Internet Message
 Bodies</citetitle>. N. Borenstein, N. Freed, editors. Internet
 Engineering Task Force. September, 1993.</bibliomixed>
+    <bibliomixed xml:id="rfc2046"><abbrev>Media Types</abbrev>
+<citetitle xlink:href="http://www.ietf.org/rfc/rfc2046.txt">RFC 2046:
+Multipurpose Internet Mail Extensions (MIME) Part Two: Media Types</citetitle>.
+N. Freed, et. al.. Network Working Group, IETF,
+November, 1996.</bibliomixed>
     <bibliomixed xml:id="rfc2119"><abbrev>RFC 2119</abbrev>
 <citetitle xlink:href="http://www.ietf.org/rfc/rfc2119.txt">Key words for use in RFCs to Indicate Requirement Levels</citetitle>.
 S. Bradner.
@@ -3275,6 +3369,18 @@ ancillary files.</para>
 </varlistentry>
 </variablelist>
 
+</appendix>
+<appendix version="5.0-extension w3c-xproc" xml:id="credits">
+<title>Credits</title>
+
+<para>This document is derived from
+<link xlink:href="https://www.w3.org/TR/2010/REC-xproc-20100511/">XProc:
+An XML Pipeline Language</link> published by the W3C. It was developed
+by the <citetitle>XML Processing Model Working Group</citetitle> and edited by
+Norman Walsh, Alex Miłowski, and Henry Thompson.</para>
+
+<para>The editors of this specification extend their gratitude to everyone
+who contributed to this document and all of the versions that came before it.</para>
 </appendix>
 
 </specification>

@@ -1886,16 +1886,52 @@ of a document as an XML document.</para>
 <methodparam><type>item()</type><parameter>doc</parameter></methodparam>
 </methodsynopsis>
 
-<para>The document returned is a <code>c:document-properties</code>
+<para>The document returned is a <tag>c:document-properties</tag>
 document that contains (exclusively) the document properties
-associated with the <parameter>doc</parameter> specified. Each key in the
-properties becomes an element, each value becomes the content of that element.
-For atomic values other than string, an
-<tag class="attribute">xsi:type</tag> attribute is added to identify the
-type of the value.</para>
+associated with the <parameter>doc</parameter> specified.
+If the item is not associated with a document, the <tag>c:document-properties</tag>
+element will be empty.</para>
 
-<para>If the item is not associated with a document, the resulting document
-will be empty.</para>
+<para>The underlying properties are serialized as follows:</para>
+
+<itemizedlist>
+<listitem>
+<para>Each property/value pair in the map becomes an element in the
+document. The property name is used as the name of the element and the
+value becomes the element content.
+</para>
+</listitem>
+<listitem>
+<para>If the property value is a sequence, then the element is
+repeated for each item in the sequence.
+</para>
+</listitem>
+<listitem>
+<para>If a map appears as a value, the property element will have an
+attribute named <tag class="attribute">map</tag> with the value “<code>true</code>”.
+<impl>It is <glossterm>implementation-defined</glossterm> how or if a
+processor attempts to serialize maps that appear in document properties.</impl>
+If the implementation does not serialize maps, the property element will be empty.
+</para>
+</listitem>
+<listitem>
+<para>If an array appears as a value, the property element will have an
+attribute named <tag class="attribute">array</tag> with the value “<code>true</code>”.
+<impl>It is <glossterm>implementation-defined</glossterm> how or if a
+processor attempts to serialize arrays that appear in document properties.</impl>
+If the implementation does not serialize arrays, the property element will be empty.
+</para>
+</listitem>
+<listitem>
+<para>For atomic values other than maps, arrays, and strings, an <tag class="attribute">xsi:type</tag> attribute is added to the element to
+identify the type of the value.
+</para>
+</listitem>
+</itemizedlist>
+
+<para>If any values in the properties map cannot be serialized, an empty string
+is used for their value. Construction of the <tag>c:document-properties</tag> document
+never fails.</para>
 
 <para>The <function>p:document-properties-document</function> function behaves
 normally during static analysis.</para>
@@ -2694,7 +2730,9 @@ appear on the <code>messages</code> port.</para>
         </varlistentry>
       </variablelist>
       <para>This specification also makes use of the prefix “<literal>xs:</literal>” to refer to the
-          <biblioref linkend="xmlschema-1"/> namespace <uri type="xmlnamespace">http://www.w3.org/2001/XMLSchema</uri>. </para>
+          <biblioref linkend="xmlschema-1"/> namespace <uri type="xmlnamespace">http://www.w3.org/2001/XMLSchema</uri> and the prefix “<literal>xsi:</literal>”
+          to refer to the namepace <uri type="xmlnamespace">http://www.w3.org/2001/XMLSchema-instance</uri>
+      </para>
     </section>
     <section xml:id="scoping">
       <title>Scoping of Names</title>
@@ -3159,6 +3197,92 @@ is meaningless or inconvenient, some other mechanism may be used.
 <rfc2119>should</rfc2119> do so before execution of the step
 begins.</para>
 </section>
+</section>
+
+<section xml:id="qname-options">
+<title>QNames as option values</title>
+
+<para>Some steps have options whose values are QNames, for example
+“<tag class="attribute">attribute-name</tag>” on
+<tag>p:add-attribute</tag>. If these attributes had a required type of
+<type>xs:QName</type>, they would be tedious to specify. As a
+convenience for pipeline authors, the declared type of these options
+is <type>xs:anyAtomicType</type>.</para>
+
+<orderedlist>
+<listitem>
+<para>If the value supplied for the option is an instance of
+<type>xs:QName</type> then that value is used.
+</para>
+</listitem>
+<listitem>
+<para>If the value supplied for the option is an instance of
+<type>xs:string</type> (or a type derived from
+<type>xs:string</type>), the QName is constructed by following the
+<link xlink:href="https://www.w3.org/TR/xpath-31/#doc-xpath31-EQName">EQName
+production rules</link> in <biblioref linkend="xpath31"/>. That is, it
+can be written as a local-name only, as a prefix plus local-name, or as
+a URI qualified name (using the <code>Q{namespace}local-name</code> syntax).
+<error code="D0061">It is a 
+<glossterm>dynamic error</glossterm> if the string value is not syntactically an
+EQName.</error>
+<error code="D0069">It is a 
+<glossterm>dynamic error</glossterm> if the string value contains a colon and
+the designated prefix is not declared in the in-scope namespaces.</error>
+</para>
+</listitem>
+<listitem>
+<para><error code="D0068">It is a <glossterm>dynamic error</glossterm>
+if the supplied value is neither an instance of <type>xs:QName</type>
+nor an instance of <type>xs:string</type>.</error>
+</para>
+</listitem>
+</orderedlist> 
+
+<para>Steps with a QName-valued option also often provide two
+additional attributes to separately identify a prefix and a namespace URI.
+Although their names vary from step to step, in this section
+they’re identified as the <code>qname-value</code>,
+<code>prefix-value</code>, and <code>namespace-value</code>
+attributes. The rules described here apply regardless of their actual
+names.</para>
+
+<para>When <code>prefix-value</code> and <code>namespace-value</code>
+attributes are available, several additional co-constraints apply:</para>
+
+<orderedlist>
+<listitem>
+<para>If the supplied value of the name is an <code>xs:QName</code>, you may not specify
+the <code>prefix-value</code> or <code>namespace-value</code>.
+<error code="D0066">It is a <glossterm>dynamic error</glossterm>
+to separately specify a prefix or namespace URI if the supplied value
+has the type <code>xs:QName</code>.</error>
+</para>
+</listitem>
+<listitem>
+<para>If the string value of the <code>qname-value</code> attribute
+contains a colon, you may not specify a <code>prefix-value</code> or
+<code>namespace-value</code>.
+<error code="D0034">It is a <glossterm>dynamic error</glossterm>
+to specify a prefix or namespace URI if the QName value contains a colon.</error>
+</para>
+</listitem>
+<listitem>
+<para>If you specify a <code>prefix-value</code>, you must also specify
+a namespace (either with the <code>namespace-value</code> or through a
+URI qualified name).
+<error code="D0070">It is a <glossterm>dynamic error</glossterm>
+to specify a prefix without also specifying a namespace URI.</error>
+</para>
+</listitem>
+<listitem>
+<para>If the specified value is of type <code>xs:QName</code> or is
+a URI qualified name, you may not specify a <code>namespace-value</code>.
+<error code="D0067">It is a <glossterm>dynamic error</glossterm>
+to separately specify a namespace URI if the value is a URI qualified name.</error>
+</para>
+</listitem>
+</orderedlist>
 </section>
 
 <section xml:id="syntax-summaries"><title>Syntax Summaries</title>
@@ -7171,6 +7295,18 @@ schemas; they are included into this one.</para>
 </varlistentry>
 </variablelist>
 
+</appendix>
+<appendix version="5.0-extension w3c-xproc" xml:id="credits">
+<title>Credits</title>
+
+<para>This document is derived from
+<link xlink:href="https://www.w3.org/TR/2010/REC-xproc-20100511/">XProc:
+An XML Pipeline Language</link> published by the W3C. It was developed
+by the <citetitle>XML Processing Model Working Group</citetitle> and edited by
+Norman Walsh, Alex Miłowski, and Henry Thompson.</para>
+
+<para>The editors of this specification extend their gratitude to everyone
+who contributed to this document and all of the versions that came before it.</para>
 </appendix>
 
 <appendix xml:id="changelog">
