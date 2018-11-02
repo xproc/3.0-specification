@@ -1818,13 +1818,19 @@ repeated for each item in the sequence.
 </para>
 </listitem>
 <listitem>
-<para>If a value is a map, the element content is the JSON serialization
-of that map.
+<para>If a map appears as a value, the property element will have an
+attribute named <tag class="attribute">map</tag> with the value “<code>true</code>”.
+<impl>It is <glossterm>implementation-defined</glossterm> how or if a
+processor attempts to serialize maps that appear in document properties.</impl>
+If the implementation does not serialize maps, the property element will be empty.
 </para>
 </listitem>
 <listitem>
-<para>If a value is an array, the element content is the JSON serialization
-of that array.
+<para>If an array appears as a value, the property element will have an
+attribute named <tag class="attribute">array</tag> with the value “<code>true</code>”.
+<impl>It is <glossterm>implementation-defined</glossterm> how or if a
+processor attempts to serialize arrays that appear in document properties.</impl>
+If the implementation does not serialize arrays, the property element will be empty.
 </para>
 </listitem>
 <listitem>
@@ -2641,7 +2647,10 @@ appear on the <code>messages</code> port.</para>
       </variablelist>
       <para>This specification also makes use of the prefix “<literal>xs:</literal>” to refer to the
           <biblioref linkend="xmlschema-1"/> namespace <uri type="xmlnamespace"
-          >http://www.w3.org/2001/XMLSchema</uri>. </para>
+          >http://www.w3.org/2001/XMLSchema</uri> and the prefix “<literal>xsi:</literal>”
+          to refer to the namepace <uri type="xmlnamespace"
+          >http://www.w3.org/2001/XMLSchema-instance</uri>
+      </para>
     </section>
     <section xml:id="scoping">
       <title>Scoping of Names</title>
