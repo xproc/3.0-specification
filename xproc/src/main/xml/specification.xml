@@ -3154,6 +3154,92 @@ begins.</para>
 </section>
 </section>
 
+<section xml:id="qname-options">
+<title>QNames as option values</title>
+
+<para>Some steps have options whose values are QNames, for example
+“<tag class="attribute">attribute-name</tag>” on
+<tag>p:add-attribute</tag>. If these attributes had a required type of
+<type>xs:QName</type>, they would be tedious to specify. As a
+convenience for pipeline authors, the declared type of these options
+is <type>xs:anyAtomicType</type>.</para>
+
+<orderedlist>
+<listitem>
+<para>If the value supplied for the option is an instance of
+<type>xs:QName</type> then that value is used.
+</para>
+</listitem>
+<listitem>
+<para>If the value supplied for the option is an instance of
+<type>xs:string</type> (or a type derived from
+<type>xs:string</type>), the QName is constructed by following the
+<link xlink:href="https://www.w3.org/TR/xpath-31/#doc-xpath31-EQName">EQName
+production rules</link> in <biblioref linkend="xpath31"/>. That is, it
+can be written as a local-name only, as a prefix plus local-name, or as
+a URI qualified name (using the <code>Q{namespace}local-name</code> syntax).
+<error code="D0061">It is a 
+<glossterm>dynamic error</glossterm> if the string value is not syntactically an
+EQName.</error>
+<error code="D0069">It is a 
+<glossterm>dynamic error</glossterm> if the string value contains a colon and
+the designated prefix is not declared in the in-scope namespaces.</error>
+</para>
+</listitem>
+<listitem>
+<para><error code="D0068">It is a <glossterm>dynamic error</glossterm>
+if the supplied value is neither an instance of <type>xs:QName</type>
+nor an instance of <type>xs:string</type>.</error>
+</para>
+</listitem>
+</orderedlist> 
+
+<para>Steps with a QName-valued option also often provide two
+additional attributes to separately identify a prefix and a namespace URI.
+Although their names vary from step to step, in this section
+they’re identified as the <code>qname-value</code>,
+<code>prefix-value</code>, and <code>namespace-value</code>
+attributes. The rules described here apply regardless of their actual
+names.</para>
+
+<para>When <code>prefix-value</code> and <code>namespace-value</code>
+attributes are available, several additional co-constraints apply:</para>
+
+<orderedlist>
+<listitem>
+<para>If the supplied value of the name is an <code>xs:QName</code>, you may not specify
+the <code>prefix-value</code> or <code>namespace-value</code>.
+<error code="D0066">It is a <glossterm>dynamic error</glossterm>
+to separately specify a prefix or namespace URI if the supplied value
+has the type <code>xs:QName</code>.</error>
+</para>
+</listitem>
+<listitem>
+<para>If the string value of the <code>qname-value</code> attribute
+contains a colon, you may not specify a <code>prefix-value</code> or
+<code>namespace-value</code>.
+<error code="D0034">It is a <glossterm>dynamic error</glossterm>
+to specify a prefix or namespace URI if the QName value contains a colon.</error>
+</para>
+</listitem>
+<listitem>
+<para>If you specify a <code>prefix-value</code>, you must also specify
+a namespace (either with the <code>namespace-value</code> or through a
+URI qualified name).
+<error code="D0070">It is a <glossterm>dynamic error</glossterm>
+to specify a prefix without also specifying a namespace URI.</error>
+</para>
+</listitem>
+<listitem>
+<para>If the specified value is of type <code>xs:QName</code> or is
+a URI qualified name, you may not specify a <code>namespace-value</code>.
+<error code="D0067">It is a <glossterm>dynamic error</glossterm>
+to separately specify a namespace URI if the value is a URI qualified name.</error>
+</para>
+</listitem>
+</orderedlist>
+</section>
+
 <section xml:id="syntax-summaries"><title>Syntax Summaries</title>
 
 <para>The description of each element in the pipeline namespace is
@@ -6182,6 +6268,7 @@ possible set of parameter values.</para>
 <xi:include href="parallel.xml"/>
 <xi:include href="mediatype.xml"/>
 <xi:include href="ancillary.xml"/>
+<xi:include href="credits.xml"/>
 
 <appendix xml:id="changelog">
 <title>Change Log</title>
