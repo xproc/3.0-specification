@@ -3154,6 +3154,44 @@ begins.</para>
 </section>
 </section>
 
+<section xml:id="qname-options">
+<title>QNames as option values</title>
+
+<para>Some steps have options whose values are QNames, for example
+“<tag class="attribute">attribute-name</tag>” on
+<tag>p:add-attribute</tag>. If these attributes had a required type of
+<type>xs:QName</type>, they would be tedious to specify. As a
+convenience for pipeline authors, the declared type of these options
+is <type>xs:anyAtomicType</type>.</para>
+
+<orderedlist>
+<listitem>
+<para>If the value supplied for the option is an instance of
+<type>xs:QName</type> then that value is used.
+</para>
+</listitem>
+
+<listitem>
+<para>If the value supplied for the option is an instance of
+<type>xs:string</type> (or a type derived from
+<type>xs:string</type>), the QName is constructed by following the
+<link xlink:href="https://www.w3.org/TR/xpath-31/#doc-xpath31-EQName">EQName
+production rules</link> in <biblioref linkend="xpath31"/>. That is, it
+can be written as a local-name only, as a prefix plus local-name, or as
+a URI plus local-name (using the <code>Q{}</code> syntax).
+<error code="D0061">It is a 
+<glossterm>dynamic error</glossterm> if the string value cannot be converted 
+into a QName.</error></para>
+</listitem>
+<listitem>
+<para><error code="D0068">It is a <glossterm>dynamic error</glossterm>
+if the supplied value is neither an instance of <type>xs:QName</type>
+nor an instance of <type>xs:string</type>.</error>
+</para>
+</listitem>
+</orderedlist> 
+</section>
+
 <section xml:id="syntax-summaries"><title>Syntax Summaries</title>
 
 <para>The description of each element in the pipeline namespace is
@@ -6182,6 +6220,7 @@ possible set of parameter values.</para>
 <xi:include href="parallel.xml"/>
 <xi:include href="mediatype.xml"/>
 <xi:include href="ancillary.xml"/>
+<xi:include href="credits.xml"/>
 
 <appendix xml:id="changelog">
 <title>Change Log</title>
