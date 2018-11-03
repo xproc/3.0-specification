@@ -4072,13 +4072,12 @@ the <tag>p:try</tag> step. However, if any errors occur, the
 that it might have generated, and considers the recovery
 subpipelines.</para>
 
-<para>Each <tag>p:catch</tag> pipeline is considered in document
-order. All except the last <rfc2119>must</rfc2119> have a
-<tag class="attribute">code</tag> attribute. If any of the specified error
+<para>All except the last <tag>p:catch</tag> pipeline <rfc2119>must</rfc2119> 
+have a <tag class="attribute">code</tag> attribute. If any of the specified error
 codes matches the error that was raised in the initial subpipeline, then
 that <tag>p:catch</tag> is selected as the recovery pipeline.
 If the last <tag>p:catch</tag> does not have a <tag class="attribute">code</tag>
-attribute, it is selected if no preceding <tag>p:catch</tag> has a
+attribute, it is selected if no other <tag>p:catch</tag> has a
 matching error code.
 If there is no matching <tag>p:catch</tag>, the <tag>p:try</tag> fails.
 <error code="S0064">It is a <glossterm>static error</glossterm>
