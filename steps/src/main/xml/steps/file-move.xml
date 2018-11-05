@@ -1,9 +1,9 @@
 <section xmlns="http://docbook.org/ns/docbook" xmlns:cs="http://www.w3.org/XML/XProc/2006/04/components#"
   xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax" xmlns:p="http://www.w3.org/ns/xproc"
-  xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="c.file-copy">
-  <title>p:file-copy</title>
+  xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="c.file-move">
+  <title>p:file-move</title>
 
-  <para>The <code>p:file-copy</code> step copies a file.</para>
+  <para>The <code>p:file-move</code> step moves a file or directory.</para>
 
   <note role="editorial">
     <title>Editorial Note</title>
@@ -11,23 +11,27 @@
     <para>Check the error codes. Were borrowed from p:load and p:store.</para>
   </note>
 
-  <p:declare-step type="p:file-copy">
+  <p:declare-step type="p:file-move">
     <p:output port="result" primary="true" content-types="application/xml"/>
     <p:option name="href" required="true" as="xs:anyURI"/>
     <p:option name="target" required="true" as="xs:anyURI"/>
     <p:option name="fail-on-error" as="xs:boolean" select="true()"/>
   </p:declare-step>
 
-  <para>The <tag>p:file-copy</tag> step copies the file or directory named in <option>href</option> to the new name specified in
-      <option>target</option>. If the target is a directory, the step attempts to move the file into that directory,
-    preserving its base name.</para>
+  <para>The <tag>p:file-move</tag> step moves the file or directory named in <option>href</option> to the new location
+    specified in <option>target</option>. If the <option>href</option> option specifies a file and the
+      <option>target</option> option a directory, the step attempts to move the file into that directory, preserving its
+    base name.</para>
 
   <para><error code="D0064">It is a <glossterm>dynamic error</glossterm> if the <option>href</option> or
         <option>target</option> option value is not a valid <type>xs:anyURI</type>.</error> If the <option>href</option>
     or <option>target</option> is relative, it is made absolute against the base URI of the element on which it is
-    specified (<tag>p:with-option</tag> or <tag>p:file-copy</tag> in the case of a syntactic shortcut value).</para>
+    specified (<tag>p:with-option</tag> or <tag>p:file-move</tag> in the case of a syntactic shortcut value).</para>
 
-  <para>If the copy is successful, the step returns a <tag>c:result</tag> element containing the absolute URI of the
+  <para>If the <option>href</option> option specifies a device or other special kind of object, the results are
+    implementation-defined.</para>
+
+  <para>If the move is successful, the step returns a <tag>c:result</tag> element containing the absolute URI of the
     target.</para>
 
   <para>If an error occurs and <option>fail-on-error</option> is <code>false</code>, the step returns a
@@ -39,19 +43,19 @@
   <itemizedlist>
     <listitem>
       <para><error code="D0011">It is a <glossterm>dynamic error</glossterm> if the resource referenced by the
-            <option>href</option> option does not exist, cannot be accessed or is not a file or directory.</error></para>
+            <option>href</option> option does not exist, cannot be accessed or is not a file or
+        directory.</error></para>
     </listitem>
     <listitem>
       <para><error code="C0050">It is a <glossterm>dynamic error</glossterm> if the URI scheme of the
-            <option>target</option> option is not supported or the file or directory cannot be copied to the specified
+            <option>target</option> option is not supported or the file or directory cannot be moved to the specified
           location.</error></para>
     </listitem>
   </itemizedlist>
-
 
   <simplesect>
     <title>Document properties</title>
     <para feature="load-preserves-none">No document properties are preserved.</para>
   </simplesect>
-  
+
 </section>
