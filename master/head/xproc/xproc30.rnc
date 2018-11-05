@@ -685,6 +685,9 @@ StandardStep =
   | Step-load-directory-list
   | Step-make-absolute-uris
   | Step-namespace-rename
+  | Step-os-cwd
+  | Step-os-env
+  | Step-os-info
   | Step-pack
   | Step-parameters
   | Step-rename
@@ -934,6 +937,27 @@ Step-namespace-rename =
     attribute to { xsd:anyURI }?,
     attribute apply-to { "all" | "elements" | "attributes" }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-os-cwd =
+  element os-cwd {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    (Documentation | PipeInfo)*
+  }
+Step-os-env =
+  element os-env {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    (Documentation | PipeInfo)*
+  }
+Step-os-info =
+  element os-info {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    (Documentation | PipeInfo)*
   }
 Step-pack =
   element pack {

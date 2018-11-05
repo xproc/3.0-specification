@@ -167,6 +167,15 @@
                 as="xs:token"
                 e:type="all|elements|attributes"/>
    </p:declare-step>
+   <p:declare-step type="p:os-cwd" xml:id="os-cwd">
+      <p:output port="result" content-types="application/xml" primary="true"/>
+   </p:declare-step>
+   <p:declare-step type="p:os-env" xml:id="os-env">
+      <p:output port="result" content-types="application/xml" primary="true"/>
+   </p:declare-step>
+   <p:declare-step type="p:os-info" xml:id="os-info">
+      <p:output port="result" content-types="application/xml" primary="true"/>
+   </p:declare-step>
    <p:declare-step type="p:pack" xml:id="pack">
       <p:input port="source"
                content-types="application/xml text/xml */*+xml"
