@@ -674,6 +674,15 @@ StandardStep =
   | Step-directory-list
   | Step-error
   | Step-escape-markup
+  | Step-file-copy
+  | Step-file-delete
+  | Step-file-head
+  | Step-file-info
+  | Step-file-mkdir
+  | Step-file-move
+  | Step-file-tail
+  | Step-file-tempfile
+  | Step-file-touch
   | Step-filter
   | Step-hash
   | Step-http-request
@@ -831,6 +840,96 @@ Step-escape-markup =
     use-when.attr?,
     attribute serialization { xsd:string }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-file-copy =
+  element file-copy {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    attribute href { xsd:anyURI }?,
+    attribute target { xsd:anyURI }?,
+    attribute fail-on-error { xsd:boolean }?,
+    (WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-file-delete =
+  element file-delete {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    attribute href { xsd:anyURI }?,
+    attribute recursive { xsd:boolean }?,
+    attribute fail-on-error { xsd:boolean }?,
+    (WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-file-head =
+  element file-head {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    attribute href { xsd:anyURI }?,
+    attribute count { xsd:integer }?,
+    attribute fail-on-error { xsd:boolean }?,
+    (WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-file-info =
+  element file-info {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    attribute href { xsd:anyURI }?,
+    attribute fail-on-error { xsd:boolean }?,
+    (WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-file-mkdir =
+  element file-mkdir {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    attribute href { xsd:anyURI }?,
+    attribute fail-on-error { xsd:boolean }?,
+    (WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-file-move =
+  element file-move {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    attribute href { xsd:anyURI }?,
+    attribute target { xsd:anyURI }?,
+    attribute fail-on-error { xsd:boolean }?,
+    (WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-file-tail =
+  element file-tail {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    attribute href { xsd:anyURI }?,
+    attribute count { xsd:integer }?,
+    attribute fail-on-error { xsd:boolean }?,
+    (WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-file-tempfile =
+  element file-tempfile {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    attribute href { xsd:anyURI }?,
+    attribute suffix { xsd:string }?,
+    attribute prefix { xsd:string }?,
+    attribute delete-on-exit { xsd:boolean }?,
+    attribute fail-on-error { xsd:boolean }?,
+    (WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-file-touch =
+  element file-touch {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    attribute href { xsd:anyURI }?,
+    attribute timestamp { xsd:dateTime }?,
+    attribute fail-on-error { xsd:boolean }?,
+    (WithOption* & (Documentation | PipeInfo)*)
   }
 Step-filter =
   element filter {
