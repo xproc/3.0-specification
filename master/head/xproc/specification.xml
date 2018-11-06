@@ -653,6 +653,21 @@ siblings.</para>
       <para><termdef xml:id="dt-signature">The <firstterm>signature</firstterm> of a step is the set
           of inputs, outputs, and options that it is declared to accept.</termdef> The declaration
         for a step provides a fixed signature which all its instances share.</para>
+
+<note>
+<para>Within the context of what can be defined by XProc pipelines,
+step signatures are fixed and shared by all instances. There is no
+mechanism for a pipeline author to declare that an atomic step has a
+signature that varies. However, implementors may provide such
+mechanisms and other specifications may depend upon them. For example,
+the standard <tag>p:run</tag> step violates this constraint in that
+the name and number of its output ports depends on its inputs and may
+vary between invocations.
+</para>
+<para>Such steps are “magic” and XProc 3.0 makes no effort to provide
+a mechanism to define them.</para>
+</note>
+
       <para><termdef xml:id="dt-matches">A step <firstterm>matches</firstterm> its signature if and
           only if it specifies an input for each declared input, it specifies no inputs that are not
           declared, it specifies an option for each option that is declared to be required, and it
@@ -2672,7 +2687,13 @@ appear on the <code>messages</code> port.</para>
       connections between those steps, the steps and connections contained within them, and so on.
       Each step is represented by an element; a combination of elements and attributes specify how
       the inputs and outputs of each step are connected and how options are
-      passed.</para>
+      passed. Outside of inline documents (<tag>p:inline</tag> elements explicitly or implicitly),
+text nodes that consist entirely of whitespace and XML comments are ignored. XML processing instructions are
+also generally ignored. <impl>It is
+<glossterm>implementation-defined</glossterm> if any processing instructions are significant
+to an implementation.</impl> In an inline document, all markup is treated as if it was a quoted
+part of the inline document and no special semantics apply except as noted elsewhere in this
+specification.</para>
     <para>Conceptually, we can speak of steps as objects that have inputs and outputs, that are
       connected together and which may contain additional steps. Syntactically, we need a mechanism
       for specifying these relationships.</para>
