@@ -2692,7 +2692,13 @@ appear on the <code>messages</code> port.</para>
       connections between those steps, the steps and connections contained within them, and so on.
       Each step is represented by an element; a combination of elements and attributes specify how
       the inputs and outputs of each step are connected and how options are
-      passed.</para>
+      passed. Outside of inline documents (<tag>p:inline</tag> elements explicitly or implicitly),
+text nodes that consist entirely of whitespace and XML comments are ignored. XML processing instructions are
+also generally ignored. <impl>It is
+<glossterm>implementation-defined</glossterm> if any processing instructions are significant
+to an implementation.</impl> In an inline document, all markup is treated as if it was a quoted
+part of the inline document and no special semantics apply except as noted elsewhere in this
+specification.</para>
     <para>Conceptually, we can speak of steps as objects that have inputs and outputs, that are
       connected together and which may contain additional steps. Syntactically, we need a mechanism
       for specifying these relationships.</para>
