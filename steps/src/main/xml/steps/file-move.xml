@@ -19,9 +19,9 @@
   </p:declare-step>
 
   <para>The <tag>p:file-move</tag> step moves the file or directory named in <option>href</option> to the new location
-    specified in <option>target</option>. If the <option>href</option> option specifies a file and the
-      <option>target</option> option a directory, the step attempts to move the file into that directory, preserving its
-    base name.</para>
+    specified in <option>target</option>. If the <option>target</option> option specifies an
+      <emphasis>existing</emphasis> directory, the step attempts to move the file or directory <emphasis>into</emphasis>
+    that directory, preserving its base name.</para>
 
   <para><error code="D0064">It is a <glossterm>dynamic error</glossterm> if the <option>href</option> or
         <option>target</option> option value is not a valid <type>xs:anyURI</type>.</error> If the <option>href</option>
@@ -45,6 +45,10 @@
       <para><error code="D0011">It is a <glossterm>dynamic error</glossterm> if the resource referenced by the
             <option>href</option> option does not exist, cannot be accessed or is not a file or
         directory.</error></para>
+    </listitem>
+    <listitem>
+      <para><error code="XXXXX">It is a <glossterm>dynamic error</glossterm> if the resource referenced by the
+        <option>target</option> option is an existing file or other file system object.</error></para>
     </listitem>
     <listitem>
       <para><error code="C0050">It is a <glossterm>dynamic error</glossterm> if the URI scheme of the
