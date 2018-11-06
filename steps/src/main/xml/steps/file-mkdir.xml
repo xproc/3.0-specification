@@ -1,0 +1,50 @@
+<section xmlns="http://docbook.org/ns/docbook" xmlns:cs="http://www.w3.org/XML/XProc/2006/04/components#"
+  xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax" xmlns:p="http://www.w3.org/ns/xproc"
+  xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="c.file-mkdir">
+  <title>p:file-mkdir</title>
+
+  <para>The <code>p:file-mkdir</code> step creates a directory.</para>
+
+  <note role="editorial">
+    <title>Editorial Note</title>
+    <para>TBD: This is an almost direct port from EXProc. Details might still change.</para>
+    <para>Check and amend the error codes.</para>
+  </note>
+
+  <p:declare-step type="p:file-mkdir">
+    <p:output port="result" primary="true" content-types="application/xml"/>
+    <p:option name="href" required="true" as="xs:anyURI"/>
+    <p:option name="fail-on-error" as="xs:boolean" select="true()"/>
+  </p:declare-step>
+
+  <para>The <tag>p:file-mkdir</tag> create the directory named in the <option>href</option> option. If this includes
+    more than one directory component, all of the intermediate components are created. The path separator is
+    implementation-defined.</para>
+
+  <para><error code="D0064">It is a <glossterm>dynamic error</glossterm> if the <option>href</option> option value is
+      not a valid <type>xs:anyURI</type>.</error> If the <option>href</option> option is relative, it is made absolute
+    against the base URI of the element on which it is specified (<tag>p:with-option</tag> or <tag>p:file-mkdir</tag> in
+    the case of a syntactic shortcut value).</para>
+
+  <para>If the create is successful, the step returns a <tag>c:result</tag> element containing the absolute URI of the
+    directory created.</para>
+
+  <para>If an error occurs and <option>fail-on-error</option> is <code>false</code>, the step returns a
+      <tag>c:error</tag> element which may contain additional, implementation-defined, information about the nature of
+    the error.</para>
+
+  <para>If an error occurs and <option>fail-on-error</option> is <code>true</code>, one of the following errors is
+    raised:</para>
+  <itemizedlist>
+    <listitem>
+      <para><error code="XXXX">It is a <glossterm>dynamic error</glossterm> if the directory referenced by the
+            <option>href</option> option cannot be created.</error></para>
+    </listitem>
+  </itemizedlist>
+
+  <simplesect>
+    <title>Document properties</title>
+    <para feature="load-preserves-none">No document properties are preserved.</para>
+  </simplesect>
+
+</section>

@@ -1,0 +1,69 @@
+<section xmlns="http://docbook.org/ns/docbook" xmlns:cs="http://www.w3.org/XML/XProc/2006/04/components#"
+  xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax" xmlns:p="http://www.w3.org/ns/xproc"
+  xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="c.file-head">
+  <title>p:file-head</title>
+
+  <para>The <code>p:file-head</code> step returns lines from the beginning of a text file.</para>
+
+  <note role="editorial">
+    <title>Editorial Note</title>
+    <para>TBD: This is an almost direct port from EXProc. Details might still change.</para>
+    <para>Check and amend the error codes.</para>
+  </note>
+
+  <p:declare-step type="p:file-head">
+    <p:output port="result" primary="true" content-types="application/xml"/>
+    <p:option name="href" required="true" as="xs:anyURI"/>
+    <p:option name="count" required="true" as="xs:integer"/>
+    <p:option name="fail-on-error" as="xs:boolean" select="true()"/>
+  </p:declare-step>
+
+  <para>The <tag>p:file-head</tag> step returns lines of the file named in the <option>href</option> option:</para>
+  <itemizedlist>
+    <listitem>
+      <para>If the <option>count</option> option is positive, the <tag>p:file-head</tag> step returns the first
+          <option>count</option> lines</para>
+    </listitem>
+    <listitem>
+      <para>If the <option>count</option> option is zero, the <tag>p:file-head</tag> step returns all lines</para>
+    </listitem>
+    <listitem>
+      <para>If the <option>count</option> option is negative, the <tag>p:file-head</tag> step returns all lines except
+        the first <option>count</option> lines</para>
+    </listitem>
+  </itemizedlist>
+
+  <para><error code="D0064">It is a <glossterm>dynamic error</glossterm> if the <option>href</option> option value is
+      not a valid <type>xs:anyURI</type>.</error> If the <option>href</option> option is relative, it is made absolute
+    against the base URI of the element on which it is specified (<tag>p:with-option</tag> or <tag>p:file-head</tag> in
+    the case of a syntactic shortcut value).</para>
+
+  <para>The step returns a <tag>c:result</tag> element containing one <tag>c:line</tag> child element for each line.
+    Lines are identified as described in <link xlink:href="https://www.w3.org/TR/xml/#sec-line-ends">XML, 2.11
+      End-of-Line Handling</link></para>
+
+  <para>If an error occurs and <option>fail-on-error</option> is <code>false</code>, the step returns a
+      <tag>c:error</tag> element which may contain additional, implementation-defined, information about the nature of
+    the error.</para>
+
+  <para>If an error occurs and <option>fail-on-error</option> is <code>true</code>, one of the following errors is
+    raised:</para>
+  <itemizedlist>
+    <listitem>
+      <para><error code="D0011">It is a <glossterm>dynamic error</glossterm> if the resource referenced by the
+            <option>href</option> option does not exist, cannot be accessed or is not a file.</error></para>
+    </listitem>
+    <listitem>
+      <para><error code="XXXXX">It is a <glossterm>dynamic error</glossterm> if the file named in the
+            <option>href</option> option does not appear to be a text file. The exact conditions that constitute “does
+          not appear to be” are implementation-defined.</error></para>
+    </listitem>
+  </itemizedlist>
+
+
+  <simplesect>
+    <title>Document properties</title>
+    <para feature="load-preserves-none">No document properties are preserved.</para>
+  </simplesect>
+
+</section>
