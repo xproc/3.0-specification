@@ -5597,13 +5597,17 @@ static.</para>
 <error code="S0096">It is a <glossterm>static error</glossterm> if
 the sequence type is not syntactically valid.</error></para>
 
-<para>If a variable or option declares a type, the value provided for the
-variable or option will be atomized according to the standard XPath rules.
-<error code="D0036">It is a <glossterm>dynamic error</glossterm> if
-the computed value does not match the specified sequence
-type.</error></para>
+<para>If a variable or option declares a type, the supplied value 
+ of the variable or option is converted to the required type, 
+ using the function conversion rules specified by XPath 3.1.
+ <error code="D0036">It is a <glossterm>dynamic error</glossterm> if 
+ the supplied value of a variable or option cannot be converted 
+ to the required type.</error></para>
 
-<para>If the sequence type is a map with <type>xs:QName</type> keys
+<para> If no sequence type is specified explicitly, <literal>item()*</literal> 
+is assumed as default type.</para>
+
+ <para>If the sequence type is a map with <type>xs:QName</type> keys
 (<type>map(xs:QName, ...)</type>), the
 <function>p:force-qname-keys</function> function is automatically applied to
 the value. This makes it possible to pass in maps using (easier to
