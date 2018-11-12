@@ -8,19 +8,24 @@ namespace xs = "http://www.w3.org/2001/XMLSchema"
 # This schema neither supports nor requires the use of RELAX NG DTD Compatibility
 
 [
-   sa:model = "XPathExpression"
+   sa:model = "p:XPathExpression"
 ]
-XPathExpression = text
+p_XPathExpression = text
 
 [
-   sa:model = "XSLTSelectionPattern"
+   sa:model = "p:XSLTSelectionPattern"
 ]
-XSLTSelectionPattern = text
+p_XSLTSelectionPattern = text
 
 [
-   sa:model = "XPathSequenceType"
+   sa:model = "p:XPathSequenceType"
 ]
-XPathSequenceType = text
+p_XPathSequenceType = text
+
+[
+   sa:model = "p:QNamen"
+]
+p_QName = text
 
 [
    sa:model = "ContentType"
@@ -54,12 +59,12 @@ Char = text
 
 name.ncname.attr = attribute name { xsd:NCName }
 name.qname.attr = attribute name { xsd:QName }
-as.attr = attribute as { XPathSequenceType }
+as.attr = attribute as { p_XPathSequenceType }
 port.attr = attribute port { xsd:NCName }
 required.attr = attribute required { xsd:boolean }
 sequence.attr = attribute sequence { xsd:boolean }
 primary.attr = attribute primary { xsd:boolean }
-select.attr = attribute select { XPathExpression }
+select.attr = attribute select { p_XPathExpression }
 xpath-version.attr = attribute xpath-version { text }
 psvi-required.attr = attribute psvi-required { xsd:boolean }
 document-properties.attr = attribute document-properties { PropertyMap }
@@ -107,12 +112,12 @@ href.attr = attribute href { xsd:anyURI }
 [
    sa:ignore = "yes"
 ]
-use-when.attr = attribute use-when { XPathExpression }
+use-when.attr = attribute use-when { p_XPathExpression }
 
 [
    sa:ignore = "yes"
 ]
-p_use-when.attr = attribute p:use-when { XPathExpression }
+p_use-when.attr = attribute p:use-when { p_XPathExpression }
 
 [
    sa:ignore = "yes"
@@ -387,6 +392,7 @@ Option =
    element option {
       name.qname.attr,
       as.attr?,
+      attribute values { text }?,
       static.attr?,
       required.attr?,
       select.attr?,
@@ -403,6 +409,7 @@ StaticOption =
    element option {
       name.qname.attr,
       as.attr?,
+      attribute values { text }?,
       attribute static { "true" },
       select.attr,
       common.attributes,
@@ -560,7 +567,7 @@ Viewport =
    element viewport {
       name.ncname.attr?,
       [ sa:avt = "true" ]
-         attribute match { XSLTSelectionPattern },
+         attribute match { p_XSLTSelectionPattern },
       common.attributes,
       global.attributes,
       step.attributes,
@@ -594,7 +601,7 @@ Choose =
 ]
 When =
    element when {
-      attribute test { XPathExpression },
+      attribute test { p_XPathExpression },
       [ sa:avt = "true" ]
          collection.attr?,
       common.attributes,
@@ -622,7 +629,7 @@ Otherwise =
 ]
 If =
    element if {
-      attribute test { XPathExpression },
+      attribute test { p_XPathExpression },
       [ sa:avt = "true" ]
          collection.attr?,
       common.attributes,

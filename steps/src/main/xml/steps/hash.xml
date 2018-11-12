@@ -7,11 +7,11 @@ for some value and injects it into the <port>source</port> document.</para>
 <p:declare-step type="p:hash">
   <p:input port="source" primary="true" content-types="*/*"/>
   <p:output port="result" content-types="application/xml"/>
-  <p:option name="parameters" as="map(xs:QName,item())"/>
+  <p:option name="parameters" as="map(xs:QName,item()*)?"/>
   <p:option name="value" required="true" as="xs:string"/>
-  <p:option name="algorithm" required="true" as="xs:QName"/>
-  <p:option name="match" select="'/*'" as="xs:string" e:type="XSLTSelectionPattern"/>
-  <p:option name="version" as="xs:string"/>
+  <p:option name="algorithm" required="true" as="p:QName"/>
+  <p:option name="match" as="p:XSLTSelectionPattern" select="'/*'"/>
+  <p:option name="version" as="xs:string?"/>
 </p:declare-step>
 
 <para>The value of the <option>algorithm</option> option must be a QName.

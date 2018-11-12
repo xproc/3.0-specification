@@ -7,12 +7,12 @@ element and stores that label in the specified attribute.</para>
 <p:declare-step type="p:label-elements">
   <p:input port="source" content-types="application/xml text/xml */*+xml"/>
   <p:output port="result" content-types="application/xml"/>
-  <p:option name="attribute" select="'xml:id'" as="xs:QName"/>
-  <p:option name="attribute-prefix" as="xs:NCName"/>
-  <p:option name="attribute-namespace" as="xs:anyURI"/>
-  <p:option name="label" select="'concat(&#34;_&#34;,$p:index)'" as="xs:string" e:type="XPathExpression"/>
-  <p:option name="match" select="'*'" as="xs:string" e:type="XSLTSelectionPattern"/>
-  <p:option name="replace" select="'true'" as="xs:boolean"/>
+  <p:option name="attribute" as="p:QName" select="'xml:id'"/>
+  <p:option name="attribute-prefix" as="xs:NCName?"/>
+  <p:option name="attribute-namespace" as="xs:anyURI?"/>
+  <p:option name="label" as="p:XPathExpression" select="'concat(&#34;_&#34;,$p:index)'"/>
+  <p:option name="match" as="p:XSLTSelectionPattern" select="'*'"/>
+  <p:option name="replace" as="xs:boolean" select="true()"/>
 </p:declare-step>
 
 <para>The value of the <option>attribute</option> option

@@ -3216,15 +3216,27 @@ begins.</para>
 </section>
 </section>
 
-<section xml:id="qname-options">
-<title>QNames as option values</title>
+<section xml:id="xproc-types">
+<title>XProc types</title>
+
+<para>This specification defines five atomic types: <type>p:RegularExpression</type>,
+<type>p:XSLTSelectionPattern</type>, <type>p:XPathExpression</type>,
+<type>p:XPathSequenceType</type>, and
+<type>p:QName</type>. The first four are vaccuous restrictions of <type>xs:string</type>.
+They simply allow a pipeline author to document that an option is expected to be
+a regular expression, XSLT selection pattern, or XPath expression, or an XPath sequence type..</para>
+
+<para>The <type>p:QName</type> type is a vaccuous restriction of <type>xs:anyAtomicType</type>.
+This type assures that the option value is ultimately an <type>xs:QName</type>, but
+allows the processor to parse the lexical value in a more convenient manner for
+pipeline authors.</para>
 
 <para>Some steps have options whose values are QNames, for example
 “<tag class="attribute">attribute-name</tag>” on
 <tag>p:add-attribute</tag>. If these attributes had a required type of
 <type>xs:QName</type>, they would be tedious to specify. As a
 convenience for pipeline authors, the declared type of these options
-is <type>xs:anyAtomicType</type>.</para>
+is <type>p:QName</type>.</para>
 
 <orderedlist>
 <listitem>
@@ -3428,7 +3440,7 @@ are allowed anywhere, and attributes that are
     </para>
   </listitem>
   <listitem>
-    <para><type>XPathExpression</type>, <type>XSLTSelectionPattern</type>:
+    <para><type>p:XPathExpression</type>, <type>p:XSLTSelectionPattern</type>:
     As a string per <biblioref linkend="xmlschema-2"/>, including
     whitespace normalization, and the further requirement to be a
     conformant Expression per <biblioref linkend="xpath31"/> or selection
@@ -5199,6 +5211,27 @@ class="attribute">as</tag> attribute using an
 <link xlink:href="https://www.w3.org/TR/xpath-31/#dt-sequence-type">sequence Type</link>.
 See <xref linkend="varopt-types"/>
 </para>
+</listitem>
+</varlistentry>
+<varlistentry><term><tag class="attribute">values</tag></term>
+<listitem>
+<para>A list of acceptable values may be specified in the <tag
+class="attribute">values</tag> attribute. If specified, the value
+of the <tag class="attribute">values</tag> attribute
+<rfc2119>must</rfc2119> be a list of atomic values expressed as an XPath sequence,
+for example: <code>('one', 'two', 'three')</code>.
+<error code="S0101">It is a <glossterm>static error</glossterm> if the
+values list is not an XPath sequence of atomic values.</error>
+</para>
+<para>The values list is an additional constraint on the acceptable values
+for the option. The option value must satisfy the <tag class="attribute">as</tag>
+type, if one is provided, and must be equal to (XPath “<code>eq</code>”) one of the listed
+<tag class="attribute">values</tag>.
+It is possible to combine <tag class="attribute">as</tag> and
+<tag class="attribute">values</tag> in ways that exclude all
+actual values (for example, <code>as="xs:integer"</code> and
+<code>values="(1.5,’pi’)"</code>). Doing so will make it impossible
+to specify a value for the option.</para>
 </listitem>
 </varlistentry>
 <varlistentry><term><tag class="attribute">static</tag></term>
