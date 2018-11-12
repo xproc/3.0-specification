@@ -250,12 +250,21 @@
 	  <xsl:variable name="rngpat" select="$schema/rng:grammar/rng:define[@name=$pattern]"/>
 	  <xsl:choose>
 	    <xsl:when test="$rngpat/@sa:model">
-	      <xsl:value-of select="$rngpat/@sa:model"/>
+              <xsl:choose>
+                <xsl:when test="starts-with($rngpat/@sa:model, 'p:')">
+	          <xsl:value-of select="substring-after($rngpat/@sa:model, 'p:')"/>
+                </xsl:when>
+                <xsl:otherwise>
+	          <xsl:value-of select="$rngpat/@sa:model"/>
+                </xsl:otherwise>
+              </xsl:choose>
 	    </xsl:when>
 	    <xsl:otherwise>
 	      <xsl:message>
 		<xsl:text>Warning: unsupported ref in attribute: </xsl:text>
 		<xsl:value-of select="@name"/>
+                <xsl:text>: </xsl:text>
+                <xsl:value-of select="rng:ref/@name"/>
 	      </xsl:message>
 	    </xsl:otherwise>
 	  </xsl:choose>

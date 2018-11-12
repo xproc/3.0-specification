@@ -103,44 +103,6 @@
 	  <xsl:with-param name="len" select="sum($lengths)"/>
 	</xsl:call-template>
       </code>
-
-      <xsl:variable name="type" as="xs:string*">
-	<xsl:choose xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax">
-	  <xsl:when test="not(@as) and not(@e:type)">
-	    <xsl:message>Warning: no e:type!!!</xsl:message>
-	    <xsl:value-of select="'string'"/>
-	  </xsl:when>
-          <xsl:when test="not(@e:type)"/>
-	  <xsl:when test="contains(@e:type,'|')">
-	    <xsl:for-each select="tokenize(@e:type,'\|')">
-	      <xsl:if test="position()&gt;1">|</xsl:if>
-	      <xsl:choose>
-		<xsl:when test="starts-with(.,'xsd:')">
-		  <xsl:value-of select="substring-after(., 'xsd:')"/>
-		</xsl:when>
-		<xsl:otherwise>
-		  <xsl:value-of select="concat('&quot;',.,'&quot;')"/>
-		</xsl:otherwise>
-	      </xsl:choose>
-	    </xsl:for-each>
-	  </xsl:when>
-	  <xsl:otherwise>
-	    <xsl:value-of select="replace(@e:type,'xsd:','')"/>
-	  </xsl:otherwise>
-	</xsl:choose>
-      </xsl:variable>
-
-      <xsl:variable name="typestr" as="xs:string">
-	<xsl:value-of select="$type" separator=" "/>
-      </xsl:variable>
-
-      <xsl:if test="exists($type)">
-        <code class="comment">&lt;!--&#160;</code>
-        <span class="opt-type">
-	  <xsl:value-of select="$typestr"/>
-        </span>
-        <code class="comment">&#160;--&gt;</code>
-      </xsl:if>
     </xsl:if>
   </span>
 </xsl:template>

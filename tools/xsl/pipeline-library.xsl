@@ -27,7 +27,7 @@
 <xsl:template match="p:declare-step" mode="copystep">
   <xsl:element name="{name(.)}" namespace="{namespace-uri(.)}">
     <xsl:copy-of select="@name|@port"/>
-    <xsl:copy-of select="@*[not(name(.) = 'e:type' or name(.) = 'name' or name(.) = 'port')]"/>
+    <xsl:copy-of select="@*[not(name(.) = 'name' or name(.) = 'port')]"/>
     <xsl:attribute name="xml:id" select="substring-after(@type,':')"/>
     <xsl:apply-templates mode="copystep"/>
   </xsl:element>
@@ -36,7 +36,7 @@
 <xsl:template match="*" mode="copystep">
   <xsl:element name="{name(.)}" namespace="{namespace-uri(.)}">
     <xsl:copy-of select="@name|@port"/>
-    <xsl:copy-of select="@*[not(name(.) = 'e:type' or name(.) = 'name' or name(.) = 'port')]"/>
+    <xsl:copy-of select="@*[not(name(.) = 'name' or name(.) = 'port')]"/>
     <xsl:apply-templates mode="copystep"/>
   </xsl:element>
 </xsl:template>
