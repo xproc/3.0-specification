@@ -10,8 +10,8 @@ port's document relative to the matching elements in the
    <p:input port="source" primary="true" content-types="application/xml text/xml */*+xml"/>
    <p:input port="insertion" sequence="true" content-types="application/xml text/* */*+xml"/>
    <p:output port="result" content-types="application/xml"/>
-   <p:option name="match" select="'/*'" as="xs:string" e:type="XSLTSelectionPattern"/>
-   <p:option name="position" required="true" as="xs:token" e:type="first-child|last-child|before|after"/>
+   <p:option name="match" as="#XSLTSelectionPattern" select="'/*'"/>
+   <p:option name="position" required="true" as="xs:token" values="('first-child','last-child','before','after')"/>
 </p:declare-step>
 
 <para>The value of the <option>match</option> option

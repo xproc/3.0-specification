@@ -7,10 +7,10 @@ processing-instruction targets in a document.</para>
 <p:declare-step type="p:rename">
   <p:input port="source" content-types="application/xml text/xml */*+xml"/>
   <p:output port="result" content-types="application/xml"/>
-  <p:option name="match" select="'/*'" as="xs:string" e:type="XSLTSelectionPattern"/>
-  <p:option name="new-name" required="true" as="xs:QName"/>
-  <p:option name="new-prefix" as="xs:NCName"/>
-  <p:option name="new-namespace" as="xs:anyURI"/>
+  <p:option name="match" as="#XSLTSelectionPattern" select="'/*'"/>
+  <p:option name="new-name" required="true" as="#QName"/>
+  <p:option name="new-prefix" as="xs:NCName?"/>
+  <p:option name="new-namespace" as="xs:anyURI?"/>
 </p:declare-step>
 
 <para>The value of the <option>match</option> option must be an

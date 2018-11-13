@@ -18,7 +18,6 @@
 
 <xsl:import href="docbook.xsl"/>
 <xsl:import href="ml-macro.xsl"/>
-<xsl:include href="elemsyntax.xsl"/>
 <xsl:include href="rngsyntax.xsl"/>
 <xsl:include href="xprocns.xsl"/>
 

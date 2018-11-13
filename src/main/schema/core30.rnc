@@ -8,19 +8,24 @@ namespace xs = "http://www.w3.org/2001/XMLSchema"
 # This schema neither supports nor requires the use of RELAX NG DTD Compatibility
 
 [
-   sa:model = "XPathExpression"
+   sa:model = "#XPathExpression"
 ]
 XPathExpression = text
 
 [
-   sa:model = "XSLTSelectionPattern"
+   sa:model = "#XSLTSelectionPattern"
 ]
 XSLTSelectionPattern = text
 
 [
-   sa:model = "XPathSequenceType"
+   sa:model = "#XProcSequenceType"
 ]
-XPathSequenceType = text
+XProcSequenceType = text
+
+[
+   sa:model = "#QName"
+]
+QName = text
 
 [
    sa:model = "ContentType"
@@ -54,7 +59,7 @@ Char = text
 
 name.ncname.attr = attribute name { xsd:NCName }
 name.qname.attr = attribute name { xsd:QName }
-as.attr = attribute as { XPathSequenceType }
+as.attr = attribute as { XProcSequenceType }
 port.attr = attribute port { xsd:NCName }
 required.attr = attribute required { xsd:boolean }
 sequence.attr = attribute sequence { xsd:boolean }
@@ -387,6 +392,7 @@ Option =
    element option {
       name.qname.attr,
       as.attr?,
+      attribute values { text }?,
       static.attr?,
       required.attr?,
       select.attr?,
@@ -403,6 +409,7 @@ StaticOption =
    element option {
       name.qname.attr,
       as.attr?,
+      attribute values { text }?,
       attribute static { "true" },
       select.attr,
       common.attributes,

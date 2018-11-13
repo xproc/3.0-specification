@@ -8,8 +8,8 @@ injects it into the <port>source</port> document.</para>
 <p:declare-step type="p:www-form-urlencode">
   <p:input port="source" primary="true" content-types="application/xml text/xml */*+xml"/>
   <p:output port="result" content-types="application/xml"/>
-  <p:option name="parameters" as="map(xs:QName,item())"/>
-  <p:option name="match" required="true" as="xs:string" e:type="XSLTSelectionPattern"/>
+  <p:option name="parameters" as="map(xs:QName,item()*)?"/>
+  <p:option name="match" required="true" as="#XSLTSelectionPattern"/>
 </p:declare-step>
 
 <para>The value of the <option>match</option> option must be an
@@ -22,7 +22,7 @@ When parameters are encoded into name/value pairs,
 The namespace name is ignored and no prefix or colon appears in the name.
 </para>
 
-<para><impl>The order of the parameters is
+<para><impl>The order of the parameters
 is <glossterm>implementation-dependent</glossterm>.</impl></para>
 
 <para>The matched nodes are specified with the match pattern in the

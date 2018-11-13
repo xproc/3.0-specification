@@ -7,9 +7,9 @@ use of a namespace in a document to a new IRI value.</para>
  <p:declare-step type="p:namespace-rename">
    <p:input port="source" content-types="application/xml text/xml */*+xml"/>
    <p:output port="result" content-types="application/xml"/>
-   <p:option name="from" as="xs:anyURI"/>
-   <p:option name="to" as="xs:anyURI"/>
-   <p:option name="apply-to" select="'all'" as="xs:token" e:type="all|elements|attributes"/>
+   <p:option name="from" required="true" as="xs:anyURI"/>
+   <p:option name="to" required="true" as="xs:anyURI"/>
+   <p:option name="apply-to" as="xs:token" select="'all'" values="('all','elements','attributes')"/>
 </p:declare-step>
 
 <para>The value of the <option>from</option> option

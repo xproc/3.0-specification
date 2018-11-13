@@ -9,9 +9,9 @@ equality.</para>
    <p:input port="alternate" content-types="*/*"/>
    <p:output port="result" content-types="application/xml"/>
    <p:output port="differences" content-types="*/*" sequence="true"/>
-   <p:option name="method" as="xs:QName"/>
-   <p:option name="fail-if-not-equal" select="false()" as="xs:boolean"/>
-   <p:option name="parameters" as="map(xs:QName,item())"/>
+   <p:option name="parameters" as="map(xs:QName,item()*)?"/>
+   <p:option name="method" as="#QName?"/>
+   <p:option name="fail-if-not-equal" as="xs:boolean" select="false()"/>
 </p:declare-step>
 
 <para>This step takes single documents on each of two ports and

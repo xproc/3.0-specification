@@ -3216,92 +3216,6 @@ begins.</para>
 </section>
 </section>
 
-<section xml:id="qname-options">
-<title>QNames as option values</title>
-
-<para>Some steps have options whose values are QNames, for example
-“<tag class="attribute">attribute-name</tag>” on
-<tag>p:add-attribute</tag>. If these attributes had a required type of
-<type>xs:QName</type>, they would be tedious to specify. As a
-convenience for pipeline authors, the declared type of these options
-is <type>xs:anyAtomicType</type>.</para>
-
-<orderedlist>
-<listitem>
-<para>If the value supplied for the option is an instance of
-<type>xs:QName</type> then that value is used.
-</para>
-</listitem>
-<listitem>
-<para>If the value supplied for the option is an instance of
-<type>xs:string</type> (or a type derived from
-<type>xs:string</type>), the QName is constructed by following the
-<link xlink:href="https://www.w3.org/TR/xpath-31/#doc-xpath31-EQName">EQName
-production rules</link> in <biblioref linkend="xpath31"/>. That is, it
-can be written as a local-name only, as a prefix plus local-name, or as
-a URI qualified name (using the <code>Q{namespace}local-name</code> syntax).
-<error code="D0061">It is a 
-<glossterm>dynamic error</glossterm> if the string value is not syntactically an
-EQName.</error>
-<error code="D0069">It is a 
-<glossterm>dynamic error</glossterm> if the string value contains a colon and
-the designated prefix is not declared in the in-scope namespaces.</error>
-</para>
-</listitem>
-<listitem>
-<para><error code="D0068">It is a <glossterm>dynamic error</glossterm>
-if the supplied value is neither an instance of <type>xs:QName</type>
-nor an instance of <type>xs:string</type>.</error>
-</para>
-</listitem>
-</orderedlist> 
-
-<para>Steps with a QName-valued option also often provide two
-additional attributes to separately identify a prefix and a namespace URI.
-Although their names vary from step to step, in this section
-they’re identified as the <code>qname-value</code>,
-<code>prefix-value</code>, and <code>namespace-value</code>
-attributes. The rules described here apply regardless of their actual
-names.</para>
-
-<para>When <code>prefix-value</code> and <code>namespace-value</code>
-attributes are available, several additional co-constraints apply:</para>
-
-<orderedlist>
-<listitem>
-<para>If the supplied value of the name is an <code>xs:QName</code>, you may not specify
-the <code>prefix-value</code> or <code>namespace-value</code>.
-<error code="D0066">It is a <glossterm>dynamic error</glossterm>
-to separately specify a prefix or namespace URI if the supplied value
-has the type <code>xs:QName</code>.</error>
-</para>
-</listitem>
-<listitem>
-<para>If the string value of the <code>qname-value</code> attribute
-contains a colon, you may not specify a <code>prefix-value</code> or
-<code>namespace-value</code>.
-<error code="D0034">It is a <glossterm>dynamic error</glossterm>
-to specify a prefix or namespace URI if the QName value contains a colon.</error>
-</para>
-</listitem>
-<listitem>
-<para>If you specify a <code>prefix-value</code>, you must also specify
-a namespace (either with the <code>namespace-value</code> or through a
-URI qualified name).
-<error code="D0070">It is a <glossterm>dynamic error</glossterm>
-to specify a prefix without also specifying a namespace URI.</error>
-</para>
-</listitem>
-<listitem>
-<para>If the specified value is of type <code>xs:QName</code> or is
-a URI qualified name, you may not specify a <code>namespace-value</code>.
-<error code="D0067">It is a <glossterm>dynamic error</glossterm>
-to separately specify a namespace URI if the value is a URI qualified name.</error>
-</para>
-</listitem>
-</orderedlist>
-</section>
-
 <section xml:id="syntax-summaries"><title>Syntax Summaries</title>
 
 <para>The description of each element in the pipeline namespace is
@@ -3428,7 +3342,7 @@ are allowed anywhere, and attributes that are
     </para>
   </listitem>
   <listitem>
-    <para><type>XPathExpression</type>, <type>XSLTSelectionPattern</type>:
+    <para><type>#XPathExpression</type>, <type>#XSLTSelectionPattern</type>:
     As a string per <biblioref linkend="xmlschema-2"/>, including
     whitespace normalization, and the further requirement to be a
     conformant Expression per <biblioref linkend="xpath31"/> or selection
@@ -5024,11 +4938,9 @@ the name of a static variable or option.</error>
 </varlistentry>
 <varlistentry><term><tag class="attribute">as</tag></term>
 <listitem>
-<para>The type of the value may be specified in the <tag
-class="attribute">as</tag> attribute using an
-<biblioref linkend="xpath31"/>
-<link xlink:href="https://www.w3.org/TR/xpath-31/#dt-sequence-type">sequence Type</link>.
-See <xref linkend="varopt-types"/>.
+<para>The type of the value may be specified in the
+<tag class="attribute">as</tag> attribute using an
+XProc sequence type, see <xref linkend="varopt-types"/>.
 </para>
 </listitem>
 </varlistentry>
@@ -5191,12 +5103,31 @@ the name of a static variable or option.</error>
 </varlistentry>
 <varlistentry><term><tag class="attribute">as</tag></term>
 <listitem>
-<para>The type of the value may be specified in the <tag
-class="attribute">as</tag> attribute using an
-<biblioref linkend="xpath31"/>
-<link xlink:href="https://www.w3.org/TR/xpath-31/#dt-sequence-type">sequence Type</link>.
-See <xref linkend="varopt-types"/>
+<para>The type of the value may be specified in the
+<tag class="attribute">as</tag> attribute using an
+XProc sequence type, see <xref linkend="varopt-types"/>.
 </para>
+</listitem>
+</varlistentry>
+<varlistentry><term><tag class="attribute">values</tag></term>
+<listitem>
+<para>A list of acceptable values may be specified in the <tag
+class="attribute">values</tag> attribute. If specified, the value
+of the <tag class="attribute">values</tag> attribute
+<rfc2119>must</rfc2119> be a list of atomic values expressed as an XPath sequence,
+for example: <code>('one', 'two', 'three')</code>.
+<error code="S0101">It is a <glossterm>static error</glossterm> if the
+values list is not an XPath sequence of atomic values.</error>
+</para>
+<para>The values list is an additional constraint on the acceptable values
+for the option. The option value must satisfy the <tag class="attribute">as</tag>
+type, if one is provided, and must be equal to (XPath “<code>eq</code>”) one of the listed
+<tag class="attribute">values</tag>.
+It is possible to combine <tag class="attribute">as</tag> and
+<tag class="attribute">values</tag> in ways that exclude all
+actual values (for example, <code>as="xs:integer"</code> and
+<code>values="(1.5,’pi’)"</code>). Doing so will make it impossible
+to specify a value for the option.</para>
 </listitem>
 </varlistentry>
 <varlistentry><term><tag class="attribute">static</tag></term>
@@ -5323,11 +5254,9 @@ name as part of the same step invocation.</error></para>
 </varlistentry>
 <varlistentry><term><tag class="attribute">as</tag></term>
 <listitem>
-<para>The type of the value may be specified in the <tag
-class="attribute">as</tag> attribute using an
-<biblioref linkend="xpath31"/>
-<link xlink:href="https://www.w3.org/TR/xpath-31/#dt-sequence-type">sequence Type</link>.
-See <xref linkend="varopt-types"/>
+<para>The type of the value may be specified in the
+<tag class="attribute">as</tag> attribute using an
+XProc sequence type, see <xref linkend="varopt-types"/>.
 </para>
 </listitem>
 </varlistentry>
@@ -5497,11 +5426,14 @@ static.</para>
 </section>
 
 <section xml:id="varopt-types">
-<title>Variable and option types</title>
+<title>XProc sequence type</title>
 
-<para>Variables and options may declare that they have a sequence type.
-<error code="S0096">It is a <glossterm>static error</glossterm> if
-the sequence type is not syntactically valid.</error></para>
+<para>Variables and options may declare that they have a type using an
+XProc sequence type. <error code="S0096">It is a <glossterm>static
+error</glossterm> if the sequence type is not syntactically
+valid.</error> The sequence type <literal>item()*</literal> is assumed if
+no explicit type is provided.
+</para>
 
 <para>If a variable or option declares a type, the supplied value 
  of the variable or option is converted to the required type, 
@@ -5510,15 +5442,116 @@ the sequence type is not syntactically valid.</error></para>
  the supplied value of a variable or option cannot be converted 
  to the required type.</error></para>
 
-<para> If no sequence type is specified explicitly, <literal>item()*</literal> 
-is assumed as default type.</para>
+<para>XProc extends the syntax of sequence types slightly.
+The type of a variable or
+option in XProc is either an XPath sequence type or a single token
+identified by a leading “<code>#</code>” sign (optionally followed by
+an occurrence indicator).</para>
 
- <para>If the sequence type is a map with <type>xs:QName</type> keys
-(<type>map(xs:QName, ...)</type>), the
-<function>p:force-qname-keys</function> function is automatically applied to
-the value. This makes it possible to pass in maps using (easier to
-write) <type>xs:string</type> type keys that are converted
-automatically into the required <type>xs:QName</type> keys.</para>
+<para>This specification defines five such tokens: <type>#RegularExpression</type>,
+<type>#XSLTSelectionPattern</type>, <type>#XPathExpression</type>,
+<type>#XProcSequenceType</type>, and
+<type>#QName</type>. The first four are treated as <type>xs:string</type> for the purpose
+of atomization.
+They simply allow a pipeline author to document that an option is expected to be
+a regular expression, XSLT selection pattern, XPath expression, or an XProc sequence type.</para>
+
+<para>The <type>#QName</type> token is treated as <type>xs:anyAtomicType</type> for the purpose
+of atomization.
+This type assures that the option value is ultimately an <type>xs:QName</type>, but
+allows the processor to parse the lexical value in a more convenient manner for
+pipeline authors.</para>
+
+<para>Some steps have options whose values are QNames, for example
+“<tag class="attribute">attribute-name</tag>” on
+<tag>p:add-attribute</tag>. If these attributes had a required type of
+<type>xs:QName</type>, they would be tedious to specify. As a
+convenience for pipeline authors, the declared type of these options
+is <type>#QName</type>.</para>
+
+<orderedlist>
+<listitem>
+<para>If the value supplied for the option is an instance of
+<type>xs:QName</type> then that value is used.
+</para>
+</listitem>
+<listitem>
+<para>If the value supplied for the option is an instance of
+<type>xs:string</type> (or a type derived from
+<type>xs:string</type>), the QName is constructed by following the
+<link xlink:href="https://www.w3.org/TR/xpath-31/#doc-xpath31-EQName">EQName
+production rules</link> in <biblioref linkend="xpath31"/>. That is, it
+can be written as a local-name only, as a prefix plus local-name, or as
+a URI qualified name (using the <code>Q{namespace}local-name</code> syntax).
+<error code="D0061">It is a 
+<glossterm>dynamic error</glossterm> if the string value is not syntactically an
+EQName.</error>
+<error code="D0069">It is a 
+<glossterm>dynamic error</glossterm> if the string value contains a colon and
+the designated prefix is not declared in the in-scope namespaces.</error>
+</para>
+</listitem>
+<listitem>
+<para><error code="D0068">It is a <glossterm>dynamic error</glossterm>
+if the supplied value is neither an instance of <type>xs:QName</type>
+nor an instance of <type>xs:string</type>.</error>
+</para>
+</listitem>
+</orderedlist> 
+
+<para>Steps with a QName-valued option also often provide two
+additional attributes to separately identify a prefix and a namespace URI.
+Although their names vary from step to step, in this section
+they’re identified as the <code>qname-value</code>,
+<code>prefix-value</code>, and <code>namespace-value</code>
+attributes. The rules described here apply regardless of their actual
+names.</para>
+
+<para>When <code>prefix-value</code> and <code>namespace-value</code>
+attributes are available, several additional co-constraints apply:</para>
+
+<orderedlist>
+<listitem>
+<para>If the supplied value of the name is an <code>xs:QName</code>, you may not specify
+the <code>prefix-value</code> or <code>namespace-value</code>.
+<error code="D0066">It is a <glossterm>dynamic error</glossterm>
+to separately specify a prefix or namespace URI if the supplied value
+has the type <code>xs:QName</code>.</error>
+</para>
+</listitem>
+<listitem>
+<para>If the string value of the <code>qname-value</code> attribute
+contains a colon, you may not specify a <code>prefix-value</code> or
+<code>namespace-value</code>.
+<error code="D0034">It is a <glossterm>dynamic error</glossterm>
+to specify a prefix or namespace URI if the QName value contains a colon.</error>
+</para>
+</listitem>
+<listitem>
+<para>If you specify a <code>prefix-value</code>, you must also specify
+a namespace (either with the <code>namespace-value</code> or through a
+URI qualified name).
+<error code="D0070">It is a <glossterm>dynamic error</glossterm>
+to specify a prefix without also specifying a namespace URI.</error>
+</para>
+</listitem>
+<listitem>
+<para>If the specified value is of type <code>xs:QName</code> or is
+a URI qualified name, you may not specify a <code>namespace-value</code>.
+<error code="D0067">It is a <glossterm>dynamic error</glossterm>
+to separately specify a namespace URI if the value is a URI qualified name.</error>
+</para>
+</listitem>
+</orderedlist>
+
+<para>As an additional convenience, if the specified sequence type is
+a map with <type>xs:QName</type> keys
+(<type>map(xs:QName, …)</type>),
+the <function>p:force-qname-keys</function> function is
+automatically applied to the value. This makes it possible to pass in
+maps using (easier to write) <type>xs:string</type> type keys that are
+converted automatically into the required <type>xs:QName</type>
+keys in a manner analgous to <type>#QName</type> values.</para>
 </section>
 
 <!-- ============================================================ -->

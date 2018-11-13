@@ -20,10 +20,10 @@ with the specified value.
 <p:declare-step type="p:add-attribute">
   <p:input port="source" content-types="application/xml text/xml */*+xml"/>
   <p:output port="result" content-types="application/xml"/>
-  <p:option name="match" select="'/*'" as="xs:string" e:type="XSLTSelectionPattern"/>
-  <p:option name="attribute-name" required="true" as="xs:QName"/>
-  <p:option name="attribute-prefix" as="xs:NCName"/>
-  <p:option name="attribute-namespace" as="xs:anyURI"/>
+  <p:option name="match" as="#XSLTSelectionPattern" select="'/*'"/>
+  <p:option name="attribute-name" required="true" as="#QName"/>
+  <p:option name="attribute-prefix" as="xs:NCName?"/>
+  <p:option name="attribute-namespace" as="xs:anyURI?"/>
   <p:option name="attribute-value" required="true" as="xs:string"/>
 </p:declare-step>
 
