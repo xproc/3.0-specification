@@ -256,6 +256,8 @@
 	      <xsl:message>
 		<xsl:text>Warning: unsupported ref in attribute: </xsl:text>
 		<xsl:value-of select="@name"/>
+                <xsl:text>: </xsl:text>
+                <xsl:value-of select="rng:ref/@name"/>
 	      </xsl:message>
 	    </xsl:otherwise>
 	  </xsl:choose>
