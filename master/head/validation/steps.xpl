@@ -33,7 +33,10 @@
       <p:option name="use-location-hints" select="false()" as="xs:boolean"/>
       <p:option name="try-namespaces" select="false()" as="xs:boolean"/>
       <p:option name="assert-valid" select="true()" as="xs:boolean"/>
-      <p:option name="mode" select="'strict'" as="xs:token" e:type="strict|lax"/>
-      <p:option name="version" as="xs:string"/>
+      <p:option name="mode"
+                select="'strict'"
+                as="xs:token"
+                values="('strict','lax')"/>
+      <p:option name="version" as="xs:string?"/>
    </p:declare-step>
 </p:library>

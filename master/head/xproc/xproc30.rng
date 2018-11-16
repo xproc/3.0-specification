@@ -673,6 +673,9 @@
         <ref name="as.attr"/>
       </optional>
       <optional>
+        <attribute name="values"/>
+      </optional>
+      <optional>
         <ref name="static.attr"/>
       </optional>
       <optional>
@@ -699,6 +702,9 @@
       <ref name="name.qname.attr"/>
       <optional>
         <ref name="as.attr"/>
+      </optional>
+      <optional>
+        <attribute name="values"/>
       </optional>
       <attribute name="static">
         <value>true</value>
@@ -1897,7 +1903,9 @@
       </optional>
       <optional>
         <attribute name="content-type">
-          <data type="string"/>
+          <optional>
+            <data type="string"/>
+          </optional>
         </attribute>
       </optional>
       <interleave>
@@ -1927,7 +1935,7 @@
       </optional>
       <optional>
         <attribute name="match">
-          <ref name="XSLTSelectionPattern"/>
+          <data type="string"/>
         </attribute>
       </optional>
       <optional>
@@ -1937,12 +1945,16 @@
       </optional>
       <optional>
         <attribute name="attribute-prefix">
-          <data type="NCName"/>
+          <optional>
+            <data type="NCName"/>
+          </optional>
         </attribute>
       </optional>
       <optional>
         <attribute name="attribute-namespace">
-          <data type="anyURI"/>
+          <optional>
+            <data type="anyURI"/>
+          </optional>
         </attribute>
       </optional>
       <optional>
@@ -2046,18 +2058,20 @@
         <ref name="use-when.attr"/>
       </optional>
       <optional>
+        <attribute name="parameters">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <optional>
         <attribute name="method">
-          <data type="QName"/>
+          <optional>
+            <data type="QName"/>
+          </optional>
         </attribute>
       </optional>
       <optional>
         <attribute name="fail-if-not-equal">
           <data type="boolean"/>
-        </attribute>
-      </optional>
-      <optional>
-        <attribute name="parameters">
-          <data type="string"/>
         </attribute>
       </optional>
       <interleave>
@@ -2117,7 +2131,7 @@
       </optional>
       <optional>
         <attribute name="match">
-          <ref name="XSLTSelectionPattern"/>
+          <data type="string"/>
         </attribute>
       </optional>
       <interleave>
@@ -2157,12 +2171,16 @@
       </optional>
       <optional>
         <attribute name="include-filter">
-          <ref name="RegularExpression"/>
+          <zeroOrMore>
+            <data type="string"/>
+          </zeroOrMore>
         </attribute>
       </optional>
       <optional>
         <attribute name="exclude-filter">
-          <ref name="RegularExpression"/>
+          <zeroOrMore>
+            <data type="string"/>
+          </zeroOrMore>
         </attribute>
       </optional>
       <interleave>
@@ -2189,7 +2207,7 @@
       </optional>
       <optional>
         <attribute name="code">
-          <data type="anyAtomicType"/>
+          <data type="QName"/>
         </attribute>
       </optional>
       <optional>
@@ -2512,17 +2530,23 @@
       </optional>
       <optional>
         <attribute name="href">
-          <data type="anyURI"/>
+          <optional>
+            <data type="anyURI"/>
+          </optional>
         </attribute>
       </optional>
       <optional>
         <attribute name="suffix">
-          <data type="string"/>
+          <optional>
+            <data type="string"/>
+          </optional>
         </attribute>
       </optional>
       <optional>
         <attribute name="prefix">
-          <data type="string"/>
+          <optional>
+            <data type="string"/>
+          </optional>
         </attribute>
       </optional>
       <optional>
@@ -2564,7 +2588,9 @@
       </optional>
       <optional>
         <attribute name="timestamp">
-          <data type="dateTime"/>
+          <optional>
+            <data type="dateTime"/>
+          </optional>
         </attribute>
       </optional>
       <optional>
@@ -2596,7 +2622,7 @@
       </optional>
       <optional>
         <attribute name="select">
-          <ref name="XPathExpression"/>
+          <data type="string"/>
         </attribute>
       </optional>
       <interleave>
@@ -2641,12 +2667,14 @@
       </optional>
       <optional>
         <attribute name="match">
-          <ref name="XSLTSelectionPattern"/>
+          <data type="string"/>
         </attribute>
       </optional>
       <optional>
         <attribute name="version">
-          <data type="string"/>
+          <optional>
+            <data type="string"/>
+          </optional>
         </attribute>
       </optional>
       <interleave>
@@ -2745,7 +2773,7 @@
       </optional>
       <optional>
         <attribute name="match">
-          <ref name="XSLTSelectionPattern"/>
+          <data type="string"/>
         </attribute>
       </optional>
       <optional>
@@ -2790,22 +2818,26 @@
       </optional>
       <optional>
         <attribute name="attribute-prefix">
-          <data type="NCName"/>
+          <optional>
+            <data type="NCName"/>
+          </optional>
         </attribute>
       </optional>
       <optional>
         <attribute name="attribute-namespace">
-          <data type="anyURI"/>
+          <optional>
+            <data type="anyURI"/>
+          </optional>
         </attribute>
       </optional>
       <optional>
         <attribute name="label">
-          <ref name="XPathExpression"/>
+          <data type="string"/>
         </attribute>
       </optional>
       <optional>
         <attribute name="match">
-          <ref name="XSLTSelectionPattern"/>
+          <data type="string"/>
         </attribute>
       </optional>
       <optional>
@@ -2850,7 +2882,9 @@
       </optional>
       <optional>
         <attribute name="content-type">
-          <data type="string"/>
+          <optional>
+            <data type="string"/>
+          </optional>
         </attribute>
       </optional>
       <optional>
@@ -2887,12 +2921,16 @@
       </optional>
       <optional>
         <attribute name="include-filter">
-          <ref name="RegularExpression"/>
+          <zeroOrMore>
+            <data type="string"/>
+          </zeroOrMore>
         </attribute>
       </optional>
       <optional>
         <attribute name="exclude-filter">
-          <ref name="RegularExpression"/>
+          <zeroOrMore>
+            <data type="string"/>
+          </zeroOrMore>
         </attribute>
       </optional>
       <interleave>
@@ -2919,12 +2957,14 @@
       </optional>
       <optional>
         <attribute name="match">
-          <ref name="XSLTSelectionPattern"/>
+          <data type="string"/>
         </attribute>
       </optional>
       <optional>
         <attribute name="base-uri">
-          <data type="anyURI"/>
+          <optional>
+            <data type="anyURI"/>
+          </optional>
         </attribute>
       </optional>
       <interleave>
@@ -3054,12 +3094,16 @@
       </optional>
       <optional>
         <attribute name="wrapper-prefix">
-          <data type="NCName"/>
+          <optional>
+            <data type="NCName"/>
+          </optional>
         </attribute>
       </optional>
       <optional>
         <attribute name="wrapper-namespace">
-          <data type="anyURI"/>
+          <optional>
+            <data type="anyURI"/>
+          </optional>
         </attribute>
       </optional>
       <interleave>
@@ -3116,7 +3160,7 @@
       </optional>
       <optional>
         <attribute name="match">
-          <ref name="XSLTSelectionPattern"/>
+          <data type="string"/>
         </attribute>
       </optional>
       <optional>
@@ -3126,12 +3170,16 @@
       </optional>
       <optional>
         <attribute name="new-prefix">
-          <data type="NCName"/>
+          <optional>
+            <data type="NCName"/>
+          </optional>
         </attribute>
       </optional>
       <optional>
         <attribute name="new-namespace">
-          <data type="anyURI"/>
+          <optional>
+            <data type="anyURI"/>
+          </optional>
         </attribute>
       </optional>
       <interleave>
@@ -3161,7 +3209,7 @@
       </optional>
       <optional>
         <attribute name="match">
-          <ref name="XSLTSelectionPattern"/>
+          <data type="string"/>
         </attribute>
       </optional>
       <interleave>
@@ -3191,7 +3239,7 @@
       </optional>
       <optional>
         <attribute name="match">
-          <ref name="XSLTSelectionPattern"/>
+          <data type="string"/>
         </attribute>
       </optional>
       <interleave>
@@ -3283,7 +3331,7 @@
       </optional>
       <optional>
         <attribute name="test">
-          <ref name="XPathExpression"/>
+          <data type="string"/>
         </attribute>
       </optional>
       <interleave>
@@ -3348,12 +3396,12 @@
       </optional>
       <optional>
         <attribute name="match">
-          <ref name="XSLTSelectionPattern"/>
+          <data type="string"/>
         </attribute>
       </optional>
       <optional>
         <attribute name="replace">
-          <ref name="XPathExpression"/>
+          <data type="string"/>
         </attribute>
       </optional>
       <interleave>
@@ -3423,7 +3471,9 @@
       </optional>
       <optional>
         <attribute name="namespace">
-          <data type="anyURI"/>
+          <optional>
+            <data type="anyURI"/>
+          </optional>
         </attribute>
       </optional>
       <optional>
@@ -3433,12 +3483,16 @@
       </optional>
       <optional>
         <attribute name="encoding">
-          <data type="string"/>
+          <optional>
+            <data type="string"/>
+          </optional>
         </attribute>
       </optional>
       <optional>
         <attribute name="charset">
-          <data type="string"/>
+          <optional>
+            <data type="string"/>
+          </optional>
         </attribute>
       </optional>
       <interleave>
@@ -3468,7 +3522,7 @@
       </optional>
       <optional>
         <attribute name="match">
-          <ref name="XSLTSelectionPattern"/>
+          <data type="string"/>
         </attribute>
       </optional>
       <interleave>
@@ -3498,12 +3552,14 @@
       </optional>
       <optional>
         <attribute name="match">
-          <ref name="XSLTSelectionPattern"/>
+          <data type="string"/>
         </attribute>
       </optional>
       <optional>
         <attribute name="version">
-          <data type="integer"/>
+          <optional>
+            <data type="integer"/>
+          </optional>
         </attribute>
       </optional>
       <interleave>
@@ -3538,17 +3594,23 @@
       </optional>
       <optional>
         <attribute name="wrapper-prefix">
-          <data type="NCName"/>
+          <optional>
+            <data type="NCName"/>
+          </optional>
         </attribute>
       </optional>
       <optional>
         <attribute name="wrapper-namespace">
-          <data type="anyURI"/>
+          <optional>
+            <data type="anyURI"/>
+          </optional>
         </attribute>
       </optional>
       <optional>
         <attribute name="group-adjacent">
-          <ref name="XPathExpression"/>
+          <optional>
+            <data type="string"/>
+          </optional>
         </attribute>
       </optional>
       <interleave>
@@ -3583,22 +3645,28 @@
       </optional>
       <optional>
         <attribute name="wrapper-prefix">
-          <data type="NCName"/>
+          <optional>
+            <data type="NCName"/>
+          </optional>
         </attribute>
       </optional>
       <optional>
         <attribute name="wrapper-namespace">
-          <data type="anyURI"/>
+          <optional>
+            <data type="anyURI"/>
+          </optional>
         </attribute>
       </optional>
       <optional>
         <attribute name="match">
-          <ref name="XSLTSelectionPattern"/>
+          <data type="string"/>
         </attribute>
       </optional>
       <optional>
         <attribute name="group-adjacent">
-          <ref name="XPathExpression"/>
+          <optional>
+            <data type="string"/>
+          </optional>
         </attribute>
       </optional>
       <interleave>
@@ -3660,7 +3728,7 @@
       </optional>
       <optional>
         <attribute name="match">
-          <ref name="XSLTSelectionPattern"/>
+          <data type="string"/>
         </attribute>
       </optional>
       <interleave>
@@ -3730,22 +3798,30 @@
       </optional>
       <optional>
         <attribute name="initial-mode">
-          <data type="QName"/>
+          <optional>
+            <data type="QName"/>
+          </optional>
         </attribute>
       </optional>
       <optional>
         <attribute name="template-name">
-          <data type="QName"/>
+          <optional>
+            <data type="QName"/>
+          </optional>
         </attribute>
       </optional>
       <optional>
         <attribute name="output-base-uri">
-          <data type="anyURI"/>
+          <optional>
+            <data type="anyURI"/>
+          </optional>
         </attribute>
       </optional>
       <optional>
         <attribute name="version">
-          <data type="string"/>
+          <optional>
+            <data type="string"/>
+          </optional>
         </attribute>
       </optional>
       <interleave>
@@ -3878,7 +3954,9 @@
       </optional>
       <optional>
         <attribute name="version">
-          <data type="string"/>
+          <optional>
+            <data type="string"/>
+          </optional>
         </attribute>
       </optional>
       <interleave>
@@ -3913,7 +3991,9 @@
       </optional>
       <optional>
         <attribute name="version">
-          <data type="string"/>
+          <optional>
+            <data type="string"/>
+          </optional>
         </attribute>
       </optional>
       <interleave>

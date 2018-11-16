@@ -5,6 +5,6 @@
       <p:input port="source" content-types="application/xml text/xml */*+xml"/>
       <p:output port="result" content-types="*/*"/>
       <p:option name="parameters" as="xs:string"/>
-      <p:option name="content-type" as="xs:string"/>
+      <p:option name="content-type" as="xs:string?"/>
    </p:declare-step>
 </p:library>

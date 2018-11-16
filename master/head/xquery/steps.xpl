@@ -9,6 +9,6 @@
       <p:input port="query" content-types="application/xml */*+xml text/*"/>
       <p:output port="result" sequence="true" content-types="*/*"/>
       <p:option name="parameters" as="xs:string"/>
-      <p:option name="version" as="xs:string"/>
+      <p:option name="version" as="xs:string?"/>
    </p:declare-step>
 </p:library>
