@@ -1,4 +1,8 @@
-<section xmlns="http://docbook.org/ns/docbook" xmlns:cs="http://www.w3.org/XML/XProc/2006/04/components#" xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax" xmlns:p="http://www.w3.org/ns/xproc" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="c.cast-content-type">
+<section xmlns="http://docbook.org/ns/docbook"
+         xmlns:p="http://www.w3.org/ns/xproc"
+         xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="c.cast-content-type">
 <title>p:cast-content-type</title>
 
 <para>The <tag>p:cast-content-type</tag> step changes the media type
@@ -8,7 +12,7 @@ of its input.</para>
    <p:input port="source" content-types="*/*"/>
    <p:output port="result" content-types="*/*"/>
    <p:option name="content-type" required="true" as="xs:string"/>
-   <p:option name="parameters" as="map(*)?"/>
+   <p:option name="parameters" as="map(xs:QName,item()*)?"/>
 </p:declare-step>
 
 <para>The input document is transformed from one media type to another.

@@ -108,22 +108,9 @@
 	<xsl:choose xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax">
 	  <xsl:when test="not(@as) and not(@e:type)">
 	    <xsl:message>Warning: no e:type!!!</xsl:message>
-	    <xsl:value-of select="'string'"/>
+	    <xsl:value-of select="'item()*'"/>
 	  </xsl:when>
           <xsl:when test="not(@e:type)"/>
-	  <xsl:when test="contains(@e:type,'|')">
-	    <xsl:for-each select="tokenize(@e:type,'\|')">
-	      <xsl:if test="position()&gt;1">|</xsl:if>
-	      <xsl:choose>
-		<xsl:when test="starts-with(.,'xsd:')">
-		  <xsl:value-of select="substring-after(., 'xsd:')"/>
-		</xsl:when>
-		<xsl:otherwise>
-		  <xsl:value-of select="concat('&quot;',.,'&quot;')"/>
-		</xsl:otherwise>
-	      </xsl:choose>
-	    </xsl:for-each>
-	  </xsl:when>
 	  <xsl:otherwise>
 	    <xsl:value-of select="replace(@e:type,'xsd:','')"/>
 	  </xsl:otherwise>

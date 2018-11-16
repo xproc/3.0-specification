@@ -73,31 +73,22 @@
   <xsl:variable name="name" select="@name"/>
   <xsl:variable name="type" as="xs:string+">
     <xsl:choose>
-      <xsl:when test="not(@as) and not(@e:type)">
+      <xsl:when test="@values">
+        <xsl:variable name="text" select="replace(@values, '^\s*\(\s*(.*)\s*\)\s*$', '$1')"/>
+	<xsl:for-each select="tokenize($text,'\s*,\s*')">
+	  <xsl:if test="position()&gt;1">|</xsl:if>
+          <xsl:value-of select="."/>
+	</xsl:for-each>
+      </xsl:when>
+      <xsl:when test="not(@as)">
 	<xsl:message>
           <xsl:text>Warning: no type for option: </xsl:text>
           <xsl:value-of select="$name"/>
         </xsl:message>
 	<xsl:value-of select="'xsd:string'"/>
       </xsl:when>
-      <xsl:when test="not(@e:type)">
-	<xsl:value-of select="replace(@as, 'xs:', 'xsd:')"/>
-      </xsl:when>
-      <xsl:when test="contains(@e:type,'|')">
-	<xsl:for-each select="tokenize(@e:type,'\|')">
-	  <xsl:if test="position()&gt;1">|</xsl:if>
-	  <xsl:choose>
-	    <xsl:when test="starts-with(.,'xsd:')">
-	      <xsl:value-of select="."/>
-	    </xsl:when>
-	    <xsl:otherwise>
-	      <xsl:value-of select="concat('&quot;',.,'&quot;')"/>
-	    </xsl:otherwise>
-	  </xsl:choose>
-	</xsl:for-each>
-      </xsl:when>
       <xsl:otherwise>
-	<xsl:value-of select="@e:type"/>
+	<xsl:value-of select="replace(replace(@as, 'xs:', 'xsd:'), '#', '')"/>
       </xsl:otherwise>
     </xsl:choose>
   </xsl:variable>

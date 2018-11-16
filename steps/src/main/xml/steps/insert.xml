@@ -1,4 +1,8 @@
-<section xmlns="http://docbook.org/ns/docbook" xmlns:cs="http://www.w3.org/XML/XProc/2006/04/components#" xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax" xmlns:p="http://www.w3.org/ns/xproc" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="c.insert">
+<section xmlns="http://docbook.org/ns/docbook"
+         xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax"
+         xmlns:p="http://www.w3.org/ns/xproc"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="c.insert">
 <title>p:insert</title>
 
 <para>The <code>p:insert</code> step inserts the
@@ -10,8 +14,8 @@ port's document relative to the matching elements in the
    <p:input port="source" primary="true" content-types="application/xml text/xml */*+xml"/>
    <p:input port="insertion" sequence="true" content-types="application/xml text/* */*+xml"/>
    <p:output port="result" content-types="application/xml"/>
-   <p:option name="match" select="'/*'" as="xs:string" e:type="XSLTSelectionPattern"/>
-   <p:option name="position" required="true" as="xs:token" e:type="first-child|last-child|before|after"/>
+   <p:option name="match" as="xs:string" select="'/*'" e:type="XSLTSelectionPattern"/>
+   <p:option name="position" required="true" as="xs:token" values="('first-child','last-child','before','after')"/>
 </p:declare-step>
 
 <para>The value of the <option>match</option> option
@@ -46,8 +50,8 @@ the following list:
 if the match pattern matches anything other than an element or a document
 node and the value of the <option>position</option> option is
 “<literal>first-child</literal>” or
-“<literal>last-child</literal>”.</error> <error code="C0024">It is a 
-<glossterm>dynamic error</glossterm> if the match pattern matches a document 
+“<literal>last-child</literal>”.</error> <error code="C0024">It is a
+<glossterm>dynamic error</glossterm> if the match pattern matches a document
 node and the value of the <option>position</option> is “<literal>before</literal>” or
 “<literal>after</literal>”.</error></para>
 
