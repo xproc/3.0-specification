@@ -138,11 +138,12 @@ xproc_ancillary.doFirst {
 task xproc_library(type: XMLCalabashTask,
                    dependsOn: [ "steps_xpl", "step_validation_xpl",
                                 "step_exec_xpl", "step_run_xpl", "step_xquery_xpl",
+                                "step_os_xpl", "step_file_xpl",
                                 "step_xsl_formatter_xpl"]) {
   // N.B. Because Travis jobs cannot see the filesystem, we have
   // to list the dependencies twice. :-(
   String steps = ""
-  ["steps", "validation", "exec", "run", "xquery", "xsl-formatter"].each { s->
+  ["steps", "validation", "exec", "os", "file", "run", "xquery", "xsl-formatter"].each { s->
     steps = steps + " ../../build/dist/" + s + "/steps.xpl"
   }
 
@@ -269,6 +270,102 @@ task step_validation_src(dependsOn: ["step-validation:source"], type: Copy) {
 task step_validation_xpl(dependsOn: ["step-validation:library"], type: Copy) {
   from "step-validation/build/"
   into "build/dist/validation/"
+  include "library.xml"
+  rename ("library.xml", "steps.xpl")
+}
+
+// ======================================================================
+// step-os
+
+task step_os(type: DocBookTask,
+               dependsOn: [ "xproc", "steps", "xproc_schemas", "spec_schemas",
+                            "step-os:specification",
+                            "step_os_assets",
+                            "step_os_src", "step_os_xpl" ]) {
+  inputs.files fileTree(dir: "tools/xsl/")
+  inputs.files fileTree(dir: "tools/xpl/")
+  inputs.file "xproc/build/toc.xml"
+  input("source", "step-os/build/source.xml")
+  output("result", "build/dist/os/index.html")
+
+  param("schemaext.schema", new File("build/schema/dbspec.rng"))
+  param("travis", getenv("TRAVIS"))
+  param("travis-commit", getenv("TRAVIS_COMMIT"))
+  param("travis-build-number", getenv("TRAVIS_BUILD_NUMBER"))
+  param("travis-user", getenv("TRAVIS_USER"))
+  param("travis-repo", getenv("TRAVIS_REPO"))
+  param("travis-branch", getenv("TRAVIS_BRANCH"))
+  param("travis-tag", getenv("TRAVIS_TAG"))
+
+  option("style", new File("tools/xsl/xproc-specs.xsl"))
+  pipeline "tools/xpl/formatspec.xpl"
+}
+allspecs.dependsOn "step_os"
+overview.dependsOn "step_os"
+
+task step_os_assets(type: Copy) {
+  from "src/main/resources"
+  into "build/dist/os/"
+}
+
+task step_os_src(dependsOn: ["step-os:source"], type: Copy) {
+  from "step-os/build/"
+  into "build/dist/os/"
+  include "source.xml"
+  rename ("source.xml", "specification.xml")
+}
+
+task step_os_xpl(dependsOn: ["step-os:library"], type: Copy) {
+  from "step-os/build/"
+  into "build/dist/os/"
+  include "library.xml"
+  rename ("library.xml", "steps.xpl")
+}
+
+// ======================================================================
+// step-file
+
+task step_file(type: DocBookTask,
+               dependsOn: [ "xproc", "steps", "xproc_schemas", "spec_schemas",
+                            "step-file:specification",
+                            "step_file_assets",
+                            "step_file_src", "step_file_xpl" ]) {
+  inputs.files fileTree(dir: "tools/xsl/")
+  inputs.files fileTree(dir: "tools/xpl/")
+  inputs.file "xproc/build/toc.xml"
+  input("source", "step-file/build/source.xml")
+  output("result", "build/dist/file/index.html")
+
+  param("schemaext.schema", new File("build/schema/dbspec.rng"))
+  param("travis", getenv("TRAVIS"))
+  param("travis-commit", getenv("TRAVIS_COMMIT"))
+  param("travis-build-number", getenv("TRAVIS_BUILD_NUMBER"))
+  param("travis-user", getenv("TRAVIS_USER"))
+  param("travis-repo", getenv("TRAVIS_REPO"))
+  param("travis-branch", getenv("TRAVIS_BRANCH"))
+  param("travis-tag", getenv("TRAVIS_TAG"))
+
+  option("style", new File("tools/xsl/xproc-specs.xsl"))
+  pipeline "tools/xpl/formatspec.xpl"
+}
+allspecs.dependsOn "step_file"
+overview.dependsOn "step_file"
+
+task step_file_assets(type: Copy) {
+  from "src/main/resources"
+  into "build/dist/file/"
+}
+
+task step_file_src(dependsOn: ["step-file:source"], type: Copy) {
+  from "step-file/build/"
+  into "build/dist/file/"
+  include "source.xml"
+  rename ("source.xml", "specification.xml")
+}
+
+task step_file_xpl(dependsOn: ["step-file:library"], type: Copy) {
+  from "step-file/build/"
+  into "build/dist/file/"
   include "library.xml"
   rename ("library.xml", "steps.xpl")
 }

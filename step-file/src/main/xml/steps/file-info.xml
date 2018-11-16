@@ -1,0 +1,120 @@
+<section xmlns="http://docbook.org/ns/docbook" xmlns:cs="http://www.w3.org/XML/XProc/2006/04/components#"
+  xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax" xmlns:p="http://www.w3.org/ns/xproc"
+  xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="c.file-info">
+<title>p:file-info</title>
+
+<para>The <code>p:file-info</code> step returns information about a
+file, directory or other file system object.</para>
+
+<note role="editorial">
+  <title>Editorial Note</title>
+  <para>TBD: This is an almost direct port from EXProc. Details might still change.</para>
+  <para>Check and amend the error codes.</para>
+</note>
+
+<p:declare-step type="p:file-info">
+  <p:output port="result" content-types="application/xml"/>
+  <p:option name="href" required="true" as="xs:anyURI"/>
+  <p:option name="fail-on-error" as="xs:boolean" select="true()"/>
+</p:declare-step>
+
+<para>The <tag>p:file-info</tag> step returns information about the
+file, directory or other file system object named in the
+<option>href</option> option.</para>
+
+<para><error code="D0064">It is a <glossterm>dynamic error</glossterm>
+if the <option>href</option> option value is not a valid
+<type>xs:anyURI</type>.</error> If the <option>href</option> option is
+relative, it is made absolute against the base URI of the element on
+which it is specified (<tag>p:with-option</tag> or
+<tag>p:file-info</tag> in the case of a syntactic shortcut
+value).</para>
+
+<para><impl>If the <option>href</option> option is not a <code>file:</code>
+URI, the result is <glossterm>implementation-defined</glossterm>.</impl></para>
+
+<para>If the <option>href</option> option is a <code>file:</code> URI,
+the step returns:</para>
+
+<itemizedlist>
+  <listitem>
+    <para>If <option>href</option> option references a file: A <tag>c:file</tag> element with standard attributes (see
+      below).</para>
+  </listitem>
+  <listitem>
+    <para>If <option>href</option> option references a directory: A <tag>c:directory</tag> element with standard
+      attributes (see below).</para>
+  </listitem>
+  <listitem>
+    <para><impl>If <option>href</option> option references any other file system object,
+    the results are <glossterm>implementation-defined</glossterm>.</impl> (For example,
+    an <tag>c:other</tag> or <tag>c:device</tag> element). Implementors are encouraged
+    to use the standard attributes (see below) if applicable.</para>
+  </listitem>
+</itemizedlist>
+
+<para>The following attributes are standard on a returned
+<tag>c:file</tag> or <tag>c:directory</tag> element. All attributes
+are optional and must be absent if not applicable. Additional
+implementation-defined attributes may be present, but they must be in
+a namespace.</para>
+
+<informaltable>
+  <tgroup cols="3">
+    <thead>
+      <row>
+        <entry>Attribute</entry>
+        <entry>Type</entry>
+        <entry>Description</entry>
+      </row>
+    </thead>
+    <tbody>
+      <row>
+        <entry><tag class="attribute">readable</tag></entry>
+        <entry><type>xs:boolean</type></entry>
+        <entry><literal>true</literal> if the object is readable.</entry>
+      </row>
+      <row>
+        <entry><tag class="attribute">writable</tag></entry>
+        <entry><type>xs:boolean</type></entry>
+        <entry><literal>true</literal> if the object file is writable.</entry>
+      </row>
+      <row>
+        <entry><tag class="attribute">hidden</tag></entry>
+        <entry><type>xs:boolean</type></entry>
+        <entry><literal>true</literal> if the object is hidden.</entry>
+      </row>
+      <row>
+        <entry><tag class="attribute">last-modified</tag></entry>
+        <entry><type>xs:dateTime</type></entry>
+        <entry>The last modification time of the object expressed in UTC.</entry>
+      </row>
+      <row>
+        <entry><tag class="attribute">size</tag></entry>
+        <entry><type>xs:integer</type></entry>
+        <entry>The size of the object in bytes.</entry>
+      </row>
+    </tbody>
+  </tgroup>
+</informaltable>
+
+<para>If an error occurs and <option>fail-on-error</option> is
+<code>false</code>, the step returns a <tag>c:error</tag> element which
+may contain additional information about the failure.
+<impl>The contents of the <tag>c:error</tag> element is
+<glossterm>implementation-defined</glossterm>.</impl>
+</para>
+
+<para>If an error occurs and <option>fail-on-error</option> is
+<code>true</code>, the following error is raised: <error
+code="D0011">It is a <glossterm>dynamic error</glossterm> if the
+resource referenced by the <option>href</option> option does not
+exist, cannot be accessed or is not a file, directory or other file
+system object.</error></para>
+
+<simplesect>
+  <title>Document properties</title>
+  <para feature="file-info-preserves-none">No document properties are preserved.</para>
+</simplesect>
+
+</section>

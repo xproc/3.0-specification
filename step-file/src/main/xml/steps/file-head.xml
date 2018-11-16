@@ -1,0 +1,49 @@
+<section xmlns="http://docbook.org/ns/docbook"
+         xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax"
+         xmlns:p="http://www.w3.org/ns/xproc"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="c.file-head">
+<title>p:file-head</title>
+
+<para>The <code>p:file-head</code> step returns lines from the
+beginning of a text file.</para>
+
+<p:declare-step type="p:file-head">
+  <p:input port="source" content-type="text/plain"/>
+  <p:output port="result" content-types="text/plain"/>
+  <p:option name="count" required="true" as="xs:integer"/>
+</p:declare-step>
+
+<para>The <tag>p:file-head</tag> step returns lines from the beginning of the document
+that appears on the <port>source</port> port.</para>
+
+<itemizedlist>
+  <listitem>
+    <para>If the <option>count</option> option is positive, the <tag>p:file-head</tag> step returns the first
+        <option>count</option> lines</para>
+  </listitem>
+  <listitem>
+    <para>If the <option>count</option> option is zero, the <tag>p:file-head</tag> step returns all lines</para>
+  </listitem>
+  <listitem>
+    <para>If the <option>count</option> option is negative, the <tag>p:file-head</tag> step returns all lines except
+      the first <option>count</option> lines</para>
+  </listitem>
+</itemizedlist>
+
+<para>The step returns the lines of the file. Lines are identified as
+described in
+<link xlink:href="https://www.w3.org/TR/xml/#sec-line-ends">XML, 2.11
+End-of-Line Handling</link>. Line breaks are normalized to single newlines.
+</para>
+
+<simplesect>
+  <title>Document properties</title>
+  <para feature="file-head-preserves-all">All document properties are preserved.</para>
+  <note role="editorial">
+    <title>Editorial Note</title>
+    <para>If there’s any kind of “file-size” property; it should be removed.</para>
+  </note>
+</simplesect>
+
+</section>
