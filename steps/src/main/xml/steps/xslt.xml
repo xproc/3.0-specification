@@ -1,4 +1,7 @@
-<section xmlns="http://docbook.org/ns/docbook" xmlns:cs="http://www.w3.org/XML/XProc/2006/04/components#" xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax" xmlns:p="http://www.w3.org/ns/xproc" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="c.xslt">
+<section xmlns="http://docbook.org/ns/docbook"
+         xmlns:p="http://www.w3.org/ns/xproc"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="c.xslt">
 <title>p:xslt</title>
 
 <para>The <tag>p:xslt</tag> step applies an XSLT stylesheet to a document.</para>
@@ -6,13 +9,13 @@
 <p:declare-step type="p:xslt">
   <p:input port="source" content-types="application/xml text/xml */*+xml" sequence="true" primary="true"/>
   <p:input port="stylesheet" content-types="application/xml text/xml */*+xml"/>
-  <p:option name="parameters" as="map(xs:QName,item())"/>
   <p:output port="result" primary="true" sequence="true" content-types="*/*"/>
   <p:output port="secondary" sequence="true"/>
-  <p:option name="initial-mode" as="xs:QName"/>
-  <p:option name="template-name" as="xs:QName"/>
-  <p:option name="output-base-uri" as="xs:anyURI"/>
-  <p:option name="version" as="xs:string"/>
+  <p:option name="parameters" as="map(xs:QName,item())?"/>
+  <p:option name="initial-mode" as="xs:QName?"/>
+  <p:option name="template-name" as="xs:QName?"/>
+  <p:option name="output-base-uri" as="xs:anyURI?"/>
+  <p:option name="version" as="xs:string?"/>
 </p:declare-step>
 
 <para>If present, the value of the <option>initial-mode</option>

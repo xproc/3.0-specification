@@ -1,4 +1,7 @@
-<section xmlns="http://docbook.org/ns/docbook" xmlns:p="http://www.w3.org/ns/xproc" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="c.compare">
+<section xmlns="http://docbook.org/ns/docbook"
+         xmlns:p="http://www.w3.org/ns/xproc"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="c.compare">
 <title>p:compare</title>
 
 <para>The <code>p:compare</code> step compares two documents for
@@ -9,9 +12,9 @@ equality.</para>
    <p:input port="alternate" content-types="*/*"/>
    <p:output port="result" content-types="application/xml"/>
    <p:output port="differences" content-types="*/*" sequence="true"/>
-   <p:option name="method" as="xs:QName"/>
-   <p:option name="fail-if-not-equal" select="false()" as="xs:boolean"/>
-   <p:option name="parameters" as="map(xs:QName,item())"/>
+   <p:option name="parameters" as="map(xs:QName,item()*)?"/>
+   <p:option name="method" as="xs:QName?"/>
+   <p:option name="fail-if-not-equal" as="xs:boolean" select="false()"/>
 </p:declare-step>
 
 <para>This step takes single documents on each of two ports and

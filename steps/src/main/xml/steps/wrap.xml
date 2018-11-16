@@ -1,4 +1,8 @@
-<section xmlns="http://docbook.org/ns/docbook" xmlns:cs="http://www.w3.org/XML/XProc/2006/04/components#" xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax" xmlns:p="http://www.w3.org/ns/xproc" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="c.wrap">
+<section xmlns="http://docbook.org/ns/docbook"
+         xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax"
+         xmlns:p="http://www.w3.org/ns/xproc"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="c.wrap">
 <title>p:wrap</title>
 
 <para>The <tag>p:wrap</tag> step wraps matching nodes in the
@@ -8,10 +12,10 @@
    <p:input port="source" content-types="application/xml text/xml */*+xml"/>
    <p:output port="result" content-types="application/xml"/>
    <p:option name="wrapper" required="true" as="xs:QName"/>
-   <p:option name="wrapper-prefix" as="xs:NCName"/>
-   <p:option name="wrapper-namespace" as="xs:anyURI"/>
+   <p:option name="wrapper-prefix" as="xs:NCName?"/>
+   <p:option name="wrapper-namespace" as="xs:anyURI?"/>
    <p:option name="match" required="true" as="xs:string" e:type="XSLTSelectionPattern"/>
-   <p:option name="group-adjacent" as="xs:string" e:type="XPathExpression"/>
+   <p:option name="group-adjacent" as="xs:string?" e:type="XPathExpression"/>
 </p:declare-step>
 
 <para>The value of the <option>wrapper</option> option

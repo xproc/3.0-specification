@@ -1,4 +1,8 @@
-<section xmlns="http://docbook.org/ns/docbook" xmlns:cs="http://www.w3.org/XML/XProc/2006/04/components#" xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax" xmlns:p="http://www.w3.org/ns/xproc" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="c.label-elements">
+<section xmlns="http://docbook.org/ns/docbook"
+         xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax"
+         xmlns:p="http://www.w3.org/ns/xproc"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="c.label-elements">
 <title>p:label-elements</title>
 
 <para>The <code>p:label-elements</code> step generates a label for each matched
@@ -7,12 +11,12 @@ element and stores that label in the specified attribute.</para>
 <p:declare-step type="p:label-elements">
   <p:input port="source" content-types="application/xml text/xml */*+xml"/>
   <p:output port="result" content-types="application/xml"/>
-  <p:option name="attribute" select="'xml:id'" as="xs:QName"/>
-  <p:option name="attribute-prefix" as="xs:NCName"/>
-  <p:option name="attribute-namespace" as="xs:anyURI"/>
-  <p:option name="label" select="'concat(&#34;_&#34;,$p:index)'" as="xs:string" e:type="XPathExpression"/>
-  <p:option name="match" select="'*'" as="xs:string" e:type="XSLTSelectionPattern"/>
-  <p:option name="replace" select="'true'" as="xs:boolean"/>
+  <p:option name="attribute" as="xs:QName" select="'xml:id'"/>
+  <p:option name="attribute-prefix" as="xs:NCName?"/>
+  <p:option name="attribute-namespace" as="xs:anyURI?"/>
+  <p:option name="label" as="xs:string" select="'concat(&#34;_&#34;,$p:index)'" e:type="XPathExpression"/>
+  <p:option name="match" as="xs:string" select="'*'" e:type="XSLTSelectionPattern"/>
+  <p:option name="replace" as="xs:boolean" select="true()"/>
 </p:declare-step>
 
 <para>The value of the <option>attribute</option> option

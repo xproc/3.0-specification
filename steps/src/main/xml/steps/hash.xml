@@ -1,4 +1,8 @@
-<section xmlns="http://docbook.org/ns/docbook" xmlns:cs="http://www.w3.org/XML/XProc/2006/04/components#" xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax" xmlns:p="http://www.w3.org/ns/xproc" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="c.hash">
+<section xmlns="http://docbook.org/ns/docbook"
+         xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax"
+         xmlns:p="http://www.w3.org/ns/xproc"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="c.hash">
 <title>p:hash</title>
 
 <para>The <tag>p:hash</tag> step generates a hash, or digital “fingerprint”,
@@ -7,11 +11,11 @@ for some value and injects it into the <port>source</port> document.</para>
 <p:declare-step type="p:hash">
   <p:input port="source" primary="true" content-types="*/*"/>
   <p:output port="result" content-types="application/xml"/>
-  <p:option name="parameters" as="map(xs:QName,item())"/>
+  <p:option name="parameters" as="map(xs:QName,item()*)?"/>
   <p:option name="value" required="true" as="xs:string"/>
   <p:option name="algorithm" required="true" as="xs:QName"/>
-  <p:option name="match" select="'/*'" as="xs:string" e:type="XSLTSelectionPattern"/>
-  <p:option name="version" as="xs:string"/>
+  <p:option name="match" as="xs:string" select="'/*'" e:type="XSLTSelectionPattern"/>
+  <p:option name="version" as="xs:string?"/>
 </p:declare-step>
 
 <para>The value of the <option>algorithm</option> option must be a QName.
