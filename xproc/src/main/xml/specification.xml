@@ -425,6 +425,11 @@ information items</literal>.</para>
 <para><impl>The level of support for typed values in XDM instances
 in an XProc pipeline is <glossterm>implementation-defined</glossterm>.</impl>
 </para>
+
+<para>When an XML document is serialized, it <rfc2119>should</rfc2119>
+be serialized using the XML serializer (see <xref
+linkend="xml-serialization-31"/>) by default.
+</para>
 </section>
 
 <section xml:id="html-documents">
@@ -460,7 +465,7 @@ in the pipeline) and will not be transformed in any way.</para>
 </note>
 </listitem>
 <listitem>
-<para>When an HTML document is serialized, it may be serialized using the
+<para>When an HTML document is serialized, it <rfc2119>should</rfc2119> be serialized using the
 HTML serializer (see <xref linkend="xml-serialization-31"/>) by default.
 </para>
 </listitem>
@@ -480,6 +485,10 @@ exception of “<literal>text/xml</literal>” which is an XML media type.
 and “<literal>text/html</literal>” which is an HTML media type.
 </termdef>
 </para>
+
+<para>When a text document is serialized, it <rfc2119>should</rfc2119> be serialized using the
+Text serializer (see <xref linkend="xml-serialization-31"/>) by default.</para>
+
 </section>
 
 <section xml:id="json-documents">
@@ -504,6 +513,9 @@ are <firstterm baseform="JSON media type">JSON media types</firstterm>.
 <emphasis>document nodes</emphasis> that contain something (because document nodes
 can’t contain maps or arrays). Can we get away with that?</para>
 </note>
+
+<para>When a JSON document is serialized, it <rfc2119>should</rfc2119> be serialized using the
+JSON serializer (see <xref linkend="xml-serialization-31"/>) by default.</para>
 </section>
 
 <section xml:id="other-documents">
@@ -519,6 +531,13 @@ Other kinds of documents are identified by media types that are not
 <glossterm baseform="text media type">text media types</glossterm>,
 or
 <glossterm baseform="JSON media type">JSON media types</glossterm>.
+</para>
+
+<para><impl>Serialization of other kinds of documents is
+<glossterm>implementation-defined</glossterm>.</impl> The stored
+sequence of octets <rfc2119>should</rfc2119> be consistent with the
+media type: an <code>image/png</code> image should be a PNG image,
+etc.
 </para>
 </section>
 </section>
