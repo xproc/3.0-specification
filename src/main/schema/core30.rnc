@@ -580,12 +580,16 @@ Choose =
       common.attributes,
       global.attributes,
       step.attributes,
-      (Documentation|PipeInfo)*,
-      WithInput?,
-      (Documentation|PipeInfo|When)*,
-      (Documentation|PipeInfo)*,
-      Otherwise?,
-      (Documentation|PipeInfo)*
+
+      ((Documentation|PipeInfo)*,
+       WithInput?,
+
+       ((((Documentation|PipeInfo)*, When)+,
+         ((Documentation|PipeInfo)*, Otherwise)?)
+       | (((Documentation|PipeInfo)*, When)*,
+         ((Documentation|PipeInfo)*, Otherwise))),
+
+       (Documentation|PipeInfo)*)
    }
 
 [
