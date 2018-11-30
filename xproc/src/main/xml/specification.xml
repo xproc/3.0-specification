@@ -4009,7 +4009,10 @@ on the connection for this input port.</error>
 
 <para>Each conditional <glossterm>subpipeline</glossterm> is
 represented by a <tag>p:when</tag> element. The default branch is
-represented by a <tag>p:otherwise</tag> element.</para>
+represented by a <tag>p:otherwise</tag> element. These elements are not
+sibling steps in the usual sense, the names of sibling <tag>p:when</tag>
+elements and the <tag>p:otherwise</tag> element are not in
+<link linkend="scoping">the same scope</link>.</para>
 
 <section xml:id="p.when"><title>p:when</title><para>A
           when specifies one subpipeline guarded by a test expression. </para>
@@ -4184,7 +4187,19 @@ declared to produce a sequence in either of its subpipelines.</para>
 <tag>p:error</tag> step.</para>
 
 <para>The recovery subpipeline of a <tag>p:try</tag> is identified
-with a <tag xml:id="p.catch">p:catch</tag>:</para>
+with a <tag>p:catch</tag>. The final subpipeline is
+identified with a <tag>p:finally</tag>.
+These elements are not
+sibling steps in the usual sense, the names of sibling <tag>p:catch</tag>
+elements and the <tag>p:finally</tag> element are not in
+<link linkend="scoping">the same scope</link>. The elements of the
+initial subpipeline are also not in the same scope as the <tag>p:catch</tag>
+and <tag>p:finally</tag> elements or their descendants.</para>
+
+<section xml:id="p.catch">
+<title>p:catch</title>
+
+<para>A <tag>p:catch</tag> is a recovery subpipeline.</para>
 
 <e:rng-pattern name="Catch"/>
 
@@ -4211,9 +4226,13 @@ messages at all. It is also possible that the failure of one component
 may cause others to fail so that there may be multiple failure
 messages in the document.</para>
 
+</section>
+<section xml:id="p.finally">
+<title>p:finally</title>
+
 <para>Irrespective of which pipeline is evaluated, the last thing that
 the <tag>p:try</tag> step does is evaluate the
-<tag xml:id="p.finally">p:finally</tag>
+<tag>p:finally</tag>
 pipeline. This happens <emphasis>even if</emphasis> the <tag>p:try</tag>
 fails.</para>
 
@@ -4243,6 +4262,7 @@ the output ports of either the initial subpipline or any <tag>p:catch</tag>.
 if the name of any output port on the <tag>p:finally</tag> is the same
 as the name of any other output port in the <tag>p:try</tag> or any
 of its sibling <tag>p:catch</tag> elements.</error></para>
+</section>
 
 <section xml:id="err-vocab">
 <title>The Error Vocabulary</title>
