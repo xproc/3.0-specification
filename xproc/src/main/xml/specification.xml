@@ -3959,9 +3959,12 @@ single default subpipeline.</para>
 
 <para>The <tag>p:choose</tag> considers each subpipeline in turn and
 selects the first (and only the first) subpipeline for which the guard
-expression evaluates to true in its context. If there are no
-subpipelines for which the expression evaluates to true, the default
-subpipeline, if it was specified, is selected.</para>
+expression evaluates to true in its context. After a subpipeline is
+selected, no further guard expressions are evaluated. If there are no
+subpipelines for which the expression evaluates to true then,
+if a default subpipeline was specified, it is selected, otherwise,
+no subpipeline runs and an empty sequence appears on all of the
+outputs.</para>
 
 <para>After a <glossterm>subpipeline</glossterm> is selected, it is
 evaluated as if only it had been present.</para>
