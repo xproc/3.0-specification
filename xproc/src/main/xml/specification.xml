@@ -4116,41 +4116,30 @@ arise within it from being exposed to the rest of the pipeline.</para>
 
 <para>The step begins with the initial subpipeline;
 the recovery (or “catch”) pipelines are identified with
-<tag>p:catch</tag> elements. The <tag>p:finally</tag> pipeline always
-runs after the <tag>p:try</tag>.</para>
+<tag>p:catch</tag> elements; a “finally” pipeline is identified with a
+<tag>p:finally</tag> element.</para>
 
 <para><error code="S0075">It is a <glossterm>static error</glossterm>
-if a <tag>p:try</tag> does not have at least one subpipeline step and
-at least one <tag>p:catch</tag> or exactly one <tag>p:finally</tag>.</error></para>
+if a <tag>p:try</tag> does not have at least one subpipeline step,
+at least one of <tag>p:catch</tag> or <tag>p:finally</tag>, and at most
+one <tag>p:finally</tag>.</error></para>
 
 <para>The <tag>p:try</tag> step evaluates the initial subpipeline and,
 if no errors occur, the outputs of that pipeline are the outputs of
 the <tag>p:try</tag> step. However, if any errors occur, the
 <tag>p:try</tag> abandons the first subpipeline, discarding any output
 that it might have generated, and considers the recovery
-subpipelines.</para>
+subpipelines.
+If there is no matching recovery subpipeline, the <tag>p:try</tag> fails.
+</para>
 
-<para>All except the last <tag>p:catch</tag> pipeline <rfc2119>must</rfc2119> 
-have a <tag class="attribute">code</tag> attribute. If any of the specified error
-codes matches the error that was raised in the initial subpipeline, then
-that <tag>p:catch</tag> is selected as the recovery pipeline.
-If the last <tag>p:catch</tag> does not have a <tag class="attribute">code</tag>
-attribute, it is selected if no other <tag>p:catch</tag> has a
-matching error code.
-If there is no matching <tag>p:catch</tag>, the <tag>p:try</tag> fails.
-<error code="S0064">It is a <glossterm>static error</glossterm>
-if the <tag class="attribute">code</tag> attribute is missing from
-any but the last <tag>p:catch</tag> or if any error code is
-repeated.</error> <error code="S0083">It is a <glossterm>static 
-error</glossterm> if the value of the <tag class="attribute">code</tag>
-attribute is not a whitespace separated list of EQNames.</error></para>
-
-<para>If the recovery subpipeline is evaluated, the outputs of the
+<para>If a recovery subpipeline is evaluated, the outputs of the
 recovery subpipeline are the outputs of the <tag>p:try</tag> step. If
 the recovery subpipeline is evaluated and a step within that
-subpipeline fails, the <tag>p:try</tag> fails.
-Irrespective of whether the initial subpipeline succeeds or fails,
-if any recovery pipelines are selected, and whether they succeed or fail,
+subpipeline fails, the <tag>p:try</tag> fails.</para>
+
+<para>Irrespective of whether the initial subpipeline succeeds or fails,
+if any recovery pipeline is selected, and whether it succeeds or fails,
 the <tag>p:finally</tag> block is <emphasis>always</emphasis> run after
 all other processing of the <tag>p:try</tag> has finished.</para>
 
@@ -4186,14 +4175,88 @@ declared to produce a sequence in either of its subpipelines.</para>
 <para>A pipeline author can cause an error to occur with the
 <tag>p:error</tag> step.</para>
 
-<para>The recovery subpipeline of a <tag>p:try</tag> is identified
-with a <tag>p:catch</tag>. The final subpipeline is
-identified with a <tag>p:finally</tag>.
-These elements are not
-sibling steps in the usual sense, the names of sibling <tag>p:catch</tag>
-elements and the <tag>p:finally</tag> element are not in
-<link linkend="scoping">the same scope</link>. The elements of the
-initial subpipeline are also not in the same scope as the <tag>p:catch</tag>
+<para>If we assume that an absent <tag>p:finally</tag> always succeeds, evaluation
+of a <tag>p:try</tag> falls into one of these cases:</para>
+
+<itemizedlist>
+<listitem>
+<para>If the initial pipeline succeeds:</para>
+<itemizedlist>
+<listitem>
+<para>If the <tag>p:finally</tag> succeeds,
+the <tag>p:try</tag> succeeds and the outputs of the initial subpipeline are
+the outputs of the <tag>p:try</tag>.
+</para>
+</listitem>
+<listitem>
+<para>If the <tag>p:finally</tag> fails,
+the <tag>p:try</tag> fails and the error raised by the <tag>p:finally</tag>
+is reported as the cause of the failure.</para>
+</listitem>
+</itemizedlist>
+</listitem>
+<listitem>
+<para>If the initial pipeline fails and a recovery subpipeline is selected:</para>
+<itemizedlist>
+<listitem>
+<para>If the recovery pipeline succeeds:</para>
+<itemizedlist>
+<listitem>
+<para>If the <tag>p:finally</tag> succeeds,
+the <tag>p:try</tag> succeeds and the outputs of the recovery subpipeline are
+the outputs of the <tag>p:try</tag>.
+</para>
+</listitem>
+<listitem>
+<para>If the <tag>p:finally</tag> fails,
+the <tag>p:try</tag> fails and the error raised by the <tag>p:finally</tag>
+is reported as the cause of the failure.</para>
+</listitem>
+</itemizedlist>
+</listitem>
+<listitem>
+<para>If the recovery pipeline fails:</para>
+<itemizedlist>
+<listitem>
+<para>If the <tag>p:finally</tag> succeeds,
+the <tag>p:try</tag> fails and the error raised by the recovery subpipeline
+is reported as the cause of the failure.</para>
+</listitem>
+<listitem>
+<para>If the <tag>p:finally</tag> fails,
+the <tag>p:try</tag> fails and the error raised by the <emphasis>recovery subpipeline</emphasis>
+<rfc2119>must</rfc2119> be reported as the cause of the failure. The error raised by
+the finally pipeline <rfc2119>may</rfc2119> also be reported in addition to the error
+raised by the recovery pipeline.</para>
+</listitem>
+</itemizedlist>
+</listitem>
+</itemizedlist>
+</listitem>
+<listitem>
+<para>If the initial pipeline fails and a recovery subpipeline is not selected:</para>
+<itemizedlist>
+<listitem>
+<para>If the <tag>p:finally</tag> succeeds,
+the <tag>p:try</tag> fails and the error raised by the initial subpipeline
+is reported as the cause of the failure.</para>
+</listitem>
+<listitem>
+<para>If the <tag>p:finally</tag> fails,
+the <tag>p:try</tag> fails and the error raised by the <emphasis>initial subpipeline</emphasis>
+<rfc2119>must</rfc2119> be reported as the cause of the failure. The error raised by
+the finally pipeline <rfc2119>may</rfc2119> also be reported in addition to the error
+raised by the initial subpipeline.</para>
+</listitem>
+</itemizedlist>
+</listitem>
+</itemizedlist>
+
+<para>The <tag>p:catch</tag> and <tag>p:finally</tag> elements are not
+sibling steps, the names of sibling <tag>p:catch</tag> elements and
+the <tag>p:finally</tag> element are not in <link
+linkend="scoping">the same scope</link>. The elements of the initial
+subpipeline are also not in the same scope as the <tag>p:catch</tag>
 and <tag>p:finally</tag> elements or their descendants.</para>
 
 <section xml:id="p.catch">
@@ -4215,6 +4278,26 @@ added to the <glossterm>readable ports</glossterm>.</para>
 </listitem>
 </itemizedlist>
 
+<para>All except the last <tag>p:catch</tag> pipeline <rfc2119>must</rfc2119> 
+have a <tag class="attribute">code</tag> attribute.
+<error code="S0064">It is a <glossterm>static error</glossterm>
+if the <tag class="attribute">code</tag> attribute is missing from
+any but the last <tag>p:catch</tag> or if any error code occurs
+in more than one <tag class="attribute">code</tag> attribute among
+sibling <tag>p:catch</tag> elements.</error>
+<error code="S0083">It is a <glossterm>static 
+error</glossterm> if the value of the <tag class="attribute">code</tag>
+attribute is not a whitespace separated list of EQNames.</error></para>
+
+<para>When a <tag>p:try</tag> considers the recovery subpipelines,
+if any of the specified error codes in a <tag>p:catch</tag> match
+the error that was raised in the initial subpipeline, then
+that <tag>p:catch</tag> is selected as the recovery pipeline.
+If the last <tag>p:catch</tag> does not have a <tag class="attribute">code</tag>
+attribute, it is selected if no other <tag>p:catch</tag> has a
+matching error code.
+</para>
+
 <para>What appears on the <port>error</port> input port is an <link
 linkend="err-vocab">error document</link>. The error document may
 contain messages generated by steps that were part of the initial
@@ -4230,11 +4313,8 @@ messages in the document.</para>
 <section xml:id="p.finally">
 <title>p:finally</title>
 
-<para>Irrespective of which pipeline is evaluated, the last thing that
-the <tag>p:try</tag> step does is evaluate the
-<tag>p:finally</tag>
-pipeline. This happens <emphasis>even if</emphasis> the <tag>p:try</tag>
-fails.</para>
+<para>The last thing that the <tag>p:try</tag> step does is evaluate
+the <tag>p:finally</tag> pipeline.</para>
 
 <e:rng-pattern name="Finally"/>
 
