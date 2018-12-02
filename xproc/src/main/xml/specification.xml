@@ -977,11 +977,39 @@ for <link linkend="use-when">conditional element exclusion</link>.</para>
 </orderedlist>
 
 <para>For the purposes of evaluating a these expressions,
-the context node, position, and size are all undefined. The
+the initial context node, position, and size are all undefined. The
 <glossterm>in-scope bindings</glossterm> are limited to the lexically preceding,
 statically declared options and variables. There are no available collections
 except the default collection on <tag>p:variable</tag>s which explicitly create
 a collection.</para>
+
+<para>The entire expression must be evaluated without reference to the
+non-static inputs to the pipeline. Expressions can access documents as long
+as they are available statically.</para>
+
+<para>Consider:</para>
+
+<programlisting language="xml"><![CDATA[<p:declare-step version="3.0"
+                xmlns:p="http://www.w3.org/ns/xproc">
+  <p:input port="source"/>
+  <p:variable name="D" select="count(//*)"/>
+
+  <p:option name="A" static="true" select="5"/>
+  <p:variable name="B" static="true" select="$A + count(//*)">
+    <p:document href="doc.xml"/>
+  </p:variable>
+
+  …
+</p:declare-step>]]></programlisting>
+
+<para>The value of <code>$A</code> will be 5, unless a different
+value is provided before static analysis. The value of <code>$B</code> will
+be the value of <code>$A</code> plus the number of elements in
+<uri>doc.xml</uri> <emphasis>which must be successfully resolved during
+static anlaysis</emphasis>. Although <code>$D</code> can reference
+the document provided dynamically on the <port>source</port> port,
+any attempt to refer to <code>$D</code> in the expression(s) that
+initialize <code>$A</code> and <code>$B</code> would be an error.</para>
 
 <para>The results of XProc extension functions may differ during static analysis,
 as described in the description of each function.</para>
