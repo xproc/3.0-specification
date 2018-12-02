@@ -775,15 +775,20 @@ content types, that they accept. Input documents must
         automatically by the processor if no explicit connection is given. Generally speaking, if
         two steps appear sequentially in a subpipeline, then the primary output of the first step
         will automatically be connected to the primary input of the second.</para>
-      <para>Additionally, if a compound step has no declared outputs and the <glossterm>last
-          step</glossterm> in its subpipeline has an unconnected primary output, then an implicit
-        primary output port will be added to the compound step (and consequently the last step's
-        primary output will be connected to it). This implicit output port has no name. It inherits
-        the <tag class="attribute">sequence</tag> and the <tag class="attribute">content-types</tag>
-        properties of the port connected to it. This rule
-        does not apply to <tag>p:declare-step</tag>; step declarations must provide explicit names
-        for all of their outputs.</para>
-    </section>
+
+<para>Additionally, if a compound step, or non-step wrapper that can
+declare outputs, has no declared outputs and the
+<glossterm>last step</glossterm> in its subpipeline has an unconnected
+primary output, then an implicit primary output port will be added to
+the compound step (and consequently the last step's primary output
+will be connected to it). This implicit output port has no name. It
+inherits the <tag class="attribute">sequence</tag> and the <tag
+class="attribute">content-types</tag> properties of the port connected
+to it. This rule does not apply to <tag>p:declare-step</tag>; step
+declarations must provide explicit names for all of their
+outputs.</para>
+
+</section>
 
 <section xml:id="connections">
 <title>Connections</title>
@@ -3992,7 +3997,15 @@ evaluated as if only it had been present.</para>
 outputs of the selected <glossterm>subpipeline</glossterm>. The
 outputs <emphasis>available</emphasis> from the <tag>p:choose</tag>
 are union of all of the outputs declared in any of its alternative
-subpipelines.</para>
+subpipelines. In order to maintain consistency with respect to the
+<glossterm>default readable port</glossterm>, if any subpipeline has a
+<glossterm>primary output port</glossterm>, even implicitly, then
+<emphasis>every</emphasis> subpipline must have exactly the same
+primary output port. In some cases, this may require making the implicit
+primary output explicit in order to assure that it has the same name.
+<error code="S0102">It is a <glossterm>static error</glossterm> if alternative
+subpipelines have different primary output ports.</error>
+</para>
 
 <para>Consider a <tag>p:choose</tag> that has two alternative
 subpipelines where one declares output ports “A” and “B” and the other
@@ -4000,19 +4013,15 @@ declares output ports “B” and “C”. The outputs available from the
 <tag>p:choose</tag> are “A”, “B”, and “C”. No documents appear on any
 outputs not declared in the subpipline actually selected.</para>
 
-<para>In order to maintain consistency with respect to the
-<glossterm>default readable port</glossterm>, if any subpipeline has a
-<glossterm>primary output port</glossterm>, even implicitly, then
-<emphasis>every</emphasis> subpipline must have exactly the same
-primary output port. In some cases, this may require making the implicit
-primary output explicit in order to assure that it has the same name.
-</para>
-
 <para>As a convenience to authors, it is not an error if some
 subpipelines declare outputs that can produce sequences and some do
 not. Each output of the <tag>p:choose</tag> is declared to produce a
 sequence if that output is declared to produce a sequence in any of
-its subpipelines.</para>
+its subpipelines.
+Similarly, the content types that can appear on the port are the union
+of the content types that might be produced by the initial subpipeline and
+any of the recovery subpipelines.
+</para>
 
 <para>The <tag>p:choose</tag> can specify the context node against
 which the XPath expressions that occur on each branch are evaluated.
@@ -4166,8 +4175,18 @@ all other processing of the <tag>p:try</tag> has finished.</para>
 outputs of the initial <glossterm>subpipeline</glossterm> or the recovery
 subpipline if an error occurred in the initial subpipeline. The
 outputs <emphasis>available</emphasis> from the <tag>p:try</tag>
-are union of all of the outputs declared in any of its alternative
-subpipelines.</para>
+are union of all of the outputs declared (explicitly or implicitly in the
+absence of any <tag>p:output</tag> elements if the <glossterm>last step</glossterm>
+has a primary output port) in any of its alternative
+subpipelines. In order to maintain consistency with respect to the
+<glossterm>default readable port</glossterm>, if any subpipeline has a
+<glossterm>primary output port</glossterm>, even implicitly, then
+<emphasis>every</emphasis> subpipline must have exactly the same
+primary output port. In some cases, this may require making the implicit
+primary output explicit in order to assure that it has the same name.
+<error code="S0102">It is a <glossterm>static error</glossterm> if alternative
+subpipelines have different primary output ports.</error>
+</para>
 
 <para>Consider a <tag>p:try</tag> that has an initial
 subpipeline that declares output ports “A” and “B” and a recovery
@@ -4177,19 +4196,15 @@ declares output ports “B” and “C”. The outputs available from the
 outputs not declared in the subpipeline whose results are actually
 returned.</para>
 
-<para>In order to maintain consistency with respect to the
-<glossterm>default readable port</glossterm>, if any subpipeline has a
-<glossterm>primary output port</glossterm>, even implicitly, then
-<emphasis>every</emphasis> subpipline must have exactly the same
-primary output port. In some cases, this may require making the implicit
-primary output explicit in order to assure that it has the same name.
-</para>
-
 <para>As a convenience to authors, it is not an error if an output
 port can produce a sequence in the initial subpipeline but not in the
 recovery subpipeline, or vice versa. Each output of the
 <tag>p:try</tag> is declared to produce a sequence if that output is
-declared to produce a sequence in either of its subpipelines.</para>
+declared to produce a sequence in either of its subpipelines.
+Similarly, the content types that can appear on the port are the union
+of the content types that might be produced by the initial subpipeline and
+any of the recovery subpipelines.
+</para>
 
 <para>A pipeline author can cause an error to occur with the
 <tag>p:error</tag> step.</para>
