@@ -398,8 +398,8 @@
   </xsl:if>
 
   <link rel="stylesheet" type="text/css" href="css/xproc.css"/>
-
   <link rel="stylesheet" type="text/css" href="{$docbook.css}"/>
+  <link rel="stylesheet" type="text/css" href="css/print.css" media="print"/>
 </xsl:template>
 
 <xsl:template match="*" mode="m:head-content">
