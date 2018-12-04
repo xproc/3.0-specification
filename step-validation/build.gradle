@@ -1,3 +1,8 @@
+repositories {
+  mavenLocal()
+  mavenCentral()
+}
+
 configurations {
   tools {
     description = "Run tools"
@@ -7,7 +12,8 @@ configurations {
 
 dependencies {
   tools (
-    fileTree(dir: '../tools/lib').include("*.jar")
+    [group: 'org.relaxng', name: 'jing', version: '20181204'],
+    [group: 'org.relaxng', name: 'trang', version: '20181204']
   )
 }
 
