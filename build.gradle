@@ -1,9 +1,15 @@
 buildscript {
   repositories {
-    maven { url uri('file:/h:/.m2/repository') }
     mavenLocal()
     mavenCentral()
     maven { url "http://maven.restlet.org" }
+  }
+
+  // Get rid of that [expletive deleted] warning about xml-apis 2.0.2/1.0.b2
+  configurations.all {
+    resolutionStrategy {
+      force 'xml-apis:xml-apis:1.4.01'
+    }
   }
 
   dependencies {
@@ -16,9 +22,15 @@ buildscript {
 }
 
 repositories {
-  maven { url uri('file:/F:/.m2/repository') }
   mavenLocal()
   mavenCentral()
+}
+
+// Get rid of that [expletive deleted] warning about xml-apis 2.0.2/1.0.b2
+configurations.all {
+  resolutionStrategy {
+    force 'xml-apis:xml-apis:1.4.01'
+  }
 }
 
 configurations {
@@ -30,7 +42,8 @@ configurations {
 
 dependencies {
   tools (
-    fileTree(dir: 'tools/lib').include("*.jar")
+    [group: 'org.relaxng', name: 'jing', version: '20181204'],
+    [group: 'org.relaxng', name: 'trang', version: '20181204']
   )
 }
 
