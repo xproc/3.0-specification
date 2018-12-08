@@ -2072,66 +2072,6 @@ non-XML document.</para>
 normally during static analysis.</para>
 </section>
 
-<section xml:id="f.force-qname-keys">
-<title>Force QName keys</title>
-
-<para>This function forces a <type>map(*)</type> into a
-<type>map(xs:QName, item()*)</type>.</para>
-
-<methodsynopsis>
-  <type>map(xs:Qname, item()*)</type>
-  <methodname>p:force-qname-keys</methodname>
-  <methodparam>
-    <type>map(*)</type>
-    <parameter>map</parameter>
-  </methodparam>
-</methodsynopsis>
-
-<para>The <function>p:force-qname-keys</function> takes as its input a
-map of type <type>map(*)</type> (so any map) and forces this into a
-map with <type>xs:Qname</type> keys. Every key/value entry in
-<code>$map</code> is processed as follows:</para>
-
-<itemizedlist>
-  <listitem>
-    <para>If the entry's key is of type <type>xs:QName</type>, the entry
-    is copied to the function's result map, unchanged.</para>
-  </listitem>
-  <listitem>
-    <para>If the entry's key is an instance of type <type>xs:string</type> 
-      (or a type derived from <type>xs:string</type>) it is
-    transformed into an <type>xs:Qname</type> using the <link
-    xlink:href="https://www.w3.org/TR/xpath-31/#doc-xpath31-EQName"
-    >XPath EQName production rules</link>. That is, it can be written
-    as a local-name only, as a prefix plus local-name or as a URI plus
-    local-name (using the <code>Q{}</code> syntax). An entry with this
-    QName as key and the original entry's value is added to the
-    function's result map.</para>
-    <para>
-      <error code="D0061">It is a <glossterm>dynamic error</glossterm>
-        if <code>$key</code> is of type <type>xs:string</type> and cannot be converted into a <type>xs:Qname</type>.</error>
-    </para>
-  </listitem>
-  <listitem>
-    <para>If the entry's key is of any other type, the entry is ignored
-    and will <emphasis>not</emphasis> be copied to the function's
-    result map.</para>
-  </listitem>
-</itemizedlist>
-
-<note>
-  <para>This function is <emphasis>forced</emphasis> on any step options that have a
-  <type>map()</type> datatype with <type>xs:QName</type> keys
-  (<code>as="map(xs:QName, ...)</code>). This allows
-  passing maps with (easier to specify) <type>xs:string</type> type
-  keys that are converted automatically into the required
-  <type>xs:QName</type> keys. See also <xref linkend="p.option"/>.</para>
-</note>
-
-<para>The <function>p:force-qname-keys</function> function behaves
-normally during static analysis.</para>
-</section>
-
 <section xml:id="other-xpath-extension-functions">
   <title>Other XPath Extension Functions</title>
   <para><impl>It is <glossterm>implementation-defined</glossterm> if the processor supports
@@ -2143,7 +2083,7 @@ static analysis is <glossterm>implementation-defined</glossterm>.</impl></para>
 </section>
 </section>
 
-    <section xml:id="psvi-support">
+  <section xml:id="psvi-support">
       <title>PSVIs in XProc</title>
       <para>XML documents flow between steps in an XProc pipeline. <xref
           linkend="infoset-conformance"/> identifies the properties of those documents that
@@ -2685,14 +2625,37 @@ to separately specify a namespace URI if the value is a URI qualified name.</err
 </listitem>
 </orderedlist>
 
-<para>As an additional convenience, if the specified sequence type is
-a map with <type>xs:QName</type> keys
-(<type>map(xs:QName, …)</type>),
-the <function>p:force-qname-keys</function> function is
-automatically applied to the value. This makes it possible to pass in
-maps using (easier to write) <type>xs:string</type> type keys that are
-converted automatically into the required <type>xs:QName</type>
-keys in a manner analgous to <type>#QName</type> values.</para>
+<para>As an additional convenience, if the specified sequence type of an option
+or a variable is a map with <type>xs:QName</type> keys
+(<type>map(xs:QName, …)</type>), the supplied map value is processed specially.
+This makes it possible to pass in maps using (easier to write) <type>xs:string</type> 
+type keys that are converted automatically into the required <type>xs:QName</type>
+keys in a manner analogous to <type>#QName</type> values.</para>
+<para>Every key/value pair in a map supplied to a variable or an option with sequence
+type <type>map(xs:QName, …)</type> is processed as follows:</para>
+  <itemizedlist>
+    <listitem>
+      <para>If the entry's key is of type <type>xs:QName</type>, the entry
+        is left unchanged.</para>
+    </listitem>
+    <listitem>
+      <para>If the entry's key is an instance of type <type>xs:string</type> 
+        (or a type derived from <type>xs:string</type>) it is
+        transformed into an <type>xs:Qname</type> using the <link
+          xlink:href="https://www.w3.org/TR/xpath-31/#doc-xpath31-EQName"
+          >XPath EQName production rules</link>. That is, it can be written
+        as a local-name only, as a prefix plus local-name or as a URI plus
+        local-name (using the <code>Q{}</code> syntax).</para>
+      <para>
+        <error code="D0061">It is a <glossterm>dynamic error</glossterm>
+          if <code>$key</code> is of type <type>xs:string</type> and cannot be converted into a <type>xs:Qname</type>.</error>
+      </para>
+    </listitem>
+    <listitem>
+      <para>If the entry's key is of any other type, the entry is ignored
+        and will be removed from the map.</para>
+    </listitem>
+  </itemizedlist>
 </section>
 
 <!-- ============================================================ -->
