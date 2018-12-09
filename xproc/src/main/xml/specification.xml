@@ -6166,126 +6166,143 @@ value templates are never expanded. The value of
 <para>The interpretation of the (possibily decoded) content
 depends on the document's content type.
 </para>
+  <note>
+    <para>In the presence of <glossterm baseform="text value
+      template">text value templates</glossterm>, it is not possible to
+      interpret the non-XML characters until the templates have been
+      expanded.</para>
+  </note>
+  
+  <section xml:id="inline-xml-content">
+    <title>Inline XML content</title>
+    
+    <para>If the <tag class="attribute">document-properties</tag> is not
+      specified or the map does not contain a key "content-type" or specifies
+      an <glossterm>XML media type</glossterm>, then
+      the content is XML. A new XML document is created by wrapping a document node
+      around the nodes which appear as children of <tag>p:inline</tag>. Any preceding or
+      following whitespace-only text nodes will be discarded.</para>
+    
+    <para>The in-scope namespaces of the inline document differ from the
+      in-scope namespace of the content of the <tag>p:inline</tag> element
+      in that bindings for all its <emphasis>excluded namespaces</emphasis>,
+      as defined below, are removed:</para>
+    
+    <itemizedlist>
+      <listitem>
+        <para>The XProc namespace itself (<uri>http://www.w3.org/ns/xproc</uri>) is
+          excluded.</para>
+      </listitem>
+      <listitem>
+        <para>A namespace URI designated by using an <tag class="attribute"
+          >exclude-inline-prefixes</tag> attribute on the enclosing <tag>p:inline</tag> is
+          excluded.</para>
+      </listitem>
+      <listitem>
+        <para>A namespace URI designated by using an <tag class="attribute"
+          >exclude-inline-prefixes</tag> attribute on any ancestor <tag>p:declare-step</tag> or <tag>p:library</tag> is also excluded. (In other words, the
+          effect of several <tag class="attribute">exclude-inline-prefixes</tag> attributes among
+          the ancestors of <tag>p:inline</tag> is cumulative.)</para>
+      </listitem>
+    </itemizedlist>
+    
+    <para>The value of each prefix in the <tag
+      class="attribute">exclude-inline-prefixes</tag> attribute is
+      interpreted as follows:</para>
+    
+    <itemizedlist>
+      <listitem>
+        <para>The value of the attribute is either <literal>#all</literal>, or
+          a whitespace-separated list of tokens, each of which is either a
+          namespace prefix or <literal>#default</literal>. The namespace bound
+          to each of the prefixes is designated as an excluded namespace. <error
+            code="S0057">It is a <glossterm>static error</glossterm> if the <tag
+              class="attribute" >exclude-inline-prefixes</tag> attribute does not
+            contain a list of tokens or if any of those tokens (except
+            <literal>#all</literal> or <literal>#default</literal>) is not a
+            prefix bound to a namespace in the in-scope namespaces of the element
+            on which it occurs.</error></para>
+      </listitem>
+      <listitem>
+        <para>The default namespace of the element on which <tag
+          class="attribute">exclude-inline-prefixes</tag> occurs may be
+          designated as an excluded namespace by including
+          <literal>#default</literal> in the list of namespace prefixes. <error
+            code="S0058">It is a <glossterm>static error</glossterm> if the value
+            <literal>#default</literal> is used within the <tag class="attribute"
+              >exclude-inline-prefixes</tag> attribute and there is no default
+            namespace in scope.</error>
+        </para>
+      </listitem>
+      <listitem>
+        <para>The value <literal>#all</literal> indicates that all namespaces
+          that are in scope for the element on which <tag
+            class="attribute">exclude-inline-prefixes</tag> occurs are designated
+          as excluded namespaces.</para>
+      </listitem>
+    </itemizedlist>
+    
+    <para>The XProc processor <rfc2119>must</rfc2119> include all in-scope
+      prefixes that are not explicitly excluded. If the namespace associated with
+      an excluded prefix is used in the expanded-QName of a descendant
+      element or attribute,
+      the processor <rfc2119>may</rfc2119> include that prefix anyway, or it may
+      generate a new prefix.</para>
+    
+    <para>Consider this example:</para>
+    
+    <programlisting language="xml"><xi:include href="../../../build/examples/exclude-pfx.txt" parse="text"/></programlisting>
+    
+    <para>which might produce a result like this:</para>
+    
+    <programlisting language="xml"><![CDATA[<doc xmlns:c="http://example.com/c">
+   <b:part xmlns:b="http://example.com/b"/>
+ </doc>]]></programlisting>
+    
+    <para>The declaration for “<literal>c</literal>” must
+      be present because it was not excluded. The “<literal>part</literal>” element
+      uses the namespace bound to “<literal>b</literal>”, so <emphasis>some</emphasis>
+      binding must be present. In this example, the original
+      prefix has been preserved, but it would be equally correct if a different
+      prefix had been used.</para>
+    
+    <para>The text-node descendants of a <tag>p:inline</tag> may be
+      <link linkend="text-value-templates">text value templates</link>. Attribute descendants may be <link
+        linkend="attribute-value-templates">attribute value templates</link>. This is controlled by the
+      <tag class="attribute">[p:]expand-text</tag> and the <tag class="attribute">p:inline-expand-text</tag> attribute. See
+      <xref linkend="expand-text-attribute"/>.</para>
+    
+  </section>
 
-<section xml:id="inline-non-xml">
-<title>Inline non-XML content</title>
+<section xml:id="inline-text">
+<title>Inline text content</title>
 
-<para>If the document's content type is not an <glossterm>XML media
-type</glossterm>, then the content is non-XML.</para>
-
-<para><impl>The representation of non-XML content is
-<glossterm>implementation-dependent</glossterm></impl>.</para>
-
-<note>
-<para>In the presence of <glossterm baseform="text value
-template">text value templates</glossterm>, it is not possible to
-interpret the non-XML characters until the templates have been
-expanded.</para>
-</note>
+<para>If the document's content type is a <glossterm>text media
+  type</glossterm>, then the content is text. A new text document is created by 
+  joining the text nodes which appear as children of p:inline together to a single
+  text node and wrapping a document node around it. Any preceding or following whitespace-only 
+  text nodes will be preserved.</para>
 
 </section>
 
-<section xml:id="inline-xml-content">
-<title>Inline XML content</title>
-
-<para>If the <tag class="attribute">document-properties</tag> is not
-specified or the map does not contain a key "content-type" or specifies
-an <glossterm>XML media type</glossterm>, then
-the content is XML. A new XML document is created by wrapping a document node
-around the nodes which appear as children of <tag>p:inline</tag>. Any preceding or
-following whitespace-only text nodes will be discarded.</para>
-
-<para>The in-scope namespaces of the inline document differ from the
-in-scope namespace of the content of the <tag>p:inline</tag> element
-in that bindings for all its <emphasis>excluded namespaces</emphasis>,
-as defined below, are removed:</para>
-
-<itemizedlist>
-                  <listitem>
-                      <para>The XProc namespace itself (<uri>http://www.w3.org/ns/xproc</uri>) is
-                          excluded.</para>
-                  </listitem>
-                  <listitem>
-                      <para>A namespace URI designated by using an <tag class="attribute"
-                          >exclude-inline-prefixes</tag> attribute on the enclosing <tag>p:inline</tag> is
-                          excluded.</para>
-                  </listitem>
-                  <listitem>
-                      <para>A namespace URI designated by using an <tag class="attribute"
-                          >exclude-inline-prefixes</tag> attribute on any ancestor <tag>p:declare-step</tag> or <tag>p:library</tag> is also excluded. (In other words, the
-                          effect of several <tag class="attribute">exclude-inline-prefixes</tag> attributes among
-                          the ancestors of <tag>p:inline</tag> is cumulative.)</para>
-                  </listitem>
-              </itemizedlist>
-
-          <para>The value of each prefix in the <tag
-              class="attribute">exclude-inline-prefixes</tag> attribute is
-              interpreted as follows:</para>
-
-          <itemizedlist>
-              <listitem>
-                  <para>The value of the attribute is either <literal>#all</literal>, or
-                      a whitespace-separated list of tokens, each of which is either a
-                      namespace prefix or <literal>#default</literal>. The namespace bound
-                      to each of the prefixes is designated as an excluded namespace. <error
-                          code="S0057">It is a <glossterm>static error</glossterm> if the <tag
-                              class="attribute" >exclude-inline-prefixes</tag> attribute does not
-                          contain a list of tokens or if any of those tokens (except
-                          <literal>#all</literal> or <literal>#default</literal>) is not a
-                          prefix bound to a namespace in the in-scope namespaces of the element
-                          on which it occurs.</error></para>
-              </listitem>
-              <listitem>
-                  <para>The default namespace of the element on which <tag
-                      class="attribute">exclude-inline-prefixes</tag> occurs may be
-                      designated as an excluded namespace by including
-                      <literal>#default</literal> in the list of namespace prefixes. <error
-                          code="S0058">It is a <glossterm>static error</glossterm> if the value
-                          <literal>#default</literal> is used within the <tag class="attribute"
-                              >exclude-inline-prefixes</tag> attribute and there is no default
-                          namespace in scope.</error>
-                  </para>
-              </listitem>
-              <listitem>
-                  <para>The value <literal>#all</literal> indicates that all namespaces
-                      that are in scope for the element on which <tag
-                          class="attribute">exclude-inline-prefixes</tag> occurs are designated
-                      as excluded namespaces.</para>
-              </listitem>
-          </itemizedlist>
-
-          <para>The XProc processor <rfc2119>must</rfc2119> include all in-scope
-              prefixes that are not explicitly excluded. If the namespace associated with
-              an excluded prefix is used in the expanded-QName of a descendant
-              element or attribute,
-              the processor <rfc2119>may</rfc2119> include that prefix anyway, or it may
-              generate a new prefix.</para>
-
-          <para>Consider this example:</para>
-
-          <programlisting language="xml"><xi:include href="../../../build/examples/exclude-pfx.txt" parse="text"/></programlisting>
-
-          <para>which might produce a result like this:</para>
-
-          <programlisting language="xml"><![CDATA[<doc xmlns:c="http://example.com/c">
-   <b:part xmlns:b="http://example.com/b"/>
- </doc>]]></programlisting>
-
-          <para>The declaration for “<literal>c</literal>” must
-              be present because it was not excluded. The “<literal>part</literal>” element
-              uses the namespace bound to “<literal>b</literal>”, so <emphasis>some</emphasis>
-              binding must be present. In this example, the original
-              prefix has been preserved, but it would be equally correct if a different
-              prefix had been used.</para>
-
-<para>The text-node descendants of a <tag>p:inline</tag> may be
-  <link linkend="text-value-templates">text value templates</link>. Attribute descendants may be <link
-    linkend="attribute-value-templates">attribute value templates</link>. This is controlled by the
-  <tag class="attribute">[p:]expand-text</tag> and the <tag class="attribute">p:inline-expand-text</tag> attribute. See
-  <xref linkend="expand-text-attribute"/>.</para>
+<section xml:id="inline-json">
+  <title>Inline JSON content</title>
+  
+<para>If the document's content type is a <glossterm>JSON media type</glossterm>,
+then the context is JSON. A new JSON document is created by joining the 
+text values of children of p:inline together and parse it as JSON.</para>
+  
+<para><error code="D0057">It is a <glossterm>dynamic error</glossterm> if the text content
+    does not conform to the JSON grammar.</error></para>
   
 </section>
 
+<section xml:id="inline-others">
+  <title>Other inline content</title>
+  <para><impl>How a processor interprets other media types is <glossterm>implementation-defined</glossterm>.
+  </impl></para>
+</section>
+  
 <section xml:id="implicit-inlines">
 <title>Implicit inlines</title>
 
