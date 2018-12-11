@@ -104,10 +104,3 @@ can be raised by the <code>p:validate-with-relax-ng</code> step:</para>
 
 The build process is owned by [norm](mailto:ndw@nwalsh.com);
 bug him if you have difficulties.
-
-## Caveats
-
-See [issue 229](https://github.com/relaxng/jing-trang/issues/229). I’ve installed
-a locally patched version of Jing that accepts `xs:anyAtomicType`. That might get
-rejected by the RELAX NG folks, or it might get replaced by something better.
-It’s worth keeping an eye on.
