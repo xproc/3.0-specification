@@ -13,24 +13,12 @@ processing-instruction targets in a document.</para>
   <p:output port="result" content-types="application/xml"/>
   <p:option name="match" as="xs:string" select="'/*'" e:type="XSLTSelectionPattern"/>
   <p:option name="new-name" required="true" as="xs:QName"/>
-  <p:option name="new-prefix" as="xs:NCName?"/>
-  <p:option name="new-namespace" as="xs:anyURI?"/>
 </p:declare-step>
 
 <para>The value of the <option>match</option> option must be an
 XSLTSelectionPattern. <error code="C0023">It is a <glossterm>dynamic
 error</glossterm> if the pattern matches anything other than element,
 attribute or processing instruction nodes.</error></para>
-
-<para>The value of the <option>new-name</option> option must be a
-<type>QName</type>.
-If the lexical value does not contain a colon, then the <tag class="attribute">new-namespace</tag> may be used to specify the
-namespace of the new name. In that case, the <tag class="attribute">new-prefix</tag> may be specified to suggest a
-prefix for the new name. <error code="D0034">It is a
-<glossterm>dynamic error</glossterm> to specify a new namespace or
-prefix if the lexical value of the specified name contains a
-colon.</error>
-</para>
 
 <para>Each element, attribute, or processing-instruction in the input
 matched by the match pattern specified in the <option>match</option>
