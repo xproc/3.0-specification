@@ -173,8 +173,6 @@ with the specified value.
   <p:output port="result" content-types="application/xml"/>
   <p:option name="match" as="xs:string" select="'/*'" e:type="XSLTSelectionPattern"/>
   <p:option name="attribute-name" required="true" as="xs:QName"/>
-  <p:option name="attribute-prefix" as="xs:NCName?"/>
-  <p:option name="attribute-namespace" as="xs:anyURI?"/>
   <p:option name="attribute-value" required="true" as="xs:string"/>
 </p:declare-step>
 
@@ -182,16 +180,6 @@ with the specified value.
 <rfc2119>must</rfc2119> be an XSLTSelectionPattern. <error code="C0023">It
 is a <glossterm>dynamic error</glossterm> if the match pattern matches a node
 which is not an element.</error></para>
-
-<para>The value of the <option>attribute-name</option> option
-<rfc2119>must</rfc2119> be a <type>QName</type>.
-If the lexical value does not contain a colon, then the <tag class="attribute">attribute-namespace</tag> may be used to specify the
-namespace of the attribute. In that case, the <tag class="attribute">attribute-prefix</tag> may be specified to suggest a
-prefix for the attribute name. <error code="D0034">It is a
-<glossterm>dynamic error</glossterm> to specify a new namespace or
-prefix if the lexical value of the specified name contains a
-colon.</error>
-The corresponding expanded name is used to construct the attribute.</para>
 
 <para>The value of the <option>attribute-value</option> option
 <rfc2119>must</rfc2119> be a legal attribute value according to XML.</para>
@@ -700,8 +688,6 @@ to the step.</para>
     <p:input port="source" sequence="true" content-types="application/xml text/xml */*+xml text/*"/>
     <p:output port="result" sequence="true" content-types="application/xml text/xml */*+xml text/*"/>
     <p:option name="code" required="true" as="xs:QName"/>
-    <p:option name="code-prefix" as="xs:NCName?"/>
-    <p:option name="code-namespace" as="xs:anyURI?"/>
 </p:declare-step>
 
 <para>This step uses the document provided on its input as the content
@@ -2229,22 +2215,10 @@ element and stores that label in the specified attribute.</para>
   <p:input port="source" content-types="application/xml text/xml */*+xml"/>
   <p:output port="result" content-types="application/xml"/>
   <p:option name="attribute" as="xs:QName" select="'xml:id'"/>
-  <p:option name="attribute-prefix" as="xs:NCName?"/>
-  <p:option name="attribute-namespace" as="xs:anyURI?"/>
   <p:option name="label" as="xs:string" select="'concat(&#34;_&#34;,$p:index)'" e:type="XPathExpression"/>
   <p:option name="match" as="xs:string" select="'*'" e:type="XSLTSelectionPattern"/>
   <p:option name="replace" as="xs:boolean" select="true()"/>
 </p:declare-step>
-
-<para>The value of the <option>attribute</option> option
-<rfc2119>must</rfc2119> be a <type>QName</type>.
-If the lexical value does not contain a colon, then the <tag class="attribute">attribute-namespace</tag> may be used to specify the
-namespace of the attribute name. In that case, the <tag class="attribute">attribute-prefix</tag> may be specified to suggest a
-prefix for the attribute name. <error code="D0034">It is a
-<glossterm>dynamic error</glossterm> to specify a new namespace or
-prefix if the lexical value of the specified name contains a
-colon.</error>
-</para>
 
 <para>The value of the <option>label</option> option is an XPath
 expression used to generate the value of the attribute label.</para>
@@ -2812,19 +2786,7 @@ fashion.</para>
    <p:input port="alternate" sequence="true" content-types="application/xml"/>
    <p:output port="result" sequence="true"/>
    <p:option name="wrapper" required="true" as="xs:QName"/>
-   <p:option name="wrapper-prefix" as="xs:NCName?"/>
-   <p:option name="wrapper-namespace" as="xs:anyURI?"/>
 </p:declare-step>
-
-<para>The value of the <option>wrapper</option> option
-<rfc2119>must</rfc2119> be a <type>QName</type>. If the lexical value
-does not contain a colon, then the <tag class="attribute">wrapper-namespace</tag>
-may be used to specify the namespace of the wrapper. In that case, the
-<tag class="attribute">wrapper-prefix</tag> may be specified to suggest a
-prefix for the wrapper element.
-<error code="D0034">It is a <glossterm>dynamic error</glossterm>
-to specify a new namespace or prefix if the lexical value of the specified
-name contains a colon.</error></para>
 
 <para>The step takes each pair of documents, in order, one from the
 <port>source</port> port and one from the <port>alternate</port> port,
@@ -2953,24 +2915,12 @@ processing-instruction targets in a document.</para>
   <p:output port="result" content-types="application/xml"/>
   <p:option name="match" as="xs:string" select="'/*'" e:type="XSLTSelectionPattern"/>
   <p:option name="new-name" required="true" as="xs:QName"/>
-  <p:option name="new-prefix" as="xs:NCName?"/>
-  <p:option name="new-namespace" as="xs:anyURI?"/>
 </p:declare-step>
 
 <para>The value of the <option>match</option> option must be an
 XSLTSelectionPattern. <error code="C0023">It is a <glossterm>dynamic
 error</glossterm> if the pattern matches anything other than element,
 attribute or processing instruction nodes.</error></para>
-
-<para>The value of the <option>new-name</option> option must be a
-<type>QName</type>.
-If the lexical value does not contain a colon, then the <tag class="attribute">new-namespace</tag> may be used to specify the
-namespace of the new name. In that case, the <tag class="attribute">new-prefix</tag> may be specified to suggest a
-prefix for the new name. <error code="D0034">It is a
-<glossterm>dynamic error</glossterm> to specify a new namespace or
-prefix if the lexical value of the specified name contains a
-colon.</error>
-</para>
 
 <para>Each element, attribute, or processing-instruction in the input
 matched by the match pattern specified in the <option>match</option>
@@ -3516,20 +3466,8 @@ documents.</para>
    <p:input port="source" content-types="application/xml */*+xml text/*" sequence="true"/>
    <p:output port="result" sequence="true" content-types="application/xml"/>
    <p:option name="wrapper" required="true" as="xs:QName"/>
-   <p:option name="wrapper-prefix" as="xs:NCName?"/>
-   <p:option name="wrapper-namespace" as="xs:anyURI?"/>
    <p:option name="group-adjacent" as="xs:string?" e:type="XPathExpression"/>
 </p:declare-step>
-
-<para>The value of the <option>wrapper</option> option
-<rfc2119>must</rfc2119> be a <type>QName</type>. If the lexical value
-does not contain a colon, then the <tag class="attribute">wrapper-namespace</tag>
-may be used to specify the namespace of the wrapper. In that case, the
-<tag class="attribute">wrapper-prefix</tag> may be specified to suggest a
-prefix for the wrapper element.
-<error code="D0034">It is a <glossterm>dynamic error</glossterm>
-to specify a new namespace or prefix if the lexical value of the specified
-name contains a colon.</error></para>
 
 <para>The value of the <option>group-adjacent</option> option
 <rfc2119>must</rfc2119> be an XPathExpression.</para>
@@ -3572,21 +3510,9 @@ element.
    <p:input port="source" content-types="application/xml text/xml */*+xml"/>
    <p:output port="result" content-types="application/xml"/>
    <p:option name="wrapper" required="true" as="xs:QName"/>
-   <p:option name="wrapper-prefix" as="xs:NCName?"/>
-   <p:option name="wrapper-namespace" as="xs:anyURI?"/>
    <p:option name="match" required="true" as="xs:string" e:type="XSLTSelectionPattern"/>
    <p:option name="group-adjacent" as="xs:string?" e:type="XPathExpression"/>
 </p:declare-step>
-
-<para>The value of the <option>wrapper</option> option
-<rfc2119>must</rfc2119> be a <type>QName</type>. If the lexical value
-does not contain a colon, then the <tag class="attribute">wrapper-namespace</tag>
-may be used to specify the namespace of the wrapper. In that case, the
-<tag class="attribute">wrapper-prefix</tag> may be specified to suggest a
-prefix for the wrapper element.
-<error code="D0034">It is a <glossterm>dynamic error</glossterm>
-to specify a new namespace or prefix if the lexical value of the specified
-name contains a colon.</error></para>
 
 <para>The value of the <option>match</option> option
 <rfc2119>must</rfc2119> be an XSLTSelectionPattern. <error code="C0023">It

@@ -9,8 +9,6 @@
                 select="'/*'"
                 e:type="XSLTSelectionPattern"/>
       <p:option name="attribute-name" required="true" as="xs:QName"/>
-      <p:option name="attribute-prefix" as="xs:NCName?"/>
-      <p:option name="attribute-namespace" as="xs:anyURI?"/>
       <p:option name="attribute-value" required="true" as="xs:string"/>
    </p:declare-step>
    <p:declare-step type="p:add-xml-base" xml:id="add-xml-base">
@@ -62,8 +60,6 @@
                 sequence="true"
                 content-types="application/xml text/xml */*+xml text/*"/>
       <p:option name="code" required="true" as="xs:QName"/>
-      <p:option name="code-prefix" as="xs:NCName?"/>
-      <p:option name="code-namespace" as="xs:anyURI?"/>
    </p:declare-step>
    <p:declare-step type="p:escape-markup" xml:id="escape-markup">
       <p:input port="source" content-types="application/xml text/xml */*+xml"/>
@@ -177,8 +173,6 @@
       <p:input port="source" content-types="application/xml text/xml */*+xml"/>
       <p:output port="result" content-types="application/xml"/>
       <p:option name="attribute" as="xs:QName" select="'xml:id'"/>
-      <p:option name="attribute-prefix" as="xs:NCName?"/>
-      <p:option name="attribute-namespace" as="xs:anyURI?"/>
       <p:option name="label"
                 as="xs:string"
                 select="'concat(&#34;_&#34;,$p:index)'"
@@ -238,8 +232,6 @@
       <p:input port="alternate" sequence="true" content-types="application/xml"/>
       <p:output port="result" sequence="true"/>
       <p:option name="wrapper" required="true" as="xs:QName"/>
-      <p:option name="wrapper-prefix" as="xs:NCName?"/>
-      <p:option name="wrapper-namespace" as="xs:anyURI?"/>
    </p:declare-step>
    <p:declare-step type="p:parameters" xml:id="parameters">
       <p:output port="result" content-types="application/xml"/>
@@ -253,8 +245,6 @@
                 select="'/*'"
                 e:type="XSLTSelectionPattern"/>
       <p:option name="new-name" required="true" as="xs:QName"/>
-      <p:option name="new-prefix" as="xs:NCName?"/>
-      <p:option name="new-namespace" as="xs:anyURI?"/>
    </p:declare-step>
    <p:declare-step type="p:replace" xml:id="replace">
       <p:input port="source"
@@ -360,16 +350,12 @@
                sequence="true"/>
       <p:output port="result" sequence="true" content-types="application/xml"/>
       <p:option name="wrapper" required="true" as="xs:QName"/>
-      <p:option name="wrapper-prefix" as="xs:NCName?"/>
-      <p:option name="wrapper-namespace" as="xs:anyURI?"/>
       <p:option name="group-adjacent" as="xs:string?" e:type="XPathExpression"/>
    </p:declare-step>
    <p:declare-step type="p:wrap" xml:id="wrap">
       <p:input port="source" content-types="application/xml text/xml */*+xml"/>
       <p:output port="result" content-types="application/xml"/>
       <p:option name="wrapper" required="true" as="xs:QName"/>
-      <p:option name="wrapper-prefix" as="xs:NCName?"/>
-      <p:option name="wrapper-namespace" as="xs:anyURI?"/>
       <p:option name="match"
                 required="true"
                 as="xs:string"
