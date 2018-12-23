@@ -13,19 +13,7 @@ fashion.</para>
    <p:input port="alternate" sequence="true" content-types="application/xml"/>
    <p:output port="result" sequence="true"/>
    <p:option name="wrapper" required="true" as="xs:QName"/>
-   <p:option name="wrapper-prefix" as="xs:NCName?"/>
-   <p:option name="wrapper-namespace" as="xs:anyURI?"/>
 </p:declare-step>
-
-<para>The value of the <option>wrapper</option> option
-<rfc2119>must</rfc2119> be a <type>QName</type>. If the lexical value
-does not contain a colon, then the <tag class="attribute">wrapper-namespace</tag>
-may be used to specify the namespace of the wrapper. In that case, the
-<tag class="attribute">wrapper-prefix</tag> may be specified to suggest a
-prefix for the wrapper element.
-<error code="D0034">It is a <glossterm>dynamic error</glossterm>
-to specify a new namespace or prefix if the lexical value of the specified
-name contains a colon.</error></para>
 
 <para>The step takes each pair of documents, in order, one from the
 <port>source</port> port and one from the <port>alternate</port> port,
