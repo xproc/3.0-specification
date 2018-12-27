@@ -1,6 +1,6 @@
 <p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
-		name="xinclude-and-validate"
-		version="3.0">
+                name="xinclude-and-validate"
+                version="3.0">
   <p:input port="source"/>
   <p:input port="schemas" sequence="true"/>
   <p:output port="result"/>
@@ -8,13 +8,13 @@
   <p:choose>
     <p:when test="/*[@version &lt; 2.0]">
       <p:validate-with-xml-schema>
-	<p:with-input port="schema" href="v1schema.xsd"/>
+        <p:with-input port="schema" href="v1schema.xsd"/>
       </p:validate-with-xml-schema>
     </p:when>
 
     <p:otherwise>
       <p:validate-with-xml-schema>
-	<p:with-input port="schema" href="v2schema.xsd"/>
+        <p:with-input port="schema" href="v2schema.xsd"/>
       </p:validate-with-xml-schema>
     </p:otherwise>
   </p:choose>
