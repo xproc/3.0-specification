@@ -30,8 +30,8 @@ describing operations to be performed on documents.</para>
 performed on documents. Pipelines generally accept
 documents as input and produce documents as output.
 Pipelines are made up of simple steps which
-perform atomic operations on documents and constructs similar to
-conditionals, iteration, and exception handlers which control which
+perform atomic operations on documents and constructs such as
+conditionals, iterations, and exception handlers which control which
 steps are executed.</para>
 </abstract>
 
@@ -52,6 +52,7 @@ An XML Pipeline Language</link> published by the W3C.</para>
 
 <para>An XML Pipeline specifies a sequence of operations to be
 performed on a collection of input documents. Pipelines take documents
+(XML, JSON, text, images, etc.)
 as their input and produce documents as their output.</para>
 
 <para>A <glossterm>pipeline</glossterm> consists of steps. Like
@@ -77,34 +78,54 @@ defines a standard library of steps. Pipeline implementations
 simple pipeline that performs XInclude processing and validation on a
 document.</para>
 
-    <figure xml:id="fig-xival">
-      <title>A simple, linear XInclude/Validate pipeline</title>
-      <mediaobject>
-        <alt>A simple, linear XInclude/Validate pipeline</alt>
-        <imageobject>
-          <imagedata fileref="graphics/sch-xinclude-validate-pipeline.png"/>
-        </imageobject>
-      </mediaobject>
-    </figure>
-    <para>This is a pipeline that consists of two atomic steps, XInclude and Validate with XML
-      Schema. The pipeline itself has two inputs, “source” (a source document) and “schemas” (a
-      sequence of W3C XML Schemas). The XInclude step reads the pipeline input “source” and produces
-      a result document. The Validate with XML Schema step reads the pipeline input “schemas” and
-      the result of the XInclude step and produces its own result document. The result of the
-      validation, “result”, is the result of the pipeline. (For consistency across the step
-      vocabulary, the standard input is usually named “source” and the standard output is
-      usually named “result”.) </para>
-    <para>The pipeline document determines how the steps are connected together inside the pipeline,
-      that is, how the output of one step becomes the input of another.</para>
-    <para>The pipeline document for this pipeline is shown in <xref linkend="ex1"/>.</para>
-    <example xml:id="ex1">
-      <title>A simple, linear XInclude/Validate pipeline</title>
-      <programlisting language="xml">&lt;p:xinclude name="included"&gt;
+<figure xml:id="fig-xival">
+  <title>A simple, linear XInclude/Validate pipeline</title>
+  <mediaobject>
+    <alt>A simple, linear XInclude/Validate pipeline</alt>
+    <imageobject>
+      <imagedata fileref="graphics/sch-xinclude-validate-pipeline.png"/>
+    </imageobject>
+  </mediaobject>
+</figure>
+<para>This is a pipeline that consists of two atomic steps, XInclude and Validate with XML
+  Schema. The pipeline itself has two inputs, “source” (a source document) and “schemas” (a
+  sequence of W3C XML Schemas). The XInclude step reads the pipeline input “source” and produces
+  a result document. The Validate with XML Schema step reads the pipeline input “schemas” and
+  the result of the XInclude step and produces its own result document. The result of the
+  validation, “result”, is the result of the pipeline. (For consistency across the step
+  vocabulary, the standard input is usually named “source” and the standard output is
+  usually named “result”.) </para>
+<para>The pipeline document determines how the steps are connected together inside the pipeline,
+  that is, how the output of one step becomes the input of another.</para>
+<para>The pipeline document for this pipeline is shown in <xref linkend="ex1"/>.</para>
+
+<example xml:id="ex1">
+<title>A simple, linear XInclude/Validate pipeline</title>
+<programlisting language="xml">&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
+                name="xinclude-and-validate"
+                version="3.0"&gt;
+  &lt;p:input port="source" primary="true"/&gt;
+  &lt;p:input port="schemas" sequence="true"/&gt;
+  &lt;p:output port="result"&gt;
+    &lt;p:pipe step="validated" port="result"/&gt;
+  &lt;/p:output&gt;
+
+  &lt;p:xinclude name="included"&gt;
     &lt;p:with-input port="source"&gt;
       &lt;p:pipe step="xinclude-and-validate" port="source"/&gt;
     &lt;/p:with-input&gt;
-  &lt;/p:xinclude&gt;</programlisting>
-    </example>
+  &lt;/p:xinclude&gt;
+
+  &lt;p:validate-with-xml-schema name="validated"&gt;
+    &lt;p:with-input port="source"&gt;
+      &lt;p:pipe step="included" port="result"/&gt;
+    &lt;/p:with-input&gt;
+    &lt;p:with-input port="schema"&gt;
+      &lt;p:pipe step="xinclude-and-validate" port="schemas"/&gt;
+    &lt;/p:with-input&gt;
+  &lt;/p:validate-with-xml-schema&gt;
+&lt;/p:declare-step&gt;</programlisting>
+</example>
 
 <para>The example in <xref linkend="ex1"/> is very verbose. It makes
 all of the connections seen in the figure explicit. In practice,
@@ -115,8 +136,22 @@ have to be made explicit.</para>
 <para>The same pipeline, using XProc defaults, is shown in <xref linkend="ex1-abbr"/>.</para>
 
 <example xml:id="ex1-abbr">
-  <title>A simple, linear XInclude/Validate pipeline (simplified)</title>
-  <programlisting language="xml">&lt;p:xinclude/&gt;</programlisting>
+<title>A simple, linear XInclude/Validate pipeline (simplified)</title>
+<programlisting language="xml">&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
+                name="xinclude-and-validate"
+                version="3.0"&gt;
+  &lt;p:input port="source" primary="true"/&gt;
+  &lt;p:input port="schemas" sequence="true"/&gt;
+  &lt;p:output port="result"/&gt;
+
+  &lt;p:xinclude/&gt;
+
+  &lt;p:validate-with-xml-schema&gt;
+    &lt;p:with-input port="schema"&gt;
+      &lt;p:pipe step="xinclude-and-validate" port="schemas"/&gt;
+    &lt;/p:with-input&gt;
+  &lt;/p:validate-with-xml-schema&gt;
+&lt;/p:declare-step&gt;</programlisting>
 </example>
 
 <para><xref linkend="fig-style-proc"/> is a more complex example: it
@@ -140,19 +175,31 @@ example, each branch consists of a single validate step.</para>
 
 <example xml:id="ex2">
   <title>A validate and transform pipeline</title>
-  <programlisting language="xml">&lt;p:choose&gt;
+  <programlisting language="xml">&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
+                name="xinclude-and-validate"
+                version="3.0"&gt;
+  &lt;p:input port="source"/&gt;
+  &lt;p:input port="schemas" sequence="true"/&gt;
+  &lt;p:output port="result"/&gt;
+
+  &lt;p:choose&gt;
     &lt;p:when test="/*[@version &amp;lt; 2.0]"&gt;
       &lt;p:validate-with-xml-schema&gt;
-	&lt;p:with-input port="schema" href="v1schema.xsd"/&gt;
+        &lt;p:with-input port="schema" href="v1schema.xsd"/&gt;
       &lt;/p:validate-with-xml-schema&gt;
     &lt;/p:when&gt;
 
     &lt;p:otherwise&gt;
       &lt;p:validate-with-xml-schema&gt;
-	&lt;p:with-input port="schema" href="v2schema.xsd"/&gt;
+        &lt;p:with-input port="schema" href="v2schema.xsd"/&gt;
       &lt;/p:validate-with-xml-schema&gt;
     &lt;/p:otherwise&gt;
-  &lt;/p:choose&gt;</programlisting>
+  &lt;/p:choose&gt;
+
+  &lt;p:xslt&gt;
+    &lt;p:with-input port="stylesheet" href="stylesheet.xsl"/&gt;
+  &lt;/p:xslt&gt;
+&lt;/p:declare-step&gt;</programlisting>
 </example>
 
 <para>This example, like the preceding, relies on XProc defaults for
@@ -306,12 +353,18 @@ one input with respect to some set of XML Schemas, etc.</para>
         </orderedlist>
         <para>In a valid pipeline that runs successfully to completion, the manufactured names
           aren't visible (except perhaps in debugging or logging output).</para>
-        <note xml:id="def-name-ncname">
-          <para>The format for defaulted names does not conform to the requirements of an <link xlink:href="http://www.w3.org/TR/xml-names/#NT-NCName">NCName</link>. This is an
-            explicit design decision; it prevents pipelines from using the defaulted names on
-              <tag>p:pipe</tag> elements. If an explicit connection is required, the pipeline author
-            must provide an explicit name for the step.</para>
-        </note>
+
+<note xml:id="def-name-ncname">
+<para>The format for defaulted names does not conform to the
+requirements of an
+<link xlink:href="http://www.w3.org/TR/xml-names/#NT-NCName">NCName</link>.
+This is an explicit design decision; it prevents pipelines from using
+the defaulted names on <tag>p:pipe</tag> elements. If an explicit
+connection requires a step name, the pipeline author must name
+the step.
+</para>
+</note>
+
       </section>
     </section>
   </section>
@@ -611,8 +664,8 @@ output named “<literal>result</literal>”, and the same set of options.
         separate declarations; each instance of the compound step serves as its own declaration. On
         these compound steps, the number and names of the outputs can be different on each instance
         of the step.</para>
-      <para><xref linkend="fig-compound-step"/> illustrates symbolically a compound step with one
-        subpipeline and one output. As you can see from the diagram, the output from the compound
+      <para><xref linkend="fig-compound-step"/> illustrates symbolically a compound step with a
+        subpipeline with one output. As you can see from the diagram, the output from the compound
         step comes from one of the outputs of the subpipeline within the step.</para>
       <figure xml:id="fig-compound-step">
         <title>A compound step</title>
@@ -642,11 +695,10 @@ connected if no explicit connection is given, see <xref linkend="primary-input-o
 
 <para>Output ports on compound steps have a dual nature: from the
 perspective of the compound step's siblings, its outputs are just
-ordinary outputs and can be connected the sames other
+ordinary outputs and can be connected the same as other
 <glossterm>declared outputs</glossterm>. From the perspective of the
-subpipeline inside the compound step, they are inputs into which
-something may be connected to produce the output of the compound
-step.</para>
+subpipeline inside the compound step, they behave like inputs and can
+be connected just like other inputs.</para>
 
 <para>Within a compound step, the <glossterm>declared
 outputs</glossterm> of the step can be connected to any of the various
@@ -746,7 +798,7 @@ content types, that they accept. Input documents must
     </section>
     <section xml:id="primary-input-output">
       <title>Primary Inputs and Outputs</title>
-      <para>As a convenience for pipeline authors, each step may have one input port designated as
+      <para>Each step may have one input port designated as
         the primary input port and one output port designated as the primary output port.</para>
       <para><termdef xml:id="dt-primary-input-port">If a step has a document input port which is
           explicitly marked “<code>primary='true'</code>”, or if it has exactly one document input
@@ -787,13 +839,59 @@ outputs.</para>
 
 <para>Steps are connected together by their input ports, output
 ports, and bindings to variables and options. Variables and options
-are also steps by the output ports from which they receive
-context.
+also behave something like steps, connected together by the
+input on which they receive their context and by references to them
+by name elsewhere.
 <error code="S0001">It is a <glossterm>static error</glossterm>
 if there are any loops in the connections between steps, variables,
 and options: no step, variable, or option can be connected to itself
 nor can there be any sequence of connections through other steps that
 leads back to itself.</error></para>
+
+<para>Consider <xref linkend="fig-depends"/>.</para>
+
+<figure xml:id="fig-depends">
+  <title>Dependencies between steps, variables, and options</title>
+  <mediaobject>
+    <alt>Dependencies between steps, variables, and options</alt>
+    <imageobject>
+      <imagedata fileref="graphics/depends.png"/>
+    </imageobject>
+  </mediaobject>
+</figure>
+
+<itemizedlist>
+<listitem>
+<para>Step1 has no connections.
+</para>
+</listitem>
+<listitem>
+<para>Step2 is connected to Step1 by an explicit dependency, see <xref linkend="depends"/>.
+</para>
+</listitem>
+<listitem>
+<para>Step3 is connected to Step2 because it reads from the output of Step2. It is also
+transitively connected to Step1 because Step2 is connected to it.
+</para>
+</listitem>
+<listitem>
+<para>Step4 has no connections. In principle, Step1 and Step4 can be evaluated in parallel
+or in either order.
+</para>
+</listitem>
+<listitem>
+<para>Step5 is connected to Step3 because it reads from the output of Step3. It is also
+transitively connected to Step2 and the connections that Step2 has. Step5 is also connected
+to Step4 because it’s option “<literal>option1</literal>” is connected to “<literal>someVar</literal>”
+which is connected to “<literal>ecount</literal>” which reads its context from Step4.
+</para>
+</listitem>
+<listitem>
+<para>Step6 is connected to Step5 because it reads from the output of Step5. It is also
+transitively connected to all of the other steps.
+</para>
+</listitem>
+</itemizedlist>
 
          <para><termdef xml:id="dt-connection">A <firstterm>connection</firstterm> associates an
                input or output port with some data source.</termdef>  Such a connection represents a
@@ -812,10 +910,8 @@ leads back to itself.</error></para>
             </listitem>
             <listitem>
                <para>One of the inputs declared on one of its
-                  <glossterm>ancestors</glossterm>.</para>
-            </listitem>
-            <listitem>
-               <para>A special port provided by an ancestor compound step, for example,
+                  <glossterm>ancestors</glossterm> or
+               a special port provided by an ancestor compound step, for example,
                      “<port>current</port>” in a <tag>p:for-each</tag> or <tag>p:viewport</tag>.
                </para>
             </listitem>
@@ -904,13 +1000,12 @@ value template in a <tag>p:inline</tag>.
         <para><impl>Except for cases which are specifically called out in <biblioref linkend="steps30"/>, the extent to which namespace fixup, and other checks for
             outputs which cannot be serialized, are performed on intermediate outputs is
               <glossterm>implementation-defined</glossterm>.</impl></para>
-        <para>Whenever an implementation serializes pipeline contents, for example for pipeline
+        <para>Whenever an implementation serializes XML, for example for pipeline
           outputs, logging, or as part of steps such as <tag>p:store</tag> or
             <tag>p:http-request</tag>, it is a dynamic error if
-          that serialization could not be done so as to produce a document which is both well-formed
+          that serialization can not be done so as to produce a document which is both well-formed
           and namespace-well-formed, as specified in <glossterm>XML</glossterm> and
-            <glossterm>Namespaces in XML</glossterm>, regardless of what serialization method, if
-          any, is called for.</para>
+            <glossterm>Namespaces in XML</glossterm>.</para>
       </section>
     </section>
 
@@ -1153,7 +1248,12 @@ variables; on atomic steps, to compute the actual values of options.
           <literal>test</literal> option on the <tag>p:split-sequence</tag> step. That's because the
         nature of the <tag>p:split-sequence</tag> is that <emphasis>it evaluates</emphasis> the
         expression. Only some options on some steps expect XPath expressions. </para>
-      <para>The XProc processor evaluates all of the XPath expressions in <tag class="attribute">select</tag> attributes on variables, options, and inputs, in <tag class="attribute">match</tag> attributes on <tag>p:viewport</tag>, and in <tag class="attribute">test</tag> attributes on <tag>p:when</tag> steps.</para>
+
+<para>The XProc processor evaluates all of the XPath expressions in
+<tag class="attribute">select</tag> attributes on variables, options,
+and inputs, in <tag class="attribute">match</tag> attributes on
+<tag>p:viewport</tag>, and in <tag class="attribute">test</tag>
+attributes on <tag>p:when</tag> and <tag>p:if</tag> steps.</para>
 
         <section xml:id="xproc-xpath-context-31">
           <title>Processor XPath Context</title>
@@ -1198,15 +1298,26 @@ with the following static context:</para>
                 <itemizedlist>
                   <listitem>
                     <para>All the primitive atomic types defined in <biblioref linkend="xmlschema-2"/>, with the exception of <literal>xs:NOTATION</literal>. That is:
-                        <literal>xs:string</literal>, <literal>xs:boolean</literal>,
-                        <literal>xs:decimal</literal>, <literal>xs:double</literal>,
-                        <literal>xs:float</literal>, <literal>xs:date</literal>,
-                        <literal>xs:time</literal>, <literal>xs:dateTime</literal>,
-                        <literal>xs:duration</literal>, <literal>xs:QName</literal>,
-                        <literal>xs:anyURI</literal>, <literal>xs:gDay</literal>,
-                        <literal>xs:gMonthDay</literal>, <literal>xs:gMonth</literal>,
-                        <literal>xs:gYearMonth</literal>, <literal>xs:gYear</literal>,
-                        <literal>xs:base64Binary</literal>, and <literal>xs:hexBinary</literal>.
+<literal>xs:anyAtomicType</literal>,
+<literal>xs:anySimpleType</literal>,
+<literal>xs:anyURI</literal>,
+<literal>xs:base64Binary</literal>,
+<literal>xs:boolean</literal>,
+<literal>xs:date</literal>,
+<literal>xs:dateTime</literal>,
+<literal>xs:decimal</literal>,
+<literal>xs:double</literal>,
+<literal>xs:duration</literal>,
+<literal>xs:float</literal>,
+<literal>xs:gDay</literal>,
+<literal>xs:gMonth</literal>,
+<literal>xs:gMonthDay</literal>,
+<literal>xs:gYear</literal>,
+<literal>xs:gYearMonth</literal>,
+<literal>xs:hexBinary</literal>,
+<literal>xs:QName</literal>,
+<literal>xs:string</literal>, and
+<literal>xs:time</literal>.
                     </para>
                   </listitem>
                   <listitem>
@@ -1215,9 +1326,8 @@ with the following static context:</para>
                   </listitem>
                   <listitem>
                     <para>The types <literal>xs:anyType</literal>,
-                        <literal>xs:anySimpleType</literal>,
                       <literal>xs:yearMonthDuration</literal>,
-                      <literal>xs:dayTimeDuration</literal>, <literal>xs:anyAtomicType</literal>,
+                      <literal>xs:dayTimeDuration</literal>, 
                         <literal>xs:untyped</literal>, and <literal>xs:untypedAtomic</literal>
                       defined in <biblioref linkend="xpath-datamodel"/>. </para>
                   </listitem>
@@ -1638,26 +1748,25 @@ readable port then the context node is undefined.</para>
 </section>
 </section>
 
-    <section xml:id="xpath-extension-functions">
-      <title>XPath Extension Functions</title>
+<section xml:id="xpath-extension-functions">
+<title>XPath Extension Functions</title>
 
-      <para>The XProc processor <rfc2119>must</rfc2119> support the
-        additional functions described in this section in XPath expressions
-        evaluated by the processor. These functions <rfc2119>must not</rfc2119> be supported
-        in XPath expressions evaluated by a step.</para>
+<para>The XProc processor <rfc2119>must</rfc2119> support the
+additional functions described in this section in XPath expressions
+evaluated by the processor.</para>
 
-      <note role="editorial">
-        <title>Editorial Note</title>
-        <para>Explain the reasons for this restriction: Interoperability of processors, functions are mostly
-        pointless in step context, step may defer XPath evalution to third party software (or web services).</para>
-      </note>
+<para>These functions <rfc2119>must not</rfc2119> be supported in
+XPath expressions evaluated by a step. In the interest of
+interoperability and to avoid imposing unnecessary constraints on
+implementors, XPath expressions inside, for example a template in an
+XSLT step, cannot be aware of the XProc-defined functions.
+</para>
 
       <section xml:id="f.system-property">
         <title>System Properties</title>
         <para>XPath expressions within a pipeline document can interrogate the processor for
           information about the current state of the pipeline. Various aspects of the processor are
-          exposed through the <function>p:system-property</function> function in the pipeline
-          namespace:</para>
+          exposed through the <function>p:system-property</function>:</para>
 
 <methodsynopsis>
 <type>xs:string</type>
@@ -1777,7 +1886,7 @@ static analysis is <glossterm>implementation-defined</glossterm>.</impl></para>
 <methodsynopsis>
 <type>xs:boolean</type>
 <methodname>p:step-available</methodname>
-<methodparam><type>xs:string</type><parameter>step-name</parameter></methodparam>
+<methodparam><type>xs:string</type><parameter>step-type</parameter></methodparam>
 </methodsynopsis>
 
 <para>The <varname>$step-type</varname> string <rfc2119>must</rfc2119>
@@ -1796,7 +1905,7 @@ static analysis is <glossterm>implementation-dependent</glossterm>.</impl></para
 <section xml:id="f.iteration-position">
 <title>Iteration Position</title>
 
-<para>Both <tag>p:for-each</tag> and <tag>p:viewport</tag> process a
+<para>Some compound steps, such as <tag>p:for-each</tag> and <tag>p:viewport</tag>, process a
 sequence of documents. The iteration position is the position of the
 current document in that sequence: the first document has position 1, the
 second 2, etc. The <function>p:iteration-position</function> function
@@ -6722,12 +6831,11 @@ editors. W3C Recommendation 16 August 2006.</bibliomixed>
 <citetitle xlink:href="http://www.w3.org/TR/xpath31/">XML Path Language (XPath)
 	3.1</citetitle>. Jonathan Robie, Michael Dyck, Josh Spiegel, editors.
 W3C Recommendation. 21 March 2017.</bibliomixed>
-    <bibliomixed xml:id="xpath-datamodel"><abbrev>XQuery 1.0 and XPath 2.0 Data
-Model (XDM)</abbrev>
-<citetitle xlink:href="http://www.w3.org/TR/xpath-datamodel/">XQuery 1.0 and
-XPath 2.0 Data Model (XDM)</citetitle>.
-Mary Fernández, Ashok Malhotra, Jonathan Marsh, <foreignphrase>et. al.</foreignphrase>, editors.
-W3C Recommendation. 23 January 2007.</bibliomixed>
+    <bibliomixed xml:id="xpath-datamodel"><abbrev>XQuery and XPath Data Model 3.1</abbrev>
+<citetitle xlink:href="http://www.w3.org/TR/xpath-datamodel-31/">XQuery and XPath
+Data Model 3.1</citetitle>.
+Norman Walsh, John Snelson, and Andrew Coleman, editors.
+W3C Recommendation. 21 March 2017.</bibliomixed>
     <bibliomixed xml:id="xml-serialization-31"><abbrev>Serialization</abbrev>
 <citetitle xlink:href="https://www.w3.org/TR/xslt-xquery-serialization-31/">XSLT
 and XQuery Serialization 3.1</citetitle>.
