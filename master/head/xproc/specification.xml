@@ -2481,56 +2481,27 @@ expression such that it returns the string values:</para>
 </section>
 </section>
 
-<section xml:id="options">
-<title>Options</title>
+  <section xml:id="variables-options-background">
+    <title>Variables and Options</title>
 
-<para>Some steps accept options. Options are name/value pairs. The value
-of an option is the default value specified in its declaration, or
-a value provided by the caller of the step (overriding the default).
-If it has neither a default value nor a provided value, its value is
-the empty sequence.</para>
+    <section xml:id="variables">
+      <title>Variables</title>
 
-<para><termdef xml:id="dt-option">An <firstterm>option</firstterm> is
-a name/value pair. The name <rfc2119>must</rfc2119> be an <link xlink:href="http://www.w3.org/TR/REC-xml-names/#dt-expname">expanded
-name</link>. The value may be any XPath data model value.</termdef>
-Option names are always expressed as literal values, pipelines cannot
-construct option names dynamically. </para>
+      <para>Variables are name/value pairs. Pipeline authors can create variables to hold computed values.</para>
 
-<para><impl>How outside values are specified for pipeline options on
-the pipeline initially invoked by the processor is
-<glossterm>implementation-defined</glossterm>.</impl> In other words,
-the command line options, APIs, or other mechanisms available to
-specify such options values are outside the scope of this
-specification.</para>
+      <para>
+        <termdef xml:id="dt-variable">A <firstterm>variable</firstterm> is a name/value pair. The name
+            <rfc2119>must</rfc2119> be an <link xlink:href="http://www.w3.org/TR/REC-xml-names/#dt-expname">expanded
+            name</link>. The value may be any XPath data model value.</termdef>
+      </para>
 
-<para>Some steps require a set of name/value pairs for the operations
-they perform. For example, an XSLT stylesheet might have required
-parameters or an XQuery query might have external variables.
-In the XProc Step Library, the standard way to pass such values to
-the step is to use an option named “<literal>parameters</literal>”
-whose value is a map.</para>
-</section>
+      <para>The names of variables and options are not distinct and are lexically scoped. <termdef xml:id="dt-shadow">We
+          say that a variable <firstterm baseform="shadow">shadows</firstterm> another variable (or option) if it has
+          the same name and appears later in the same lexical scope.</termdef></para>
 
-<section xml:id="variables">
-<title>Variables</title>
+      <para>Consider this pipeline:</para>
 
-<para>Variables are name/value pairs. Pipeline authors can create
-variables to hold computed values.</para>
-
-<para><termdef xml:id="dt-variable">A <firstterm>variable</firstterm>
-is a name/value pair. The name <rfc2119>must</rfc2119> be an <link xlink:href="http://www.w3.org/TR/REC-xml-names/#dt-expname">expanded
-name</link>. The value may be any XPath data model value.</termdef>
-</para>
-
-<para>The names of variables and options are not distinct and are lexically
-scoped. <termdef xml:id="dt-shadow">We say that a variable
-<firstterm baseform="shadow">shadows</firstterm> another variable
-(or option) if it has the same name and appears later in the same lexical
-scope.</termdef></para>
-
-<para>Consider this pipeline:</para>
-
-<programlisting language="xml">&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc" version="3.0" name="main"&gt;
+      <programlisting language="xml">&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc" version="3.0" name="main"&gt;
   &lt;p:option name="bname" as="xs:integer" select="1"/&gt;
 
   &lt;p:message message="NAME1={$bname}"&gt;
@@ -2550,207 +2521,164 @@ scope.</termdef></para>
   &lt;p:sink/&gt;
 &lt;/p:declare-step&gt;</programlisting>
 
-<para>If no overriding value is provided for <varname>$bname</varname> at runtime,
-the pipeline will produce three messages: “NAME1=1”, “NAME2=2”, and “NAME3=7”.
-(If an overriding value is provided at runtime, “NAME1” will have that value,
-“NAME2” will have one more than that value, and “NAME3” will have the value 7.
-</para>
+      <para>If no overriding value is provided for <varname>$bname</varname> at runtime, the pipeline will produce three
+        messages: “NAME1=1”, “NAME2=2”, and “NAME3=7”. (If an overriding value is provided at runtime, “NAME1” will have
+        that value, “NAME2” will have one more than that value, and “NAME3” will have the value 7. </para>
 
-<section xml:id="statics">
-<title>Static Options and Variables</title>
+    </section>
 
-<para>A <tag>p:option</tag> or <tag>p:variable</tag> that is a
-<emphasis>direct child</emphasis> of <tag>p:declare-step</tag> may be
-declared “static”. Options and variables that are the direct
-children of <tag>p:library</tag> <rfc2119>must</rfc2119> be declared
-static.</para>
+    <section xml:id="options">
+      <title>Options</title>
 
-<para>The values of static options and variables are computed during
-<link linkend="initiating">static analysis</link>.</para>
-</section>
+      <para>Some steps accept options. Options are name/value pairs. The value of an option is the default value
+        specified in its declaration, or a value provided by the caller of the step (overriding the default). If it has
+        neither a default value nor a provided value, its value is the empty sequence.</para>
 
-<section xml:id="varopt-types">
-<title>Variable and option types</title>
+      <para><termdef xml:id="dt-option">An <firstterm>option</firstterm> is a name/value pair. The name
+            <rfc2119>must</rfc2119> be an <link xlink:href="http://www.w3.org/TR/REC-xml-names/#dt-expname">expanded
+            name</link>. The value may be any XPath data model value.</termdef> Option names are always expressed as
+        literal values, pipelines cannot construct option names dynamically. </para>
 
-<para>Variables and options may declare that they have a type using the
-<tag class="attribute">as</tag> attribute. The attribute value <rfc2119>must</rfc2119>
-be an
-<biblioref linkend="xpath31"/>
-<link xlink:href="https://www.w3.org/TR/xpath-31/#dt-sequence-type">sequence Type</link>.
-<error code="S0096">It is a <glossterm>static
-error</glossterm> if the sequence type is not syntactically
-valid.</error> The sequence type <literal>item()*</literal> is assumed if
-no explicit type is provided.
-</para>
+      <para><impl>How outside values are specified for pipeline options on the pipeline initially invoked by the
+          processor is <glossterm>implementation-defined</glossterm>.</impl> In other words, the command line options,
+        APIs, or other mechanisms available to specify such options values are outside the scope of this
+        specification.</para>
 
-<para>If a variable or option declares a type, the supplied value 
- of the variable or option is converted to the required type, 
- using the function conversion rules specified by XPath 3.1.
- <error code="D0036">It is a <glossterm>dynamic error</glossterm> if 
- the supplied value of a variable or option cannot be converted 
- to the required type.</error></para>
+      <para>Some steps require a set of name/value pairs for the operations they perform. For example, an XSLT
+        stylesheet might have required parameters or an XQuery query might have external variables. In the XProc Step
+        Library, the standard way to pass such values to the step is to use an option named
+          “<literal>parameters</literal>” whose value is a map.</para>
+    </section>
 
-<para>Some steps have options whose values are QNames, for example
-“<tag class="attribute">attribute-name</tag>” on
-<tag>p:add-attribute</tag>. If the type
-<type>xs:QName</type> was strictly enforced, they would be tedious to specify. As a
-convenience for pipeline authors, the values of variables or options
-declared with the type <type>xs:QName</type> are processed specially.
-The type <type>xs:QName</type> is treated as <type>xs:anyAtomicType</type> for the purpose
-of atomization. The value (or values) are converted to <type>xs:QName</type>s:</para>
+    <section xml:id="statics">
+      <title>Static Options and Variables</title>
 
-<orderedlist>
-<listitem>
-<para>If the value supplied for the option is an instance of
-<type>xs:QName</type> then that value is used.
-</para>
-</listitem>
-<listitem>
-<para>If the value supplied for the option is an instance of
-<type>xs:string</type> (or a type derived from
-<type>xs:string</type>), the QName is constructed by following the
-<link xlink:href="https://www.w3.org/TR/xpath-31/#doc-xpath31-EQName">EQName
-production rules</link> in <biblioref linkend="xpath31"/>. That is, it
-can be written as a local-name only, as a prefix plus local-name, or as
-a URI qualified name (using the <code>Q{namespace}local-name</code> syntax).
-<error code="D0061">It is a 
-<glossterm>dynamic error</glossterm> if the string value is not syntactically an
-EQName.</error>
-<error code="D0069">It is a 
-<glossterm>dynamic error</glossterm> if the string value contains a colon and
-the designated prefix is not declared in the in-scope namespaces.</error>
-</para>
-</listitem>
-<listitem>
-<para><error code="D0068">It is a <glossterm>dynamic error</glossterm>
-if the supplied value is neither an instance of <type>xs:QName</type>
-nor an instance of <type>xs:string</type>.</error>
-</para>
-</listitem>
-</orderedlist> 
+      <para>Any <tag>p:variable</tag> that is part of the prologue of a step (as a direct child of
+          <tag>p:declare-step</tag> declared before the start of the sub-pipeline) <rfc2119>must</rfc2119> be declared
+        “static”. Any <tag>p:variable</tag> that is part of the sub-pipeline of a step <rfc2119>must not</rfc2119> be
+        declared “static”.</para>
+      <para>A <tag>p:option</tag> may be declared “static”. </para>
+      <para>Options and variables that are the direct children of <tag>p:library</tag>
+        <rfc2119>must</rfc2119> be declared static.</para>
 
-<!--
-<para>Steps with a QName-valued option also often provide two
-additional attributes to separately identify a prefix and a namespace URI.
-Although their names vary from step to step, in this section
-they’re identified as the <code>qname-value</code>,
-<code>prefix-value</code>, and <code>namespace-value</code>
-attributes. The rules described here apply regardless of their actual
-names.</para>
+      <para>The values of static options and variables are computed during <link linkend="initiating">static
+          analysis</link>.</para>
+    </section>
 
-<para>When <code>prefix-value</code> and <code>namespace-value</code>
-attributes are available, several additional co-constraints apply:</para>
+    <section xml:id="varopt-types">
+      <title>Variable and option types</title>
 
-<orderedlist>
-<listitem>
-<para>If the supplied value of the name is an <code>xs:QName</code>, you may not specify
-the <code>prefix-value</code> or <code>namespace-value</code>.
-<error code="D0066">It is a <glossterm>dynamic error</glossterm>
-to separately specify a prefix or namespace URI if the supplied value
-has the type <code>xs:QName</code>.</error>
-</para>
-</listitem>
-<listitem>
-<para>If the string value of the <code>qname-value</code> attribute
-contains a colon, you may not specify a <code>prefix-value</code> or
-<code>namespace-value</code>.
-<error code="D0034">It is a <glossterm>dynamic error</glossterm>
-to specify a prefix or namespace URI if the QName value contains a colon.</error>
-</para>
-</listitem>
-<listitem>
-<para>If you specify a <code>prefix-value</code>, you must also specify
-a namespace (either with the <code>namespace-value</code> or through a
-URI qualified name).
-<error code="D0070">It is a <glossterm>dynamic error</glossterm>
-to specify a prefix without also specifying a namespace URI.</error>
-</para>
-</listitem>
-<listitem>
-<para>If the specified value is of type <code>xs:QName</code> or is
-a URI qualified name, you may not specify a <code>namespace-value</code>.
-<error code="D0067">It is a <glossterm>dynamic error</glossterm>
-to separately specify a namespace URI if the value is a URI qualified name.</error>
-</para>
-</listitem>
-</orderedlist>
--->
+      <para>Variables and options may declare that they have a type using the <tag class="attribute">as</tag> attribute.
+        The attribute value <rfc2119>must</rfc2119> be an <biblioref linkend="xpath31"/>
+        <link xlink:href="https://www.w3.org/TR/xpath-31/#dt-sequence-type">sequence Type</link>. <error code="S0096">It
+          is a <glossterm>static error</glossterm> if the sequence type is not syntactically valid.</error> The sequence
+        type <literal>item()*</literal> is assumed if no explicit type is provided. </para>
 
-<para>As an additional convenience, if the specified sequence type of an option
-or a variable is a map with <type>xs:QName</type> keys
-(<type>map(xs:QName, …)</type>), the supplied map value is processed specially.
-This makes it possible to pass in maps using (easier to write) <type>xs:string</type> 
-type keys that are converted automatically into the required <type>xs:QName</type>
-keys in a manner analogous to <type>#QName</type> values.</para>
-<para>Every key/value pair in a map supplied to a variable or an option with sequence
-type <type>map(xs:QName, …)</type> is processed as follows:</para>
-  <itemizedlist>
-    <listitem>
-      <para>If the entry's key is of type <type>xs:QName</type>, the entry
-        is left unchanged.</para>
-    </listitem>
-    <listitem>
-      <para>If the entry's key is an instance of type <type>xs:string</type> 
-        (or a type derived from <type>xs:string</type>) it is
-        transformed into an <type>xs:Qname</type> using the <link xlink:href="https://www.w3.org/TR/xpath-31/#doc-xpath31-EQName">XPath EQName production rules</link>. That is, it can be written
-        as a local-name only, as a prefix plus local-name or as a URI plus
-        local-name (using the <code>Q{}</code> syntax).</para>
-      <para>
-        <error code="D0061">It is a <glossterm>dynamic error</glossterm>
-          if <code>$key</code> is of type <type>xs:string</type> and cannot be converted into a <type>xs:Qname</type>.</error>
-      </para>
-    </listitem>
-    <listitem>
-      <para>If the entry's key is of any other type, the entry is ignored
-        and will be removed from the map.</para>
-    </listitem>
-  </itemizedlist>
-</section>
+      <para>If a variable or option declares a type, the supplied value of the variable or option is converted to the
+        required type, using the function conversion rules specified by XPath 3.1. <error code="D0036">It is a
+            <glossterm>dynamic error</glossterm> if the supplied value of a variable or option cannot be converted to
+          the required type.</error></para>
+      
+    </section>
+    
+    <section xml:id="qname-handling">
+      <title>QName handling</title>
+      
+      <para>Some steps have options whose values are QNames, for example “<tag class="attribute">attribute-name</tag>”
+        on <tag>p:add-attribute</tag>. If the type <type>xs:QName</type> was strictly enforced, they would be tedious to
+        specify. As a convenience for pipeline authors, the values of variables or options declared with the type
+        <type>xs:QName</type> are processed specially. The type <type>xs:QName</type> is treated as
+        <type>xs:anyAtomicType</type> for the purpose of atomization. The value (or values) are converted to
+        <type>xs:QName</type>s:</para>
+      
+      <orderedlist>
+        <listitem>
+          <para>If the value supplied for the option is an instance of <type>xs:QName</type> then that value is used.
+          </para>
+        </listitem>
+        <listitem>
+          <para>If the value supplied for the option is an instance of <type>xs:string</type> (or a type derived from
+            <type>xs:string</type>), the QName is constructed by following the <link xlink:href="https://www.w3.org/TR/xpath-31/#doc-xpath31-EQName">EQName production rules</link> in
+            <biblioref linkend="xpath31"/>. That is, it can be written as a local-name only, as a prefix plus
+            local-name, or as a URI qualified name (using the <code>Q{namespace}local-name</code> syntax). <error code="D0061">It is a <glossterm>dynamic error</glossterm> if the string value is not syntactically an
+              EQName.</error>
+            <error code="D0069">It is a <glossterm>dynamic error</glossterm> if the string value contains a colon and
+              the designated prefix is not declared in the in-scope namespaces.</error>
+          </para>
+        </listitem>
+        <listitem>
+          <para>
+            <error code="D0068">It is a <glossterm>dynamic error</glossterm> if the supplied value is neither an
+              instance of <type>xs:QName</type> nor an instance of <type>xs:string</type>.</error>
+          </para>
+        </listitem>
+      </orderedlist>
+      
+      <para>As an additional convenience, if the specified sequence type of an option or a variable is a map with
+        <type>xs:QName</type> keys (<type>map(xs:QName, …)</type>), the supplied map value is processed specially.
+        This makes it possible to pass in maps using (easier to write) <type>xs:string</type> type keys that are
+        converted automatically into the required <type>xs:QName</type> keys in a manner analogous to
+        <type>#QName</type> values.</para>
+      <para>Every key/value pair in a map supplied to a variable or an option with sequence type <type>map(xs:QName,
+        …)</type> is processed as follows:</para>
+      <itemizedlist>
+        <listitem>
+          <para>If the entry's key is of type <type>xs:QName</type>, the entry is left unchanged.</para>
+        </listitem>
+        <listitem>
+          <para>If the entry's key is an instance of type <type>xs:string</type> (or a type derived from
+            <type>xs:string</type>) it is transformed into an <type>xs:Qname</type> using the <link xlink:href="https://www.w3.org/TR/xpath-31/#doc-xpath31-EQName">XPath EQName production rules</link>. That
+            is, it can be written as a local-name only, as a prefix plus local-name or as a URI plus local-name (using
+            the <code>Q{}</code> syntax).</para>
+          <para>
+            <error code="D0061">It is a <glossterm>dynamic error</glossterm> if the entry's key is of type
+              <type>xs:string</type> and cannot be converted into a <type>xs:Qname</type>.</error>
+          </para>
+        </listitem>
+        <listitem>
+          <para>If the entry's key is of any other type, the entry is ignored and will be removed from the map.</para>
+        </listitem>
+      </itemizedlist>
+    </section>
 
-<!-- ============================================================ -->
+    <section xml:id="opt-bindings">
+      <title>Namespaces on variables and options</title>
 
-<section xml:id="opt-bindings"><title>Namespaces on variables and options</title>
-
-<para>Variable and option values carry with them not only
-their literal or computed string value but also a set of namespaces.
-To see why this is necessary, consider the following
-step:</para><programlisting language="xml">&lt;p:delete xmlns:p="http://www.w3.org/ns/xproc"&gt;
+      <para>Variable and option values carry with them not only their literal or computed string value but also a set of
+        namespaces. To see why this is necessary, consider the following step:</para>
+      <programlisting language="xml">&lt;p:delete xmlns:p="http://www.w3.org/ns/xproc"&gt;
   &lt;p:with-option name="match" select="'html:div'"
 	         xmlns:html="http://www.w3.org/1999/xhtml"/&gt;
-&lt;/p:delete&gt;</programlisting><para>The
-<tag>p:delete</tag> step will delete elements that match the
-expression “<literal>html:div</literal>”, but that expression can only
-be correctly interpreted if there's a namespace binding for the prefix
-“<literal>html</literal>” so that binding has to travel with the
-option.</para>
+&lt;/p:delete&gt;</programlisting>
+      <para>The <tag>p:delete</tag> step will delete elements that match the expression “<literal>html:div</literal>”,
+        but that expression can only be correctly interpreted if there's a namespace binding for the prefix
+          “<literal>html</literal>” so that binding has to travel with the option.</para>
 
-<para>The default namespace bindings associated with a variable or
-option value are computed as follows:</para><orderedlist>
+      <para>The default namespace bindings associated with a variable or option value are computed as follows:</para>
+      <orderedlist>
 
-<listitem>
-<para>If the <tag class="attribute">select</tag> attribute was used to
-specify the value and it consisted of a single
-<literal>VariableReference</literal> (per <biblioref linkend="xpath31"/>), then the namespace bindings from the referenced
-option or variable are used.</para>
-</listitem>
-          <listitem>
-            <para>If the <tag class="attribute">select</tag> attribute was used to specify the value
-              and it evaluated to a node-set, then the in-scope namespaces from the first node in
-              the selected node-set (or, if it's not an element, its parent) are used.</para>
-            <para>The expression is evaluated in the appropriate context, See <xref linkend="xpath-context"/>.</para>
-          </listitem>
-          <listitem>
-            <para>Otherwise, the in-scope namespaces from the element providing the value are used.
-              (For options specified using <link linkend="option-shortcut">syntactic
-                shortcuts</link>, the step element itself is providing the value.)</para>
-          </listitem>
-        </orderedlist><para>The default namespace is never included in the namespace bindings for a
-          variable or option value. Unqualified names are always in
-          no-namespace.</para>
-<para>Unfortunately, in more complex situations, there may be no
-          single variable or option that can reliably be expected to have the correct set
-          of namespace bindings. Consider this
-          pipeline:</para><programlisting language="xml">&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
+        <listitem>
+          <para>If the <tag class="attribute">select</tag> attribute was used to specify the value and it consisted of a
+            single <literal>VariableReference</literal> (per <biblioref linkend="xpath31"/>), then the namespace
+            bindings from the referenced option or variable are used.</para>
+        </listitem>
+        <listitem>
+          <para>If the <tag class="attribute">select</tag> attribute was used to specify the value and it evaluated to a
+            node-set, then the in-scope namespaces from the first node in the selected node-set (or, if it's not an
+            element, its parent) are used.</para>
+          <para>The expression is evaluated in the appropriate context, See <xref linkend="xpath-context"/>.</para>
+        </listitem>
+        <listitem>
+          <para>Otherwise, the in-scope namespaces from the element providing the value are used. (For options specified
+            using <link linkend="option-shortcut">syntactic shortcuts</link>, the step element itself is providing the
+            value.)</para>
+        </listitem>
+      </orderedlist>
+      <para>The default namespace is never included in the namespace bindings for a variable or option value.
+        Unqualified names are always in no-namespace.</para>
+      <para>Unfortunately, in more complex situations, there may be no single variable or option that can reliably be
+        expected to have the correct set of namespace bindings. Consider this pipeline:</para>
+      <programlisting language="xml">&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
 	        xmlns:ex="http://example.org/ns/ex"
 	        xmlns:h="http://www.w3.org/1999/xhtml"
                 type="ex:delete-in-div" version="3.0"&gt;
@@ -2762,39 +2690,34 @@ option or variable are used.</para>
   &lt;p:with-option name="match" select="concat('h:div/',$divchild)"/&gt;
 &lt;/p:delete&gt;
 
-&lt;/p:declare-step&gt;</programlisting><para>It
-          defines an atomic step (“<literal>ex:delete-in-div</literal>”) that deletes elements that
-          occur inside of XHTML div elements. It might be used as
-          follows:</para>
+&lt;/p:declare-step&gt;</programlisting>
+      <para>It defines an atomic step (“<literal>ex:delete-in-div</literal>”) that deletes elements that occur inside of
+        XHTML div elements. It might be used as follows:</para>
 
-<programlisting language="xml">&lt;ex:delete-in-div xmlns:p="http://www.w3.org/ns/xproc"
+      <programlisting language="xml">&lt;ex:delete-in-div xmlns:p="http://www.w3.org/ns/xproc"
                   xmlns:ex="http://example.org/ns/ex"
 		  xmlns:html="http://www.w3.org/1999/xhtml"
     divchild="html:p[@class='delete']"/&gt;</programlisting>
 
-<para>In this case, the <varname>match</varname> option passed to the
-<tag>p:delete</tag> step needs <emphasis>both</emphasis> the namespace
-binding of “<literal>h</literal>” specified in the
-<tag>ex:delete-in-div</tag> pipeline definition
-<emphasis>and</emphasis> the namespace binding of
-“<literal>html</literal>” specified in the <varname>divchild</varname>
-option on the call of that pipeline. It's not sufficient to provide
-just one of the sets of bindings.</para>
+      <para>In this case, the <varname>match</varname> option passed to the <tag>p:delete</tag> step needs
+          <emphasis>both</emphasis> the namespace binding of “<literal>h</literal>” specified in the
+          <tag>ex:delete-in-div</tag> pipeline definition <emphasis>and</emphasis> the namespace binding of
+          “<literal>html</literal>” specified in the <varname>divchild</varname> option on the call of that pipeline.
+        It's not sufficient to provide just one of the sets of bindings.</para>
 
-<para>If pipeline authors cannot arrange for all of the necessary namespace
-bindings to be in scope, then EQNames can be used to remove the dependency
-on namespace bindings:</para>
+      <para>If pipeline authors cannot arrange for all of the necessary namespace bindings to be in scope, then EQNames
+        can be used to remove the dependency on namespace bindings:</para>
 
-<programlisting language="xml">&lt;ex:delete-in-div xmlns:p="http://www.w3.org/ns/xproc"
+      <programlisting language="xml">&lt;ex:delete-in-div xmlns:p="http://www.w3.org/ns/xproc"
                   xmlns:ex="http://example.org/ns/ex"
     divchild="q{http://www.w3.org/1999/xhtml}p[@class='delete']"/&gt;</programlisting>
 
-<para>In this example, the expression will match “<literal>p</literal>”
-elements in the XHTML namespace irrespective of any bindings that may or may
-not be in scope.</para>
+      <para>In this example, the expression will match “<literal>p</literal>” elements in the XHTML namespace
+        irrespective of any bindings that may or may not be in scope.</para>
 
-</section>
-</section>
+    </section>
+
+  </section>
 
     <section xml:id="security-considerations">
       <title>Security Considerations</title>
@@ -6952,9 +6875,9 @@ how <glossterm role="unwrapped">implementation-dependent</glossterm> features ar
               <glossterm>XML</glossterm> document, the XProc processor must sometimes add additional
             namespace nodes, perhaps even renaming prefixes, to satisfy the constraints of
               <glossterm>Namespaces in XML</glossterm>. This process is referred to as
-              <firstterm>namespace fixup</firstterm>.</para></glossdef></glossentry><glossentry><glossterm>option</glossterm><glossdef><para>An <firstterm>option</firstterm> is
-a name/value pair. The name <rfc2119>must</rfc2119> be an <link xlink:href="http://www.w3.org/TR/REC-xml-names/#dt-expname">expanded
-name</link>. The value may be any XPath data model value.</para></glossdef></glossentry><glossentry><glossterm>pipeline</glossterm><glossdef><para>A <firstterm>pipeline</firstterm> is a set of connected
+              <firstterm>namespace fixup</firstterm>.</para></glossdef></glossentry><glossentry><glossterm>option</glossterm><glossdef><para>An <firstterm>option</firstterm> is a name/value pair. The name
+            <rfc2119>must</rfc2119> be an <link xlink:href="http://www.w3.org/TR/REC-xml-names/#dt-expname">expanded
+            name</link>. The value may be any XPath data model value.</para></glossdef></glossentry><glossentry><glossterm>pipeline</glossterm><glossdef><para>A <firstterm>pipeline</firstterm> is a set of connected
         steps, with outputs of one step flowing into inputs of another.</para></glossdef></glossentry><glossentry><glossterm>primary input
             port</glossterm><glossdef><para>If a step has a document input port which is
           explicitly marked “<code>primary='true'</code>”, or if it has exactly one document input
@@ -6969,10 +6892,9 @@ name</link>. The value may be any XPath data model value.</para></glossdef></glo
                 ports</glossterm><glossdef><para>The <firstterm>readable
                 ports</firstterm> are a set of step name/port name pairs.</para></glossdef></glossentry><glossentry><glossterm>representation</glossterm><glossdef><para>A <firstterm>representation</firstterm>
 is a data structure used by an XProc processor to refer to the actual
-document content.</para></glossdef></glossentry><glossentry><glossterm>shadow</glossterm><glossdef><para>We say that a variable
-<firstterm baseform="shadow">shadows</firstterm> another variable
-(or option) if it has the same name and appears later in the same lexical
-scope.</para></glossdef></glossentry><glossentry><glossterm>signature</glossterm><glossdef><para>The <firstterm>signature</firstterm> of a step is the set
+document content.</para></glossdef></glossentry><glossentry><glossterm>shadow</glossterm><glossdef><para>We
+          say that a variable <firstterm baseform="shadow">shadows</firstterm> another variable (or option) if it has
+          the same name and appears later in the same lexical scope.</para></glossdef></glossentry><glossentry><glossterm>signature</glossterm><glossdef><para>The <firstterm>signature</firstterm> of a step is the set
           of inputs, outputs, and options that it is declared to accept.</para></glossdef></glossentry><glossentry><glossterm>static analysis</glossterm><glossdef><para><firstterm baseform="static analysis">Static
 analysis</firstterm>
 consists of
@@ -6998,9 +6920,9 @@ brackets (<code>{}</code>), following the
 general rules for <glossterm baseform="value template">value
 templates</glossterm>.</para></glossdef></glossentry><glossentry><glossterm>value template</glossterm><glossdef><para>Collectively,
 attribute value templates and text value templates are referred to as
-<firstterm baseform="value template">value templates</firstterm>.</para></glossdef></glossentry><glossentry><glossterm>variable</glossterm><glossdef><para>A <firstterm>variable</firstterm>
-is a name/value pair. The name <rfc2119>must</rfc2119> be an <link xlink:href="http://www.w3.org/TR/REC-xml-names/#dt-expname">expanded
-name</link>. The value may be any XPath data model value.</para></glossdef></glossentry><glossentry><glossterm>visible</glossterm><glossdef><para>If two names are in the same scope, we say that
+<firstterm baseform="value template">value templates</firstterm>.</para></glossdef></glossentry><glossentry><glossterm>variable</glossterm><glossdef><para>A <firstterm>variable</firstterm> is a name/value pair. The name
+            <rfc2119>must</rfc2119> be an <link xlink:href="http://www.w3.org/TR/REC-xml-names/#dt-expname">expanded
+            name</link>. The value may be any XPath data model value.</para></glossdef></glossentry><glossentry><glossterm>visible</glossterm><glossdef><para>If two names are in the same scope, we say that
 they are <firstterm>visible</firstterm> to each other.
 </para></glossdef></glossentry></glosslist></appendix>
 <appendix xml:id="language-summary">
