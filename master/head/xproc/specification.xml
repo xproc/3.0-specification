@@ -2120,7 +2120,7 @@ normally during static analysis.</para>
 </section>
   
   <section xml:id="f.urify">
-   <title>p:urify</title>
+   <title>Transform filesystem paths into URIs</title>
   <para><function>p:urify</function> is a function that attempts to transform file system paths into file URIs (<biblioref linkend="rfc2396"/>). If a URI is already given as an argument, it <rfc2119>should</rfc2119> return it unchanged, 
     apart from character escaping and path normalizations that are permitted for (presumptive) file URIs.</para>
   <methodsynopsis>
@@ -2129,16 +2129,27 @@ normally during static analysis.</para>
     <methodparam><type>xs:string</type><parameter>filepath</parameter></methodparam>
     <methodparam><type>xs:string?</type><parameter>basedir</parameter></methodparam>
   </methodsynopsis>
-  <para>The function may be implemented as an operation on strings; it need not try to determine the existence of a file or
-    directory, and it <rfc2119>should not</rfc2119> follow symbolic links. How the function performs the task is 
-    <glossterm>implementation-dependent</glossterm>.</para>
-  <para>The purpose of this function is to resolve a file system path to a URI on the platform that the processor runs on; the
-    function need not resolve, for example, Windows paths when the processor runs on a Unix-like operating system. The function
-    is intended as a convenience for pipeline authors and users for transforming OS specific paths and paths relative to the
-    working directory from which they invoked the processor.</para>
-  <para>The function should support Unix-like (for example, Linux, Solaris, Mac OS X) and Windows file system paths.
-    For Windows paths, the forward slash and the backslash <rfc2119>should</rfc2119> be considered equivalent. Operating
-    systems with other filesystem path addressing schemes (for example, VMS or Mac OS) need not be supported.</para>
+
+<para>The function may be implemented as an operation on strings; it
+need not try to determine the existence of a file or directory, and it
+<rfc2119>should not</rfc2119> follow symbolic links. <impl>How <function>p:urify</function>
+transforms its arguments into a URI is
+<glossterm>implementation-defined</glossterm></impl>.</para>
+
+<para>The purpose of this function is to resolve a file system path to
+a URI on the platform that the processor runs on; the function need
+not resolve, for example, Windows paths when the processor runs on a
+Unix-like operating system. The function is intended as a convenience
+for pipeline authors and users for transforming OS specific paths and
+paths relative to the working directory from which they invoked the
+processor.</para>
+
+<para>The function should support Unix-like (for example, Linux,
+Solaris, Mac OS X) and Windows file system paths. For Windows paths,
+the forward slash and the backslash <rfc2119>should</rfc2119> be
+considered equivalent. Operating systems with other filesystem path
+addressing schemes (for example, VMS or Mac OS) need not be
+supported.</para>
   <para>Each argument may be an operating system path, including paths with drive letters and UNC paths on Windows, or a URI.
     On non-Windows systems, file URIs that contain an authority component (<literal>file://hostname/path</literal>) may be reported 
     as an error.</para>
@@ -2155,10 +2166,15 @@ normally during static analysis.</para>
     URIs can be resolved by the processor and by the standard steps that ship with the processor. Examples for non-conforming
     yet probably acceptable URIs are file URIs with a single slash instead of three slashes after <literal>file:</literal> or
     URIs that contain unescaped UTF-8 characters whose codepoints are above the ASCII range.</para>
-  <para>When a URI is given as any argument, it is <glossterm>implementation-dependent</glossterm> whether query or fragment
-    components are supported. An implementation may choose to return them unchanged, to silently omit them, or to raise an
-    error. It <rfc2119>must not</rfc2119> return <literal>?</literal> and <literal>#</literal> escaped though.</para>
-  <para>If the <parameter>$basedir</parameter> argument is omitted or is the empty sequence, the current working directory should be used
+
+<para><impl>For any URI argument to <function>p:urify</function>, it is
+<glossterm>implementation-dependent</glossterm> whether query or
+fragment components are supported.</impl> An implementation may choose to
+return them unchanged, to silently omit them, or to raise an error. It
+<rfc2119>must not</rfc2119> return <literal>?</literal> and
+<literal>#</literal> escaped though.</para>
+
+<para>If the <parameter>$basedir</parameter> argument is omitted or is the empty sequence, the current working directory should be used
     if available. The <parameter>$basedir</parameter> argument or the current working directory need only be considered if the
       <parameter>$filepath</parameter> is determined to be a relative path or URI.</para>
   <note xml:id="note-urify-encoding">
@@ -2236,9 +2252,14 @@ normally during static analysis.</para>
   </simplesect>
   <simplesect>
     <title>Errors</title>
-    <para>It is a dynamic error if <code>$filepath</code> is determined to be relative, no <code>$basedir</code> is
-    given that can be transformed into an absolute URI and the current working directory is unavailable.</para>
-    <para>Other <glossterm>implementation-dependent</glossterm> errors may be thrown.</para>
+
+    <para>It is a dynamic error if <code>$filepath</code> is
+    determined to be relative, no <code>$basedir</code> is given that
+    can be transformed into an absolute URI and the current working
+    directory is unavailable.</para>
+
+    <para><impl>Other <glossterm>implementation-dependent</glossterm> errors may be thrown by
+<function>p:urify</function>.</impl></para>
   </simplesect>
 </section>
 
