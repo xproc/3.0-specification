@@ -2118,6 +2118,130 @@ non-XML document.</para>
 <para>The <function>p:document-property</function> function behaves
 normally during static analysis.</para>
 </section>
+  
+  <section xml:id="f.urify">
+   <title>p:urify</title>
+  <para><function>p:urify</function> is a function that attempts to transform file system paths into file URIs (<biblioref linkend="rfc2396"/>). If a URI is already given as an argument, it <rfc2119>should</rfc2119> return it unchanged, 
+    apart from character escaping and path normalizations that are permitted for (presumptive) file URIs.</para>
+  <methodsynopsis>
+    <type>xs:string</type>
+    <methodname>p:urify</methodname>
+    <methodparam><type>xs:string</type><parameter>filepath</parameter></methodparam>
+    <methodparam><type>xs:string?</type><parameter>basedir</parameter></methodparam>
+  </methodsynopsis>
+  <para>The function may be implemented as an operation on strings; it need not try to determine the existence of a file or
+    directory, and it <rfc2119>should not</rfc2119> follow symbolic links. How the function performs the task is 
+    <glossterm>implementation-dependent</glossterm>.</para>
+  <para>The purpose of this function is to resolve a file system path to a URI on the platform that the processor runs on; the
+    function need not resolve, for example, Windows paths when the processor runs on a Unix-like operating system. The function
+    is intended as a convenience for pipeline authors and users for transforming OS specific paths and paths relative to the
+    working directory from which they invoked the processor.</para>
+  <para>The function should support Unix-like (for example, Linux, Solaris, Mac OS X) and Windows file system paths.
+    For Windows paths, the forward slash and the backslash <rfc2119>should</rfc2119> be considered equivalent. Operating
+    systems with other filesystem path addressing schemes (for example, VMS or Mac OS) need not be supported.</para>
+  <para>Each argument may be an operating system path, including paths with drive letters and UNC paths on Windows, or a URI.
+    On non-Windows systems, file URIs that contain an authority component (<literal>file://hostname/path</literal>) may be reported 
+    as an error.</para>
+  <para>The function need not make sure that an argument identified as a URI is already a <emphasis>correct</emphasis> URI
+    according to <biblioref linkend="rfc2396"/>. It may attempt to correct errors in purported file URIs, such as fixing the
+    missing escaping of a space character. It <rfc2119>should</rfc2119> leave presumptive non-file URIs unchanged.
+  The scheme-relative URI <literal>//hostname/path</literal>) may be reported as an error on non-Windows platforms,
+    even though the omitted scheme may well be a non-file scheme.</para>
+  <para>The function may normalize URIs and file system paths by contracting multiple consecutive directory path separator slashes,
+    by eliminating path components <code>.</code> or by letting path components <code>..</code> “consume” their parent path 
+    components. Other permitted normalizations contain, but are not limited to, making Windows drive letters uppercase or
+  making the URI scheme lowercase.</para>
+  <para>The function is allowed to produce URIs that do not strictly conform to <biblioref linkend="rfc2396"/> as long as the
+    URIs can be resolved by the processor and by the standard steps that ship with the processor. Examples for non-conforming
+    yet probably acceptable URIs are file URIs with a single slash instead of three slashes after <literal>file:</literal> or
+    URIs that contain unescaped UTF-8 characters whose codepoints are above the ASCII range.</para>
+  <para>When a URI is given as any argument, it is <glossterm>implementation-dependent</glossterm> whether query or fragment
+    components are supported. An implementation may choose to return them unchanged, to silently omit them, or to raise an
+    error. It <rfc2119>must not</rfc2119> return <literal>?</literal> and <literal>#</literal> escaped though.</para>
+  <para>If the <parameter>$basedir</parameter> argument is omitted or is the empty sequence, the current working directory should be used
+    if available. The <parameter>$basedir</parameter> argument or the current working directory need only be considered if the
+      <parameter>$filepath</parameter> is determined to be a relative path or URI.</para>
+  <note xml:id="note-urify-encoding">
+    <para>Sometimes file names are created in an encoding that does not match the system’s locale. This function does not aim at
+      solving these issues. Implementations should not try to correct apparent errors that originate from garbled encodings
+      since they will probably not be able to produce file URIs that address the corresponding files correctly.</para>
+    <para>Likewise it is also possible, in particular on Windows, that the encoding gets garbled when command line arguments are
+      passed to the processor. On modern Windows 10 versions (April 2018 or later), this can be addressed by setting the system
+      locale to UTF-8.</para>
+  </note>
+  <note role="editorial" xml:id="ednote-test-p_urify">
+    <title>Testing</title>
+    <para>Depending on the system where the tests run on, the results may vary. For example, an implementation may add a
+      trailing slash to the file URI if it recognizes that it represents a directory.</para>
+    <para>One way to make the test results more predictable is to provide an additional function argument that holds a map with
+      certain overriding parameters, such as the <code>file-separator</code> or whether the <code>filepath</code> argument
+      represents a directory. However, this is impractical if the implementation relies on external libraries to perform the
+      conversion.</para>
+    <para>A test suite may therefore specify system-dependent tests that run only on Windows or Linux and that accept function
+      results with or without a trailing slash.</para>
+  </note>
+  <para>The <function>p:urify</function> function behaves normally during static analysis.</para>
+  <simplesect>
+    <title>Examples</title>
+    <itemizedlist>
+      <title>Windows</title>
+      <listitem>
+        <para><literal>c:\path\to\file</literal> → <literal>file:///c:/path/to/file</literal>
+            (<literal>file:///C:/path/to/file</literal> will also be correct, as will
+            <literal>file:///c:/path/to/file/</literal> be if the implementation detects that
+            <literal>c:/path/to/file/</literal> is actually a directory)</para>
+      </listitem>
+      <listitem>
+        <para><literal>\\hostname\path\to\file</literal>, <literal>\\hostname/path/to/file</literal> or 
+          <literal>//hostname/path/to/file</literal> → <literal>file://hostname/path/to/file</literal></para>
+      </listitem>
+      <listitem>
+        <para><literal>C:/Program Files (x86)</literal> → <literal>file:///C:/Program%20Files%20(x86)</literal>
+        (or <literal>file:///C:/Program%20Files%20(x86)/</literal>)</para>
+      </listitem>
+      <listitem>
+        <para><literal>temp</literal>, <literal>/</literal> (two arguments) → <literal>file:///C:/temp/</literal> (depending on
+        the drive letter of the current working directory, and possibly without the trailing slash)</para>
+      </listitem>
+      <listitem>
+        <para><literal>[workspace]</literal>, <literal>E:\temp</literal> → <literal>file:///E:/temp/%5Bworkspace%5D/</literal>
+        (or without trailing slash)</para>
+      </listitem>
+    </itemizedlist>
+    <itemizedlist>
+      <title>Unix-like or Windows</title>
+      <listitem>
+        <para><literal>x y/rαaßβöů亊.txt</literal> → <literal>…/x%20y/r%CE%B1a%C3%9F%CE%B2%C3%B6%C5%AF%E4%BA%8A.txt</literal>
+        (where <literal>…</literal> represents the file URI of the current working directory) 
+          (or <literal>…/x%20y/rαaßβöů亊.txt</literal> if unescaped non-ASCII UTF-8 is acceptable
+          on the given processor/OS combination)</para>
+        <para><literal>@50%.csv</literal> → <literal>…/@50%25.csv</literal></para>
+        <para><literal>@50%25.csv</literal> → <literal>…/@50%2525.csv</literal></para>
+      </listitem>
+    </itemizedlist>
+    <itemizedlist>
+      <title>Unix-like</title>
+      <listitem>
+        <para><literal>/etc</literal> → <literal>file:///etc/</literal>
+        (or <literal>file:///etc</literal>)</para>
+        <para><literal>file:/etc</literal> → <literal>file:///etc/</literal>
+        (or <literal>file:///etc</literal>)</para>
+        <para><literal>/etc?foo=bar#fragment</literal> → <literal>file:///etc%3Ffoo=bar%23fragment</literal></para>
+        <para><literal>file:/etc?foo=bar#fragment</literal> → error (or <literal>file:///etc?foo=bar#fragment</literal>,
+        <literal>file:///etc</literal>, or <literal>file:///etc/</literal></para>
+        <para><literal>/etc?foo=bar#fragment</literal> → <literal>file:///etc%3Ffoo=bar%23fragment</literal></para>
+        <para><literal>file:///etc%3Ffoo=bar%23fragment</literal> → <literal>file:///etc%3Ffoo=bar%23fragment</literal></para>
+      </listitem>
+    </itemizedlist>
+  </simplesect>
+  <simplesect>
+    <title>Errors</title>
+    <para>It is a dynamic error if <code>$filepath</code> is determined to be relative, no <code>$basedir</code> is
+    given that can be transformed into an absolute URI and the current working directory is unavailable.</para>
+    <para>Other <glossterm>implementation-dependent</glossterm> errors may be thrown.</para>
+  </simplesect>
+</section>
+
 
 <section xml:id="other-xpath-extension-functions">
   <title>Other XPath Extension Functions</title>
