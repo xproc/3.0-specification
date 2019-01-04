@@ -3667,8 +3667,15 @@ the element's syntax:</para>
         </listitem>
         <listitem>
           <para>If an attribute value is an attribute value template, its type is shown
-          in curly brackets: “<code>{ some-type }</code>”.</para>
+          in curly brackets: “<code>{ some-type }</code>”. If <literal>some-type</literal> is 
+          <type>xs:QName</type> or a map type with key type <type>xs:QName</type> the conversion described in
+            <xref linkend="qname-handling"/> applies.</para>
         </listitem>
+          <listitem>
+            <para>An attribute value with a map type marks an <type>XPathExpression</type> expected to
+              deliver a map of the indicated type. If the map type has key type <type>xs:QName</type> 
+              the conversion described in <xref linkend="qname-handling"/> applies.</para>
+          </listitem>
 
 </itemizedlist>
 
