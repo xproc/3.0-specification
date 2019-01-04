@@ -318,8 +318,7 @@ one input with respect to some set of XML Schemas, etc.</para>
       </note>
       <para>Steps have “ports” into which inputs and outputs are connected. Each step has a number
         of input ports and a number of output ports; a step can have zero input ports and/or zero
-        output ports. (All steps have an implicit output port for reporting errors that
-          <rfc2119>must not</rfc2119> be declared.) The names of all ports on each step must be
+        output ports. The names of all ports on each step must be
         unique on that step (you can't have two input ports named “source”, nor can you have an
         input port named “schema” and an output port named “schema”). </para>
       <para>A Step may have zero or more <link linkend="options">options</link>, all with unique
@@ -791,7 +790,7 @@ content types, that they accept. Input documents must
               <glossterm>implementation-defined</glossterm>.</impl>
         </para>
         <para>Version 3.0 of XProc does not require implementations to guarantee that multiple
-          attempts to dereference the same URI always produce consistent results.</para>
+          attempts to dereference the same URI always produce the same results.</para>
         <note xml:id="note-unsatisfying">
           <para>On the one hand, this is a somewhat unsatisfying state of affairs because it leaves
             room for interoperability problems. On the other, it is not expected to cause such
@@ -1097,6 +1096,13 @@ static anlaysis</emphasis>. Although <code>$D</code> can reference
 the document provided dynamically on the <port>source</port> port,
 any attempt to refer to <code>$D</code> in the expression(s) that
 initialize <code>$A</code> and <code>$B</code> would be an error.</para>
+
+<note>
+<title>Note</title>
+<para>There is no guarantee that the document read from <uri>doc.xml</uri> during
+static anlaysis will be the same as the document read later during dynamic evaluation.
+See <xref linkend="external-docs"/> for further discussion.</para>
+</note>
 
 <para>The results of XProc extension functions may differ during static analysis,
 as described in the description of each function.</para>
