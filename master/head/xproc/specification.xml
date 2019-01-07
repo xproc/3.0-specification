@@ -2240,7 +2240,7 @@ expression such that it returns the string values:</para>
 
       <para>Variables and options may declare that they have a type using the <tag class="attribute">as</tag> attribute.
         The attribute value <rfc2119>must</rfc2119> be an <biblioref linkend="xpath31"/>
-        <link xlink:href="https://www.w3.org/TR/xpath-31/#dt-sequence-type">sequence Type</link>. <error code="S0096">It
+        <link xlink:href="https://www.w3.org/TR/xpath-31/#dt-sequence-type">sequence type</link>. <error code="S0096">It
           is a <glossterm>static error</glossterm> if the sequence type is not syntactically valid.</error> The sequence
         type <literal>item()*</literal> is assumed if no explicit type is provided. </para>
 
@@ -3356,46 +3356,6 @@ are allowed anywhere, and attributes that are
     <para>This section describes the core language steps of XProc; the full
 vocabulary of standard, atomic steps is described in
 <biblioref linkend="steps30"/>.</para>
-
-<para>The following dynamic errors are described in the atomic step vocabulary.
-They are repeated here so that the list of dynamic errors is wholly contained
-within this specification.</para>
-
-<note xml:id="ednote-dup-derrs" role="editorial">
-<title>Editorial Note</title>
-<para>This is not the right long term solution.</para>
-</note>
-
-<itemizedlist>
-<listitem>
-<para><error code="D0014">It is a
-<glossterm>dynamic error</glossterm> for any unqualified attribute
-names other than “<literal>name</literal>”,
-“<literal>namespace</literal>”, or “<literal>value</literal>” to
-appear on a <code>c:param</code> element.</error></para>
-</listitem>
-<listitem>
-<para><error code="D0025">It is a <glossterm>dynamic
-error</glossterm> if the <tag class="attribute">namespace</tag>
-attribute is specified on <code>c:param</code>,
-the <tag class="attribute">name</tag> contains
-a colon, and the specified namespace is not the same as the in-scope
-namespace binding for the specified prefix.</error></para>
-</listitem>
-<listitem>
-<para><error code="D0018">It is a
-<glossterm>dynamic error</glossterm> if the <code>c:parameter-set</code>
-parameter list contains
-any elements other than <tag>c:param</tag>.</error></para>
-</listitem>
-<listitem>
-<para><error code="D0034">On steps which allow independent specification
-of a namespace and a name, it is a
-<glossterm>dynamic error</glossterm> to specify a new namespace or
-prefix if the lexical value of the specified name contains a
-colon.</error></para>
-</listitem>
-</itemizedlist>
 
 <section xml:id="pipelines">
 <title>Pipelines</title>

@@ -2833,8 +2833,8 @@ to the <port>result</port> port.
 order in which <tag>c:param</tag> elements occur in the <tag>c:param-set</tag> is
 <glossterm>implementation-dependent</glossterm>.</impl></para>
 
-<para>For consistency and user convenience, if any of the parameters
-have names that are in a namespace, the
+<para>For consistency and user convenience, <emphasis>in the output of <tag>p:parameters</tag></emphasis>,
+if any of the parameters have names that are in a namespace, the
 <tag class="attribute">namespace</tag> attribute on the
 <tag>c:param</tag> element <rfc2119>must</rfc2119> be used. Each
 <tag class="attribute">name</tag> <rfc2119>must</rfc2119> be an NCName.</para>
@@ -2845,40 +2845,91 @@ that contains the step.</para>
 <section xml:id="cv.param">
 <title>The c:param element</title>
 
-<para>A <tag>c:param</tag> represents a parameter on a parameter
-input.</para>
+<para>A <tag>c:param</tag> is a standard XML representation of a parameter.
+</para>
 
 <e:rng-pattern name="VocabParam"/>
 
-<para>The <tag class="attribute">name</tag> attribute of the
-<tag>c:param</tag> must have the lexical form of a QName.</para>
+<para>The attributes that can occur on <tag>c:param</tag> are:</para>
 
-<para>If the <tag class="attribute">namespace</tag> attribute is
-specified, then the expanded name of the parameter is constructed from
-the specified namespace and the <tag class="attribute">name</tag>
-value. <error code="D0025">It is a <glossterm>dynamic
-error</glossterm> if the <tag class="attribute">namespace</tag>
-attribute is specified, the <tag class="attribute">name</tag> contains
-a colon, and the specified namespace is not the same as the in-scope
-namespace binding for the specified prefix.</error>
+<variablelist>
+<varlistentry><term><tag class="attribute">name</tag></term>
+<listitem>
+<para>The <tag class="attribute">name</tag> attribute of the
+<tag>c:param</tag> must have the lexical form of a QName.
+(In the output of some steps, such as <tag>p:parameters</tag>, the name will
+always be an <type>xs:NCName</type>, but that is not a general requirement
+for user-constructed <tag>c:param</tag> elements )
 </para>
 
 <para>If the <tag class="attribute">namespace</tag> attribute is not
 specified, and the <tag class="attribute">name</tag> contains a colon,
 then the expanded name of the parameter is constructed using the <tag class="attribute">name</tag> value and the namespace declarations
-in-scope on the <tag>c:param</tag> element.</para>
+in-scope on the <tag>c:param</tag> element.
+<error code="C0087">It is a <glossterm>dynamic
+error</glossterm> if the <tag class="attribute">namespace</tag>
+attribute is not specified, the <tag class="attribute">name</tag> contains
+a colon, and the specified prefix is not in the in-scope
+namespace bindings.</error>
+</para>
 
 <para>If the <tag class="attribute">namespace</tag> attribute is not
 specified, and the <tag class="attribute">name</tag> does not contain
 a colon, then the expanded name of the parameter is in no
 namespace.</para>
-
+</listitem>
+</varlistentry>
+<varlistentry><term><tag class="attribute">namespace</tag></term>
+<listitem>
+<para>The namespace URI of the parameter name.</para>
+<para>If the <tag class="attribute">namespace</tag> attribute is
+specified, then the expanded name of the parameter is constructed from
+the specified namespace and the <tag class="attribute">name</tag>
+value. <error code="C0083">It is a <glossterm>dynamic
+error</glossterm> if the <tag class="attribute">namespace</tag>
+attribute is specified, the <tag class="attribute">name</tag> contains
+a colon, and the specified namespace is not the same as the in-scope
+namespace binding for the specified prefix.</error>
+</para>
+</listitem>
+</varlistentry>
+<varlistentry><term><tag class="attribute">value</tag></term>
+<listitem>
+<para>If the parameter value is an atomic type, a lexical representation of its
+value appears in the <tag class="attribute">value</tag> attribute.
+<error code="C0087">It is a
+<glossterm>dynamic error</glossterm> if the <tag class="attribute">value</tag> attribute
+is specified and the <tag>c:param</tag> element is not empty.</error>
+</para>
+</listitem>
+</varlistentry>
+<varlistentry><term><tag class="attribute">as</tag></term>
+<listitem>
+<para>The <tag class="attribute">as</tag> attribute specifies the <biblioref linkend="xpath31"/> <link xlink:href="https://www.w3.org/TR/xpath-31/#dt-sequence-type">sequence
+type</link> of the parameter value. <error code="C0089">It is a
+<glossterm>dynamic error</glossterm> if the sequence type is not
+syntactically valid.</error> The sequence type
+<literal>item()*</literal> is assumed if no explicit type is provided.
+<error code="D0036">It is a <glossterm>dynamic error</glossterm> if
+the supplied value of a variable or option cannot be converted to the
+required type.</error>
+</para>
+</listitem>
+</varlistentry>
+<varlistentry><term>Other attributes</term>
+<listitem>
 <para>Any namespace-qualified attribute names that appear on the
-<tag>c:param</tag> element are ignored. <error code="D0014">It is a
+<tag>c:param</tag> element are ignored. <error code="C0085">It is a
 <glossterm>dynamic error</glossterm> for any unqualified attribute
 names other than “<literal>name</literal>”,
-“<literal>namespace</literal>”, or “<literal>value</literal>” to
+“<literal>namespace</literal>”, “<literal>as</literal>”, or “<literal>value</literal>” to
 appear on a <tag>c:param</tag> element.</error></para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+<para>If the <tag>c:param</tag> element is not empty, then its content, interpreted
+as a sequence of XML nodes, is the value of the parameter.</para>
 </section>
 
 <section xml:id="cv.param-set">
@@ -2890,12 +2941,12 @@ parameter input.</para>
 <e:rng-pattern name="VocabParamSet"/>
 
 <para>The <tag>c:param-set</tag> contains zero or more
-<tag>c:param</tag> elements. <error code="D0018">It is a
+<tag>c:param</tag> elements. <error code="C0084">It is a
 <glossterm>dynamic error</glossterm> if the parameter list contains
 any elements other than <tag>c:param</tag>.</error></para>
 
 <para>Any namespace-qualified attribute names that appear on the
-<tag>c:param-set</tag> element are ignored. <error code="D0014">It is
+<tag>c:param-set</tag> element are ignored. <error code="C0086">It is
 a <glossterm>dynamic error</glossterm> for any unqualified attribute
 names to appear on a <tag>c:param-set</tag>
 element.</error></para>
