@@ -70,11 +70,13 @@ pipeline itself, or from the outputs of other steps in the pipeline.
 The outputs from a step are consumed by other steps, are outputs of
 the pipeline as a whole, or are discarded.</para>
 
-<para>There are three kinds of steps: atomic steps, compound steps,
-and multi-container steps. Atomic steps carry out single operations
-and have no substructure as far as the pipeline is concerned. Compound
-steps and multi-container steps control the execution of other steps,
-which they include in the form of one or more subpipelines.</para>
+<para>There are two kinds of steps:
+<glossterm baseform="atomic step">atomic steps</glossterm> and
+<glossterm baseform="compound step">compound steps</glossterm>.
+Atomic steps carry out a single operation and have no substructure as
+far as the pipeline is concerned. Compound steps control the execution
+of other steps, which they include in the form of one or more
+subpipelines.</para>
 
 <para><biblioref linkend="steps30"/>
 defines a standard library of steps. Pipeline implementations
@@ -189,74 +191,76 @@ functional (that is, that their outputs depend only on their
 <glossterm baseform="option">options</glossterm>) or side-effect
 free.</para>
 
-    <para>The pattern of connections between steps will not always completely determine their order
-      of evaluation. <impl>The evaluation order of steps not connected to one another is
-          <glossterm>implementation-dependent</glossterm></impl>.</para>
-    <section xml:id="step-concept">
-      <title>Steps</title>
-      <para><termdef xml:id="dt-step">A <firstterm>step</firstterm> is the basic computational unit
-          of a pipeline.</termdef> A typical step has zero or more inputs, from which it receives
-        documents to process, zero or more outputs, to which it sends document results, and
-        can have options.</para>
-      <para>There are three kinds of steps: <glossterm baseform="atomic step">atomic</glossterm>,
-          <glossterm baseform="compound step">compound</glossterm>, and <glossterm
-          baseform="multi-container step">multi-container</glossterm>.</para>
+<para>The pattern of connections between steps will not always
+completely determine their order of evaluation. <impl>The evaluation
+order of steps not connected to one another is
+<glossterm>implementation-dependent</glossterm></impl>.</para>
+
+<section xml:id="step-concept">
+<title>Steps</title>
+
+<para><termdef xml:id="dt-step">A <firstterm>step</firstterm> is the
+basic computational unit of a pipeline.</termdef> A typical step has
+inputs, from which it receives documents to process, outputs, to which
+it sends result documents, and options which influence its behavior.</para>
+
+<para>There are two kinds of steps: atomic and compound:</para>
 
 <para><termdef xml:id="dt-atomic-step">An <firstterm>atomic
 step</firstterm> is a step that performs a unit of processing
 on its input,
-such as XInclude or transformation, and has no internal
-<glossterm>subpipeline</glossterm>. </termdef> Atomic steps carry out
+such as validation or transformation, and has no internal
+<glossterm>subpipeline</glossterm>.</termdef> Atomic steps carry out
 fundamental operations and can perform arbitrary amounts of
-computation, but they are indivisible. An XSLT step, for example,
-performs XSLT processing; a Validate with XML Schema step validates
-one input with respect to some set of XML Schemas, etc.</para>
+computation, but they are indivisible.</para>
 
-      <para>There are many <emphasis>types</emphasis> of atomic steps. The standard library of
-        atomic steps is described in <biblioref linkend="steps30"/>, but implementations
-          <rfc2119>may</rfc2119> provide others as well. <impl>It is
-            <glossterm>implementation-defined</glossterm> what additional step types, if any, are
-          provided. </impl> Each use, or instance, of an atomic step invokes the processing defined
-        by that type of step. A pipeline may contain instances of many types of steps and many
-        instances of the same type of step.</para>
-      <para>Compound steps, on the other hand, control and organize the flow of documents through a
-        pipeline, reconstructing familiar programming language functionality such as conditionals,
-        iterators and exception handling. They contain other steps, whose evaluation they
-        control.</para>
-      <para><termdef xml:id="dt-compound-step">A <firstterm>compound step</firstterm> is a step that
-          contains a <glossterm>subpipeline</glossterm>.</termdef> That is, a compound step differs
-        from an atomic step in that its semantics are at least partially determined by the steps
-        that it contains.</para>
-      <para>Finally, there are two “multi-container steps”: <tag>p:choose</tag> and
-        <tag>p:try</tag>. <termdef xml:id="dt-multi-container-step">A <firstterm>multi-container
-            step</firstterm> is a step that contains several alternate <glossterm
-            baseform="subpipeline">subpipelines</glossterm>. </termdef> Each subpipeline is
-        identified by a non-step wrapper element: <tag>p:when</tag> and <tag>p:otherwise</tag> in
-        the case of <tag>p:choose</tag>, <tag>p:group</tag> and <tag>p:catch</tag> in the case of
-          <tag>p:try</tag>. </para>
-      <para>The output of a multi-container step is the output of exactly one of its subpipelines.
-        In this sense, a multi-container step functions like a <glossterm>compound step</glossterm>.
-        However, evaluating a multi-container step may involve evaluating, or partially evaluating,
-        more than one of its subpipelines. It's possible for steps in a partially evaluated pipeline
-        to have side effects that are visible outside the processor, even if the final output of the
-        multi-container step is the result of some other subpipeline. For example, a web server
-        might record that some interaction was performed, or a file on the local file system might
-        have been modified.</para>
-      <para><termdef xml:id="dt-container">A compound step or multi-container step is a
-            <firstterm>container</firstterm> for the steps directly within it or within non-step
-          wrappers directly within it.</termdef>
-        <termdef xml:id="dt-contained-steps">The steps that occur directly within, or within
-          non-step wrappers directly within, a step are called that step's <firstterm>contained
-            steps</firstterm>. In other words, “container” and “contained steps” are inverse
-          relationships.</termdef>
-        <termdef xml:id="dt-ancestors">The <firstterm>ancestors</firstterm> of a step, if it has
-          any, are its <glossterm>container</glossterm> and the ancestors of its
-          container.</termdef>
-      </para>
-      <para><termdef xml:id="dt-subpipeline">Sibling steps (and the connections between them) form a
-            <firstterm>subpipeline</firstterm>.</termdef>
-        <termdef xml:id="dt-last-step">The <firstterm>last step</firstterm> in a subpipeline is its
-          last step in document order.</termdef></para>
+<para>There are many <emphasis>types</emphasis> of atomic steps. The
+standard library of atomic steps is described in <biblioref
+linkend="steps30"/>, but implementations <rfc2119>may</rfc2119>
+provide others as well. <impl>It is
+<glossterm>implementation-defined</glossterm> what additional step
+types, if any, are provided. </impl> Each use, or instance, of an
+atomic step invokes the processing defined by that type of step. A
+pipeline may contain instances of many types of steps and many
+instances of the same type of step.</para>
+
+<para>Compound steps, on the other hand, control and organize the flow
+of documents through a pipeline, providing familiar programming
+language functionality such as conditionals, iterators and exception
+handling. They contain other steps, whose evaluation they
+control.</para>
+
+<para><termdef xml:id="dt-compound-step">A <firstterm>compound
+step</firstterm> is a step that contains one or more
+<glossterm baseform="subpipeline">subpipelines</glossterm>.</termdef>
+That is, a compound step differs from an atomic step in that its
+semantics are at least partially determined by the steps that it
+contains.</para>
+
+<para>Compound steps either directly contain a single subpipeline or
+contain several subpipelines and select one or more to evaluate
+dynamically. In the latter case, alternate subpipelines are identified
+by non-step wrapper elements that each contain a single subpipeline.
+</para>
+
+<para><termdef xml:id="dt-container">A <firstterm>container</firstterm>
+is either a compound step or one
+of the non-step wrapper elements in a compound step that contains
+several subpipelines.</termdef>
+<termdef xml:id="dt-contained-steps">The steps that occur directly
+within a container are called
+that step’s <firstterm>contained steps</firstterm>. In other words,
+“container” and “contained steps” are inverse relationships.</termdef>
+<termdef xml:id="dt-ancestors">The <firstterm>ancestors</firstterm> of
+a step, if it has any, are its <glossterm>container</glossterm> and
+the ancestors of its container.</termdef>
+</para>
+
+<para><termdef xml:id="dt-subpipeline">Sibling steps and variables (and the
+connections between them) form a
+<firstterm>subpipeline</firstterm>.</termdef> <termdef
+xml:id="dt-last-step">The <firstterm>last step</firstterm> in a
+subpipeline is its last step in document order.</termdef></para>
 
       <para xml:id="p.subpipeline"
         role="element-syntax element-syntax-language-construct hanging-indent">
@@ -292,7 +296,8 @@ one input with respect to some set of XML Schemas, etc.</para>
             “<replaceable>m</replaceable>” is the position (in the sense of counting sibling
           elements) of the step's highest ancestor element within the pipeline document or library
           which contains it, “<replaceable>n</replaceable>” is the position of the next-highest
-          ancestor, and so on, including both steps and non-step wrappers. For example, consider the
+          ancestor, and so on, including all of the elements in the pipeline document
+(that were not <glossterm>effectively excluded</glossterm>). For example, consider the
           pipeline in <xref linkend="ex2"/>. The <tag>p:declare-step</tag> step has no name, so it gets
           the default name “<literal>!1</literal>”; the <tag>p:choose</tag> gets the name
             “<literal>!1.1</literal>”; the first <tag>p:when</tag> gets the name
@@ -790,8 +795,8 @@ content types, that they accept. Input documents must
         two steps appear sequentially in a subpipeline, then the primary output of the first step
         will automatically be connected to the primary input of the second.</para>
 
-<para>Additionally, if a compound step, or non-step wrapper that can
-declare outputs, has no declared outputs and the
+<para>Additionally, if a container, that can have
+declared outputs, has no declared outputs and the
 <glossterm>last step</glossterm> in its subpipeline has an unconnected
 primary output, then an implicit primary output port will be added to
 the compound step (and consequently the last step's primary output
@@ -2929,21 +2934,23 @@ any element that is not a descendant of a
 <section xml:id="use-when">
 <title>Conditional Element Exclusion</title>
 
-<para xml:id="p.use-when">The
-<tag class="attribute">[p:]use-when</tag> attribute controls whether
-or not an element (and its descendants) appear in the pipeline. The
-value of the attribute <rfc2119>must</rfc2119> contain an XPath
-expression that can be evaluated statically (See
-<link linkend="statics"/>.) If the attribute is present and the
-effective boolean value of the expression is false, then the element
-and all of its descendants are effectively excluded from the pipeline document. If
-a node is effectively excluded, the processor <rfc2119>must</rfc2119>
-behave as if the element was not present in the document.
+<para xml:id="p.use-when">The <tag
+class="attribute">[p:]use-when</tag> attribute controls whether or not
+an element (and its descendants) appear in the pipeline. The value of
+the attribute <rfc2119>must</rfc2119> contain an XPath expression that
+can be evaluated statically (See <link linkend="statics"/>.) <termdef
+xml:id="dt-effectively-excluded">If the effective boolean value of the
+<tag class="attribute">[p:]use-when</tag> expression is false, then
+the element and all of its descendants are <firstterm>effectively
+excluded</firstterm> from the pipeline document.</termdef> If a node is
+effectively excluded, the processor <rfc2119>must</rfc2119> behave as
+if the element was not present in the document.
 </para>
   
-  <para>Exception: <tag class="attribute">[p:]use-when</tag> attributes on descendant
-    <tag>p:inline</tag> elements and in implicit inlines carry no special meaning and are considered part of the inlined
-    contents.</para>
+<para>Exception: <tag class="attribute">[p:]use-when</tag> attributes
+on descendant <tag>p:inline</tag> elements and in implicit inlines
+carry no special meaning and are considered part of the inlined
+contents.</para>
 
 <para>Conditional element exclusion occurs during <link
 linkend="initiating">static analysis</link> of the pipeline.</para>
@@ -3531,13 +3538,12 @@ on the output.</para>
 <section xml:id="p.choose">
 <title>p:choose</title>
 
-<para>A choose is specified by the <tag>p:choose</tag> element. It is
-a <glossterm>multi-container step</glossterm> that selects exactly one
-of a list of alternative <glossterm baseform="subpipeline"
->subpipelines</glossterm> based on the evaluation of XPath
+<para>A choose step is specified by the <tag>p:choose</tag> element.
+It is a <glossterm>compound step</glossterm> that contains several, alternate subpipelines. One
+subpipeline is selected based on the evaluation of XPath
 expressions.</para>
 
-      <e:rng-pattern name="Choose"/>
+<e:rng-pattern name="Choose"/>
 
 <para>A <tag>p:choose</tag> contains an arbitrary number of
 alternative <glossterm
@@ -3702,10 +3708,14 @@ on the <tag>p:if</tag> will produce any documents.</para>
 <section xml:id="p.try">
 <title>p:try</title>
 
-<para>A try/catch is specified by the <tag>p:try</tag> element. It is
-a <glossterm>multi-container step</glossterm> that isolates a
-<glossterm>subpipeline</glossterm>, preventing any dynamic errors that
-arise within it from being exposed to the rest of the pipeline.</para>
+<para>A try/catch step is specified by the <tag>p:try</tag> element.
+It is a <glossterm>compound step</glossterm> that isolates its initial
+subpipeline, preventing dynamic errors that arise within it from being
+exposed to the rest of the pipeline.
+The <tag>p:try</tag> includes alternate
+recovery subpipelines, and may include a “finally”
+subpipeline to perform post-processing irrespective of the outcome of
+the <tag>p:try</tag>.</para>
 
 <e:rng-pattern name="Try"/>
 
@@ -3727,6 +3737,15 @@ that it might have generated, and considers the recovery
 subpipelines.
 If there is no matching recovery subpipeline, the <tag>p:try</tag> fails.
 </para>
+
+<note>
+<para>If the initial subpipeline fails, none of its outputs will be
+visible outside of the <tag>p:try</tag>, but it's still possible for
+steps in the partially evaluated pipeline to have side effects that
+are visible outside the processor. For example, a web server might
+record that some interaction was performed, or a file on the local
+file system might have been modified.</para>
+</note>
 
 <para>If a recovery subpipeline is evaluated, the outputs of the
 recovery subpipeline are the outputs of the <tag>p:try</tag> step. If
