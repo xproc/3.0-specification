@@ -4237,7 +4237,9 @@ author to exclude some namespace declarations in inline content, see <tag>p:inli
 <tag>p:input</tag> can only declare the input port. <error
 code="S0042">It is a <glossterm>static error</glossterm> to attempt to
 provide a connection for an input port on the declaration of an atomic
-step.</error></para>
+step.</error> On <tag>p:declare-step</tag>, any binding provided in
+<tag>p:input</tag> is a default connection for the port, if no other
+connection is provided, see <xref linkend="conn-prec"/>.</para>
 
 <para xml:id="note-pipe-excl">The <tag>p:pipe</tag> element is
 explicitly excluded from a declaration because it would make the
@@ -4392,37 +4394,69 @@ author to exclude some namespace declarations in inline content, see <tag>p:inli
 </varlistentry>
 </variablelist>
 
-<para>An input declaration may include a default connection. If no
-connection is provided for an input port which has a default
-connection, then the input is treated as if the default connection
-appeared.</para>
-
 <para>A <tag>p:with-input</tag> element with no children
 (<foreignphrase>e.g.</foreignphrase>, “<code>&lt;p:with-input/&gt;</code>”)
-is equivalent to an
-input connection that contains only “<code>&lt;p:pipe/&gt;</code>”, which is
+is treated implicitly as if it contained only “<code>&lt;p:pipe/&gt;</code>”, which is
 in turn equivalent to a binding to the default readable port.
 </para>
 
-<para>An input declaration may contain foreign element, scoped outside of XProc vocabulary
-(<uri type="xmlnamespace">http://www.w3.org/ns/xproc</uri>) namespace. Each element is treated
-as if wrapped with a <tag>p:inline</tag> element. For definition of this implicit behaviour
-see <tag>p:inline</tag>.</para>
+<para>If the <tag>p:with-input</tag> contains elements not in the XProc namespace,
+they are <link linkend="implicit-inlines">implicit inlines</link>.</para>
 
-<para>A default connection does not satisfy the requirement that a
-primary input port is automatically connected by the processor, nor is
-it used when no default readable port is defined. In other words, a
-<tag>p:declare-step</tag> can define
-defaults for all of its inputs, whether they are primary or not, but
-defining a default for a primary input usually has no effect. It's
-never used by an atomic step since the step, when it's called, will
-always connect the primary input port to the default readable port (or
-cause a static error). The only case where it has value is on a
-<tag>p:declare-step</tag> when that pipeline is invoked directly by the
-processor. In that case, the processor <rfc2119>must</rfc2119> use the
-default connection if no external connection is provided for the
-port.</para>
+<section xml:id="conn-prec">
+<title>Connection precedence</title>
 
+<para>XProc 3.0 introduces a number of new connection defaulting
+mechanisms to make pipeline authoring easier. Defaults only apply
+if there’s no explicit connection, and they apply differently to
+primary and secondary inputs.</para>
+
+<variablelist>
+<varlistentry>
+<term>Primary input ports</term>
+<listitem>
+<para>For a given primary input port:</para>
+<orderedlist>
+<listitem>
+<para>If there is a <tag>p:with-input</tag> for that port and it provides a
+binding, even an implicit one, that binding is used.
+</para>
+</listitem>
+<listitem>
+<para>If there’s no <tag>p:with-input</tag> for that port and there is a default
+readable port, the input will be connected to the default readable port.
+</para>
+</listitem>
+<listitem>
+<para>If there’s no <tag>p:with-input</tag> for that port and there’s no default
+readable port, then the default connection from the declaration’s <tag>p:input</tag>
+will be used. It will be a static error if there is no default connection.
+</para>
+</listitem>
+</orderedlist>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>Secondary input ports</term>
+<listitem>
+<para>For a given secondary input port:</para>
+<orderedlist>
+<listitem>
+<para>If there is a <tag>p:with-input</tag> for that port and it provides a
+binding, even an implicit one, that binding is used.
+</para>
+</listitem>
+<listitem>
+<para>If there’s no <tag>p:with-input</tag> for that port
+then the default connection from the declaration’s <tag>p:input</tag>
+will be used. It will be a static error if there is no default connection.
+</para>
+</listitem>
+</orderedlist>
+</listitem>
+</varlistentry>
+</variablelist>
+</section>
 </section>
 
 <!-- ============================================================ -->
