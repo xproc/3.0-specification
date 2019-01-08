@@ -1091,7 +1091,10 @@ be raised statically.</para>
 <section xml:id="dynamic-evaluation">
 <title>Dynamic evaluation of the pipeline</title>
 
-<para>FIXME: write an introduction.</para>
+<para>Dynamic evaluation of the pipeline occurs when it begins to process documents.
+The processor evaluates any expressions necessary to provide all of the input documents
+and options required. The step processes the input documents and produces outputs which
+flow through the pipeline.</para>
 
     <section xml:id="environment">
       <title>Environment</title>
@@ -5649,9 +5652,45 @@ See also <xref linkend="handling-imports"
 
 <section xml:id="p.import-functions"><title>p:import-functions</title>
 
-<para>FIXME: T.B.D.</para>
+<para>An <tag>p:import-functions</tag> element identifies a library of externally
+defined functions to be imported into the pipeline. After the functions have been
+imported, they are available in the processor XPath context.</para>
 
 <e:rng-pattern name="ImportFunctions"/>
+
+<variablelist>
+<varlistentry><term><tag class="attribute">href</tag></term>
+<listitem><para>The <tag class="attribute">href</tag> attribute
+identifies the URI of the function library. <error code="S0103">It is
+a <glossterm>static error</glossterm> if the URI of a
+<tag>p:import-functions</tag> element cannot be retrieved or if, once
+retrieved, it points to a library that the processor cannot
+import.</error>
+</para>
+</listitem>
+</varlistentry>
+<varlistentry><term><tag class="attribute">content-type</tag></term>
+<listitem>
+<para>The <tag class="attribute">content-type</tag> specifies what kind of library
+is expected at the URI. If the processor does not understand libraries of that type, it
+is free to raise <code>err:XS0103</code> immediately.
+</para>
+</listitem>
+</varlistentry>
+<varlistentry><term><tag class="attribute">namespace</tag></term>
+<listitem>
+<para>If a <tag class="attribute">namespace</tag> is specified, then only functions
+in that namespace will be loaded.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+<para>The ability to import functions is optional. <impl>Whether or not a processor
+can import functions, and if it can, what kinds of function libraries it can import
+from is <glossterm>implementation-defined</glossterm>.</impl>
+</para>
+
 </section>
 
 <!-- ============================================================ -->
