@@ -245,6 +245,14 @@
 	<xsl:when test="rng:data">
 	  <xsl:apply-templates/>
 	</xsl:when>
+	<xsl:when test="rng:oneOrMore/rng:data">
+	  <xsl:apply-templates/>
+          <xsl:text>+</xsl:text>
+	</xsl:when>
+	<xsl:when test="rng:zeroOrMore/rng:data">
+	  <xsl:apply-templates/>
+          <xsl:text>*</xsl:text>
+	</xsl:when>
 	<xsl:when test="rng:ref">
 	  <xsl:variable name="pattern" select="rng:ref/@name"/>
 	  <xsl:variable name="rngpat" select="$schema/rng:grammar/rng:define[@name=$pattern]"/>
@@ -291,6 +299,7 @@
 	    <xsl:text> (</xsl:text>
 	    <xsl:value-of select="ancestor::rng:element/@name"/>
 	    <xsl:text>)</xsl:text>
+            <xsl:sequence select="."/>
 	  </xsl:message>
 	</xsl:otherwise>
       </xsl:choose>
