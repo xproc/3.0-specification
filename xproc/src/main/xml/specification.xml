@@ -1091,7 +1091,10 @@ be raised statically.</para>
 <section xml:id="dynamic-evaluation">
 <title>Dynamic evaluation of the pipeline</title>
 
-<para>FIXME: write an introduction.</para>
+<para>Dynamic evaluation of the pipeline occurs when it begins to process documents.
+The processor evaluates any expressions necessary to provide all of the input documents
+and options required. The step processes the input documents and produces outputs which
+flow through the pipeline.</para>
 
     <section xml:id="environment">
       <title>Environment</title>
@@ -1767,6 +1770,29 @@ return them unchanged, to silently omit them, or to raise an error. It
   </simplesect>
 </section>
 
+<section xml:id="f.function-library-importable">
+<title>Function library importable</title>
+
+<para>The <function>p:function-library-importable</function> function
+reports whether or not function libraries of a particular type can be imported.
+</para>
+
+<methodsynopsis>
+<type>xs:boolean</type>
+<methodname>p:function-library-importable</methodname>
+<methodparam><type>xs:string</type><parameter>library-type</parameter></methodparam>
+</methodsynopsis>
+
+<para>The <varname>$library-type</varname> string is interpreted as a content type.
+If the processor understands
+(<foreignphrase>i.e.</foreignphrase> if <tag>p:import-functions</tag> understands)
+how to load function libraries of that type, this function returns
+<literal>true()</literal>, otherewise it returns <literal>false()</literal>.
+</para>
+
+<para>The <function>p:function-library-importable</function> function behaves
+normally during static analysis.</para>
+</section>
 
 <section xml:id="other-xpath-extension-functions">
   <title>Other XPath Extension Functions</title>
@@ -5649,9 +5675,69 @@ See also <xref linkend="handling-imports"
 
 <section xml:id="p.import-functions"><title>p:import-functions</title>
 
-<para>FIXME: T.B.D.</para>
+<para>An <tag>p:import-functions</tag> element identifies a library of externally
+defined functions to be imported into the pipeline. After the functions have been
+imported, they are available in the processor XPath context.</para>
 
 <e:rng-pattern name="ImportFunctions"/>
+
+<variablelist>
+<varlistentry><term><tag class="attribute">href</tag></term>
+<listitem><para>The <tag class="attribute">href</tag> attribute
+identifies the URI of the function library. <error code="S0103">It is
+a <glossterm>static error</glossterm> if the URI of a
+<tag>p:import-functions</tag> element cannot be retrieved or if, once
+retrieved, it points to a library that the processor cannot
+import.</error>
+</para>
+</listitem>
+</varlistentry>
+<varlistentry><term><tag class="attribute">content-type</tag></term>
+<listitem>
+<para>The <tag class="attribute">content-type</tag> specifies what kind of library
+is expected at the URI. <impl>If no type is specified, the way that the processor
+determines the type of the library is <glossterm>implementation-defined</glossterm>.</impl>
+</para>
+</listitem>
+</varlistentry>
+<varlistentry><term><tag class="attribute">namespace</tag></term>
+<listitem>
+<para>If a <tag class="attribute">namespace</tag> is specified, it provides a list
+of namespace URIs. Only functions
+in those namespaces will be loaded.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+<para>The ability to import functions is optional. <impl>Whether or not a processor
+can import functions, and if it can, what kinds of function libraries it can import
+from is <glossterm>implementation-defined</glossterm>.</impl> Pipeline authors can
+use <function>p:function-library-importable</function> to test whether or not a particular
+kind of library can be loaded.
+</para>
+
+<para>Importing functions from a library implies loading and processing that library
+according to its conventions (loading imports, resolving dependencies, etc.).
+<error code="S0104">It is a <glossterm>static error</glossterm> if the processor
+cannot load the function library.</error> This may occur because the format is
+unknown, because it is a version of the library that the processor does
+not recognize, or if it’s uninterpretable for any other reason.
+<error code="S0106">It is a
+<glossterm>static error</glossterm> if the processor detects that a
+particular library is unloadable.</error> This may occur
+if the processor is, in principle, able to load libraries of the specified format,
+but detects that the particuar library requested is somehow ill-formed
+(syntactically invalid, has unsatisfiable dependencies or circular
+imports, etc.).
+</para>
+
+<para>Imported functions must be unique (they must not have the same name, namespace, and
+arity). <error code="S0105">It is a <glossterm>static error</glossterm> if a function
+imported from a library has the same name and arity as a function already imported.</error>
+</para>
+
+
 </section>
 
 <!-- ============================================================ -->
