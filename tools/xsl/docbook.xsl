@@ -12,7 +12,7 @@
 		exclude-result-prefixes="f h db m t xlink xs tp"
                 version="2.0">
 
-<xsl:import href="https://cdn.docbook.org/release/2.3.7/xslt/base/html/final-pass.xsl"/>
+<xsl:import href="https://cdn.docbook.org/release/latest/xslt/base/html/final-pass.xsl"/>
 
 <xsl:param name="js-navigation" select="false()"/>
 
@@ -94,7 +94,7 @@
     </xsl:message>
   </xsl:if>
 
-  <div class="{local-name(.)}">
+  <article class="{local-name(.)}">
     <xsl:if test="$revisionflags">
       <p>The presentation of this document has been augmented to
       identify changes from a previous version. Three kinds of changes
@@ -112,7 +112,7 @@
 	<xsl:call-template name="format-specification"/>
       </xsl:otherwise>
     </xsl:choose>
-  </div>
+  </article>
 </xsl:template>
 
 <xsl:template name="format-specification">

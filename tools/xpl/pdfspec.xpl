@@ -8,14 +8,12 @@
                 name="main">
 <p:input port="source"/>
 <p:input port="parameters" kind="parameter"/>
-<p:output port="result">
-  <p:pipe step="format-docbook" port="result"/>
-</p:output>
-<p:serialization port="result" indent="false" method="xhtml"/>
 <p:option name="style" select="'dbspec.xsl'"/>
 <p:option name="diffkey" select="''"/>
 <p:option name="webid" select="'xproc'"/>
 <p:option name="diffloc" select="'/tmp/diff.html'"/>
+<p:option name="pdf" select="'/tmp/spec.pdf'"/>
+<p:option name="css" select="'/src/main/css/print.css'"/>
 
 <p:import href="https://cdn.docbook.org/release/latest/xslt/base/pipelines/docbook.xpl"/>
 
@@ -31,7 +29,7 @@
 
 <pos:env/>
 
-<dbp:docbook name="format-docbook" format="html" return-secondary="true">
+<dbp:docbook name="format-docbook" format="cssprint">
   <p:input port="source">
     <p:pipe step="main" port="source"/>
   </p:input>
@@ -56,45 +54,12 @@
                 select="substring-after(
                           /c:result/c:env[@name='TRAVIS_REPO_SLUG']/@value,
                           '/')"/>
-  <p:with-param name="auto-diff" select="$diffkey != ''"/>
+  <p:with-param name="auto-diff" select="false()"/>
+
+  <p:with-option name="pdf" select="$pdf"/>
+  <p:with-option name="css" select="$css"/>
 </dbp:docbook>
 
-<p:wrap match="/" wrapper="c:body"/>
-<p:add-attribute match="/c:body" attribute-name="content-type"
-                 attribute-value="application/xml+html"/>
-
-<p:escape-markup/>
-
-<p:wrap match="/" wrapper="c:request"/>
-<p:add-attribute match="/c:request" attribute-name="method"
-                 attribute-value="post"/>
-<p:add-attribute match="/c:request" attribute-name="href">
-  <p:with-option name="attribute-value"
-                 select="concat('https://dataapi.nwalsh.com/dxml/cgi-bin/deltaxml.pl?',
-                                'key=', $diffkey, '&amp;webid=', $webid)"/>
-</p:add-attribute>
-
-<p:choose>
-  <p:when test="$diffkey != ''">
-    <p:http-request/>
-    <p:unescape-markup/>
-    <p:unwrap match="/c:body"/>
-    <p:store method="html">
-      <p:with-option name="href" select="$diffloc"/>
-    </p:store>
-  </p:when>
-  <p:otherwise>
-    <p:sink/>
-  </p:otherwise>
-</p:choose>
-
-<p:for-each>
-  <p:iteration-source>
-    <p:pipe step="format-docbook" port="secondary"/>
-  </p:iteration-source>
-  <p:store name="store-chunk" encoding="utf-8" indent="true" method="xml">
-    <p:with-option name="href" select="base-uri(/)"/>
-  </p:store>
-</p:for-each>
+<p:sink/>
 
 </p:declare-step>
