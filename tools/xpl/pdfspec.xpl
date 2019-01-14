@@ -8,7 +8,12 @@
                 name="main">
 <p:input port="source"/>
 <p:input port="parameters" kind="parameter"/>
+<p:output port="result"/>
+
+<p:serialization port="result" indent="false" method="xhtml"/>
+
 <p:option name="style" select="'dbspec.xsl'"/>
+<p:option name="postprocess" select="''"/>
 <p:option name="diffkey" select="''"/>
 <p:option name="webid" select="'xproc'"/>
 <p:option name="diffloc" select="'/tmp/diff.html'"/>
@@ -29,7 +34,7 @@
 
 <pos:env/>
 
-<dbp:docbook name="format-docbook" format="cssprint">
+<dbp:docbook name="format-docbook" format="xhtml">
   <p:input port="source">
     <p:pipe step="main" port="source"/>
   </p:input>
@@ -55,11 +60,30 @@
                           /c:result/c:env[@name='TRAVIS_REPO_SLUG']/@value,
                           '/')"/>
   <p:with-param name="auto-diff" select="false()"/>
-
-  <p:with-option name="pdf" select="$pdf"/>
-  <p:with-option name="css" select="$css"/>
 </dbp:docbook>
 
-<p:sink/>
+<p:choose>
+  <p:when test="$postprocess = ''">
+    <p:identity>
+      <p:input port="source">
+        <p:pipe step="format-docbook" port="result"/>
+      </p:input>
+    </p:identity>
+  </p:when>
+  <p:otherwise>
+    <p:load name="post">
+      <p:with-option name="href"
+                     select="resolve-uri($postprocess)"/>
+    </p:load>
+    <p:xslt>
+      <p:input port="source">
+        <p:pipe step="format-docbook" port="result"/>
+      </p:input>
+      <p:input port="stylesheet">
+        <p:pipe step="post" port="result"/>
+      </p:input>
+    </p:xslt>
+  </p:otherwise>
+</p:choose>
 
 </p:declare-step>
