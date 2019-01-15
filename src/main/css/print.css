@@ -1,5 +1,5 @@
 html {
-    /* background-color: #eeffee; */
+    font-family: Times New Roman;
 }
 
 html > head > title {
@@ -16,13 +16,81 @@ h1, h2, h3, h4, h5, h6 {
     page-break-inside: avoid;
 }
 
+.title {
+    font-family: sans-serif;
+    page-break-after: avoid;
+    page-break-inside: avoid;
+}
+
 h1+p, h2+p, h3+p, h4+p, h5+p, h6+p {
     page-break-before: avoid;
 }
 
-table, figure {
+table, figure, .admonition, .element-syntax {
     page-break-inside: avoid;
 }
+
+.figure-wrapper {
+    text-align: center;
+    margin-left: 0.25in;
+    margin-right: 0.25in;
+}
+
+.figure-wrapper div.title {
+    margin-top: 0.5em;
+    font-weight: bold;
+}
+
+.figure {
+    border: solid 1pt #808080;
+    padding-top: 1em;
+    padding-bottom: 1em;
+}
+
+.informalfigure-wrapper {
+    text-align: center;
+    margin-left: 0.25in;
+    margin-right: 0.25in;
+}
+
+.rfc2119 {
+    font-weight: bold;
+}
+
+.admonition {
+    margin-left: 0.5in;
+    margin-right: 0.5in;
+    border: solid 1px #AAAAAA;
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+.admonition h3 {
+    font-size: inherit;
+    padding-left: 1rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.admonition-body { 
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.editorial {
+    background-color: #FAFAAA;
+}
+
+.element-syntax                    { padding: 2px; }
+.element-syntax-declare-step       { border: solid thin;  background-color: #ffeeff }
+.element-syntax-declare-step-opt   { border: solid thin; background-color: #ffeeff }
+.element-syntax-declare-step-opt   { border: solid thin; background-color: #ffeeff }
+.element-syntax-error-vocabulary   { border: solid thin;  background-color: #ffffee }
+.element-syntax-language-construct { border: solid thin;  background-color: #ffeeff }
+.element-syntax-language-example   { border: solid thin;  background-color: #ffeeff }
+.element-syntax-other-step         { border: solid thin;  background-color: #ffeeff }
+.element-syntax-step-vocabulary    { border: dotted thin; background-color: #ffffee }
 
 body > article > header h1,
 body > article > header h2,
@@ -38,6 +106,11 @@ body > article > header h6 {
 body > article > section,
 body > article > article {
     page-break-before: always;
+}
+
+body > article > section h2,
+body > article > article h2 {
+    string-set: SectionTitle content();
 }
 
 header .abstract {
@@ -74,18 +147,42 @@ header .abstract p+p {
         vertical-align: bottom;
         border-bottom: 1px solid black;
     }
+}
+
+@page :left {
     @bottom-left {
+        content: counter(page);
         border-top: 1px solid black;
         vertical-align: top;
         height: 1in;
     }
     @bottom-center {
-        content: counter(page);
         vertical-align: top;
         height: 1in;
         border-top: 1px solid black;
     }
     @bottom-right {
+        content: string(SectionTitle);
+        border-top: 1px solid black;
+        vertical-align: top;
+        height: 1in;
+    }
+}
+
+@page :right {
+    @bottom-left {
+        content: string(SectionTitle);
+        border-top: 1px solid black;
+        vertical-align: top;
+        height: 1in;
+    }
+    @bottom-center {
+        vertical-align: top;
+        height: 1in;
+        border-top: 1px solid black;
+    }
+    @bottom-right {
+        content: counter(page);
         border-top: 1px solid black;
         vertical-align: top;
         height: 1in;
@@ -108,6 +205,7 @@ header .abstract p+p {
     }
 
     @bottom-left {
+        content: none;
         border-top: none;
         background-color: transparent;
     }
@@ -117,6 +215,7 @@ header .abstract p+p {
         content: none;
     }
     @bottom-right {
+        content: none;
         border-top: none;
         background-color: transparent;
     }
@@ -170,4 +269,11 @@ ul.toc a::after {
 
 a, a:link, a:visited {
     color: inherit;
+    text-decoration: none;
+}
+
+img {
+    max-height: 50%;
+    max-width: 50%;
+    text-align: center;
 }
