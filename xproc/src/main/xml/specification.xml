@@ -4814,10 +4814,13 @@ default varies according to the <option>method</option>:</para>
 <varlistentry><term><literal>text</literal></term>
 <listitem><simpara><literal>text/plain</literal></simpara></listitem>
 </varlistentry>
+  <varlistentry><term><literal>json</literal></term>
+    <listitem><simpara><literal>application/json</literal></simpara></listitem>
+  </varlistentry>
 </variablelist>
 
 <para><impl>For methods other than <literal>xml</literal>, <literal>html</literal>,
-<literal>xhtml</literal>, and <literal>text</literal>; the
+<literal>xhtml</literal>, <literal>text</literal>, and <literal>json</literal>; the
 <option>media-type</option> is <glossterm>implementation-defined</glossterm>.
 </impl></para>
 </listitem>
@@ -4895,7 +4898,7 @@ semantics is implied by this different spelling.</para>
 
 <para>The <option>method</option> option controls the serialization
 method used by this component with standard values of 'html', 'xml',
-'xhtml', and 'text' but only the 'xml' value is required to be
+'xhtml', 'text' and 'json' but only the 'xml' value is required to be
 supported. The interpretation of the remaining options is as
 specified in <biblioref linkend="xml-serialization-31"/>.</para>
 
@@ -4910,7 +4913,8 @@ values:</para>
 <itemizedlist>
    <listitem><para>The <code>version</code> must support the value <code>1.0</code>.</para></listitem>
    <listitem><para>The <code>encoding</code> must support the values <code>UTF-8</code>.</para></listitem>
-   <listitem><para>The <code>omit-xml-declaration</code> must be supported.  If the value is not specified or has the value <code>no</code>, an XML declaration must be produced.</para></listitem>
+   <listitem><para>The <code>omit-xml-declaration</code> must be supported.  If the value is not 
+     specified or has the value <code>no</code>, an XML declaration must be produced.</para></listitem>
 </itemizedlist>
 
 <para>All other option values may be ignored for the <code>xml</code>
