@@ -138,9 +138,9 @@ document.</para>
 &lt;/p:declare-step&gt;</programlisting>
 </example>
 
-<para>The example in <xref linkend="ex1"/> is very verbose. It makes
+<para><xref linkend="ex1"/> is very verbose. It makes
 all of the connections seen in the figure explicit. In practice,
-pipelines do not have to be this verbose. By default, Where inputs and
+pipelines do not have to be this verbose. By default, where inputs and
 outputs are connected between sequential sibling steps, they do not
 have to be made explicit.</para>
 
@@ -424,6 +424,13 @@ property matches the base URI of each document produced on every output port.
 <para>Other property keys may also be present, including user
 defined properties.</para>
 
+<para>An output port may have several connections. In this case the document(s) that
+appear on that port are sent to each of the connections. In principle, a distinct
+copy of each document is sent to each connection. Critically, any changes made to one
+copy <rfc2119>must not</rfc2119> be visible in any other copy. In the interest of efficiency,
+if an implementation can isolate such changes, it is not required to make actual copies.
+</para>
+
 <section xml:id="document-types">
 <title>Document Types</title>
 
@@ -498,8 +505,7 @@ be serialized using the XML serializer (see <xref linkend="xml-serialization-31"
 <title>HTML Documents</title>
 
 <para>Representations of HTML documents are general instances of the XDM.
-Within XProc, they are
-<xref linkend="xml-documents"/>.
+Within XProc, they are <link linkend="xml-documents">XML documents</link>.
 HTML documents are identified by an HTML media type.
 <termdef xml:id="dt-HTML-media-type">The
 “<literal>text/html</literal>” and “<literal>application/xhtml+xml</literal>
@@ -586,7 +592,7 @@ JSON serializer (see <xref linkend="xml-serialization-31"/>) by default.</para>
 <para>Representations of other kinds of documents are empty XDM documents.
 <impl>The <emphasis>underlying</emphasis> representations of other
 kinds of documents are
-<glossterm>implementation-defined</glossterm>.</impl>
+<glossterm>implementation-dependent</glossterm>.</impl>
 Other kinds of documents are identified by media types that are not
 <glossterm baseform="XML media type">XML media types</glossterm>,
 <glossterm baseform="HTML media type">HTML media types</glossterm>,
@@ -670,7 +676,9 @@ ports, and options of all steps of that type. For example, every
 “<literal>source</literal>” and “<literal>schema</literal>”, one
 output named “<literal>result</literal>”, and the same set of options.
 </para>
-      <para>Like atomic steps, top level, user-defined pipelines also have declarations. The
+      <para>Like atomic steps, top level, user-defined pipelines also have declarations.</para>
+
+<para>The
         situation is slightly more complicated for the other compound steps because they don't have
         separate declarations; each instance of the compound step serves as its own declaration. On
         these compound steps, the number and names of the outputs can be different on each instance
@@ -695,11 +703,11 @@ output named “<literal>result</literal>”, and the same set of options.
 
          <para>When a step is used, all of the <glossterm>declared inputs</glossterm> of the step
                <rfc2119>must</rfc2119> be connected. Each connection binds the input to a data
-            source that may be from a variety of sources (see <xref linkend="connections"/>). <error code="S0003">It is a <glossterm>static error</glossterm> if any declared input is not
+            source (see <xref linkend="connections"/>). <error code="S0003">It is a <glossterm>static error</glossterm> if any declared input is not
                connected.</error></para>
          <para>The <glossterm>declared outputs</glossterm> of a step are only connected when they
-            are used by another step or expression.  Usually, this connection is made in reverse
-            where the use of the output describes the connection (see <xref linkend="connections"/>). Any documents produced on an unconnected output port are discarded.</para>
+            are used by another step or expression. 
+Any documents produced on an unconnected output port are discarded.</para>
 
 <para>Primary input and primary output ports may be implicitly
 connected if no explicit connection is given, see <xref linkend="primary-input-output"/>.</para>
@@ -723,14 +731,14 @@ siblings.</para>
       <para>Each input and output on a step is declared to accept or produce either a single
         document or a sequence of documents. It <emphasis>is not</emphasis> an error to connect a
         port that is declared to produce a sequence of documents to a port that is declared to
-        accept only a single document. It is, however, an error if the former step actually produces
-        more than one document at run time.</para>
+        accept only a single document. It is, however, an error if the former step does not
+        produce exactly one document at run time.</para>
       <para>It is also not an error to connect a port that is declared to produce a single document
         to a port that is declared to accept a sequence. A single document is the same as a sequence
         of one document.</para>
       <para>An output port may have more than one connection: it may be connected to more than one
         input port, more than one of its container's output ports, or both. At runtime this will
-        result in distinct copies of the output. </para>
+        result in the outputs being sent to each of those places.</para>
       <para><termdef xml:id="dt-signature">The <firstterm>signature</firstterm> of a step is the set
           of inputs, outputs, and options that it is declared to accept.</termdef> The declaration
         for a step provides a fixed signature which all its instances share.</para>
@@ -811,7 +819,7 @@ content types, that they accept. Input documents must
       <title>Primary Inputs and Outputs</title>
       <para>Each step may have one input port designated as
         the primary input port and one output port designated as the primary output port.</para>
-      <para><termdef xml:id="dt-primary-input-port">If a step has a document input port which is
+      <para><termdef xml:id="dt-primary-input-port">If a step has an input port which is
           explicitly marked “<code>primary='true'</code>”, or if it has exactly one document input
           port and that port is <emphasis>not</emphasis> explicitly marked
             “<code>primary='false'</code>”, then that input port is the <firstterm>primary input
@@ -819,7 +827,7 @@ content types, that they accept. Input documents must
         is explicitly marked “<code>primary='false'</code>”, or if a step has more than one input
         port and none is explicitly marked as the primary, then the primary input port of that step
         is undefined. A step can have at most one primary input port.</para>
-      <para><termdef xml:id="dt-primary-output-port">If a step has a document output port which is
+      <para><termdef xml:id="dt-primary-output-port">If a step has an output port which is
           explicitly marked “<code>primary='true'</code>”, or if it has exactly one document output
           port and that port is <emphasis>not</emphasis> explicitly marked
             “<code>primary='false'</code>”, then that output port is the <firstterm>primary output
@@ -914,7 +922,7 @@ transitively connected to all of the other steps.
                <para>The output port of some other step.</para>
             </listitem>
             <listitem>
-               <para>A fixed, inline document or sequence of documents.</para>
+               <para>A fixed, inline document.</para>
             </listitem>
             <listitem>
                <para>A document read from a URI.</para>
@@ -958,9 +966,6 @@ value template in a <tag>p:inline</tag>.
 
          <para>As with an input, the output can be a sequence of documents constructed from any
             combination of the above.</para>
-         <para>An output port may have multiple consumers and this results in multiple connections.
-            A subset of these connections are the input port connections for various sibling or
-            contained steps.</para>
          <para>Within the context of a <glossterm>compound step</glossterm>, the <glossterm>declared
                outputs</glossterm> of the compound step must describe their connections.  The set of
             possibilities for this connection is exactly the same set as for any other input port
@@ -1128,10 +1133,8 @@ flow through the pipeline.</para>
     <section xml:id="environment">
       <title>Environment</title>
       <para><termdef xml:id="dt-environment">The <firstterm>environment</firstterm> is a
-          context-dependent collection of information available within subpipelines.</termdef> Most
-        of the information in the environment is static and can be computed for each subpipeline
-        before evaluation of the pipeline as a whole begins. The in-scope bindings have to be
-        calculated as the pipeline is being evaluated.</para>
+          context-dependent collection of information available within subpipelines.</termdef>
+</para>
       <para>The environment consists of:</para>
       <orderedlist>
         <listitem>
@@ -1152,7 +1155,7 @@ flow through the pipeline.</para>
         </listitem>
       </orderedlist>
       <para><termdef xml:id="dt-empty-environment">The <firstterm>empty environment</firstterm>
-          contains no readable ports, an undefined default readable port and no in-scope
+          contains no readable ports, an undefined default readable port, and no in-scope
           bindings.</termdef>
       </para>
       <para>Unless otherwise specified, the environment of a <glossterm baseform="contained steps">contained step</glossterm> is its <glossterm>inherited environment</glossterm>. <termdef xml:id="dt-inherited-environment">The <firstterm>inherited environment</firstterm> of a
@@ -1210,7 +1213,7 @@ environment</glossterm>. </para>
 <para>Variables and options are lexically scoped. The environment of a step
 also includes the <glossterm>in-scope bindings</glossterm> for all of
 the variables and options “visible” from its lexical position. Variables
-and options can shadow each other, only the lexically most recent bindings
+and options can shadow each other; only the lexically most recent bindings
 are visible.</para>
 
          <section xml:id="initial-environment">
@@ -1219,13 +1222,13 @@ are visible.</para>
                   <termdef xml:id="dt-initial-environment">An <firstterm>initial
                      environment</firstterm> is a <glossterm>connection</glossterm> for each of the
                      <glossterm>readable ports</glossterm> and a set of option bindings used to
-                  construct the <glossterm>in-scope bindings</glossterm>.</termdef> This environment
+                  construct the initial <glossterm>in-scope bindings</glossterm>.</termdef> This environment
                is used in place of the <glossterm>empty environment</glossterm> that might have
                otherwise been provided.</para>
             <para>An invoked pipeline's <glossterm>initial environment</glossterm> is different from
                the environment constructed for the sub-pipeline of a declared step.  The initial
                environment is constructed for the initial invocation of the pipeline by the
-               processor by the outside application.  Steps that are subsequently invoked construct
+               processor outside the application.  Steps that are subsequently invoked construct
                an environment as specified in <xref linkend="declare-pipelines"/>.</para>
             <para>When constructing an <glossterm>initial environment</glossterm>, an implementation
                is free to provide any set of mechanisms to construct connections for the input ports
@@ -1294,7 +1297,7 @@ evaluated by the processor.</para>
 <para>These functions <rfc2119>must not</rfc2119> be supported in
 XPath expressions evaluated by a step. In the interest of
 interoperability and to avoid imposing unnecessary constraints on
-implementors, XPath expressions inside, for example a template in an
+implementors, XPath expressions inside, for example, a template in an
 XSLT step, cannot be aware of the XProc-defined functions.
 </para>
 
@@ -1302,7 +1305,7 @@ XSLT step, cannot be aware of the XProc-defined functions.
         <title>System Properties</title>
         <para>XPath expressions within a pipeline document can interrogate the processor for
           information about the current state of the pipeline. Various aspects of the processor are
-          exposed through the <function>p:system-property</function>:</para>
+          exposed through the <function>p:system-property</function> function:</para>
 
 <methodsynopsis>
 <type>xs:string</type>
@@ -1445,8 +1448,8 @@ static analysis is <glossterm>implementation-dependent</glossterm>.</impl></para
 sequence of documents. The iteration position is the position of the
 current document in that sequence: the first document has position 1, the
 second 2, etc. The <function>p:iteration-position</function> function
-returns the iteration position of the nearest
-ancestor <tag>p:for-each</tag> or <tag>p:viewport</tag>.</para>
+returns the iteration position of the nearest compound step that processes
+a sequence of documents.</para>
 
 <methodsynopsis>
 <type>xs:integer</type>
@@ -1454,7 +1457,7 @@ ancestor <tag>p:for-each</tag> or <tag>p:viewport</tag>.</para>
 <void/>
 </methodsynopsis>
 
-<para>If there is no <tag>p:for-each</tag> or <tag>p:viewport</tag>
+<para>If there is no compound step that processes a sequence of documents
 among the ancestors of the element on which the expression involving
 <function>p:iteration-position</function> occurs, it returns 1.</para>
 
@@ -1469,7 +1472,8 @@ static analysis is 1.</para>
 sequence of documents. The iteration size is the total number of documents
 in that sequence. The <function>p:iteration-size</function> function
 returns the iteration size of the nearest
-ancestor <tag>p:for-each</tag> or <tag>p:viewport</tag>.</para>
+ancestor
+compound step that processes a sequence of documents.</para>
 
 <methodsynopsis>
 <type>xs:integer</type>
@@ -1642,14 +1646,6 @@ interpreted as follows:</para>
       <para>If <code>$key</code> is of any other type, the function returns the empty sequence.</para>
     </listitem>
   </itemizedlist>
-
-<para feature="document-properties-non-xml-document">The context node
-for the <function>p:document-property</function> function must be an
-XPath document node. In order to access the document properties of a
-non-XML document, the processor is responsible for manufacturing an
-empty document node for this purpose and for maintaining the
-association between that empty document node and the corresponding
-non-XML document.</para>
 
 <para>The <function>p:document-property</function> function behaves
 normally during static analysis.</para>
@@ -1928,7 +1924,7 @@ attribute value templates and text value templates are referred to as
 
 <para>A value template is a string that contains zero or more
 expressions delimited by curly brackets. Outside an expression, a
-doubled left or right curly brackets (“<literal>{{</literal>” or
+doubled left or right curly bracket (“<literal>{{</literal>” or
 “<literal>}}</literal>”) represents a literal, single bracket and does
 not start or end an expression. Once an expression begins, it extends
 to the first unmatched right curly bracket that is not within a string
@@ -1986,18 +1982,18 @@ as one that permits an attribute value template. Option shortcuts
 permit attribute value templates.
 <impl>Whether or not an extension attribute permits attribute value
 templates is <glossterm>implementation-defined</glossterm>.</impl>
-In an element
-syntax summary, the value of an attribute that allows attribute value
+In element
+syntax summaries in this specification, the value of an attribute that allows attribute value
 templates is surrounded by
 curly brackets.</para>
 
 <para>An attribute value template can be seen as an alternating
 sequence of zero or more “fixed” (non-expression) parts and expression
-parts. Each expression is evaluated with an undefined context
-node.</para>
+parts.</para>
 
-<para>The result of the attribute value template is the concatenation of the fixed parts and the string-value of the
-        result of evaluating each expression part.</para>
+<para>The result of the attribute value template is the concatenation
+of the fixed parts and the string-value of the result of evaluating
+each expression part.</para>
 
 <note xml:id="note-dynerr">
 <para>This process can generate dynamic errors, for example if the
@@ -2012,16 +2008,6 @@ value template as an <type>xs:untypedAtomic</type>.</para>
 <section xml:id="text-value-templates">
 <title>Text Value Templates</title>
 
-<para>This section describes how text nodes are processed when they
-are designated text value templates. Text nodes that are descendants
-of a <tag>p:inline</tag> and text nodes that are descendants of an
-element node in an implicit inline may be text value templates. No
-other text node is a text value template.</para>
-
-<para>Whether or not a text node that may be a text value template is
-designated one is determined by <code>expand-text</code> and <code>p:inline-expand-text</code> attributes,
-see <xref linkend="expand-text-attribute"/>.</para>
-
 <para><termdef xml:id="dt-text-value-template">In a text node that is
 designated as a <firstterm>text value template</firstterm>,
 expressions can be used by surrounding each expression with curly
@@ -2030,9 +2016,17 @@ general rules for <glossterm baseform="value template">value
 templates</glossterm>.</termdef>
 </para>
 
+<para>Text nodes that are descendants
+of a <tag>p:inline</tag> and text nodes that are descendants of an
+element node in an implicit inline may be text value templates. No
+other text node is a text value template.</para>
+
+<para>Whether or not a text node that may be a text value template is
+designated one is determined by <code>expand-text</code> and <code>p:inline-expand-text</code> attributes,
+see <xref linkend="expand-text-attribute"/>.</para>
+
 <para>A text value template can be seen as an alternating sequence of
-zero or more “fixed” (non-expression) parts and expression parts. Each
-expression is evaluated with an undefined context node.</para>
+zero or more “fixed” (non-expression) parts and expression parts.</para>
 
 <para>This produces a sequence of strings (the fixed parts) and items
 (the results of evaluating each expression). Any items that are
@@ -2062,10 +2056,10 @@ to the way element constructors work in <biblioref linkend="xquery10"/>.
 </para>
 <para>If the node is an attribute
 it is added to an element parent if and only if the attribute either has
-no siblings in the XDM sequence or has only attributes as preceding siblings.
+no preceding nodes in the sequence of nodes or has only attributes as preceding nodes.
 <error code="D0052">It is a <glossterm>dynamic error</glossterm> if the XPath
 expression in a TVT evaluates to an attribute and either the parent is not an
-element or the attribute has a preceding sibling that it not an attribute.</error>
+element or the attribute has a preceding node that it not an attribute.</error>
 </para>
 </listitem>
 <listitem>
@@ -2073,6 +2067,52 @@ element or the attribute has a preceding sibling that it not an attribute.</erro
             concatenation of the serialization of the nodes that result from evaluating the template.</para>
 <para>This serialization is performed with the following serialization parameters:</para>
 
+<informaltable>
+<tgroup cols="2">
+<thead>
+<row>
+<entry>Parameter</entry>
+<entry>Value</entry>
+</row>
+</thead>
+<tbody>
+<row>
+  <entry><option>byte-order-mark</option></entry><entry>false</entry></row>
+<row>
+  <entry><option>cdata-section-elements</option></entry><entry>()</entry></row>
+<row>
+  <entry><option>doctype-public</option></entry><entry>()</entry></row>
+<row>
+  <entry><option>doctype-system</option></entry><entry>()</entry></row>
+<row>
+  <entry><option>encoding</option></entry><entry>“utf-8”</entry></row>
+<row>
+  <entry><option>escape-uri-attributes</option></entry><entry>false</entry></row>
+<row>
+  <entry><option>include-content-type</option></entry><entry>false</entry></row>
+<row>
+  <entry><option>indent</option></entry><entry>false</entry></row>
+<row>
+  <entry><option>media-type</option></entry><entry>“application/xml”</entry></row>
+<row>
+  <entry><option>method</option></entry><entry>“xml”</entry></row>
+<row>
+  <entry><option>normalization-form</option></entry><entry>()</entry></row>
+<row>
+  <entry><option>omit-xml-declaration</option></entry><entry>true</entry></row>
+<row>
+  <entry><option>standalone</option></entry><entry>false</entry></row>
+<row>
+  <entry><option>undeclare-prefixes</option></entry><entry>false</entry></row>
+<row>
+  <entry><option>use-character-maps</option></entry><entry>()</entry></row>
+<row>
+  <entry><option>version</option></entry><entry>1.0</entry></row>
+</tbody>
+</tgroup>
+</informaltable>
+
+<!--
 <itemizedlist>
 <listitem>
 <para><option>byte-order-mark</option>: false</para>
@@ -2123,6 +2163,7 @@ element or the attribute has a preceding sibling that it not an attribute.</erro
 <para><option>version</option>: 1.0</para>
 </listitem>
 </itemizedlist>
+-->
 </listitem>
 </orderedlist>
 
@@ -2191,12 +2232,14 @@ expression such that it returns the string values:</para>
     <section xml:id="variables">
       <title>Variables</title>
 
-      <para>Variables are name/value pairs. Pipeline authors can create variables to hold computed values.</para>
+      <para>Pipeline authors can create variables to hold computed values.</para>
 
       <para>
         <termdef xml:id="dt-variable">A <firstterm>variable</firstterm> is a name/value pair. The name
             <rfc2119>must</rfc2119> be an <link xlink:href="http://www.w3.org/TR/REC-xml-names/#dt-expname">expanded
             name</link>. The value may be any XPath data model value.</termdef>
+Variable names are always expressed as
+        literal values, pipelines cannot construct variable names dynamically.
       </para>
 
       <para>The names of variables and options are not distinct and are lexically scoped. <termdef xml:id="dt-shadow">We
@@ -2214,11 +2257,11 @@ expression such that it returns the string values:</para>
     &lt;/p:input&gt;
   &lt;/p:message&gt;
 
-  &lt;p:variable name="bname" as="$opt + 1"/&gt;
+  &lt;p:variable name="bname" select="$opt + 1"/&gt;
 
   &lt;p:message message="NAME2={$bname}"/&gt;
 
-  &lt;p:variable name="bname" as="7"/&gt;
+  &lt;p:variable name="bname" select="7"/&gt;
 
   &lt;p:message message="NAME3={$bname}"/&gt;
 
@@ -2234,7 +2277,7 @@ expression such that it returns the string values:</para>
     <section xml:id="options">
       <title>Options</title>
 
-      <para>Some steps accept options. Options are name/value pairs. The value of an option is the default value
+      <para>Some steps accept options. The value of an option is the default value
         specified in its declaration, or a value provided by the caller of the step (overriding the default). If it has
         neither a default value nor a provided value, its value is the empty sequence.</para>
 
@@ -2257,7 +2300,8 @@ expression such that it returns the string values:</para>
     <section xml:id="statics">
       <title>Static Options and Variables</title>
 
-      <para>Any <tag>p:variable</tag> that is part of the prologue of a step (as a direct child of
+      <para>Any <tag>p:variable</tag> that is part of the
+<glossterm>prologue</glossterm> of a step (as a direct child of
           <tag>p:declare-step</tag> declared before the start of the sub-pipeline) <rfc2119>must</rfc2119> be declared
         “static”. Any <tag>p:variable</tag> that is part of the sub-pipeline of a step <rfc2119>must not</rfc2119> be
         declared “static”.</para>
@@ -2321,8 +2365,7 @@ expression such that it returns the string values:</para>
       <para>As an additional convenience, if the specified sequence type of an option or a variable is a map with
         <type>xs:QName</type> keys (<type>map(xs:QName, …)</type>), the supplied map value is processed specially.
         This makes it possible to pass in maps using (easier to write) <type>xs:string</type> type keys that are
-        converted automatically into the required <type>xs:QName</type> keys in a manner analogous to
-        <type>#QName</type> values.</para>
+        converted automatically into the required <type>xs:QName</type> keys.</para>
       <para>Every key/value pair in a map supplied to a variable or an option with sequence type <type>map(xs:QName,
         …)</type> is processed as follows:</para>
       <itemizedlist>
@@ -2348,7 +2391,7 @@ expression such that it returns the string values:</para>
     <section xml:id="opt-bindings">
       <title>Namespaces on variables and options</title>
 
-      <para>Variable and option values carry with them not only their literal or computed string value but also a set of
+      <para>Variable and option values carry with them not only their literal or computed value but also a set of
         namespaces. To see why this is necessary, consider the following step:</para>
       <programlisting language="xml">&lt;p:delete xmlns:p="http://www.w3.org/ns/xproc"&gt;
   &lt;p:with-option name="match" select="'html:div'"
@@ -2564,7 +2607,7 @@ encounter the following step:</para>
 <para>The processor will simply ignore the “<port>ancillary</port>” port.
 </para>
 
-          <para>Suppose that XProc version 3.0 changes the definition of the <tag>p:xslt</tag> step
+          <para>Suppose that XProc version 99.0 changes the definition of the <tag>p:xslt</tag> step
             so that it has an additional output port, <code>messages</code>. Then consider the
             following pipeline: </para>
           <programlisting language="xml">&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
@@ -2589,9 +2632,9 @@ encounter the following step:</para>
 
 <para>When run by a "99.0" or later processor, it will count the
 documents that appear on the <code>messages</code> port. When run by a
-“1.0” processor in forwards-compatible mode, the binding to the
+“3.0” processor in forwards-compatible mode, the binding to the
 “<port>messages</port>” port is not a static error.
-Dynamically, the "1.0" processor will always produce
+Dynamically, the "3.0" processor will always produce
 a count of zero, because an empty sequence of documents will always
 appear on the <code>messages</code> port.</para>
 
@@ -2630,24 +2673,6 @@ specification.</para>
         <glossterm>subpipeline</glossterm>.</para>
     <para>The connections between steps are expressed using names and references to those
       names.</para>
-    <para>Six kinds of things are named in XProc:</para>
-    <orderedlist spacing="compact">
-      <listitem>
-        <simpara>Step types,</simpara>
-      </listitem>
-      <listitem>
-        <simpara>Steps,</simpara>
-      </listitem>
-      <listitem>
-        <simpara>Input ports),</simpara>
-      </listitem>
-      <listitem>
-        <simpara>Output ports,</simpara>
-      </listitem>
-      <listitem>
-        <simpara>Options and variables</simpara>
-      </listitem>
-    </orderedlist>
     <section xml:id="namespaces">
       <title>XProc Namespaces</title>
       <para>There are three namespaces associated with XProc:</para>
@@ -2692,6 +2717,26 @@ Steps and ports are named with NCNames. The scope of a name is a
 measure of where it is available in a pipeline. <termdef xml:id="dt-visible">If two names are in the same scope, we say that
 they are <firstterm>visible</firstterm> to each other.
 </termdef></para>
+
+    <para>Six kinds of things are named in XProc:</para>
+    <orderedlist spacing="compact">
+      <listitem>
+        <simpara>Step types,</simpara>
+      </listitem>
+      <listitem>
+        <simpara>Steps,</simpara>
+      </listitem>
+      <listitem>
+        <simpara>Input ports,</simpara>
+      </listitem>
+      <listitem>
+        <simpara>Output ports,</simpara>
+      </listitem>
+      <listitem>
+        <simpara>Options and variables</simpara>
+      </listitem>
+    </orderedlist>
+
       <para>The scope of the names of the step types is the pipeline in which they are declared,
         including any declarations imported from libraries via <tag>p:import</tag>. Nested pipelines
         inherit the step types in scope for their parent.</para>
@@ -2807,10 +2852,9 @@ port in four ways: <glossterm>by source</glossterm>, <glossterm>by
 URI</glossterm>, by providing an <glossterm>inline
 document</glossterm>, or by making it
 <glossterm baseform="empty-sequence">explicitly empty</glossterm>.
-Each of these mechanisms is allowed on the <tag>p:with-input</tag> and
-<tag>p:output</tag> elements. Specification <glossterm>by
-URI</glossterm>, by providing an <glossterm>inline document</glossterm>, or by making it
-  <glossterm baseform="empty-sequence">explicitly empty</glossterm> is allowed on <tag>p:input</tag>.</para>
+Each of these mechanisms is allowed where connections may be made, except that
+<tag>p:input</tag> may not include a connection <glossterm>by source</glossterm>.</para>
+
 <variablelist>
 <varlistentry>
 <term>Specified by URI</term>
@@ -2829,6 +2873,9 @@ documents by URI.</para>
     &lt;p:document href="http://example.com/input.xml"/&gt;
   &lt;/p:with-input&gt;
 &lt;/p:identity&gt;</programlisting>
+
+            <para>See the description of <tag>p:document</tag> for a complete description of how
+            URIs may be specified.</para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2873,6 +2920,9 @@ documents by URI.</para>
             <para>Inline documents are considered “quoted”. The pipeline processor passes them
               literally to the port, even if they contain elements from the XProc namespace or other
               namespaces that would have other semantics outside of the <tag>p:inline</tag>.</para>
+
+            <para>See the description of <tag>p:inline</tag> for a complete description of how
+            inline documents may be specified.</para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -2900,6 +2950,8 @@ documents by URI.</para>
                 <glossterm>default readable port</glossterm> will be assumed. Making the connection
               explicitly empty guarantees that the connection will be to an empty sequence of
               documents.</para>
+            <para>See the description of <tag>p:empty</tag> for a complete description of
+            empty connections.</para>
           </listitem>
         </varlistentry>
       </variablelist>
@@ -3184,8 +3236,36 @@ the element's syntax:</para>
           <define name="OtherElements"><element name="other-elements"><empty/></element></define>
         </grammar>
       </e:rng-fragment>
+
       <para>The content model fragments in these tableaux are presented in a simple, compact
-        notation. In brief:</para><itemizedlist>
+        notation. In brief:</para>
+
+<variablelist>
+<varlistentry>
+<term>Attributes</term>
+<listitem>
+<itemizedlist>
+        <listitem>
+          <para>Required attributes are bold. Optional attributes are followed by a question mark.</para>
+        </listitem>
+        <listitem>
+          <para>If an attribute value is an attribute value template, its type is shown
+          in curly brackets: “<code>{ some-type }</code>”. If <literal>some-type</literal> is 
+          <type>xs:QName</type> or a map type with key type <type>xs:QName</type> the conversion described in
+            <xref linkend="qname-handling"/> applies.</para>
+        </listitem>
+          <listitem>
+            <para>An attribute value with a map type marks an <type>XPathExpression</type> expected to
+              deliver a map of the indicated type. If the map type has key type <type>xs:QName</type> 
+              the conversion described in <xref linkend="qname-handling"/> applies.</para>
+          </listitem>
+</itemizedlist>
+</listitem>
+</varlistentry>
+<varlistentry>
+<term>Elements</term>
+<listitem>
+<itemizedlist>
         <listitem>
           <para>A name represent exactly one occurrence of an element with that name.</para>
         </listitem>
@@ -3216,22 +3296,11 @@ the element's syntax:</para>
           <para>An element or group followed by a plus (“+”) is required and may be repeated; it
             must occur at least once, and it can occur any number of times. </para>
         </listitem>
-        <listitem>
-          <para>Required attributes are bold. Optional attributes are followed by a question mark.</para>
-        </listitem>
-        <listitem>
-          <para>If an attribute value is an attribute value template, its type is shown
-          in curly brackets: “<code>{ some-type }</code>”. If <literal>some-type</literal> is 
-          <type>xs:QName</type> or a map type with key type <type>xs:QName</type> the conversion described in
-            <xref linkend="qname-handling"/> applies.</para>
-        </listitem>
-          <listitem>
-            <para>An attribute value with a map type marks an <type>XPathExpression</type> expected to
-              deliver a map of the indicated type. If the map type has key type <type>xs:QName</type> 
-              the conversion described in <xref linkend="qname-handling"/> applies.</para>
-          </listitem>
 
 </itemizedlist>
+</listitem>
+</varlistentry>
+</variablelist>
 
 <para>For clarity of exposition, the common attributes (see <xref linkend="common-attr"/>) are elided from the summaries as are the
 <tag>p:documentation</tag> and <tag>p:pipeinfo</tag> elements, which
@@ -5669,13 +5738,38 @@ attribute has no effect and is ignored.
 </varlistentry>
 </variablelist>
 
-<para>Informally, the content of a step declaration can be divided
-into two sections: a prologue and a subpipeline. The
-<tag>p:import</tag> and <tag>p:import-functions</tag> elements occur
-at the start of the prologue. After that, the prologue consists of
-<tag>p:input</tag>, <tag>p:output</tag>, <tag>p:option</tag>, and
-<tag>p:variable</tag> elements. Any variables declared in the prologue
-must be static.</para>
+<para>In the general case, the children of a <tag>p:declare-step</tag>
+can be grouped into several sections. All of these sections, except the
+subpipeline, may be empty.</para>
+
+<orderedlist>
+<listitem>
+<para>Imports must come first.</para>
+</listitem>
+<listitem>
+<para>The prologue follows the imports.
+<termdef xml:id="dt-prologue">The <firstterm>prologue</firstterm> consists of
+the <tag>p:input</tag>, <tag>p:output</tag>, and <tag>p:option</tag> elements.
+The prologue may also contain <tag>p:variable</tag> elements, but if it does,
+they must be declared statically.</termdef>
+</para>
+</listitem>
+<listitem>
+<para>The prologue may be followed by any number of inline <tag>p:declare-step</tag>
+elements that declare additional steps.</para>
+</listitem>
+<listitem>
+<para>Finally, there must be at least one step in the subpipeline.</para>
+</listitem>
+</orderedlist>
+
+<note>
+<para>In the absence of any inline declared steps, it is possible for the
+prologue to end with a <tag>p:variable</tag> and the subpipeline to begin
+with a <tag>p:variable</tag>. This does not introduce any ambiguity. In this
+case, the first non-static variable marks the beginning of the subpipeline.
+</para>
+</note>
 
 <para>Neither options nor variables in the prologue may shadow
 each other. <error code="S0091">It is a <glossterm>static
@@ -6444,7 +6538,10 @@ in the PSVI, are preserved between steps.</impl></para>
 <appendix xml:id="xproc-and-step-xpath-context">
 <title>XPath contexts in XProc</title>
 
-<para>FIXME: write an introduction</para>
+<para>Two kinds of XPath context are relevant in XProc: the context of the pipeline itself
+(<xref linkend="xproc-xpath-context-31"/>) and the context <emphasis>within</emphasis> steps
+(<xref linkend="step-xpath-context-31"/>).
+</para>
 
 <section xml:id="xproc-xpath-context-31">
 <title>Processor XPath Context</title>
@@ -6719,7 +6816,8 @@ readable port then the context node is undefined.</para>
             </varlistentry>
           </variablelist>
         </section>
-        <section xml:id="step-xpath-context-31">
+
+<section xml:id="step-xpath-context-31">
           <title>Step XPath Context</title>
           <para>When a step evaluates an XPath expression using XPath 3.1, unless otherwise
             indicated by a particular step, it does so with the following static context:</para>
@@ -7112,7 +7210,7 @@ excluded</glossterm><glossdef><para>If the effective boolean value of the
 <tag class="attribute">[p:]use-when</tag> expression is false, then
 the element and all of its descendants are <firstterm>effectively
 excluded</firstterm> from the pipeline document.</para></glossdef></glossentry><glossentry><glossterm>empty environment</glossterm><glossdef><para>The <firstterm>empty environment</firstterm>
-          contains no readable ports, an undefined default readable port and no in-scope
+          contains no readable ports, an undefined default readable port, and no in-scope
           bindings.</para></glossdef></glossentry><glossentry><glossterm>empty sequence</glossterm><glossdef><para>An <firstterm>empty sequence</firstterm> of
                 documents is specified with the <tag>p:empty</tag> element.</para></glossdef></glossentry><glossentry><glossterm>environment</glossterm><glossdef><para>The <firstterm>environment</firstterm> is a
           context-dependent collection of information available within subpipelines.</para></glossdef></glossentry><glossentry><glossterm>extension attribute</glossterm><glossdef><para>An element from the XProc namespace
@@ -7135,7 +7233,7 @@ how <glossterm role="unwrapped">implementation-dependent</glossterm> features ar
                      environment</glossterm><glossdef><para>An <firstterm>initial
                      environment</firstterm> is a <glossterm>connection</glossterm> for each of the
                      <glossterm>readable ports</glossterm> and a set of option bindings used to
-                  construct the <glossterm>in-scope bindings</glossterm>.</para></glossdef></glossentry><glossentry><glossterm>inline document</glossterm><glossdef><para>An <firstterm>inline document</firstterm> is
+                  construct the initial <glossterm>in-scope bindings</glossterm>.</para></glossdef></glossentry><glossentry><glossterm>inline document</glossterm><glossdef><para>An <firstterm>inline document</firstterm> is
                 specified directly in the body of the element to which it connects.</para></glossdef></glossentry><glossentry><glossterm>last step</glossterm><glossdef><para>The <firstterm>last step</firstterm> in a
 subpipeline is its last step in document order.</para></glossdef></glossentry><glossentry><glossterm>map attribute</glossterm><glossdef><para>A <firstterm>map attribute</firstterm> is an option's syntactic
                   shortcut attribute for which the option's sequence type is a map or array.</para></glossdef></glossentry><glossentry><glossterm>matches</glossterm><glossdef><para>A step <firstterm>matches</firstterm> its signature if and
@@ -7149,16 +7247,19 @@ subpipeline is its last step in document order.</para></glossdef></glossentry><g
             <rfc2119>must</rfc2119> be an <link xlink:href="http://www.w3.org/TR/REC-xml-names/#dt-expname">expanded
             name</link>. The value may be any XPath data model value.</para></glossdef></glossentry><glossentry><glossterm>pipeline</glossterm><glossdef><para>A <firstterm>pipeline</firstterm> is a set of connected
         steps, with outputs of one step flowing into inputs of another.</para></glossdef></glossentry><glossentry><glossterm>primary input
-            port</glossterm><glossdef><para>If a step has a document input port which is
+            port</glossterm><glossdef><para>If a step has an input port which is
           explicitly marked “<code>primary='true'</code>”, or if it has exactly one document input
           port and that port is <emphasis>not</emphasis> explicitly marked
             “<code>primary='false'</code>”, then that input port is the <firstterm>primary input
             port</firstterm> of the step.</para></glossdef></glossentry><glossentry><glossterm>primary output
-            port</glossterm><glossdef><para>If a step has a document output port which is
+            port</glossterm><glossdef><para>If a step has an output port which is
           explicitly marked “<code>primary='true'</code>”, or if it has exactly one document output
           port and that port is <emphasis>not</emphasis> explicitly marked
             “<code>primary='false'</code>”, then that output port is the <firstterm>primary output
-            port</firstterm> of the step.</para></glossdef></glossentry><glossentry><glossterm>readable
+            port</firstterm> of the step.</para></glossdef></glossentry><glossentry><glossterm>prologue</glossterm><glossdef><para>The <firstterm>prologue</firstterm> consists of
+the <tag>p:input</tag>, <tag>p:output</tag>, and <tag>p:option</tag> elements.
+The prologue may also contain <tag>p:variable</tag> elements, but if it does,
+they must be declared statically.</para></glossdef></glossentry><glossentry><glossterm>readable
                 ports</glossterm><glossdef><para>The <firstterm>readable
                 ports</firstterm> are a set of step name/port name pairs.</para></glossdef></glossentry><glossentry><glossterm>representation</glossterm><glossdef><para>A <firstterm>representation</firstterm>
 is a data structure used by an XProc processor to refer to the actual
