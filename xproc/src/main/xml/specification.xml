@@ -4699,8 +4699,18 @@ ignored.</para>
 
 <para><impl>The default value of any serialization parameters not
 specified on a particular output is
-<glossterm>implementation-defined</glossterm>.</impl>
-<error code="D0020">It is a <glossterm>dynamic error</glossterm> if
+<glossterm>implementation-defined</glossterm>.</impl> However if the
+<literal>method</literal> serialization parameter is not specified the 
+processor <rfc2119>must</rfc2119> select a method based on the document's
+<literal>content-type</literal> property:</para>
+  <variablelist>
+    <varlistentry><term><literal>application/xml</literal></term>, 
+      <term><literal>text/xml</literal>, and <term><literal>application/*+xml</literal></term> 
+        (except for <literal>application/xhtml+xml</literal>)
+      <listitem><simpara><literal>xml</literal></simpara></listitem>
+    </varlistentry>
+  </variablelist>
+<para><error code="D0020">It is a <glossterm>dynamic error</glossterm> if
 the combination of serialization options specified or defaulted is not
 allowed.</error> Implementations <rfc2119>must</rfc2119> check that
 all of the specified serialization options are allowed if they
