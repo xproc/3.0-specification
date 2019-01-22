@@ -1625,13 +1625,22 @@ normally during static analysis.</para>
   <para><function>p:urify</function> is a function that attempts to transform file system paths into file URIs (<biblioref
       linkend="rfc2396"/>). If a URI is already given as an argument, it <rfc2119>should</rfc2119> return it unchanged, 
     apart from character escaping and path normalizations that are permitted for (presumptive) file URIs.</para>
+
   <methodsynopsis>
     <type>xs:string</type>
     <methodname>p:urify</methodname>
     <methodparam><type>xs:string</type><parameter>filepath</parameter></methodparam>
     <methodparam><type>xs:string?</type><parameter>basedir</parameter></methodparam>
   </methodsynopsis>
+  
+    <methodsynopsis>
+      <type>xs:string</type>
+      <methodname>p:urify</methodname>
+      <methodparam><type>xs:string</type><parameter>filepath</parameter></methodparam>
+    </methodsynopsis>
 
+<para>If the single-argument version of the function is used, the result is the same as calling 
+the two-argument version with <parameter>basedir</parameter> set to empty sequence.</para>
 <para>The function may be implemented as an operation on strings; it
 need not try to determine the existence of a file or directory, and it
 <rfc2119>should not</rfc2119> follow symbolic links. <impl>How <function>p:urify</function>
