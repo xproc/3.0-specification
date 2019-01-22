@@ -4862,10 +4862,40 @@ example, the pipeline has been called from another pipeline), then the
 <rfc2119 feature="ser-must-ignore">must</rfc2119> be
 ignored.</para>
 
-<para><impl>The default value of any serialization parameters not
-specified on a particular output is
-<glossterm>implementation-defined</glossterm>.</impl>
-<error code="D0020">It is a <glossterm>dynamic error</glossterm> if
+<para><impl>The default value of any serialization parameters not specified on a particular output
+            is <glossterm>implementation-defined</glossterm>.</impl> However if the serialization
+          parameter <literal>method</literal> is not specified the processor
+            <rfc2119>should</rfc2119> select a method based on the document's
+            <literal>content-type</literal> property:</para>
+  <itemizedlist>
+    <listitem>
+      <para>For documents with content types <literal>application/xml</literal>,
+                <literal>text/xml</literal>, and <literal>application/*+xml</literal> (except for
+                <literal>application/xhtml+xml</literal>), serialization method
+                <literal>xml</literal> should be used.</para>
+    </listitem>
+    <listitem>
+      <para>For documents with content type <literal>application/xhtml+xml</literal> serialization
+              method <literal>xhtml</literal> should be used.</para>
+    </listitem>
+    <listitem>
+      <para>For documents with content type <literal>text/html</literal> serialization method
+                <literal>html</literal> should be used.</para>
+    </listitem>
+    <listitem>
+      <para>For documents with <glossterm>text media types</glossterm> serialization method
+                <literal>text</literal> should be used.</para>
+    </listitem>
+    <listitem>
+      <para>For documents with <glossterm>JSON media types</glossterm> serialization method
+                <literal>json</literal> should be used.</para>
+    </listitem>
+    <listitem>
+      <para>The serialization method for documents with other media types is 
+        <glossterm>implementation-defined</glossterm>.</para>
+    </listitem>
+  </itemizedlist>
+<para><error code="D0020">It is a <glossterm>dynamic error</glossterm> if
 the combination of serialization options specified or defaulted is not
 allowed.</error> Implementations <rfc2119>must</rfc2119> check that
 all of the specified serialization options are allowed if they
@@ -4979,10 +5009,13 @@ default varies according to the <option>method</option>:</para>
 <varlistentry><term><literal>text</literal></term>
 <listitem><simpara><literal>text/plain</literal></simpara></listitem>
 </varlistentry>
+  <varlistentry><term><literal>json</literal></term>
+    <listitem><simpara><literal>application/json</literal></simpara></listitem>
+  </varlistentry>
 </variablelist>
 
 <para><impl>For methods other than <literal>xml</literal>, <literal>html</literal>,
-<literal>xhtml</literal>, and <literal>text</literal>; the
+<literal>xhtml</literal>, <literal>text</literal>, and <literal>json</literal>; the
 <option>media-type</option> is <glossterm>implementation-defined</glossterm>.
 </impl></para>
 </listitem>
@@ -5060,7 +5093,7 @@ semantics is implied by this different spelling.</para>
 
 <para>The <option>method</option> option controls the serialization
 method used by this component with standard values of 'html', 'xml',
-'xhtml', and 'text' but only the 'xml' value is required to be
+'xhtml', 'text' and 'json' but only the 'xml' value is required to be
 supported. The interpretation of the remaining options is as
 specified in <biblioref linkend="xml-serialization-31"/>.</para>
 
@@ -5075,7 +5108,8 @@ values:</para>
 <itemizedlist>
    <listitem><para>The <code>version</code> must support the value <code>1.0</code>.</para></listitem>
    <listitem><para>The <code>encoding</code> must support the values <code>UTF-8</code>.</para></listitem>
-   <listitem><para>The <code>omit-xml-declaration</code> must be supported.  If the value is not specified or has the value <code>no</code>, an XML declaration must be produced.</para></listitem>
+   <listitem><para>The <code>omit-xml-declaration</code> must be supported.  If the value is not 
+     specified or has the value <code>no</code>, an XML declaration must be produced.</para></listitem>
 </itemizedlist>
 
 <para>All other option values may be ignored for the <code>xml</code>
