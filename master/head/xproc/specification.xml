@@ -1040,10 +1040,17 @@ alone, including the binding of
 <link linkend="statics">static options and variables</link>,
 computation of serialization properties and document-properties,
 <link linkend="use-when">evaluation of <code>use-when</code> expressions</link>,
-and detecting static errors.</termdef>
+performing a static analysis of all XPath expressions, and detecting static errors.</termdef>
 <termdef xml:id="dt-dynamic-evaluation"><firstterm baseform="dynamic evaluation">Dynamic
 evaluation</firstterm> consists of tasks which, in general,
 cannot be performed out until a source document is available.</termdef></para>
+
+<para><error code="S0107">It is a <glossterm>static error</glossterm> if any static 
+XPath error is encountered during the static analysis of an expression, e.g. because 
+the expression is not syntactically valid, contains reference to unknown variables, or makes use of 
+undeclared functions.</error> Type errors even if they are determined during static
+analysis <rfc2119>must</rfc2119> be reported as <glossterm>dynamic error</glossterm> by
+the XProc processor.</para>
 
 <para><impl>There may be an <glossterm>implementation-defined</glossterm>
 mechanism for providing default values for static
@@ -1104,7 +1111,7 @@ as they are available statically.</para>
 value is provided before static analysis. The value of <code>$B</code> will
 be the value of <code>$A</code> plus the number of elements in
 <uri>doc.xml</uri> <emphasis>which must be successfully resolved during
-static anlaysis</emphasis>. Although <code>$D</code> can reference
+static analysis</emphasis>. Although <code>$D</code> can reference
 the document provided dynamically on the <port>source</port> port,
 any attempt to refer to <code>$D</code> in the expression(s) that
 initialize <code>$A</code> and <code>$B</code> would be an error.</para>
@@ -4862,10 +4869,13 @@ by <biblioref linkend="xml-serialization-31"/>.
 <para>If the pipeline processor serializes the output on a port, it
 <rfc2119 feature="ser-must-use">must</rfc2119> use the serialization
 parameters specified. If the processor is not serializing (if, for
-example, the pipeline has been called from another pipeline), then the
-<tag class="attribute">serialization</tag>
-<rfc2119 feature="ser-must-ignore">must</rfc2119> be
-ignored.</para>
+example, the pipeline has been called from another pipeline), then
+serialization does not apply. The serialization parameter map is
+computed (and must therefore be statically and syntactically valid),
+but the processor <rfc2119 feature="ser-must-ignore">must not</rfc2119>
+raise an error if the output could not be serialized with those
+parameters.
+</para>
 
 <para><impl>The default value of any serialization parameters not specified on a particular output
             is <glossterm>implementation-defined</glossterm>.</impl> However if the serialization
@@ -7309,7 +7319,7 @@ alone, including the binding of
 <link linkend="statics">static options and variables</link>,
 computation of serialization properties and document-properties,
 <link linkend="use-when">evaluation of <code>use-when</code> expressions</link>,
-and detecting static errors.</para></glossdef></glossentry><glossentry><glossterm>static error</glossterm><glossdef><para>A <firstterm>static error</firstterm> is one which can
+performing a static analysis of all XPath expressions, and detecting static errors.</para></glossdef></glossentry><glossentry><glossterm>static error</glossterm><glossdef><para>A <firstterm>static error</firstterm> is one which can
           be detected before pipeline evaluation is even attempted.</para></glossdef></glossentry><glossentry><glossterm>step</glossterm><glossdef><para>A <firstterm>step</firstterm> is the
 basic computational unit of a pipeline.</para></glossdef></glossentry><glossentry><glossterm>step type exports</glossterm><glossdef><para>The <firstterm>step type exports</firstterm> of an
         XProc element, against the background of a set of URIs of resources already visited (call
