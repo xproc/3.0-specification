@@ -354,11 +354,7 @@
         <ref name="content-type.attr"/>
       </optional>
       <optional>
-        <attribute name="namespace">
-          <oneOrMore>
-            <data type="anyURI"/>
-          </oneOrMore>
-        </attribute>
+        <attribute name="namespace"/>
       </optional>
       <zeroOrMore>
         <choice>
@@ -1259,12 +1255,16 @@
       <ref name="common.attributes"/>
       <ref name="global.attributes"/>
       <ref name="step.attributes"/>
-      <interleave>
-        <group>
-          <zeroOrMore>
+      <group>
+        <zeroOrMore>
+          <choice>
             <ref name="Output"/>
-          </zeroOrMore>
-          <ref name="Subpipeline"/>
+            <ref name="Documentation"/>
+            <ref name="PipeInfo"/>
+          </choice>
+        </zeroOrMore>
+        <ref name="Subpipeline"/>
+        <interleave>
           <choice>
             <group>
               <oneOrMore>
@@ -1281,14 +1281,14 @@
               <ref name="Finally"/>
             </group>
           </choice>
-        </group>
-        <zeroOrMore>
-          <choice>
-            <ref name="Documentation"/>
-            <ref name="PipeInfo"/>
-          </choice>
-        </zeroOrMore>
-      </interleave>
+          <zeroOrMore>
+            <choice>
+              <ref name="Documentation"/>
+              <ref name="PipeInfo"/>
+            </choice>
+          </zeroOrMore>
+        </interleave>
+      </group>
     </element>
   </define>
   <define name="Catch" sa:class="language-construct">
@@ -2186,16 +2186,12 @@
       </optional>
       <optional>
         <attribute name="include-filter">
-          <zeroOrMore>
-            <data type="string"/>
-          </zeroOrMore>
+          <data type="string"/>
         </attribute>
       </optional>
       <optional>
         <attribute name="exclude-filter">
-          <zeroOrMore>
-            <data type="string"/>
-          </zeroOrMore>
+          <data type="string"/>
         </attribute>
       </optional>
       <interleave>
@@ -2908,16 +2904,12 @@
       </optional>
       <optional>
         <attribute name="include-filter">
-          <zeroOrMore>
-            <data type="string"/>
-          </zeroOrMore>
+          <data type="string"/>
         </attribute>
       </optional>
       <optional>
         <attribute name="exclude-filter">
-          <zeroOrMore>
-            <data type="string"/>
-          </zeroOrMore>
+          <data type="string"/>
         </attribute>
       </optional>
       <interleave>

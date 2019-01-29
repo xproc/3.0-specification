@@ -129,7 +129,7 @@ ImportFunctions =
     global.attributes,
     href.attr,
     content-type.attr?,
-    attribute namespace { xsd:anyURI+ }?,
+    attribute namespace { text }?,
     (Documentation | PipeInfo)*
   }
 [ sa:model = "subpipeline" ]
@@ -489,10 +489,10 @@ Try =
     common.attributes,
     global.attributes,
     step.attributes,
-    ((Output*,
-      Subpipeline,
-      ((Catch+, Finally?) | (Catch*, Finally)))
-     & (Documentation | PipeInfo)*)
+    ((Output | Documentation | PipeInfo)*,
+     Subpipeline,
+     (((Catch+, Finally?) | (Catch*, Finally))
+      & (Documentation | PipeInfo)*))
   }
 [ sa:class = "language-construct" ]
 Catch =
@@ -826,8 +826,8 @@ Step-directory-list =
     use-when.attr?,
     attribute path { xsd:anyURI }?,
     attribute detailed { xsd:boolean }?,
-    attribute include-filter { xsd:string* }?,
-    attribute exclude-filter { xsd:string* }?,
+    attribute include-filter { xsd:string }?,
+    attribute exclude-filter { xsd:string }?,
     (WithOption* & (Documentation | PipeInfo)*)
   }
 Step-error =
@@ -1017,8 +1017,8 @@ Step-load-directory-list =
     common.attributes,
     use-when.attr?,
     attribute path { xsd:anyURI }?,
-    attribute include-filter { xsd:string* }?,
-    attribute exclude-filter { xsd:string* }?,
+    attribute include-filter { xsd:string }?,
+    attribute exclude-filter { xsd:string }?,
     (WithOption* & (Documentation | PipeInfo)*)
   }
 Step-make-absolute-uris =
