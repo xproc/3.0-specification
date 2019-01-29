@@ -225,7 +225,7 @@ ImportFunctions =
       global.attributes,
       href.attr,
       content-type.attr?,
-      attribute namespace { xsd:anyURI+ }?,
+      attribute namespace { text }?,
       (Documentation|PipeInfo)*
    }
 
@@ -668,7 +668,9 @@ Try =
       common.attributes,
       global.attributes,
       step.attributes,
-      ((Output*, Subpipeline, ((Catch+, Finally?)|(Catch*, Finally))) & (Documentation|PipeInfo)*)
+      ((Output|Documentation|PipeInfo)*,
+        Subpipeline,
+        (((Catch+, Finally?)|(Catch*, Finally)) & (Documentation|PipeInfo)*))
    }
 
 [
