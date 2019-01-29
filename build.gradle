@@ -584,6 +584,8 @@ task xproc30_rng(type: XMLCalabashTask,
 }
 
 task xproc30_rnc(dependsOn: [ "xproc30_rng" ], type: JavaExec) {
+  inputs.file "build/xproc30.rng"
+  outputs.file "build/xproc30.rnc"
   classpath = configurations.tools
   main = 'com.thaiopensource.relaxng.translate.Driver'
   args = ["build/xproc30.rng", "build/xproc30.rnc"]
@@ -628,8 +630,13 @@ task xproc_rng(dependsOn: [ "xproc_rnc" ], type: JavaExec) {
   args = ["build/xproc.rnc", "build/xproc.rng"]
 }
 
-task xproc_schemas(dependsOn: [ "xproc30_rnc", "xproc30_rng", "xproc10_rng", "xproc_rng" ]) {
-  // nop
+task xproc_schemas(dependsOn: [ "xproc30_rnc", "xproc30_rng", "xproc10_rng", "xproc_rng" ],
+                   type: JavaExec) {
+  inputs.file "tools/xpl/smoke-test.xpl"
+
+  classpath = configurations.tools
+  main = 'com.thaiopensource.relaxng.util.Driver'
+  args = ["-i", "-c", "build/xproc.rnc", "tools/xpl/smoke-test.xpl" ]
 }
 
 // ======================================================================

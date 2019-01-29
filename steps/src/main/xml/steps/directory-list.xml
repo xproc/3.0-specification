@@ -12,8 +12,8 @@
   <p:output port="result" content-type="application/xml"/>
   <p:option name="path" required="true" as="xs:anyURI"/>
   <p:option name="detailed" as="xs:boolean" select="false()"/>
-  <p:option name="include-filter" as="xs:string*" e:type="RegularExpression"/>
-  <p:option name="exclude-filter" as="xs:string*" e:type="RegularExpression"/>
+  <p:option name="include-filter" as="xs:string" e:type="RegularExpression"/>
+  <p:option name="exclude-filter" as="xs:string" e:type="RegularExpression"/>
 </p:declare-step>
 
 <para><impl>Conformant processors <rfc2119>must</rfc2119> support directory paths whose
@@ -36,7 +36,7 @@ see <xref linkend="dir-list-details"/>.</para>
 
 <para>If present, the value of the <option>include-filter</option>
 or <option>exclude-filter</option>
-option <rfc2119>must</rfc2119> be a list of regular expression as specified in
+option <rfc2119>must</rfc2119> be a whitespace separated list of regular expressions as specified in
 <biblioref linkend="xpath31-functions"/>, section 7.61 “<literal>Regular Expression
 Syntax</literal>”.</para>
 
