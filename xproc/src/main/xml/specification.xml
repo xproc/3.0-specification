@@ -2489,124 +2489,13 @@ to the element on which the
 <tag class="attribute">version</tag> attribute appears and all of its descendants,
 unless or until another version is explicitly identified.</para>
 
-<para>When a processor encounters an explicit version (other than a
-version which it implements), it proceeds in backwards- or
-forwards-compatible mode. </para>
-
-<section xml:id="vers-backcomp">
-<title>Backwards-compatible Mode</title>
-<para>If the processor encounters a request for a previous version of
-XProc (e.g., if a "3.0" processor encounters an explicit request for
-the "1.0" language), it <rfc2119>must</rfc2119> process the pipeline
-as if it was a processor for the requested version: it
-<rfc2119>must</rfc2119> enforce the semantics
-of the requested version, it <rfc2119>must</rfc2119> report steps not
-known in that version as errors, etc.
+<para>XProc 3.0 takes a draconian approach to versioning.
 <error code="S0060">It
 is a <glossterm>static error</glossterm> if the processor encounters
-an explicit request for a previous version of the language and it is
-unable to process the pipeline using those semantics.</error></para>
-</section>
-
-<section xml:id="vers-forwcomp">
-<title>Forwards-compatible Mode</title>
-
-<para>If the processor encounters an explicit version which it does
-not recognize, it processes the pipeline in forwards-compatible mode.
-Forwards-compatible mode relaxes several static errors, turning them
-into dynamic errors so that a pipeline author can write a pipeline
-which conditionally uses new language features.</para>
-
-<para>In forwards-compatible mode:</para>
-<orderedlist>
-<listitem>
-<para>On any element in the XProc namespace, unrecognized attributes
-(other than extension attributes) are ignored.</para>
-</listitem>
-<listitem>
-<para>On any step in the XProc namespace, unknown options are ignored.
+an explicit request for a version of the language other than “3.0”.</error>
 </para>
-</listitem>
-<listitem>
-<para>If a step in the XProc namespace includes an unknown input port
-with an explicit connection, the connection is treated normally for
-the purpose of computing the dependencies in the pipeline but it is
-otherwise ignored. Unknown input ports <rfc2119>must not</rfc2119>
-be treated as
-<glossterm baseform="primary input port">primary input ports</glossterm>;
-it will always be an error if they are used but not explicitly
-connected.
-</para>
-</listitem>
-<listitem>
-<para>If a step in the pipeline includes an explicit connection to an
-unknown output port on a step in the XProc namespace, the connection
-is treated normally for the purpose of computing the dependencies in
-the pipeline. An empty sequence of documents <rfc2119>must</rfc2119>
-appear on that connection.
-</para>
-</listitem>
-</orderedlist>
-
-<para>As a consequence of the rules above, future specifications
-<rfc2119>must not</rfc2119> change the semantics of existing step
-types without changing their names. Although they may add new input
-and output ports, such changes should be done with care; they
-<rfc2119>should</rfc2119>
-in some sense be limited to ancillary inputs and outputs and they
-<rfc2119>must not</rfc2119> be
-<glossterm baseform="primary input port">primary input ports</glossterm>.
-</para>
-
-<section xml:id="vers-forwcomp-ex">
-<title>Examples</title>
-
-<para>In forwards-compatible mode, it is not a static error to
-encounter the following step:</para>
-
-<programlisting language="xml"><![CDATA[<p:string-replace match="div/@class" replace="newclass">
-  <p:with-input port="ancillary">
-    <p:document href="doc.xml"/>
-  </p:with-input>
-</p:string-replace>]]></programlisting>
-
-<para>The processor will simply ignore the “<port>ancillary</port>” port.
-</para>
-
-          <para>Suppose that XProc version 99.0 changes the definition of the <tag>p:xslt</tag> step
-            so that it has an additional output port, <code>messages</code>. Then consider the
-            following pipeline: </para>
-          <programlisting language="xml"><![CDATA[<p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
-                version="99.0">
-<p:input port="source"/>
-<p:output port="result"/>
-
-  <p:xslt name="style">
-    <p:with-input port="stylesheet">
-      <p:document href="style.xsl"/>
-    </p:with-input>
-  </p:xslt>
-
-  <p:sink/>
-
-  <p:count>
-    <p:with-input port="source">
-      <p:pipe step="style" port="messages"/>
-    </p:with-input>
-  </p:count>
-</p:declare-step>]]></programlisting>
-
-<para>When run by a "99.0" or later processor, it will count the
-documents that appear on the <code>messages</code> port. When run by a
-“3.0” processor in forwards-compatible mode, the binding to the
-“<port>messages</port>” port is not a static error.
-Dynamically, the "3.0" processor will always produce
-a count of zero, because an empty sequence of documents will always
-appear on the <code>messages</code> port.</para>
-
-        </section>
       </section>
-    </section>
+
 
   <section xml:id="syntax">
     <title>Syntax Overview</title>
@@ -5336,9 +5225,7 @@ does not contain a prefix then it is in no namespace.
 <error code="S0031">It is a <glossterm>static error</glossterm> to use an
 option name in <tag>p:with-option</tag> if the step type being invoked
 has not declared an option with that name.</error>
-(This error does not apply for steps in the XProc namespace when the processor
-is operating in
-<link linkend="vers-forwcomp">forwards-compatible mode</link>.)</para>
+</para>
 
 <para><error code="S0080">It is a <glossterm>static error</glossterm>
 to include more than one <tag>p:with-option</tag> with the same option
