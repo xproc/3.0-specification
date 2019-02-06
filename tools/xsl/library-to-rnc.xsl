@@ -43,6 +43,7 @@
   <xsl:text>    name.ncname.attr?,&#10;</xsl:text>
   <xsl:text>    common.attributes,&#10;</xsl:text>
   <xsl:text>    use-when.attr?,&#10;</xsl:text>
+  <xsl:text>    step.attributes,&#10;</xsl:text>
   <xsl:apply-templates select="p:option"/>
 
   <xsl:choose>
