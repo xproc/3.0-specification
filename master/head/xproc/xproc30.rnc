@@ -735,6 +735,7 @@ Step-exec =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
+    step.attributes,
     attribute command { xsd:string }?,
     attribute args { xsd:string }?,
     attribute cwd { xsd:string }?,
@@ -754,6 +755,7 @@ Step-run =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
+    step.attributes,
     (WithInput* & (Documentation | PipeInfo)*)
   }
 Step-xsl-formatter =
@@ -761,6 +763,7 @@ Step-xsl-formatter =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
+    step.attributes,
     attribute parameters { xsd:string }?,
     attribute content-type { xsd:string? }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
@@ -770,6 +773,7 @@ Step-add-attribute =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
+    step.attributes,
     attribute match { xsd:string }?,
     attribute attribute-name { xsd:QName }?,
     attribute attribute-value { xsd:string }?,
@@ -780,6 +784,7 @@ Step-add-xml-base =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
+    step.attributes,
     attribute all { xsd:boolean }?,
     attribute relative { xsd:boolean }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
@@ -789,6 +794,7 @@ Step-cast-content-type =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
+    step.attributes,
     attribute content-type { xsd:string }?,
     attribute parameters { xsd:string }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
@@ -798,6 +804,7 @@ Step-compare =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
+    step.attributes,
     attribute parameters { xsd:string }?,
     attribute method { xsd:QName? }?,
     attribute fail-if-not-equal { xsd:boolean }?,
@@ -808,6 +815,7 @@ Step-count =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
+    step.attributes,
     attribute limit { xsd:integer }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
   }
@@ -816,6 +824,7 @@ Step-delete =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
+    step.attributes,
     attribute match { xsd:string }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
   }
@@ -824,6 +833,7 @@ Step-directory-list =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
+    step.attributes,
     attribute path { xsd:anyURI }?,
     attribute detailed { xsd:boolean }?,
     attribute include-filter { xsd:string }?,
@@ -835,6 +845,7 @@ Step-error =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
+    step.attributes,
     attribute code { xsd:QName }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
   }
@@ -843,6 +854,7 @@ Step-escape-markup =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
+    step.attributes,
     attribute serialization { xsd:string }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
   }
@@ -851,6 +863,7 @@ Step-file-copy =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
+    step.attributes,
     attribute href { xsd:anyURI }?,
     attribute target { xsd:anyURI }?,
     attribute fail-on-error { xsd:boolean }?,
@@ -861,6 +874,7 @@ Step-file-delete =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
+    step.attributes,
     attribute href { xsd:anyURI }?,
     attribute recursive { xsd:boolean }?,
     attribute fail-on-error { xsd:boolean }?,
@@ -871,6 +885,7 @@ Step-file-head =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
+    step.attributes,
     attribute href { xsd:anyURI }?,
     attribute count { xsd:integer }?,
     attribute fail-on-error { xsd:boolean }?,
@@ -881,6 +896,7 @@ Step-file-info =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
+    step.attributes,
     attribute href { xsd:anyURI }?,
     attribute fail-on-error { xsd:boolean }?,
     (WithOption* & (Documentation | PipeInfo)*)
@@ -890,6 +906,7 @@ Step-file-mkdir =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
+    step.attributes,
     attribute href { xsd:anyURI }?,
     attribute fail-on-error { xsd:boolean }?,
     (WithOption* & (Documentation | PipeInfo)*)
@@ -899,6 +916,7 @@ Step-file-move =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
+    step.attributes,
     attribute href { xsd:anyURI }?,
     attribute target { xsd:anyURI }?,
     attribute fail-on-error { xsd:boolean }?,
@@ -909,6 +927,7 @@ Step-file-tail =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
+    step.attributes,
     attribute href { xsd:anyURI }?,
     attribute count { xsd:integer }?,
     attribute fail-on-error { xsd:boolean }?,
@@ -919,6 +938,7 @@ Step-file-tempfile =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
+    step.attributes,
     attribute href { xsd:anyURI? }?,
     attribute suffix { xsd:string? }?,
     attribute prefix { xsd:string? }?,
@@ -931,6 +951,7 @@ Step-file-touch =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
+    step.attributes,
     attribute href { xsd:anyURI }?,
     attribute timestamp { xsd:dateTime? }?,
     attribute fail-on-error { xsd:boolean }?,
@@ -941,6 +962,7 @@ Step-filter =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
+    step.attributes,
     attribute select { xsd:string }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
   }
@@ -949,6 +971,7 @@ Step-hash =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
+    step.attributes,
     attribute parameters { xsd:string }?,
     attribute value { xsd:string }?,
     attribute algorithm { xsd:QName }?,
@@ -961,6 +984,7 @@ Step-http-request =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
+    step.attributes,
     attribute serialization { xsd:string }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
   }
@@ -969,6 +993,7 @@ Step-identity =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
+    step.attributes,
     (WithInput* & (Documentation | PipeInfo)*)
   }
 Step-in-scope-names =
@@ -976,6 +1001,7 @@ Step-in-scope-names =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
+    step.attributes,
     (Documentation | PipeInfo)*
   }
 Step-insert =
@@ -983,6 +1009,7 @@ Step-insert =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
+    step.attributes,
     attribute match { xsd:string }?,
     attribute position {
       "first-child" | "last-child" | "before" | "after"
@@ -994,6 +1021,7 @@ Step-label-elements =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
+    step.attributes,
     attribute attribute { xsd:QName }?,
     attribute label { xsd:string }?,
     attribute match { xsd:string }?,
@@ -1005,6 +1033,7 @@ Step-load =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
+    step.attributes,
     attribute href { xsd:anyURI }?,
     attribute parameters { xsd:string }?,
     attribute content-type { xsd:string? }?,
@@ -1016,6 +1045,7 @@ Step-load-directory-list =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
+    step.attributes,
     attribute path { xsd:anyURI }?,
     attribute include-filter { xsd:string }?,
     attribute exclude-filter { xsd:string }?,
@@ -1026,6 +1056,7 @@ Step-make-absolute-uris =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
+    step.attributes,
     attribute match { xsd:string }?,
     attribute base-uri { xsd:anyURI? }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
@@ -1035,6 +1066,7 @@ Step-namespace-rename =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
+    step.attributes,
     attribute from { xsd:anyURI }?,
     attribute to { xsd:anyURI }?,
     attribute apply-to { "all" | "elements" | "attributes" }?,
@@ -1045,6 +1077,7 @@ Step-os-cwd =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
+    step.attributes,
     (Documentation | PipeInfo)*
   }
 Step-os-env =
@@ -1052,6 +1085,7 @@ Step-os-env =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
+    step.attributes,
     (Documentation | PipeInfo)*
   }
 Step-os-info =
@@ -1059,6 +1093,7 @@ Step-os-info =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
+    step.attributes,
     (Documentation | PipeInfo)*
   }
 Step-pack =
@@ -1066,6 +1101,7 @@ Step-pack =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
+    step.attributes,
     attribute wrapper { xsd:QName }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
   }
@@ -1074,6 +1110,7 @@ Step-parameters =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
+    step.attributes,
     attribute parameters { xsd:string }?,
     (WithOption* & (Documentation | PipeInfo)*)
   }
@@ -1082,6 +1119,7 @@ Step-rename =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
+    step.attributes,
     attribute match { xsd:string }?,
     attribute new-name { xsd:QName }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
@@ -1091,6 +1129,7 @@ Step-replace =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
+    step.attributes,
     attribute match { xsd:string }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
   }
@@ -1099,6 +1138,7 @@ Step-set-attributes =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
+    step.attributes,
     attribute match { xsd:string }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
   }
@@ -1107,6 +1147,7 @@ Step-set-properties =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
+    step.attributes,
     attribute properties { xsd:string }?,
     attribute merge { xsd:boolean }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
@@ -1116,6 +1157,7 @@ Step-sink =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
+    step.attributes,
     (WithInput* & (Documentation | PipeInfo)*)
   }
 Step-split-sequence =
@@ -1123,6 +1165,7 @@ Step-split-sequence =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
+    step.attributes,
     attribute initial-only { xsd:boolean }?,
     attribute test { xsd:string }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
@@ -1132,6 +1175,7 @@ Step-store =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
+    step.attributes,
     attribute href { xsd:anyURI }?,
     attribute serialization { xsd:string }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
@@ -1141,6 +1185,7 @@ Step-string-replace =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
+    step.attributes,
     attribute match { xsd:string }?,
     attribute replace { xsd:string }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
@@ -1150,6 +1195,7 @@ Step-tee =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
+    step.attributes,
     attribute href { xsd:anyURI }?,
     attribute serialization { xsd:string }?,
     attribute enable { xsd:boolean }?,
@@ -1160,6 +1206,7 @@ Step-unescape-markup =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
+    step.attributes,
     attribute namespace { xsd:anyURI? }?,
     attribute content-type { xsd:string }?,
     attribute encoding { xsd:string? }?,
@@ -1171,6 +1218,7 @@ Step-unwrap =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
+    step.attributes,
     attribute match { xsd:string }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
   }
@@ -1179,6 +1227,7 @@ Step-uuid =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
+    step.attributes,
     attribute match { xsd:string }?,
     attribute version { xsd:integer? }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
@@ -1188,6 +1237,7 @@ Step-wrap-sequence =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
+    step.attributes,
     attribute wrapper { xsd:QName }?,
     attribute group-adjacent { xsd:string? }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
@@ -1197,6 +1247,7 @@ Step-wrap =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
+    step.attributes,
     attribute wrapper { xsd:QName }?,
     attribute match { xsd:string }?,
     attribute group-adjacent { xsd:string? }?,
@@ -1207,6 +1258,7 @@ Step-www-form-urldecode =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
+    step.attributes,
     attribute value { xsd:string }?,
     (WithOption* & (Documentation | PipeInfo)*)
   }
@@ -1215,6 +1267,7 @@ Step-www-form-urlencode =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
+    step.attributes,
     attribute parameters { xsd:string }?,
     attribute match { xsd:string }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
@@ -1224,6 +1277,7 @@ Step-xinclude =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
+    step.attributes,
     attribute fixup-xml-base { xsd:boolean }?,
     attribute fixup-xml-lang { xsd:boolean }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
@@ -1233,6 +1287,7 @@ Step-xslt =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
+    step.attributes,
     attribute parameters { xsd:string }?,
     attribute initial-mode { xsd:QName? }?,
     attribute template-name { xsd:QName? }?,
@@ -1245,6 +1300,7 @@ Step-validate-with-relax-ng =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
+    step.attributes,
     attribute dtd-attribute-values { xsd:boolean }?,
     attribute dtd-id-idref-warnings { xsd:boolean }?,
     attribute assert-valid { xsd:boolean }?,
@@ -1255,6 +1311,7 @@ Step-validate-with-schematron =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
+    step.attributes,
     attribute parameters { xsd:string }?,
     attribute phase { xsd:string }?,
     attribute assert-valid { xsd:boolean }?,
@@ -1265,6 +1322,7 @@ Step-validate-with-xml-schema =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
+    step.attributes,
     attribute use-location-hints { xsd:boolean }?,
     attribute try-namespaces { xsd:boolean }?,
     attribute assert-valid { xsd:boolean }?,
@@ -1277,6 +1335,7 @@ Step-xquery =
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
+    step.attributes,
     attribute parameters { xsd:string }?,
     attribute version { xsd:string? }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
