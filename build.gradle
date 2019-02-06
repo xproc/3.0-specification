@@ -190,12 +190,13 @@ xproc_ancillary.doFirst {
 
 task xproc_library(type: XMLCalabashTask,
                    dependsOn: [ "steps_xpl", "step_validation_xpl",
-                                "step_exec_xpl", "step_run_xpl", "step_xquery_xpl",
-                                "step_xsl_formatter_xpl"]) {
+                                "step_os_xpl", "step_run_xpl",
+                                "step_file_xpl", "step_text_xpl",
+                                "step_paged_media_xpl"]) {
   // N.B. Because Travis jobs cannot see the filesystem, we have
   // to list the dependencies twice. :-(
   String steps = ""
-  ["steps", "validation", "exec", "run", "xquery", "xsl-formatter"].each { s->
+  ["steps", "validation", "os", "run", "file", "text", "paged-media"].each { s->
     steps = steps + " ../../build/dist/" + s + "/steps.xpl"
   }
 
@@ -327,18 +328,18 @@ task step_validation_xpl(dependsOn: ["step-validation:library"], type: Copy) {
 }
 
 // ======================================================================
-// step-exec
+// step-os
 
-task step_exec(type: DocBookTask,
+task step_os(type: DocBookTask,
                dependsOn: [ "xproc", "steps", "xproc_schemas", "spec_schemas",
-                            "step-exec:specification",
-                            "step_exec_assets",
-                            "step_exec_src", "step_exec_xpl" ]) {
+                            "step-os:specification",
+                            "step_os_assets",
+                            "step_os_src", "step_os_xpl" ]) {
   inputs.files fileTree(dir: "tools/xsl/")
   inputs.files fileTree(dir: "tools/xpl/")
   inputs.file "xproc/build/toc.xml"
-  input("source", "step-exec/build/source.xml")
-  output("result", "build/dist/exec/index.html")
+  input("source", "step-os/build/source.xml")
+  output("result", "build/dist/os/index.html")
 
   param("schemaext.schema", new File("build/schema/dbspec.rng"))
   param("travis", getenv("TRAVIS"))
@@ -352,24 +353,24 @@ task step_exec(type: DocBookTask,
   option("style", new File("tools/xsl/xproc-specs.xsl"))
   pipeline "tools/xpl/formatspec.xpl"
 }
-allspecs.dependsOn "step_exec"
-overview.dependsOn "step_exec"
+allspecs.dependsOn "step_os"
+overview.dependsOn "step_os"
 
-task step_exec_assets(type: Copy) {
+task step_os_assets(type: Copy) {
   from "src/main/resources"
-  into "build/dist/exec/"
+  into "build/dist/os/"
 }
 
-task step_exec_src(dependsOn: ["step-exec:source"], type: Copy) {
-  from "step-exec/build/"
-  into "build/dist/exec/"
+task step_os_src(dependsOn: ["step-os:source"], type: Copy) {
+  from "step-os/build/"
+  into "build/dist/os/"
   include "source.xml"
   rename ("source.xml", "specification.xml")
 }
 
-task step_exec_xpl(dependsOn: ["step-exec:library"], type: Copy) {
-  from "step-exec/build/"
-  into "build/dist/exec/"
+task step_os_xpl(dependsOn: ["step-os:library"], type: Copy) {
+  from "step-os/build/"
+  into "build/dist/os/"
   include "library.xml"
   rename ("library.xml", "steps.xpl")
 }
@@ -423,18 +424,18 @@ task step_run_xpl(dependsOn: ["step-run:library"], type: Copy) {
 }
 
 // ======================================================================
-// step-xquery
+// step-paged-media
 
-task step_xquery(type: DocBookTask,
+task step_paged_media(type: DocBookTask,
                dependsOn: [ "xproc", "steps", "xproc_schemas", "spec_schemas",
-                            "step-xquery:specification",
-                            "step_xquery_assets",
-                            "step_xquery_src", "step_xquery_xpl" ]) {
+                            "step-paged-media:specification",
+                            "step_paged_media_assets",
+                            "step_paged_media_src", "step_paged_media_xpl" ]) {
   inputs.files fileTree(dir: "tools/xsl/")
   inputs.files fileTree(dir: "tools/xpl/")
   inputs.file "xproc/build/toc.xml"
-  input("source", "step-xquery/build/source.xml")
-  output("result", "build/dist/xquery/index.html")
+  input("source", "step-paged-media/build/source.xml")
+  output("result", "build/dist/paged-media/index.html")
 
   param("schemaext.schema", new File("build/schema/dbspec.rng"))
   param("travis", getenv("TRAVIS"))
@@ -448,41 +449,41 @@ task step_xquery(type: DocBookTask,
   option("style", new File("tools/xsl/xproc-specs.xsl"))
   pipeline "tools/xpl/formatspec.xpl"
 }
-allspecs.dependsOn "step_xquery"
-overview.dependsOn "step_xquery"
+allspecs.dependsOn "step_paged_media"
+overview.dependsOn "step_paged_media"
 
-task step_xquery_assets(type: Copy) {
+task step_paged_media_assets(type: Copy) {
   from "src/main/resources"
-  into "build/dist/xquery/"
+  into "build/dist/paged-media/"
 }
 
-task step_xquery_src(dependsOn: ["step-xquery:source"], type: Copy) {
-  from "step-xquery/build/"
-  into "build/dist/xquery/"
+task step_paged_media_src(dependsOn: ["step-paged-media:source"], type: Copy) {
+  from "step-paged-media/build/"
+  into "build/dist/paged-media/"
   include "source.xml"
   rename ("source.xml", "specification.xml")
 }
 
-task step_xquery_xpl(dependsOn: ["step-xquery:library"], type: Copy) {
-  from "step-xquery/build/"
-  into "build/dist/xquery/"
+task step_paged_media_xpl(dependsOn: ["step-paged-media:library"], type: Copy) {
+  from "step-paged-media/build/"
+  into "build/dist/paged-media/"
   include "library.xml"
   rename ("library.xml", "steps.xpl")
 }
 
 // ======================================================================
-// step-xsl-formatter
+// step-file
 
-task step_xsl_formatter(type: DocBookTask,
+task step_file(type: DocBookTask,
                dependsOn: [ "xproc", "steps", "xproc_schemas", "spec_schemas",
-                            "step-xsl-formatter:specification",
-                            "step_xsl_formatter_assets",
-                            "step_xsl_formatter_src", "step_xsl_formatter_xpl" ]) {
+                            "step-file:specification",
+                            "step_file_assets",
+                            "step_file_src", "step_file_xpl" ]) {
   inputs.files fileTree(dir: "tools/xsl/")
   inputs.files fileTree(dir: "tools/xpl/")
   inputs.file "xproc/build/toc.xml"
-  input("source", "step-xsl-formatter/build/source.xml")
-  output("result", "build/dist/xsl-formatter/index.html")
+  input("source", "step-file/build/source.xml")
+  output("result", "build/dist/file/index.html")
 
   param("schemaext.schema", new File("build/schema/dbspec.rng"))
   param("travis", getenv("TRAVIS"))
@@ -496,24 +497,72 @@ task step_xsl_formatter(type: DocBookTask,
   option("style", new File("tools/xsl/xproc-specs.xsl"))
   pipeline "tools/xpl/formatspec.xpl"
 }
-allspecs.dependsOn "step_xsl_formatter"
-overview.dependsOn "step_xsl_formatter"
+allspecs.dependsOn "step_file"
+overview.dependsOn "step_file"
 
-task step_xsl_formatter_assets(type: Copy) {
+task step_file_assets(type: Copy) {
   from "src/main/resources"
-  into "build/dist/xsl-formatter/"
+  into "build/dist/file/"
 }
 
-task step_xsl_formatter_src(dependsOn: ["step-xsl-formatter:source"], type: Copy) {
-  from "step-xsl-formatter/build/"
-  into "build/dist/xsl-formatter/"
+task step_file_src(dependsOn: ["step-file:source"], type: Copy) {
+  from "step-file/build/"
+  into "build/dist/file/"
   include "source.xml"
   rename ("source.xml", "specification.xml")
 }
 
-task step_xsl_formatter_xpl(dependsOn: ["step-xsl-formatter:library"], type: Copy) {
-  from "step-xsl-formatter/build/"
-  into "build/dist/xsl-formatter/"
+task step_file_xpl(dependsOn: ["step-file:library"], type: Copy) {
+  from "step-file/build/"
+  into "build/dist/file/"
+  include "library.xml"
+  rename ("library.xml", "steps.xpl")
+}
+
+// ======================================================================
+// step-text
+
+task step_text(type: DocBookTask,
+               dependsOn: [ "xproc", "steps", "xproc_schemas", "spec_schemas",
+                            "step-text:specification",
+                            "step_text_assets",
+                            "step_text_src", "step_text_xpl" ]) {
+  inputs.files fileTree(dir: "tools/xsl/")
+  inputs.files fileTree(dir: "tools/xpl/")
+  inputs.file "xproc/build/toc.xml"
+  input("source", "step-text/build/source.xml")
+  output("result", "build/dist/text/index.html")
+
+  param("schemaext.schema", new File("build/schema/dbspec.rng"))
+  param("travis", getenv("TRAVIS"))
+  param("travis-commit", getenv("TRAVIS_COMMIT"))
+  param("travis-build-number", getenv("TRAVIS_BUILD_NUMBER"))
+  param("travis-user", getenv("TRAVIS_USER"))
+  param("travis-repo", getenv("TRAVIS_REPO"))
+  param("travis-branch", getenv("TRAVIS_BRANCH"))
+  param("travis-tag", getenv("TRAVIS_TAG"))
+
+  option("style", new File("tools/xsl/xproc-specs.xsl"))
+  pipeline "tools/xpl/formatspec.xpl"
+}
+allspecs.dependsOn "step_text"
+overview.dependsOn "step_text"
+
+task step_text_assets(type: Copy) {
+  from "src/main/resources"
+  into "build/dist/text/"
+}
+
+task step_text_src(dependsOn: ["step-text:source"], type: Copy) {
+  from "step-text/build/"
+  into "build/dist/text/"
+  include "source.xml"
+  rename ("source.xml", "specification.xml")
+}
+
+task step_text_xpl(dependsOn: ["step-text:library"], type: Copy) {
+  from "step-text/build/"
+  into "build/dist/text/"
   include "library.xml"
   rename ("library.xml", "steps.xpl")
 }
@@ -562,14 +611,16 @@ core_rng.doFirst {
 task xproc30_rng(type: XMLCalabashTask,
                dependsOn: [ "core_rng",
                             "steps:rng", "step-validation:rng",
-                            "step-exec:rng", "step-run:rng", "step-xquery:rng",
-                            "step-xsl-formatter:rng" ]) {
+                            "step-os:rng", "step-run:rng",
+                            "step-text:rng", "step-file:rng",
+                            "step-paged-media:rng" ]) {
   // This is bogus; I'm having trouble getting the filesystem read to
   // happen at the right time:
   // https://discuss.gradle.org/t/controlling-order-of-execution-of-statements-wrt-execution-of-a-task/26291
   String files = ""
-  ["step-exec", "step-run", "step-xsl-formatter", "steps",
-   "step-validation", "step-xquery"].each { s ->
+  ["step-os", "step-run", "step-paged-media", "steps",
+   "step-file", "step-text",
+   "step-validation"].each { s ->
     files = files + " ../../" + s + "/build/steps.rng"
   }
 

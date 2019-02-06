@@ -1,13 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<specification xmlns="http://docbook.org/ns/docbook"
-               xmlns:cs="http://www.w3.org/XML/XProc/2006/04/components#"
-               xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax"
-               xmlns:p="http://www.w3.org/ns/xproc"
-               xmlns:xi="http://www.w3.org/2001/XInclude"
-               xmlns:xlink="http://www.w3.org/1999/xlink"
-               xml:id='step-xquery'
-               class="ed" role="step"
-               version="5.0-extension w3c-xproc">
+<specification xmlns="http://docbook.org/ns/docbook" xmlns:cs="http://www.w3.org/XML/XProc/2006/04/components#" xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax" xmlns:p="http://www.w3.org/ns/xproc" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="step-xquery" class="ed" role="step" version="5.0-extension w3c-xproc">
 <info>
 <title>XProc 3.0: XQuery</title>
 <!-- defaults to date formatted <pubdate>2014-12-18</pubdate> -->
@@ -71,8 +62,7 @@ steps is assumed; for background details, see
 provided on the <port>source</port> port.</para>
 
 <p:declare-step type="p:xquery">
-  <p:input port="source" content-types="application/xml text/xml */*+xml"
-           sequence="true" primary="true"/>
+  <p:input port="source" content-types="application/xml text/xml */*+xml" sequence="true" primary="true"/>
   <p:input port="query" content-types="application/xml */*+xml text/*"/>
   <p:output port="result" sequence="true" content-types="*/*"/>
   <p:option name="parameters" as="map(xs:QName,item()*)?"/>
@@ -252,7 +242,22 @@ validation before using XQuery:</para>
 
 <example xml:id="ex.c.xquery">
 <title>A Sample Pipeline Document</title>
-<programlisting language="xml"><xi:include href="../../../build/examples/xquery.txt" parse="text"/></programlisting>
+<programlisting language="xml">&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
+                version="3.0"&gt;
+&lt;p:input port="source"/&gt;
+&lt;p:output port="result"/&gt;
+
+&lt;p:xinclude/&gt;
+
+&lt;p:validate-with-xml-schema name="validate"&gt;
+  &lt;p:with-input port="schema" href="http://example.com/path/to/schema.xsd"/&gt;
+&lt;/p:validate-with-xml-schema&gt;
+
+&lt;p:xquery&gt;
+   &lt;p:with-input port="query" href="countp.xq"/&gt;
+&lt;/p:xquery&gt;
+
+&lt;/p:declare-step&gt;</programlisting>
 </example>
 
 <para>Where <filename>countp.xq</filename> might contain:</para>
@@ -268,7 +273,7 @@ validation before using XQuery:</para>
 </section>
 
 
-<section xmlns="http://docbook.org/ns/docbook" xml:id="errors">
+<section xml:id="errors">
 <title>Step Errors</title>
 
 <para>This step can raise
@@ -295,28 +300,93 @@ failure causes the entire pipeline to fail.</para>
 
 </section>
 
-<xi:include href="conformance.xml"/>
+<appendix xml:id="conformance">
+<title>Conformance</title>
+
+<para>Conformant processors <rfc2119>must</rfc2119> implement all of the features
+described in this specification except those that are explicitly identified
+as optional.</para>
+
+<para>Some aspects of processor behavior are not completely specified; those
+features are either <glossterm role="unwrapped">implementation-dependent</glossterm> or
+<glossterm role="unwrapped">implementation-defined</glossterm>.</para>
+
+<para><termdef xml:id="dt-implementation-dependent">An
+<firstterm>implementation-dependent</firstterm> feature is one where the
+implementation has discretion in how it is performed.
+Implementations are not required to document or explain
+how <glossterm role="unwrapped">implementation-dependent</glossterm> features are performed.</termdef>
+</para>
+
+<para><termdef xml:id="dt-implementation-defined">An
+<firstterm>implementation-defined</firstterm> feature is one where the
+implementation has discretion in how it is performed.
+Conformant implementations <rfc2119>must</rfc2119> document
+how <glossterm role="unwrapped">implementation-defined</glossterm> features are performed.</termdef>
+</para>
+
+<section xml:id="implementation-defined">
+<title>Implementation-defined features</title>
+
+<para>The following features are implementation-defined:</para>
+
+<?implementation-defined-features?>
+</section>
+
+<section xml:id="implementation-dependent">
+<title>Implementation-dependent features</title>
+
+<para>The following features are implementation-dependent:</para>
+
+<?implementation-dependent-features?>
+</section>
+</appendix>
 
 <appendix xml:id="references">
 <title>References</title>
 <bibliolist>
-<bibliomixed xml:id="xproc30"/>
-<bibliomixed xml:id="xproc30-steps"/>
-<bibliomixed xml:id="xquery10"/>
+<bibliomixed xml:id="xproc30"><abbrev>XProc 3.0</abbrev>
+<citetitle xlink:href="http://spec.xproc.org/">XProc 3.0:
+An XML Pipeline Language</citetitle>.
+Norman Walsh, Achim Berndzen, Gerrit Imsieke and Erik Siegel, editors.
+</bibliomixed>
+<bibliomixed xml:id="xproc30-steps"><abbrev>XProc 3.0 Steps</abbrev>
+<citetitle xlink:href="http://spec.xproc.org/">XProc 3.0 Steps:
+An Introduction</citetitle>.
+Norman Walsh, Achim Berndzen, Gerrit Imsieke and Erik Siegel, editors.
+</bibliomixed>
+<bibliomixed xml:id="xquery10"><abbrev>XQuery 1.0</abbrev>
+<citetitle xlink:href="http://www.w3.org/TR/xquery/">XQuery 1.0: An XML
+Query Language</citetitle>. Scott Boag, Don Chamberlin, Mary Fernández, et. al.,
+editors. W3C Recommendation. 23 January 2007.</bibliomixed>
 </bibliolist>
 </appendix>
 
 <!-- This glossary will automatically be elided if there are no
      terms marked up as 'firstterm's in this specification. -->
-<xi:include href="../../../build/glossary.xml">
-  <xi:fallback>
+
     <glossary xml:id="glossary">
       <title>Glossary</title>
       <para>Glossary needs to be generated</para>
     </glossary>
-  </xi:fallback>
-</xi:include>
+  
 
-<xi:include href="ancillary.xml"/>
+<appendix version="5.0-extension w3c-xproc" xml:id="ancillary-files">
+<title>Ancillary files</title>
+
+<para>This specification includes by reference a number of
+ancillary files.</para>
+
+<variablelist>
+<varlistentry>
+<term><link xlink:href="steps.xpl"/></term>
+<listitem>
+<para>An XProc step library for the declared steps.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+</appendix>
 
 </specification>

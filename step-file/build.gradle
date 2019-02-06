@@ -88,22 +88,6 @@ task specification(dependsOn: [ "source", "library", "rng" ]) {
   // nop
 }
 
-// ================================================================================
-// Process the examples
-
-def copyFiles = [ "xquery.xml" ]
-
-copyFiles.each { String name ->
-  String newname = name.substring(0, name.lastIndexOf(".")) + ".txt"
-
-  task "copy_$name"(type: Copy) {
-    from "src/main/examples/$name"
-    into "$buildDir/examples"
-    rename (name, newname)
-  }
-  xinclude.dependsOn "copy_$name"
-}
-
 task clean() {
   doFirst {
     delete("build")

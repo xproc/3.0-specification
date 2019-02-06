@@ -5,11 +5,11 @@
                xmlns:p="http://www.w3.org/ns/xproc"
                xmlns:xi="http://www.w3.org/2001/XInclude"
                xmlns:xlink="http://www.w3.org/1999/xlink"
-               xml:id='step-exec'
+               xml:id='step-os'
                class="ed" role="step"
                version="5.0-extension w3c-xproc">
 <info>
-<title>XProc 3.0: Exec</title>
+<title>XProc 3.0: operating system steps</title>
 <!-- defaults to date formatted <pubdate>2014-12-18</pubdate> -->
 <copyright><year>2018</year><holder>@@FIXME:</holder></copyright>
 
@@ -30,8 +30,9 @@
 </authorgroup>
 
 <abstract>
-<para>This specification describes the <code>p:exec</code>
-step for
+<para>This specification describes the <code>p:os-exec</code> and
+<code>p:os-info</code> steps
+for
 <citetitle>XProc 3.0: An XML Pipeline Language</citetitle>.</para>
 </abstract>
 
@@ -51,7 +52,8 @@ An XML Pipeline Language</link> published by the W3C.</para>
 <title>Introduction</title>
 
 <para>This specification describes the
-<code>p:exec</code> XProc step.
+<code>p:os-info</code> and
+<code>p:os-exec</code> XProc steps.
 A machine-readable description of
 these steps may be found in
 <link xlink:href="steps.xpl">steps.xpl</link>.
@@ -63,15 +65,94 @@ steps is assumed; for background details, see
 <biblioref linkend="xproc30-steps"/>.</para>
 </section>
 
-<section xml:id="c.exec">
-<title>p:exec</title>
+<section xml:id="c.os-info">
+  <title>p:os-info</title>
 
-<para>The <tag>p:exec</tag> step runs an external command passing the
+  <para>The <code>p:os-info</code> step returns information about the
+  operating system on which the processor is running.</para>
+
+  <p:declare-step type="p:os-info">
+    <p:output port="result" content-types="application/xml" primary="true"/>
+  </p:declare-step>
+
+  <para>The step returns a <tag>c:result</tag> element with attributes
+  describing properties of the system. It <rfc2119>should</rfc2119>
+  include the following properties:</para>
+
+  <variablelist>
+    <varlistentry>
+      <term><tag class="attribute">file-separator</tag></term>
+      <listitem>
+        <para>The file separator; usually <code>"/"</code> on Unix, <code>"\"</code> on Windows.</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term><tag class="attribute">path-separator</tag></term>
+      <listitem>
+        <para>The path separator; usually <code>":"</code> on Unix, <code>";"</code> on Windows.</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term><tag class="attribute">os-architecture</tag></term>
+      <listitem>
+        <para>The operating system architecture, for example <code>"i386"</code>.</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term><tag class="attribute">os-name</tag></term>
+      <listitem>
+        <para>The name of the operating system, for example <code>"Mac OS X"</code>.</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term><tag class="attribute">os-version</tag></term>
+      <listitem>
+        <para>The version of the operating system, for example <code>"10.5.6"</code>.</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term><tag class="attribute">cwd</tag></term>
+      <listitem>
+        <para>The current working directory. On systems which have no concept of a working directory the value of the
+          attribute will be empty.</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term><tag class="attribute">user-name</tag></term>
+      <listitem>
+        <para>The login name of the effective user, for example <code>"ndw"</code>.</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term><tag class="attribute">user-home</tag></term>
+      <listitem>
+        <para>The home directory of the effective user, for example <code>"/home/ndw"</code>.</para>
+      </listitem>
+    </varlistentry>
+  </variablelist>
+
+  <para>FIXME: the <tag>c:result</tag> element may contain zero or more
+  <tag>c:environment</tag> elements that identify the environment variables
+  available.</para>
+
+  <para>The exact set of properties returned is implementation-dependent.</para>
+
+  <simplesect>
+    <title>Document properties</title>
+    <para feature="store-preserves-none">No document properties are preserved.</para>
+  </simplesect>
+
+</section>
+
+<section xml:id="c.os-exec">
+<title>p:os-exec</title>
+
+<para>The <tag>p:os-exec</tag> step runs an external command passing the
 input that arrives on its <port>source</port> port as standard input,
 reading <port>result</port> from standard output, and <port>errors</port>
 from standard error.</para>
 
-<p:declare-step type="p:exec">
+<p:declare-step type="p:os-exec">
   <p:input port="source" primary="true" sequence="true" content-types="*/*"/>
   <p:output port="result" primary="true" content-types="*/*"/>
   <p:output port="errors"/>
@@ -99,7 +180,7 @@ from standard error.</para>
 and <option>fix-slashes</option> options <rfc2119>must</rfc2119> be
 boolean.</para>
 
-<para>The <tag>p:exec</tag> step executes the command passed on
+<para>The <tag>p:os-exec</tag> step executes the command passed on
 <option>command</option> with the arguments passed on
 <option>args</option>. The processor does not interpolate the values
 of the <option>command</option> or <option>args</option> (for example,
@@ -137,7 +218,7 @@ the <option>arg-separator</option> option is specified and is not
 exactly one character long.</error>
 </para>
 
-<para>The following examples of <tag>p:exec</tag> are equivalent. The
+<para>The following examples of <tag>p:os-exec</tag> are equivalent. The
 first uses the default <option>arg-separator</option>:</para>
 
 <programlisting language="xml"><xi:include href="../../../build/examples/exec-as1.txt" parse="text"/></programlisting>
@@ -156,7 +237,7 @@ standard input. If a document does arrive on the <port>source</port>
 port, it will be passed to the command as its standard input. <error
 code="D0006">It is a <glossterm>dynamic error</glossterm> if more than
 one document appears on the <port>source</port> port of the
-<tag>p:exec</tag> step.</error>
+<tag>p:os-exec</tag> step.</error>
 If <option>source-is-xml</option> is true, the value of the
 <option>serialization</option> option is used to convert the input
 into serialized XML which is passed to the command, otherwise the
@@ -194,11 +275,11 @@ parsed with namespaces enabled and validation turned off, just like
 <para>The <port>exit-status</port> port always returns a single
 <tag>c:result</tag> element which contains the system exit status that
 the process returned. <impl>The specific exit status values returned by
-a process invoked with <tag>p:exec</tag> are
+a process invoked with <tag>p:os-exec</tag> are
 <glossterm>implementation-dependent</glossterm>.</impl></para>
 
 <para>If a <option>failure-threshold</option> value is supplied, and the
-exit status is greater than that threshold, then the <tag>p:exec</tag>
+exit status is greater than that threshold, then the <tag>p:os-exec</tag>
 step <rfc2119>must</rfc2119> fail.
 <error code="C0064">It is a <glossterm>dynamic
 error</glossterm> if the exit code from the command is greater than
