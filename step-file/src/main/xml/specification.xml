@@ -1,0 +1,538 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<specification xmlns="http://docbook.org/ns/docbook"
+               xmlns:cs="http://www.w3.org/XML/XProc/2006/04/components#"
+               xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax"
+               xmlns:p="http://www.w3.org/ns/xproc"
+               xmlns:xi="http://www.w3.org/2001/XInclude"
+               xmlns:xlink="http://www.w3.org/1999/xlink"
+               xml:id='step-file'
+               class="ed" role="step"
+               version="5.0-extension w3c-xproc">
+<info>
+<title>XProc 3.0: file steps</title>
+<!-- defaults to date formatted <pubdate>2014-12-18</pubdate> -->
+<copyright><year>2018</year><holder>@@FIXME:</holder></copyright>
+
+<bibliorelation type="isformatof" xlink:href="specification.xml">XML</bibliorelation>
+<authorgroup>
+  <author>
+    <personname>Norman Walsh</personname>
+  </author>
+  <author>
+    <personname>Achim Berndzen</personname>
+  </author>
+  <author>
+    <personname>Gerrit Imsieke</personname>
+  </author>
+  <author>
+    <personname>Erik Siegel</personname>
+  </author>
+</authorgroup>
+
+<abstract>
+<para>This specification describes the file related steps
+for
+<citetitle>XProc 3.0: An XML Pipeline Language</citetitle>.</para>
+</abstract>
+
+<legalnotice role="status">
+
+<para><emphasis>This section describes the status of this document at
+the time of its publication. Other documents may supersede this
+document.</emphasis></para>
+
+<para>This document is derived from
+<link xlink:href="https://www.w3.org/TR/2010/REC-xproc-20100511/">XProc:
+An XML Pipeline Language</link> published by the W3C.</para>
+</legalnotice>
+</info>
+
+<section xml:id="introduction">
+<title>Introduction</title>
+
+<para>This specification describes the file related XProc steps.
+A machine-readable description of
+these steps may be found in
+<link xlink:href="steps.xpl">steps.xpl</link>.
+</para>
+
+<para>Familarity with the
+general nature of <biblioref linkend="xproc30"/>
+steps is assumed; for background details, see
+<biblioref linkend="xproc30-steps"/>.</para>
+</section>
+
+<section xml:id="c.file-copy">
+  <title>p:file-copy</title>
+
+  <para>The <code>p:file-copy</code> step copies a file.</para>
+
+  <p:declare-step type="p:file-copy">
+    <p:output port="result" primary="true" content-types="application/xml"/>
+    <p:option name="href" required="true" as="xs:anyURI"/>
+    <p:option name="target" required="true" as="xs:anyURI"/>
+    <p:option name="fail-on-error" as="xs:boolean" select="true()"/>
+  </p:declare-step>
+
+  <para>The <tag>p:file-copy</tag> step copies the file or directory named in <option>href</option> to the new name specified in
+      <option>target</option>. If the target is a directory, the step attempts to move the file into that directory,
+    preserving its base name.</para>
+
+  <para><error code="D0064">It is a <glossterm>dynamic error</glossterm> if the <option>href</option> or
+        <option>target</option> option value is not a valid <type>xs:anyURI</type>.</error> If the <option>href</option>
+    or <option>target</option> is relative, it is made absolute against the base URI of the element on which it is
+    specified (<tag>p:with-option</tag> or <tag>p:file-copy</tag> in the case of a syntactic shortcut value).</para>
+
+  <para>If the copy is successful, the step returns a <tag>c:result</tag> element containing the absolute URI of the
+    target.</para>
+
+  <para>If an error occurs and <option>fail-on-error</option> is <code>false</code>, the step returns a
+      <tag>c:error</tag> element which may contain additional, implementation-defined, information about the nature of
+    the error.</para>
+
+  <para>If an error occurs and <option>fail-on-error</option> is <code>true</code>, one of the following errors is
+    raised:</para>
+  <itemizedlist>
+    <listitem>
+      <para><error code="D0011">It is a <glossterm>dynamic error</glossterm> if the resource referenced by the
+            <option>href</option> option does not exist, cannot be accessed or is not a file or directory.</error></para>
+    </listitem>
+    <listitem>
+      <para><error code="C0050">It is a <glossterm>dynamic error</glossterm> if the URI scheme of the
+            <option>target</option> option is not supported or the file or directory cannot be copied to the specified
+          location.</error></para>
+    </listitem>
+  </itemizedlist>
+
+
+  <simplesect>
+    <title>Document properties</title>
+    <para feature="load-preserves-none">No document properties are preserved.</para>
+  </simplesect>
+  
+</section>
+
+<section xml:id="c.file-delete">
+  <title>p:file-delete</title>
+
+  <para>The <code>p:file-delete</code> step deletes a file or a directory.</para>
+
+  <p:declare-step type="p:file-delete">
+    <p:output port="result" primary="true" content-types="application/xml"/>
+    <p:option name="href" required="true" as="xs:anyURI"/>
+    <p:option name="recursive" as="xs:boolean" select="false()"/>
+    <p:option name="fail-on-error" as="xs:boolean" select="true()"/>
+  </p:declare-step>
+
+  <para>The <tag>p:file-delete</tag> step attempts to delete the file or directory named in
+    <option>href</option>.</para>
+
+  <para><error code="D0064">It is a <glossterm>dynamic error</glossterm> if the <option>href</option> option value is
+      not a valid <type>xs:anyURI</type>.</error> If the <option>href</option> option is relative, it is made absolute
+    against the base URI of the element on which it is specified (<tag>p:with-option</tag> or <tag>p:file-delete</tag>
+    in the case of a syntactic shortcut value).</para>
+
+  <para>If <option>href</option> specifies a directory, it can only be deleted if the <option>recursive</option> option
+    is <code>true</code> or if the specified directory is empty.</para>
+
+  <para>If the delete is successful, the step returns a <tag>c:result</tag> element containing the absolute URI of the
+    deleted file or directory.</para>
+
+  <para>If an error occurs and <option>fail-on-error</option> is <code>false</code>, the step returns a
+      <tag>c:error</tag> element which may contain additional, implementation-defined, information about the nature of
+    the error.</para>
+
+  <para>If an error occurs and <option>fail-on-error</option> is <code>true</code>, one of the following errors is
+    raised:</para>
+  <itemizedlist>
+    <listitem>
+      <para><error code="D0011">It is a <glossterm>dynamic error</glossterm> if the resource referenced by the
+            <option>href</option> option does not exist, cannot be accessed or is not a file or directory.</error></para>
+    </listitem>
+    <listitem>
+      <para><error code="XXXXX">It is a <glossterm>dynamic error</glossterm> if an attempt is made to delete a non-empty
+      directory and the <option>recursive</option> option was set to <code>false</code>.</error></para>
+    </listitem>
+  </itemizedlist>
+
+
+  <simplesect>
+    <title>Document properties</title>
+    <para feature="load-preserves-none">No document properties are preserved.</para>
+  </simplesect>
+
+</section>
+
+<section xml:id="c.file-info">
+  <title>p:file-info</title>
+
+  <para>The <code>p:file-info</code> step returns information about a file, directory or other file system
+    object.</para>
+
+  <p:declare-step type="p:file-info">
+    <p:output port="result" primary="true" content-types="application/xml"/>
+    <p:option name="href" required="true" as="xs:anyURI"/>
+    <p:option name="fail-on-error" as="xs:boolean" select="true()"/>
+  </p:declare-step>
+
+  <para>The <tag>p:file-info</tag> step returns information about the file, directory or other file system object named
+    in the <option>href</option> option.</para>
+
+  <para><error code="D0064">It is a <glossterm>dynamic error</glossterm> if the <option>href</option> option value is
+      not a valid <type>xs:anyURI</type>.</error> If the <option>href</option> option is relative, it is made absolute
+    against the base URI of the element on which it is specified (<tag>p:with-option</tag> or <tag>p:file-info</tag> in
+    the case of a syntactic shortcut value).</para>
+
+  <para>If the <option>href</option> option is not a <code>file:</code> URI, the result is implementation
+    defined.</para>
+
+  <para>If the <option>href</option> option is a <code>file:</code> URI, the step returns:</para>
+  <itemizedlist>
+    <listitem>
+      <para>If <option>href</option> option references a file: A <tag>c:file</tag> element with standard attributes (see
+        below).</para>
+    </listitem>
+    <listitem>
+      <para>If <option>href</option> option references a directory: A <tag>c:directory</tag> element with standard
+        attributes (see below).</para>
+    </listitem>
+    <listitem>
+      <para>If <option>href</option> option references any other file system object: Implementation defined (for example
+        an <tag>c:other</tag> or <tag>c:device</tag> element). It is advised to use the standard attributes (see below)
+        if applicable.</para>
+    </listitem>
+  </itemizedlist>
+
+  <para>The following attributes are standard on a returned <tag>c:file</tag> or <tag>c:directory</tag> element. All
+    attributes are optional and must be absent if not applicable. Additional implementation-defined attributes may be
+    present, but they must be in a namespace.</para>
+  <informaltable>
+    <tgroup cols="3">
+      <thead>
+        <row>
+          <entry>Attribute</entry>
+          <entry>Type</entry>
+          <entry>Description</entry>
+        </row>
+      </thead>
+      <tbody>
+        <row>
+          <entry><tag class="attribute">readable</tag></entry>
+          <entry><type>xs:boolean</type></entry>
+          <entry><literal>true</literal> if the object is readable.</entry>
+        </row>
+        <row>
+          <entry><tag class="attribute">writable</tag></entry>
+          <entry><type>xs:boolean</type></entry>
+          <entry><literal>true</literal> if the object file is writable.</entry>
+        </row>
+        <row>
+          <entry><tag class="attribute">hidden</tag></entry>
+          <entry><type>xs:boolean</type></entry>
+          <entry><literal>true</literal> if the object is hidden.</entry>
+        </row>
+        <row>
+          <entry><tag class="attribute">last-modified</tag></entry>
+          <entry><type>xs:dateTime</type></entry>
+          <entry>The last modification time of the object expressed in UTC.</entry>
+        </row>
+        <row>
+          <entry><tag class="attribute">size</tag></entry>
+          <entry><type>xs:integer</type></entry>
+          <entry>The size of the object in bytes.</entry>
+        </row>
+      </tbody>
+    </tgroup>
+  </informaltable>
+
+  <para>If an error occurs and <option>fail-on-error</option> is <code>false</code>, the step returns a
+      <tag>c:error</tag> element which may contain additional, implementation-defined, information about the nature of
+    the error.</para>
+
+  <para>If an error occurs and <option>fail-on-error</option> is <code>true</code>, one of the following errors is
+    raised:</para>
+  <itemizedlist>
+    <listitem>
+      <para><error code="D0011">It is a <glossterm>dynamic error</glossterm> if the resource referenced by the
+            <option>href</option> option does not exist, cannot be accessed or is not a file, directory or other file
+          system object.</error></para>
+    </listitem>
+  </itemizedlist>
+
+
+  <simplesect>
+    <title>Document properties</title>
+    <para feature="load-preserves-none">No document properties are preserved.</para>
+  </simplesect>
+
+</section>
+
+<section xml:id="c.file-mkdir">
+  <title>p:file-mkdir</title>
+
+  <para>The <code>p:file-mkdir</code> step creates a directory.</para>
+
+  <p:declare-step type="p:file-mkdir">
+    <p:output port="result" primary="true" content-types="application/xml"/>
+    <p:option name="href" required="true" as="xs:anyURI"/>
+    <p:option name="fail-on-error" as="xs:boolean" select="true()"/>
+  </p:declare-step>
+
+  <para>The <tag>p:file-mkdir</tag> create the directory named in the <option>href</option> option. If this includes
+    more than one directory component, all of the intermediate components are created. The path separator is
+    implementation-defined.</para>
+
+  <para><error code="D0064">It is a <glossterm>dynamic error</glossterm> if the <option>href</option> option value is
+      not a valid <type>xs:anyURI</type>.</error> If the <option>href</option> option is relative, it is made absolute
+    against the base URI of the element on which it is specified (<tag>p:with-option</tag> or <tag>p:file-mkdir</tag> in
+    the case of a syntactic shortcut value).</para>
+
+  <para>If the create is successful, the step returns a <tag>c:result</tag> element containing the absolute URI of the
+    directory created.</para>
+
+  <para>If an error occurs and <option>fail-on-error</option> is <code>false</code>, the step returns a
+      <tag>c:error</tag> element which may contain additional, implementation-defined, information about the nature of
+    the error.</para>
+
+  <para>If an error occurs and <option>fail-on-error</option> is <code>true</code>, one of the following errors is
+    raised:</para>
+  <itemizedlist>
+    <listitem>
+      <para><error code="XXXX">It is a <glossterm>dynamic error</glossterm> if the directory referenced by the
+            <option>href</option> option cannot be created.</error></para>
+    </listitem>
+  </itemizedlist>
+
+  <simplesect>
+    <title>Document properties</title>
+    <para feature="load-preserves-none">No document properties are preserved.</para>
+  </simplesect>
+
+</section>
+<section xml:id="c.file-move">
+  <title>p:file-move</title>
+
+  <para>The <code>p:file-move</code> step moves a file or directory.</para>
+
+  <p:declare-step type="p:file-move">
+    <p:output port="result" primary="true" content-types="application/xml"/>
+    <p:option name="href" required="true" as="xs:anyURI"/>
+    <p:option name="target" required="true" as="xs:anyURI"/>
+    <p:option name="fail-on-error" as="xs:boolean" select="true()"/>
+  </p:declare-step>
+
+  <para>The <tag>p:file-move</tag> step moves the file or directory named in <option>href</option> to the new location
+    specified in <option>target</option>. If the <option>target</option> option specifies an
+      <emphasis>existing</emphasis> directory, the step attempts to move the file or directory <emphasis>into</emphasis>
+    that directory, preserving its base name.</para>
+
+  <para><error code="D0064">It is a <glossterm>dynamic error</glossterm> if the <option>href</option> or
+        <option>target</option> option value is not a valid <type>xs:anyURI</type>.</error> If the <option>href</option>
+    or <option>target</option> is relative, it is made absolute against the base URI of the element on which it is
+    specified (<tag>p:with-option</tag> or <tag>p:file-move</tag> in the case of a syntactic shortcut value).</para>
+
+  <para>If the <option>href</option> option specifies a device or other special kind of object, the results are
+    implementation-defined.</para>
+
+  <para>If the move is successful, the step returns a <tag>c:result</tag> element containing the absolute URI of the
+    target.</para>
+
+  <para>If an error occurs and <option>fail-on-error</option> is <code>false</code>, the step returns a
+      <tag>c:error</tag> element which may contain additional, implementation-defined, information about the nature of
+    the error.</para>
+
+  <para>If an error occurs and <option>fail-on-error</option> is <code>true</code>, one of the following errors is
+    raised:</para>
+  <itemizedlist>
+    <listitem>
+      <para><error code="D0011">It is a <glossterm>dynamic error</glossterm> if the resource referenced by the
+            <option>href</option> option does not exist, cannot be accessed or is not a file or
+        directory.</error></para>
+    </listitem>
+    <listitem>
+      <para><error code="XXXXX">It is a <glossterm>dynamic error</glossterm> if the resource referenced by the
+        <option>target</option> option is an existing file or other file system object.</error></para>
+    </listitem>
+    <listitem>
+      <para><error code="C0050">It is a <glossterm>dynamic error</glossterm> if the URI scheme of the
+            <option>target</option> option is not supported or the file or directory cannot be moved to the specified
+          location.</error></para>
+    </listitem>
+  </itemizedlist>
+
+  <simplesect>
+    <title>Document properties</title>
+    <para feature="load-preserves-none">No document properties are preserved.</para>
+  </simplesect>
+
+</section>
+
+<section xml:id="c.file-create-tempfile">
+  <title>p:file-create-tempfile</title>
+ 
+  <para>The <code>p:file-create-tempfile</code> step creates a temporary file.</para>
+
+  <note role="editorial">
+    <title>Editorial Note</title>
+    <para>TBD: This is an almost direct port from EXProc. Details might still change.</para>
+    <para>Check the error codes. ANd is the name ok? <tag>p:file-create-tempfile</tag> sounds better to me?</para>
+    <para>I added the option to leave out the <option>href</option> option and have the tempfile created in the system's
+      temp directory. Ok?</para>
+  </note>
+
+  <p:declare-step type="p:file-create-tempfile">
+    <p:output port="result" primary="true" content-types="application/xml"/>
+    <p:option name="href" as="xs:anyURI?"/>
+    <p:option name="suffix" as="xs:string?"/>
+    <p:option name="prefix" as="xs:string?"/>
+    <p:option name="delete-on-exit" as="xs:boolean" select="false()"/>
+    <p:option name="fail-on-error" as="xs:boolean" select="true()"/>
+  </p:declare-step>
+
+  <para>The <tag>p:file-create-tempfile</tag> creates a temporary file. The temporary file is guaranteed not to already exist
+    when the step is called.</para>
+
+  <para>If the <option>href</option> option is specified it must be the URI of an existing directory. The temporary file
+    is created here. If there is no <option>href</option> option specified the location of the temporary file is
+    implementation defined, usually the operating system's default location for temporary files.</para>
+
+  <para><error code="D0064">It is a <glossterm>dynamic error</glossterm> if the <option>href</option> option value is
+      not a valid <type>xs:anyURI</type>.</error> If the <option>href</option> is relative, it is made absolute against
+    the base URI of the element on which it is specified (<tag>p:with-option</tag> or <tag>p:file-create-tempfile</tag> in the
+    case of a syntactic shortcut value).</para>
+
+  <para>If the <option>prefix</option> option is specified, the filename will begin with that prefix. If the
+      <option>suffix</option> option is specified, the filename will end with that suffix.</para>
+
+  <para>If the <option>delete-on-exit</option> option is <code>true</code>, an attempt will be made to automatically
+    delete the temporary file when the processor terminates the pipeline. No error will be raised if this is
+    unsuccessful.</para>
+
+  <para>If the temporary file creation is successful, the step returns a <tag>c:result</tag> element containing the
+    absolute URI of this file.</para>
+
+  <para>If an error occurs and <option>fail-on-error</option> is <code>false</code>, the step returns a
+      <tag>c:error</tag> element which may contain additional, implementation-defined, information about the nature of
+    the error.</para>
+
+  <para>If an error occurs and <option>fail-on-error</option> is <code>true</code>, one of the following errors is
+    raised:</para>
+  <itemizedlist>
+    <listitem>
+      <para><error code="D0011">It is a <glossterm>dynamic error</glossterm> if the resource referenced by the
+            <option>href</option> option does not exist, cannot be accessed or is not a directory.</error></para>
+    </listitem>
+    <listitem>
+      <para><error code="XXXXX">It is a <glossterm>dynamic error</glossterm> if the temporary file could not be
+          created.</error></para>
+    </listitem>
+  </itemizedlist>
+
+  <simplesect>
+    <title>Document properties</title>
+    <para feature="load-preserves-none">No document properties are preserved.</para>
+  </simplesect>
+
+</section>
+
+<section  xml:id="c.file-touch">
+<title>p:file-touch</title>
+
+<para>The <code>p:file-touch</code> step updates the modification
+timestamp of a file.</para>
+
+  <p:declare-step type="p:file-touch">
+    <p:output port="result" primary="true" content-types="application/xml"/>
+    <p:option name="href" required="true" as="xs:anyURI"/>
+    <p:option name="timestamp" as="xs:dateTime?"/>
+    <p:option name="fail-on-error" as="xs:boolean" select="true()"/>
+  </p:declare-step>
+
+<para>The <tag>p:file-touch</tag> step updates the modification
+timestamp of the fiel specified in the <option>href</option>
+option.</para>
+
+<para><error code="D0064">It is a <glossterm>dynamic error</glossterm>
+if the <option>href</option> option value is not a valid
+<type>xs:anyURI</type>.</error> If the <option>href</option> option is
+relative, it is made absolute against the base URI of the element on
+which it is specified (<tag>p:with-option</tag> or
+<tag>p:file-touch</tag> in the case of a syntactic shortcut
+value).</para>
+
+<para>If the <option>timestamp</option> option is set, the file's
+timestamp is set to this value. Otherwise the file's timestamp is set
+to the current system's date and time.</para>
+
+<para>If an error occurs and <option>fail-on-error</option> is
+<code>false</code>, the step returns a <tag>c:error</tag> element
+which may contain additional, implementation-defined, information
+about the nature of the error.</para>
+
+<para>If an error occurs and <option>fail-on-error</option> is
+<code>true</code>, one of the following errors is raised:</para>
+  <itemizedlist>
+    <listitem>
+      <para><error code="D0011">It is a <glossterm>dynamic error</glossterm> if the resource referenced by the
+            <option>href</option> option does not exist and cannot be created
+or exists and cannot be accessed.</error></para>
+    </listitem>
+  </itemizedlist>
+
+  <simplesect>
+    <title>Document properties</title>
+    <para feature="load-preserves-none">No document properties are preserved.</para>
+  </simplesect>
+</section>
+
+<section xmlns="http://docbook.org/ns/docbook" xml:id="errors">
+<title>Step Errors</title>
+
+<para>This step can raise
+<glossterm baseform="dynamic-error">dynamic errors</glossterm>.
+</para>
+
+<para><termdef xml:id="dt-dynamic-error">A <firstterm>dynamic
+error</firstterm> is one which occurs while a pipeline is being
+evaluated.</termdef> Examples of dynamic errors include references to
+URIs that cannot be resolved, steps which fail, and pipelines that
+exhaust the capacity of an implementation (such as memory or disk
+space). For a more complete discussion of dynamic errors, see
+<xspecref spec="xproc" xref="dynamic-errors"/>.
+</para>
+
+<para>If a step fails due to a dynamic error, failure propagates
+upwards until either a <tag>p:try</tag> is encountered or the entire
+pipeline fails. In other words, outside of a <tag>p:try</tag>, step
+failure causes the entire pipeline to fail.</para>
+
+<para>The following errors can be raised by this step:</para>
+
+<?step-error-list level="none"?>
+
+</section>
+
+<xi:include href="conformance.xml"/>
+
+<appendix xml:id="references">
+<title>References</title>
+<bibliolist>
+<bibliomixed xml:id="xproc30"/>
+<bibliomixed xml:id="xproc30-steps"/>
+</bibliolist>
+</appendix>
+
+<!-- This glossary will automatically be elided if there are no
+     terms marked up as 'firstterm's in this specification. -->
+<xi:include href="../../../build/glossary.xml">
+  <xi:fallback>
+    <glossary xml:id="glossary">
+      <title>Glossary</title>
+      <para>Glossary needs to be generated</para>
+    </glossary>
+  </xi:fallback>
+</xi:include>
+
+<xi:include href="ancillary.xml"/>
+
+</specification>

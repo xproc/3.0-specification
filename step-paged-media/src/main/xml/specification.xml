@@ -5,11 +5,11 @@
                xmlns:p="http://www.w3.org/ns/xproc"
                xmlns:xi="http://www.w3.org/2001/XInclude"
                xmlns:xlink="http://www.w3.org/1999/xlink"
-               xml:id='step-xsl-formatter'
+               xml:id='step-paged-media'
                class="ed" role="step"
                version="5.0-extension w3c-xproc">
 <info>
-<title>XProc 3.0: XSL Formatter</title>
+<title>XProc 3.0: paged media steps</title>
 <!-- defaults to date formatted <pubdate>2014-12-18</pubdate> -->
 <copyright><year>2018</year><holder>@@FIXME:</holder></copyright>
 
@@ -30,8 +30,9 @@
 </authorgroup>
 
 <abstract>
-<para>This specification describes the <code>p:xsl-formatter</code>
-step for
+<para>This specification describes the <code>p:css-formatter</code>
+and <code>p:xsl-formatter</code>
+steps for
 <citetitle>XProc 3.0: An XML Pipeline Language</citetitle>.</para>
 </abstract>
 
@@ -51,7 +52,8 @@ An XML Pipeline Language</link> published by the W3C.</para>
 <title>Introduction</title>
 
 <para>This specification describes the
-<code>p:xsl-formatter</code> XProc step.
+<code>p:css-formatter</code> and
+<code>p:xsl-formatter</code> XProc steps.
 A machine-readable description of
 these steps may be found in
 <link xlink:href="steps.xpl">steps.xpl</link>.
@@ -61,6 +63,26 @@ these steps may be found in
 general nature of <biblioref linkend="xproc30"/>
 steps is assumed; for background details, see
 <biblioref linkend="xproc30-steps"/>.</para>
+</section>
+
+<section xml:id="c.css-formatter">
+<title>p:css-formatter</title>
+
+<para>T.B.D.</para>
+
+<p:declare-step type="p:css-formatter">
+  <p:input port="source" content-types="application/xml text/xml */*+xml"/>
+  <p:output port="result" content-types="*/*"/>
+  <p:option name="parameters" as="map(xs:QName,item()*)?"/>
+  <p:option name="content-type" as="xs:string?"/>
+</p:declare-step>
+
+<para>T.B.D.</para>
+
+<simplesect>
+<title>Document properties</title>
+<para feature="css-formatter-preserves-none">No document properties are preserved.</para>
+</simplesect>
 </section>
 
 <section xml:id="c.xsl-formatter">
@@ -98,12 +120,11 @@ are defined by the XSL implementation used and are
 <para>The output of this step is a document containing the result of
 processing. This is often, but not necessarily, a PDF document.</para>
 
-<section>
+<simplesect>
 <title>Document properties</title>
 <para feature="xsl-formatter-preserves-none">No document properties are preserved.</para>
+</simplesect>
 </section>
-</section>
-
 
 <section xmlns="http://docbook.org/ns/docbook" xml:id="errors">
 <title>Step Errors</title>
