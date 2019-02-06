@@ -1,7 +1,10 @@
 <p:library xmlns:p="http://www.w3.org/ns/xproc"
            xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax"
            version="3.0">
-   <p:declare-step type="p:exec" xml:id="exec">
+   <p:declare-step type="p:os-info" xml:id="os-info">
+      <p:output port="result" content-types="application/xml" primary="true"/>
+   </p:declare-step>
+   <p:declare-step type="p:os-exec" xml:id="os-exec">
       <p:input port="source"
                primary="true"
                sequence="true"

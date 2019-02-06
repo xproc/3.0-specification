@@ -37,6 +37,12 @@
       <p:output port="result" content-types="application/xml"/>
       <p:option name="limit" as="xs:integer" select="0"/>
    </p:declare-step>
+   <p:declare-step type="p:css-formatter" xml:id="css-formatter">
+      <p:input port="source" content-types="application/xml text/xml */*+xml"/>
+      <p:output port="result" content-types="*/*"/>
+      <p:option name="parameters" as="xs:string"/>
+      <p:option name="content-type" as="xs:string?"/>
+   </p:declare-step>
    <p:declare-step type="p:delete" xml:id="delete">
       <p:input port="source" content-types="application/xml text/xml */*+xml"/>
       <p:output port="result" content-types="application/xml"/>
@@ -66,43 +72,24 @@
       <p:output port="result" content-types="application/xml"/>
       <p:option name="serialization" as="xs:string"/>
    </p:declare-step>
-   <p:declare-step type="p:exec" xml:id="exec">
-      <p:input port="source"
-               primary="true"
-               sequence="true"
-               content-types="*/*"/>
-      <p:output port="result" primary="true" content-types="*/*"/>
-      <p:output port="errors"/>
-      <p:output port="exit-status"/>
-      <p:option name="command" required="true" as="xs:string"/>
-      <p:option name="args" select="''" as="xs:string"/>
-      <p:option name="cwd" as="xs:string"/>
-      <p:option name="source-is-xml" select="true()" as="xs:boolean"/>
-      <p:option name="result-is-xml" select="true()" as="xs:boolean"/>
-      <p:option name="wrap-result-lines" select="false()" as="xs:boolean"/>
-      <p:option name="errors-is-xml" select="false()" as="xs:boolean"/>
-      <p:option name="wrap-error-lines" select="false()" as="xs:boolean"/>
-      <p:option name="path-separator" as="xs:string"/>
-      <p:option name="failure-threshold" as="xs:integer"/>
-      <p:option name="arg-separator" select="' '" as="xs:string"/>
-      <p:option name="serialization" as="xs:string"/>
-   </p:declare-step>
    <p:declare-step type="p:file-copy" xml:id="file-copy">
       <p:output port="result" primary="true" content-types="application/xml"/>
       <p:option name="href" required="true" as="xs:anyURI"/>
       <p:option name="target" required="true" as="xs:anyURI"/>
       <p:option name="fail-on-error" as="xs:boolean" select="true()"/>
    </p:declare-step>
+   <p:declare-step type="p:file-create-tempfile" xml:id="file-create-tempfile">
+      <p:output port="result" primary="true" content-types="application/xml"/>
+      <p:option name="href" as="xs:anyURI?"/>
+      <p:option name="suffix" as="xs:string?"/>
+      <p:option name="prefix" as="xs:string?"/>
+      <p:option name="delete-on-exit" as="xs:boolean" select="false()"/>
+      <p:option name="fail-on-error" as="xs:boolean" select="true()"/>
+   </p:declare-step>
    <p:declare-step type="p:file-delete" xml:id="file-delete">
       <p:output port="result" primary="true" content-types="application/xml"/>
       <p:option name="href" required="true" as="xs:anyURI"/>
       <p:option name="recursive" as="xs:boolean" select="false()"/>
-      <p:option name="fail-on-error" as="xs:boolean" select="true()"/>
-   </p:declare-step>
-   <p:declare-step type="p:file-head" xml:id="file-head">
-      <p:output port="result" primary="true" content-types="application/xml"/>
-      <p:option name="href" required="true" as="xs:anyURI"/>
-      <p:option name="count" required="true" as="xs:integer"/>
       <p:option name="fail-on-error" as="xs:boolean" select="true()"/>
    </p:declare-step>
    <p:declare-step type="p:file-info" xml:id="file-info">
@@ -119,20 +106,6 @@
       <p:output port="result" primary="true" content-types="application/xml"/>
       <p:option name="href" required="true" as="xs:anyURI"/>
       <p:option name="target" required="true" as="xs:anyURI"/>
-      <p:option name="fail-on-error" as="xs:boolean" select="true()"/>
-   </p:declare-step>
-   <p:declare-step type="p:file-tail" xml:id="file-tail">
-      <p:output port="result" primary="true" content-types="application/xml"/>
-      <p:option name="href" required="true" as="xs:anyURI"/>
-      <p:option name="count" required="true" as="xs:integer"/>
-      <p:option name="fail-on-error" as="xs:boolean" select="true()"/>
-   </p:declare-step>
-   <p:declare-step type="p:file-tempfile" xml:id="file-tempfile">
-      <p:output port="result" primary="true" content-types="application/xml"/>
-      <p:option name="href" as="xs:anyURI?"/>
-      <p:option name="suffix" as="xs:string?"/>
-      <p:option name="prefix" as="xs:string?"/>
-      <p:option name="delete-on-exit" as="xs:boolean" select="false()"/>
       <p:option name="fail-on-error" as="xs:boolean" select="true()"/>
    </p:declare-step>
    <p:declare-step type="p:file-touch" xml:id="file-touch">
@@ -236,11 +209,26 @@
                 select="'all'"
                 values="('all','elements','attributes')"/>
    </p:declare-step>
-   <p:declare-step type="p:os-cwd" xml:id="os-cwd">
-      <p:output port="result" content-types="application/xml" primary="true"/>
-   </p:declare-step>
-   <p:declare-step type="p:os-env" xml:id="os-env">
-      <p:output port="result" content-types="application/xml" primary="true"/>
+   <p:declare-step type="p:os-exec" xml:id="os-exec">
+      <p:input port="source"
+               primary="true"
+               sequence="true"
+               content-types="*/*"/>
+      <p:output port="result" primary="true" content-types="*/*"/>
+      <p:output port="errors"/>
+      <p:output port="exit-status"/>
+      <p:option name="command" required="true" as="xs:string"/>
+      <p:option name="args" select="''" as="xs:string"/>
+      <p:option name="cwd" as="xs:string"/>
+      <p:option name="source-is-xml" select="true()" as="xs:boolean"/>
+      <p:option name="result-is-xml" select="true()" as="xs:boolean"/>
+      <p:option name="wrap-result-lines" select="false()" as="xs:boolean"/>
+      <p:option name="errors-is-xml" select="false()" as="xs:boolean"/>
+      <p:option name="wrap-error-lines" select="false()" as="xs:boolean"/>
+      <p:option name="path-separator" as="xs:string"/>
+      <p:option name="failure-threshold" as="xs:integer"/>
+      <p:option name="arg-separator" select="' '" as="xs:string"/>
+      <p:option name="serialization" as="xs:string"/>
    </p:declare-step>
    <p:declare-step type="p:os-info" xml:id="os-info">
       <p:output port="result" content-types="application/xml" primary="true"/>
@@ -344,6 +332,23 @@
       <p:option name="href" required="true" as="xs:anyURI"/>
       <p:option name="serialization" as="xs:string"/>
       <p:option name="enable" as="xs:boolean" select="true()"/>
+   </p:declare-step>
+   <p:declare-step type="p:text-head" xml:id="text-head">
+      <p:output port="result" primary="true" content-types="text/plain"/>
+      <p:option name="href" required="true" as="xs:anyURI"/>
+      <p:option name="count" required="true" as="xs:integer"/>
+   </p:declare-step>
+   <p:declare-step type="p:text-join" xml:id="text-join">
+      <p:output port="result"
+                primary="true"
+                sequence="true"
+                content-types="text/plain"/>
+      <p:option name="href" required="true" as="xs:anyURI"/>
+   </p:declare-step>
+   <p:declare-step type="p:text-tail" xml:id="text-tail">
+      <p:output port="result" primary="true" content-types="text/plain"/>
+      <p:option name="href" required="true" as="xs:anyURI"/>
+      <p:option name="count" required="true" as="xs:integer"/>
    </p:declare-step>
    <p:declare-step type="p:unescape-markup" xml:id="unescape-markup">
       <p:input port="source" content-types="application/xml text/xml */*+xml text/*"/>

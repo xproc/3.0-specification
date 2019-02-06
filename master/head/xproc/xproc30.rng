@@ -1748,8 +1748,10 @@
   </define>
   <define name="StandardStep">
     <choice>
-      <ref name="Step-exec"/>
+      <ref name="Step-os-info"/>
+      <ref name="Step-os-exec"/>
       <ref name="Step-run"/>
+      <ref name="Step-css-formatter"/>
       <ref name="Step-xsl-formatter"/>
       <ref name="Step-add-attribute"/>
       <ref name="Step-add-xml-base"/>
@@ -1760,15 +1762,6 @@
       <ref name="Step-directory-list"/>
       <ref name="Step-error"/>
       <ref name="Step-escape-markup"/>
-      <ref name="Step-file-copy"/>
-      <ref name="Step-file-delete"/>
-      <ref name="Step-file-head"/>
-      <ref name="Step-file-info"/>
-      <ref name="Step-file-mkdir"/>
-      <ref name="Step-file-move"/>
-      <ref name="Step-file-tail"/>
-      <ref name="Step-file-tempfile"/>
-      <ref name="Step-file-touch"/>
       <ref name="Step-filter"/>
       <ref name="Step-hash"/>
       <ref name="Step-http-request"/>
@@ -1780,9 +1773,6 @@
       <ref name="Step-load-directory-list"/>
       <ref name="Step-make-absolute-uris"/>
       <ref name="Step-namespace-rename"/>
-      <ref name="Step-os-cwd"/>
-      <ref name="Step-os-env"/>
-      <ref name="Step-os-info"/>
       <ref name="Step-pack"/>
       <ref name="Step-parameters"/>
       <ref name="Step-rename"/>
@@ -1802,15 +1792,43 @@
       <ref name="Step-www-form-urldecode"/>
       <ref name="Step-www-form-urlencode"/>
       <ref name="Step-xinclude"/>
+      <ref name="Step-xquery"/>
       <ref name="Step-xslt"/>
+      <ref name="Step-file-copy"/>
+      <ref name="Step-file-delete"/>
+      <ref name="Step-file-info"/>
+      <ref name="Step-file-mkdir"/>
+      <ref name="Step-file-move"/>
+      <ref name="Step-file-create-tempfile"/>
+      <ref name="Step-file-touch"/>
+      <ref name="Step-text-head"/>
+      <ref name="Step-text-join"/>
+      <ref name="Step-text-tail"/>
       <ref name="Step-validate-with-relax-ng"/>
       <ref name="Step-validate-with-schematron"/>
       <ref name="Step-validate-with-xml-schema"/>
-      <ref name="Step-xquery"/>
     </choice>
   </define>
-  <define name="Step-exec">
-    <element name="exec">
+  <define name="Step-os-info">
+    <element name="os-info">
+      <optional>
+        <ref name="name.ncname.attr"/>
+      </optional>
+      <ref name="common.attributes"/>
+      <optional>
+        <ref name="use-when.attr"/>
+      </optional>
+      <ref name="step.attributes"/>
+      <zeroOrMore>
+        <choice>
+          <ref name="Documentation"/>
+          <ref name="PipeInfo"/>
+        </choice>
+      </zeroOrMore>
+    </element>
+  </define>
+  <define name="Step-os-exec">
+    <element name="os-exec">
       <optional>
         <ref name="name.ncname.attr"/>
       </optional>
@@ -1908,6 +1926,44 @@
       <interleave>
         <zeroOrMore>
           <ref name="WithInput"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <choice>
+            <ref name="Documentation"/>
+            <ref name="PipeInfo"/>
+          </choice>
+        </zeroOrMore>
+      </interleave>
+    </element>
+  </define>
+  <define name="Step-css-formatter">
+    <element name="css-formatter">
+      <optional>
+        <ref name="name.ncname.attr"/>
+      </optional>
+      <ref name="common.attributes"/>
+      <optional>
+        <ref name="use-when.attr"/>
+      </optional>
+      <ref name="step.attributes"/>
+      <optional>
+        <attribute name="parameters">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="content-type">
+          <optional>
+            <data type="string"/>
+          </optional>
+        </attribute>
+      </optional>
+      <interleave>
+        <zeroOrMore>
+          <ref name="WithInput"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="WithOption"/>
         </zeroOrMore>
         <zeroOrMore>
           <choice>
@@ -2267,356 +2323,6 @@
         <zeroOrMore>
           <ref name="WithInput"/>
         </zeroOrMore>
-        <zeroOrMore>
-          <ref name="WithOption"/>
-        </zeroOrMore>
-        <zeroOrMore>
-          <choice>
-            <ref name="Documentation"/>
-            <ref name="PipeInfo"/>
-          </choice>
-        </zeroOrMore>
-      </interleave>
-    </element>
-  </define>
-  <define name="Step-file-copy">
-    <element name="file-copy">
-      <optional>
-        <ref name="name.ncname.attr"/>
-      </optional>
-      <ref name="common.attributes"/>
-      <optional>
-        <ref name="use-when.attr"/>
-      </optional>
-      <ref name="step.attributes"/>
-      <optional>
-        <attribute name="href">
-          <data type="anyURI"/>
-        </attribute>
-      </optional>
-      <optional>
-        <attribute name="target">
-          <data type="anyURI"/>
-        </attribute>
-      </optional>
-      <optional>
-        <attribute name="fail-on-error">
-          <data type="boolean"/>
-        </attribute>
-      </optional>
-      <interleave>
-        <zeroOrMore>
-          <ref name="WithOption"/>
-        </zeroOrMore>
-        <zeroOrMore>
-          <choice>
-            <ref name="Documentation"/>
-            <ref name="PipeInfo"/>
-          </choice>
-        </zeroOrMore>
-      </interleave>
-    </element>
-  </define>
-  <define name="Step-file-delete">
-    <element name="file-delete">
-      <optional>
-        <ref name="name.ncname.attr"/>
-      </optional>
-      <ref name="common.attributes"/>
-      <optional>
-        <ref name="use-when.attr"/>
-      </optional>
-      <ref name="step.attributes"/>
-      <optional>
-        <attribute name="href">
-          <data type="anyURI"/>
-        </attribute>
-      </optional>
-      <optional>
-        <attribute name="recursive">
-          <data type="boolean"/>
-        </attribute>
-      </optional>
-      <optional>
-        <attribute name="fail-on-error">
-          <data type="boolean"/>
-        </attribute>
-      </optional>
-      <interleave>
-        <zeroOrMore>
-          <ref name="WithOption"/>
-        </zeroOrMore>
-        <zeroOrMore>
-          <choice>
-            <ref name="Documentation"/>
-            <ref name="PipeInfo"/>
-          </choice>
-        </zeroOrMore>
-      </interleave>
-    </element>
-  </define>
-  <define name="Step-file-head">
-    <element name="file-head">
-      <optional>
-        <ref name="name.ncname.attr"/>
-      </optional>
-      <ref name="common.attributes"/>
-      <optional>
-        <ref name="use-when.attr"/>
-      </optional>
-      <ref name="step.attributes"/>
-      <optional>
-        <attribute name="href">
-          <data type="anyURI"/>
-        </attribute>
-      </optional>
-      <optional>
-        <attribute name="count">
-          <data type="integer"/>
-        </attribute>
-      </optional>
-      <optional>
-        <attribute name="fail-on-error">
-          <data type="boolean"/>
-        </attribute>
-      </optional>
-      <interleave>
-        <zeroOrMore>
-          <ref name="WithOption"/>
-        </zeroOrMore>
-        <zeroOrMore>
-          <choice>
-            <ref name="Documentation"/>
-            <ref name="PipeInfo"/>
-          </choice>
-        </zeroOrMore>
-      </interleave>
-    </element>
-  </define>
-  <define name="Step-file-info">
-    <element name="file-info">
-      <optional>
-        <ref name="name.ncname.attr"/>
-      </optional>
-      <ref name="common.attributes"/>
-      <optional>
-        <ref name="use-when.attr"/>
-      </optional>
-      <ref name="step.attributes"/>
-      <optional>
-        <attribute name="href">
-          <data type="anyURI"/>
-        </attribute>
-      </optional>
-      <optional>
-        <attribute name="fail-on-error">
-          <data type="boolean"/>
-        </attribute>
-      </optional>
-      <interleave>
-        <zeroOrMore>
-          <ref name="WithOption"/>
-        </zeroOrMore>
-        <zeroOrMore>
-          <choice>
-            <ref name="Documentation"/>
-            <ref name="PipeInfo"/>
-          </choice>
-        </zeroOrMore>
-      </interleave>
-    </element>
-  </define>
-  <define name="Step-file-mkdir">
-    <element name="file-mkdir">
-      <optional>
-        <ref name="name.ncname.attr"/>
-      </optional>
-      <ref name="common.attributes"/>
-      <optional>
-        <ref name="use-when.attr"/>
-      </optional>
-      <ref name="step.attributes"/>
-      <optional>
-        <attribute name="href">
-          <data type="anyURI"/>
-        </attribute>
-      </optional>
-      <optional>
-        <attribute name="fail-on-error">
-          <data type="boolean"/>
-        </attribute>
-      </optional>
-      <interleave>
-        <zeroOrMore>
-          <ref name="WithOption"/>
-        </zeroOrMore>
-        <zeroOrMore>
-          <choice>
-            <ref name="Documentation"/>
-            <ref name="PipeInfo"/>
-          </choice>
-        </zeroOrMore>
-      </interleave>
-    </element>
-  </define>
-  <define name="Step-file-move">
-    <element name="file-move">
-      <optional>
-        <ref name="name.ncname.attr"/>
-      </optional>
-      <ref name="common.attributes"/>
-      <optional>
-        <ref name="use-when.attr"/>
-      </optional>
-      <ref name="step.attributes"/>
-      <optional>
-        <attribute name="href">
-          <data type="anyURI"/>
-        </attribute>
-      </optional>
-      <optional>
-        <attribute name="target">
-          <data type="anyURI"/>
-        </attribute>
-      </optional>
-      <optional>
-        <attribute name="fail-on-error">
-          <data type="boolean"/>
-        </attribute>
-      </optional>
-      <interleave>
-        <zeroOrMore>
-          <ref name="WithOption"/>
-        </zeroOrMore>
-        <zeroOrMore>
-          <choice>
-            <ref name="Documentation"/>
-            <ref name="PipeInfo"/>
-          </choice>
-        </zeroOrMore>
-      </interleave>
-    </element>
-  </define>
-  <define name="Step-file-tail">
-    <element name="file-tail">
-      <optional>
-        <ref name="name.ncname.attr"/>
-      </optional>
-      <ref name="common.attributes"/>
-      <optional>
-        <ref name="use-when.attr"/>
-      </optional>
-      <ref name="step.attributes"/>
-      <optional>
-        <attribute name="href">
-          <data type="anyURI"/>
-        </attribute>
-      </optional>
-      <optional>
-        <attribute name="count">
-          <data type="integer"/>
-        </attribute>
-      </optional>
-      <optional>
-        <attribute name="fail-on-error">
-          <data type="boolean"/>
-        </attribute>
-      </optional>
-      <interleave>
-        <zeroOrMore>
-          <ref name="WithOption"/>
-        </zeroOrMore>
-        <zeroOrMore>
-          <choice>
-            <ref name="Documentation"/>
-            <ref name="PipeInfo"/>
-          </choice>
-        </zeroOrMore>
-      </interleave>
-    </element>
-  </define>
-  <define name="Step-file-tempfile">
-    <element name="file-tempfile">
-      <optional>
-        <ref name="name.ncname.attr"/>
-      </optional>
-      <ref name="common.attributes"/>
-      <optional>
-        <ref name="use-when.attr"/>
-      </optional>
-      <ref name="step.attributes"/>
-      <optional>
-        <attribute name="href">
-          <optional>
-            <data type="anyURI"/>
-          </optional>
-        </attribute>
-      </optional>
-      <optional>
-        <attribute name="suffix">
-          <optional>
-            <data type="string"/>
-          </optional>
-        </attribute>
-      </optional>
-      <optional>
-        <attribute name="prefix">
-          <optional>
-            <data type="string"/>
-          </optional>
-        </attribute>
-      </optional>
-      <optional>
-        <attribute name="delete-on-exit">
-          <data type="boolean"/>
-        </attribute>
-      </optional>
-      <optional>
-        <attribute name="fail-on-error">
-          <data type="boolean"/>
-        </attribute>
-      </optional>
-      <interleave>
-        <zeroOrMore>
-          <ref name="WithOption"/>
-        </zeroOrMore>
-        <zeroOrMore>
-          <choice>
-            <ref name="Documentation"/>
-            <ref name="PipeInfo"/>
-          </choice>
-        </zeroOrMore>
-      </interleave>
-    </element>
-  </define>
-  <define name="Step-file-touch">
-    <element name="file-touch">
-      <optional>
-        <ref name="name.ncname.attr"/>
-      </optional>
-      <ref name="common.attributes"/>
-      <optional>
-        <ref name="use-when.attr"/>
-      </optional>
-      <ref name="step.attributes"/>
-      <optional>
-        <attribute name="href">
-          <data type="anyURI"/>
-        </attribute>
-      </optional>
-      <optional>
-        <attribute name="timestamp">
-          <optional>
-            <data type="dateTime"/>
-          </optional>
-        </attribute>
-      </optional>
-      <optional>
-        <attribute name="fail-on-error">
-          <data type="boolean"/>
-        </attribute>
-      </optional>
-      <interleave>
         <zeroOrMore>
           <ref name="WithOption"/>
         </zeroOrMore>
@@ -3036,60 +2742,6 @@
           </choice>
         </zeroOrMore>
       </interleave>
-    </element>
-  </define>
-  <define name="Step-os-cwd">
-    <element name="os-cwd">
-      <optional>
-        <ref name="name.ncname.attr"/>
-      </optional>
-      <ref name="common.attributes"/>
-      <optional>
-        <ref name="use-when.attr"/>
-      </optional>
-      <ref name="step.attributes"/>
-      <zeroOrMore>
-        <choice>
-          <ref name="Documentation"/>
-          <ref name="PipeInfo"/>
-        </choice>
-      </zeroOrMore>
-    </element>
-  </define>
-  <define name="Step-os-env">
-    <element name="os-env">
-      <optional>
-        <ref name="name.ncname.attr"/>
-      </optional>
-      <ref name="common.attributes"/>
-      <optional>
-        <ref name="use-when.attr"/>
-      </optional>
-      <ref name="step.attributes"/>
-      <zeroOrMore>
-        <choice>
-          <ref name="Documentation"/>
-          <ref name="PipeInfo"/>
-        </choice>
-      </zeroOrMore>
-    </element>
-  </define>
-  <define name="Step-os-info">
-    <element name="os-info">
-      <optional>
-        <ref name="name.ncname.attr"/>
-      </optional>
-      <ref name="common.attributes"/>
-      <optional>
-        <ref name="use-when.attr"/>
-      </optional>
-      <ref name="step.attributes"/>
-      <zeroOrMore>
-        <choice>
-          <ref name="Documentation"/>
-          <ref name="PipeInfo"/>
-        </choice>
-      </zeroOrMore>
     </element>
   </define>
   <define name="Step-pack">
@@ -3759,6 +3411,44 @@
       </interleave>
     </element>
   </define>
+  <define name="Step-xquery">
+    <element name="xquery">
+      <optional>
+        <ref name="name.ncname.attr"/>
+      </optional>
+      <ref name="common.attributes"/>
+      <optional>
+        <ref name="use-when.attr"/>
+      </optional>
+      <ref name="step.attributes"/>
+      <optional>
+        <attribute name="parameters">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="version">
+          <optional>
+            <data type="string"/>
+          </optional>
+        </attribute>
+      </optional>
+      <interleave>
+        <zeroOrMore>
+          <ref name="WithInput"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="WithOption"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <choice>
+            <ref name="Documentation"/>
+            <ref name="PipeInfo"/>
+          </choice>
+        </zeroOrMore>
+      </interleave>
+    </element>
+  </define>
   <define name="Step-xslt">
     <element name="xslt">
       <optional>
@@ -3806,6 +3496,374 @@
         <zeroOrMore>
           <ref name="WithInput"/>
         </zeroOrMore>
+        <zeroOrMore>
+          <ref name="WithOption"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <choice>
+            <ref name="Documentation"/>
+            <ref name="PipeInfo"/>
+          </choice>
+        </zeroOrMore>
+      </interleave>
+    </element>
+  </define>
+  <define name="Step-file-copy">
+    <element name="file-copy">
+      <optional>
+        <ref name="name.ncname.attr"/>
+      </optional>
+      <ref name="common.attributes"/>
+      <optional>
+        <ref name="use-when.attr"/>
+      </optional>
+      <ref name="step.attributes"/>
+      <optional>
+        <attribute name="href">
+          <data type="anyURI"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="target">
+          <data type="anyURI"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="fail-on-error">
+          <data type="boolean"/>
+        </attribute>
+      </optional>
+      <interleave>
+        <zeroOrMore>
+          <ref name="WithOption"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <choice>
+            <ref name="Documentation"/>
+            <ref name="PipeInfo"/>
+          </choice>
+        </zeroOrMore>
+      </interleave>
+    </element>
+  </define>
+  <define name="Step-file-delete">
+    <element name="file-delete">
+      <optional>
+        <ref name="name.ncname.attr"/>
+      </optional>
+      <ref name="common.attributes"/>
+      <optional>
+        <ref name="use-when.attr"/>
+      </optional>
+      <ref name="step.attributes"/>
+      <optional>
+        <attribute name="href">
+          <data type="anyURI"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="recursive">
+          <data type="boolean"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="fail-on-error">
+          <data type="boolean"/>
+        </attribute>
+      </optional>
+      <interleave>
+        <zeroOrMore>
+          <ref name="WithOption"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <choice>
+            <ref name="Documentation"/>
+            <ref name="PipeInfo"/>
+          </choice>
+        </zeroOrMore>
+      </interleave>
+    </element>
+  </define>
+  <define name="Step-file-info">
+    <element name="file-info">
+      <optional>
+        <ref name="name.ncname.attr"/>
+      </optional>
+      <ref name="common.attributes"/>
+      <optional>
+        <ref name="use-when.attr"/>
+      </optional>
+      <ref name="step.attributes"/>
+      <optional>
+        <attribute name="href">
+          <data type="anyURI"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="fail-on-error">
+          <data type="boolean"/>
+        </attribute>
+      </optional>
+      <interleave>
+        <zeroOrMore>
+          <ref name="WithOption"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <choice>
+            <ref name="Documentation"/>
+            <ref name="PipeInfo"/>
+          </choice>
+        </zeroOrMore>
+      </interleave>
+    </element>
+  </define>
+  <define name="Step-file-mkdir">
+    <element name="file-mkdir">
+      <optional>
+        <ref name="name.ncname.attr"/>
+      </optional>
+      <ref name="common.attributes"/>
+      <optional>
+        <ref name="use-when.attr"/>
+      </optional>
+      <ref name="step.attributes"/>
+      <optional>
+        <attribute name="href">
+          <data type="anyURI"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="fail-on-error">
+          <data type="boolean"/>
+        </attribute>
+      </optional>
+      <interleave>
+        <zeroOrMore>
+          <ref name="WithOption"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <choice>
+            <ref name="Documentation"/>
+            <ref name="PipeInfo"/>
+          </choice>
+        </zeroOrMore>
+      </interleave>
+    </element>
+  </define>
+  <define name="Step-file-move">
+    <element name="file-move">
+      <optional>
+        <ref name="name.ncname.attr"/>
+      </optional>
+      <ref name="common.attributes"/>
+      <optional>
+        <ref name="use-when.attr"/>
+      </optional>
+      <ref name="step.attributes"/>
+      <optional>
+        <attribute name="href">
+          <data type="anyURI"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="target">
+          <data type="anyURI"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="fail-on-error">
+          <data type="boolean"/>
+        </attribute>
+      </optional>
+      <interleave>
+        <zeroOrMore>
+          <ref name="WithOption"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <choice>
+            <ref name="Documentation"/>
+            <ref name="PipeInfo"/>
+          </choice>
+        </zeroOrMore>
+      </interleave>
+    </element>
+  </define>
+  <define name="Step-file-create-tempfile">
+    <element name="file-create-tempfile">
+      <optional>
+        <ref name="name.ncname.attr"/>
+      </optional>
+      <ref name="common.attributes"/>
+      <optional>
+        <ref name="use-when.attr"/>
+      </optional>
+      <ref name="step.attributes"/>
+      <optional>
+        <attribute name="href">
+          <optional>
+            <data type="anyURI"/>
+          </optional>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="suffix">
+          <optional>
+            <data type="string"/>
+          </optional>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="prefix">
+          <optional>
+            <data type="string"/>
+          </optional>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="delete-on-exit">
+          <data type="boolean"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="fail-on-error">
+          <data type="boolean"/>
+        </attribute>
+      </optional>
+      <interleave>
+        <zeroOrMore>
+          <ref name="WithOption"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <choice>
+            <ref name="Documentation"/>
+            <ref name="PipeInfo"/>
+          </choice>
+        </zeroOrMore>
+      </interleave>
+    </element>
+  </define>
+  <define name="Step-file-touch">
+    <element name="file-touch">
+      <optional>
+        <ref name="name.ncname.attr"/>
+      </optional>
+      <ref name="common.attributes"/>
+      <optional>
+        <ref name="use-when.attr"/>
+      </optional>
+      <ref name="step.attributes"/>
+      <optional>
+        <attribute name="href">
+          <data type="anyURI"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="timestamp">
+          <optional>
+            <data type="dateTime"/>
+          </optional>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="fail-on-error">
+          <data type="boolean"/>
+        </attribute>
+      </optional>
+      <interleave>
+        <zeroOrMore>
+          <ref name="WithOption"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <choice>
+            <ref name="Documentation"/>
+            <ref name="PipeInfo"/>
+          </choice>
+        </zeroOrMore>
+      </interleave>
+    </element>
+  </define>
+  <define name="Step-text-head">
+    <element name="text-head">
+      <optional>
+        <ref name="name.ncname.attr"/>
+      </optional>
+      <ref name="common.attributes"/>
+      <optional>
+        <ref name="use-when.attr"/>
+      </optional>
+      <ref name="step.attributes"/>
+      <optional>
+        <attribute name="href">
+          <data type="anyURI"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="count">
+          <data type="integer"/>
+        </attribute>
+      </optional>
+      <interleave>
+        <zeroOrMore>
+          <ref name="WithOption"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <choice>
+            <ref name="Documentation"/>
+            <ref name="PipeInfo"/>
+          </choice>
+        </zeroOrMore>
+      </interleave>
+    </element>
+  </define>
+  <define name="Step-text-join">
+    <element name="text-join">
+      <optional>
+        <ref name="name.ncname.attr"/>
+      </optional>
+      <ref name="common.attributes"/>
+      <optional>
+        <ref name="use-when.attr"/>
+      </optional>
+      <ref name="step.attributes"/>
+      <optional>
+        <attribute name="href">
+          <data type="anyURI"/>
+        </attribute>
+      </optional>
+      <interleave>
+        <zeroOrMore>
+          <ref name="WithOption"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <choice>
+            <ref name="Documentation"/>
+            <ref name="PipeInfo"/>
+          </choice>
+        </zeroOrMore>
+      </interleave>
+    </element>
+  </define>
+  <define name="Step-text-tail">
+    <element name="text-tail">
+      <optional>
+        <ref name="name.ncname.attr"/>
+      </optional>
+      <ref name="common.attributes"/>
+      <optional>
+        <ref name="use-when.attr"/>
+      </optional>
+      <ref name="step.attributes"/>
+      <optional>
+        <attribute name="href">
+          <data type="anyURI"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="count">
+          <data type="integer"/>
+        </attribute>
+      </optional>
+      <interleave>
         <zeroOrMore>
           <ref name="WithOption"/>
         </zeroOrMore>
@@ -3931,44 +3989,6 @@
             <value>strict</value>
             <value>lax</value>
           </choice>
-        </attribute>
-      </optional>
-      <optional>
-        <attribute name="version">
-          <optional>
-            <data type="string"/>
-          </optional>
-        </attribute>
-      </optional>
-      <interleave>
-        <zeroOrMore>
-          <ref name="WithInput"/>
-        </zeroOrMore>
-        <zeroOrMore>
-          <ref name="WithOption"/>
-        </zeroOrMore>
-        <zeroOrMore>
-          <choice>
-            <ref name="Documentation"/>
-            <ref name="PipeInfo"/>
-          </choice>
-        </zeroOrMore>
-      </interleave>
-    </element>
-  </define>
-  <define name="Step-xquery">
-    <element name="xquery">
-      <optional>
-        <ref name="name.ncname.attr"/>
-      </optional>
-      <ref name="common.attributes"/>
-      <optional>
-        <ref name="use-when.attr"/>
-      </optional>
-      <ref name="step.attributes"/>
-      <optional>
-        <attribute name="parameters">
-          <data type="string"/>
         </attribute>
       </optional>
       <optional>
