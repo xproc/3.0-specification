@@ -110,15 +110,29 @@ steps is assumed; for background details, see
       <p:output port="source" primary="true" sequence="true" content-types="text/*"/>
       <p:output port="result" primary="true" sequence="false" content-types="text/*"/>
       <p:option name="separator" required="false" as="xs:string"/>
-      <p:option name="suffix" required="false" as="xs:string"/>
       <p:option name="prefix" required="false" as="xs:string"/>
+      <p:option name="suffix" required="false" as="xs:string"/>
     </p:declare-step>
 
-    <para>FIXME: T.B.D.</para>
-
+    <para>The <code>p:text-join</code> step concatenates the text documents appearing on its <port>source</port> port
+      into a single document on its <port>result</port> port. The documents will be concatenated in order of appearance.
+    </para>
+    <itemizedlist>
+      <listitem>
+        <para>When the <option>separator</option> option is specified, its value will be inserted in between adjacent
+          documents.</para>
+      </listitem>
+      <listitem>
+        <para>When the <option>prefix</option> option is specified, the document appearing on the <port>result</port>
+          port will always start with its value (also when there are no documents on the <port>source</port> port).</para>
+      </listitem>
+      <listitem>
+        <para>When the <option>suffix</option> option is specified, the document appearing on the <port>result</port>
+          port will always end with its value (also when there are no documents on the <port>source</port> port).</para>
+      </listitem>
+    </itemizedlist>
     <simplesect>
       <title>Document properties</title>
-      <!-- ??? WHAT HAPPENS in WRAP-SEQUENCE? -->
       <para feature="load-preserves-none">No document properties are preserved.</para>
     </simplesect>
   </section>
