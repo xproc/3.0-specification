@@ -1283,9 +1283,8 @@ Step-text-head =
     common.attributes,
     use-when.attr?,
     step.attributes,
-    attribute href { xsd:anyURI }?,
     attribute count { xsd:integer }?,
-    (WithOption* & (Documentation | PipeInfo)*)
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
   }
 Step-text-join =
   element text-join {
@@ -1293,7 +1292,9 @@ Step-text-join =
     common.attributes,
     use-when.attr?,
     step.attributes,
-    attribute href { xsd:anyURI }?,
+    attribute separator { xsd:string }?,
+    attribute prefix { xsd:string }?,
+    attribute suffix { xsd:string }?,
     (WithOption* & (Documentation | PipeInfo)*)
   }
 Step-text-tail =
@@ -1302,9 +1303,8 @@ Step-text-tail =
     common.attributes,
     use-when.attr?,
     step.attributes,
-    attribute href { xsd:anyURI }?,
     attribute count { xsd:integer }?,
-    (WithOption* & (Documentation | PipeInfo)*)
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
   }
 Step-validate-with-relax-ng =
   element validate-with-relax-ng {

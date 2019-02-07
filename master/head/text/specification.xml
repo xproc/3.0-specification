@@ -61,15 +61,15 @@ steps is assumed; for background details, see
 <section xml:id="c.text-head">
   <title>p:text-head</title>
 
-  <para>The <code>p:text-head</code> step returns lines from the beginning of a text file.</para>
+  <para>The <code>p:text-head</code> step returns lines from the beginning of a text document.</para>
 
   <p:declare-step type="p:text-head">
-    <p:output port="result" primary="true" content-types="text/plain"/>
-    <p:option name="href" required="true" as="xs:anyURI"/>
+    <p:input port="source" primary="true" sequence="false" content-types="text/*"/>
+    <p:output port="result" primary="true" sequence="false" content-types="text/*"/>
     <p:option name="count" required="true" as="xs:integer"/>
   </p:declare-step>
 
-  <para>The <tag>p:text-head</tag> step returns lines of the file named in the <option>href</option> option:</para>
+  <para>The <tag>p:text-head</tag> step returns on its <port>result</port> port lines from the text document that appears on its <port>input</port> port:</para>
   <itemizedlist>
     <listitem>
       <para>If the <option>count</option> option is positive, the <tag>p:text-head</tag> step returns the first
@@ -83,81 +83,85 @@ steps is assumed; for background details, see
         the first <option>count</option> lines</para>
     </listitem>
   </itemizedlist>
+  
+  <para>Lines are identified as described in <link xlink:href="https://www.w3.org/TR/xml/#sec-line-ends">XML, 2.11
+    End-of-Line Handling</link>.</para>
 
-  <para><error code="D0064">It is a <glossterm>dynamic error</glossterm> if the <option>href</option> option value is
-      not a valid <type>xs:anyURI</type>.</error> If the <option>href</option> option is relative, it is made absolute
-    against the base URI of the element on which it is specified (<tag>p:with-option</tag> or <tag>p:text-head</tag> in
-    the case of a syntactic shortcut value).</para>
-
-  <para>The step returns a <tag>c:result</tag> element containing one <tag>c:line</tag> child element for each line.
-    Lines are identified as described in <link xlink:href="https://www.w3.org/TR/xml/#sec-line-ends">XML, 2.11
-      End-of-Line Handling</link></para>
-
-  <simplesect>
+    <simplesect>
     <title>Document properties</title>
-    <para feature="load-preserves-none">No document properties are preserved.</para>
-  </simplesect>
+    <para feature="add-attribute-preserves-all">All document properties are preserved.</para>  </simplesect>
 </section>
 
-<section xml:id="c.text-join">
-  <title>p:text-join</title>
+  <section xml:id="c.text-join">
+    <title>p:text-join</title>
 
-  <para>The <code>p:text-join</code> step concatenates two or more text
-files.</para>
+    <para>The <code>p:text-join</code> step concatenates text documents.</para>
 
-  <p:declare-step type="p:text-join">
-    <p:output port="result" primary="true" sequence="true" content-types="text/plain"/>
-    <p:option name="href" required="true" as="xs:anyURI"/>
-  </p:declare-step>
+    <p:declare-step type="p:text-join">
+      <p:output port="source" primary="true" sequence="true" content-types="text/*"/>
+      <p:output port="result" primary="true" sequence="false" content-types="text/*"/>
+      <p:option name="separator" required="false" as="xs:string"/>
+      <p:option name="prefix" required="false" as="xs:string"/>
+      <p:option name="suffix" required="false" as="xs:string"/>
+    </p:declare-step>
 
-  <para>FIXME: T.B.D.</para>
+    <para>The <code>p:text-join</code> step concatenates the text documents appearing on its <port>source</port> port
+      into a single document on its <port>result</port> port. The documents will be concatenated in order of appearance.
+    </para>
+    <itemizedlist>
+      <listitem>
+        <para>When the <option>separator</option> option is specified, its value will be inserted in between adjacent
+          documents.</para>
+      </listitem>
+      <listitem>
+        <para>When the <option>prefix</option> option is specified, the document appearing on the <port>result</port>
+          port will always start with its value (also when there are no documents on the <port>source</port> port).</para>
+      </listitem>
+      <listitem>
+        <para>When the <option>suffix</option> option is specified, the document appearing on the <port>result</port>
+          port will always end with its value (also when there are no documents on the <port>source</port> port).</para>
+      </listitem>
+    </itemizedlist>
+    <simplesect>
+      <title>Document properties</title>
+      <para feature="load-preserves-none">No document properties are preserved.</para>
+    </simplesect>
+  </section>
 
-  <simplesect>
-    <title>Document properties</title>
-    <para feature="load-preserves-none">No document properties are preserved.</para>
-  </simplesect>
-</section>
-
-<section xml:id="c.text-tail">
-  <title>p:text-tail</title>
-
-  <para>The <code>p:text-tail</code> step returns lines from the end of a text file.</para>
-
-  <p:declare-step type="p:text-tail">
-    <p:output port="result" primary="true" content-types="text/plain"/>
-    <p:option name="href" required="true" as="xs:anyURI"/>
-    <p:option name="count" required="true" as="xs:integer"/>
-  </p:declare-step>
-
-  <para>The <tag>p:text-tail</tag> step returns lines of the file named in the <option>href</option> option:</para>
-  <itemizedlist>
-    <listitem>
-      <para>If the <option>count</option> option is positive, the <tag>p:text-tail</tag> step returns the last
+  <section xml:id="c.text-tail">
+    <title>p:text-tail</title>
+    
+    <para>The <code>p:text-tail</code> step returns lines from the end of a text document.</para>
+    
+    <p:declare-step type="p:text-tail">
+      <p:input port="source" primary="true" sequence="false" content-types="text/*"/>
+      <p:output port="result" primary="true" sequence="false" content-types="text/*"/>
+      <p:option name="count" required="true" as="xs:integer"/>
+    </p:declare-step>
+    
+    <para>The <tag>p:text-tail</tag> step returns on its <port>result</port> port lines from the text document that appears on its <port>input</port> port:</para>
+    <itemizedlist>
+      <listitem>
+        <para>If the <option>count</option> option is positive, the <tag>p:text-tail</tag> step returns the last
           <option>count</option> lines</para>
-    </listitem>
-    <listitem>
-      <para>If the <option>count</option> option is zero, the <tag>p:text-tail</tag> step returns all lines</para>
-    </listitem>
-    <listitem>
-      <para>If the <option>count</option> option is negative, the <tag>p:text-tail</tag> step returns all lines except
-        the last <option>count</option> lines</para>
-    </listitem>
-  </itemizedlist>
+      </listitem>
+      <listitem>
+        <para>If the <option>count</option> option is zero, the <tag>p:text-tail</tag> step returns all lines</para>
+      </listitem>
+      <listitem>
+        <para>If the <option>count</option> option is negative, the <tag>p:text-tail</tag> step returns all lines except
+          the last <option>count</option> lines</para>
+      </listitem>
+    </itemizedlist>
+    
+    <para>Lines are identified as described in <link xlink:href="https://www.w3.org/TR/xml/#sec-line-ends">XML, 2.11
+      End-of-Line Handling</link>.</para>
+    
+    <simplesect>
+      <title>Document properties</title>
+      <para feature="add-attribute-preserves-all">All document properties are preserved.</para>  </simplesect>
+  </section>
 
-  <para><error code="D0064">It is a <glossterm>dynamic error</glossterm> if the <option>href</option> option value is
-      not a valid <type>xs:anyURI</type>.</error> If the <option>href</option> option is relative, it is made absolute
-    against the base URI of the element on which it is specified (<tag>p:with-option</tag> or <tag>p:text-tail</tag> in
-    the case of a syntactic shortcut value).</para>
-
-  <para>The step returns a <tag>c:result</tag> element containing one <tag>c:line</tag> child element for each line.
-    Lines are identified as described in <link xlink:href="https://www.w3.org/TR/xml/#sec-line-ends">XML, 2.11
-      End-of-Line Handling</link></para>
-
-  <simplesect>
-    <title>Document properties</title>
-    <para feature="load-preserves-none">No document properties are preserved.</para>
-  </simplesect>
-</section>
 
 <section xml:id="errors">
 <title>Step Errors</title>
