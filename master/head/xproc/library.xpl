@@ -143,9 +143,6 @@
       <p:input port="source" sequence="true" content-types="*/*"/>
       <p:output port="result" sequence="true" content-types="*/*"/>
    </p:declare-step>
-   <p:declare-step type="p:in-scope-names" xml:id="in-scope-names">
-      <p:output port="result" content-types="application/xml"/>
-   </p:declare-step>
    <p:declare-step type="p:insert" xml:id="insert">
       <p:input port="source"
                primary="true"
@@ -241,10 +238,6 @@
       <p:input port="alternate" sequence="true" content-types="application/xml"/>
       <p:output port="result" sequence="true"/>
       <p:option name="wrapper" required="true" as="xs:QName"/>
-   </p:declare-step>
-   <p:declare-step type="p:parameters" xml:id="parameters">
-      <p:output port="result" content-types="application/xml"/>
-      <p:option name="parameters" as="xs:string"/>
    </p:declare-step>
    <p:declare-step type="p:rename" xml:id="rename">
       <p:input port="source" content-types="application/xml text/xml */*+xml"/>

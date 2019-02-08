@@ -1766,7 +1766,6 @@
       <ref name="Step-hash"/>
       <ref name="Step-http-request"/>
       <ref name="Step-identity"/>
-      <ref name="Step-in-scope-names"/>
       <ref name="Step-insert"/>
       <ref name="Step-label-elements"/>
       <ref name="Step-load"/>
@@ -1774,7 +1773,6 @@
       <ref name="Step-make-absolute-uris"/>
       <ref name="Step-namespace-rename"/>
       <ref name="Step-pack"/>
-      <ref name="Step-parameters"/>
       <ref name="Step-rename"/>
       <ref name="Step-replace"/>
       <ref name="Step-set-attributes"/>
@@ -2473,24 +2471,6 @@
       </interleave>
     </element>
   </define>
-  <define name="Step-in-scope-names">
-    <element name="in-scope-names">
-      <optional>
-        <ref name="name.ncname.attr"/>
-      </optional>
-      <ref name="common.attributes"/>
-      <optional>
-        <ref name="use-when.attr"/>
-      </optional>
-      <ref name="step.attributes"/>
-      <zeroOrMore>
-        <choice>
-          <ref name="Documentation"/>
-          <ref name="PipeInfo"/>
-        </choice>
-      </zeroOrMore>
-    </element>
-  </define>
   <define name="Step-insert">
     <element name="insert">
       <optional>
@@ -2763,34 +2743,6 @@
         <zeroOrMore>
           <ref name="WithInput"/>
         </zeroOrMore>
-        <zeroOrMore>
-          <ref name="WithOption"/>
-        </zeroOrMore>
-        <zeroOrMore>
-          <choice>
-            <ref name="Documentation"/>
-            <ref name="PipeInfo"/>
-          </choice>
-        </zeroOrMore>
-      </interleave>
-    </element>
-  </define>
-  <define name="Step-parameters">
-    <element name="parameters">
-      <optional>
-        <ref name="name.ncname.attr"/>
-      </optional>
-      <ref name="common.attributes"/>
-      <optional>
-        <ref name="use-when.attr"/>
-      </optional>
-      <ref name="step.attributes"/>
-      <optional>
-        <attribute name="parameters">
-          <data type="string"/>
-        </attribute>
-      </optional>
-      <interleave>
         <zeroOrMore>
           <ref name="WithOption"/>
         </zeroOrMore>
