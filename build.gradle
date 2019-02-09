@@ -60,7 +60,10 @@ import com.xmlcalabash.XMLCalabashTask
 
 // ======================================================================
 
-task allspecs() {
+task allspecs(dependsOn: [ "buildspecs", "make_etc" ]) {
+}
+
+task buildspecs() {
   // dependencies are added by the specs
 }
 
@@ -70,6 +73,29 @@ def getenv(String name) {
   } else {
     return System.getenv(name)
   }
+}
+
+// ======================================================================
+// Make sure that some build artifacts get published so that they
+// can be used by the build process for the steps
+
+task make_etc(dependsOn: [ "copy_core_schemas", "copy_xproc_build" ]) {
+    // nop
+}
+
+task copy_core_schemas(dependsOn: [ "buildspecs" ], type: Copy) {
+    from "build/core30.rng", "build/xproc.rng", "build/xproc.rnc",
+         "build/xproc10.rng", "build/xproc10.rnc", "build/xproc30.rng",
+         "build/xproc30.rnc"
+    into "build/etc/"
+    doFirst { mkdir "$buildDir/etc" }
+}
+
+task copy_xproc_build(dependsOn: [ "buildspecs" ], type: Copy) {
+    from "xproc/build/"
+    exclude "xinclude.xml", "examples/**", "graphics/**", "glossary.xml"
+    into "build/etc/xproc/"
+    doFirst { mkdir "$buildDir/etc/xproc" }
 }
 
 // ======================================================================
@@ -96,7 +122,7 @@ task overview(dependsOn: [ "xproc_schemas", "spec_schemas",
   option("style", new File("tools/xsl/xproc-specs.xsl"))
   pipeline "tools/xpl/formatspec.xpl"
 }
-allspecs.dependsOn "overview"
+buildspecs.dependsOn "overview"
 
 task overview_assets(type: Copy) {
   from "src/main/resources"
@@ -137,7 +163,7 @@ task xproc(dependsOn: [ "xproc_schemas", "spec_schemas",
 
   pipeline "tools/xpl/formatspec.xpl"
 }
-allspecs.dependsOn "xproc"
+buildspecs.dependsOn "xproc"
 overview.dependsOn "xproc"
 
 task xproc_pdf_xform(dependsOn: [ "xproc" ], type: DocBookTask) {
@@ -257,7 +283,7 @@ task steps(dependsOn: [ "xproc", "xproc_schemas", "spec_schemas",
 
   pipeline "tools/xpl/formatspec.xpl"
 }
-allspecs.dependsOn "steps"
+buildspecs.dependsOn "steps"
 overview.dependsOn "steps"
 
 task steps_assets(type: Copy) {
@@ -305,7 +331,7 @@ task step_validation(type: DocBookTask,
   option("style", new File("tools/xsl/xproc-specs.xsl"))
   pipeline "tools/xpl/formatspec.xpl"
 }
-allspecs.dependsOn "step_validation"
+buildspecs.dependsOn "step_validation"
 overview.dependsOn "step_validation"
 
 task step_validation_assets(type: Copy) {
@@ -353,7 +379,7 @@ task step_os(type: DocBookTask,
   option("style", new File("tools/xsl/xproc-specs.xsl"))
   pipeline "tools/xpl/formatspec.xpl"
 }
-allspecs.dependsOn "step_os"
+buildspecs.dependsOn "step_os"
 overview.dependsOn "step_os"
 
 task step_os_assets(type: Copy) {
@@ -401,7 +427,7 @@ task step_run(type: DocBookTask,
   option("style", new File("tools/xsl/xproc-specs.xsl"))
   pipeline "tools/xpl/formatspec.xpl"
 }
-allspecs.dependsOn "step_run"
+buildspecs.dependsOn "step_run"
 overview.dependsOn "step_run"
 
 task step_run_assets(type: Copy) {
@@ -449,7 +475,7 @@ task step_paged_media(type: DocBookTask,
   option("style", new File("tools/xsl/xproc-specs.xsl"))
   pipeline "tools/xpl/formatspec.xpl"
 }
-allspecs.dependsOn "step_paged_media"
+buildspecs.dependsOn "step_paged_media"
 overview.dependsOn "step_paged_media"
 
 task step_paged_media_assets(type: Copy) {
@@ -497,7 +523,7 @@ task step_file(type: DocBookTask,
   option("style", new File("tools/xsl/xproc-specs.xsl"))
   pipeline "tools/xpl/formatspec.xpl"
 }
-allspecs.dependsOn "step_file"
+buildspecs.dependsOn "step_file"
 overview.dependsOn "step_file"
 
 task step_file_assets(type: Copy) {
@@ -545,7 +571,7 @@ task step_text(type: DocBookTask,
   option("style", new File("tools/xsl/xproc-specs.xsl"))
   pipeline "tools/xpl/formatspec.xpl"
 }
-allspecs.dependsOn "step_text"
+buildspecs.dependsOn "step_text"
 overview.dependsOn "step_text"
 
 task step_text_assets(type: Copy) {
