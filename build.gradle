@@ -87,15 +87,15 @@ task copy_core_schemas(dependsOn: [ "buildspecs" ], type: Copy) {
     from "build/core30.rng", "build/xproc.rng", "build/xproc.rnc",
          "build/xproc10.rng", "build/xproc10.rnc", "build/xproc30.rng",
          "build/xproc30.rnc"
-    into "build/etc/"
-    doFirst { mkdir "$buildDir/etc" }
+    into "build/dist/etc/"
+    doFirst { mkdir "$buildDir/dist/etc" }
 }
 
 task copy_xproc_build(dependsOn: [ "buildspecs" ], type: Copy) {
     from "xproc/build/"
     exclude "xinclude.xml", "examples/**", "graphics/**", "glossary.xml"
-    into "build/etc/xproc/"
-    doFirst { mkdir "$buildDir/etc/xproc" }
+    into "build/dist/etc/xproc/"
+    doFirst { mkdir "$buildDir/dist/etc/xproc" }
 }
 
 // ======================================================================
