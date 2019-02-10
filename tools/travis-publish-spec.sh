@@ -1,15 +1,7 @@
 #!/bin/bash
 
-set | grep TRAVIS
-
 if [ "$TRAVIS_REPO_SLUG" == "$GIT_PUB_REPO" ]; then
     echo -e "Setting up for publication...\n"
-
-    mkdir $HOME/pubroot
-    cp -R build/dist/* $HOME/pubroot
-
-    mkdir $HOME/tools
-    cp -R tools/* $HOME/tools
 
     cd $HOME
     git config --global user.email ${GIT_EMAIL}
@@ -22,17 +14,21 @@ if [ "$TRAVIS_REPO_SLUG" == "$GIT_PUB_REPO" ]; then
         TIP=${TRAVIS_TAG:="head"}
 
         cd gh-pages
-        git rm -rf ./${TRAVIS_BRANCH}/${TIP}
+        git rm -rf ./${TRAVIS_BRANCH}/${TIP} > /dev/null
         mkdir -p ./${TRAVIS_BRANCH}/${TIP}
-        cp -Rf $HOME/pubroot/* ./${TRAVIS_BRANCH}/${TIP}
+        cp -Rf $TRAVIS_BUILD_DIR/build/dist/* ./${TRAVIS_BRANCH}/${TIP}
 
         if [ "$GITHUB_CNAME" != "" ]; then
             echo $GITHUB_CNAME > CNAME
         fi
 
-        perl $HOME/tools/make-index.pl > index.html
+        # Copy the homepage furniture to gh-pages
+        mkdir -p homepage
+        cp $TRAVIS_BUILD_DIR/src/homepage/index.html .
+        cp $TRAVIS_BUILD_DIR/src/homepage/homepage/* homepage/
+        date +"%d %B %Y" > pubdate
 
-        git add -f .
+        git add --verbose -f .
         git commit -m "Successful travis build $TRAVIS_BUILD_NUMBER"
         git push -fq origin gh-pages > /dev/null
 
