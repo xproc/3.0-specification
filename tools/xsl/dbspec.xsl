@@ -777,7 +777,10 @@
 <xsl:template match="db:xspecref">
   <xsl:variable name="spec" select="string(@spec)"/>
   <xsl:variable name="xref" select="@xref/string()"/>
-  <xsl:variable name="tocfn" select="concat('../../', @spec, '/build/toc.xml')"/>
+  <xsl:variable name="tocfn"
+                select="if (@spec = 'xproc')
+                        then concat('../../', @spec, '/build/toc.xml')
+                        else concat('../../build/', @spec, '/toc.xml')"/>
 
   <xsl:choose>
     <xsl:when test="doc-available($tocfn)">
