@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set | grep TRAVIS
-
 if [ "$TRAVIS_REPO_SLUG" == "$GIT_PUB_REPO" ]; then
     echo -e "Setting up for publication...\n"
 
@@ -16,7 +14,7 @@ if [ "$TRAVIS_REPO_SLUG" == "$GIT_PUB_REPO" ]; then
         TIP=${TRAVIS_TAG:="head"}
 
         cd gh-pages
-        git rm -rf ./${TRAVIS_BRANCH}/${TIP}
+        git rm -rf ./${TRAVIS_BRANCH}/${TIP} > /dev/null
         mkdir -p ./${TRAVIS_BRANCH}/${TIP}
         cp -Rf $TRAVIS_BUILD_DIR/build/dist/* ./${TRAVIS_BRANCH}/${TIP}
 
@@ -30,7 +28,7 @@ if [ "$TRAVIS_REPO_SLUG" == "$GIT_PUB_REPO" ]; then
         cp $TRAVIS_BUILD_DIR/src/homepage/homepage/* homepage/
         date +"%d %B %Y" > pubdate
 
-        git add -f .
+        git add --verbose -f .
         git commit -m "Successful travis build $TRAVIS_BUILD_NUMBER"
         git push -fq origin gh-pages > /dev/null
 
