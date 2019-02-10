@@ -30,6 +30,10 @@ if [ "$TRAVIS_REPO_SLUG" == "$GIT_PUB_REPO" ]; then
             echo $GITHUB_CNAME > CNAME
         fi
 
+        # Copy the homepage furniture to gh-pages
+        mkdir -p homepage
+        cp $HOME/src/homepage/index.html .
+        cp $HOME/src/homepage/homepage/* homepage/
         date +"%d %B %Y" > pubdate
 
         git add -f .
