@@ -30,6 +30,8 @@ if [ "$TRAVIS_REPO_SLUG" == "$GIT_PUB_REPO" ]; then
             echo $GITHUB_CNAME > CNAME
         fi
 
+        date +"%d %B %Y" > pubdate
+
         git add -f .
         git commit -m "Successful travis build $TRAVIS_BUILD_NUMBER"
         git push -fq origin gh-pages > /dev/null
