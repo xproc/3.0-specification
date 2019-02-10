@@ -327,38 +327,20 @@
       <p:option name="enable" as="xs:boolean" select="true()"/>
    </p:declare-step>
    <p:declare-step type="p:text-head" xml:id="text-head">
-      <p:input port="source"
-               primary="true"
-               sequence="false"
-               content-types="text/*"/>
-      <p:output port="result"
-                primary="true"
-                sequence="false"
-                content-types="text/*"/>
+      <p:output port="result" primary="true" content-types="text/plain"/>
+      <p:option name="href" required="true" as="xs:anyURI"/>
       <p:option name="count" required="true" as="xs:integer"/>
    </p:declare-step>
    <p:declare-step type="p:text-join" xml:id="text-join">
-      <p:output port="source"
+      <p:output port="result"
                 primary="true"
                 sequence="true"
-                content-types="text/*"/>
-      <p:output port="result"
-                primary="true"
-                sequence="false"
-                content-types="text/*"/>
-      <p:option name="separator" required="false" as="xs:string"/>
-      <p:option name="prefix" required="false" as="xs:string"/>
-      <p:option name="suffix" required="false" as="xs:string"/>
+                content-types="text/plain"/>
+      <p:option name="href" required="true" as="xs:anyURI"/>
    </p:declare-step>
    <p:declare-step type="p:text-tail" xml:id="text-tail">
-      <p:input port="source"
-               primary="true"
-               sequence="false"
-               content-types="text/*"/>
-      <p:output port="result"
-                primary="true"
-                sequence="false"
-                content-types="text/*"/>
+      <p:output port="result" primary="true" content-types="text/plain"/>
+      <p:option name="href" required="true" as="xs:anyURI"/>
       <p:option name="count" required="true" as="xs:integer"/>
    </p:declare-step>
    <p:declare-step type="p:unescape-markup" xml:id="unescape-markup">

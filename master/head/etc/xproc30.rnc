@@ -671,11 +671,24 @@ NormalizationForm =
   | xsd:NMTOKEN
 ListOfQNames = text
 StandardStep =
-  Step-os-info
+  Step-file-copy
+  | Step-file-delete
+  | Step-file-info
+  | Step-file-mkdir
+  | Step-file-move
+  | Step-file-create-tempfile
+  | Step-file-touch
+  | Step-os-info
   | Step-os-exec
-  | Step-run
   | Step-css-formatter
   | Step-xsl-formatter
+  | Step-run
+  | Step-text-head
+  | Step-text-join
+  | Step-text-tail
+  | Step-validate-with-relax-ng
+  | Step-validate-with-schematron
+  | Step-validate-with-xml-schema
   | Step-add-attribute
   | Step-add-xml-base
   | Step-cast-content-type
@@ -715,19 +728,83 @@ StandardStep =
   | Step-xinclude
   | Step-xquery
   | Step-xslt
-  | Step-file-copy
-  | Step-file-delete
-  | Step-file-info
-  | Step-file-mkdir
-  | Step-file-move
-  | Step-file-create-tempfile
-  | Step-file-touch
-  | Step-text-head
-  | Step-text-join
-  | Step-text-tail
-  | Step-validate-with-relax-ng
-  | Step-validate-with-schematron
-  | Step-validate-with-xml-schema
+Step-file-copy =
+  element file-copy {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute href { xsd:anyURI }?,
+    attribute target { xsd:anyURI }?,
+    attribute fail-on-error { xsd:boolean }?,
+    (WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-file-delete =
+  element file-delete {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute href { xsd:anyURI }?,
+    attribute recursive { xsd:boolean }?,
+    attribute fail-on-error { xsd:boolean }?,
+    (WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-file-info =
+  element file-info {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute href { xsd:anyURI }?,
+    attribute fail-on-error { xsd:boolean }?,
+    (WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-file-mkdir =
+  element file-mkdir {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute href { xsd:anyURI }?,
+    attribute fail-on-error { xsd:boolean }?,
+    (WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-file-move =
+  element file-move {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute href { xsd:anyURI }?,
+    attribute target { xsd:anyURI }?,
+    attribute fail-on-error { xsd:boolean }?,
+    (WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-file-create-tempfile =
+  element file-create-tempfile {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute href { xsd:anyURI? }?,
+    attribute suffix { xsd:string? }?,
+    attribute prefix { xsd:string? }?,
+    attribute delete-on-exit { xsd:boolean }?,
+    attribute fail-on-error { xsd:boolean }?,
+    (WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-file-touch =
+  element file-touch {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute href { xsd:anyURI }?,
+    attribute timestamp { xsd:dateTime? }?,
+    attribute fail-on-error { xsd:boolean }?,
+    (WithOption* & (Documentation | PipeInfo)*)
+  }
 Step-os-info =
   element os-info {
     name.ncname.attr?,
@@ -756,14 +833,6 @@ Step-os-exec =
     attribute serialization { xsd:string }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
   }
-Step-run =
-  element run {
-    name.ncname.attr?,
-    common.attributes,
-    use-when.attr?,
-    step.attributes,
-    (WithInput* & (Documentation | PipeInfo)*)
-  }
 Step-css-formatter =
   element css-formatter {
     name.ncname.attr?,
@@ -782,6 +851,78 @@ Step-xsl-formatter =
     step.attributes,
     attribute parameters { xsd:string }?,
     attribute content-type { xsd:string? }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-run =
+  element run {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    (WithInput* & (Documentation | PipeInfo)*)
+  }
+Step-text-head =
+  element text-head {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute href { xsd:anyURI }?,
+    attribute count { xsd:integer }?,
+    (WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-text-join =
+  element text-join {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute href { xsd:anyURI }?,
+    (WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-text-tail =
+  element text-tail {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute href { xsd:anyURI }?,
+    attribute count { xsd:integer }?,
+    (WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-validate-with-relax-ng =
+  element validate-with-relax-ng {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute dtd-attribute-values { xsd:boolean }?,
+    attribute dtd-id-idref-warnings { xsd:boolean }?,
+    attribute assert-valid { xsd:boolean }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-validate-with-schematron =
+  element validate-with-schematron {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute parameters { xsd:string }?,
+    attribute phase { xsd:string }?,
+    attribute assert-valid { xsd:boolean }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-validate-with-xml-schema =
+  element validate-with-xml-schema {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute use-location-hints { xsd:boolean }?,
+    attribute try-namespaces { xsd:boolean }?,
+    attribute assert-valid { xsd:boolean }?,
+    attribute mode { "strict" | "lax" }?,
+    attribute version { xsd:string? }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
   }
 Step-add-attribute =
@@ -1178,147 +1319,6 @@ Step-xslt =
     attribute initial-mode { xsd:QName? }?,
     attribute template-name { xsd:QName? }?,
     attribute output-base-uri { xsd:anyURI? }?,
-    attribute version { xsd:string? }?,
-    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
-  }
-Step-file-copy =
-  element file-copy {
-    name.ncname.attr?,
-    common.attributes,
-    use-when.attr?,
-    step.attributes,
-    attribute href { xsd:anyURI }?,
-    attribute target { xsd:anyURI }?,
-    attribute fail-on-error { xsd:boolean }?,
-    (WithOption* & (Documentation | PipeInfo)*)
-  }
-Step-file-delete =
-  element file-delete {
-    name.ncname.attr?,
-    common.attributes,
-    use-when.attr?,
-    step.attributes,
-    attribute href { xsd:anyURI }?,
-    attribute recursive { xsd:boolean }?,
-    attribute fail-on-error { xsd:boolean }?,
-    (WithOption* & (Documentation | PipeInfo)*)
-  }
-Step-file-info =
-  element file-info {
-    name.ncname.attr?,
-    common.attributes,
-    use-when.attr?,
-    step.attributes,
-    attribute href { xsd:anyURI }?,
-    attribute fail-on-error { xsd:boolean }?,
-    (WithOption* & (Documentation | PipeInfo)*)
-  }
-Step-file-mkdir =
-  element file-mkdir {
-    name.ncname.attr?,
-    common.attributes,
-    use-when.attr?,
-    step.attributes,
-    attribute href { xsd:anyURI }?,
-    attribute fail-on-error { xsd:boolean }?,
-    (WithOption* & (Documentation | PipeInfo)*)
-  }
-Step-file-move =
-  element file-move {
-    name.ncname.attr?,
-    common.attributes,
-    use-when.attr?,
-    step.attributes,
-    attribute href { xsd:anyURI }?,
-    attribute target { xsd:anyURI }?,
-    attribute fail-on-error { xsd:boolean }?,
-    (WithOption* & (Documentation | PipeInfo)*)
-  }
-Step-file-create-tempfile =
-  element file-create-tempfile {
-    name.ncname.attr?,
-    common.attributes,
-    use-when.attr?,
-    step.attributes,
-    attribute href { xsd:anyURI? }?,
-    attribute suffix { xsd:string? }?,
-    attribute prefix { xsd:string? }?,
-    attribute delete-on-exit { xsd:boolean }?,
-    attribute fail-on-error { xsd:boolean }?,
-    (WithOption* & (Documentation | PipeInfo)*)
-  }
-Step-file-touch =
-  element file-touch {
-    name.ncname.attr?,
-    common.attributes,
-    use-when.attr?,
-    step.attributes,
-    attribute href { xsd:anyURI }?,
-    attribute timestamp { xsd:dateTime? }?,
-    attribute fail-on-error { xsd:boolean }?,
-    (WithOption* & (Documentation | PipeInfo)*)
-  }
-Step-text-head =
-  element text-head {
-    name.ncname.attr?,
-    common.attributes,
-    use-when.attr?,
-    step.attributes,
-    attribute count { xsd:integer }?,
-    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
-  }
-Step-text-join =
-  element text-join {
-    name.ncname.attr?,
-    common.attributes,
-    use-when.attr?,
-    step.attributes,
-    attribute separator { xsd:string }?,
-    attribute prefix { xsd:string }?,
-    attribute suffix { xsd:string }?,
-    (WithOption* & (Documentation | PipeInfo)*)
-  }
-Step-text-tail =
-  element text-tail {
-    name.ncname.attr?,
-    common.attributes,
-    use-when.attr?,
-    step.attributes,
-    attribute count { xsd:integer }?,
-    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
-  }
-Step-validate-with-relax-ng =
-  element validate-with-relax-ng {
-    name.ncname.attr?,
-    common.attributes,
-    use-when.attr?,
-    step.attributes,
-    attribute dtd-attribute-values { xsd:boolean }?,
-    attribute dtd-id-idref-warnings { xsd:boolean }?,
-    attribute assert-valid { xsd:boolean }?,
-    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
-  }
-Step-validate-with-schematron =
-  element validate-with-schematron {
-    name.ncname.attr?,
-    common.attributes,
-    use-when.attr?,
-    step.attributes,
-    attribute parameters { xsd:string }?,
-    attribute phase { xsd:string }?,
-    attribute assert-valid { xsd:boolean }?,
-    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
-  }
-Step-validate-with-xml-schema =
-  element validate-with-xml-schema {
-    name.ncname.attr?,
-    common.attributes,
-    use-when.attr?,
-    step.attributes,
-    attribute use-location-hints { xsd:boolean }?,
-    attribute try-namespaces { xsd:boolean }?,
-    attribute assert-valid { xsd:boolean }?,
-    attribute mode { "strict" | "lax" }?,
     attribute version { xsd:string? }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
   }
