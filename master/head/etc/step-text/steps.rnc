@@ -3,37 +3,15 @@ namespace local = ""
 
 # This schema could be made more constrained.
 
-Step = Step-text-head | Step-text-join | Step-text-tail
+Step = Step-markdown-to-html
 
-Step-text-head =
-  element text-head {
+Step-markdown-to-html =
+  element markdown-to-html {
     name.ncname.attr?,
     common.attributes,
     use-when.attr?,
     step.attributes,
-    attribute href { xsd:anyURI }?,
-    attribute count { xsd:integer }?,
-    (WithOption* & (Documentation|PipeInfo)*)
-  }
-
-Step-text-join =
-  element text-join {
-    name.ncname.attr?,
-    common.attributes,
-    use-when.attr?,
-    step.attributes,
-    attribute href { xsd:anyURI }?,
-    (WithOption* & (Documentation|PipeInfo)*)
-  }
-
-Step-text-tail =
-  element text-tail {
-    name.ncname.attr?,
-    common.attributes,
-    use-when.attr?,
-    step.attributes,
-    attribute href { xsd:anyURI }?,
-    attribute count { xsd:integer }?,
-    (WithOption* & (Documentation|PipeInfo)*)
+    attribute parameters { xsd:string }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
   }
 

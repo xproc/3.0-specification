@@ -1,21 +1,15 @@
 <p:library xmlns:p="http://www.w3.org/ns/xproc"
            xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax"
            version="3.0">
-   <p:declare-step type="p:text-head" xml:id="text-head">
-      <p:output port="result" primary="true" content-types="text/plain"/>
-      <p:option name="href" required="true" as="xs:anyURI"/>
-      <p:option name="count" required="true" as="xs:integer"/>
-   </p:declare-step>
-   <p:declare-step type="p:text-join" xml:id="text-join">
+   <p:declare-step type="p:markdown-to-html" xml:id="markdown-to-html">
+      <p:input port="source"
+               primary="true"
+               sequence="false"
+               content-types="text/*"/>
       <p:output port="result"
                 primary="true"
-                sequence="true"
-                content-types="text/plain"/>
-      <p:option name="href" required="true" as="xs:anyURI"/>
-   </p:declare-step>
-   <p:declare-step type="p:text-tail" xml:id="text-tail">
-      <p:output port="result" primary="true" content-types="text/plain"/>
-      <p:option name="href" required="true" as="xs:anyURI"/>
-      <p:option name="count" required="true" as="xs:integer"/>
+                sequence="false"
+                content-types="application/xhtml+xml"/>
+      <p:option name="parameters" required="false" as="xs:string"/>
    </p:declare-step>
 </p:library>

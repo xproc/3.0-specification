@@ -2390,6 +2390,223 @@ serialization of content when it is stored. Serialization is described in
   <para feature="tee-preserves-all">All document properties are preserved.</para>
 </simplesect>
 </section>
+<section xml:id="c.text-count">
+  <title>p:text-count</title>
+
+  <para>The <code>p:text-count</code> step counts the number of lines in a text document and returns a single XML
+    document containing that number.</para>
+
+  <p:declare-step type="p:text-count">
+    <p:input port="source" primary="true" sequence="false" content-types="text/*"/>
+    <p:output port="result" primary="true" sequence="false" content-types="application/xml"/>
+  </p:declare-step>
+
+  <para>The <tag>p:text-count</tag> step counts the number of lines in the text document appearing on its
+      <port>source</port> port. It returns on its <port>result</port> port an XML document containing a single
+      <tag>c:result</tag> element whose contents is the string representing this count.</para>
+
+  <para>Lines are identified as described in <link xlink:href="https://www.w3.org/TR/xml/#sec-line-ends">XML, 2.11
+      End-of-Line Handling</link>.</para>
+
+  <simplesect>
+    <title>Document properties</title>
+    <para feature="count-preserves-none">No document properties are preserved.</para>
+  </simplesect>
+</section>
+<section xml:id="c.text-head">
+  <title>p:text-head</title>
+
+  <para>The <code>p:text-head</code> step returns lines from the beginning of a text document.</para>
+
+  <p:declare-step type="p:text-head">
+    <p:input port="source" primary="true" sequence="false" content-types="text/*"/>
+    <p:output port="result" primary="true" sequence="false" content-types="text/*"/>
+    <p:option name="count" required="true" as="xs:integer"/>
+  </p:declare-step>
+
+  <para>The <tag>p:text-head</tag> step returns on its <port>result</port> port lines from the text document that
+    appears on its <port>source</port> port:</para>
+  <itemizedlist>
+    <listitem>
+      <para>If the <option>count</option> option is positive, the <tag>p:text-head</tag> step returns the first
+          <option>count</option> lines</para>
+    </listitem>
+    <listitem>
+      <para>If the <option>count</option> option is zero, the <tag>p:text-head</tag> step returns all lines</para>
+    </listitem>
+    <listitem>
+      <para>If the <option>count</option> option is negative, the <tag>p:text-head</tag> step returns all lines except
+        the first <option>count</option> lines</para>
+    </listitem>
+  </itemizedlist>
+
+  <para>Lines are identified as described in <link xlink:href="https://www.w3.org/TR/xml/#sec-line-ends">XML, 2.11
+      End-of-Line Handling</link>.</para>
+
+  <simplesect>
+    <title>Document properties</title>
+    <para feature="add-attribute-preserves-all">All document properties are preserved.</para>
+  </simplesect>
+</section>
+<section xml:id="c.text-join">
+  <title>p:text-join</title>
+  
+  <para>The <code>p:text-join</code> step concatenates text documents.</para>
+  
+  <p:declare-step type="p:text-join">
+    <p:output port="source" primary="true" sequence="true" content-types="text/*"/>
+    <p:output port="result" primary="true" sequence="false" content-types="text/*"/>
+    <p:option name="separator" required="false" as="xs:string"/>
+    <p:option name="prefix" required="false" as="xs:string"/>
+    <p:option name="suffix" required="false" as="xs:string"/>
+  </p:declare-step>
+  
+  <para>The <code>p:text-join</code> step concatenates the text documents appearing on its <port>source</port> port
+    into a single document on its <port>result</port> port. The documents will be concatenated in order of appearance. </para>
+  <itemizedlist>
+    <listitem>
+      <para>When the <option>separator</option> option is specified, its value will be inserted in between adjacent
+        documents.</para>
+    </listitem>
+    <listitem>
+      <para>When the <option>prefix</option> option is specified, the document appearing on the <port>result</port>
+        port will always start with its value (also when there are no documents on the <port>source</port>
+        port).</para>
+    </listitem>
+    <listitem>
+      <para>When the <option>suffix</option> option is specified, the document appearing on the <port>result</port>
+        port will always end with its value (also when there are no documents on the <port>source</port> port).</para>
+    </listitem>
+  </itemizedlist>
+  <simplesect>
+    <title>Document properties</title>
+    <para feature="load-preserves-none">No document properties are preserved.</para>
+  </simplesect>
+</section>
+<section xml:id="c.text-replace">
+  <title>p:text-replace</title>
+
+  <para>The <code>p:text-replace</code> step replaces all occurrences of substrings in a text document that match a
+    supplied regular expression with a given replacement string.</para>
+
+  <p:declare-step type="p:text-replace">
+    <p:input port="source" primary="true" sequence="false" content-types="text/*"/>
+    <p:output port="result" primary="true" sequence="false" content-types="text/*"/>
+    <p:option name="pattern" required="true" as="xs:string"/>
+    <p:option name="replacement" required="true" as="xs:string"/>
+    <p:option name="flags" required="false" as="xs:string"/>
+  </p:declare-step>
+
+  <para>The <code>p:text-replace</code> step replaces all occurrences of substrings in the text document appearing on
+    its <port>source</port> port that match a supplied regular expression with a given replacement string. The result is
+    returned (as another text document) on its <port>result</port> port. </para>
+  <para>This step is a convenience wrapper around the XPath <link xlink:href="https://www.w3.org/TR/xpath-functions-31/#func-replace"><function>fn:replace</function></link>
+    function to ease text replacements in the document flow of a pipeline.</para>
+
+  <para>The <option>pattern</option>, <option>replacement</option> and <option>flags</option> options are specified the
+    same as the parameters with the same names of the <link xlink:href="https://www.w3.org/TR/xpath-functions-31/#func-replace"><function>fn:replace</function></link>
+    function.</para>
+
+  <simplesect>
+    <title>Document properties</title>
+    <para feature="add-attribute-preserves-all">All document properties are preserved.</para>
+  </simplesect>
+</section>
+<section xml:id="c.text-sort">
+  <title>p:text-sort</title>
+
+  <para>The <code>p:text-sort</code> step sorts lines in a text document.</para>
+
+  <p:declare-step type="p:text-sort">
+    <p:input port="source" primary="true" sequence="false" content-types="text/*"/>
+    <p:output port="result" primary="true" sequence="false" content-types="text/*"/>
+    <p:option name="order" required="false" as="xs:string" select="'ascending'" values="('ascending', 'descending')"/>
+    <p:option name="case-order" required="false" as="xs:string" values="('upper-first', 'lower-first')"/>
+    <p:option name="lang" required="false" as="xs:language"/>
+    <p:option name="data-type" required="false" as="xs:string" select="'text'" values="('text', 'number')"/>
+    <p:option name="collation" required="false" as="xs:string" select="'https://www.w3.org/2005/xpath-functions/collation/codepoint'"/>
+    <p:option name="stable" required="false" as="xs:boolean" select="true()"/>
+  </p:declare-step>
+
+  <para>The <tag>p:text-sort</tag> step sorts the lines in the text document appearing on its <port>source</port> port
+    and returns the result as another text document on its <port>result</port> port. The full lines are used as the
+    sorting key.</para>
+  <itemizedlist>
+    <listitem>
+      <para>The <option>order</option> option defines whether the lines are processed in ascending or descending order.
+        Its value <rfc2119>must</rfc2119> be one of <code>ascending</code> or <code>descending</code>. The default is
+          <code>ascending</code>.</para>
+    </listitem>
+    <listitem>
+      <para>The <option>case-order</option> option defines whether upper-case letters are to be collated before or after
+        lower-case letters. Its value <rfc2119>must</rfc2119> be one of <code>upper-first</code> or
+          <code>lower-first</code>. The default is language-dependent.</para>
+    </listitem>
+    <listitem>
+      <para>The <option>lang</option> option defines the language whose collating conventions are to be used. The
+        default depends on the processing environment. Its value must be a valid language code (e.g.
+        <code>en-EN</code>).</para>
+    </listitem>
+    <listitem>
+      <para>The <option>data-type</option> option defines whether the lines are to be collated alphabetically or
+        numerically. Its value <rfc2119>must</rfc2119> be one of <code>text</code> or <code>number</code>. The default
+        is <code>text</code>.</para>
+    </listitem>
+    <listitem>
+      <para>The <option>collation</option> option identifies how strings are to be compared with each other. Its value
+        must be a valid collation URI. The only collation XProc processors <rfc2119>must</rfc2119> support is the
+        Unicode Codepoint Collation <link xlink:href="https://www.w3.org/2005/xpath-functions/collation/codepoint/"><code>https://www.w3.org/2005/xpath-functions/collation/codepoint</code></link>. This is also its default.
+        Support for other collations is <glossterm>implementation-defined</glossterm>.</para>
+    </listitem>
+    <listitem>
+      <para>If the <option>stable</option> option is set to <code>false</code> this indicates that there is no
+        requirement to retain the original order of items that have equal values for all the sort keys.</para>
+    </listitem>
+  </itemizedlist>
+
+  <para>Lines are identified as described in <link xlink:href="https://www.w3.org/TR/xml/#sec-line-ends">XML, 2.11
+      End-of-Line Handling</link>.</para>
+
+  <simplesect>
+    <title>Document properties</title>
+    <para feature="add-attribute-preserves-all">All document properties are preserved.</para>
+  </simplesect>
+</section>
+<section xml:id="c.text-tail">
+  <title>p:text-tail</title>
+  
+  <para>The <code>p:text-tail</code> step returns lines from the end of a text document.</para>
+  
+  <p:declare-step type="p:text-tail">
+    <p:input port="source" primary="true" sequence="false" content-types="text/*"/>
+    <p:output port="result" primary="true" sequence="false" content-types="text/*"/>
+    <p:option name="count" required="true" as="xs:integer"/>
+  </p:declare-step>
+  
+  <para>The <tag>p:text-tail</tag> step returns on its <port>result</port> port lines from the text document that
+    appears on its <port>source</port> port:</para>
+  <itemizedlist>
+    <listitem>
+      <para>If the <option>count</option> option is positive, the <tag>p:text-tail</tag> step returns the last
+        <option>count</option> lines</para>
+    </listitem>
+    <listitem>
+      <para>If the <option>count</option> option is zero, the <tag>p:text-tail</tag> step returns all lines</para>
+    </listitem>
+    <listitem>
+      <para>If the <option>count</option> option is negative, the <tag>p:text-tail</tag> step returns all lines except
+        the last <option>count</option> lines</para>
+    </listitem>
+  </itemizedlist>
+  
+  <para>Lines are identified as described in <link xlink:href="https://www.w3.org/TR/xml/#sec-line-ends">XML, 2.11
+    End-of-Line Handling</link>.</para>
+  
+  <simplesect>
+    <title>Document properties</title>
+    <para feature="add-attribute-preserves-all">All document properties are preserved.</para>
+  </simplesect>
+</section>
 <section xml:id="c.unescape-markup">
 <title>p:unescape-markup</title>
 

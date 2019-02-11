@@ -247,6 +247,94 @@
       <p:option name="serialization" as="xs:string"/>
       <p:option name="enable" as="xs:boolean" select="true()"/>
    </p:declare-step>
+   <p:declare-step type="p:text-count" xml:id="text-count">
+      <p:input port="source"
+               primary="true"
+               sequence="false"
+               content-types="text/*"/>
+      <p:output port="result"
+                primary="true"
+                sequence="false"
+                content-types="application/xml"/>
+   </p:declare-step>
+   <p:declare-step type="p:text-head" xml:id="text-head">
+      <p:input port="source"
+               primary="true"
+               sequence="false"
+               content-types="text/*"/>
+      <p:output port="result"
+                primary="true"
+                sequence="false"
+                content-types="text/*"/>
+      <p:option name="count" required="true" as="xs:integer"/>
+   </p:declare-step>
+   <p:declare-step type="p:text-join" xml:id="text-join">
+      <p:output port="source"
+                primary="true"
+                sequence="true"
+                content-types="text/*"/>
+      <p:output port="result"
+                primary="true"
+                sequence="false"
+                content-types="text/*"/>
+      <p:option name="separator" required="false" as="xs:string"/>
+      <p:option name="prefix" required="false" as="xs:string"/>
+      <p:option name="suffix" required="false" as="xs:string"/>
+   </p:declare-step>
+   <p:declare-step type="p:text-replace" xml:id="text-replace">
+      <p:input port="source"
+               primary="true"
+               sequence="false"
+               content-types="text/*"/>
+      <p:output port="result"
+                primary="true"
+                sequence="false"
+                content-types="text/*"/>
+      <p:option name="pattern" required="true" as="xs:string"/>
+      <p:option name="replacement" required="true" as="xs:string"/>
+      <p:option name="flags" required="false" as="xs:string"/>
+   </p:declare-step>
+   <p:declare-step type="p:text-sort" xml:id="text-sort">
+      <p:input port="source"
+               primary="true"
+               sequence="false"
+               content-types="text/*"/>
+      <p:output port="result"
+                primary="true"
+                sequence="false"
+                content-types="text/*"/>
+      <p:option name="order"
+                required="false"
+                as="xs:string"
+                select="'ascending'"
+                values="('ascending', 'descending')"/>
+      <p:option name="case-order"
+                required="false"
+                as="xs:string"
+                values="('upper-first', 'lower-first')"/>
+      <p:option name="lang" required="false" as="xs:language"/>
+      <p:option name="data-type"
+                required="false"
+                as="xs:string"
+                select="'text'"
+                values="('text', 'number')"/>
+      <p:option name="collation"
+                required="false"
+                as="xs:string"
+                select="'https://www.w3.org/2005/xpath-functions/collation/codepoint'"/>
+      <p:option name="stable" required="false" as="xs:boolean" select="true()"/>
+   </p:declare-step>
+   <p:declare-step type="p:text-tail" xml:id="text-tail">
+      <p:input port="source"
+               primary="true"
+               sequence="false"
+               content-types="text/*"/>
+      <p:output port="result"
+                primary="true"
+                sequence="false"
+                content-types="text/*"/>
+      <p:option name="count" required="true" as="xs:integer"/>
+   </p:declare-step>
    <p:declare-step type="p:unescape-markup" xml:id="unescape-markup">
       <p:input port="source" content-types="application/xml text/xml */*+xml text/*"/>
       <p:output port="result" content-types="application/xml text/xml */*+xml"/>

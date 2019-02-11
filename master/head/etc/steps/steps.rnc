@@ -3,7 +3,7 @@ namespace local = ""
 
 # This schema could be made more constrained.
 
-Step = Step-add-attribute | Step-add-xml-base | Step-cast-content-type | Step-compare | Step-count | Step-delete | Step-directory-list | Step-error | Step-escape-markup | Step-filter | Step-hash | Step-http-request | Step-identity | Step-insert | Step-label-elements | Step-load | Step-load-directory-list | Step-make-absolute-uris | Step-namespace-rename | Step-pack | Step-rename | Step-replace | Step-set-attributes | Step-set-properties | Step-sink | Step-split-sequence | Step-store | Step-string-replace | Step-tee | Step-unescape-markup | Step-unwrap | Step-uuid | Step-wrap-sequence | Step-wrap | Step-www-form-urldecode | Step-www-form-urlencode | Step-xinclude | Step-xquery | Step-xslt
+Step = Step-add-attribute | Step-add-xml-base | Step-cast-content-type | Step-compare | Step-count | Step-delete | Step-directory-list | Step-error | Step-escape-markup | Step-filter | Step-hash | Step-http-request | Step-identity | Step-insert | Step-label-elements | Step-load | Step-load-directory-list | Step-make-absolute-uris | Step-namespace-rename | Step-pack | Step-rename | Step-replace | Step-set-attributes | Step-set-properties | Step-sink | Step-split-sequence | Step-store | Step-string-replace | Step-tee | Step-text-count | Step-text-head | Step-text-join | Step-text-replace | Step-text-sort | Step-text-tail | Step-unescape-markup | Step-unwrap | Step-uuid | Step-wrap-sequence | Step-wrap | Step-www-form-urldecode | Step-www-form-urlencode | Step-xinclude | Step-xquery | Step-xslt
 
 Step-add-attribute =
   element add-attribute {
@@ -322,6 +322,74 @@ Step-tee =
     attribute href { xsd:anyURI }?,
     attribute serialization { xsd:string }?,
     attribute enable { xsd:boolean }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-text-count =
+  element text-count {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    (WithInput* & (Documentation|PipeInfo)*)
+  }
+
+Step-text-head =
+  element text-head {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute count { xsd:integer }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-text-join =
+  element text-join {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute separator { xsd:string }?,
+    attribute prefix { xsd:string }?,
+    attribute suffix { xsd:string }?,
+    (WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-text-replace =
+  element text-replace {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute pattern { xsd:string }?,
+    attribute replacement { xsd:string }?,
+    attribute flags { xsd:string }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-text-sort =
+  element text-sort {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute order { 'ascending' | 'descending' }?,
+    attribute case-order { 'upper-first' | 'lower-first' }?,
+    attribute lang { xsd:language }?,
+    attribute data-type { 'text' | 'number' }?,
+    attribute collation { xsd:string }?,
+    attribute stable { xsd:boolean }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-text-tail =
+  element text-tail {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute count { xsd:integer }?,
     (WithInput* & WithOption* & (Documentation|PipeInfo)*)
   }
 
