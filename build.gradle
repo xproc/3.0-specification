@@ -163,7 +163,7 @@ task overview(dependsOn: [ "xproc_schemas", "spec_schemas",
   inputs.files fileTree(dir: "tools/xsl/")
   inputs.files fileTree(dir: "tools/xpl/")
   input("source", "overview/build/source.xml")
-  output("result", "build/dist/index.html")
+  output("result", "build/dist/overview/index.html")
 
   param("schemaext.schema", new File("build/schema/dbspec.rng"))
   param("travis", getenv("TRAVIS"))
@@ -181,12 +181,12 @@ buildspecs.dependsOn "overview"
 
 task overview_assets(type: Copy) {
   from "src/main/resources"
-  into "build/dist/"
+  into "build/dist/overview/"
 }
 
 task overview_src(dependsOn: ["overview:source"], type: Copy) {
   from "overview/build/"
-  into "build/dist/"
+  into "build/dist/overview/"
   include "source.xml"
   rename ("source.xml", "specification.xml")
 }
