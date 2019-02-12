@@ -175,6 +175,10 @@ task overview(dependsOn: [ "xproc_schemas", "spec_schemas",
   param("travis-tag", getenv("TRAVIS_TAG"))
 
   option("style", new File("tools/xsl/xproc-specs.xsl"))
+  option("diff", getenv("DELTAXML"))
+  option("specid", "overview")
+  option("diffloc", new File("build/dist/overview/diff.html").getAbsolutePath())
+
   pipeline "tools/xpl/formatspec.xpl"
 }
 buildspecs.dependsOn "overview"
@@ -212,8 +216,8 @@ task xproc(dependsOn: [ "xproc_schemas", "spec_schemas",
   param("travis-tag", getenv("TRAVIS_TAG"))
 
   option("style", new File("tools/xsl/xproc-specs.xsl"))
-  option("diffkey", getenv("DELTAXML_DIFF_KEY"))
-  option("webid", "xproc")
+  option("diff", getenv("DELTAXML"))
+  option("specid", "xproc")
   option("diffloc", new File("build/dist/xproc/diff.html").getAbsolutePath())
 
   pipeline "tools/xpl/formatspec.xpl"
@@ -238,9 +242,6 @@ task xproc_pdf_xform(dependsOn: [ "xproc" ], type: DocBookTask) {
 
   option("style", new File("tools/xsl/xproc-pdf.xsl"))
   option("postprocess", new File("tools/xsl/post-pdf.xsl"))
-  option("diffkey", getenv("DELTAXML_DIFF_KEY"))
-  option("webid", "xproc")
-  option("diffloc", new File("build/dist/xproc/diff.html").getAbsolutePath())
 
   pipeline "tools/xpl/pdfspec.xpl"
 }
