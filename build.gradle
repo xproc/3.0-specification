@@ -80,6 +80,15 @@ def getenv(String name) {
   }
 }
 
+def deltaxml() {
+  def dxml = new File("deltaxml")
+  if (dxml.exists() && dxml.isDirectory()) {
+    return "diff"
+  } else {
+    return ""
+  }
+}
+
 // ======================================================================
 // Make sure that some build artifacts get published so that they
 // can be used by the build process for the steps
@@ -175,7 +184,7 @@ task overview(dependsOn: [ "xproc_schemas", "spec_schemas",
   param("travis-tag", getenv("TRAVIS_TAG"))
 
   option("style", new File("tools/xsl/xproc-specs.xsl"))
-  option("diff", getenv("DELTAXML"))
+  option("diff", deltaxml())
   option("specid", "overview")
   option("diffloc", new File("build/dist/overview/diff.html").getAbsolutePath())
 
@@ -216,7 +225,7 @@ task xproc(dependsOn: [ "xproc_schemas", "spec_schemas",
   param("travis-tag", getenv("TRAVIS_TAG"))
 
   option("style", new File("tools/xsl/xproc-specs.xsl"))
-  option("diff", getenv("DELTAXML"))
+  option("diff", deltaxml())
   option("specid", "xproc")
   option("diffloc", new File("build/dist/xproc/diff.html").getAbsolutePath())
 

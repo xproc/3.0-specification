@@ -3,5 +3,8 @@ language: java
 install: true
 script: ./gradlew --stacktrace
 
+before_install:
+  - tools/difftools.sh
+
 after_success:
   - tools/travis-publish-spec.sh
