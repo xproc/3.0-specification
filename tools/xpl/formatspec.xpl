@@ -67,11 +67,11 @@
          It might break a link or two, but it's worth it for clean
          differences.
     -->
-    <p:delete match="html:p[//html:code]/@id">
-      <p:input port="source">
-        <p:document href="http://spec.xproc.org/master/head/xproc/"/>
-      </p:input>
-    </p:delete>
+    <p:load>
+      <p:with-option name="href"
+                     select="concat('https://spec.xproc.org/master/head/', $specid)"/>
+    </p:load>
+    <p:delete match="html:p[//html:code]/@id"/>
     <p:store name="fix1">
       <p:with-option name="href" select="concat('../../build/', $specid, '-current.html')"/>
     </p:store>
