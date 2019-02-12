@@ -13,9 +13,9 @@
 </p:output>
 <p:serialization port="result" indent="false" method="xhtml"/>
 <p:option name="style" select="'dbspec.xsl'"/>
-<p:option name="diffkey" select="''"/>
-<p:option name="webid" select="'xproc'"/>
-<p:option name="diffloc" select="'/tmp/diff.html'"/>
+<p:option name="diffloc" select="'build/diff.html'"/>
+<p:option name="diff" select="''"/>
+<p:option name="specid" select="''"/>
 
 <p:import href="https://cdn.docbook.org/release/latest/xslt/base/pipelines/docbook.xpl"/>
 
@@ -56,32 +56,47 @@
                 select="substring-after(
                           /c:result/c:env[@name='TRAVIS_REPO_SLUG']/@value,
                           '/')"/>
-  <p:with-param name="auto-diff" select="$diffkey != ''"/>
+  <p:with-param name="auto-diff" select="$diff != '' and $specid != ''"/>
 </dbp:docbook>
 
-<p:wrap match="/" wrapper="c:body"/>
-<p:add-attribute match="/c:body" attribute-name="content-type"
-                 attribute-value="application/xml+html"/>
-
-<p:escape-markup/>
-
-<p:wrap match="/" wrapper="c:request"/>
-<p:add-attribute match="/c:request" attribute-name="method"
-                 attribute-value="post"/>
-<p:add-attribute match="/c:request" attribute-name="href">
-  <p:with-option name="attribute-value"
-                 select="concat('https://dataapi.nwalsh.com/dxml/cgi-bin/deltaxml.pl?',
-                                'key=', $diffkey, '&amp;webid=', $webid)"/>
-</p:add-attribute>
-
 <p:choose>
-  <p:when test="$diffkey != ''">
-    <p:http-request/>
-    <p:unescape-markup/>
-    <p:unwrap match="/c:body"/>
-    <p:store method="html">
-      <p:with-option name="href" select="$diffloc"/>
+  <p:when test="$diff != '' and $specid != ''"
+          xmlns:html="http://www.w3.org/1999/xhtml">
+    <!-- The id values on paragraphs that contain code often change;
+         these changed ids confuse the diff tool. Just remove them.
+         It might break a link or two, but it's worth it for clean
+         differences.
+    -->
+    <p:delete match="html:p[//html:code]/@id">
+      <p:input port="source">
+        <p:document href="http://spec.xproc.org/master/head/xproc/"/>
+      </p:input>
+    </p:delete>
+    <p:store name="fix1">
+      <p:with-option name="href" select="concat('../../build/', $specid, '-current.html')"/>
     </p:store>
+
+   <p:delete match="html:p[//html:code]/@id" cx:depends-on="fix1">
+      <p:input port="source">
+        <p:pipe step="format-docbook" port="result"/>
+      </p:input>
+    </p:delete>
+    <p:store name="fix2">
+      <p:with-option name="href" select="concat('../../build/', $specid, '-updated.html')"/>
+    </p:store>
+
+    <!-- This is exec'd instead of cx:delta-xml'd because the newest version
+         of Delta XML seems to require SaxonPE which it ships with but
+         we don't have. :-( -->
+    <p:exec command="java" result-is-xml="false" cx:depends-on="fix2">
+      <p:input port="source"><p:empty/></p:input>
+      <p:with-option name="args"
+                     select="concat('-jar deltaxml/command-10.0.0.jar compare xhtml ',
+                                    'build/', $specid, '-current.html build/', $specid, '-updated.html ', $diffloc)">
+        <p:empty/>
+      </p:with-option>
+    </p:exec>
+    <p:sink/>
   </p:when>
   <p:otherwise>
     <p:sink/>
