@@ -14,6 +14,7 @@
 <p:serialization port="result" indent="false" method="xhtml"/>
 <p:option name="style" select="'dbspec.xsl'"/>
 <p:option name="diffloc" select="'build/diff.html'"/>
+<p:option name="lcdiffloc" select="''"/>
 <p:option name="diff" select="''"/>
 <p:option name="specid" select="''"/>
 
@@ -100,6 +101,54 @@
   </p:when>
   <p:otherwise>
     <p:sink/>
+  </p:otherwise>
+</p:choose>
+
+<p:choose>
+  <p:when test="$diff != '' and $specid != '' and $lcdiffloc != ''"
+          xmlns:html="http://www.w3.org/1999/xhtml">
+    <!-- The id values on paragraphs that contain code often change;
+         these changed ids confuse the diff tool. Just remove them.
+         It might break a link or two, but it's worth it for clean
+         differences.
+    -->
+    <p:load>
+      <p:with-option name="href"
+                     select="concat('https://spec.xproc.org/lastcall-2019-02/head/', $specid)"/>
+    </p:load>
+    <p:delete match="html:p[//html:code]/@id"/>
+    <p:store name="fix1">
+      <p:with-option name="href" select="concat('../../build/', $specid, '-lc.html')"/>
+    </p:store>
+
+   <p:delete match="html:p[//html:code]/@id" cx:depends-on="fix1">
+      <p:input port="source">
+        <p:pipe step="format-docbook" port="result"/>
+      </p:input>
+    </p:delete>
+    <p:store name="fix2">
+      <p:with-option name="href" select="concat('../../build/', $specid, '-updated.html')"/>
+    </p:store>
+
+    <!-- This is exec'd instead of cx:delta-xml'd because the newest version
+         of Delta XML seems to require SaxonPE which it ships with but
+         we don't have. :-( -->
+    <p:exec command="java" result-is-xml="false" cx:depends-on="fix2">
+      <p:input port="source"><p:empty/></p:input>
+      <p:with-option name="args"
+                     select="concat('-jar deltaxml/command-10.0.0.jar compare xhtml ',
+                                    'build/', $specid, '-lc.html build/', $specid, '-updated.html ', $lcdiffloc)">
+        <p:empty/>
+      </p:with-option>
+    </p:exec>
+    <p:sink/>
+  </p:when>
+  <p:otherwise>
+    <p:sink>
+      <p:input port="source">
+        <p:empty/>
+      </p:input>
+    </p:sink>
   </p:otherwise>
 </p:choose>
 
