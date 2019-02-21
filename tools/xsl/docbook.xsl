@@ -315,7 +315,9 @@
 
         <xsl:if test="$auto-diff">
           <xsl:text>, </xsl:text>
-	  automatic <a href="diff.html">change markup</a> from the previous draft
+	  automatic change markup
+          <a href="diff.html">from the previous draft</a>
+          and <a href="lcdiff.html">from the last call draft</a>
           courtesy of <a href="http://www.deltaxml.com/">DeltaXML</a>
         </xsl:if>
 
