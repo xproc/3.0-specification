@@ -232,6 +232,18 @@
   </ss:group>
 </xsl:template>
 
+<xsl:template match="rng:attribute[@name='version']" priority="20">
+  <xsl:param name="schema" tunnel="yes"/>
+  <xsl:param name="repeat" select="''"/>
+  <xsl:param name="avt" select="()"/>
+
+  <!-- A totally special case: allow the version attribute to be of type xs:decimal,
+       but display its fixed value as "3.0" without the quotation marks that make
+       it look like a string. -->
+
+  <ss:attribute name="{@name}" optional="{$repeat}" avt="false" type="3.0"/>
+</xsl:template>
+
 <xsl:template match="rng:attribute[@name]" priority="10">
   <xsl:param name="schema" tunnel="yes"/>
   <xsl:param name="repeat" select="''"/>
