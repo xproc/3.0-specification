@@ -3827,13 +3827,13 @@ preceding <tag>p:when</tag> evaluates to true.</para>
 
 <e:rng-pattern name="If"/>
 
-<para>The <tag>p:if</tag> has a <tag class="attribute">test</tag>
+<para>The <tag>p:if</tag> step has a <tag class="attribute">test</tag>
 attribute which <rfc2119>must</rfc2119> contain an XPath expression.
 That XPath expression's effective boolean value is the guard for the
 <glossterm>subpipeline</glossterm> contained within it.
 </para>
 
-<para>The <tag>p:if</tag> can specify a context node against which
+<para>The <tag>p:if</tag> step can specify a context node against which
 its <tag class="attribute">test</tag> expression is to be evaluated.
 That context node is specified as a <glossterm>connection</glossterm>
 for the <tag>p:with-input</tag>. If no context is specified on the
@@ -3849,9 +3849,36 @@ then the default collection will contain all of the documents that appeared
 on that input and the context item will be undefined.
 </para>
 
+<para>The <tag>p:if</tag> must specify a primary output port (either implicitly
+or explicitly). <error code="S0108">It is a <glossterm>static error</glossterm>
+if the <tag>p:if</tag> step does not specify a primary output port.</error>
+</para>
+
+<para>The requirement for a primary output port stems from the semantics of
+<tag>p:if</tag>:</para>
+
+<itemizedlist>
+<listitem>
 <para>If the effective boolean value of the test expression is true, then
-the subpipline will be run. If it is not run, then none of the output ports
-on the <tag>p:if</tag> will produce any documents.</para>
+the subpipline will be run. The output of the <tag>p:if</tag> in this case
+is determined by the output ports of the step and what the subpipeline sends
+to them.</para>
+</listitem>
+<listitem>
+<para>If the effective boolean value of the test expression is false, then
+<tag>p:if</tag> copies any documents that appear on its default readable port
+to its primary output port. No documents will be written to the primary output port
+if there isn’t a default readable port, but that is not an error in this case.
+No documents will ever be written to any non-primary output
+ports if the test expression is false.</para>
+</listitem>
+</itemizedlist>
+
+<para>Informally, if the test expression is false, then
+<tag>p:if</tag> acts like the identity step. (With the additional
+feature that it isn’t an error if there’s no default readable port.) A
+primary output port is required in order to make these semantics
+meaningful and consistent.</para>
 </section>
 
     <section xml:id="p.group"><title>p:group</title><para>A group is specified by the
@@ -7831,85 +7858,16 @@ who contributed to this document and all of the versions that came before it.</p
 
 <appendix xml:id="changelog">
 <title>Change Log</title>
-<para>This appendix summarizes significant changes in this
-draft.</para>
-
-<para>This First Public Working Draft contains a number of significant
-changes to the XProc pipeline language. Future drafts will attempt to address
-<link xlink:href="https://github.com/xproc/specification/issues?q=is%3Aopen+is%3Aissue">the remaining issues</link>.</para>
-
-<para>In this draft:</para>
+<para>This appendix catalogs non-editorial changes made after the
+February 2019
+“<link xlink:href="http://spec.xproc.org/lastcall-2019-02/head/xproc/">last call</link>”
+draft:</para>
 
 <itemizedlist>
 <listitem>
-<para>An attempt has been made to simplify how parameters are handled.
-There are no more parameter input ports. Instead, parameters are handled
-with a map and an otherwise ordinary option named “<code>parameters</code>”.
-(See issue <link xlink:href="https://github.com/xproc/specification/issues/28">#28</link>)
-</para>
-</listitem>
-<listitem>
-<para>Documents have accessible, arbitrary metadata (key/value pairs).
-(See issue <link xlink:href="https://github.com/xproc/specification/issues/46">#46</link>)
-</para>
-</listitem>
-<listitem>
-<para>Non-XML documents can flow between steps.
-(See issue <link xlink:href="https://github.com/xproc/specification/issues/29">#29</link>)
-</para>
-</listitem>
-<listitem>
-<para>Option shortcut attributes can contain
-<link linkend="attribute-value-templates">attribute value templates</link> and
-inline XML can contain
-<link linkend="text-value-templates">text value templates</link>.
-(See issues <link xlink:href="https://github.com/xproc/specification/issues/33">#33</link>
-and <link xlink:href="https://github.com/xproc/specification/issues/39">#39</link>)
-</para>
-</listitem>
-<listitem>
-<para>The <tag>p:variable</tag> and <tag>p:option</tag> elements may
-specify a value type.
-(See issue <link xlink:href="https://github.com/xproc/specification/issues/62">#62</link>)
-</para>
-</listitem>
-<listitem>
-<para>The <tag>p:inline</tag> can be omitted when the result is
-unambiguous.
-(See issue <link xlink:href="https://github.com/xproc/specification/issues/38">#38</link>)
-</para>
-</listitem>
-<listitem>
-<para>The <tag>p:try</tag> step has been enhanced.
-(See issue <link xlink:href="https://github.com/xproc/specification/issues/50">#50</link>)
-</para>
-</listitem>
-
-<listitem>
-<para>All steps have a primary output port.
-(See issue <link xlink:href="https://github.com/xproc/specification/issues/41">#41</link>)
-</para>
-</listitem>
-<listitem>
-<para>The specification has been split into a language specification
-and standard step library specification.
-(See issue <link xlink:href="https://github.com/xproc/specification/issues/53">#53</link>)
-</para>
-</listitem>
-<listitem>
-<para>A version option has been added to <tag>p:validate-with-xml-schema</tag>.
-(See issue <link xlink:href="https://github.com/xproc/specification/issues/83">#83</link>)
-</para>
-</listitem>
-<listitem>
-<para>A version option has been added to <tag>p:xquery</tag>
-(See issue <link xlink:href="https://github.com/xproc/specification/issues/84">#84</link>)
-</para>
-</listitem>
-<listitem>
-<para>Support for XPath 1.0 has been removed.
-(See issue <link xlink:href="https://github.com/xproc/specification/issues/52">#52</link>)
-</para>
+<para>The semantics of <tag>p:if</tag> have been changed. If the test expression
+is false, <tag>p:if</tag> behaves roughly like an identity step. Previously it produced
+no outputs.</para>
 </listitem>
 </itemizedlist>
 </appendix>
