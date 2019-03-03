@@ -5220,10 +5220,8 @@ the variable is visible to an importing pipeline. If
 <tag class="attribute">visibility</tag> is set to “<literal>private</literal>”,
 the variable is visible inside the <tag>p:library</tag> but not visible to
 any pipeline importing the <tag>p:library</tag>. If the visibility attribute is
-missing, “<literal>public</literal>” is assumed.
-<error code="S0093">It is a <glossterm>static error</glossterm> if
-<tag class="attribute">visibility</tag> is specified on a <tag>p:option</tag>
-or <tag>p:variable</tag> that is not a child of <tag>p:library</tag>.</error>
+missing, “<literal>public</literal>” is assumed. If the <tag>p:variable</tag> is not a child 
+of <tag>a p:library</tag> the attribute has no effect and is ignored.
 </para>
 </listitem>
 </varlistentry>
@@ -5400,10 +5398,8 @@ the option is visible to an importing pipeline. If
 <tag class="attribute">visibility</tag> is set to “<literal>private</literal>”,
 the option is visible inside the <tag>p:library</tag> but not visible to
 any pipeline importing the <tag>p:library</tag>. If the visibility attribute is
-missing, “<literal>public</literal>” is assumed.
-<error code="S0093">It is a <glossterm>static error</glossterm> if
-<tag class="attribute">visibility</tag> is specified on a <tag>p:option</tag>
-or <tag>p:variable</tag> that is not a child of <tag>p:library</tag>.</error>
+  missing, “<literal>public</literal>” is assumed. If the <tag>p:option</tag> is not a child 
+  of <tag>a p:library</tag> the attribute has no effect and is ignored.
 </para>
 </listitem>
 </varlistentry>
@@ -7866,6 +7862,10 @@ draft:</para>
 <para>The semantics of <tag>p:if</tag> have been changed. If the test expression
 is false, <tag>p:if</tag> behaves roughly like an identity step. Previously it produced
 no outputs.</para>
+</listitem>
+<listitem>
+<para>It is no longer a static error (XS0093), if <tag>p:option</tag> or <tag>p:variable</tag>
+have an attribute <literal>visibility</literal> and are not children of a <tag>p:library</tag>.</para>
 </listitem>
 </itemizedlist>
 </appendix>
