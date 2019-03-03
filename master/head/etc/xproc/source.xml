@@ -1444,8 +1444,8 @@ system properties, which are all in the XProc namespace:</para>
                 for evaluating XPath expressions on XProc elements. The result
                 is a space-separated list of versions supported. For example, a
                 processor that only supports XPath 3.1 would return “3.1”; a
-                processor that supports XPath 3.0 and XPath 3.1 could return
-                “3.0 3.1”.</para>
+                processor that supports XPath 3.1 and XPath 3.2 could return
+                “3.1 3.2”.</para>
             </listitem>
           </varlistentry>
           <varlistentry>
@@ -5694,7 +5694,8 @@ If the attribute is not specified, the value
 <rfc2119>must</rfc2119> be used to evaluate XPath expressions subject
 to the constraints outlined in <xref linkend="xpath-context"/>. If the
 attribute is not specified, the value “<literal>3.1</literal>” is
-assumed.</para>
+assumed. <error code="S0110">It is a <glossterm>static error</glossterm> if
+the requested XPath version is less than “<literal>3.1</literal>”</error>.</para>
 </listitem>
 </varlistentry>
 <varlistentry><term><tag class="attribute">exclude-inline-prefixes</tag></term>
@@ -5861,7 +5862,9 @@ See <xref linkend="versioning-considerations"/>.</para>
 <para>The requested <tag class="attribute">xpath-version</tag>
           <rfc2119>must</rfc2119> be used to evaluate XPath expressions subject to the constraints
           outlined in <xref linkend="xpath-context"/>. If the attribute is not specified, the value
-          “<literal>3.1</literal>” is assumed. </para>
+          “<literal>3.1</literal>” is assumed. <error code="S0110">It is a 
+            <glossterm>static error</glossterm> if the requested XPath version is less 
+            than “<literal>3.1</literal>”</error>.</para>
         <para>The <tag class="attribute">psvi-required</tag> attribute allows the author to declare
           that a step relies on the processor's ability to pass PSVI annotations between steps, see
             <xref linkend="psvi-support"/>. If the attribute is not specified, the value
