@@ -280,6 +280,122 @@ element's [base URI].</para>
 <para feature="add-xml-base-preserves-all">All document properties are preserved.</para>
 </simplesect>
 </section>
+<section xml:id="c.archive">
+
+  <title>p:archive</title>
+
+  <para>The <code>p:archive</code> step outputs on its <port>result</port> port an archive (usually binary) document,
+    for instance a ZIP file. A specification of the contents of the archive must be specified in a manifest XML document
+    on the <port>manifest</port>. The contents of the archive itself can come from documents provided on the
+      <port>source</port> port, from a URI, from documents specified inline in the manifest or any combination of these.
+    The step produces a report on the <port>report</port> port, which contains the manifest, amended with additional
+    information about the archiving. </para>
+
+  <p:declare-step type="p:archive">
+    <p:input port="source" primary="true" content-types="*/*" sequence="true"/>
+    <p:input port="manifest" content-types="application/xml" sequence="false"/>
+    <p:output port="result" primary="true" content-types="application/*" sequence="false"/>
+    <p:output port="report" content-types="application/xml" sequence="false"/>
+    <p:option name="format" as="xs:QName" required="false" select="'zip'"/>
+    <p:option name="parameters" as="map(xs:Qname, item()*)" required="false"/>
+  </p:declare-step>
+
+  <para>The <code>p:archive</code> step takes the document appearing on its <port>manifest</port> port as a
+    specification for an archive file. It outputs this archive on its <port>result</port> port.</para>
+
+  <para>The format of the archive can be specified using the <option>format</option> option. Implementations
+      <rfc2119>must</rfc2119> support the <biblioref linkend="zip"/> format, specified with the value <code>zip</code>.
+      <impl>It is <glossterm>implementation-defined</glossterm> what other formats are supported.</impl></para>
+
+  <para>The <option>parameters</option> can be used to supply parameters to control the archiving. <impl>The semantics
+      of the keys and the allowed values for these keys are <glossterm>implementation-defined</glossterm>.</impl>
+    <error code="C0079">It is a <glossterm>dynamic error</glossterm> if the map <option>parameters</option> contains an
+      entry whose key is defined by the implementation and whose value is not valid for that key.</error></para>
+
+  <para>The <port>report</port> port outputs a copy of the manifest, optionally amended with additional attributes
+    and/or elements. <impl>The semantics of any additional attributes, elements and their values are
+        <glossterm>implementation-defined</glossterm>.</impl>
+  </para>
+
+  <section xml:id="cv.request">
+    <title>Specifying an archive manifest</title>
+
+    <para>An archive manifest is represented by a <tag>c:archive</tag> root element.</para>
+
+    <note role="editorial">
+      <para>TBD: Specify <tag>c:archive</tag> root element using schemas. Proposal:</para>
+      <programlisting>&lt;c:archive&gt; &lt;c:file&gt;* &lt;/c:archive&gt;</programlisting>
+    </note>
+    <!--<e:rng-pattern name="..."/>-->
+
+    <para>The <code>c:archive</code> root element may contain additional <glossterm>implementation-defined</glossterm>
+      attributes.</para>
+
+    <para>All entries in the archive must be present as <tag>c:file</tag> child elements:</para>
+
+    <note role="editorial">
+      <para>TBD: Specify <tag>c:file</tag> elements using schemas. Proposal:</para>
+      <programlisting>&lt;c:entry name="..." href?="..." compression-method?="..."&gt; ...optional contents... &lt;/c:entry&gt;</programlisting>
+    </note>
+    <!--<e:rng-pattern name="..."/>-->
+
+    <para>The <code>name</code> attribute specifies the name of the entry in the archive. It <rfc2119>must</rfc2119> be
+      specified as a relative path.</para>
+    <para>The optional <code>href</code> attribute is interpreted as follows:</para>
+    <itemizedlist>
+      <listitem>
+        <para><error code="D0064">It is a <glossterm>dynamic error</glossterm> if the <option>href</option> attribute is
+            present and its value is not a valid <type>xs:anyURI</type>.</error></para>
+      </listitem>
+      <listitem>
+        <para>When the <tag>c:file</tag> elements has any child nodes, it is ignored.</para>
+      </listitem>
+      <listitem>
+        <para>The <code>p:archive</code> step checks the documents appearing on its <port>source</port> port for any
+          documents with exactly the same base URI as the contents of the <code>href</code> attribute. If any such
+          documents are found, the <emphasis>first</emphasis> of these is used as entry for the archive.</para>
+      </listitem>
+      <listitem>
+        <para>If the above doesn't apply, the value of the <code>href</code> attribute is interpreted as a URI and the
+          document is loaded from this.</para>
+
+        <para><error code="D0011">It is a <glossterm>dynamic error</glossterm> if the resource referenced by the
+              <option>href</option> option does not exist, cannot be accessed or is not a file</error></para>
+        <para> If the <option>href</option> option is relative, it is made absolute against the base URI of the
+          manifest.</para>
+      </listitem>
+      <listitem>
+        <para><error code="TBDTBD">It is a <glossterm>dynamic error</glossterm> if the <code>href</code> attribute is
+            not specified and the <tag>c:file</tag> element has no child nodes.</error></para>
+      </listitem>
+    </itemizedlist>
+
+    <para>The <code>compression-method</code> attribute specifies how the entry should be compressed. <impl>The default
+        compression method is <glossterm>implementation-defined</glossterm>. </impl>Implementations
+        <rfc2119>must</rfc2119> support no compression, specified with the value <code>none</code>. <impl>It is
+          <glossterm>implementation-defined</glossterm> what other compression methods are supported.</impl></para>
+
+    <para>When the <code>c:file</code> element has any child nodes this is taken as the contents of the archive's entry.
+      The <code>href</code> attribute is ignored in this case.</para>
+
+    <para>The <code>p:archive</code> step should strive to retain the order of the <tag>c:file</tag> elements when
+      constructing the archive. For instance, an e-book in EPub format has a non-compressed entry that must be first in
+      the archive. It should be possible to construct such an archive using <code>p:archive</code>.</para>
+
+    <para>The <code>c:file</code> elements may contain additional <glossterm>implementation-defined</glossterm>
+      attributes.</para>
+    <note role="editorial">
+      <para>Do we need to say anything about serialization options for XML contents?</para>
+      <para>Not sure whether JSON needs more specifications</para>
+    </note>
+
+  </section>
+
+  <simplesect>
+    <title>Document properties</title>
+    <para feature="archive-preserves-none">No document properties are preserved.</para>
+  </simplesect>
+</section>
 <section xml:id="c.cast-content-type">
 <title>p:cast-content-type</title>
 
@@ -2607,6 +2723,81 @@ serialization of content when it is stored. Serialization is described in
     <para feature="add-attribute-preserves-all">All document properties are preserved.</para>
   </simplesect>
 </section>
+<section xml:id="c.unarchive">
+
+  <title>p:unarchive</title>
+
+  <para>The <code>p:unarchive</code> step outputs on its <port>result</port> port either a manifest file describing the
+    contents of an archive (for instance entries in a ZIP file) or specific entries in an archive.</para>
+
+  <p:declare-step type="p:unarchive">
+    <p:input port="source" primary="true" content-types="*/*" sequence="false"/>
+    <p:output port="result" primary="true" content-types="*/*" sequence="true"/>
+    <p:option name="include-filter" as="xs:string" e:type="RegularExpression" required="false"/>
+    <p:option name="exclude-filter" as="xs:string" e:type="RegularExpression" required="false"/>
+    <p:option name="format" as="xs:QName" required="false" select="'zip'"/>
+    <p:option name="parameters" as="map(xs:Qname, item()*)" required="false"/>
+  </p:declare-step>
+
+  <para>The <code>p:unarchive</code> step takes the document appearing on its <port>source</port> port as an archive
+    (for instance a zip file). Depending on which options are set it either outputs a description of the contents of the
+    archive as an XML document or specific entries (files) from the archive.</para>
+
+  <para>The format of the archive can be specified using the <option>format</option> option. Implementations
+      <rfc2119>must</rfc2119> support the <biblioref linkend="zip"/> format, specified with the value <code>zip</code>.
+      <impl>It is <glossterm>implementation-defined</glossterm> what other formats are supported.</impl></para>
+
+  <para>The <option>parameters</option> can be used to supply parameters to control the unarchiving. <impl>The semantics
+      of the keys and the allowed values for these keys are <glossterm>implementation-defined</glossterm>.</impl>
+    <error code="C0079">It is a <glossterm>dynamic error</glossterm> if the map <option>parameters</option> contains an
+      entry whose key is defined by the implementation and whose value is not valid for that key.</error></para>
+
+  <para>If present, the value of the <option>include-filter</option> or <option>exclude-filter</option> option
+      <rfc2119>must</rfc2119> be a whitespace separated list of regular expressions as specified in <biblioref linkend="xpath31-functions"/>, section 7.61 “<literal>Regular Expression Syntax</literal>”.</para>
+
+  <para>If neither the <option>include-filter</option> option nor the <option>exclude-filter</option> option is
+    specified, the <code>p:unarchive</code> step outputs on its <port>result</port> port a description of the contents of the
+    archive, as specified below.</para>
+
+  <para>If the <option>include-filter</option> option or the <option>exclude-filter</option> option is specified, the
+      <code>p:archive</code> step outputs on the <port>result</port> port the entries from the archive that conform to the
+    following rules:</para>
+  <itemizedlist>
+    <listitem>
+      <para>If any <option>include-filter</option> pattern matches an archive entry's name, the entry is included in the
+        output.</para>
+    </listitem>
+    <listitem>
+      <para>If any <option>exclude-filter</option> pattern matches an archive entry's name, the entry is excluded in
+        the output.</para>
+    </listitem>
+    <listitem>
+      <para>If both options are provided, the include filter is processed first, then the exclude filter. </para>
+    </listitem>
+    <listitem>
+      <para>Names of entries in archives are always relative names. For instance, the name of a file called
+        <code>xyz.xml</code> in a <code>specs</code> subdirectory in an archive is called in full
+        <code>specs/xyz.xml</code> (and not <code>/specs/xyz.xml</code>).</para>
+    </listitem>
+  </itemizedlist>
+  <para>As a result: an item is included if it matches (at least) one of the <option>include-filter</option> values and
+    none of the <option>exclude-filter</option> values.</para>
+  <note role="editorial">
+    <para>What about the base URIs of these documents?</para>
+  </note>
+ 
+  <section>
+    <title>Archive content specification</title>
+    <note role="editorial">
+      <para>TBD. Like the manifest of <code>p:archive</code> but no <code>@href</code>?</para>
+    </note>
+  </section>
+
+  <simplesect>
+    <title>Document properties</title>
+    <para feature="archive-preserves-none">No document properties are preserved.</para>
+  </simplesect>
+</section>
 <section xml:id="c.unescape-markup">
 <title>p:unescape-markup</title>
 
@@ -3531,6 +3722,8 @@ and their use as ASN.1 Object Identifier components</citetitle>.
     <bibliomixed xml:id="bib.sha"><abbrev>SHA1</abbrev>
 <citetitle xlink:href="http://www.itl.nist.gov/fipspubs/fip180-1.htm">Federal Information Processing Standards Publication 180-1: Secure Hash Standard</citetitle>.
 1995.</bibliomixed>
+    <bibliomixed xml:id="zip"><abbrev>ZIP</abbrev>
+    <citetitle xlink:href="https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT">.ZIP File Format Specification</citetitle>.</bibliomixed>
   </bibliolist>
 </section>
 <section xml:id="informative-references">

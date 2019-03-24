@@ -3,7 +3,7 @@ namespace local = ""
 
 # This schema could be made more constrained.
 
-Step = Step-add-attribute | Step-add-xml-base | Step-cast-content-type | Step-compare | Step-count | Step-delete | Step-directory-list | Step-error | Step-escape-markup | Step-filter | Step-hash | Step-http-request | Step-identity | Step-insert | Step-label-elements | Step-load | Step-load-directory-list | Step-make-absolute-uris | Step-namespace-rename | Step-pack | Step-rename | Step-replace | Step-set-attributes | Step-set-properties | Step-sink | Step-split-sequence | Step-store | Step-string-replace | Step-tee | Step-text-count | Step-text-head | Step-text-join | Step-text-replace | Step-text-sort | Step-text-tail | Step-unescape-markup | Step-unwrap | Step-uuid | Step-wrap-sequence | Step-wrap | Step-www-form-urldecode | Step-www-form-urlencode | Step-xinclude | Step-xquery | Step-xslt
+Step = Step-add-attribute | Step-add-xml-base | Step-archive | Step-cast-content-type | Step-compare | Step-count | Step-delete | Step-directory-list | Step-error | Step-escape-markup | Step-filter | Step-hash | Step-http-request | Step-identity | Step-insert | Step-label-elements | Step-load | Step-load-directory-list | Step-make-absolute-uris | Step-namespace-rename | Step-pack | Step-rename | Step-replace | Step-set-attributes | Step-set-properties | Step-sink | Step-split-sequence | Step-store | Step-string-replace | Step-tee | Step-text-count | Step-text-head | Step-text-join | Step-text-replace | Step-text-sort | Step-text-tail | Step-unarchive | Step-unescape-markup | Step-unwrap | Step-uuid | Step-wrap-sequence | Step-wrap | Step-www-form-urldecode | Step-www-form-urlencode | Step-xinclude | Step-xquery | Step-xslt
 
 Step-add-attribute =
   element add-attribute {
@@ -25,6 +25,17 @@ Step-add-xml-base =
     step.attributes,
     attribute all { xsd:boolean }?,
     attribute relative { xsd:boolean }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-archive =
+  element archive {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute format { xsd:QName }?,
+    attribute parameters { xsd:string }?,
     (WithInput* & WithOption* & (Documentation|PipeInfo)*)
   }
 
@@ -390,6 +401,19 @@ Step-text-tail =
     use-when.attr?,
     step.attributes,
     attribute count { xsd:integer }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-unarchive =
+  element unarchive {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute include-filter { xsd:string }?,
+    attribute exclude-filter { xsd:string }?,
+    attribute format { xsd:QName }?,
+    attribute parameters { xsd:string }?,
     (WithInput* & WithOption* & (Documentation|PipeInfo)*)
   }
 
