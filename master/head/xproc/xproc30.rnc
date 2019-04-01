@@ -689,6 +689,7 @@ StandardStep =
   | Step-validate-with-xml-schema
   | Step-add-attribute
   | Step-add-xml-base
+  | Step-archive
   | Step-cast-content-type
   | Step-compare
   | Step-count
@@ -722,6 +723,7 @@ StandardStep =
   | Step-text-replace
   | Step-text-sort
   | Step-text-tail
+  | Step-unarchive
   | Step-unescape-markup
   | Step-unwrap
   | Step-uuid
@@ -928,6 +930,16 @@ Step-add-xml-base =
     step.attributes,
     attribute all { xsd:boolean }?,
     attribute relative { xsd:boolean }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-archive =
+  element archive {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute format { xsd:QName }?,
+    attribute parameters { xsd:string }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
   }
 Step-cast-content-type =
@@ -1262,6 +1274,18 @@ Step-text-tail =
     use-when.attr?,
     step.attributes,
     attribute count { xsd:integer }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-unarchive =
+  element unarchive {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute include-filter { xsd:string }?,
+    attribute exclude-filter { xsd:string }?,
+    attribute format { xsd:QName }?,
+    attribute parameters { xsd:string }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
   }
 Step-unescape-markup =
