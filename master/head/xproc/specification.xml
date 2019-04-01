@@ -7882,17 +7882,22 @@ February 2019
 “<link xlink:href="http://spec.xproc.org/lastcall-2019-02/head/xproc/">last call</link>”
 draft:</para>
 
-<itemizedlist>
-<listitem>
-<para>The semantics of <tag>p:if</tag> have been changed. If the test expression
-is false, <tag>p:if</tag> behaves roughly like an identity step. Previously it produced
-no outputs.</para>
-</listitem>
-<listitem>
-<para>It is no longer a static error (XS0093), if <tag>p:option</tag> or <tag>p:variable</tag>
-have an attribute <literal>visibility</literal> and are not children of a <tag>p:library</tag>.</para>
-</listitem>
-</itemizedlist>
+    <itemizedlist>
+      <listitem>
+        <para>The semantics of <tag>p:if</tag> have been changed. If the test expression is false, <tag>p:if</tag>
+          behaves roughly like an identity step. Previously it produced no outputs.</para>
+      </listitem>
+      <listitem>
+        <para>It is no longer a static error (XS0093), if <tag>p:option</tag> or <tag>p:variable</tag> have an attribute
+            <literal>visibility</literal> and are not children of a <tag>p:library</tag>.</para>
+      </listitem>
+      <listitem>
+        <para>The semantics of <tag>p:choose</tag> have been changed. The default sub-pipeline for a missing
+            <tag>p:otherwise</tag> is a <tag>p:identity</tag> step (with the additional feature that it isn’t an error
+          if there’s no default readable port). A primary output port on the <tag>p:when</tag> branches for this is
+          required.</para>
+      </listitem>
+    </itemizedlist>
 </appendix>
 
 </specification>
