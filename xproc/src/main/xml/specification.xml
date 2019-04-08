@@ -3626,16 +3626,16 @@ of the content types that might be produced by any of the <tag>p:when</tag>
 or the <tag>p:otherwise</tag>.
 </para>
 
-<para>The <tag>p:choose</tag> can specify the context node against
+<para>The <tag>p:choose</tag> can specify the context item against
 which the XPath expressions that occur on each branch are evaluated.
-The context node is specified as a <glossterm>connection</glossterm>
+The context item is specified as a <glossterm>connection</glossterm>
 in the <tag>p:with-input</tag>. If no explicit connection is provided,
 the <glossterm>default readable port</glossterm> is used. If the
-context node is connected to <tag>p:empty</tag>, or is unconnected and
+context item is connected to <tag>p:empty</tag>, or is unconnected and
 the <glossterm>default readable port</glossterm> is undefined, the
 context item is undefined. <error code="D0005">It is a
-<glossterm>dynamic error</glossterm> if more than one document appears
-on the connection for this input port.</error>
+<glossterm>dynamic error</glossterm> if more than one connection for 
+the context item is provided.</error>
 </para>
 
 <para>Each conditional <glossterm>subpipeline</glossterm> is
@@ -3677,9 +3677,9 @@ elements and the <tag>p:otherwise</tag> element are not in
             <glossterm>subpipeline</glossterm> contained within that
           <tag>p:when</tag>.</para>
 
-<para>The <tag>p:when</tag> can specify a context node against which
+<para>The <tag>p:when</tag> can specify a context item against which
 its <tag class="attribute">test</tag> expression is to be evaluated.
-That context node is specified as a <glossterm>connection</glossterm>
+That context item is specified as a <glossterm>connection</glossterm>
 for the <tag>p:with-input</tag>. If no context is specified on the
 <tag>p:when</tag>, the context of the <tag>p:choose</tag> is
 used.</para>
@@ -3723,9 +3723,9 @@ That XPath expression's effective boolean value is the guard for the
 <glossterm>subpipeline</glossterm> contained within it.
 </para>
 
-<para>The <tag>p:if</tag> step can specify a context node against which
+<para>The <tag>p:if</tag> step can specify a context item against which
 its <tag class="attribute">test</tag> expression is to be evaluated.
-That context node is specified as a <glossterm>connection</glossterm>
+That context item is specified as a <glossterm>connection</glossterm>
 for the <tag>p:with-input</tag>. If no context is specified on the
 <tag>p:if</tag>, the context comes from the
 <glossterm>default readable port</glossterm>.</para>
