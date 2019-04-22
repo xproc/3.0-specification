@@ -3677,18 +3677,17 @@ elements and the <tag>p:otherwise</tag> element are not in
             <glossterm>subpipeline</glossterm> contained within that
           <tag>p:when</tag>.</para>
 
-<para>The <tag>p:when</tag> can specify a context node against which
+<para>The <tag>p:when</tag> can specify a context item against which
 its <tag class="attribute">test</tag> expression is to be evaluated.
-That context node is specified as a <glossterm>connection</glossterm>
+That context item is specified as a <glossterm>connection</glossterm>
 for the <tag>p:with-input</tag>. If no context is specified on the
 <tag>p:when</tag>, the context of the <tag>p:choose</tag> is
-used.</para>
-<para><error code="D0005">If the <tag
-class="attribute">collection</tag> attribute is not specified, or if
-its value is false,
-it is a <glossterm>dynamic error</glossterm> if
-more than one document appears on the connection for the <tag>p:when</tag>
-test expression.</error> If the collection attribute has the value true,
+used. The context item is undefined if the connection or
+the context of the <tag>p:choose</tag> provides no or more than one document.
+<error code="D0001">It is a <glossterm>dynamic error</glossterm>
+    if the XPath expression makes use of the context item, but the context item is
+    undefined.</error></para>
+<para>If the <tag class="attribute">collection</tag> attribute has the value true,
 then the default collection will contain all of the documents that appeared
 on that input and the context item will be undefined.
 </para>
