@@ -3626,16 +3626,17 @@ of the content types that might be produced by any of the <tag>p:when</tag>
 or the <tag>p:otherwise</tag>.
 </para>
 
-<para>The <tag>p:choose</tag> can specify the context node against
+<para>The <tag>p:choose</tag> can specify the context item against
 which the XPath expressions that occur on each branch are evaluated.
-The context node is specified as a <glossterm>connection</glossterm>
+The context item is specified as a <glossterm>connection</glossterm>
 in the <tag>p:with-input</tag>. If no explicit connection is provided,
 the <glossterm>default readable port</glossterm> is used. If the
-context node is connected to <tag>p:empty</tag>, or is unconnected and
+context item is connected to <tag>p:empty</tag>, or is connected to
+more than one document, or is unconnected and
 the <glossterm>default readable port</glossterm> is undefined, the
-context item is undefined. <error code="D0005">It is a
-<glossterm>dynamic error</glossterm> if more than one document appears
-on the connection for this input port.</error>
+  context item is undefined. <error code="D0001">It is a <glossterm>dynamic error</glossterm>
+    if the XPath expression makes use of the context item, but the context item is
+    undefined.</error>
 </para>
 
 <para>Each conditional <glossterm>subpipeline</glossterm> is
