@@ -168,10 +168,11 @@ recent bindings are visible.</para>
               <listitem>
 <para>The context item. The context item is either specified with a
 <glossterm>connection</glossterm> or is taken from the
-<glossterm>default readable port</glossterm>. <error code="D0008">It
-is a <glossterm>dynamic error</glossterm> if a sequence of items
-appears where an item to be used as the context item is
-expected.</error>
+  <glossterm>default readable port</glossterm>.  If the explicit connection or
+the default readable port provides no or more than one document then the context 
+item is undefined. <error code="D0001">It is a <glossterm>dynamic error</glossterm>
+if the XPath expression makes use of the context item, but the context item is
+undefined.</error>
 </para>
 
 <para>The context item used for an XML, text, or JSON document is
@@ -180,7 +181,7 @@ the XDM representation of that item.
 <glossterm>implementation-defined</glossterm>.</impl></para>
 
 <para>If there is no explicit connection and there is no default
-readable port then the context node is undefined.</para>
+readable port then the context item is undefined.</para>
               </listitem>
             </varlistentry>
             <varlistentry>
