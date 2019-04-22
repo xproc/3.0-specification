@@ -3723,19 +3723,19 @@ That XPath expression's effective boolean value is the guard for the
 <glossterm>subpipeline</glossterm> contained within it.
 </para>
 
-<para>The <tag>p:if</tag> step can specify a context node against which
+<para>The <tag>p:if</tag> step can specify a context item against which
 its <tag class="attribute">test</tag> expression is to be evaluated.
 That context node is specified as a <glossterm>connection</glossterm>
 for the <tag>p:with-input</tag>. If no context is specified on the
 <tag>p:if</tag>, the context comes from the
-<glossterm>default readable port</glossterm>.</para>
+<glossterm>default readable port</glossterm>. If no context is specified and
+there is no default readable port, the context item is undefined. The context
+item is also undefined, if no or more than one document is provided. 
+<error code="D0001">It is a <glossterm>dynamic error</glossterm>
+  if the XPath expression makes use of the context item, but the context item is
+  undefined.</error></para>
 
-<para><error code="D0005">If the <tag
-class="attribute">collection</tag> attribute is not specified, or if
-its value is false,
-it is a <glossterm>dynamic error</glossterm> if
-more than one document appears on the connection for the <tag>p:if</tag>
-test expression.</error> If the collection attribute has the value true,
+<para>If the <tag class="attribute">collection</tag> attribute has the value true,
 then the default collection will contain all of the documents that appeared
 on that input and the context item will be undefined.
 </para>
