@@ -603,6 +603,97 @@ is created and content-type <literal>application/json</literal> is used.</para>
 </itemizedlist>
 </section>
 
+<section xml:id="specified-content-types">
+<title>Specifying content types</title>
+
+<para>In some contexts (step inputs, step outputs, and inline
+elements, for example), XProc allows the pipeline author to specify a
+list of content types to identify what kinds of documents are allowed.
+Each content type in this list must have one of the following
+forms:</para>
+
+<itemizedlist>
+<listitem>
+<para>A fully qualified type of the form
+“<literal><replaceable>type</replaceable>/<replaceable>subtype</replaceable>+<replaceable>ext</replaceable></literal>”
+where “<literal>+<replaceable>ext</replaceable></literal>” is optional and any of <replaceable>type</replaceable>,
+<replaceable>subtype</replaceable>, and <replaceable>ext</replaceable>
+can be specified as “<literal>*</literal>” meaning “any”.
+For example:
+<literal>text/plain</literal> (only plain text documents),
+<literal>text/*</literal> (any “text” content type),
+<literal>*/*+xml</literal> (any “+xml” content type),
+and <literal>*/*</literal> (any content type).
+</para>
+</listitem>
+<listitem>
+<para>A fully qualified type preceded by a minus sign (“-”) indicates that the specified type is forbidden.
+For example:
+<literal>-image/svg</literal> forbids SVG images,
+<literal>-text/*</literal> forbids “text” content types,
+and <literal>-text/html</literal> forbids HTML documents.
+</para>
+</listitem>
+<listitem>
+<para>A single token (without a “/”), is considered a shortcut form.
+The following shortcuts <rfc2119>must</rfc2119> be supported by the processor:</para>
+<variablelist>
+<varlistentry><term><literal>xml</literal></term>
+<listitem>
+<para>Expands to “<literal>application/xml text/xml application/*+xml -application/xhtml+xml</literal>”.
+</para>
+</listitem>
+</varlistentry>
+<varlistentry><term><literal>html</literal></term>
+<listitem>
+<para>Expands to “<literal>text/html application/xhtml+xml</literal>”.
+</para>
+</listitem>
+</varlistentry>
+<varlistentry><term><literal>text</literal></term>
+<listitem>
+<para>Expands to: “<literal>text/* -text/html -text/xml</literal>”.
+</para>
+</listitem>
+</varlistentry>
+<varlistentry><term><literal>json</literal></term>
+<listitem>
+<para>Expands to “<literal>application/json</literal>”.
+</para>
+</listitem>
+</varlistentry>
+<varlistentry><term><literal>any</literal></term>
+<listitem>
+<para>Expands to “<literal>*/*</literal>”.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+</listitem>
+</itemizedlist>
+
+<para><impl>It is <glossterm>implementation-defined</glossterm> if a processor accepts any other content type shortcuts.</impl>
+<error code="S0111">It is a <glossterm>static error</glossterm> if an unrecognized content type shortcut is specified.</error>
+</para>
+
+<para>To determine if a document is acceptable, the (expanded) list of
+content types is considered from left to right. If the actual content
+type matches an acceptable content type, the document is acceptable.
+If it matches a forbidden content type, then it is not. A content type
+that isn’t matched is ignored. The document is considered acceptable
+if and only if it matches at least one acceptable content type
+and the last content type that matched was not forbidden.</para>
+
+<para>For example: a document with the content type “<literal>image/svg</literal>” is acceptable if the content type list expands
+to “<literal>image/* application/xml</literal>” but it is not acceptable if the content type list expands
+to “<literal>image/* -image/svg</literal>”. (Note that order matters; the document would be considered acceptable
+if the content type list expands to “<literal>-image/svg image/*</literal>”.)
+</para>
+
+<para>In the particular case of shortcut values, note that “<literal>application/xhtml+xml</literal>” is acceptable if the
+content type list is “<literal>xml html</literal>” but not if it is “<literal>html xml</literal>”.</para>
+</section>
+
 <section xml:id="media-type-match">
 <title>Matching Media Types</title>
 
@@ -4271,31 +4362,9 @@ expression is ignored.</para>
 <listitem>
 <para>The <tag class="attribute">content-types</tag> attribute lists one
 or more (space separated) content types that this input port will
-accept. If the attribute is not specified, <literal>*/*</literal> is assumed. 
-A content type must be of the form
-“<literal><replaceable>type</replaceable>/<replaceable>subtype</replaceable>+<replaceable>ext</replaceable></literal>”
-where any of <replaceable>type</replaceable>,
-<replaceable>subtype</replaceable>, and <replaceable>ext</replaceable>
-can be specified as “<literal>*</literal>” meaning “any”. The
-“<literal>+<replaceable>ext</replaceable></literal>” is optional. Here
-are some examples of content types for matching:</para>
-
-<itemizedlist>
-<listitem><simpara><literal>text/plain</literal>, plain text
-documents</simpara>
-</listitem>
-<listitem><simpara><literal>text/*</literal>, any kind of text
-document.</simpara>
-</listitem>
-<listitem><simpara><literal>*/*+xml</literal>, any XML content type.
-</simpara>
-</listitem>
-<listitem><simpara><literal>*/*</literal>, any content type.
-</simpara>
-</listitem>
-</itemizedlist>
-
-<para>The media type of input documents must
+accept. If the attribute is not specified, <literal>*/*</literal> is assumed.
+See <xref linkend="specified-content-types"/>.
+The media type of input documents must
 <link linkend="media-type-match">match</link> the allowed content types.</para>
 </listitem>
 </varlistentry>
@@ -6350,6 +6419,11 @@ draft:</para>
         if the connection delivers exactly one document, otherwise the context item is undefined. A new error (XD0001) is
         introduced. It is raised if an XPath expression makes use of the context item, but the context item is undefined.
         Two dynamic errors (XD0005 and XD0008) were removed.</para>
+      </listitem>
+      <listitem>
+        <para>Content type shortcuts and the notion of forbidden content types have been added.
+        See <xref linkend="specified-content-types"/>.
+        </para>
       </listitem>
     </itemizedlist>
 </appendix>
