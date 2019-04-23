@@ -648,8 +648,8 @@ of the element on which it occurred.</para>
   <p:output port="result" content-type="application/xml"/>
   <p:option name="path" required="true" as="xs:anyURI"/>
   <p:option name="detailed" as="xs:boolean" select="false()"/>
-  <p:option name="include-filter" as="xs:string" e:type="RegularExpression"/>
-  <p:option name="exclude-filter" as="xs:string" e:type="RegularExpression"/>
+  <p:option name="include-filter" as="xs:string*" e:type="RegularExpression"/>
+  <p:option name="exclude-filter" as="xs:string*" e:type="RegularExpression"/>
 </p:declare-step>
 
 <para><impl>Conformant processors <rfc2119>must</rfc2119> support directory paths whose
@@ -657,9 +657,14 @@ scheme is <code>file</code>. It is
 <glossterm>implementation-defined</glossterm> what other schemes are
 supported by <tag>p:directory-list</tag>, and what the interpretation
 of 'directory', 'file' and 'contents' is for those schemes.</impl>
+<error code="C0102">It is a <glossterm>dynamic error</glossterm> if an
+implementation does not support directory listing for a specified scheme.</error>
 </para>
 
-<para><error code="C0017">It is a
+ <para>If <option>path</option> is relative, it is made absolute against the 
+ base URI of the element on which it is specified 
+ (<tag>p:with-option</tag> or <tag>p:directory-list</tag> in the case of a 
+ syntactic shortcut value). <error code="C0017">It is a
 <glossterm>dynamic error</glossterm> if the absolute path does not
 identify a directory.</error> <error code="C0012">It is a
 <glossterm>dynamic error</glossterm> if the contents of the directory
@@ -670,11 +675,10 @@ environment in which the pipeline is run.</error></para>
 author is requesting additional information about the matching entries,
 see <xref linkend="dir-list-details"/>.</para>
 
-<para>If present, the value of the <option>include-filter</option>
-or <option>exclude-filter</option>
-option <rfc2119>must</rfc2119> be a whitespace separated list of regular expressions as specified in
-<biblioref linkend="xpath31-functions"/>, section 7.61 “<literal>Regular Expression
-Syntax</literal>”.</para>
+<para>If present, the value of the <option>include-filter</option> or
+<option>exclude-filter</option> option <rfc2119>must</rfc2119> be a sequence of strings, each
+one representing a regular expressions as specified in <biblioref linkend="xpath31-functions"/>,
+    section 7.61 “<literal>Regular Expression Syntax</literal>”.</para>
 
 <para>If any <option>include-filter</option> pattern matches a
 directory entry's name, the entry is included in the output. If any
