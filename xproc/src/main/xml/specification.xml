@@ -2172,7 +2172,8 @@ node, all the children of the document node are inserted.</para>
 
 <orderedlist>
 <listitem>
-<para>If the content type is an <glossterm>XML media type</glossterm>,
+<para>If the content type is an <glossterm>XML media type</glossterm> or an
+  <glossterm>HTML mediatype</glossterm>,
 the nodes are added to the XML document where they occur. This is analagous
 to the way element constructors work in <biblioref linkend="xquery10"/>.
 </para>
@@ -2185,7 +2186,8 @@ element or the attribute has a preceding node that it not an attribute.</error>
 </para>
 </listitem>
 <listitem>
-<para>If the content type is not an <glossterm>XML media type</glossterm>, each text value template is replaced by the
+<para>If the content type is not an <glossterm>XML media type</glossterm> or an 
+  <glossterm>HTML media type</glossterm>, each text value template is replaced by the
             concatenation of the serialization of the nodes that result from evaluating the template.</para>
 <para>This serialization is performed with the following serialization parameters:</para>
 
@@ -6012,7 +6014,8 @@ element is interpreted depends on the document's content type and the
 
 <para><error code="D0054">It is a
 <glossterm>dynamic error</glossterm> if an encoding is specified
-and the content type is an <glossterm>XML media type</glossterm>.</error>
+and the content type is an <glossterm>XML media type</glossterm> or
+  an <glossterm>HTML media type</glossterm>.</error>
 </para>
 
 <para><error code="D0055">It is a <glossterm>dynamic error</glossterm>
@@ -6031,7 +6034,8 @@ if an encoding is specified and the content of the <tag>p:inline</tag>
 contains any XML markup.</error>
 <error code="D0063">It is a <glossterm>dynamic error</glossterm>
 if the <tag>p:inline</tag> contains any XML markup and has a
-content type that is not an <glossterm>XML media type</glossterm>.</error>
+content type that is not an <glossterm>XML media type</glossterm> or
+  an <glossterm>HTML media type</glossterm>.</error>
 In other words, in these cases, the entire content
 must be a single text node. CDATA sections and character references do
 not count as markup for this purpose because they will already have
@@ -6067,11 +6071,11 @@ depends on the document's content type.
   </note>
   
   <section xml:id="inline-xml-content">
-    <title>Inline XML content</title>
+    <title>Inline XML and HTML content</title>
     
     <para>If the <tag class="attribute">document-properties</tag> is not
       specified or the map does not contain a key "content-type" or specifies
-      an <glossterm>XML media type</glossterm>, then
+      an <glossterm>XML media type</glossterm> or an <glossterm>HTML media type</glossterm>, then
       the content is XML. A new XML document is created by wrapping a document node
       around the nodes which appear as children of <tag>p:inline</tag>. Any preceding or
       following whitespace-only text nodes will be discarded.</para>
