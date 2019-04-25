@@ -606,8 +606,8 @@ is created and content-type <literal>application/json</literal> is used.</para>
 <section xml:id="specified-content-types">
 <title>Specifying content types</title>
 
-<para>In some contexts (step inputs, step outputs, and inline
-elements, for example), XProc allows the pipeline author to specify a
+<para>In some contexts (step inputs, and step outputs, for example), 
+XProc allows the pipeline author to specify a
 list of content types to identify what kinds of documents are allowed.
 Each content type in this list must have one of the following
 forms:</para>
@@ -640,7 +640,7 @@ The following shortcuts <rfc2119>must</rfc2119> be supported by the processor:</
 <variablelist>
 <varlistentry><term><literal>xml</literal></term>
 <listitem>
-<para>Expands to “<literal>application/xml text/xml application/*+xml -application/xhtml+xml</literal>”.
+<para>Expands to “<literal>application/xml text/xml */*+xml -application/xhtml+xml</literal>”.
 </para>
 </listitem>
 </varlistentry>
@@ -692,46 +692,9 @@ if the content type list expands to “<literal>-image/svg image/*</literal>”.
 
 <para>In the particular case of shortcut values, note that “<literal>application/xhtml+xml</literal>” is acceptable if the
 content type list is “<literal>xml html</literal>” but not if it is “<literal>html xml</literal>”.</para>
-</section>
-
-<section xml:id="media-type-match">
-<title>Matching Media Types</title>
-
-<para feature="media-type-match">When an input document arrives on a
-port, it must be match at least one of the media types specified on
-that input port. It matches if the port specifies no media types or if
-the media type of the input document is compatible with at least one
-of the specified media types. Two media types are compatible if:</para>
-
-<orderedlist>
-<listitem>
-<para feature="xml-media-types-compatible">They are both
-<glossterm baseform="XML media type">XML media types</glossterm>
-(<code>application/xml</code> is compatible with <code>image/svg+xml</code>),
-</para>
-</listitem>
-<listitem>
-<para feature="text-media-types-compatible">they are both
-<glossterm baseform="text media type">text media types</glossterm>
-(<code>text/plain</code> is compatible with <code>text/csv</code>),
-</para>
-</listitem>
-<listitem>
-<para feature="other-media-types-equal">or they are equal when
-compared with the Unicode codepoint collation
-(<code>image/png</code> is compatible with <code>image/png</code>).</para>
-</listitem>
-<listitem>
-<para feature="impl-media-type-equal"><impl>It is
-<glossterm>implementation-defined</glossterm> what additional
-content types are considered equal.</impl>
-</para>
-</listitem>
-</orderedlist>
-
 <para><error code="D0038">It is a <glossterm>dynamic error</glossterm>
 if an input document arrives on a port and it does not match the
-allowed media types.</error></para>
+allowed content types.</error></para>
 
 </section>
 
