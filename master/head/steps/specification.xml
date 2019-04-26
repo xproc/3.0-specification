@@ -169,8 +169,8 @@ with the specified value.
 </para>
 
 <p:declare-step type="p:add-attribute">
-  <p:input port="source" content-types="application/xml text/xml */*+xml"/>
-  <p:output port="result" content-types="application/xml"/>
+  <p:input port="source" content-types="xml html"/>
+  <p:output port="result" content-types="xml html"/>
   <p:option name="match" as="xs:string" select="'/*'" e:type="XSLTSelectionPattern"/>
   <p:option name="attribute-name" required="true" as="xs:QName"/>
   <p:option name="attribute-value" required="true" as="xs:string"/>
@@ -228,8 +228,8 @@ with <code>xml:base</code> attributes added to or corrected on each element as s
 by the options on this step.</para>
 
 <p:declare-step type="p:add-xml-base">
-   <p:input port="source" content-types="application/xml text/xml */*+xml"/>
-   <p:output port="result" content-types="application/xml"/>
+   <p:input port="source" content-types="xml html"/>
+   <p:output port="result" content-types="xml html"/>
    <p:option name="all" as="xs:boolean" select="false()"/>
    <p:option name="relative" as="xs:boolean" select="true()"/>
 </p:declare-step>
@@ -615,8 +615,8 @@ pattern from the
 with the deleted items removed, on the <port>result</port> port.</para>
 
 <p:declare-step type="p:delete">
-   <p:input port="source" content-types="application/xml text/xml */*+xml"/>
-   <p:output port="result" content-types="application/xml"/>
+   <p:input port="source" content-types="xml html"/>
+   <p:output port="result" content-types="xml html"/>
    <p:option name="match" required="true" as="xs:string" e:type="XSLTSelectionPattern"/>
 </p:declare-step>
 
@@ -866,8 +866,8 @@ represents the "escaped" syntax of the children as they were
 serialized.</para>
 
 <p:declare-step type="p:escape-markup">
-  <p:input port="source" content-types="application/xml text/xml */*+xml"/>
-  <p:output port="result" content-types="application/xml"/>
+  <p:input port="source" content-types="xml html"/>
+  <p:output port="result" content-types="xml html"/>
   <p:option name="serialization" as="map(xs:QName,item()*)?"/>
 </p:declare-step>
 
@@ -914,8 +914,8 @@ XML declaration in the escaped result.</para>
 based on a (possibly dynamically constructed) XPath select expression.</para>
 
 <p:declare-step type="p:filter">
-  <p:input port="source" content-types="application/xml text/xml */*+xml"/>
-  <p:output port="result" sequence="true" content-types="application/xml"/>
+  <p:input port="source" content-types="xml html"/>
+  <p:output port="result" sequence="true" content-types="xml html"/>
   <p:option name="select" required="true" as="xs:string" e:type="XPathExpression"/>
 </p:declare-step>
 
@@ -935,7 +935,7 @@ expression is computed dynamically.</para>
 for some value and injects it into the <port>source</port> document.</para>
 
 <p:declare-step type="p:hash">
-  <p:input port="source" primary="true" content-types="*/*"/>
+  <p:input port="source" primary="true" content-types="any"/>
   <p:output port="result" content-types="application/xml"/>
   <p:option name="parameters" as="map(xs:QName,item()*)?"/>
   <p:option name="value" required="true" as="xs:string"/>
@@ -1598,8 +1598,8 @@ name=W3C&amp;amp;spec=XProc
 available on its output.</para>
 
 <p:declare-step type="p:identity">
-  <p:input port="source" sequence="true" content-types="*/*"/>
-  <p:output port="result" sequence="true" content-types="*/*"/>
+  <p:input port="source" sequence="true" content-types="any"/>
+  <p:output port="result" sequence="true" content-types="any"/>
 </p:declare-step>
 
 <para>If the implementation supports passing PSVI annotations between
@@ -1620,9 +1620,9 @@ port's document relative to the matching elements in the
 <code>source</code> port's document.</para>
 
 <p:declare-step type="p:insert">
-   <p:input port="source" primary="true" content-types="application/xml text/xml */*+xml"/>
-   <p:input port="insertion" sequence="true" content-types="application/xml text/* */*+xml"/>
-   <p:output port="result" content-types="application/xml"/>
+   <p:input port="source" primary="true" content-types="xml html"/>
+   <p:input port="insertion" sequence="true" content-types="xml html"/>
+   <p:output port="result" content-types="xml html"/>
    <p:option name="match" as="xs:string" select="'/*'" e:type="XSLTSelectionPattern"/>
    <p:option name="position" required="true" as="xs:token" values="('first-child','last-child','before','after')"/>
 </p:declare-step>
@@ -1683,8 +1683,8 @@ as the source.</para>
 element and stores that label in the specified attribute.</para>
 
 <p:declare-step type="p:label-elements">
-  <p:input port="source" content-types="application/xml text/xml */*+xml"/>
-  <p:output port="result" content-types="application/xml"/>
+  <p:input port="source" content-types="xml html"/>
+  <p:output port="result" content-types="xml html"/>
   <p:option name="attribute" as="xs:QName" select="'xml:id'"/>
   <p:option name="label" as="xs:string" select="'concat(&#34;_&#34;,$p:index)'" e:type="XPathExpression"/>
   <p:option name="match" as="xs:string" select="'*'" e:type="XSLTSelectionPattern"/>
@@ -1741,7 +1741,7 @@ remains the same.</para>
 result a document (or documents) specified by an IRI.</para>
 
 <p:declare-step type="p:load">
-  <p:output port="result" sequence="true" content-types="*/*"/>
+  <p:output port="result" sequence="true" content-types="any"/>
   <p:option name="href" required="true" as="xs:anyURI"/>
   <p:option name="parameters" as="map(xs:QName,item()*)?"/>
   <p:option name="content-type" as="xs:string?"/>
@@ -1956,8 +1956,8 @@ attribute's value in the source document an absolute IRI value in the
 result document.</para>
 
 <p:declare-step type="p:make-absolute-uris">
-  <p:input port="source" content-types="application/xml text/xml */*+xml"/>
-  <p:output port="result" content-types="application/xml"/>
+  <p:input port="source" content-types="xml html"/>
+  <p:output port="result" content-types="xml html"/>
   <p:option name="match" required="true" as="xs:string" e:type="XSLTSelectionPattern"/>
   <p:option name="base-uri" as="xs:anyURI?"/>
 </p:declare-step>
@@ -2007,8 +2007,8 @@ the results are <glossterm>implementation-dependent</glossterm>.</impl>
 use of a namespace in a document to a new IRI value.</para>
 
  <p:declare-step type="p:namespace-rename">
-   <p:input port="source" content-types="application/xml text/xml */*+xml"/>
-   <p:output port="result" content-types="application/xml"/>
+   <p:input port="source" content-types="xml html"/>
+   <p:output port="result" content-types="xml html"/>
    <p:option name="from" required="true" as="xs:anyURI"/>
    <p:option name="to" required="true" as="xs:anyURI"/>
    <p:option name="apply-to" as="xs:token" select="'all'" values="('all','elements','attributes')"/>
@@ -2124,7 +2124,7 @@ XPath expressions, may end up with no appropriate namespace binding.</para></not
 fashion.</para>
 
 <p:declare-step type="p:pack">
-   <p:input port="source" content-types="application/xml text/xml */*+xml" sequence="true" primary="true"/>
+   <p:input port="source" content-types="xml html" sequence="true" primary="true"/>
    <p:input port="alternate" sequence="true" content-types="application/xml"/>
    <p:output port="result" sequence="true"/>
    <p:option name="wrapper" required="true" as="xs:QName"/>
@@ -2160,8 +2160,8 @@ this step does not attempt to distinguish which one.</para>
 processing-instruction targets in a document.</para>
 
 <p:declare-step type="p:rename">
-  <p:input port="source" content-types="application/xml text/xml */*+xml"/>
-  <p:output port="result" content-types="application/xml"/>
+  <p:input port="source" content-types="xml html"/>
+  <p:output port="result" content-types="xml html"/>
   <p:option name="match" as="xs:string" select="'/*'" e:type="XSLTSelectionPattern"/>
   <p:option name="new-name" required="true" as="xs:QName"/>
 </p:declare-step>
@@ -2210,9 +2210,9 @@ its primary input with the document element of the
 <code>replacement</code> port's document.</para>
 
 <p:declare-step type="p:replace">
-   <p:input port="source" primary="true" content-types="application/xml text/xml */*+xml"/>
-   <p:input port="replacement" content-types="application/xml text/xml */*+xml"/>
-   <p:output port="result" content-types="application/xml"/>
+   <p:input port="source" primary="true" content-types="xml html"/>
+   <p:input port="replacement" content-types="xml html"/>
+   <p:output port="result" content-types="xml html"/>
    <p:option name="match" required="true" as="xs:string" e:type="XSLTSelectionPattern"/>
 </p:declare-step>
 
@@ -2241,9 +2241,9 @@ be matched.</para>
 matching elements.</para>
 
 <p:declare-step type="p:set-attributes">
-   <p:input port="source" primary="true" content-types="application/xml text/xml */*+xml"/>
-   <p:input port="attributes" content-types="application/xml text/xml */*+xml"/>
-   <p:output port="result" content-types="application/xml"/>
+   <p:input port="source" primary="true" content-types="xml html"/>
+   <p:input port="attributes" content-types="xml html"/>
+   <p:output port="result" content-types="xml html"/>
    <p:option name="match" as="xs:string" select="'/*'" e:type="XSLTSelectionPattern"/>
 </p:declare-step>
 
@@ -2287,8 +2287,8 @@ of the element <rfc2119>must</rfc2119> also be amended accordingly.</para>
 properties on the source document.</para>
 
 <p:declare-step type="p:set-properties">
-   <p:input port="source" content-types="*/*"/>
-   <p:output port="result" content-types="*/*"/>
+   <p:input port="source" content-types="any"/>
+   <p:output port="result" content-types="any"/>
    <p:option name="properties" required="true" as="map(xs:QName,item()*)"/>
    <p:option name="merge" default="false()" as="xs:boolean"/>
 </p:declare-step>
@@ -2325,7 +2325,7 @@ the <option>properties</option> map.
 discards them. It has no output.</para>
 
 <p:declare-step type="p:sink">
-   <p:input port="source" content-types="*/*" sequence="true"/>
+   <p:input port="source" content-types="any" sequence="true"/>
 </p:declare-step>
 
 <simplesect>
@@ -2340,9 +2340,9 @@ discards them. It has no output.</para>
 documents and divides it into two sequences.</para>
 
 <p:declare-step type="p:split-sequence">
-  <p:input port="source" content-types="application/xml text/xml */*+xml" sequence="true"/>
-  <p:output port="matched" sequence="true" primary="true" content-types="application/xml"/>
-  <p:output port="not-matched" sequence="true" content-types="application/xml"/>
+  <p:input port="source" content-types="xml html" sequence="true"/>
+  <p:output port="matched" sequence="true" primary="true" content-types="xml html"/>
+  <p:output port="not-matched" sequence="true" content-types="xml html"/>
   <p:option name="initial-only" as="xs:boolean" select="false()"/>
   <p:option name="test" required="true" as="xs:string" e:type="XPathExpression"/>
 </p:declare-step>
@@ -2397,7 +2397,7 @@ version of) its input to a URI. This step outputs a reference to the
 location of the stored document.</para>
 
 <p:declare-step type="p:store">
-  <p:input port="source" content-types="*/*"/>
+  <p:input port="source" content-types="any"/>
   <p:output port="result" content-types="application/xml" primary="true"/>
   <p:option name="href" required="true" as="xs:anyURI"/>
   <p:option name="serialization" as="map(xs:QName,item()*)?"/>
@@ -2436,8 +2436,8 @@ document provided on the <port>source</port> port and replaces them
 with the string result of evaluating an XPath expression.</para>
 
 <p:declare-step type="p:string-replace">
-   <p:input port="source" content-types="application/xml text/xml */*+xml"/>
-   <p:output port="result" content-types="application/xml"/>
+   <p:input port="source" content-types="xml html"/>
+   <p:output port="result" content-types="xml html"/>
    <p:option name="match" required="true" as="xs:string" e:type="XSLTSelectionPattern"/>
    <p:option name="replace" required="true" as="xs:string" e:type="XPathExpression"/>
 </p:declare-step>
@@ -2479,8 +2479,8 @@ the string value of the <option>replace</option> expression.</para>
 version of) its input to a URI. The step outputs its input unchanged.</para>
 
   <p:declare-step type="p:tee">
-    <p:input port="source" content-types="*/*" sequence="true"/>
-    <p:output port="result" sequence="true" content-types="*/*"/>
+    <p:input port="source" content-types="any" sequence="true"/>
+    <p:output port="result" sequence="true" content-types="any"/>
     <p:option name="href" required="true" as="xs:anyURI"/>
     <p:option name="serialization" as="map(xs:QName,item()*)?"/>
     <p:option name="enable" as="xs:boolean" select="true()"/>
@@ -2517,7 +2517,7 @@ serialization of content when it is stored. Serialization is described in
     document containing that number.</para>
 
   <p:declare-step type="p:text-count">
-    <p:input port="source" primary="true" sequence="false" content-types="text/*"/>
+    <p:input port="source" primary="true" sequence="false" content-types="text"/>
     <p:output port="result" primary="true" sequence="false" content-types="application/xml"/>
   </p:declare-step>
 
@@ -2539,8 +2539,8 @@ serialization of content when it is stored. Serialization is described in
   <para>The <code>p:text-head</code> step returns lines from the beginning of a text document.</para>
 
   <p:declare-step type="p:text-head">
-    <p:input port="source" primary="true" sequence="false" content-types="text/*"/>
-    <p:output port="result" primary="true" sequence="false" content-types="text/*"/>
+    <p:input port="source" primary="true" sequence="false" content-types="text"/>
+    <p:output port="result" primary="true" sequence="false" content-types="text"/>
     <p:option name="count" required="true" as="xs:integer"/>
   </p:declare-step>
 
@@ -2574,8 +2574,8 @@ serialization of content when it is stored. Serialization is described in
   <para>The <code>p:text-join</code> step concatenates text documents.</para>
   
   <p:declare-step type="p:text-join">
-    <p:output port="source" primary="true" sequence="true" content-types="text/*"/>
-    <p:output port="result" primary="true" sequence="false" content-types="text/*"/>
+    <p:output port="source" primary="true" sequence="true" content-types="text"/>
+    <p:output port="result" primary="true" sequence="false" content-types="text"/>
     <p:option name="separator" required="false" as="xs:string"/>
     <p:option name="prefix" required="false" as="xs:string"/>
     <p:option name="suffix" required="false" as="xs:string"/>
@@ -2610,8 +2610,8 @@ serialization of content when it is stored. Serialization is described in
     supplied regular expression with a given replacement string.</para>
 
   <p:declare-step type="p:text-replace">
-    <p:input port="source" primary="true" sequence="false" content-types="text/*"/>
-    <p:output port="result" primary="true" sequence="false" content-types="text/*"/>
+    <p:input port="source" primary="true" sequence="false" content-types="text"/>
+    <p:output port="result" primary="true" sequence="false" content-types="text"/>
     <p:option name="pattern" required="true" as="xs:string"/>
     <p:option name="replacement" required="true" as="xs:string"/>
     <p:option name="flags" required="false" as="xs:string"/>
@@ -2638,8 +2638,8 @@ serialization of content when it is stored. Serialization is described in
   <para>The <code>p:text-sort</code> step sorts lines in a text document.</para>
 
   <p:declare-step type="p:text-sort">
-    <p:input port="source" primary="true" sequence="false" content-types="text/*"/>
-    <p:output port="result" primary="true" sequence="false" content-types="text/*"/>
+    <p:input port="source" primary="true" sequence="false" content-types="text"/>
+    <p:output port="result" primary="true" sequence="false" content-types="text"/>
     <p:option name="order" required="false" as="xs:string" select="'ascending'" values="('ascending', 'descending')"/>
     <p:option name="case-order" required="false" as="xs:string" values="('upper-first', 'lower-first')"/>
     <p:option name="lang" required="false" as="xs:language"/>
@@ -2698,8 +2698,8 @@ serialization of content when it is stored. Serialization is described in
   <para>The <code>p:text-tail</code> step returns lines from the end of a text document.</para>
   
   <p:declare-step type="p:text-tail">
-    <p:input port="source" primary="true" sequence="false" content-types="text/*"/>
-    <p:output port="result" primary="true" sequence="false" content-types="text/*"/>
+    <p:input port="source" primary="true" sequence="false" content-types="text"/>
+    <p:output port="result" primary="true" sequence="false" content-types="text"/>
     <p:option name="count" required="true" as="xs:integer"/>
   </p:declare-step>
   
@@ -2812,8 +2812,8 @@ same document element with children that result from the parse. This
 is the reverse of the <tag>p:escape-markup</tag> step.</para>
 
 <p:declare-step type="p:unescape-markup">
-  <p:input port="source" content-types="application/xml text/xml */*+xml text/*"/>
-  <p:output port="result" content-types="application/xml text/xml */*+xml"/>
+  <p:input port="source" content-types="xml html"/>
+  <p:output port="result" content-types="xml html"/>
   <p:option name="namespace" as="xs:anyURI?"/>
   <p:option name="content-type" as="xs:string" select="'application/xml'"/>
   <p:option name="encoding" as="xs:string?"/>
@@ -2914,7 +2914,7 @@ namespace, the following input:</para>
 children.</para>
 
 <p:declare-step type="p:unwrap">
-   <p:input port="source" content-types="application/xml text/xml */*+xml"/>
+   <p:input port="source" content-types="xml html"/>
    <p:output port="result" content-types="application/xml"/>
    <p:option name="match" as="xs:string" select="'/*'" e:type="XSLTSelectionPattern"/>
 </p:declare-step>
@@ -2952,8 +2952,8 @@ unwrapped, the result might not be well-formed XML.</para>
 the <port>source</port> document.</para>
 
 <p:declare-step type="p:uuid">
-  <p:input port="source" primary="true" content-types="application/xml text/xml */*+xml"/>
-  <p:output port="result" content-types="application/xml"/>
+  <p:input port="source" primary="true" content-types="xml html"/>
+  <p:output port="result" content-types="xml html"/>
   <p:option name="match" as="xs:string" select="'/*'" e:type="XSLTSelectionPattern"/>
   <p:option name="version" as="xs:integer?"/>
 </p:declare-step>
@@ -3004,7 +3004,7 @@ documents and produces either a single document or a new sequence of
 documents.</para>
 
 <p:declare-step type="p:wrap-sequence">
-   <p:input port="source" content-types="application/xml */*+xml text/*" sequence="true"/>
+   <p:input port="source" content-types="text xml html" sequence="true"/>
    <p:output port="result" sequence="true" content-types="application/xml"/>
    <p:option name="wrapper" required="true" as="xs:QName"/>
    <p:option name="group-adjacent" as="xs:string?" e:type="XPathExpression"/>
@@ -3048,7 +3048,7 @@ element.
 <port>source</port> document with a new parent element.</para>
 
 <p:declare-step type="p:wrap">
-   <p:input port="source" content-types="application/xml text/xml */*+xml"/>
+   <p:input port="source" content-types="xml html"/>
    <p:output port="result" content-types="application/xml"/>
    <p:option name="wrapper" required="true" as="xs:QName"/>
    <p:option name="match" required="true" as="xs:string" e:type="XSLTSelectionPattern"/>
@@ -3148,7 +3148,7 @@ values as a <literal>x-www-form-urlencoded</literal> string and
 injects it into the <port>source</port> document.</para>
 
 <p:declare-step type="p:www-form-urlencode">
-  <p:input port="source" primary="true" content-types="application/xml text/xml */*+xml"/>
+  <p:input port="source" primary="true" content-types="xml html"/>
   <p:output port="result" content-types="application/xml"/>
   <p:option name="parameters" as="map(xs:QName,item()*)?"/>
   <p:option name="match" required="true" as="xs:string" e:type="XSLTSelectionPattern"/>
@@ -3190,8 +3190,8 @@ the encoded string.</para>
 <para>The <tag>p:xinclude</tag> step applies <biblioref linkend="xinclude"/> processing to the <port>source</port> document.</para>
 
 <p:declare-step type="p:xinclude">
-  <p:input port="source" content-types="application/xml text/xml */*+xml"/>
-  <p:output port="result" content-types="application/xml text/xml */*+xml"/>
+  <p:input port="source" content-types="xml html"/>
+  <p:output port="result" content-types="xml html"/>
   <p:option name="fixup-xml-base" as="xs:boolean" select="false()"/>
   <p:option name="fixup-xml-lang" as="xs:boolean" select="false()"/>
 </p:declare-step>
@@ -3438,9 +3438,9 @@ validation before using XQuery:</para>
 <para>The <tag>p:xslt</tag> step applies an XSLT stylesheet to a document.</para>
 
 <p:declare-step type="p:xslt">
-  <p:input port="source" content-types="*/*" sequence="true" primary="true"/>
-  <p:input port="stylesheet" content-types="application/xml text/xml */*+xml"/>
-  <p:output port="result" primary="true" sequence="false" content-types="*/*"/>
+  <p:input port="source" content-types="any" sequence="true" primary="true"/>
+  <p:input port="stylesheet" content-types="xml"/>
+  <p:output port="result" primary="true" sequence="false" content-types="any"/>
   <p:output port="secondary" sequence="true" content-types="*/*"/>
   <p:option name="parameters" as="map(xs:QName,item()*)?"/>
   <p:option name="initial-mode" as="xs:QName?"/>
