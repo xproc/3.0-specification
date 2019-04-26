@@ -67,12 +67,8 @@
       <p:option name="exclude-filter" as="xs:string*" e:type="RegularExpression"/>
    </p:declare-step>
    <p:declare-step type="p:error" xml:id="error">
-      <p:input port="source"
-               sequence="true"
-               content-types="application/xml text/xml */*+xml text/*"/>
-      <p:output port="result"
-                sequence="true"
-                content-types="application/xml text/xml */*+xml text/*"/>
+      <p:input port="source" sequence="true" content-types="text xml"/>
+      <p:output port="result" sequence="true" content-types="any"/>
       <p:option name="code" required="true" as="xs:QName"/>
    </p:declare-step>
    <p:declare-step type="p:escape-markup" xml:id="escape-markup">
