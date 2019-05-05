@@ -166,11 +166,11 @@
    </p:declare-step>
    <p:declare-step type="p:pack" xml:id="pack">
       <p:input port="source"
-               content-types="xml html"
+               content-types="text xml html"
                sequence="true"
                primary="true"/>
-      <p:input port="alternate" sequence="true" content-types="application/xml"/>
-      <p:output port="result" sequence="true"/>
+      <p:input port="alternate" sequence="true" content-types="text xml html"/>
+      <p:output port="result" sequence="true" content-types="application/xml"/>
       <p:option name="wrapper" required="true" as="xs:QName"/>
    </p:declare-step>
    <p:declare-step type="p:rename" xml:id="rename">
