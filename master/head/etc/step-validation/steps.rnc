@@ -3,7 +3,18 @@ namespace local = ""
 
 # This schema could be made more constrained.
 
-Step = Step-validate-with-relax-ng | Step-validate-with-schematron | Step-validate-with-xml-schema
+Step = Step-validate-with-nvdl | Step-validate-with-relax-ng | Step-validate-with-schematron | Step-validate-with-xml-schema
+
+Step-validate-with-nvdl =
+  element validate-with-nvdl {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute assert-valid { xsd:boolean }?,
+    attribute parameters { xsd:string }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
 
 Step-validate-with-relax-ng =
   element validate-with-relax-ng {
@@ -14,6 +25,7 @@ Step-validate-with-relax-ng =
     attribute dtd-attribute-values { xsd:boolean }?,
     attribute dtd-id-idref-warnings { xsd:boolean }?,
     attribute assert-valid { xsd:boolean }?,
+    attribute parameters { xsd:string }?,
     (WithInput* & WithOption* & (Documentation|PipeInfo)*)
   }
 
@@ -38,6 +50,7 @@ Step-validate-with-xml-schema =
     attribute use-location-hints { xsd:boolean }?,
     attribute try-namespaces { xsd:boolean }?,
     attribute assert-valid { xsd:boolean }?,
+    attribute parameters { xsd:string }?,
     attribute mode { 'strict' | 'lax' }?,
     attribute version { xsd:string? }?,
     (WithInput* & WithOption* & (Documentation|PipeInfo)*)

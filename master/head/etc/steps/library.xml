@@ -22,13 +22,15 @@
                primary="true"
                content-types="*/*"
                sequence="true"/>
-      <p:input port="manifest" content-types="application/xml" sequence="false"/>
+      <p:input port="manifest" content-types="application/xml" sequence="true"/>
+      <p:input port="archive" content-types="application/*" sequence="true"/>
       <p:output port="result"
                 primary="true"
                 content-types="application/*"
                 sequence="false"/>
       <p:output port="report" content-types="application/xml" sequence="false"/>
       <p:option name="format" as="xs:QName" required="false" select="'zip'"/>
+      <p:option name="relative-to" as="xs:anyURI" required="false"/>
       <p:option name="parameters" as="xs:string" required="false"/>
    </p:declare-step>
    <p:declare-step type="p:cast-content-type" xml:id="cast-content-type">
@@ -63,6 +65,7 @@
       <p:output port="result" content-type="application/xml"/>
       <p:option name="path" required="true" as="xs:anyURI"/>
       <p:option name="detailed" as="xs:boolean" select="false()"/>
+      <p:option name="recursive" as="xs:boolean" select="false()"/>
       <p:option name="include-filter" as="xs:string*" e:type="RegularExpression"/>
       <p:option name="exclude-filter" as="xs:string*" e:type="RegularExpression"/>
    </p:declare-step>
