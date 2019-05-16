@@ -85,14 +85,14 @@
                 e:type="XPathExpression"/>
    </p:declare-step>
    <p:declare-step type="p:hash" xml:id="hash">
-      <p:input port="source" primary="true" content-types="any"/>
-      <p:output port="result" content-types="application/xml"/>
+      <p:input port="source" primary="true" content-types="xml html"/>
+      <p:output port="result" content-types="xml html"/>
       <p:option name="parameters" as="xs:string"/>
       <p:option name="value" required="true" as="xs:string"/>
       <p:option name="algorithm" required="true" as="xs:QName"/>
       <p:option name="match"
                 as="xs:string"
-                select="'/*'"
+                select="'/*/node()'"
                 e:type="XSLTSelectionPattern"/>
       <p:option name="version" as="xs:string?"/>
    </p:declare-step>

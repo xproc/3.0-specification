@@ -935,12 +935,12 @@ expression is computed dynamically.</para>
 for some value and injects it into the <port>source</port> document.</para>
 
 <p:declare-step type="p:hash">
-  <p:input port="source" primary="true" content-types="any"/>
-  <p:output port="result" content-types="application/xml"/>
+  <p:input port="source" primary="true" content-types="xml html"/>
+  <p:output port="result" content-types="xml html"/>
   <p:option name="parameters" as="map(xs:QName,item()*)?"/>
   <p:option name="value" required="true" as="xs:string"/>
   <p:option name="algorithm" required="true" as="xs:QName"/>
-  <p:option name="match" as="xs:string" select="'/*'" e:type="XSLTSelectionPattern"/>
+  <p:option name="match" as="xs:string" select="'/*/node()'" e:type="XSLTSelectionPattern"/>
   <p:option name="version" as="xs:string?"/>
 </p:declare-step>
 
@@ -989,7 +989,9 @@ of the element <rfc2119>must</rfc2119> also be amended accordingly.</para>
 
 <para>If the expression matches any
 other kind of node, the entire node (and <emphasis>not</emphasis> just
-its contents) is replaced by the hash.</para>
+  its contents) is replaced by the hash. <error code="C0091">It is a
+    <glossterm>dynamic error</glossterm> if the result of <tag>p:hash</tag> contains only 
+text nodes.</error></para>
 
 <simplesect>
 <title>Document properties</title>
