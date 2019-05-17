@@ -2099,8 +2099,8 @@ use of a namespace in a document to a new IRI value.</para>
  <p:declare-step type="p:namespace-rename">
    <p:input port="source" content-types="xml html"/>
    <p:output port="result" content-types="xml html"/>
-   <p:option name="from" required="true" as="xs:anyURI"/>
-   <p:option name="to" required="true" as="xs:anyURI"/>
+   <p:option name="from" as="xs:anyURI"/>
+   <p:option name="to" as="xs:anyURI"/>
    <p:option name="apply-to" as="xs:token" select="'all'" values="('all','elements','attributes')"/>
 </p:declare-step>
 
@@ -2175,6 +2175,9 @@ not specified or has an empty string as its value) changed to have no value.</pa
    whose namespace name has no value, in the
    output its namespace name is set to the value of the
    <option>to</option> option.</para>
+      <para><error code="C0092">It is a <glossterm>dynamic error</glossterm>
+          if as a consequence of changing or removing the namespace of an attribute
+          the attribute's name is not unique on the respective element.</error></para>
   </listitem>
   <listitem>
    <para>Namespace attributes:  If the <option>from</option> option is present

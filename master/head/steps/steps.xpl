@@ -160,8 +160,8 @@
    <p:declare-step type="p:namespace-rename" xml:id="namespace-rename">
       <p:input port="source" content-types="xml html"/>
       <p:output port="result" content-types="xml html"/>
-      <p:option name="from" required="true" as="xs:anyURI"/>
-      <p:option name="to" required="true" as="xs:anyURI"/>
+      <p:option name="from" as="xs:anyURI"/>
+      <p:option name="to" as="xs:anyURI"/>
       <p:option name="apply-to"
                 as="xs:token"
                 select="'all'"
