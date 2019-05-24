@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar ns="http://www.w3.org/ns/xproc" xmlns="http://relaxng.org/ns/structure/1.0">
+<grammar ns="http://www.w3.org/ns/xproc" xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
   <!-- This schema could be made more constrained. -->
   <define name="Step">
     <ref name="Step-join-json"/>
@@ -14,9 +14,17 @@
         <ref name="use-when.attr"/>
       </optional>
       <ref name="step.attributes"/>
+      <optional>
+        <attribute name="flatten-arrays">
+          <data type="boolean"/>
+        </attribute>
+      </optional>
       <interleave>
         <zeroOrMore>
           <ref name="WithInput"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="WithOption"/>
         </zeroOrMore>
         <zeroOrMore>
           <choice>
