@@ -1,4 +1,4 @@
-<html xmlns="http://www.w3.org/1999/xhtml"><head><title>XProc 3.0: Standard Step Library</title><meta charset="utf-8" /><link rel="alternate" title="XML" href="specification.xml" /><link rel="alternate" title="Latest editor's draft" href="http://www.w3.org/XML/XProc/docs/langspec.html" /><link rel="alternate" title="Latest Public Working Draft" href="http://www.w3.org/TR/xproc/" /><meta name="generator" content="DocBook XSL 2.0 Stylesheets V2.3.9" /><meta name="description" content="Abstract This specification describes the standard step vocabulary of&#xA;  XProc 3.0: An XML Pipeline Language." /><link href="css/prism.css" rel="stylesheet" type="text/css" /><link href="css/db-prism.css" rel="stylesheet" type="text/css" /><link rel="stylesheet" type="text/css" href="css/base.css" /><link rel="stylesheet" type="text/css" href="css/xproc.css" /><link rel="stylesheet" type="text/css" href="css/base.css" /><link rel="stylesheet" type="text/css" href="css/print.css" media="print" /><script type="text/javascript" src="js/dbmodnizr.js"></script></head><body><article class="specification"><div class="head" id="spec.head"><h1>XProc 3.0: Standard Step Library</h1><h2>Editor's Draft  <time datetime="2019-05-24T13:19:05Z">24 May 2019 at 13:19 UTC (<a href="https://github.com/xproc/3.0-steps/commit/cad45e4d05b44e6dd2b82b523790efa6adb59927">build 60</a>)</time></h2><dl><dt>This Version:</dt><dd><a href="https://xproc.github.io/3.0-steps/master/head/steps/">https://xproc.github.io/3.0-steps/master/head/steps/</a></dd><dt>Latest Version:</dt><dd><a href="http://spec.xproc.org/master/head/steps/">http://spec.xproc.org/master/head/steps/</a></dd><dt>Editors:</dt><dd><span class="personname">Norman Walsh</span></dd><dd><span class="personname">Achim Berndzen</span></dd><dd><span class="personname">Gerrit Imsieke</span></dd><dd><span class="personname">Erik Siegel</span></dd><dt>Repository:</dt><dd><a href="http://github.com/xproc/3.0-steps">This specification on GitHub</a></dd><dd><a href="http://github.com/xproc/3.0-specification/issues">Report an issue</a></dd><dt>Changes:</dt><dd><a href="diff.html">Diff against current “status quo” draft</a></dd><dd><a href="http://github.com/xproc/3.0-steps/commits/master">Commits for this specification</a></dd></dl><p>This document is also available in these non-normative formats: <a href="specification.xml">XML</a>, 
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>XProc 3.0: Standard Step Library</title><meta charset="utf-8" /><link rel="alternate" title="XML" href="specification.xml" /><link rel="alternate" title="Latest editor's draft" href="http://www.w3.org/XML/XProc/docs/langspec.html" /><link rel="alternate" title="Latest Public Working Draft" href="http://www.w3.org/TR/xproc/" /><meta name="generator" content="DocBook XSL 2.0 Stylesheets V2.3.9" /><meta name="description" content="Abstract This specification describes the standard step vocabulary of&#xA;  XProc 3.0: An XML Pipeline Language." /><link href="css/prism.css" rel="stylesheet" type="text/css" /><link href="css/db-prism.css" rel="stylesheet" type="text/css" /><link rel="stylesheet" type="text/css" href="css/base.css" /><link rel="stylesheet" type="text/css" href="css/xproc.css" /><link rel="stylesheet" type="text/css" href="css/base.css" /><link rel="stylesheet" type="text/css" href="css/print.css" media="print" /><script type="text/javascript" src="js/dbmodnizr.js"></script></head><body><article class="specification"><div class="head" id="spec.head"><h1>XProc 3.0: Standard Step Library</h1><h2>Editor's Draft  <time datetime="2019-06-10T11:08:22Z">10 June 2019 at 11:08 UTC (<a href="https://github.com/xproc/3.0-steps/commit/a4bbf347425b3f9a4c3205480352c77cf0c01686">build 63</a>)</time></h2><dl><dt>This Version:</dt><dd><a href="https://xproc.github.io/3.0-steps/master/head/steps/">https://xproc.github.io/3.0-steps/master/head/steps/</a></dd><dt>Latest Version:</dt><dd><a href="http://spec.xproc.org/master/head/steps/">http://spec.xproc.org/master/head/steps/</a></dd><dt>Editors:</dt><dd><span class="personname">Norman Walsh</span></dd><dd><span class="personname">Achim Berndzen</span></dd><dd><span class="personname">Gerrit Imsieke</span></dd><dd><span class="personname">Erik Siegel</span></dd><dt>Repository:</dt><dd><a href="http://github.com/xproc/3.0-steps">This specification on GitHub</a></dd><dd><a href="http://github.com/xproc/3.0-specification/issues">Report an issue</a></dd><dt>Changes:</dt><dd><a href="diff.html">Diff against current “status quo” draft</a></dd><dd><a href="http://github.com/xproc/3.0-steps/commits/master">Commits for this specification</a></dd></dl><p>This document is also available in these non-normative formats: <a href="specification.xml">XML</a>, 
 	  automatic <a href="diff.html">change markup</a> from the previous draft
           courtesy of <a href="http://www.deltaxml.com/">DeltaXML</a>.</p><p class="copyright"><span class="copyright">Copyright © <span class="years">2018</span> <span class="holders"><span class="holder">@@FIXME:</span></span></span></p><hr /><div class="abstract"><h2>Abstract</h2>
   <p>This specification describes the standard step vocabulary of
@@ -676,18 +676,34 @@ one representing a regular expressions as specified in [<a href="#xpath31-functi
     section 7.61 “<code class="literal">Regular Expression Syntax</code>”.</p>
 
 <p>The regular expressions will be matched against an item’s file system path relative to the top-level path that was
-  given in the <code class="option">path</code> option. Prior to be matched against the regular expression, the relative path
-will be completed with a leading slash and, if the item is a directory, with a trailing slash.</p>
-  <p>Examples: A file <code class="literal">file.txt</code> in the directory specified by <code class="option">path</code> will become
-    <code class="literal">/file.txt</code>. A relative path <code class="literal">dir1/file.txt</code> will become
-      <code class="literal">/dir1/file.txt</code>. A relative path <code class="literal">dir1/dir2</code> will become
-      <code class="literal">/dir1/dir2/</code>. A relative path <code class="literal">a/a/b/file.txt</code> will become 
-    <code class="literal">/a/a/b/file.txt</code>.</p>
-  <p>Regular expression that match <code class="literal">/a/a/b/file.txt</code> are, for example,
-  <code class="literal">^/(\w+/){2,3}.+\.txt$</code> or <code class="literal">/file\.[^/]+$</code>.</p>
+  given in the <code class="option">path</code> option. If the item is a directory, a trailing slash will be appended.</p>
+  <p>Examples: A file <code class="literal">file.txt</code> in the directory specified by <code class="option">path</code> will remain
+    <code class="literal">file.txt</code>, a relative path <code class="literal">dir1/file.txt</code> will remain
+      <code class="literal">dir1/file.txt</code>, while a relative path <code class="literal">dir1/dir2</code> will become
+      <code class="literal">dir1/dir2/</code> id <code class="literal">dir2</code> is a directory.</p>
+  <p>Regular expressions that match <code class="literal">a/a/b/file.txt</code> are, for example,
+  <code class="literal">^/(\w+/){2,3}.+\.txt$</code>, <code class="literal">a/a/b/</code>, or <code class="literal">/file\.[^/]+$</code>.</p>
 
-<p>If any <code class="option">include-filter</code> pattern matches the slash-augmented relative path, the entry is included in the output. If any
-<code class="option">exclude-filter</code> pattern matches the slash-augmented relative path, the entry is excluded in the output. If both options are
+<p>If any <code class="option">include-filter</code> pattern matches the slash-augmented relative path, the entry is included in the output. 
+  If a directory’s path matches the inclusion regex, the directory’s content will not automatically be included, too.
+  They need to match, the regular expression, too. So the filter regex <code class="literal">^dir/</code> will match the directory
+  content but <code class="literal">^dir/$</code> won’t, and as a consequence the directory’s content will not be included in the result.</p>
+  <p>If a relative path is matched by an include filter,
+    all its ancestor directories starting from the initial directory (but not their content if not included explicitly) 
+    will be included, too. Example: for a file <code class="literal">a/a/b/file.txt</code> below the initial directory 
+    <code class="literal">/home/jane</code>, this output will be produced, omitting content that might be present in the 
+    intermediate directories:<pre class="literallayout language-none line-numbers"><code>&lt;c:directory xml:base="file:/home/jane/` uri="." name="jane"&gt;
+  &lt;c:directory uri="a/" name="a"&gt;
+    &lt;c:directory uri="a/a/" name="a"&gt;
+      &lt;c:directory uri="a/a/b/" name="b"&gt;
+        &lt;c:file uri="a/a/b/file.txt" name="file.txt"/&gt;
+      &lt;/c:directory&gt;
+    &lt;/c:directory&gt;
+  &lt;/c:directory&gt;
+&lt;/c:directory&gt;</code></pre></p>
+  <p>If the <code class="option">exclude-filter</code> pattern matches the slash-augmented relative path, the entry (and all of
+    its content in case of a directory) is excluded in the output.</p>
+  <p>If both options are
 provided, the include filter is processed first, then the exclude
 filter. As a result: an item is included if it matches (at least) one
 of the <code class="option">include-filter</code> values and none of the
@@ -695,6 +711,12 @@ of the <code class="option">include-filter</code> values and none of the
   <p>If no <code class="option">include-filter</code> is given, that is, if <code class="option">include-filter</code> is an empty
   sequence, any item will be included in the result (unless it is excluded by <code class="option">exclude-filter</code>).</p>
 
+  <p>The augmented relative path will also be stored as a <code class="tag-element attribute">uri</code> attribute on the respective
+      <a href="#cv.directory"><code class="tag-element">c:directory</code></a>, <a href="#cv.file"><code class="tag-element">c:file</code></a>, and <a href="#cv.other"><code class="tag-element">c:other</code></a> elements. This relative URI, if resolved against
+    the top-level directory’s <code class="tag-element attirubte">xml:base</code> attribute value, will give the absolute URI for the
+    resource. The top-level <a href="#cv.directory"><code class="tag-element">c:directory</code></a> will always have the relative URI <code class="literal">.</code> attached to
+    it, while its <code class="tag-element attribute">xml:base</code> will also undergo trailing-slash normalization, which is to say,
+    it always must end in a slash.</p>
 <div class="note admonition"><h3>Note</h3><div class="admonition-body">
 <p>There is no way to specify a list of values using attribute value
 templates. If the option shortcut syntax is used to provide the
@@ -711,7 +733,7 @@ element whose base URI is the directory path and whose
 <code class="tag-attribute">name</code> attribute is the last segment
 of the directory path (that is, the directory's (local) name).</p>
 
-<p id="d695e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:directory<br />  <strong>name</strong> = <var>string</var>&gt;<br />    (<a href="#cv.file">c:file</a> | <br />     <a href="#cv.directory">c:directory</a> | <br />     <a href="#cv.other">c:other</a>)*<br />&lt;/c:directory&gt;</code></p>
+<p id="d717e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:directory<br />  <strong>name</strong> = <var>string</var>&gt;<br />    (<a href="#cv.file">c:file</a> | <br />     <a href="#cv.directory">c:directory</a> | <br />     <a href="#cv.other">c:other</a>)*<br />&lt;/c:directory&gt;</code></p>
 
 <p>Its contents are determined as follows, based on the entries in
 the directory identified by the directory path. For each entry in the
@@ -731,14 +753,14 @@ determined to be special.</p>
 </li><li>
 <p id="cv.file">A <a href="#cv.file"><code class="tag-element">c:file</code></a> is produced for each file
 not determined to be special.</p>
-<p id="d705e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:file<br />  <strong>name</strong> = <var>string</var><br />  content-types? = <var>ContentTypes</var> /&gt;</code></p>
+<p id="d727e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:file<br />  <strong>name</strong> = <var>string</var><br />  content-types? = <var>ContentTypes</var> /&gt;</code></p>
 </li><li>
 <p id="cv.other"><span id="impl-17">Any file or directory determined to be
 special by the <code class="tag-element">p:directory-list</code> step may be output using a
 <a href="#cv.other"><code class="tag-element">c:other</code></a> element but the criteria for marking a file as
 special are <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em>.</span>
 </p>
-<p id="d709e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:other<br />  <strong>name</strong> = <var>string</var> /&gt;</code></p>
+<p id="d731e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:other<br />  <strong>name</strong> = <var>string</var> /&gt;</code></p>
 </li></ul></div>
 
 <p>When a directory entry is a subdirectory, unless the <code class="option">recursive</code> is <code class="literal">true</code>,
@@ -795,7 +817,7 @@ meaningful value, the attribute may be omitted.</p>
 are <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em>.</span></p>
 </div></section>
 
-<section id="c.directory-list.23" class="simplesect"><div class="section-titlepage"><h4>Document properties</h4></div><div class="content">
+<section id="c.directory-list.27" class="simplesect"><div class="section-titlepage"><h4>Document properties</h4></div><div class="content">
 
 <p>No document properties are preserved.</p>
 </div></section>
@@ -1011,7 +1033,7 @@ if the document element of the document that arrives on the
 
 <p>An HTTP request is represented by a <code class="tag-element">c:request</code> element.</p>
 
-<p id="d928e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:request<br />  <strong>method</strong> = <var>NCName</var><br />  href? = <var>anyURI</var><br />  detailed? = <var>boolean</var><br />  status-only? = <var>boolean</var><br />  username? = <var>string</var><br />  password? = <var>string</var><br />  auth-method? = <var>string</var><br />  send-authorization? = <var>boolean</var><br />  override-content-type? = <var>ContentType</var><br />  timeout? = <var>positiveInteger</var><br />  fail-on-timeout? = <var>boolean</var>&gt;<br />    (<a href="#cv.header">c:header</a>*,<br />     (<a href="#cv.multipart">c:multipart</a> | <br />      <a href="#cv.body">c:body</a>)?)<br />&lt;/c:request&gt;</code></p>
+<p id="d940e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:request<br />  <strong>method</strong> = <var>NCName</var><br />  href? = <var>anyURI</var><br />  detailed? = <var>boolean</var><br />  status-only? = <var>boolean</var><br />  username? = <var>string</var><br />  password? = <var>string</var><br />  auth-method? = <var>string</var><br />  send-authorization? = <var>boolean</var><br />  override-content-type? = <var>ContentType</var><br />  timeout? = <var>positiveInteger</var><br />  fail-on-timeout? = <var>boolean</var>&gt;<br />    (<a href="#cv.header">c:header</a>*,<br />     (<a href="#cv.multipart">c:multipart</a> | <br />      <a href="#cv.body">c:body</a>)?)<br />&lt;/c:request&gt;</code></p>
 
 <p><a id="err.inline.C0006"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic error</a></em> (<a href="#err.C0006"><code class="errqname">err:XC0006</code></a>) if the
 <code class="tag-attribute">method</code> is not specified on a <code class="tag-element">c:request</code>.
@@ -3058,7 +3080,7 @@ is empty.</p>
 <ul><li>
 <p>If the document root element is <a href="#cv.query"><code id="cv.query" class="tag-element">c:query</code></a>, the text
 descendants of this element are considered the query.</p>
-<p id="d2215e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:query&gt;<br />    <var>string</var><br />&lt;/c:query&gt;</code></p>
+<p id="d2227e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:query&gt;<br />    <var>string</var><br />&lt;/c:query&gt;</code></p>
 </li><li>
 <p>If the document root element is in the XQueryX namespace, the
 document is treated as an XQueryX-encoded query. <span id="impl-44">Support for

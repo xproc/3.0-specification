@@ -755,18 +755,34 @@ one representing a regular expressions as specified in <biblioref linkend="xpath
     section 7.61 “<literal>Regular Expression Syntax</literal>”.</para>
 
 <para>The regular expressions will be matched against an item’s file system path relative to the top-level path that was
-  given in the <option>path</option> option. Prior to be matched against the regular expression, the relative path
-will be completed with a leading slash and, if the item is a directory, with a trailing slash.</para>
-  <para>Examples: A file <literal>file.txt</literal> in the directory specified by <option>path</option> will become
-    <literal>/file.txt</literal>. A relative path <literal>dir1/file.txt</literal> will become
-      <literal>/dir1/file.txt</literal>. A relative path <literal>dir1/dir2</literal> will become
-      <literal>/dir1/dir2/</literal>. A relative path <literal>a/a/b/file.txt</literal> will become 
-    <literal>/a/a/b/file.txt</literal>.</para>
-  <para>Regular expression that match <literal>/a/a/b/file.txt</literal> are, for example,
-  <literal>^/(\w+/){2,3}.+\.txt$</literal> or <literal>/file\.[^/]+$</literal>.</para>
+  given in the <option>path</option> option. If the item is a directory, a trailing slash will be appended.</para>
+  <para>Examples: A file <literal>file.txt</literal> in the directory specified by <option>path</option> will remain
+    <literal>file.txt</literal>, a relative path <literal>dir1/file.txt</literal> will remain
+      <literal>dir1/file.txt</literal>, while a relative path <literal>dir1/dir2</literal> will become
+      <literal>dir1/dir2/</literal> id <literal>dir2</literal> is a directory.</para>
+  <para>Regular expressions that match <literal>a/a/b/file.txt</literal> are, for example,
+  <literal>^/(\w+/){2,3}.+\.txt$</literal>, <literal>a/a/b/</literal>, or <literal>/file\.[^/]+$</literal>.</para>
 
-<para>If any <option>include-filter</option> pattern matches the slash-augmented relative path, the entry is included in the output. If any
-<option>exclude-filter</option> pattern matches the slash-augmented relative path, the entry is excluded in the output. If both options are
+<para>If any <option>include-filter</option> pattern matches the slash-augmented relative path, the entry is included in the output. 
+  If a directory’s path matches the inclusion regex, the directory’s content will not automatically be included, too.
+  They need to match, the regular expression, too. So the filter regex <literal>^dir/</literal> will match the directory
+  content but <literal>^dir/$</literal> won’t, and as a consequence the directory’s content will not be included in the result.</para>
+  <para>If a relative path is matched by an include filter,
+    all its ancestor directories starting from the initial directory (but not their content if not included explicitly) 
+    will be included, too. Example: for a file <literal>a/a/b/file.txt</literal> below the initial directory 
+    <literal>/home/jane</literal>, this output will be produced, omitting content that might be present in the 
+    intermediate directories:<literallayout>&lt;c:directory xml:base="file:/home/jane/` uri="." name="jane"&gt;
+  &lt;c:directory uri="a/" name="a"&gt;
+    &lt;c:directory uri="a/a/" name="a"&gt;
+      &lt;c:directory uri="a/a/b/" name="b"&gt;
+        &lt;c:file uri="a/a/b/file.txt" name="file.txt"/&gt;
+      &lt;/c:directory&gt;
+    &lt;/c:directory&gt;
+  &lt;/c:directory&gt;
+&lt;/c:directory&gt;</literallayout></para>
+  <para>If the <option>exclude-filter</option> pattern matches the slash-augmented relative path, the entry (and all of
+    its content in case of a directory) is excluded in the output.</para>
+  <para>If both options are
 provided, the include filter is processed first, then the exclude
 filter. As a result: an item is included if it matches (at least) one
 of the <option>include-filter</option> values and none of the
@@ -774,6 +790,12 @@ of the <option>include-filter</option> values and none of the
   <para>If no <option>include-filter</option> is given, that is, if <option>include-filter</option> is an empty
   sequence, any item will be included in the result (unless it is excluded by <option>exclude-filter</option>).</para>
 
+  <para>The augmented relative path will also be stored as a <tag role="attribute">uri</tag> attribute on the respective
+      <tag>c:directory</tag>, <tag>c:file</tag>, and <tag>c:other</tag> elements. This relative URI, if resolved against
+    the top-level directory’s <tag role="attirubte">xml:base</tag> attribute value, will give the absolute URI for the
+    resource. The top-level <tag>c:directory</tag> will always have the relative URI <literal>.</literal> attached to
+    it, while its <tag role="attribute">xml:base</tag> will also undergo trailing-slash normalization, which is to say,
+    it always must end in a slash.</para>
 <note>
 <para>There is no way to specify a list of values using attribute value
 templates. If the option shortcut syntax is used to provide the
