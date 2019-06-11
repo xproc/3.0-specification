@@ -50,8 +50,20 @@ A machine-readable description of
 these steps may be found in
 <link xlink:href="steps.xpl">steps.xpl</link>.
 </para>
+  
+  <note role="editorial">
+      <para><tag>p:validate</tag> is not included yet. We should discuss <link xlink:href="https://github.com/xproc/1.0-specification/issues/135#issuecomment-83043122">Norm’s
+          proposal</link> and decide whether we want to include such a step. In addition, an idea was floating that such
+        a generic step might also look at the <code>xml-model</code> processing instructions that might be prepended to
+        a document. What makes it problematic might be that these PIs are missing after parsing the document, unless an
+        extra effort is made to re-attach them to the document node after parsing. This could be a document property
+          <code>models</code> that holds a <code>c:models</code> document with an XML representation of the
+          <code>xml-model</code> PIs, but all kinds of document loading mechanisms (<tag>p:load</tag>,
+          <tag>p:document</tag>, <tag>p:http-request</tag>) would need to be extended to process these prepended
+          <code>xml-model</code> PIs when loading a document.</para>
+  </note>
 
-<para>Familarity with the
+<para>Familiarity with the
 general nature of <biblioref linkend="xproc30"/>
 steps is assumed; for background details, see
 <biblioref linkend="xproc30-steps"/>.</para>
@@ -65,9 +77,9 @@ steps is assumed; for background details, see
     <note xml:id="note-assert-valid">
       <para>Historically, the validation steps (apart from <tag>p:validate-with-schematron</tag>) could only report errors
       by setting <option>assert-valid</option> to <literal>true</literal> and catching the errors. A <tag>c:errors</tag> 
-        document on the <port>error</port> of the corresponding <tag>p:catch</tag> recovery pipeline had to be sent to an 
+        document on the <port>error</port> port of the corresponding <tag>p:catch</tag> recovery pipeline had to be sent to an 
         output, either verbatim or after postprocessing. Now, if <option>assert-valid</option> is <literal>false</literal>, 
-        an XVRL document will be available on the <port>report</port> of the validation step. It uses the XVRL severity 
+        an XVRL document will be available on the <port>report</port> port of the validation step. It uses the XVRL severity 
         vocabulary to indicate whether the validation failed, and to which degree. This allows more nuance in reporting
       errors. Previously, <literal>assert-valid="true"</literal> on <tag>p:validate-with-schematron</tag> would always
       throw an error even if the reported findings were only intended as less severe, for example if the schema author used 
@@ -92,7 +104,7 @@ steps is assumed; for background details, see
     <para>Each of the validation steps has a <option>parameters</option> option. The supported keys and their semantics are
         <glossterm>implementation-defined</glossterm>, and they can be different for each validation step. Keys in the
         <literal>c</literal> namespace, <uri type="namespace">http://www.w3.org/ns/xproc-step</uri>, namely
-        <literal>c:compile</literal> and <literal>c:xvrl</literal>, hold itself maps that control schema compilation and XVRL
+        <literal>c:compile</literal> and <literal>c:xvrl</literal>, hold maps themselves that control schema compilation and XVRL
       generation, respectively. Schema compilation is, for example, the process of converting a Schematron schema into an XSLT
       stylesheet. For the <literal>c:xvrl</literal> map, XProc implementations that implement any of the validation steps
         <rfc2119>should</rfc2119> also support the basic parameters that are defined in the <biblioref linkend="xvrl"/>
