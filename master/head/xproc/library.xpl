@@ -22,13 +22,15 @@
                primary="true"
                content-types="*/*"
                sequence="true"/>
-      <p:input port="manifest" content-types="application/xml" sequence="false"/>
+      <p:input port="manifest" content-types="application/xml" sequence="true"/>
+      <p:input port="archive" content-types="application/*" sequence="true"/>
       <p:output port="result"
                 primary="true"
                 content-types="application/*"
                 sequence="false"/>
       <p:output port="report" content-types="application/xml" sequence="false"/>
       <p:option name="format" as="xs:QName" required="false" select="'zip'"/>
+      <p:option name="relative-to" as="xs:anyURI" required="false"/>
       <p:option name="parameters" as="xs:string" required="false"/>
    </p:declare-step>
    <p:declare-step type="p:cast-content-type" xml:id="cast-content-type">
@@ -69,6 +71,7 @@
       <p:output port="result" content-type="application/xml"/>
       <p:option name="path" required="true" as="xs:anyURI"/>
       <p:option name="detailed" as="xs:boolean" select="false()"/>
+      <p:option name="max-depth" as="xs:string?" select="'1'"/>
       <p:option name="include-filter" as="xs:string*" e:type="RegularExpression"/>
       <p:option name="exclude-filter" as="xs:string*" e:type="RegularExpression"/>
    </p:declare-step>
@@ -126,21 +129,21 @@
    </p:declare-step>
    <p:declare-step type="p:filter" xml:id="filter">
       <p:input port="source" content-types="xml html"/>
-      <p:output port="result" sequence="true" content-types="xml html"/>
+      <p:output port="result" sequence="true" content-types="text xml html"/>
       <p:option name="select"
                 required="true"
                 as="xs:string"
                 e:type="XPathExpression"/>
    </p:declare-step>
    <p:declare-step type="p:hash" xml:id="hash">
-      <p:input port="source" primary="true" content-types="any"/>
-      <p:output port="result" content-types="application/xml"/>
+      <p:input port="source" primary="true" content-types="xml html"/>
+      <p:output port="result" content-types="xml html"/>
       <p:option name="parameters" as="xs:string"/>
       <p:option name="value" required="true" as="xs:string"/>
       <p:option name="algorithm" required="true" as="xs:QName"/>
       <p:option name="match"
                 as="xs:string"
-                select="'/*'"
+                select="'/*/node()'"
                 e:type="XSLTSelectionPattern"/>
       <p:option name="version" as="xs:string?"/>
    </p:declare-step>
@@ -216,8 +219,8 @@
    <p:declare-step type="p:namespace-rename" xml:id="namespace-rename">
       <p:input port="source" content-types="xml html"/>
       <p:output port="result" content-types="xml html"/>
-      <p:option name="from" required="true" as="xs:anyURI"/>
-      <p:option name="to" required="true" as="xs:anyURI"/>
+      <p:option name="from" as="xs:anyURI"/>
+      <p:option name="to" as="xs:anyURI"/>
       <p:option name="apply-to"
                 as="xs:token"
                 select="'all'"
@@ -249,11 +252,11 @@
    </p:declare-step>
    <p:declare-step type="p:pack" xml:id="pack">
       <p:input port="source"
-               content-types="xml html"
+               content-types="text xml html"
                sequence="true"
                primary="true"/>
-      <p:input port="alternate" sequence="true" content-types="application/xml"/>
-      <p:output port="result" sequence="true"/>
+      <p:input port="alternate" sequence="true" content-types="text xml html"/>
+      <p:output port="result" sequence="true" content-types="application/xml"/>
       <p:option name="wrapper" required="true" as="xs:QName"/>
    </p:declare-step>
    <p:declare-step type="p:rename" xml:id="rename">
@@ -470,38 +473,43 @@
                 e:type="XSLTSelectionPattern"/>
       <p:option name="version" as="xs:integer?"/>
    </p:declare-step>
+   <p:declare-step type="p:validate-with-nvdl" xml:id="validate-with-nvdl">
+      <p:input port="source" primary="true" content-types="xml html"/>
+      <p:input port="nvdl" content-types="xml"/>
+      <p:input port="schemas" sequence="true" content-types="text xml"/>
+      <p:output port="result" primary="true" content-types="xml html"/>
+      <p:output port="report" sequence="true" content-types="application/xml json"/>
+      <p:option name="assert-valid" select="true()" as="xs:boolean"/>
+      <p:option name="parameters" as="xs:string"/>
+   </p:declare-step>
    <p:declare-step type="p:validate-with-relax-ng" xml:id="validate-with-relax-ng">
-      <p:input port="source"
-               primary="true"
-               content-types="application/xml text/xml */*+xml"/>
-      <p:input port="schema" content-types="application/xml */*+xml text/*"/>
-      <p:output port="result" content-types="application/xml"/>
+      <p:input port="source" primary="true" content-types="xml html"/>
+      <p:input port="schema" content-types="text xml"/>
+      <p:output port="result" primary="true" content-types="xml html"/>
+      <p:output port="report" sequence="true" content-types="application/xml json"/>
       <p:option name="dtd-attribute-values" select="false()" as="xs:boolean"/>
       <p:option name="dtd-id-idref-warnings" select="false()" as="xs:boolean"/>
       <p:option name="assert-valid" select="true()" as="xs:boolean"/>
+      <p:option name="parameters" as="xs:string"/>
    </p:declare-step>
    <p:declare-step type="p:validate-with-schematron" xml:id="validate-with-schematron">
-      <p:input port="source"
-               primary="true"
-               content-types="application/xml text/xml */*+xml"/>
-      <p:input port="schema" content-types="application/xml text/xml */*+xml"/>
+      <p:input port="source" primary="true" content-types="xml html"/>
+      <p:input port="schema" content-types="xml"/>
       <p:output port="result" primary="true" content-types="application/xml"/>
-      <p:output port="report" sequence="true" content-types="application/xml"/>
+      <p:output port="report" sequence="true" content-types="application/xml json"/>
       <p:option name="parameters" as="xs:string"/>
-      <p:option name="phase" select="'#ALL'" as="xs:string"/>
+      <p:option name="phase" select="'#DEFAULT'" as="xs:string"/>
       <p:option name="assert-valid" select="true()" as="xs:boolean"/>
    </p:declare-step>
    <p:declare-step type="p:validate-with-xml-schema" xml:id="validate-with-xml-schema">
-      <p:input port="source"
-               primary="true"
-               content-types="application/xml text/xml */*+xml"/>
-      <p:input port="schema"
-               sequence="true"
-               content-types="application/xml text/xml */*+xml"/>
-      <p:output port="result" content-types="application/xml"/>
+      <p:input port="source" primary="true" content-types="xml html"/>
+      <p:input port="schema" content-types="xml"/>
+      <p:output port="result" primary="true" content-types="xml html"/>
+      <p:output port="report" sequence="true" content-types="application/xml json"/>
       <p:option name="use-location-hints" select="false()" as="xs:boolean"/>
       <p:option name="try-namespaces" select="false()" as="xs:boolean"/>
       <p:option name="assert-valid" select="true()" as="xs:boolean"/>
+      <p:option name="parameters" as="xs:string"/>
       <p:option name="mode"
                 select="'strict'"
                 as="xs:token"

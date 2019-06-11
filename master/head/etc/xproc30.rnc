@@ -95,6 +95,7 @@ start =
   | VocabLine
   | VocabData
   | VocabDirectory
+  | VocabArchive
   | Errors
   | StandardStep
   | ExtraStep
@@ -550,6 +551,9 @@ option.attr =
 extension.attr = attribute * - (local:* | xml:* | p:*) { text }
 [ sa:model = "anyElement" ]
 AnyElement = element * { (_any.attr | text | AnyElement)* }
+[ sa:model = "anyNonXProcElement" ]
+AnyNonXProcElement =
+  element * - (c:* | p:*) { (_any.attr | text | AnyElement)* }
 [ sa:model = "anyNode" ]
 Any =
   element * { (_any.attr | Any)* }
@@ -570,12 +574,14 @@ VocabParamSet = element c:param-set { VocabParam* }
 VocabDirectory =
   element c:directory {
     attribute name { text },
+    attribute uri { xsd:anyURI },
     (VocabFile | VocabDirectory | VocabOther)*
   }
 [ sa:class = "step-vocabulary" ]
 VocabFile =
   element c:file {
     attribute name { text },
+    attribute uri { xsd:anyURI },
     content-types.attr?,
     empty
   }
@@ -583,6 +589,7 @@ VocabFile =
 VocabOther =
   element c:other {
     attribute name { text },
+    attribute uri { xsd:anyURI },
     empty
   }
 [ sa:class = "step-vocabulary" ] VocabResult = element c:result { text }
@@ -642,6 +649,19 @@ VocabData =
     attribute encoding { text }?,
     text
   }
+[ sa:class = "step-vocabulary" ]
+VocabArchive = element c:archive { VocabEntry* & AnyNonXProcElement* }
+[ sa:class = "step-vocabulary" ]
+VocabEntry =
+  element c:entry {
+    attribute name { text },
+    attribute href { xsd:anyURI }?,
+    attribute comment { text }?,
+    attribute method { text }?,
+    attribute level { text }?,
+    attribute * - (local:* | p:* | c:*) { text }*,
+    AnyElement*
+  }
 # ============================================================
 [ sa:class = "error-vocabulary" ] Errors = element c:errors { Error* }
 [ sa:class = "error-vocabulary" ]
@@ -684,6 +704,7 @@ StandardStep =
   | Step-xsl-formatter
   | Step-run
   | Step-markdown-to-html
+  | Step-validate-with-nvdl
   | Step-validate-with-relax-ng
   | Step-validate-with-schematron
   | Step-validate-with-xml-schema
@@ -876,6 +897,16 @@ Step-markdown-to-html =
     attribute parameters { xsd:string }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
   }
+Step-validate-with-nvdl =
+  element validate-with-nvdl {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute assert-valid { xsd:boolean }?,
+    attribute parameters { xsd:string }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
 Step-validate-with-relax-ng =
   element validate-with-relax-ng {
     name.ncname.attr?,
@@ -885,6 +916,7 @@ Step-validate-with-relax-ng =
     attribute dtd-attribute-values { xsd:boolean }?,
     attribute dtd-id-idref-warnings { xsd:boolean }?,
     attribute assert-valid { xsd:boolean }?,
+    attribute parameters { xsd:string }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
   }
 Step-validate-with-schematron =
@@ -907,6 +939,7 @@ Step-validate-with-xml-schema =
     attribute use-location-hints { xsd:boolean }?,
     attribute try-namespaces { xsd:boolean }?,
     attribute assert-valid { xsd:boolean }?,
+    attribute parameters { xsd:string }?,
     attribute mode { "strict" | "lax" }?,
     attribute version { xsd:string? }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
@@ -939,6 +972,7 @@ Step-archive =
     use-when.attr?,
     step.attributes,
     attribute format { xsd:QName }?,
+    attribute relative-to { xsd:anyURI }?,
     attribute parameters { xsd:string }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
   }
@@ -989,6 +1023,7 @@ Step-directory-list =
     step.attributes,
     attribute path { xsd:anyURI }?,
     attribute detailed { xsd:boolean }?,
+    attribute max-depth { xsd:string? }?,
     attribute include-filter { xsd:string }?,
     attribute exclude-filter { xsd:string }?,
     (WithOption* & (Documentation | PipeInfo)*)

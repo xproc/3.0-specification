@@ -300,6 +300,7 @@
       <ref name="VocabLine"/>
       <ref name="VocabData"/>
       <ref name="VocabDirectory"/>
+      <ref name="VocabArchive"/>
       <ref name="Errors"/>
       <ref name="StandardStep"/>
       <ref name="ExtraStep"/>
@@ -1458,6 +1459,23 @@
       </zeroOrMore>
     </element>
   </define>
+  <define name="AnyNonXProcElement" sa:model="anyNonXProcElement">
+    <element>
+      <anyName>
+        <except>
+          <nsName ns="http://www.w3.org/ns/xproc-step"/>
+          <nsName/>
+        </except>
+      </anyName>
+      <zeroOrMore>
+        <choice>
+          <ref name="_any.attr"/>
+          <text/>
+          <ref name="AnyElement"/>
+        </choice>
+      </zeroOrMore>
+    </element>
+  </define>
   <define name="Any" sa:model="anyNode">
     <choice>
       <element>
@@ -1502,6 +1520,9 @@
   <define name="VocabDirectory" sa:class="step-vocabulary">
     <element name="c:directory">
       <attribute name="name"/>
+      <attribute name="uri">
+        <data type="anyURI"/>
+      </attribute>
       <zeroOrMore>
         <choice>
           <ref name="VocabFile"/>
@@ -1514,6 +1535,9 @@
   <define name="VocabFile" sa:class="step-vocabulary">
     <element name="c:file">
       <attribute name="name"/>
+      <attribute name="uri">
+        <data type="anyURI"/>
+      </attribute>
       <optional>
         <ref name="content-types.attr"/>
       </optional>
@@ -1523,6 +1547,9 @@
   <define name="VocabOther" sa:class="step-vocabulary">
     <element name="c:other">
       <attribute name="name"/>
+      <attribute name="uri">
+        <data type="anyURI"/>
+      </attribute>
       <empty/>
     </element>
   </define>
@@ -1669,6 +1696,51 @@
         <attribute name="encoding"/>
       </optional>
       <text/>
+    </element>
+  </define>
+  <define name="VocabArchive" sa:class="step-vocabulary">
+    <element name="c:archive">
+      <interleave>
+        <zeroOrMore>
+          <ref name="VocabEntry"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="AnyNonXProcElement"/>
+        </zeroOrMore>
+      </interleave>
+    </element>
+  </define>
+  <define name="VocabEntry" sa:class="step-vocabulary">
+    <element name="c:entry">
+      <attribute name="name"/>
+      <optional>
+        <attribute name="href">
+          <data type="anyURI"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="comment"/>
+      </optional>
+      <optional>
+        <attribute name="method"/>
+      </optional>
+      <optional>
+        <attribute name="level"/>
+      </optional>
+      <zeroOrMore>
+        <attribute>
+          <anyName>
+            <except>
+              <nsName ns=""/>
+              <nsName/>
+              <nsName ns="http://www.w3.org/ns/xproc-step"/>
+            </except>
+          </anyName>
+        </attribute>
+      </zeroOrMore>
+      <zeroOrMore>
+        <ref name="AnyElement"/>
+      </zeroOrMore>
     </element>
   </define>
   <!-- ============================================================ -->
