@@ -154,8 +154,8 @@ compatible versions.</para>
 
 <para>The <code>p:add-attribute</code> step adds a single attribute to
 a set of matching elements. The input document specified on the
-<code>source</code> is processed for matches specified by the match
-pattern in the <option>match</option> option. For each of these
+  <code>source</code> is processed for matches specified by the 
+    <glossterm>selection pattern</glossterm> in the <option>match</option> option. For each of these
 matches, the attribute whose name is specified by the
 <option>attribute-name</option> option is set to the attribute value
 specified by the <option>attribute-value</option> option.
@@ -178,7 +178,7 @@ with the specified value.
 
 <para>The value of the <option>match</option> option
 <rfc2119>must</rfc2119> be an XSLTSelectionPattern. <error code="C0023">It
-is a <glossterm>dynamic error</glossterm> if the match pattern matches a node
+is a <glossterm>dynamic error</glossterm> if the <glossterm>selection pattern</glossterm> matches a node
 which is not an element.</error></para>
 
 <para>The value of the <option>attribute-value</option> option
@@ -678,8 +678,7 @@ continue.</para>
 <section xml:id="c.delete">
 <title>p:delete</title>
 
-<para>The <code>p:delete</code> step deletes items specified by a match
-pattern from the
+<para>The <code>p:delete</code> step deletes items specified by a <glossterm>selection pattern</glossterm> from the
 <code>source</code> input document and produces the resulting document,
 with the deleted items removed, on the <port>result</port> port.</para>
 
@@ -690,7 +689,7 @@ with the deleted items removed, on the <port>result</port> port.</para>
 </p:declare-step>
 
 <para>The value of the <option>match</option> option <rfc2119>must</rfc2119> be an
-XSLTSelectionPattern. A match pattern may match multiple items to be
+XSLTSelectionPattern. A <glossterm>selection pattern</glossterm> may match multiple items to be
 deleted.</para>
 
 <para>If an element is selected by the <option>match</option> option, the
@@ -1077,7 +1076,7 @@ parameters specified. <error code="C0036">It is a
 one that the processor understands or if the value or parameters are
 not appropriate for that algorithm.</error></para>
 
-<para>The matched nodes are specified with the match pattern in the
+<para>The matched nodes are specified with the <glossterm>selection pattern</glossterm> in the
 <option>match</option> option. For each matching node, the string
 value of the computed hash is used in the output (if more than one node
 matches, the <emphasis>same</emphasis> hash value is used in each match).
@@ -1761,11 +1760,11 @@ the following list:
 </itemizedlist>
 
 <para><error code="C0025">It is a <glossterm>dynamic error</glossterm>
-if the match pattern matches anything other than an element or a document
+if the <glossterm>selection pattern</glossterm> matches anything other than an element or a document
 node and the value of the <option>position</option> option is
 “<literal>first-child</literal>” or
 “<literal>last-child</literal>”.</error> <error code="C0024">It is a
-<glossterm>dynamic error</glossterm> if the match pattern matches a document
+<glossterm>dynamic error</glossterm> if the <glossterm>selection pattern</glossterm> matches a document
 node and the value of the <option>position</option> is “<literal>before</literal>” or
 “<literal>after</literal>”.</error></para>
 
@@ -2279,7 +2278,7 @@ error</glossterm> if the pattern matches anything other than element,
 attribute or processing instruction nodes.</error></para>
 
 <para>Each element, attribute, or processing-instruction in the input
-matched by the match pattern specified in the <option>match</option>
+matched by the <glossterm>selection pattern</glossterm> specified in the <option>match</option>
 option is renamed in the output to the name specified by the
 <option>new-name</option> option.</para>
 
@@ -2369,7 +2368,7 @@ be copied already exists, the value specified on the
 this step produces a copy of the <port>source</port> port's document
 with the matching elements' attributes modified.</para>
 
-<para>The matching elements are specified by the match pattern in the
+<para>The matching elements are specified by the <glossterm>selection pattern</glossterm> in the
 <option>match</option> option. All matching elements are processed.
 If no elements match, the step will not change any elements.</para>
 
@@ -2555,7 +2554,7 @@ XSLTSelectionPattern.</para>
 <para>The value of the <option>replace</option> option <rfc2119>must</rfc2119> be an
 XPathExpression.</para>
 
-<para>The matched nodes are specified with the match pattern in the
+<para>The matched nodes are specified with the <glossterm>selection pattern</glossterm> in the
 <option>match</option> option.
 For each matching node, the XPath
 expression provided by the <option>replace</option> option is
@@ -3083,7 +3082,7 @@ the necessary inputs are made available for computing other versions,
 is <glossterm>implementation-defined</glossterm>.</impl>
 </para>
 
-<para>The matched nodes are specified with the match pattern in the
+<para>The matched nodes are specified with the <glossterm>selection pattern</glossterm> in the
 <option>match</option> option. For each matching node, the generated
 UUID is used in the output (if more than one node matches, the
 <emphasis>same</emphasis> UUID is used in each match). Nodes that do not
@@ -3178,7 +3177,7 @@ element node whose QName is the value specified in the
 <option>wrapper</option> option. That new element contains copies of
 all of the children of the original document node.</para>
 
-<para>When the match pattern does not match the document node,
+<para>When the <glossterm>selection pattern</glossterm> does not match the document node,
 every node that matches the specified <option>match</option>
 pattern is replaced with a new element node whose QName is the value
 specified in the <option>wrapper</option> option.
@@ -3274,7 +3273,7 @@ The namespace name is ignored and no prefix or colon appears in the name.
 <para><impl>The order of the parameters
 is <glossterm>implementation-dependent</glossterm>.</impl></para>
 
-<para>The matched nodes are specified with the match pattern in the
+<para>The matched nodes are specified with the <glossterm>selection pattern</glossterm> in the
 <option>match</option> option. For each matching node, the encoded
 string is used in the output. Nodes that do not
 match are copied without change.</para>
