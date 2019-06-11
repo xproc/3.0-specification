@@ -1967,8 +1967,14 @@ static analysis is <glossterm>implementation-defined</glossterm>.</impl></para>
         </listitem>
         <listitem>
           <para>If an implementation supports XPath 2.0 or later, the data model constructed with which to
-            evaluate XPath expressions and match patterns <rfc2119>should</rfc2119> take advantage
+            evaluate XPath expressions and <glossterm baseform="selection pattern">selection patterns</glossterm> <rfc2119>should</rfc2119> take advantage
             of as much PSVI information as possible. </para>
+          <para>
+          <termdef xml:id="dt-selection-pattern">A <firstterm>selection pattern</firstterm> uses a
+            subset of the syntax for path expressions, and is defined to match a node if the
+            corresponding path expression would select the node. It is defined as in the 
+            <link xlink:href="https://www.w3.org/TR/xslt-30/#dt-selection-pattern">XSLT 3.0
+              specification</link>.</termdef></para>
         </listitem>
         <listitem>
           <para>Except as specified above, or in the descriptions of individual steps,
@@ -3272,8 +3278,8 @@ are allowed anywhere, and attributes that are
     <para><type>XPathExpression</type>, <type>XSLTSelectionPattern</type>:
     As a string per <biblioref linkend="xmlschema-2"/>, including
     whitespace normalization, and the further requirement to be a
-    conformant Expression per <biblioref linkend="xpath31"/> or selection
-    pattern per <biblioref linkend="xslt30"/>.
+    conformant Expression per <biblioref linkend="xpath31"/> or 
+            <glossterm>selection pattern</glossterm> per <biblioref linkend="xslt30"/>.
     </para>
   </listitem>
   <listitem>
@@ -3353,12 +3359,12 @@ attribute">extension attributes</glossterm>.</error>
             extension steps are encouraged to use this code for general failures.</para>
         </listitem>
         <listitem>
-          <para>In most steps which use a select expression or match pattern, any kind of node can
+          <para>In most steps which use a select expression or <glossterm>selection pattern</glossterm>, any kind of node can
             be identified by the expression or pattern. However, some expressions and patterns on
             some steps are only applicable to some kinds of nodes (e.g., it doesn't make sense to
             speak of adding attributes to a comment!). </para>
           <para><error code="C0023">It is a <glossterm>dynamic error</glossterm> if a select
-              expression or match pattern returns a node type that is not allowed by the
+            expression or <glossterm>selection pattern</glossterm> returns a node type that is not allowed by the
               step.</error>
           </para>
         </listitem>
@@ -3544,7 +3550,7 @@ each document in the sequence is processed in turn producing a sequence
 on the output.</para>
 
 <para>The <tag class="attribute">match</tag> attribute specifies
-        an XSLT match pattern. Each matching node in the source document is wrapped in a document
+  an XSLT <glossterm>selection pattern</glossterm>. Each matching node in the source document is wrapped in a document
         node, as necessary, and provided, one at a time, to the viewport's
           <glossterm>subpipeline</glossterm> on a port named <port>current</port>. The base URI of
         the resulting document that is passed to the subpipeline is the base URI of the matched
@@ -3576,8 +3582,8 @@ on the output.</para>
           port.</error></para>
 <para>What appears on the output from the <tag>p:viewport</tag> will
         be a copy of the input document where each matching node is replaced by the result of
-        applying the subpipeline to the subtree rooted at that node. In other words, if the match
-        pattern matches a particular element then that element is wrapped in a document node and
+        applying the subpipeline to the subtree rooted at that node. In other words, if the 
+        <glossterm>selection pattern</glossterm> matches a particular element then that element is wrapped in a document node and
         provided on the <port>current</port> port, the subpipeline in the <tag>p:viewport</tag> is
         evaluated, and the result that appears on the <port>output</port> port replaces the matched
         element. </para>
