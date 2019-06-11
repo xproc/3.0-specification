@@ -717,7 +717,7 @@ of the element on which it occurred.</para>
   <p:output port="result" content-type="application/xml"/>
   <p:option name="path" required="true" as="xs:anyURI"/>
   <p:option name="detailed" as="xs:boolean" select="false()"/>
-  <p:option name="recursive" as="xs:boolean" select="false()"/>
+  <p:option name="max-depth" as="xs:string?" select="'1'"/>
   <p:option name="include-filter" as="xs:string*" e:type="RegularExpression"/>
   <p:option name="exclude-filter" as="xs:string*" e:type="RegularExpression"/>
 </p:declare-step>
@@ -745,9 +745,13 @@ environment in which the pipeline is run.</error></para>
 author is requesting additional information about the matching entries,
 see <xref linkend="dir-list-details"/>.</para>
   
-  <para>If the <option>recursive</option> option is true, a <tag>c:directory</tag> element in the result document 
-    will include <tag>c:file</tag>, <tag>c:other</tag>, and <tag>c:directory</tag> elements for the corresponding
-    items in the given directory, if there are any.</para>
+  <para>The <option>max-depth</option> option may contain either the string “<literal>unbounded</literal>” or a string
+    that may be cast to a non-negative integer. An integer value of <literal>0</literal> means that only information
+    about the directory that is given in the <option>path</option> option is returned. A <option>max-depth</option> of
+      <literal>1</literal>, which is the default, will effect that also information about the top-level directory’s
+    immediate children will be included. For larger values of <option>max-depth</option>, also the content of
+    directories will be considered recursively up to the maximum depth, and it will be included as children of the
+    corresponding <tag>c:directory</tag> elements.</para>
 
 <para>If present, the value of the <option>include-filter</option> or
 <option>exclude-filter</option> option <rfc2119>must</rfc2119> be a sequence of strings, each
@@ -759,7 +763,7 @@ one representing a regular expressions as specified in <biblioref linkend="xpath
   <para>Examples: A file <literal>file.txt</literal> in the directory specified by <option>path</option> will remain
     <literal>file.txt</literal>, a relative path <literal>dir1/file.txt</literal> will remain
       <literal>dir1/file.txt</literal>, while a relative path <literal>dir1/dir2</literal> will become
-      <literal>dir1/dir2/</literal> id <literal>dir2</literal> is a directory.</para>
+      <literal>dir1/dir2/</literal> if <literal>dir2</literal> is a directory.</para>
   <para>Regular expressions that match <literal>a/a/b/file.txt</literal> are, for example,
   <literal>^/(\w+/){2,3}.+\.txt$</literal>, <literal>a/a/b/</literal>, or <literal>/file\.[^/]+$</literal>.</para>
 
@@ -769,33 +773,32 @@ one representing a regular expressions as specified in <biblioref linkend="xpath
   content but <literal>^dir/$</literal> won’t, and as a consequence the directory’s content will not be included in the result.</para>
   <para>If a relative path is matched by an include filter,
     all its ancestor directories starting from the initial directory (but not their content if not included explicitly) 
-    will be included, too. Example: for a file <literal>a/a/b/file.txt</literal> below the initial directory 
+    will be included, too.</para>
+  <example xml:id="ex.c.directory-list">
+    <title>Sample Directory List Output for a Single File</title>
+    <para>For a file <literal>a/a/b/file.txt</literal> below the initial directory 
     <literal>/home/jane</literal>, this output will be produced, omitting content that might be present in the 
-    intermediate directories:<literallayout>&lt;c:directory xml:base="file:/home/jane/` uri="." name="jane"&gt;
-  &lt;c:directory uri="a/" name="a"&gt;
-    &lt;c:directory uri="a/a/" name="a"&gt;
-      &lt;c:directory uri="a/a/b/" name="b"&gt;
-        &lt;c:file uri="a/a/b/file.txt" name="file.txt"/&gt;
+    intermediate directories:</para>
+    <literallayout>&lt;c:directory xml:base="file:///home/jane/" name="jane"&gt;
+  &lt;c:directory xml:base="a/" name="a"&gt;
+    &lt;c:directory xml:base="a/a/" name="a"&gt;
+      &lt;c:directory xml:base="a/a/b/" name="b"&gt;
+        &lt;c:file xml:base="a/a/b/file.txt" name="file.txt"/&gt;
       &lt;/c:directory&gt;
     &lt;/c:directory&gt;
   &lt;/c:directory&gt;
-&lt;/c:directory&gt;</literallayout></para>
+&lt;/c:directory&gt;</literallayout>
+  </example>
   <para>If the <option>exclude-filter</option> pattern matches the slash-augmented relative path, the entry (and all of
     its content in case of a directory) is excluded in the output.</para>
   <para>If both options are
 provided, the include filter is processed first, then the exclude
-filter. As a result: an item is included if it matches (at least) one
+filter. As a result, an item is included if it matches (at least) one
 of the <option>include-filter</option> values and none of the
 <option>exclude-filter</option> values.</para>
   <para>If no <option>include-filter</option> is given, that is, if <option>include-filter</option> is an empty
   sequence, any item will be included in the result (unless it is excluded by <option>exclude-filter</option>).</para>
 
-  <para>The augmented relative path will also be stored as a <tag role="attribute">uri</tag> attribute on the respective
-      <tag>c:directory</tag>, <tag>c:file</tag>, and <tag>c:other</tag> elements. This relative URI, if resolved against
-    the top-level directory’s <tag role="attirubte">xml:base</tag> attribute value, will give the absolute URI for the
-    resource. The top-level <tag>c:directory</tag> will always have the relative URI <literal>.</literal> attached to
-    it, while its <tag role="attribute">xml:base</tag> will also undergo trailing-slash normalization, which is to say,
-    it always must end in a slash.</para>
 <note>
 <para>There is no way to specify a list of values using attribute value
 templates. If the option shortcut syntax is used to provide the
@@ -806,26 +809,22 @@ syntax.
 </para>
 </note>
 
-<para xml:id="cv.directory">The result document produced for
-the specified directory path has a <tag>c:directory</tag> document
-element whose base URI is the directory path and whose
-<tag class="attribute">name</tag> attribute is the last segment
-of the directory path (that is, the directory's (local) name).</para>
+  <para xml:id="cv.directory">The result document produced for the specified directory path has a <tag>c:directory</tag>
+    document element whose base URI, attached as an <tag role="attribute">xml:base</tag> attribute, is the absolute
+    directory path (expressed as a URI that ends in a slash) and whose <tag class="attribute">name</tag> attribute
+    (without a trailing slash) is the last segment of the directory path.</para>
 
 <e:rng-pattern name="VocabDirectory"/>
 
-<para>Its contents are determined as follows, based on the entries in
-the directory identified by the directory path. For each entry in the
-directory, if either no <option>filter</option> was specified, or the
-(local) name of the entry matches the filter pattern, a
-<tag>c:file</tag>, a <tag>c:directory</tag>, or a <tag>c:other</tag>
-element is produced, as follows:
-</para>
+  <para>Its contents are determined as follows, based on the entries in the directory identified by the directory path.
+    For each entry in the directory and subject to the rules that are imposed by the <option>max-depth</option>,
+      <option>include-filter</option>, and <option>exclude-filter</option> options, a <tag>c:file</tag>, a
+      <tag>c:directory</tag>, or a <tag>c:other</tag> element is produced, as follows: </para>
 
 <itemizedlist>
 <listitem>
-<para>A <tag>c:directory</tag> is produced for each subdirectory not
-determined to be special.</para>
+      <para>A <tag>c:directory</tag> is produced for each subdirectory not determined to be special. Depending on the
+        values of the three options, it may contain child elements for the directory’s content.</para>
 </listitem>
 <listitem>
 <para xml:id="cv.file">A <tag>c:file</tag> is produced for each file
@@ -842,30 +841,23 @@ special are <glossterm>implementation-defined</glossterm>.</impl>
 </listitem>
 </itemizedlist>
 
-<para>When a directory entry is a subdirectory, unless the <option>recursive</option> is <literal>true</literal>,
-  that directory's entries are not output as part of that entry's <tag>c:directory</tag>.</para>
-
 <para>Each of the elements <tag>c:file</tag>, <tag>c:directory</tag>,
-and <tag>c:other</tag> has a <code>name</code> attribute when it
-appears within a <tag>c:directory</tag> element, whose
+and <tag>c:other</tag> has a <code>name</code> attribute, whose
 value is a relative IRI reference, giving the (local) file or
 directory name.</para>
-  <para>Each item in the result document, apart from the top-level <tag>c:directory</tag>, gets an
-      <code>xml:base</code> attribute that contains its path relative to the base URI of the
-    top-level <tag>c:directory</tag> element. In the case of immediate children of the top-level element,
-  the value of this <code>xml:base</code> attribute is identical to the value of the <code>name</code>
-  attribute.</para>
+  
+  <para>Each of these element also contains the corresponding resource’s URI in an <tag role="attribute">xml:base</tag>
+    attribute, which may be a relative URI for any but the top-level <tag>c:directory</tag> element. In the case of
+      <tag>c:directory</tag>, it must end in a trailing slash. This way, users will always be able to compute the
+    absolute URI for any of these elements by applying <code>fn:base-uri()</code> to it.</para>
 
 <section xml:id="dir-list-details">
 <title>Directory list details</title>
 
 <para>If <option>detailed</option> is false, then only the
-<tag class="attribute">name</tag> attribute is expected on
+<tag class="attribute">name</tag> and <tag class="attribute">xml:base</tag> attributes are expected on
 <tag>c:file</tag>, <tag>c:directory</tag>, or <tag>c:other</tag>
-elements.
-<impl>Any other attributes on
-<tag>c:file</tag>, <tag>c:directory</tag>, or <tag>c:other</tag>
-are <glossterm>implementation-defined</glossterm>.</impl></para>
+elements.</para>
 
 <para>If <option>detailed</option> is true, then the pipeline author
 is expecting additional details about each entry. The following attributes
