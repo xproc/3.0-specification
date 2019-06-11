@@ -186,7 +186,7 @@ decl.attributes = psvi-required.attr?,
 start = Library | DeclareStep
  | VocabParam | VocabParamSet | VocabResult | VocabHttpRequest
  | VocabHeader | VocabMultipart | VocabBody | VocabHttpResponse | VocabQuery
- | VocabLine | VocabData | VocabDirectory | Errors | StandardStep | ExtraStep
+ | VocabLine | VocabData | VocabDirectory | VocabArchive | Errors | StandardStep | ExtraStep
 
 # StandardStep is explicitly unspecified because this is not a complete schema
 ExtraStep = notAllowed
@@ -774,6 +774,14 @@ AnyElement =
    }
 
 [
+   sa:model = "anyNonXProcElement"
+]
+AnyNonXProcElement =
+   element * - (c:* | p:*) {
+      (_any.attr | text | AnyElement)*
+   }
+
+[
    sa:model = "anyNode"
 ]
 Any =
@@ -810,6 +818,7 @@ VocabParamSet =
 VocabDirectory =
    element c:directory {
       attribute name { text },
+      attribute uri { xsd:anyURI },
       ((VocabFile|VocabDirectory|VocabOther)*)
    }
 [
@@ -818,6 +827,7 @@ VocabDirectory =
 VocabFile =
    element c:file {
       attribute name { text },
+      attribute uri { xsd:anyURI },
       content-types.attr?,
       empty
    }
@@ -827,6 +837,7 @@ VocabFile =
 VocabOther =
    element c:other {
       attribute name { text },
+      attribute uri { xsd:anyURI },
       empty
    }
 [
@@ -922,6 +933,29 @@ VocabData =
       attribute charset { text }?,
       attribute encoding { text }?,
       text
+   }
+
+[
+   sa:class = "step-vocabulary"
+]
+VocabArchive =
+   element c:archive {
+      VocabEntry* &
+      AnyNonXProcElement*
+   }
+
+[
+   sa:class = "step-vocabulary"
+]
+VocabEntry =
+   element c:entry {
+      attribute name { text },
+      attribute href { xsd:anyURI }?,
+      attribute comment { text }?,
+      attribute method { text }?,
+      attribute level { text }?,
+      attribute (* - (local:* | p:* | c:*)) { text }*,
+      AnyElement*
    }
 
 # ============================================================
