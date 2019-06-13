@@ -482,7 +482,8 @@ of its input.</para>
 <error code="C0070">It is a <glossterm>dynamic
 error</glossterm> if the supplied <option>content-type</option> is not
 a valid media type of the form
-“<literal><replaceable>type</replaceable>/<replaceable>subtype</replaceable>+<replaceable>ext</replaceable></literal>”.</error>
+“<literal><replaceable>type</replaceable>/<replaceable>subtype</replaceable>+<replaceable>ext</replaceable></literal>”
+ where “<literal>+<replaceable>ext</replaceable></literal>” is optional.</error>
 <error code="C0071">It is a <glossterm>dynamic
 error</glossterm> if the <tag>p:cast-content-type</tag> step
 cannot perform the requested cast.</error>
@@ -2681,10 +2682,11 @@ serialization of content when it is stored. Serialization is described in
   
   <p:declare-step type="p:text-join">
     <p:output port="source" primary="true" sequence="true" content-types="text"/>
-    <p:output port="result" primary="true" sequence="false" content-types="text"/>
+    <p:output port="result" primary="true" sequence="false" content-types="text/plain"/>
     <p:option name="separator" required="false" as="xs:string"/>
     <p:option name="prefix" required="false" as="xs:string"/>
     <p:option name="suffix" required="false" as="xs:string"/>
+    <p:option name="override-content-type" required="false" as="xs:string"/>
   </p:declare-step>
   
   <para>The <code>p:text-join</code> step concatenates the text documents appearing on its <port>source</port> port
@@ -2704,6 +2706,13 @@ serialization of content when it is stored. Serialization is described in
         port will always end with its value (also when there are no documents on the <port>source</port> port).</para>
     </listitem>
   </itemizedlist>
+  <para>When the <option>override-content-type</option> option is specified, the document appearing on the port <port>result</port>
+    will have this media type as part of its document properties. <error code="C0070">It is a <glossterm>dynamic
+      error</glossterm> if the supplied <option>content-type</option> is not
+      a valid media type of the form
+      “<literal><replaceable>type</replaceable>/<replaceable>subtype</replaceable>+<replaceable>ext</replaceable></literal>” 
+      where “<literal>+<replaceable>ext</replaceable></literal>” is optional.</error>
+  </para>
   <simplesect>
     <title>Document properties</title>
     <para feature="load-preserves-none">No document properties are preserved.</para>

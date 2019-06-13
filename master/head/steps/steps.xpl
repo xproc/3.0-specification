@@ -279,10 +279,11 @@
       <p:output port="result"
                 primary="true"
                 sequence="false"
-                content-types="text"/>
+                content-types="text/plain"/>
       <p:option name="separator" required="false" as="xs:string"/>
       <p:option name="prefix" required="false" as="xs:string"/>
       <p:option name="suffix" required="false" as="xs:string"/>
+      <p:option name="override-content-type" required="false" as="xs:string"/>
    </p:declare-step>
    <p:declare-step type="p:text-replace" xml:id="text-replace">
       <p:input port="source"
