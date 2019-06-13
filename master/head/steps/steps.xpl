@@ -117,9 +117,9 @@
                 select="'/*'"
                 e:type="XSLTSelectionPattern"/>
       <p:option name="position"
-                required="true"
                 as="xs:token"
-                values="('first-child','last-child','before','after')"/>
+                values="('first-child','last-child','before','after')"
+                select="'after'"/>
    </p:declare-step>
    <p:declare-step type="p:label-elements" xml:id="label-elements">
       <p:input port="source" content-types="xml html"/>
