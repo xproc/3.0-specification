@@ -349,11 +349,11 @@
                 content-types="*/*"
                 sequence="true"/>
       <p:option name="include-filter"
-                as="xs:string"
+                as="xs:string*"
                 e:type="RegularExpression"
                 required="false"/>
       <p:option name="exclude-filter"
-                as="xs:string"
+                as="xs:string*"
                 e:type="RegularExpression"
                 required="false"/>
       <p:option name="format" as="xs:QName" required="false" select="'zip'"/>

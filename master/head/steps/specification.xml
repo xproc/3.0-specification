@@ -284,12 +284,13 @@ element's [base URI].</para>
 
   <title>p:archive</title>
 
-  <para>The <code>p:archive</code> step outputs on its <port>result</port> port an archive (usually binary) document,
-    for instance a ZIP file. A specification of the contents of the archive may be specified in a manifest XML document
-    on the <port>manifest</port>. The contents of the archive can come from documents provided on the
-      <port>source</port> and <port>archive</port> ports, from documents specified inline in the manifest, or from a combination of these.
-    The step produces a report on the <port>report</port> port, which contains the manifest, amended with additional
-    information about the archiving. </para>
+  <para>The <code>p:archive</code> step outputs on its <port>result</port> port an archive (usually
+    binary) document, for instance a ZIP file. A specification of the contents of the archive may be
+    specified in a manifest XML document on the <port>manifest</port>. The contents of the archive
+    can come from documents provided on the <port>source</port> and <port>archive</port> ports, from
+    documents specified inline in the manifest, or from a combination of these. The step produces a
+    report on the <port>report</port> port, which contains the manifest, amended with additional
+    information about the archiving.</para>
 
   <p:declare-step type="p:archive">
     <p:input port="source" primary="true" content-types="*/*" sequence="true"/>
@@ -302,168 +303,318 @@ element's [base URI].</para>
     <p:option name="parameters" as="map(xs:Qname, item()*)" required="false"/>
   </p:declare-step>
 
-  <para>The <code>p:archive</code> step takes the document appearing on its <port>manifest</port> port as a
-    specification for an archive file. It outputs this archive on its <port>result</port> port.</para>
-  
-  <para>The format of the archive can be specified using the <option>format</option> option. Implementations
-      <rfc2119>must</rfc2119> support the <biblioref linkend="zip"/> format, specified with the value <code>zip</code>.
-      <impl>It is <glossterm>implementation-defined</glossterm> what other formats are supported.</impl></para>
+  <para>The <code>p:archive</code> step can perform several different operations on archives. The
+    most common one will likely be creating an archive, but it could also, depending on the archive
+    format, provide services like update, freshen or even merge. The only format implementations
+      <rfc2119>must</rfc2119> support is <biblioref linkend="zip"/>. Support for other formats is
+      <glossterm>implementation-defined</glossterm>.</para>
 
-  <para>The <option>parameters</option> can be used to supply parameters to control the archiving. <impl>The semantics
-      of the keys and the allowed values for these keys are <glossterm>implementation-defined</glossterm>.</impl>
-    <error code="C0079">It is a <glossterm>dynamic error</glossterm> if the map <option>parameters</option> contains an
-      entry whose key is defined by the implementation and whose value is not valid for that key.</error></para>
-  
-  <para>For the 'zip' format, the following parameters <rfc2119>must</rfc2119> be supported:</para>
-
+  <para>The <code>p:archive</code> step has the following input ports:</para>
   <variablelist>
     <varlistentry>
-      <term><code>command</code></term>
+      <term><port>source</port></term>
       <listitem>
-        <para>“update” | “freshen” | “create” | “delete”</para>
-        <para>If no command is given, “update” (add entries that do not exist, freshen entries whose timestamp is older
-          than the underlying resource’s) will be assumed.</para>
-        <para>“update”, “freshen” and “create” will work with or without a manifest (see below).</para>
-        <para>“update” does not require an existing archive to be submitted on the <port>archive</port> port.</para>
-        <para>“freshen” and “delete” require that exactly one zip archive is supplied on the <port>archive</port> port.</para>
-        <para>“delete” informs <code>p:archive</code> to remove the entries that are specified in the manifest by
-          the <code>c:entry/@name</code>.</para>
-        <para>If an entry that should be deleted or freshened is not found in the document on the <port>archive</port>
-          port, no error is raised and nothing is changed.</para>
+        <para>The (primary) <port>source</port> port is used to provide documents to be archived
+          (for instance constructed by other steps). How and which of these documents are processed
+          is governed by the document(s) appearing on the other input ports and the combination of
+          options and parameters. See below for details. <error code="C0084">It is a
+              <glossterm>dynamic error</glossterm> if documents appear on the <code>p:archive</code>
+            step's <port>source</port> port that have duplicate or no base URI's.</error></para>
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term><code>compression-level</code></term>
+      <term><port>manifest</port></term>
       <listitem>
-        <para>“<code>smallest</code>” | “<code>fastest</code>” | “<code>default</code>” | “<code>huffman</code>” 
-          | “<code>none</code>”</para>
+        <para>The <port>manifest</port> port can receive a manifest document that tells the step how
+          to construct the archive. If no manifest document is provided on this port, a default
+          manifest is automatically constructed. See <xref linkend="cv.archive-manifest"/>.</para>
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term><code>compression-method</code></term>
+      <term><port>archive</port></term>
       <listitem>
-        <para>“<code>stored</code>” | “<code>deflated</code>”</para>
+        <para>The <port>archive</port> port is used to provide the step with existing archive(s) for
+          operations like update, freshen or merge. Handling of ZIP files supports modifying
+          archives appearing on the <port>archive</port> port (<xref linkend="cv.archive-zips"/>).
+          Whether other archive formats and implementations support modifications of
+            <port>archive</port> inputs is <glossterm>implementation-defined</glossterm>. A,
+          currently hypothetical, archive merging implementation may accept more than one document
+          on the <port>archive</port> port. <error code="C0081">It is a <glossterm>dynamic
+              error</glossterm> if the content type of a document on the <port>archive</port> does
+            not match the given archive format as specified in the <option>format</option>
+            option.</error></para>
       </listitem>
     </varlistentry>
   </variablelist>
-  
-  <para>Implementations of other archive formats <rfc2119>should</rfc2119> use the same parameter names if applicable. 
-    The value spaces for these parameters may be format-specific though. They are 
-    <glossterm>implementation-defined</glossterm>.</para>
-  
-  <para>Whether other archive formats and implementations support modifications of <port>archive</port> inputs
-  is <glossterm>implementation-defined</glossterm>.</para>
-  
-  <para><error code="C0080">It is a <glossterm>dynamic error</glossterm> if the number of documents on
-      the <port>archive</port> does not match the expected number of archive input documents for the
-      given <code>format</code> and <code>command</code>.</error></para>
-  
-  <note>
-    <para>The expected number of documents on the <port>archive</port> may be zero for formats such as gzip that do not 
-      allow manipulation of existing archives.</para>
-    <para>A hypothetical archive merging implementation, on the other hand, may accept more than one document
-    on the <port>archive</port> port.</para>
-  </note>
-  
-  <para><error code="C0081">It is a <glossterm>dynamic error</glossterm> if the content type of a document on the 
-    <port>archive</port> does not match the given archive <code>format</code>.</error></para>
 
-  <para>If no manifest entry is given for a <port>source</port> document, the step will manufacture
-    a manifest entry from the document’s <code>base-uri</code> property. If no document arrives on
-    the <port>manifest</port>, it will create a complete manifest document (see below for the
-    manifest document specification). The option <option>relative-to</option> can be used to derive
-    the entry’s <tag role="attribute">name</tag> attribute from the <port>source</port> document’s
-      <code>base-uri</code> property, which in turn will used for the entry’s <tag role="attribute">href</tag> attribute. Both the URI that is given in <option>relative-to</option> and the value of the 
-  <code>base-uri</code> property should be normalized with respect to slash deduplication, parent path
-    elimination, and drive letter case folding. The the step will remove the leading (normalized) 
-    <option>relative-to</option> option value from the <port>source</port> document’s (normalized) base URI. 
-    If there is no match, the manifest entry’s <tag role="attribute">name</tag> attribute should consist of the 
-    path part of the <port>source</port> document’s base URI, without any leading slashes.</para>
+  <para>The <code>p:archive</code> step has the following output ports:</para>
+  <variablelist>
+    <varlistentry>
+      <term><port>result</port></term>
+      <listitem>
+        <para>The (primary) <port>result</port> port will output the resulting archive.</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term><port>report</port></term>
+      <listitem>
+        <para>The <port>report</port> port will output a report about the archiving operation. This
+          will be the same as the manifest (as provided on the <port>manifest</port> port or
+          automatically created if there was no manifest provided), optionally amended with
+          additional attributes and/or elements. <impl>The semantics of any additional attributes,
+            elements and their values are
+          <glossterm>implementation-defined</glossterm>.</impl></para>
+      </listitem>
+    </varlistentry>
+  </variablelist>
 
-  <para>The <port>report</port> port outputs a copy of the manifest, optionally amended with additional attributes
-    and/or elements. <impl>The semantics of any additional attributes, elements and their values are
-        <glossterm>implementation-defined</glossterm>.</impl>
-  </para>
+  <para>The <code>p:archive</code> step has the following options:</para>
+  <variablelist>
+    <varlistentry>
+      <term><option>format</option></term>
+      <listitem>
+        <para>The format of the archive can be specified using the <option>format</option> option.
+          Implementations <rfc2119>must</rfc2119> support the <biblioref linkend="zip"/> format,
+          specified with the value <code>zip</code>. <impl>It is
+              <glossterm>implementation-defined</glossterm> what other formats are
+          supported.</impl></para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term><option>parameters</option></term>
+      <listitem>
+        <para>The <option>parameters</option> option can be used to supply parameters to control the
+          archiving. <impl>The semantics of the keys and the allowed values for these keys are
+              <glossterm>implementation-defined</glossterm>.</impl>
+          <error code="C0079">It is a <glossterm>dynamic error</glossterm> if the map
+              <option>parameters</option> contains an entry whose key is defined by the
+            implementation and whose value is not valid for that key.</error></para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term><option>relative-to</option></term>
+      <listitem>
+        <para>The <option>relative-to</option> option is used in creating a manifest when no
+          manifest is provided on the <port>manifest</port> port. See <xref linkend="cv.archive-manifest"/>.</para>
+      </listitem>
+    </varlistentry>
+  </variablelist>
 
-  <section xml:id="cv.manifest">
-    <title>Specifying an archive manifest</title>
+  <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
-    <para>An archive manifest is represented by a <tag>c:archive</tag> root element.</para>
+  <section xml:id="cv.archive-manifest">
+    <title>The archive manifest</title>
+
+    <para>An archive manifest specifies what must be archived and how. It is represented by a
+        <tag>c:archive</tag> root element:</para>
 
     <e:rng-pattern name="VocabArchive" xml:id="cv.archive"/>
 
-    <para><impl>The <code>c:archive</code> root element may contain additional <glossterm>implementation-defined</glossterm>
-      attributes.</impl></para>
+    <para><impl>The <code>c:archive</code> root element may contain additional
+          <glossterm>implementation-defined</glossterm> attributes.</impl></para>
 
     <para>All entries in the archive must be present as <tag>c:entry</tag> child elements:</para>
 
     <e:rng-pattern name="VocabEntry" xml:id="cv.entry"/>
 
-    <para>The <code>name</code> attribute specifies the name of the entry in the archive. It <rfc2119>must</rfc2119> be
-      specified as a relative path.</para>
-    <para>The optional <code>href</code> attribute is interpreted as follows:</para>
     <itemizedlist>
       <listitem>
-        <para><error code="D0064">It is a <glossterm>dynamic error</glossterm> if the <option>href</option> attribute is
-            present and its value is not a valid <type>xs:anyURI</type>.</error></para>
+        <para>The mandatory <code>name</code> attribute specifies the name of the entry in the
+          archive. It <rfc2119>must</rfc2119> be specified as a relative path.</para>
       </listitem>
       <listitem>
-        <para>When the <tag>c:entry</tag> elements has any child nodes, it is ignored.</para>
-        <note role="editorial">
-          <para>Why should the entry be ignored if it has content? Shouldn’t the entry’s content rather be ignored?</para>
-        </note>
+        <para>The optional <code>href</code> attribute is interpreted as follows:</para>
+        <itemizedlist>
+          <listitem>
+            <para><error code="D0064">It is a <glossterm>dynamic error</glossterm> if the
+                  <option>c:entry/@href</option> attribute in a <code>p:archive</code> step manifest
+                is present and its value is not a valid <type>xs:anyURI</type>.</error></para>
+          </listitem>
+          <listitem>
+            <para>When the <tag>c:entry</tag> elements has any child nodes, the <code>href</code>
+              attribute is ignored.</para>
+          </listitem>
+          <listitem>
+            <para>The <code>p:archive</code> step checks the documents appearing on its
+                <port>source</port> port for any documents with exactly the same base URI as the
+              contents of the <code>href</code> attribute. If any such document is found, this is
+              used as entry for the archive.</para>
+            <para><error code="C0082">It is a <glossterm>dynamic error</glossterm> if more than one
+                document appears on the <port>source</port> port of a <code>p:archive</code> step
+                with a base URI mentioned in one of the non-ignored <code>c:entry/@href</code>
+                attributes.</error></para>
+          </listitem>
+          <listitem>
+            <para>If the above doesn't apply, the value of the <code>href</code> attribute is
+              interpreted as a URI and the document is loaded from this location. <error code="D0011">It is a <glossterm>dynamic error</glossterm> if the resource referenced
+                by the <option>href</option> option does not exist, cannot be accessed or is not a
+                file</error> If the <option>href</option> option is relative, it is made absolute
+              against the base URI of the manifest.</para>
+          </listitem>
+          <listitem>
+            <para><error code="C0083">It is a <glossterm>dynamic error</glossterm> if the
+                  <code>c:entry/@href</code> attribute in a <code>p:archive</code> step manifest is
+                not specified and the <tag>c:file</tag> element has no child nodes.</error></para>
+          </listitem>
+        </itemizedlist>
       </listitem>
       <listitem>
-        <para>The <code>p:archive</code> step checks the documents appearing on its <port>source</port> port for any
-          documents with exactly the same base URI as the contents of the <code>href</code> attribute. If any such
-          documents are found, the <emphasis>first</emphasis> of these is used as entry for the archive.</para>
-        <note role="editorial">
-          <para>In the interest of portability and reproducibility, shouldn’t we raise a dynamic
-            error if the same <code>href</code> attribute is used on another manifest entry? If the
-            documents are, for example, taken from the <port>secondary</port> port of a
-              <code>p:xslt</code> step, the document order may be different among implementations,
-            file systems, etc.</para>
-        </note>
+        <para>The <code>method</code> attribute specifies how the entry should be compressed.
+            <impl>The default compression method is <glossterm>implementation-defined</glossterm>.
+          </impl>Implementations <rfc2119>must</rfc2119> support no compression, specified with the
+          value <code>none</code>. <impl>It is <glossterm>implementation-defined</glossterm> what
+            other compression methods are supported.</impl></para>
       </listitem>
       <listitem>
-        <para>If the above doesn't apply, the value of the <code>href</code> attribute is interpreted as a URI and the
-          document is loaded from this location.</para>
-        <para><error code="D0011">It is a <glossterm>dynamic error</glossterm> if the resource referenced by the
-              <option>href</option> option does not exist, cannot be accessed or is not a file</error></para>
-        <para> If the <option>href</option> option is relative, it is made absolute against the base URI of the
-          manifest.</para>
-      </listitem>
-      <listitem>
-        <para><error code="TBDTBD">It is a <glossterm>dynamic error</glossterm> if the <code>href</code> attribute is
-            not specified and the <tag>c:file</tag> element has no child nodes.</error></para>
+        <para>The <code>level</code> attribute specifies the level of compression. <impl>The default
+            compression method is <glossterm>implementation-defined</glossterm>. </impl>
+          <impl>It is <glossterm>implementation-defined</glossterm> what compression levels are
+            supported.</impl></para>
       </listitem>
     </itemizedlist>
 
-    <para>The <code>compression-method</code> attribute specifies how the entry should be compressed. <impl>The default
-        compression method is <glossterm>implementation-defined</glossterm>. </impl>Implementations
-        <rfc2119>must</rfc2119> support no compression, specified with the value <code>none</code>. <impl>It is
-          <glossterm>implementation-defined</glossterm> what other compression methods are supported.</impl></para>
+    <para>When the <code>c:file</code> element has any child nodes this is taken as the contents of
+      the archive's entry. The <code>href</code> attribute is ignored in this case.</para>
 
-    <para>When the <code>c:file</code> element has any child nodes this is taken as the contents of the archive's entry.
-      The <code>href</code> attribute is ignored in this case.</para>
+    <para>The <code>p:archive</code> step <rfc2119>should</rfc2119> strive to retain the order of
+      the <tag>c:entry</tag> elements when constructing the archive. For instance, an e-book in EPUB
+      format has a non-compressed entry that must be first in the archive. It should be possible to
+      construct such an archive using <code>p:archive</code>.</para>
 
-    <para>The <code>p:archive</code> step <rfc2119>should</rfc2119> strive to retain the order of the <tag>c:entry</tag> elements when
-      constructing the archive. For instance, an e-book in EPUB format has a non-compressed entry that must be first in
-      the archive. It should be possible to construct such an archive using <code>p:archive</code>.</para>
+    <para><impl>The <code>c:entry</code> elements may contain additional
+          <glossterm>implementation-defined</glossterm> attributes.</impl></para>
 
-    <para><impl>The <code>c:entry</code> elements may contain additional <glossterm>implementation-defined</glossterm>
-      attributes.</impl></para>
-    <note role="editorial">
-      <para>Do we need to say anything about serialization options for XML contents?</para>
-      <para>Not sure whether JSON needs more specifications</para>
-    </note>
+    <para>If no manifest entry is provided for a document appearing on the <port>source</port> port,
+      the step will manufacture a manifest entry from the document’s <code>base-uri</code> property.
+      If no document arrives on the <port>manifest</port>, it will create a complete manifest
+      document.</para>
+    <para>The option <option>relative-to</option> can be used to derive the entry’s <tag role="attribute">name</tag> attribute from the <port>source</port> document’s
+        <code>base-uri</code> property, which in turn will be used for the entry’s <tag role="attribute">href</tag> attribute. Both the URI that is given in
+        <option>relative-to</option> and the value of the <code>base-uri</code> property should be
+      normalized with respect to slash deduplication, parent path elimination, and drive letter case
+      folding. The the step will remove the leading (normalized) <option>relative-to</option> option
+      value from the <port>source</port> document’s (normalized) base URI. If there is no match, the
+      manifest entry’s <tag role="attribute">name</tag> attribute will consist of the path part of
+      the <port>source</port> document’s base URI, without any leading slashes.</para>
+  </section>
+
+  <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+  <section xml:id="cv.archive-zips">
+    <title>Handling of ZIP archives</title>
+
+    <para>The format of the archive can be specified using the <option>format</option> option.
+      Implementations <rfc2119>must</rfc2119> support the <biblioref linkend="zip"/> format,
+      specified with the value <code>zip</code>. </para>
+
+    <para>The <option>parameters</option> option can be used to supply parameters to control the
+      archiving. For the <code>zip</code> format, the following parameters <rfc2119>must</rfc2119>
+      be supported:</para>
+
+    <variablelist>
+      <varlistentry>
+        <term><code>command</code></term>
+        <listitem>
+          <para>Specifies what operation to perform. If not specified, its default value is
+              <code>update</code>. Possible values are:</para>
+          <variablelist>
+            <varlistentry>
+              <term><code>update</code></term>
+              <listitem>
+                <para>When the <code>command</code> parameter is set to <code>update</code> or not
+                  specified, zero or exactly one document in ZIP format can appear on the
+                    <port>archive</port> port. If there is no document on the <port>archive</port>
+                  port, an empty ZIP archive is assumed.</para>
+                <para>The contents of the manifest (either provided or (partially) constructed, see
+                    <xref linkend="cv.archive-manifest"/>) is held against the entries in the ZIP
+                  file provided on the <port>archive</port> port: </para>
+                <itemizedlist>
+                  <listitem>
+                    <para>Any entry in the manifest that does not exist in the ZIP file provided on
+                      the <port>archive</port> port is added.</para>
+                  </listitem>
+                  <listitem>
+                    <para>For any entry that does exist in the ZIP file provided on the
+                        <port>archive</port> port, a timestamp compare is done. When the entry in
+                      the manifest is newer than the entry in the ZIP file provided on the
+                        <port>archive</port> port, it is replaced. Documents that are either
+                      specified in the manifest or come from the <port>source</port> port have no
+                      timestamp and will <emphasis>always</emphasis> cause a replace to be
+                      done.</para>
+                  </listitem>
+                </itemizedlist>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term><code>create</code></term>
+              <listitem>
+                <para>When the <code>command</code> parameter is set to <code>create</code>, the
+                    <code>p:archive</code> step will behave exactly as for <code>update</code>,
+                  except that existing entries will <emphasis>always</emphasis> be updated,
+                  regardless of their timestamp.</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term><code>freshen</code></term>
+              <listitem>
+                <para>When the <code>command</code> parameter is set to <code>freshen</code>, the
+                    <code>p:archive</code> step will behave exactly as for <code>update</code>,
+                  except that no new entries will be added. Any entries in the manifest that do not
+                  match an entry in the archive are ignored.</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term><code>delete</code></term>
+              <listitem>
+                <para>When the <code>command</code> parameter is set to <code>delete</code>, exactly
+                  one document in ZIP format must appear on the <port>archive</port> port. The
+                  contents of the manifest (either provided or (partially) constructed, see <xref linkend="cv.archive-manifest"/>) is held against the entries in the ZIP file
+                  provided on the <port>archive</port> port. Any entries in the manifest file that
+                  match an entry in the ZIP archive will be deleted. All other entries in the
+                  manifest are ignored.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><code>level</code></term>
+        <listitem>
+          <para>Specifies the default compression level for files added to or updated in the
+            archive. It can be overruled on a per-entry basis with a <code>c:entry/@level</code>
+            attribute in the manifest. Values that must be supported for ZIP files are:
+              “<code>smallest</code>” | “<code>fastest</code>” | “<code>default</code>” |
+              “<code>huffman</code>” | “<code>none</code>”.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><code>method</code></term>
+        <listitem>
+          <para>Specifies the default compression method for files added to or updated in the
+            archive. It can be overruled on a per-entry basis with a <code>c:entry/@method</code>
+            attribute in the manifest. Values that must be supported for ZIP files are:
+              “<code>none</code>” | “<code>deflated</code>”.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+
+    <para><error code="C0080">It is a <glossterm>dynamic error</glossterm> if the number of
+        documents on the <port>archive</port> does not match the expected number of archive input
+        documents for the given <code>format</code> and <code>command</code>.</error></para>
+
+    <para>Implementations of other archive formats <rfc2119>should</rfc2119> use the same parameter
+      names if applicable. The value spaces for these parameters may be format-specific though. They
+      are <glossterm>implementation-defined</glossterm>.</para>
 
   </section>
+
+  <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
   <simplesect>
     <title>Document properties</title>
     <para feature="archive-preserves-none">No document properties are preserved.</para>
   </simplesect>
+
 </section>
 <section xml:id="c.cast-content-type">
 <title>p:cast-content-type</title>
@@ -2846,71 +2997,70 @@ serialization of content when it is stored. Serialization is described in
 
   <title>p:unarchive</title>
 
-  <para>The <code>p:unarchive</code> step outputs on its <port>result</port> port either a manifest file describing the
-    contents of an archive (for instance entries in a ZIP file) or specific entries in an archive.</para>
+  <para>The <code>p:unarchive</code> step outputs on its <port>result</port> port specific
+    entries in an archive (for instance from a zip file).</para>
 
   <p:declare-step type="p:unarchive">
     <p:input port="source" primary="true" content-types="*/*" sequence="false"/>
     <p:output port="result" primary="true" content-types="*/*" sequence="true"/>
-    <p:option name="include-filter" as="xs:string" e:type="RegularExpression" required="false"/>
-    <p:option name="exclude-filter" as="xs:string" e:type="RegularExpression" required="false"/>
+    <p:option name="include-filter" as="xs:string*" e:type="RegularExpression" required="false"/>
+    <p:option name="exclude-filter" as="xs:string*" e:type="RegularExpression" required="false"/>
     <p:option name="format" as="xs:QName" required="false" select="'zip'"/>
     <p:option name="parameters" as="map(xs:Qname, item()*)" required="false"/>
   </p:declare-step>
 
-  <para>The <code>p:unarchive</code> step takes the document appearing on its <port>source</port> port as an archive
-    (for instance a zip file). Depending on which options are set it either outputs a description of the contents of the
-    archive as an XML document or specific entries (files) from the archive.</para>
+  
 
-  <para>The format of the archive can be specified using the <option>format</option> option. Implementations
-      <rfc2119>must</rfc2119> support the <biblioref linkend="zip"/> format, specified with the value <code>zip</code>.
-      <impl>It is <glossterm>implementation-defined</glossterm> what other formats are supported.</impl></para>
+  <para>The format of the archive can be specified using the <option>format</option> option.
+    Implementations <rfc2119>must</rfc2119> support the <biblioref linkend="zip"/> format, specified
+    with the value <code>zip</code>. <impl>It is <glossterm>implementation-defined</glossterm> what
+      other formats are supported.</impl></para>
 
-  <para>The <option>parameters</option> can be used to supply parameters to control the unarchiving. <impl>The semantics
-      of the keys and the allowed values for these keys are <glossterm>implementation-defined</glossterm>.</impl>
-    <error code="C0079">It is a <glossterm>dynamic error</glossterm> if the map <option>parameters</option> contains an
-      entry whose key is defined by the implementation and whose value is not valid for that key.</error></para>
+  <para>The <option>parameters</option> option can be used to supply parameters to control the unarchiving.
+      <impl>The semantics of the keys and the allowed values for these keys are
+        <glossterm>implementation-defined</glossterm>.</impl>
+    <error code="C0079">It is a <glossterm>dynamic error</glossterm> if the map
+        <option>parameters</option> contains an entry whose key is defined by the implementation and
+      whose value is not valid for that key.</error></para>
 
-  <para>If present, the value of the <option>include-filter</option> or <option>exclude-filter</option> option
-      <rfc2119>must</rfc2119> be a whitespace separated list of regular expressions as specified in <biblioref linkend="xpath31-functions"/>, section 7.61 “<literal>Regular Expression Syntax</literal>”.</para>
+  <para>If present, the value of the <option>include-filter</option> or
+    <option>exclude-filter</option> option <rfc2119>must</rfc2119> be a sequence of strings, each
+    one representing a regular expressions as specified in <biblioref linkend="xpath31-functions"/>,
+    section 7.61 “<literal>Regular Expression Syntax</literal>”.</para>
 
-  <para>If neither the <option>include-filter</option> option nor the <option>exclude-filter</option> option is
-    specified, the <code>p:unarchive</code> step outputs on its <port>result</port> port a description of the contents of the
-    archive, as specified below.</para>
+  <para>If neither the <option>include-filter</option> option nor the
+      <option>exclude-filter</option> option is specified, the <code>p:unarchive</code> step outputs
+    on its <port>result</port> port all entries in the archive.</para>
 
-  <para>If the <option>include-filter</option> option or the <option>exclude-filter</option> option is specified, the
-      <code>p:archive</code> step outputs on the <port>result</port> port the entries from the archive that conform to the
-    following rules:</para>
+  <para>If the <option>include-filter</option> option or the <option>exclude-filter</option> option
+    is specified, the <code>p:archive</code> step outputs on the <port>result</port> port the
+    entries from the archive that conform to the following rules:</para>
   <itemizedlist>
     <listitem>
-      <para>If any <option>include-filter</option> pattern matches an archive entry's name, the entry is included in the
-        output.</para>
+      <para>If any <option>include-filter</option> pattern matches an archive entry's name, the
+        entry is included in the output.</para>
     </listitem>
     <listitem>
-      <para>If any <option>exclude-filter</option> pattern matches an archive entry's name, the entry is excluded in
-        the output.</para>
+      <para>If any <option>exclude-filter</option> pattern matches an archive entry's name, the
+        entry is excluded in the output.</para>
     </listitem>
     <listitem>
-      <para>If both options are provided, the include filter is processed first, then the exclude filter. </para>
+      <para>If both options are provided, the include filter is processed first, then the exclude
+        filter. </para>
     </listitem>
     <listitem>
-      <para>Names of entries in archives are always relative names. For instance, the name of a file called
-        <code>xyz.xml</code> in a <code>specs</code> subdirectory in an archive is called in full
-        <code>specs/xyz.xml</code> (and not <code>/specs/xyz.xml</code>).</para>
+      <para>Names of entries in archives are always relative names. For instance, the name of a file
+        called <code>xyz.xml</code> in a <code>specs</code> subdirectory in an archive is called in
+        full <code>specs/xyz.xml</code> (and not <code>/specs/xyz.xml</code>).</para>
     </listitem>
   </itemizedlist>
-  <para>As a result: an item is included if it matches (at least) one of the <option>include-filter</option> values and
-    none of the <option>exclude-filter</option> values.</para>
+  <para>As a result: an item is included if it matches (at least) one of the
+      <option>include-filter</option> values and none of the <option>exclude-filter</option>
+    values.</para>
+  
   <note role="editorial">
     <para>What about the base URIs of these documents?</para>
   </note>
- 
-  <section>
-    <title>Archive content specification</title>
-    <note role="editorial">
-      <para>TBD. Like the manifest of <code>p:archive</code> but no <code>@href</code>?</para>
-    </note>
-  </section>
 
   <simplesect>
     <title>Document properties</title>
