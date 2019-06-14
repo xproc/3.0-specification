@@ -2464,13 +2464,13 @@ a processing instruction and the new name has a non-null namespace.</error>
 <title>p:replace</title>
 
 <para>The <code>p:replace</code> step replaces matching nodes in
-its primary input with the document element of the
+its primary input with the top-level node(s) of the
 <code>replacement</code> port's document.</para>
 
 <p:declare-step type="p:replace">
    <p:input port="source" primary="true" content-types="xml html"/>
-   <p:input port="replacement" content-types="xml html"/>
-   <p:output port="result" content-types="xml html"/>
+   <p:input port="replacement" content-types="text xml html"/>
+   <p:output port="result" content-types="text xml html"/>
    <p:option name="match" required="true" as="xs:string" e:type="XSLTSelectionPattern"/>
 </p:declare-step>
 
@@ -2482,14 +2482,17 @@ nodes. </error> Multiple matches are allowed, in which case multiple
 copies of the <port>replacement</port> document will occur.</para>
 
 <para>Every node in the primary input matching the specified
-pattern is replaced in the output is replaced by the document element
+   pattern is replaced in the output by the top-level node(s)
 of the <port>replacement</port> document. Only non-nested matches are
 replaced. That is, once a node is replaced, its descendants cannot
 be matched.</para>
 
 <simplesect>
 <title>Document properties</title>
-<para feature="replace-preserves-all">All document properties are preserved.</para>
+<para feature="replace-preserves-partially">If the resulting document contains exactly one text node,
+the <literal>content-type</literal> property is changed to <literal>text/plain</literal> and the 
+   <literal>serialization</literal> property is removed, while all other document properties are 
+   preserved. For other document types, all document properties are preserved.</para>
 </simplesect>
 </section>
 <section xml:id="c.set-attributes">
