@@ -1190,7 +1190,7 @@ for some value and injects it into the <port>source</port> document.</para>
 
 <p:declare-step type="p:hash">
   <p:input port="source" primary="true" content-types="xml html"/>
-  <p:output port="result" content-types="xml html"/>
+  <p:output port="result" content-types="text xml html"/>
   <p:option name="parameters" as="map(xs:QName,item()*)?"/>
   <p:option name="value" required="true" as="xs:string"/>
   <p:option name="algorithm" required="true" as="xs:QName"/>
@@ -1243,14 +1243,15 @@ of the element <rfc2119>must</rfc2119> also be amended accordingly.</para>
 
 <para>If the expression matches any
 other kind of node, the entire node (and <emphasis>not</emphasis> just
-  its contents) is replaced by the hash. <error code="C0091">It is a
-    <glossterm>dynamic error</glossterm> if the result of <tag>p:hash</tag> contains only 
-text nodes.</error></para>
+  its contents) is replaced by the hash.</para>
 
-<simplesect>
-<title>Document properties</title>
-<para feature="hash-preserves-all">All document properties are preserved.</para>
-</simplesect>
+  <simplesect>
+    <title>Document properties</title>
+    <para feature="hash-preserves-partially">If the resulting document contains exactly one text node,
+      the <literal>content-type</literal> property is changed to <literal>text/plain</literal> and the 
+      <literal>serialization</literal> property is removed, while all other document properties are 
+      preserved. For other document types, all document properties are preserved.</para>
+  </simplesect>
 </section>
 <section xml:id="c.http-request">
 <title>p:http-request</title>
@@ -2698,7 +2699,7 @@ with the string result of evaluating an XPath expression.</para>
 
 <p:declare-step type="p:string-replace">
    <p:input port="source" content-types="xml html"/>
-   <p:output port="result" content-types="xml html"/>
+   <p:output port="result" content-types="text xml html"/>
    <p:option name="match" required="true" as="xs:string" e:type="XSLTSelectionPattern"/>
    <p:option name="replace" required="true" as="xs:string" e:type="XPathExpression"/>
 </p:declare-step>
@@ -2730,7 +2731,10 @@ the string value of the <option>replace</option> expression.</para>
 
 <simplesect>
 <title>Document properties</title>
-<para feature="string-replace-preserves-all">All document properties are preserved.</para>
+   <para feature="string-replace-preserves-all">If the resulting document contains exactly one text node,
+      the <literal>content-type</literal> property is changed to <literal>text/plain</literal> and the 
+      <literal>serialization</literal> property is removed, while all other document properties are 
+      preserved. For other document types, all document properties are preserved.</para>
 </simplesect>
 </section>
 <section xml:id="c.tee">

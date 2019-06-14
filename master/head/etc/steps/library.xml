@@ -89,7 +89,7 @@
    </p:declare-step>
    <p:declare-step type="p:hash" xml:id="hash">
       <p:input port="source" primary="true" content-types="xml html"/>
-      <p:output port="result" content-types="xml html"/>
+      <p:output port="result" content-types="text xml html"/>
       <p:option name="parameters" as="xs:string"/>
       <p:option name="value" required="true" as="xs:string"/>
       <p:option name="algorithm" required="true" as="xs:QName"/>
@@ -233,7 +233,7 @@
    </p:declare-step>
    <p:declare-step type="p:string-replace" xml:id="string-replace">
       <p:input port="source" content-types="xml html"/>
-      <p:output port="result" content-types="xml html"/>
+      <p:output port="result" content-types="text xml html"/>
       <p:option name="match"
                 required="true"
                 as="xs:string"
