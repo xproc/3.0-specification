@@ -243,13 +243,6 @@
                 as="xs:string"
                 e:type="XPathExpression"/>
    </p:declare-step>
-   <p:declare-step type="p:tee" xml:id="tee">
-      <p:input port="source" content-types="any" sequence="true"/>
-      <p:output port="result" sequence="true" content-types="any"/>
-      <p:option name="href" required="true" as="xs:anyURI"/>
-      <p:option name="serialization" as="xs:string"/>
-      <p:option name="enable" as="xs:boolean" select="true()"/>
-   </p:declare-step>
    <p:declare-step type="p:text-count" xml:id="text-count">
       <p:input port="source"
                primary="true"
