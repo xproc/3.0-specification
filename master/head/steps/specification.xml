@@ -3149,7 +3149,7 @@ children.</para>
 
 <p:declare-step type="p:unwrap">
    <p:input port="source" content-types="xml html"/>
-   <p:output port="result" content-types="application/xml"/>
+   <p:output port="result" content-types="application/xml text/plain"/>
    <p:option name="match" as="xs:string" select="'/*'" e:type="XSLTSelectionPattern"/>
 </p:declare-step>
 
@@ -3171,7 +3171,9 @@ ones.</para>
 </note>
 
 <para>This step produces a single document; if the document element is
-unwrapped, the result might not be well-formed XML.</para>
+unwrapped, the result might not be well-formed XML. If the step produces a
+document node with a single text child, the result will have content type 
+“<literal>text/plain</literal>”.</para>
 
 <simplesect>
 <title>Document properties</title>
