@@ -364,7 +364,7 @@
    </p:declare-step>
    <p:declare-step type="p:uuid" xml:id="uuid">
       <p:input port="source" primary="true" content-types="xml html"/>
-      <p:output port="result" content-types="xml html"/>
+      <p:output port="result" content-types="text xml html"/>
       <p:option name="match"
                 as="xs:string"
                 select="'/*'"
