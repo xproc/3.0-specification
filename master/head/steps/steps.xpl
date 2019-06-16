@@ -55,7 +55,7 @@
    </p:declare-step>
    <p:declare-step type="p:delete" xml:id="delete">
       <p:input port="source" content-types="xml html"/>
-      <p:output port="result" content-types="xml html"/>
+      <p:output port="result" content-types="text xml html"/>
       <p:option name="match"
                 required="true"
                 as="xs:string"
