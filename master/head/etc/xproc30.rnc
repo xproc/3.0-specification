@@ -725,7 +725,6 @@ StandardStep =
   | Step-insert
   | Step-label-elements
   | Step-load
-  | Step-load-directory-list
   | Step-make-absolute-uris
   | Step-namespace-rename
   | Step-pack
@@ -737,7 +736,6 @@ StandardStep =
   | Step-split-sequence
   | Step-store
   | Step-string-replace
-  | Step-tee
   | Step-text-count
   | Step-text-head
   | Step-text-join
@@ -1121,17 +1119,6 @@ Step-load =
     attribute document-properties { xsd:string }?,
     (WithOption* & (Documentation | PipeInfo)*)
   }
-Step-load-directory-list =
-  element load-directory-list {
-    name.ncname.attr?,
-    common.attributes,
-    use-when.attr?,
-    step.attributes,
-    attribute path { xsd:anyURI }?,
-    attribute include-filter { xsd:string }?,
-    attribute exclude-filter { xsd:string }?,
-    (WithOption* & (Documentation | PipeInfo)*)
-  }
 Step-make-absolute-uris =
   element make-absolute-uris {
     name.ncname.attr?,
@@ -1238,17 +1225,6 @@ Step-string-replace =
     attribute replace { xsd:string }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
   }
-Step-tee =
-  element tee {
-    name.ncname.attr?,
-    common.attributes,
-    use-when.attr?,
-    step.attributes,
-    attribute href { xsd:anyURI }?,
-    attribute serialization { xsd:string }?,
-    attribute enable { xsd:boolean }?,
-    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
-  }
 Step-text-count =
   element text-count {
     name.ncname.attr?,
@@ -1275,6 +1251,7 @@ Step-text-join =
     attribute separator { xsd:string }?,
     attribute prefix { xsd:string }?,
     attribute suffix { xsd:string }?,
+    attribute override-content-type { xsd:string }?,
     (WithOption* & (Documentation | PipeInfo)*)
   }
 Step-text-replace =
