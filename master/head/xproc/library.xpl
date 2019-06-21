@@ -33,6 +33,18 @@
       <p:option name="relative-to" as="xs:anyURI" required="false"/>
       <p:option name="parameters" as="xs:string" required="false"/>
    </p:declare-step>
+   <p:declare-step type="p:archive-manifest" xml:id="archive-manifest">
+      <p:input port="source"
+               primary="true"
+               content-types="*/*"
+               sequence="false"/>
+      <p:output port="result"
+                primary="true"
+                content-types="application/xml"
+                sequence="false"/>
+      <p:option name="format" as="xs:QName?" required="false"/>
+      <p:option name="parameters" as="xs:string" required="false"/>
+   </p:declare-step>
    <p:declare-step type="p:cast-content-type" xml:id="cast-content-type">
       <p:input port="source" content-types="*/*"/>
       <p:output port="result" content-types="*/*"/>

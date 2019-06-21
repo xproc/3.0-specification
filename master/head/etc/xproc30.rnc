@@ -711,6 +711,7 @@ StandardStep =
   | Step-add-attribute
   | Step-add-xml-base
   | Step-archive
+  | Step-archive-manifest
   | Step-cast-content-type
   | Step-compare
   | Step-count
@@ -971,6 +972,16 @@ Step-archive =
     step.attributes,
     attribute format { xsd:QName }?,
     attribute relative-to { xsd:anyURI }?,
+    attribute parameters { xsd:string }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-archive-manifest =
+  element archive-manifest {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute format { xsd:QName? }?,
     attribute parameters { xsd:string }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
   }
