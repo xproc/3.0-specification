@@ -616,6 +616,68 @@ element's [base URI].</para>
   </simplesect>
 
 </section>
+<section xml:id="c.archive-manifest">
+
+  <title>p:archive-manifest</title>
+
+  <para>The <code>p:archive-manifest</code> creates an XML manifest file describing the contents of
+    the archive appearing on its <port>source</port> port.</para>
+
+  <p:declare-step type="p:archive-manifest">
+    <p:input port="source" primary="true" content-types="*/*" sequence="false"/>
+    <p:output port="result" primary="true" content-types="application/xml" sequence="false"/>
+    <p:option name="format" as="xs:QName?" required="false"/>
+    <p:option name="parameters" as="map(xs:Qname, item()*)" required="false"/>
+  </p:declare-step>
+
+  <para>The <code>p:archive-manifest</code> step inspects the archive appearing on its
+      <port>source</port> port and outputs a manifest describing the contents of the archive on its
+      <port>result</port> port. </para>
+
+  <para>The format of the archive is determined as follows:</para>
+  <itemizedlist>
+    <listitem>
+      <para>If the <option>format</option> option is specified, this determines the format of the
+        archive. Implementations <rfc2119>must</rfc2119> support the <biblioref linkend="zip"/>
+        format, specified with the value <code>zip</code>. <impl>It is
+            <glossterm>implementation-defined</glossterm> what other formats are
+        supported.</impl> <error code="C0081">It is a <glossterm>dynamic error</glossterm> if the format of the
+          archive does not match the format as specified in the <option>format</option>
+          option.</error></para>
+    </listitem>
+    <listitem>
+      <para>If no <option>format</option> option is specified or if its value is the empty sequence,
+        the archive's format will be determined by the step, using the <code>content-type</code>
+        document-property of the document on the <port>source</port> port and/or by inspecting its
+        contents. <impl>It is <glossterm>implementation-defined</glossterm> how the step determines
+          the archive's format.</impl> Implementations <rfc2119>should</rfc2119> recognize archives
+        in <biblioref linkend="zip"/> format. </para>
+    </listitem>
+  </itemizedlist>
+  
+  <para><error code="C0085">It is a <glossterm>dynamic error</glossterm> if the format of the
+    archive cannot be understood, determined and/or processed.</error></para>
+
+  <para>The <option>parameters</option> option can be used to supply parameters to control the
+    archive manifest generation. <impl>The semantics of the keys and the allowed values for these
+      keys are <glossterm>implementation-defined</glossterm>.</impl>
+    <error code="C0079">It is a <glossterm>dynamic error</glossterm> if the map
+        <option>parameters</option> contains an entry whose key is defined by the implementation and
+      whose value is not valid for that key.</error></para>
+
+  <para>The generated archive has the format as described in <xref linkend="cv.archive-manifest"/>.
+    Implementations <rfc2119>must</rfc2119> supply an <tag>c:entry</tag> element and its
+      <code>name</code> attribute for every entry in the archive. Supplying additional information
+    is <glossterm>implementation-defined</glossterm>.</para>
+
+  <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+  <simplesect>
+    <title>Document properties</title>
+    <para feature="archive-preserves-none">No document properties are preserved.</para>
+  </simplesect>
+
+</section>
 <section xml:id="c.cast-content-type">
 <title>p:cast-content-type</title>
 
