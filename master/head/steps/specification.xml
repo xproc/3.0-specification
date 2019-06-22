@@ -2537,9 +2537,9 @@ matching elements.</para>
 
 <p:declare-step type="p:set-attributes">
    <p:input port="source" primary="true" content-types="xml html"/>
-   <p:input port="attributes" content-types="xml html"/>
    <p:output port="result" content-types="xml html"/>
    <p:option name="match" as="xs:string" select="'/*'" e:type="XSLTSelectionPattern"/>
+   <p:option name="attributes" required="true" as="map(xs:QName, xs:untypedAtomic)"/> 
 </p:declare-step>
 
  <para>The value of the <option>match</option> option <rfc2119>must</rfc2119> be an
@@ -2547,13 +2547,14 @@ matching elements.</para>
  error</glossterm> if that pattern matches anything other than element
  nodes.</error></para>
 
-<para>Each attribute on the document element of the document that
-appears on the <port>attributes</port> port is copied to each element
-that matches the <option>match</option> expression.</para>
+<para>A new attribute is created for each entry in the map appearing
+on the <option>attributes</option> option. The attribute name is taken
+from the entry's key while the attribute value is taken from the string value of
+the entry's value.</para>
 
 <para>If an attribute with the same name as one of the attributes to
-be copied already exists, the value specified on the
-<port>attribute</port> port's document is used. The result port of
+be created already exists, the value specified on the
+<option>attributes</option> option is used. The result port of
 this step produces a copy of the <port>source</port> port's document
 with the matching elements' attributes modified.</para>
 
@@ -2561,9 +2562,8 @@ with the matching elements' attributes modified.</para>
 <option>match</option> option. All matching elements are processed.
 If no elements match, the step will not change any elements.</para>
 
-<para>This step must not copy namespace declarations.  If the attributes
-copied from the <port>attributes</port> use namespaces, prefixes, or
-prefixes bound to different namespaces, the document produced on the
+<para>If the attributes taken from the <option>attributes</option> use namespaces, 
+prefixes, or prefixes bound to different namespaces, the document produced on the
 <port>result</port> output port will require namespace fixup.</para>
 
 <para>If an attribute named

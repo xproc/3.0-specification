@@ -202,12 +202,12 @@
    </p:declare-step>
    <p:declare-step type="p:set-attributes" xml:id="set-attributes">
       <p:input port="source" primary="true" content-types="xml html"/>
-      <p:input port="attributes" content-types="xml html"/>
       <p:output port="result" content-types="xml html"/>
       <p:option name="match"
                 as="xs:string"
                 select="'/*'"
                 e:type="XSLTSelectionPattern"/>
+      <p:option name="attributes" required="true" as="xs:string"/>
    </p:declare-step>
    <p:declare-step type="p:set-properties" xml:id="set-properties">
       <p:input port="source" content-types="any"/>
