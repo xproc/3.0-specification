@@ -70,7 +70,9 @@ implemented.
     </para>
   </listitem>
   <listitem>
-    <para><type>XSLTSelectionPattern</type>: An XSLT pattern.
+    <para><type>XSLTSelectionPattern</type>:
+<termdef xml:id="dt-selection-pattern">A <firstterm>selection pattern</firstterm> is an
+XSLT selection pattern. FIXME:</termdef>
     </para>
   </listitem>
   <listitem>
@@ -112,14 +114,19 @@ input document unless the step's process explicitly sets an
 description explicitly states how the base URI is constructed.</para>
 </listitem>
 <listitem>
-<para>Each step describes how it modifies the document properties of
-the documents that flow through it.</para>
-<para>A great many steps indicate that they preserve some or all of
-the properties of the input document. It should be noted that in some
-cases the transformation performed by the step will violate the
-condition associated with some property. In general, the steps cannot
-know this and the pipeline author is responsible for managing the
-properties with greater care in this case.
+<para>Steps are responsible for describing how document properties are
+transformed as documents flow through them. Many steps claim that the
+specified properties are preserved. Generally, it is the
+responsibility of the pipeline author to determine when this is
+inapropriate and take corrective action. However, it is the
+responsibility of the pipeline processor to assure that the
+<code>content-type</code> property is correct. If a step transforms a
+document in a manner that is inconsistent with the
+<code>content-type</code> property (accepting an XML document on the
+source port but producing a text document on the result, for example), the
+processor must assure that the <code>content-type</code> property is appropriate.
+If a step changes the <code>content-type</code> in this way, it <rfc2119>must</rfc2119> also
+remove the <code>serialization</code> property
 </para>
 </listitem>
 </itemizedlist>
@@ -306,8 +313,9 @@ element's [base URI].</para>
   <para>The <code>p:archive</code> step can perform several different operations on archives. The
     most common one will likely be creating an archive, but it could also, depending on the archive
     format, provide services like update, freshen or even merge. The only format implementations
-      <rfc2119>must</rfc2119> support is <biblioref linkend="zip"/>. Support for other formats is
-      <glossterm>implementation-defined</glossterm>.</para>
+      <rfc2119>must</rfc2119> support is <biblioref linkend="zip"/>. <impl>The list of formats
+supported by the <tag>p:archive</tag> step is
+      <glossterm>implementation-defined</glossterm>.</impl></para>
 
   <para>The <code>p:archive</code> step has the following input ports:</para>
   <variablelist>
@@ -336,8 +344,8 @@ element's [base URI].</para>
         <para>The <port>archive</port> port is used to provide the step with existing archive(s) for
           operations like update, freshen or merge. Handling of ZIP files supports modifying
           archives appearing on the <port>archive</port> port (<xref linkend="cv.archive-zips"/>).
-          Whether other archive formats and implementations support modifications of
-            <port>archive</port> inputs is <glossterm>implementation-defined</glossterm>. A,
+          <impl>The list of archive formats that can be modified by <tag>p:archive</tag> is
+            <glossterm>implementation-defined</glossterm>.</impl> A,
           currently hypothetical, archive merging implementation may accept more than one document
           on the <port>archive</port> port. <error code="C0081">It is a <glossterm>dynamic
               error</glossterm> if the content type of a document on the <port>archive</port> does
@@ -603,8 +611,9 @@ element's [base URI].</para>
         documents for the given <code>format</code> and <code>command</code>.</error></para>
 
     <para>Implementations of other archive formats <rfc2119>should</rfc2119> use the same parameter
-      names if applicable. The value spaces for these parameters may be format-specific though. They
-      are <glossterm>implementation-defined</glossterm>.</para>
+      names if applicable. The value spaces for these parameters may be format-specific though.
+      <impl>The actual parameter names supported by <tag>p:archive</tag> for a particular format
+      are <glossterm>implementation-defined</glossterm>.</impl></para>
 
   </section>
 
@@ -667,8 +676,9 @@ element's [base URI].</para>
 
   <para>The generated manifest has the format as described in <xref linkend="cv.archive-manifest"/>.
     Implementations <rfc2119>must</rfc2119> supply an <tag>c:entry</tag> element and its
-      <code>name</code> attribute for every entry in the archive. Supplying additional information
-    is <glossterm>implementation-defined</glossterm>.</para>
+      <code>name</code> attribute for every entry in the archive. <impl>Additional information
+provided for entries in <tag>p:archive-manifest</tag>
+    is <glossterm>implementation-defined</glossterm>.</impl></para>
 
   <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
@@ -4024,7 +4034,8 @@ how <glossterm role="unwrapped">implementation-defined</glossterm> features are 
 <firstterm>implementation-dependent</firstterm> feature is one where the
 implementation has discretion in how it is performed.
 Implementations are not required to document or explain
-how <glossterm role="unwrapped">implementation-dependent</glossterm> features are performed.</para></glossdef></glossentry></glosslist></appendix>
+how <glossterm role="unwrapped">implementation-dependent</glossterm> features are performed.</para></glossdef></glossentry><glossentry><glossterm>selection pattern</glossterm><glossdef><para>A <firstterm>selection pattern</firstterm> is an
+XSLT selection pattern. FIXME:</para></glossdef></glossentry></glosslist></appendix>
 
 <appendix version="5.0-extension w3c-xproc" xml:id="ancillary-files">
 <title>Ancillary files</title>

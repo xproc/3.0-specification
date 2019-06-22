@@ -101,8 +101,9 @@ steps is assumed; for background details, see
       <para>Should we add a parameter to <code>p:cast-content-type</code> that allows to convert between XML and JSON
       XVRL serialization formats (once JSON serialization is specified for XVRL)?</para>
     </note>
-    <para>Each of the validation steps has a <option>parameters</option> option. The supported keys and their semantics are
-        <glossterm>implementation-defined</glossterm>, and they can be different for each validation step. Keys in the
+    <para>Each of the validation steps has a <option>parameters</option> option. <impl>The parameters supported by the
+validation steps and their semantics are
+        <glossterm>implementation-defined</glossterm>, and they can be different for each validation step.</impl> Keys in the
         <literal>c</literal> namespace, <uri type="namespace">http://www.w3.org/ns/xproc-step</uri>, namely
         <literal>c:compile</literal> and <literal>c:xvrl</literal>, hold maps themselves that control schema compilation and XVRL
       generation, respectively. Schema compilation is, for example, the process of converting a Schematron schema into an XSLT
@@ -245,16 +246,16 @@ code generation, or to parameters that influence SVRL to XVRL conversion.</para>
 
     <para>There are multiple Schematron implementations. An XProc processor that implements this step <rfc2119>should</rfc2119>
       at least support the <biblioref linkend="schematron-skeleton"/> implementation.</para>
-    <para>How the Schematron implementation is selected is
-    <glossterm>implementation-defined</glossterm>. A processor might select an implementation based on the schema’s 
+    <para><impl>How the Schematron implementation is selected is
+    <glossterm>implementation-defined</glossterm>.</impl> A processor might select an implementation based on the schema’s 
       <code role="attribute">queryBinding</code> attribute and/or provide configuration options.</para>
     
     <para>The <option>parameters</option> map may contain two special entries, <literal>c:compile</literal> and
         <literal>c:xvrl</literal>, both are maps. If a code-generating implementation such as Skeleton is used, the entries of
       the <literal>c:compile</literal> map, for example <literal>allow-foreign</literal>, will be passed to the code
       generator.</para>
-    <para>The SVRL to XVRL conversion can be influenced by the entries of the <literal>c:xvrl</literal> map. Which parameters
-      this conversion accepts is <glossterm>implementation-defined</glossterm>.</para>
+    <para>The SVRL to XVRL conversion can be influenced by the entries of the <literal>c:xvrl</literal> map. <impl>Which parameters
+the SVRL to XVRL conversion supports is <glossterm>implementation-defined</glossterm>.</impl></para>
     <para>All other parameters of the <option>parameters</option> option will be passed to the generated code if applicable,
       or to a hypothetical native Schematron validator that does without code generation.</para>
 
