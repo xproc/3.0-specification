@@ -2674,12 +2674,14 @@ any annotations that appear in the input.</para>
 <title>p:store</title>
 
 <para>The <tag>p:store</tag> step stores (a possibly serialized
-version of) its input to a URI. This step outputs a reference to the
-location of the stored document.</para>
+version of) its input to a URI. The input is copied to the <port>result</port>
+port. Additionally this step outputs a reference to the
+location of the stored document on the <port>result-uri</port> port.</para>
 
 <p:declare-step type="p:store">
   <p:input port="source" content-types="any"/>
-  <p:output port="result" content-types="application/xml" primary="true"/>
+  <p:output port="result" content-types="any" primary="true"/>
+  <p:output port="result-uri" content-types="application/xml"/>
   <p:option name="href" required="true" as="xs:anyURI"/>
   <p:option name="serialization" as="map(xs:QName,item()*)?"/>
 </p:declare-step>
@@ -2691,22 +2693,25 @@ specified (<tag>p:with-option</tag> or <tag>p:store</tag> in the case
 of a syntactic shortcut
 value).</para>
 
-<para>The step attempts to store the XML document to the specified
+<para>The step attempts to store the document to the specified
 URI. <error code="C0050">It is a <glossterm>dynamic error</glossterm>
 if the URI scheme is not supported or the step cannot store to the
 specified location.</error></para>
 
-<para>The output of this step is a document containing a single
-<tag>c:result</tag> element whose content is the absolute URI of the
-document stored by the step.</para>
+<para>The output of this step on the <port>result-uri</port> port is a 
+document containing a single <tag>c:result</tag> element whose content 
+is the absolute URI of the document stored by the step.</para>
 
 <para>The <option>serialization</option> option is provided to control the
-serialization of content when it is stored. Serialization is described in
+serialization of content when it is stored. If the document to be stored
+has a “serialization” property, the serialization is controlled by the
+merger of the two maps where the entries in the “serialization” property
+take precedence. Serialization is described in
 <biblioref linkend="xproc30"/>.</para>
 
 <simplesect>
 <title>Document properties</title>
-<para feature="store-preserves-none">No document properties are preserved.</para>
+<para feature="store-preserves-all">All document properties are preserved.</para>
 </simplesect>
 </section>
 <section xml:id="c.string-replace">
@@ -2983,36 +2988,50 @@ the string value of the <option>replace</option> expression.</para>
 </section>
 <section xml:id="c.unarchive">
 
-  <title>p:unarchive</title>
+  <title>p:unarchive</title> 
 
-  <para>The <code>p:unarchive</code> step outputs on its <port>result</port> port specific
-    entries in an archive (for instance from a zip file).</para>
+  <para>The <code>p:unarchive</code> step outputs on its <port>result</port> port specific entries
+    in an archive (for instance from a zip file).</para>
 
   <p:declare-step type="p:unarchive">
     <p:input port="source" primary="true" content-types="*/*" sequence="false"/>
     <p:output port="result" primary="true" content-types="*/*" sequence="true"/>
     <p:option name="include-filter" as="xs:string*" e:type="RegularExpression" required="false"/>
     <p:option name="exclude-filter" as="xs:string*" e:type="RegularExpression" required="false"/>
-    <p:option name="format" as="xs:QName" required="false" select="'zip'"/>
+    <p:option name="format" as="xs:QName" required="false"/>
     <p:option name="parameters" as="map(xs:Qname, item()*)" required="false"/>
   </p:declare-step>
 
-  
+  <para>The format of the archive is determined as follows:</para>
+  <itemizedlist>
+    <listitem>
+      <para>If the <option>format</option> option is specified, this determines the format of the
+        archive. Implementations <rfc2119>must</rfc2119> support the <biblioref linkend="zip"/>
+        format, specified with the value <code>zip</code>. <impl>It is
+            <glossterm>implementation-defined</glossterm> what other formats are supported.</impl>
+        <error code="C0081">It is a <glossterm>dynamic error</glossterm> if the format of the
+          archive does not match the format as specified in the <option>format</option>
+          option.</error></para>
+    </listitem>
+    <listitem>
+      <para>If no <option>format</option> option is specified or if its value is the empty sequence,
+        the archive's format will be determined by the step, using the <code>content-type</code>
+        document-property of the document on the <port>source</port> port and/or by inspecting its
+        contents. <impl>It is <glossterm>implementation-defined</glossterm> how the step determines
+          the archive's format.</impl> Implementations <rfc2119>should</rfc2119> recognize archives
+        in <biblioref linkend="zip"/> format. </para>
+    </listitem>
+  </itemizedlist>
 
-  <para>The format of the archive can be specified using the <option>format</option> option.
-    Implementations <rfc2119>must</rfc2119> support the <biblioref linkend="zip"/> format, specified
-    with the value <code>zip</code>. <impl>It is <glossterm>implementation-defined</glossterm> what
-      other formats are supported.</impl></para>
-
-  <para>The <option>parameters</option> option can be used to supply parameters to control the unarchiving.
-      <impl>The semantics of the keys and the allowed values for these keys are
+  <para>The <option>parameters</option> option can be used to supply parameters to control the
+    unarchiving. <impl>The semantics of the keys and the allowed values for these keys are
         <glossterm>implementation-defined</glossterm>.</impl>
     <error code="C0079">It is a <glossterm>dynamic error</glossterm> if the map
         <option>parameters</option> contains an entry whose key is defined by the implementation and
       whose value is not valid for that key.</error></para>
 
   <para>If present, the value of the <option>include-filter</option> or
-    <option>exclude-filter</option> option <rfc2119>must</rfc2119> be a sequence of strings, each
+      <option>exclude-filter</option> option <rfc2119>must</rfc2119> be a sequence of strings, each
     one representing a regular expressions as specified in <biblioref linkend="xpath31-functions"/>,
     section 7.61 “<literal>Regular Expression Syntax</literal>”.</para>
 
@@ -3045,10 +3064,11 @@ the string value of the <option>replace</option> expression.</para>
   <para>As a result: an item is included if it matches (at least) one of the
       <option>include-filter</option> values and none of the <option>exclude-filter</option>
     values.</para>
-  
-  <note role="editorial">
-    <para>What about the base URIs of these documents?</para>
-  </note>
+
+  <para>The base URI of an unarchived document appearing on the <port>result</port> port is the
+    relative path of this document as it was in the archive. For instance, the base URI of an
+    unarchived file called <code>xyz.xml</code> that resided in the <code>specs</code> subdirectory
+    in the archive will become <code>specs/xyz.xml</code>.</para>
 
   <simplesect>
     <title>Document properties</title>
@@ -3364,38 +3384,29 @@ instruction nodes.</para>
 <title>p:www-form-urldecode</title>
 
 <para>The <tag>p:www-form-urldecode</tag> step decodes a
-<literal>x-www-form-urlencoded</literal> string into an XML representation.</para>
+<literal>x-www-form-urlencoded</literal> string into a JSON representation.</para>
 
 <p:declare-step type="p:www-form-urldecode">
-  <p:output port="result" content-types="application/xml"/>
+  <p:output port="result" content-types="application/json"/>
   <p:option name="value" required="true" as="xs:string"/>
 </p:declare-step>
 
-<para>The <option>value</option> option is interpreted as a string of
-parameter values encoded using the
+<para>A JSON object of the form “<literal>map(xs:string, xs:string+)</literal>” will
+appear on <port>result</port> port. The <option>value</option> option is interpreted 
+as a string of parameter values encoded using the
 <literal>x-www-form-urlencoded</literal> algorithm. Each name/value
-pair is written in a <tag>c:param</tag> element.
-The entire set of parameters
-is written (as a <tag>c:param-set</tag>) on the <port>result</port>
-output port.</para>
+pair is represented in the JSON object as key/value entry.
+</para>
 
 <para><error code="C0037">It is a
 <glossterm>dynamic error</glossterm> if the <option>value</option> provided
 is not a properly
 <literal>x-www-form-urlencoded</literal> value.</error>
-<error code="C0061">It is a
-<glossterm>dynamic error</glossterm> if the name of any encoded parameter
-name is not a valid <type>xs:NCName</type>.</error> In other words, this
-step can only decode simple name/value pairs where the names do not contain
-colons or any characters that cannot be used in XML names.
 </para>
 
-<para>The order of the <tag>c:param</tag> elements in the result is the same
-as the order of the encoded parameters, reading from left to right.</para>
-
 <para>If any parameter name occurs more than once in the encoded string,
-the resulting parameter set will contain a <tag>c:param</tag> for
-each instance.</para>
+a sequence will be associated with the respective key. The order in the sequence
+retains the order of name/value pairs in the encoded string.</para>
 
 <simplesect>
 <title>Document properties</title>
@@ -3406,40 +3417,20 @@ each instance.</para>
 <title>p:www-form-urlencode</title>
 
 <para>The <tag>p:www-form-urlencode</tag> step encodes a set of parameter
-values as a <literal>x-www-form-urlencoded</literal> string and
-injects it into the <port>source</port> document.</para>
+values as a <literal>x-www-form-urlencoded</literal> string.</para>
 
 <p:declare-step type="p:www-form-urlencode">
-  <p:input port="source" primary="true" content-types="xml html"/>
-  <p:output port="result" content-types="application/xml"/>
-  <p:option name="parameters" as="map(xs:QName,item()*)?"/>
-  <p:option name="match" required="true" as="xs:string" e:type="XSLTSelectionPattern"/>
+  <p:output port="result" content-types="text/plain"/>
+  <p:option name="parameters" required="true" as="map(xs:string,xs:untypedAtomic+)"/>
 </p:declare-step>
 
-<para>The value of the <option>match</option> option must be an
-XSLTSelectionPattern.</para>
-
-<para>The set of parameters is encoded as a single
-<literal>x-www-form-urlencoded</literal> string of name/value pairs.
-When parameters are encoded into name/value pairs,
-<emphasis>only</emphasis> the local name of each parameter is used.
-The namespace name is ignored and no prefix or colon appears in the name.
+<para>The map entries of <option>parameters</option> option are encoded as a single
+<literal>x-www-form-urlencoded</literal> string of name/value pairs. This
+string is returned on the <port>result</port> port as a text document.
 </para>
 
-<para><impl>The order of the parameters
-is <glossterm>implementation-dependent</glossterm>.</impl></para>
-
-<para>The matched nodes are specified with the <glossterm>selection pattern</glossterm> in the
-<option>match</option> option. For each matching node, the encoded
-string is used in the output. Nodes that do not
-match are copied without change.</para>
-
-<para>If the expression given in the <option>match</option> option
-matches an <emphasis>attribute</emphasis>, the encoded
-string is used as the new value of the attribute in the output.
-If the expression matches any other kind of node, the entire
-node (and <emphasis>not</emphasis> just its contents) is replaced by
-the encoded string.</para>
+<para>If more than one value is associated with a given key in <option>parameters</option>
+option, a name/value pair is created for each value.</para>
 
 <simplesect>
 <title>Document properties</title>
@@ -3481,7 +3472,7 @@ if an XInclude error occurs during processing.</error> </para>
 <title>p:xquery</title>
 
 <para>The <tag>p:xquery</tag> step applies an
-<biblioref linkend="xquery10"/> query to the sequence of documents
+XQuery query to the sequence of documents
 provided on the <port>source</port> port.</para>
 
 <p:declare-step type="p:xquery">
@@ -3537,22 +3528,6 @@ is not available.</error> If the step does not specify a version, the
 implementation may use any version it has available and may use any means
 to determine what version to use, including, but not limited to,
 examining the version of the query.</para>
-
-<para>The result of the <tag>p:xquery</tag> step must be a sequence of
-documents. <error code="C0057">It is a <glossterm>dynamic
-error</glossterm> if the sequence that results from evaluating the XQuery contains
-items other than documents and elements.</error> Any elements that appear
-in the result sequence will be treated as documents with the element as their
-document element.</para>
-
-<para>For example:</para>
-<programlisting language="xml">
-&lt;c:query&gt;
-declare namespace atom="http://www.w3.org/2005/Atom";
-/atom:feed/atom:entry
-&lt;/c:query&gt;
-
-</programlisting>
 
 <para>The output of this step
 <rfc2119>may</rfc2119> include PSVI annotations.</para>
@@ -3934,10 +3909,6 @@ W3C Recommendation. 15 November 2006.</bibliomixed>
 <citetitle xlink:href="https://www.w3.org/TR/xslt-xquery-serialization-31/">XSLT
 and XQuery Serialization 3.1</citetitle>.
 Andrew Coleman and C. M. Sperberg-McQueen, editors. W3C Recommendation. 21 March 2017.</bibliomixed>
-    <bibliomixed xml:id="xquery10"><abbrev>XQuery 1.0</abbrev>
-<citetitle xlink:href="http://www.w3.org/TR/xquery/">XQuery 1.0: An XML
-Query Language</citetitle>. Scott Boag, Don Chamberlin, Mary Fernández, et. al.,
-editors. W3C Recommendation. 23 January 2007.</bibliomixed>
     <bibliomixed xml:id="rfc1321"><abbrev>MD5</abbrev>
 <citetitle xlink:href="https://doi.org/10.17487/RFC1321">RFC 1321:
 The MD5 Message-Digest Algorithm</citetitle>.

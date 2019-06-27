@@ -233,7 +233,8 @@
    </p:declare-step>
    <p:declare-step type="p:store" xml:id="store">
       <p:input port="source" content-types="any"/>
-      <p:output port="result" content-types="application/xml" primary="true"/>
+      <p:output port="result" content-types="any" primary="true"/>
+      <p:output port="result-uri" content-types="application/xml"/>
       <p:option name="href" required="true" as="xs:anyURI"/>
       <p:option name="serialization" as="xs:string"/>
    </p:declare-step>
@@ -355,7 +356,7 @@
                 as="xs:string*"
                 e:type="RegularExpression"
                 required="false"/>
-      <p:option name="format" as="xs:QName" required="false" select="'zip'"/>
+      <p:option name="format" as="xs:QName" required="false"/>
       <p:option name="parameters" as="xs:string" required="false"/>
    </p:declare-step>
    <p:declare-step type="p:unescape-markup" xml:id="unescape-markup">
@@ -400,17 +401,12 @@
       <p:option name="group-adjacent" as="xs:string?" e:type="XPathExpression"/>
    </p:declare-step>
    <p:declare-step type="p:www-form-urldecode" xml:id="www-form-urldecode">
-      <p:output port="result" content-types="application/xml"/>
+      <p:output port="result" content-types="application/json"/>
       <p:option name="value" required="true" as="xs:string"/>
    </p:declare-step>
    <p:declare-step type="p:www-form-urlencode" xml:id="www-form-urlencode">
-      <p:input port="source" primary="true" content-types="xml html"/>
-      <p:output port="result" content-types="application/xml"/>
-      <p:option name="parameters" as="xs:string"/>
-      <p:option name="match"
-                required="true"
-                as="xs:string"
-                e:type="XSLTSelectionPattern"/>
+      <p:output port="result" content-types="text/plain"/>
+      <p:option name="parameters" required="true" as="xs:string"/>
    </p:declare-step>
    <p:declare-step type="p:xinclude" xml:id="xinclude">
       <p:input port="source" content-types="xml html"/>
