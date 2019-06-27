@@ -293,9 +293,7 @@ element's [base URI].</para>
 
   <para>The <code>p:archive</code> step outputs on its <port>result</port> port an archive (usually
     binary) document, for instance a ZIP file. A specification of the contents of the archive may be
-    specified in a manifest XML document on the <port>manifest</port>. The contents of the archive
-    can come from documents provided on the <port>source</port> and <port>archive</port> ports, from
-    documents specified inline in the manifest, or from a combination of these. The step produces a
+    specified in a manifest XML document on the <port>manifest</port> port. The step produces a
     report on the <port>report</port> port, which contains the manifest, amended with additional
     information about the archiving.</para>
 
@@ -314,7 +312,7 @@ element's [base URI].</para>
     most common one will likely be creating an archive, but it could also, depending on the archive
     format, provide services like update, freshen or even merge. The only format implementations
       <rfc2119>must</rfc2119> support is <biblioref linkend="zip"/>. <impl>The list of formats
-supported by the <tag>p:archive</tag> step is
+      supported by the <tag>p:archive</tag> step is
       <glossterm>implementation-defined</glossterm>.</impl></para>
 
   <para>The <code>p:archive</code> step has the following input ports:</para>
@@ -335,7 +333,7 @@ supported by the <tag>p:archive</tag> step is
       <listitem>
         <para>The <port>manifest</port> port can receive a manifest document that tells the step how
           to construct the archive. If no manifest document is provided on this port, a default
-          manifest is automatically constructed. See <xref linkend="cv.archive-manifest"/>.</para>
+          manifest is constructed automatically. See <xref linkend="cv.archive-manifest"/>.</para>
       </listitem>
     </varlistentry>
     <varlistentry>
@@ -344,10 +342,10 @@ supported by the <tag>p:archive</tag> step is
         <para>The <port>archive</port> port is used to provide the step with existing archive(s) for
           operations like update, freshen or merge. Handling of ZIP files supports modifying
           archives appearing on the <port>archive</port> port (<xref linkend="cv.archive-zips"/>).
-          <impl>The list of archive formats that can be modified by <tag>p:archive</tag> is
-            <glossterm>implementation-defined</glossterm>.</impl> A,
-          currently hypothetical, archive merging implementation may accept more than one document
-          on the <port>archive</port> port. <error code="C0081">It is a <glossterm>dynamic
+            <impl>The list of archive formats that can be modified by <tag>p:archive</tag> is
+              <glossterm>implementation-defined</glossterm>.</impl> For instance an implementation
+          that supports archive merging may accept more than one document on the
+            <port>archive</port> port. <error code="C0081">It is a <glossterm>dynamic
               error</glossterm> if the content type of a document on the <port>archive</port> does
             not match the given archive format as specified in the <option>format</option>
             option.</error></para>
@@ -427,11 +425,11 @@ supported by the <tag>p:archive</tag> step is
 
     <itemizedlist>
       <listitem>
-        <para>The mandatory <code>name</code> attribute specifies the name of the entry in the
-          archive. It <rfc2119>must</rfc2119> be specified as a relative path.</para>
+        <para>The <code>name</code> attribute specifies the name of the entry in the archive. It
+            <rfc2119>must</rfc2119> be specified as a relative path.</para>
       </listitem>
       <listitem>
-        <para>The optional <code>href</code> attribute is interpreted as follows:</para>
+        <para>The <code>href</code> attribute is interpreted as follows:</para>
         <itemizedlist>
           <listitem>
             <para><error code="D0064">It is a <glossterm>dynamic error</glossterm> if the
@@ -439,31 +437,22 @@ supported by the <tag>p:archive</tag> step is
                 is present and its value is not a valid <type>xs:anyURI</type>.</error></para>
           </listitem>
           <listitem>
-            <para>When the <tag>c:entry</tag> elements has any child nodes, the <code>href</code>
-              attribute is ignored.</para>
-          </listitem>
-          <listitem>
             <para>The <code>p:archive</code> step checks the documents appearing on its
                 <port>source</port> port for any documents with exactly the same base URI as the
               contents of the <code>href</code> attribute. If any such document is found, this is
-              used as entry for the archive.</para>
-            <para><error code="C0082">It is a <glossterm>dynamic error</glossterm> if more than one
-                document appears on the <port>source</port> port of a <code>p:archive</code> step
-                with a base URI mentioned in one of the non-ignored <code>c:entry/@href</code>
-                attributes.</error></para>
+              used as entry for the archive. To store these documents in the archive they must be
+              serialized. The <code>serialization</code> document property can be used to provide
+              serialization properties.</para>
           </listitem>
           <listitem>
             <para>If the above doesn't apply, the value of the <code>href</code> attribute is
               interpreted as a URI and the document is loaded from this location. <error code="D0011">It is a <glossterm>dynamic error</glossterm> if the resource referenced
                 by the <option>href</option> option does not exist, cannot be accessed or is not a
                 file</error> If the <option>href</option> option is relative, it is made absolute
-              against the base URI of the manifest.</para>
+              against the base URI of the manifest. These documents are stored in the archive "as
+              is". No parsing/serialization takes place.</para>
           </listitem>
-          <listitem>
-            <para><error code="C0083">It is a <glossterm>dynamic error</glossterm> if the
-                  <code>c:entry/@href</code> attribute in a <code>p:archive</code> step manifest is
-                not specified and the <tag>c:file</tag> element has no child nodes.</error></para>
-          </listitem>
+
         </itemizedlist>
       </listitem>
       <listitem>
@@ -481,9 +470,6 @@ supported by the <tag>p:archive</tag> step is
       </listitem>
     </itemizedlist>
 
-    <para>When the <code>c:file</code> element has any child nodes this is taken as the contents of
-      the archive's entry. The <code>href</code> attribute is ignored in this case.</para>
-
     <para>The <code>p:archive</code> step <rfc2119>should</rfc2119> strive to retain the order of
       the <tag>c:entry</tag> elements when constructing the archive. For instance, an e-book in EPUB
       format has a non-compressed entry that must be first in the archive. It should be possible to
@@ -494,7 +480,7 @@ supported by the <tag>p:archive</tag> step is
 
     <para>If no manifest entry is provided for a document appearing on the <port>source</port> port,
       the step will manufacture a manifest entry from the document’s <code>base-uri</code> property.
-      If no document arrives on the <port>manifest</port>, it will create a complete manifest
+      If no document arrives on the <port>manifest</port> port, it will create a complete manifest
       document.</para>
     <para>The option <option>relative-to</option> can be used to derive the entry’s <tag role="attribute">name</tag> attribute from the <port>source</port> document’s
         <code>base-uri</code> property, which in turn will be used for the entry’s <tag role="attribute">href</tag> attribute. Both the URI that is given in
@@ -612,8 +598,8 @@ supported by the <tag>p:archive</tag> step is
 
     <para>Implementations of other archive formats <rfc2119>should</rfc2119> use the same parameter
       names if applicable. The value spaces for these parameters may be format-specific though.
-      <impl>The actual parameter names supported by <tag>p:archive</tag> for a particular format
-      are <glossterm>implementation-defined</glossterm>.</impl></para>
+        <impl>The actual parameter names supported by <tag>p:archive</tag> for a particular format
+        are <glossterm>implementation-defined</glossterm>.</impl></para>
 
   </section>
 
