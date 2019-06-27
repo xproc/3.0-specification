@@ -655,7 +655,7 @@ VocabArchive = element c:archive { VocabEntry* & AnyNonXProcElement* }
 VocabEntry =
   element c:entry {
     attribute name { text },
-    attribute href { xsd:anyURI }?,
+    attribute href { xsd:anyURI },
     attribute comment { text }?,
     attribute method { text }?,
     attribute level { text }?,
@@ -1380,8 +1380,7 @@ Step-www-form-urlencode =
     use-when.attr?,
     step.attributes,
     attribute parameters { xsd:string }?,
-    attribute match { xsd:string }?,
-    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+    (WithOption* & (Documentation | PipeInfo)*)
   }
 Step-xinclude =
   element xinclude {
