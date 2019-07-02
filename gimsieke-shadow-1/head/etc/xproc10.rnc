@@ -1,0 +1,1310 @@
+default namespace p = "http://www.w3.org/ns/xproc"
+namespace c = "http://www.w3.org/ns/xproc-step"
+namespace s = "http://www.ascc.net/xml/schematron"
+namespace local = ""
+namespace sa = "http://xproc.org/ns/syntax-annotations"
+namespace xs = "http://www.w3.org/2001/XMLSchema"
+
+# This schema neither supports nor requires the use of RELAX NG DTD Compatibility
+
+[
+   sa:model = "XPathExpression"
+]
+XPathExpression = text
+
+[
+   sa:model = "XSLTSelectionPattern"
+]
+XSLTSelectionPattern = text
+
+name.ncname.attr = attribute name { xsd:NCName }
+name.qname.attr = attribute name { xsd:QName }
+port.attr = attribute port { xsd:NCName }
+required.attr = attribute required { xsd:boolean }
+sequence.attr = attribute sequence { xsd:boolean }
+primary.attr = attribute primary { xsd:boolean }
+select.attr = attribute select { XPathExpression }
+xpath-version.attr = attribute xpath-version { text }
+psvi-required.attr = attribute psvi-required { xsd:boolean }
+
+exclude-inline-prefixes.attr =
+   attribute exclude-inline-prefixes { ExcludeInlinePrefixes }
+
+# Bah, humbug. The ExcludeInlinePrefixes pattern should 
+# really be ("#all" | (PrefixList & "#default"?)) or
+# maybe ("#all" | (PrefixList | "#default")+), but neither
+# one of those is allowed by RELAX NG.
+[
+   sa:model = "prefix list"
+]
+ExcludeInlinePrefixes = text
+
+[
+   sa:model = "prefix list"
+]
+PrefixList = xsd:NMTOKENS
+
+[
+   sa:ignore = "yes"
+]
+xmlid.attr = attribute xml:id { xsd:ID }
+
+[
+   sa:ignore = "yes"
+]
+xmlbase.attr = attribute xml:base { xsd:anyURI }
+href.attr = attribute href { xsd:anyURI }
+
+[
+   sa:ignore = "yes"
+]
+use-when.attr = attribute use-when { XPathExpression }
+
+[
+   sa:ignore = "yes"
+]
+p_use-when.attr = attribute p:use-when { XPathExpression }
+
+version.attr = attribute version { "1.0" }
+
+common.attributes = xmlid.attr?, xmlbase.attr?, extension.attr*
+
+decl.attributes = psvi-required.attr?,
+   xpath-version.attr?,
+   exclude-inline-prefixes.attr?,
+   version.attr?
+
+# ============================================================
+
+start = Pipeline | Library | DeclareStep
+ | VocabParam | VocabParamSet | VocabResult | VocabHttpRequest
+ | VocabHeader | VocabMultipart | VocabBody | VocabHttpResponse | VocabQuery
+ | VocabLine | VocabDirectory | Errors | StandardStep
+
+# ============================================================
+
+[
+   sa:class = "language-construct"
+]
+Library =
+   element library {
+      decl.attributes,
+      common.attributes,
+      use-when.attr?,
+      (Import|DeclareStep|Pipeline|Documentation|PipeInfo)*
+   }
+
+[
+   sa:class = "language-construct"
+]
+Import =
+   element import {
+      common.attributes,
+      use-when.attr?,
+      href.attr,
+      (Documentation|PipeInfo)*
+   }
+
+[
+   sa:class = "language-construct"
+]
+Pipeline =
+   element pipeline {
+      name.ncname.attr?,
+      attribute type { xsd:QName }?,
+      common.attributes,
+      use-when.attr?,
+      decl.attributes,
+      (Input|ParameterInput|Output|Option|Log
+       |Serialization|Documentation|PipeInfo)*,
+      (DeclareStep|Pipeline|Import|Documentation|PipeInfo)*,
+      Subpipeline
+   }
+
+[
+   sa:model = "subpipeline"
+]
+Subpipeline = Variable*,(ForEach|Viewport|Choose|Group|Try|OtherStep|Documentation|PipeInfo)+
+
+# ============================================================
+
+[
+   sa:class = "language-construct"
+]
+InputDeclaration =
+   element input {
+      port.attr,
+      sequence.attr?,
+      primary.attr?,
+      attribute kind { "document" }?,
+      select.attr?,
+      common.attributes,
+      use-when.attr?,
+      ((\Empty|(Document|Inline|Data)+)? & (Documentation|PipeInfo)*)
+   }
+
+[
+   sa:class = "language-construct"
+]
+InputConnection =
+   element input {
+      port.attr,
+      select.attr?,
+      common.attributes,
+      use-when.attr?,
+      ((\Empty|(Pipe|Document|Inline|Data)+)? & (Documentation|PipeInfo)*)
+   }
+
+[
+   sa:element = "input"
+]
+Input = InputDeclaration | InputConnection
+
+# ============================================================
+
+[
+   sa:class = "language-construct"
+   sa:ignore = "yes"
+]
+ParameterInputDeclaration =
+   element input {
+      port.attr,
+      attribute sequence { xsd:boolean }?,
+      primary.attr?,
+      attribute kind { "parameter" },
+      common.attributes,
+      use-when.attr?,
+      ((\Empty|(Document|Inline)+)? & (Documentation|PipeInfo)*)
+   }
+
+[
+   sa:element = "input"
+   sa:ignore = "yes"
+]
+ParameterInput = ParameterInputDeclaration
+
+# ============================================================
+
+[
+   sa:class = "language-construct"
+]
+OutputDeclaration =
+   element output {
+      port.attr,
+      sequence.attr?,
+      primary.attr?,
+      common.attributes,
+      use-when.attr?,
+      (Documentation|PipeInfo)*
+   }
+
+[
+   sa:class = "language-construct"
+]
+OutputConnection =
+   element output {
+      port.attr,
+      sequence.attr?,
+      primary.attr?,
+      common.attributes,
+      use-when.attr?,
+      ((\Empty|(Pipe|Document|Inline|Data)+)? & (Documentation|PipeInfo)*)
+   }
+
+[
+   sa:element = "output"
+]
+Output = OutputDeclaration | OutputConnection
+
+[
+   sa:class = "language-construct"
+]
+Pipe =
+   element pipe {
+      attribute step { xsd:NCName },
+      port.attr,
+      common.attributes,
+      use-when.attr?,
+      (Documentation|PipeInfo)*
+   }
+
+[
+   sa:class = "language-construct"
+]
+Document =
+   element document {
+      href.attr,
+      common.attributes,
+      use-when.attr?,
+      (Documentation|PipeInfo)*
+   }
+
+[
+   sa:class = "language-construct"
+]
+Inline =
+   element inline {
+      exclude-inline-prefixes.attr?,
+      common.attributes,
+      use-when.attr?,
+      Any
+   }
+
+[
+   sa:class = "language-construct"
+]
+\Empty =
+   element empty {
+      (Documentation|PipeInfo)*
+   }
+
+
+[
+   sa:class = "language-construct"
+]
+Data =
+   element data {
+      href.attr,
+      attribute wrapper { xsd:QName }?,
+      attribute wrapper-prefix { text }?,
+      attribute wrapper-namespace { text }?,
+      attribute content-type { text }?,
+      common.attributes,
+      use-when.attr?,
+      (Documentation|PipeInfo)*
+   }
+
+
+[
+   sa:class = "language-construct"
+]
+Log =
+   element log {
+      common.attributes,
+      use-when.attr?,
+      port.attr,
+      href.attr?,
+      (Documentation|PipeInfo)*
+   }
+
+[
+   sa:class = "language-construct"
+]
+Serialization =
+   element serialization {
+      common.attributes,
+      use-when.attr?,
+      port.attr,
+      attribute byte-order-mark { xsd:boolean }?,
+      attribute cdata-section-elements { xsd:NMTOKENS }?,
+      attribute doctype-public { text }?,
+      attribute doctype-system { text }?,
+      attribute encoding { text }?,
+      attribute escape-uri-attributes { xsd:boolean }?,
+      attribute include-content-type { xsd:boolean }?,
+      attribute indent { xsd:boolean }?,
+      attribute media-type { text }?,
+      attribute method { xsd:QName }?,
+      attribute normalization-form { 'NFC'|'NFD'|'NFKC'|'NFKD'|'fully-normalized'|'none'|xsd:NMTOKEN }?,
+      attribute omit-xml-declaration { xsd:boolean }?,
+      attribute standalone { "true" | "false" | "omit" }?,
+      attribute undeclare-prefixes { xsd:boolean }?,
+      attribute version { text }?,
+      (Documentation|PipeInfo)*
+   }
+
+# ============================================================
+
+[
+   sa:class = "language-construct"
+]
+OptionDeclaration =
+   element option {
+      name.qname.attr,
+      required.attr?,
+      common.attributes,
+      use-when.attr?,
+      (Documentation|PipeInfo)*
+   }
+
+[
+   sa:class = "language-construct"
+]
+OptionSelect =
+   element option {
+      name.qname.attr,
+      select.attr,
+      common.attributes,
+      use-when.attr?,
+      (Documentation|PipeInfo)*
+   }
+
+[
+   sa:element = "option"
+]
+Option = OptionDeclaration | OptionSelect
+
+# ============================================================
+
+[
+   sa:class = "language-construct"
+]
+WithOptionSelect =
+   element with-option {
+      name.qname.attr,
+      select.attr,
+      common.attributes,
+      use-when.attr?,
+      ((\Empty|Pipe|Document|Inline|Data)? & (Namespaces|Documentation|PipeInfo)*)
+   }
+
+[
+   sa:element = "with-option"
+]
+WithOption = WithOptionSelect
+
+# ============================================================
+
+[
+   sa:class = "language-construct"
+]
+VariableSelect =
+   element variable {
+      name.qname.attr,
+      select.attr,
+      common.attributes,
+      use-when.attr?,
+      ((\Empty|Pipe|Document|Inline|Data)? & (Namespaces|Documentation|PipeInfo)*)
+   }
+
+[
+   sa:element = "variable"
+]
+Variable = VariableSelect
+
+# ============================================================
+
+[
+   sa:class = "language-construct"
+]
+Namespaces =
+   element namespaces {
+      attribute binding { xsd:QName }?,
+      attribute element { XPathExpression }?,
+      attribute except-prefixes { PrefixList }?,
+      (Documentation|PipeInfo)*
+   }
+      
+# ============================================================
+
+[
+   sa:class = "language-construct"
+]
+WithParamSelect =
+   element with-param {
+      name.qname.attr,
+      select.attr,
+      port.attr?,
+      common.attributes,
+      use-when.attr?,
+      ((\Empty|Pipe|Document|Inline|Data)? & (Namespaces|Documentation|PipeInfo)*)
+   }
+
+[
+   sa:element = "with-param"
+]
+WithParam = WithParamSelect
+
+# ============================================================
+
+[
+   sa:class = "language-construct"
+]
+DeclareStep =
+   element declare-step {
+      name.ncname.attr?,
+      attribute type { xsd:QName }?,
+      decl.attributes,
+      common.attributes,
+      use-when.attr?,
+      (Input|ParameterInput|Output|Option|Log
+       |Serialization|Documentation|PipeInfo)*,
+      ((DeclareStep|Pipeline|Import|Documentation|PipeInfo)*,Subpipeline)?
+   }
+
+# ============================================================
+
+[
+   sa:class = "language-construct"
+]
+ForEach =
+   element for-each {
+      name.ncname.attr?,
+      common.attributes,
+      use-when.attr?,
+      ((IterationSource? & (Output|Log|Documentation|PipeInfo)*), Subpipeline)
+   }
+
+[
+   sa:class = "language-construct"
+]
+IterationSource =
+   element iteration-source {
+      select.attr?,
+      common.attributes,
+      use-when.attr?,
+      ((\Empty|(Pipe|Document|Inline|Data)+)? & (Documentation|PipeInfo)*)
+   }
+
+# ============================================================
+
+[
+   sa:class = "language-construct"
+]
+Viewport =
+   element viewport {
+      name.ncname.attr?,
+      attribute match { XSLTSelectionPattern },
+      common.attributes,
+      use-when.attr?,
+      ((ViewportSource? & Output? & Log? & Documentation* & PipeInfo*), Subpipeline)
+   }
+
+[
+   sa:class = "language-construct"
+]
+ViewportSource =
+   element viewport-source {
+      common.attributes,
+      use-when.attr?,
+      ((Pipe|Document|Inline|Data)? & (Documentation|PipeInfo)*)
+   }
+
+# ============================================================
+
+[
+   sa:class = "language-construct"
+]
+Choose =
+   element choose {
+      name.ncname.attr?,
+      common.attributes,
+      use-when.attr?,
+      ((Documentation|PipeInfo)*,
+         XPathContext?,
+         Variable*,
+         (When|Documentation|PipeInfo)*,
+         Otherwise?,
+         (Documentation|PipeInfo)*)
+   }
+
+[
+   sa:class = "language-construct"
+]
+XPathContext =
+   element xpath-context {
+      common.attributes,
+      use-when.attr?,
+      ((\Empty|Pipe|Document|Inline|Data) & (Documentation|PipeInfo)*)
+   }
+
+[
+   sa:class = "language-construct"
+]
+When =
+   element when {
+      attribute test { XPathExpression },
+      common.attributes,
+      use-when.attr?,
+      ((Documentation|PipeInfo)*,
+         XPathContext?,
+         (Output|Log|Documentation|PipeInfo)*,
+         Subpipeline)
+   }
+
+[
+   sa:class = "language-construct"
+]
+Otherwise =
+   element otherwise {
+      common.attributes,
+      use-when.attr?,
+      ((Output|Log|Documentation|PipeInfo)*, Subpipeline)
+   }
+
+# ============================================================
+
+[
+   sa:class = "language-construct"
+]
+Group =
+   element group {
+      name.ncname.attr?,
+      common.attributes,
+      use-when.attr?,
+      ((Output|Log|Documentation|PipeInfo)*, Subpipeline)
+   }
+
+# ============================================================
+
+[
+   sa:class = "language-construct"
+]
+Try =
+   element try {
+      name.ncname.attr?,
+      common.attributes,
+      use-when.attr?,
+      ((Variable*, TryGroup, Catch) & (Documentation|PipeInfo)*)
+   }
+
+[
+   sa:class = "language-construct"
+]
+TryGroup =
+   element group {
+      common.attributes,
+      use-when.attr?,
+      ((Output|Log|Documentation|PipeInfo)*, Subpipeline)
+   }
+
+[
+   sa:class = "language-construct"
+]
+Catch =
+   element catch {
+      name.ncname.attr?,
+      common.attributes,
+      use-when.attr?,
+      ((Output|Log|Documentation|PipeInfo)*, Subpipeline)
+   }
+
+# ============================================================
+
+[
+   sa:class = "language-construct"
+]
+OtherAtomicStep =
+   element * - (p:*) {
+      name.ncname.attr?,
+      option.attr*,
+      common.attributes,
+      p_use-when.attr?,
+      (InputConnection|WithOption|WithParam|Log|Documentation|PipeInfo)*
+   }
+
+[
+   sa:class = "language-construct"
+]
+OtherCompoundStep =
+   element * - (p:*) {
+      name.ncname.attr?,
+      common.attributes,
+      p_use-when.attr?,
+      ((Output|Log|Documentation|PipeInfo)*, Subpipeline)
+   }
+
+OtherStep = StandardStep | OtherAtomicStep | OtherCompoundStep
+
+# ============================================================
+[
+   sa:ignore = "yes"
+   sa:class = "language-construct"
+]
+Documentation =
+   element documentation {
+      common.attributes,
+      use-when.attr?,
+      DocContent*
+   }
+
+[
+   sa:model = "any-well-formed-content"
+]
+DocContent = (text | Any)
+
+# ============================================================
+[
+   sa:ignore = "yes"
+   sa:class = "language-construct"
+]
+PipeInfo =
+   element pipeinfo {
+      common.attributes,
+      use-when.attr?,
+      DocContent*
+   }
+
+# ============================================================
+
+_any.attr =
+   attribute * { text }
+
+option.attr =
+   attribute (local:* - local:name) { text }
+
+extension.attr =
+   attribute (* - (local:*|xml:*|p:*)) { text }
+
+[
+   sa:model = "anyElement"
+]
+Any =
+   element * {
+      (_any.attr | text | Any)*
+   }
+
+# ============================================================
+
+[
+   sa:class = "step-vocabulary"
+]
+VocabParam =
+   element c:param {
+      name.qname.attr,
+      attribute namespace { xsd:anyURI }?,
+      attribute value { text },
+      empty
+   }
+
+[
+   sa:class = "step-vocabulary"
+]
+VocabParamSet =
+   element c:param-set {
+      VocabParam*
+   }
+
+[
+   sa:class = "step-vocabulary"
+]
+VocabDirectory =
+   element c:directory {
+      attribute name { text },
+      ((VocabFile|VocabDirectory|VocabOther)*)
+   }
+[
+   sa:class = "step-vocabulary"
+]
+VocabFile =
+   element c:file {
+      attribute name { text },
+      empty
+   }
+[
+   sa:class = "step-vocabulary"
+]
+VocabOther =
+   element c:other {
+      attribute name { text },
+      empty
+   }
+[
+   sa:class = "step-vocabulary"
+]
+VocabResult =
+   element c:result {
+      text
+   }
+[
+   sa:class = "step-vocabulary"
+]
+VocabHttpRequest =
+   element c:request {
+      attribute method { xsd:NCName },
+      attribute href { xsd:anyURI }?,
+      attribute detailed { xsd:boolean }?,
+      attribute status-only { xsd:boolean }?,
+      attribute username { text }?,
+      attribute password { text }?,
+      attribute auth-method { text }?,
+      attribute send-authorization { xsd:boolean }?,
+      attribute override-content-type { text }?,
+      (VocabHeader*,(VocabMultipart|VocabBody)?)
+   }
+
+[
+   sa:class = "step-vocabulary"
+]
+VocabHeader =
+   element c:header {
+      attribute name { text },
+      attribute value { text },
+      empty
+   }
+
+[
+   sa:class = "step-vocabulary"
+]
+VocabMultipart =
+   element c:multipart {
+      attribute content-type { text },
+      attribute boundary { text },
+      (VocabBody)+
+   }
+
+[
+   sa:class = "step-vocabulary"
+]
+VocabBody =
+   element c:body {
+      attribute content-type { text },
+      attribute encoding { text }?,
+      attribute id { text }?,
+      attribute description { text }?,
+      Any*
+   }
+
+[
+   sa:class = "step-vocabulary"
+]
+VocabHttpResponse =
+   element c:response {
+      attribute status { xsd:integer }?,
+      (VocabHeader*,(VocabMultipart|VocabBody)?)
+   }
+
+[
+   sa:class = "step-vocabulary"
+]
+VocabQuery =
+   element c:query {
+      text
+   }
+
+[
+   sa:class = "step-vocabulary"
+]
+VocabLine =
+   element c:line {
+      text
+   }
+
+[
+   sa:class = "step-vocabulary"
+]
+VocabData =
+   element c:data {
+      attribute content-type { text }?,
+      attribute charset { text }?,
+      attribute encoding { text }?,
+      text
+   }
+
+# ============================================================
+
+[
+   sa:class = "error-vocabulary"
+]
+Errors =
+   element c:errors {
+      Error*
+   }
+
+[
+   sa:class = "error-vocabulary"
+]
+Error =
+   element c:error {
+      name.ncname.attr?,
+      attribute type { xsd:QName }?,
+      attribute code { xsd:QName }?,
+      attribute href { xsd:anyURI }?,
+      attribute line { xsd:integer }?,
+      attribute column { xsd:integer }?,
+      attribute offset { xsd:integer }?,
+      (text|Any)*
+   }
+
+Charset = text
+Encoding = text
+MIMEContentType = text
+MIMEMediaType = text
+RegularExpression = text
+NormalizationForm = 'NFC'|'NFD'|'NFKC'|'NFKD'|'fully-normalized'|'none'|xsd:NMTOKEN
+ListOfQNames = text
+
+# This schema could be made more constrained.
+
+StandardStep = Step-add-attribute | Step-add-xml-base | Step-compare | Step-count | Step-delete | Step-directory-list | Step-error | Step-escape-markup | Step-filter | Step-http-request | Step-identity | Step-insert | Step-label-elements | Step-load | Step-make-absolute-uris | Step-namespace-rename | Step-pack | Step-parameters | Step-rename | Step-replace | Step-set-attributes | Step-sink | Step-split-sequence | Step-store | Step-string-replace | Step-unescape-markup | Step-unwrap | Step-wrap | Step-wrap-sequence | Step-xinclude | Step-xslt | Step-exec | Step-hash | Step-uuid | Step-validate-with-relax-ng | Step-validate-with-schematron | Step-validate-with-xml-schema | Step-www-form-urldecode | Step-www-form-urlencode | Step-xquery | Step-xsl-formatter
+
+Step-add-attribute =
+  element add-attribute {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    attribute match { XSLTSelectionPattern }?,
+    attribute attribute-name { xsd:QName }?,
+    attribute attribute-prefix { xsd:NCName }?,
+    attribute attribute-namespace { xsd:anyURI }?,
+    attribute attribute-value { xsd:string }?,
+    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+  }
+
+Step-add-xml-base =
+  element add-xml-base {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    attribute all { xsd:boolean }?,
+    attribute relative { xsd:boolean }?,
+    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+  }
+
+Step-compare =
+  element compare {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    attribute fail-if-not-equal { xsd:boolean }?,
+    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+  }
+
+Step-count =
+  element count {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    attribute limit { xsd:integer }?,
+    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+  }
+
+Step-delete =
+  element delete {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    attribute match { XSLTSelectionPattern }?,
+    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+  }
+
+Step-directory-list =
+  element directory-list {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    attribute path { xsd:anyURI }?,
+    attribute include-filter { RegularExpression }?,
+    attribute exclude-filter { RegularExpression }?,
+    (WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-error =
+  element error {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    attribute code { xsd:QName }?,
+    attribute code-prefix { xsd:NCName }?,
+    attribute code-namespace { xsd:anyURI }?,
+    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+  }
+
+Step-escape-markup =
+  element escape-markup {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    attribute cdata-section-elements { ListOfQNames }?,
+    attribute doctype-public { xsd:string }?,
+    attribute doctype-system { xsd:anyURI }?,
+    attribute escape-uri-attributes { xsd:boolean }?,
+    attribute include-content-type { xsd:boolean }?,
+    attribute indent { xsd:boolean }?,
+    attribute media-type { xsd:string }?,
+    attribute method { xsd:QName }?,
+    attribute omit-xml-declaration { xsd:boolean }?,
+    attribute standalone { "true" | "false" | "omit" }?,
+    attribute undeclare-prefixes { xsd:boolean }?,
+    attribute version { xsd:string }?,
+    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+  }
+
+Step-filter =
+  element filter {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    attribute select { XPathExpression }?,
+    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+  }
+
+Step-http-request =
+  element http-request {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    attribute byte-order-mark { xsd:boolean }?,
+    attribute cdata-section-elements { ListOfQNames }?,
+    attribute doctype-public { xsd:string }?,
+    attribute doctype-system { xsd:anyURI }?,
+    attribute encoding { xsd:string }?,
+    attribute escape-uri-attributes { xsd:boolean }?,
+    attribute include-content-type { xsd:boolean }?,
+    attribute indent { xsd:boolean }?,
+    attribute media-type { xsd:string }?,
+    attribute method { xsd:QName }?,
+    attribute normalization-form { NormalizationForm }?,
+    attribute omit-xml-declaration { xsd:boolean }?,
+    attribute standalone { "true" | "false" | "omit" }?,
+    attribute undeclare-prefixes { xsd:boolean }?,
+    attribute version { xsd:string }?,
+    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+  }
+
+Step-identity =
+  element identity {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    (InputConnection* & Log* & (Documentation|PipeInfo)*)
+  }
+
+Step-insert =
+  element insert {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    attribute match { XSLTSelectionPattern }?,
+    attribute position { "first-child" | "last-child" | "before" | "after" }?,
+    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+  }
+
+Step-label-elements =
+  element label-elements {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    attribute attribute { xsd:QName }?,
+    attribute attribute-prefix { xsd:NCName }?,
+    attribute attribute-namespace { xsd:anyURI }?,
+    attribute label { XPathExpression }?,
+    attribute match { XSLTSelectionPattern }?,
+    attribute replace { xsd:boolean }?,
+    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+  }
+
+Step-load =
+  element load {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    attribute href { xsd:anyURI }?,
+    attribute dtd-validate { xsd:boolean }?,
+    (WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-make-absolute-uris =
+  element make-absolute-uris {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    attribute match { XSLTSelectionPattern }?,
+    attribute base-uri { xsd:anyURI }?,
+    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+  }
+
+Step-namespace-rename =
+  element namespace-rename {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    attribute from { xsd:anyURI }?,
+    attribute to { xsd:anyURI }?,
+    attribute apply-to { "all" | "elements" | "attributes" }?,
+    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+  }
+
+Step-pack =
+  element pack {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    attribute wrapper { xsd:QName }?,
+    attribute wrapper-prefix { xsd:NCName }?,
+    attribute wrapper-namespace { xsd:anyURI }?,
+    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+  }
+
+Step-parameters =
+  element parameters {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    (InputConnection* & Log* & WithParam* & (Documentation|PipeInfo)*)
+  }
+
+Step-rename =
+  element rename {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    attribute match { XSLTSelectionPattern }?,
+    attribute new-name { xsd:QName }?,
+    attribute new-prefix { xsd:NCName }?,
+    attribute new-namespace { xsd:anyURI }?,
+    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+  }
+
+Step-replace =
+  element replace {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    attribute match { XSLTSelectionPattern }?,
+    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+  }
+
+Step-set-attributes =
+  element set-attributes {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    attribute match { XSLTSelectionPattern }?,
+    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+  }
+
+Step-sink =
+  element sink {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    (InputConnection* & (Documentation|PipeInfo)*)
+  }
+
+Step-split-sequence =
+  element split-sequence {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    attribute initial-only { xsd:boolean }?,
+    attribute test { XPathExpression }?,
+    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+  }
+
+Step-store =
+  element store {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    attribute href { xsd:anyURI }?,
+    attribute byte-order-mark { xsd:boolean }?,
+    attribute cdata-section-elements { ListOfQNames }?,
+    attribute doctype-public { xsd:string }?,
+    attribute doctype-system { xsd:anyURI }?,
+    attribute encoding { xsd:string }?,
+    attribute escape-uri-attributes { xsd:boolean }?,
+    attribute include-content-type { xsd:boolean }?,
+    attribute indent { xsd:boolean }?,
+    attribute media-type { xsd:string }?,
+    attribute method { xsd:QName }?,
+    attribute normalization-form { NormalizationForm }?,
+    attribute omit-xml-declaration { xsd:boolean }?,
+    attribute standalone { "true" | "false" | "omit" }?,
+    attribute undeclare-prefixes { xsd:boolean }?,
+    attribute version { xsd:string }?,
+    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+  }
+
+Step-string-replace =
+  element string-replace {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    attribute match { XSLTSelectionPattern }?,
+    attribute replace { XPathExpression }?,
+    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+  }
+
+Step-unescape-markup =
+  element unescape-markup {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    attribute namespace { xsd:anyURI }?,
+    attribute content-type { xsd:string }?,
+    attribute encoding { xsd:string }?,
+    attribute charset { xsd:string }?,
+    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+  }
+
+Step-unwrap =
+  element unwrap {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    attribute match { XSLTSelectionPattern }?,
+    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+  }
+
+Step-wrap =
+  element wrap {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    attribute wrapper { xsd:QName }?,
+    attribute wrapper-prefix { xsd:NCName }?,
+    attribute wrapper-namespace { xsd:anyURI }?,
+    attribute match { XSLTSelectionPattern }?,
+    attribute group-adjacent { XPathExpression }?,
+    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+  }
+
+Step-wrap-sequence =
+  element wrap-sequence {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    attribute wrapper { xsd:QName }?,
+    attribute wrapper-prefix { xsd:NCName }?,
+    attribute wrapper-namespace { xsd:anyURI }?,
+    attribute group-adjacent { XPathExpression }?,
+    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+  }
+
+Step-xinclude =
+  element xinclude {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    attribute fixup-xml-base { xsd:boolean }?,
+    attribute fixup-xml-lang { xsd:boolean }?,
+    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+  }
+
+Step-xslt =
+  element xslt {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    attribute initial-mode { xsd:QName }?,
+    attribute template-name { xsd:QName }?,
+    attribute output-base-uri { xsd:anyURI }?,
+    attribute version { xsd:string }?,
+    (InputConnection* & WithOption* & Log* & WithParam* & (Documentation|PipeInfo)*)
+  }
+
+Step-exec =
+  element exec {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    attribute command { xsd:string }?,
+    attribute args { xsd:string }?,
+    attribute cwd { xsd:string }?,
+    attribute source-is-xml { xsd:boolean }?,
+    attribute result-is-xml { xsd:boolean }?,
+    attribute wrap-result-lines { xsd:boolean }?,
+    attribute errors-is-xml { xsd:boolean }?,
+    attribute wrap-error-lines { xsd:boolean }?,
+    attribute path-separator { xsd:string }?,
+    attribute failure-threshold { xsd:integer }?,
+    attribute arg-separator { xsd:string }?,
+    attribute byte-order-mark { xsd:boolean }?,
+    attribute cdata-section-elements { ListOfQNames }?,
+    attribute doctype-public { xsd:string }?,
+    attribute doctype-system { xsd:anyURI }?,
+    attribute encoding { xsd:string }?,
+    attribute escape-uri-attributes { xsd:boolean }?,
+    attribute include-content-type { xsd:boolean }?,
+    attribute indent { xsd:boolean }?,
+    attribute media-type { xsd:string }?,
+    attribute method { xsd:QName }?,
+    attribute normalization-form { NormalizationForm }?,
+    attribute omit-xml-declaration { xsd:boolean }?,
+    attribute standalone { "true" | "false" | "omit" }?,
+    attribute undeclare-prefixes { xsd:boolean }?,
+    attribute version { xsd:string }?,
+    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+  }
+
+Step-hash =
+  element hash {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    attribute value { xsd:string }?,
+    attribute algorithm { xsd:QName }?,
+    attribute match { XSLTSelectionPattern }?,
+    attribute version { xsd:string }?,
+    (InputConnection* & WithOption* & Log* & WithParam* & (Documentation|PipeInfo)*)
+  }
+
+Step-uuid =
+  element uuid {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    attribute match { XSLTSelectionPattern }?,
+    attribute version { xsd:integer }?,
+    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+  }
+
+Step-validate-with-relax-ng =
+  element validate-with-relax-ng {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    attribute dtd-attribute-values { xsd:boolean }?,
+    attribute dtd-id-idref-warnings { xsd:boolean }?,
+    attribute assert-valid { xsd:boolean }?,
+    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+  }
+
+Step-validate-with-schematron =
+  element validate-with-schematron {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    attribute phase { xsd:string }?,
+    attribute assert-valid { xsd:boolean }?,
+    (InputConnection* & WithOption* & Log* & WithParam* & (Documentation|PipeInfo)*)
+  }
+
+Step-validate-with-xml-schema =
+  element validate-with-xml-schema {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    attribute use-location-hints { xsd:boolean }?,
+    attribute try-namespaces { xsd:boolean }?,
+    attribute assert-valid { xsd:boolean }?,
+    attribute mode { "strict" | "lax" }?,
+    (InputConnection* & WithOption* & Log* & (Documentation|PipeInfo)*)
+  }
+
+Step-www-form-urldecode =
+  element www-form-urldecode {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    attribute value { xsd:string }?,
+    (WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-www-form-urlencode =
+  element www-form-urlencode {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    attribute match { XSLTSelectionPattern }?,
+    (InputConnection* & WithOption* & Log* & WithParam* & (Documentation|PipeInfo)*)
+  }
+
+Step-xquery =
+  element xquery {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    (InputConnection* & Log* & WithParam* & (Documentation|PipeInfo)*)
+  }
+
+Step-xsl-formatter =
+  element xsl-formatter {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    attribute href { xsd:anyURI }?,
+    attribute content-type { xsd:string }?,
+    (InputConnection* & WithOption* & Log* & WithParam* & (Documentation|PipeInfo)*)
+  }

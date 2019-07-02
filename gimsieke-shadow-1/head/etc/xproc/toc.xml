@@ -1,0 +1,235 @@
+<toc xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax"
+     xmlns:xi="http://www.w3.org/2001/XInclude"
+     xmlns="http://docbook.org/ns/docbook">
+   <title xmlns:xlink="http://www.w3.org/1999/xlink">XProc 3.0: An XML Pipeline Language</title>
+   <tocdiv role="section" xml:id="introduction">
+      <title>Introduction</title>
+      <tocentry role="section" xml:id="intro-examples">Pipeline examples</tocentry>
+   </tocdiv>
+   <tocdiv role="section" xml:id="pipeline-concepts">
+      <title>Pipeline Concepts</title>
+      <tocdiv role="section" xml:id="step-concept">
+         <title>Steps</title>
+         <tocentry role="section" xml:id="step-names">Step names</tocentry>
+      </tocdiv>
+   </tocdiv>
+   <tocdiv role="section" xml:id="documents">
+      <title>Documents</title>
+      <tocentry role="section" xml:id="document-properties">Document Properties</tocentry>
+      <tocdiv role="section" xml:id="document-types">
+         <title>Document Types</title>
+         <tocentry role="section" xml:id="xml-documents">XML Documents</tocentry>
+         <tocentry role="section" xml:id="html-documents">HTML Documents</tocentry>
+         <tocentry role="section" xml:id="text-documents">Text Documents</tocentry>
+         <tocentry role="section" xml:id="json-documents">JSON Documents</tocentry>
+         <tocentry role="section" xml:id="other-documents">Other documents</tocentry>
+      </tocdiv>
+      <tocentry role="section">Creating documents from XDM step results</tocentry>
+      <tocentry role="section" xml:id="specified-content-types">Specifying content types</tocentry>
+   </tocdiv>
+   <tocdiv role="section" xml:id="input-output">
+      <title>Inputs and Outputs</title>
+      <tocentry role="figure" xml:id="fig-atomic-step">An atomic step</tocentry>
+      <tocentry role="figure" xml:id="fig-compound-step">A compound step</tocentry>
+      <tocentry role="section" xml:id="external-docs">External Documents</tocentry>
+   </tocdiv>
+   <tocentry role="section" xml:id="primary-input-output">Primary Inputs and Outputs</tocentry>
+   <tocdiv role="section" xml:id="connections">
+      <title>Connections</title>
+      <tocentry role="figure" xml:id="fig-depends">Dependencies between steps, variables, and options</tocentry>
+      <tocentry role="section" xml:id="namespace-fixup">Namespace Fixup on XML Outputs</tocentry>
+   </tocdiv>
+   <tocdiv role="section" xml:id="initiating">
+      <title>Initiating a pipeline</title>
+      <tocentry role="section" xml:id="static-expressions">Evaluating expressions during static analysis</tocentry>
+      <tocdiv role="section" xml:id="dynamic-evaluation">
+         <title>Dynamic evaluation of the pipeline</title>
+         <tocdiv role="section" xml:id="environment">
+            <title>Environment</title>
+            <tocentry role="section" xml:id="initial-environment">Initial Environment</tocentry>
+         </tocdiv>
+         <tocentry role="section" xml:id="xpath-context">XPath in XProc</tocentry>
+      </tocdiv>
+   </tocdiv>
+   <tocdiv role="section" xml:id="xpath-extension-functions">
+      <title>XPath Extension Functions</title>
+      <tocentry role="section" xml:id="f.system-property">System Properties</tocentry>
+      <tocentry role="section" xml:id="f.step-available">Step Available</tocentry>
+      <tocentry role="section" xml:id="f.iteration-position">Iteration Position</tocentry>
+      <tocentry role="section" xml:id="f.iteration-size">Iteration Size</tocentry>
+      <tocentry role="section" xml:id="f.version-available">Version Available</tocentry>
+      <tocentry role="section" xml:id="f.xpath-version-available">XPath Version Available</tocentry>
+      <tocentry role="section" xml:id="f.document-properties">Document properties</tocentry>
+      <tocentry role="section" xml:id="f.document-properties-document">Document properties document</tocentry>
+      <tocentry role="section" xml:id="f.document-property">Document property</tocentry>
+      <tocentry role="section" xml:id="f.urify">Transform filesystem paths into URIs</tocentry>
+      <tocentry role="section" xml:id="f.function-library-importable">Function library importable</tocentry>
+      <tocentry role="section" xml:id="other-xpath-extension-functions">Other XPath Extension Functions</tocentry>
+   </tocdiv>
+   <tocentry role="section" xml:id="psvi-support">PSVIs in XProc</tocentry>
+   <tocdiv role="section" xml:id="value-templates">
+      <title>Value Templates</title>
+      <tocentry role="section" xml:id="attribute-value-templates">Attribute Value Templates</tocentry>
+      <tocentry role="section" xml:id="text-value-templates">Text Value Templates</tocentry>
+   </tocdiv>
+   <tocdiv role="section" xml:id="variables-options-background">
+      <title>Variables and Options</title>
+      <tocentry role="section" xml:id="variables">Variables</tocentry>
+      <tocentry role="section" xml:id="options">Options</tocentry>
+      <tocentry role="section" xml:id="statics">Static Options and Variables</tocentry>
+      <tocentry role="section" xml:id="varopt-types">Variable and option types</tocentry>
+      <tocentry role="section" xml:id="qname-handling">QName handling</tocentry>
+      <tocentry role="section" xml:id="opt-bindings">Namespaces on variables and options</tocentry>
+   </tocdiv>
+   <tocentry role="section" xml:id="security-considerations">Security Considerations</tocentry>
+   <tocentry role="section" xml:id="versioning-considerations">Versioning Considerations</tocentry>
+   <tocdiv role="section" xml:id="syntax">
+      <title>Syntax Overview</title>
+      <tocentry role="section" xml:id="namespaces">XProc Namespaces</tocentry>
+      <tocentry role="section" xml:id="scoping">Scoping of Names</tocentry>
+      <tocentry role="section" xml:id="xml-base-attribute">Base URIs and xml:base</tocentry>
+      <tocentry role="section" xml:id="xml-id-attribute">Unique identifiers</tocentry>
+      <tocentry role="section" xml:id="syntax-docs-ports">Associating Documents with Ports</tocentry>
+      <tocentry role="section" xml:id="documentation">Documentation</tocentry>
+      <tocentry role="section" xml:id="annotations">Processor annotations</tocentry>
+      <tocentry role="section" xml:id="extension-attributes">Extension attributes</tocentry>
+      <tocdiv role="section" xml:id="common-attr">
+         <title>Common Attributes</title>
+         <tocentry role="section" xml:id="expand-text-attribute">Expand text attributes</tocentry>
+         <tocentry role="section" xml:id="use-when">Conditional Element Exclusion</tocentry>
+         <tocentry role="section" xml:id="depends">Additional dependent connections</tocentry>
+         <tocentry role="section" xml:id="timeout">Controlling long running steps</tocentry>
+         <tocentry role="section" xml:id="messages">Status and debugging output</tocentry>
+      </tocdiv>
+      <tocentry role="section" xml:id="syntax-summaries">Syntax Summaries</tocentry>
+      <tocentry role="section" xml:id="common-errors">Common errors</tocentry>
+   </tocdiv>
+   <tocdiv role="section" xml:id="steps">
+      <title>Steps</title>
+      <tocdiv role="section" xml:id="pipelines">
+         <title>Pipelines</title>
+         <tocentry role="section" xml:id="example-pipeline">Example</tocentry>
+      </tocdiv>
+      <tocdiv role="section" xml:id="p.for-each">
+         <title>p:for-each</title>
+         <tocentry role="section" xml:id="for-each-xpath-context">XPath Context</tocentry>
+         <tocentry role="section" xml:id="example-for-each">Example</tocentry>
+      </tocdiv>
+      <tocdiv role="section" xml:id="p.viewport">
+         <title>p:viewport</title>
+         <tocentry role="section" xml:id="viewport-xpath-context">XPath Context</tocentry>
+         <tocentry role="section" xml:id="example-viewport">Example</tocentry>
+      </tocdiv>
+      <tocdiv role="section" xml:id="p.choose">
+         <title>p:choose</title>
+         <tocentry role="section" xml:id="p.when">p:when</tocentry>
+         <tocentry role="section" xml:id="p.otherwise">p:otherwise</tocentry>
+         <tocentry role="section" xml:id="example-choose">Example</tocentry>
+      </tocdiv>
+      <tocentry role="section" xml:id="p.if">p:if</tocentry>
+      <tocdiv role="section" xml:id="p.group">
+         <title>p:group</title>
+         <tocentry role="section" xml:id="example-group">Example</tocentry>
+      </tocdiv>
+      <tocdiv role="section" xml:id="p.try">
+         <title>p:try</title>
+         <tocentry role="section" xml:id="p.catch">p:catch</tocentry>
+         <tocentry role="section" xml:id="p.finally">p:finally</tocentry>
+         <tocdiv role="section" xml:id="err-vocab">
+            <title>The Error Vocabulary</title>
+            <tocentry role="section" xml:id="cv.errors">c:errors</tocentry>
+            <tocentry role="section" xml:id="cv.error">c:error</tocentry>
+            <tocentry role="section" xml:id="error-example">Error Example</tocentry>
+         </tocdiv>
+         <tocentry role="section" xml:id="example-try">Example</tocentry>
+      </tocdiv>
+      <tocentry role="section" xml:id="p.atomic">Atomic Steps</tocentry>
+      <tocentry role="section" xml:id="p.extension">Extension Steps</tocentry>
+   </tocdiv>
+   <tocdiv role="section" xml:id="other-elements">
+      <title>Other pipeline elements</title>
+      <tocentry role="section" xml:id="p.input">p:input</tocentry>
+      <tocdiv role="section" xml:id="p.with-input">
+         <title>p:with-input</title>
+         <tocentry role="section" xml:id="conn-prec">Connection precedence</tocentry>
+      </tocdiv>
+      <tocdiv role="section" xml:id="p.output">
+         <title>p:output</title>
+         <tocdiv role="section" xml:id="serialization">
+            <title>Serialization parameters</title>
+            <tocentry role="section" xml:id="xproc-xml-serialization">XML serialization</tocentry>
+            <tocentry role="section" xml:id="xproc-non-xml-serialization">Non-XML serialization</tocentry>
+         </tocdiv>
+      </tocdiv>
+      <tocdiv role="section" xml:id="variables-options">
+         <title>Variables and Options</title>
+         <tocentry role="section" xml:id="p.variable">p:variable</tocentry>
+         <tocentry role="section" xml:id="p.option">p:option</tocentry>
+         <tocdiv role="section" xml:id="p.with-option">
+            <title>p:with-option</title>
+            <tocentry role="section" xml:id="option-shortcut">Syntactic Shortcut for Option Values</tocentry>
+         </tocdiv>
+      </tocdiv>
+      <tocdiv role="section" xml:id="p.declare-step">
+         <title>p:declare-step</title>
+         <tocentry role="section" xml:id="declare-pipelines">Declaring pipelines</tocentry>
+         <tocentry role="section" xml:id="declare-atomic-steps">Declaring atomic steps</tocentry>
+      </tocdiv>
+      <tocentry role="section" xml:id="p.library">p:library</tocentry>
+      <tocentry role="section" xml:id="p.import">p:import</tocentry>
+      <tocentry role="section" xml:id="p.import-functions">p:import-functions</tocentry>
+      <tocentry role="section" xml:id="p.pipe">p:pipe</tocentry>
+      <tocdiv role="section" xml:id="p.inline">
+         <title>p:inline</title>
+         <tocentry role="section" xml:id="inline-xml-content">Inline XML and HTML content</tocentry>
+         <tocentry role="section" xml:id="inline-text">Inline text content</tocentry>
+         <tocentry role="section" xml:id="inline-json">Inline JSON content</tocentry>
+         <tocentry role="section" xml:id="inline-others">Other inline content</tocentry>
+         <tocentry role="section" xml:id="implicit-inlines">Implicit inlines</tocentry>
+      </tocdiv>
+      <tocentry role="section" xml:id="p.document">p:document</tocentry>
+      <tocentry role="section" xml:id="p.empty">p:empty</tocentry>
+      <tocentry role="section" xml:id="p.documentation">p:documentation</tocentry>
+      <tocentry role="section" xml:id="p.pipeinfo">p:pipeinfo</tocentry>
+   </tocdiv>
+   <tocdiv role="section" xml:id="errors">
+      <title>Errors</title>
+      <tocentry role="section" xml:id="static-errors">Static Errors</tocentry>
+      <tocentry role="section" xml:id="dynamic-errors">Dynamic Errors</tocentry>
+      <tocentry role="section" xml:id="step-errors">Step Errors</tocentry>
+   </tocdiv>
+   <tocdiv role="appendix" xml:id="conformance">
+      <title>Conformance</title>
+      <tocentry role="section" xml:id="implementation-defined">Implementation-defined features</tocentry>
+      <tocentry role="section" xml:id="implementation-dependent">Implementation-dependent features</tocentry>
+      <tocentry role="section" xml:id="infoset-conformance">Infoset Conformance</tocentry>
+   </tocdiv>
+   <tocdiv role="appendix" xml:id="xproc-and-step-xpath-context">
+      <title>XPath contexts in XProc</title>
+      <tocentry role="section" xml:id="xproc-xpath-context-31">Processor XPath Context</tocentry>
+      <tocentry role="section" xml:id="step-xpath-context-31">Step XPath Context</tocentry>
+   </tocdiv>
+   <tocdiv role="appendix" xml:id="references">
+      <title>References</title>
+      <tocentry role="section" xml:id="normative-references">Normative References</tocentry>
+   </tocdiv>
+   <tocentry role="appendix" xml:id="glossary">Glossary</tocentry>
+   <tocentry role="appendix" xml:id="language-summary">Pipeline Language Summary</tocentry>
+   <tocdiv role="appendix" xml:id="errors-list">
+      <title>List of Error Codes</title>
+      <tocentry role="section" xml:id="app.static-errors">Static Errors</tocentry>
+      <tocentry role="section" xml:id="app.dynamic-errors">Dynamic Errors</tocentry>
+      <tocentry role="section" xml:id="app.step-errors">Step Errors</tocentry>
+   </tocdiv>
+   <tocentry role="appendix" xml:id="namespace-fixup-guidance">Guidance on Namespace Fixup (Non-Normative)</tocentry>
+   <tocentry role="appendix" xml:id="handling-imports">Handling Circular and Re-entrant Library Imports (Non-Normative)</tocentry>
+   <tocentry role="appendix" xml:id="parallelism">Sequential steps, parallelism, and side-effects</tocentry>
+   <tocdiv role="appendix" xml:id="xproc-media-type">
+      <title>The <code>application/xproc+xml</code> media type</title>
+      <tocentry role="section" xml:id="media-type-registration">Registration of MIME media type application/xproc+xml</tocentry>
+      <tocentry role="section" xml:id="fragid">Fragment Identifiers</tocentry>
+   </tocdiv>
+   <tocentry role="appendix" xml:id="ancillary-files">Ancillary files</tocentry>
+   <tocentry role="appendix" xml:id="credits">Credits</tocentry>
+   <tocentry role="appendix" xml:id="changelog">Change Log</tocentry>
+</toc>
