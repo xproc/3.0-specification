@@ -3729,17 +3729,18 @@ primary input document. The whole sequence is also the default
 collection.
 If no documents are provided on the <port>source</port> port,
 the primary input document is undefined and the default collection
-is empty.
+is empty.<error code="C0094">It is a <glossterm>dynamic error</glossterm> if 
+any document supplied on the source port is not an XML document, 
+an HTML documents, or a Text document if XSLT 2.0 is used.</error>
 <error code="C0039">It is a
-<glossterm>dynamic error</glossterm> if a sequence of documents (including
-an empty sequence) is provided
-to an XSLT 1.0 step.</error>
+<glossterm>dynamic error</glossterm> if the source port does not contain
+exactly one XML document or one HTML document if XSLT 1.0 is used.</error>
 </para>
 
-<para>A dynamic error occurs if the XSLT processor signals a fatal
-error. This includes the case where the transformation terminates due
-to a <tag>xsl:message</tag> instruction with a <tag class="attribute">terminate</tag> attribute value of
-“<literal>yes</literal>”. <impl>How XSLT message termination
+<para><error code="C0094">It is a <glossterm>dynamic error</glossterm> if 
+an error occurred during the transformation.</error> <error code="C0095">It
+is a <glossterm>dynamic error</glossterm> if the transformation is terminated 
+by XSLT message termination.</error> <impl>How XSLT message termination
 errors are reported to the XProc processor is
 <glossterm>implementation-dependent</glossterm>.</impl>
 Implementations <rfc2119>should</rfc2119> raise an error using the error code
