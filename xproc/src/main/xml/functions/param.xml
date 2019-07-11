@@ -1,0 +1,55 @@
+<section xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xml:id="f.param"
+         version="5.0-extension w3c-xproc">
+<title>Runtime parameters</title>
+
+<para>Implementations may provide mechanisms for defining name/value pairs at runtime.
+The <function>p:param</function> function provides access to those values. Runtime values
+accessed in this way are independent of pipeline options which may also be defined in
+an implementation-defined manner.</para>
+
+<para>Unlike pipeline options, the values accessable through <function>p:param</function> are
+global in scope. That is, a pipeline nested inside a library, to which there’s no way to pass
+an option directly, may obtain a default value from the runtime environment with
+<function>p:param</function>. This provides a useful mechanism for passing configuration
+details, for example serialization parameters, into the system at runtime.
+</para>
+
+<methodsynopsis>
+<type>item()*</type>
+<methodname>p:param</methodname>
+<methodparam><type>xs:qname</type><parameter>name</parameter></methodparam>
+<methodparam><type>item()*</type><parameter>default</parameter></methodparam>
+</methodsynopsis>
+
+<para>If a runtime value has been provided for <code>$name</code>, it is returned,
+otherwise <code>$default</code> is returned.</para>
+
+<methodsynopsis>
+<type>item()*</type>
+<methodname>p:param</methodname>
+<methodparam><type>xs:qname</type><parameter>name</parameter></methodparam>
+<methodparam><type>item()*</type><parameter>default</parameter></methodparam>
+<methodparam><type>xs:string</type><parameter>as</parameter></methodparam>
+</methodsynopsis>
+
+<para>If <code>$as</code> is provided, it must be an
+<link xlink:href="https://www.w3.org/TR/xpath-31/#dt-sequence-type">XPath sequence type</link>.
+<error code="D0071">It is a <glossterm>dynamic error</glossterm> if
+the parameter sequence type is not syntactically valid.</error> The
+sequence type <literal>item()*</literal> is assumed if no explicit
+type is provided.
+</para>
+
+<para>If a type is provided, the value returned is converted to the
+required type, using the function conversion rules specified by XPath
+3.1. <error code="D0036">It is a <glossterm>dynamic error</glossterm>
+if the value cannot be converted to the required type.</error></para>
+
+<para>The value of the <function>p:param</function> function during
+static analysis is the empty sequence for all names.</para>
+
+</section>
