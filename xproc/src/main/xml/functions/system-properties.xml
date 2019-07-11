@@ -1,0 +1,124 @@
+<section xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xml:id="f.system-property"
+         version="5.0-extension w3c-xproc">
+<title>System Properties</title>
+
+<para>XPath expressions within a pipeline document can interrogate the
+processor for information about the current state of the pipeline.
+Various aspects of the processor are exposed through the
+<function>p:system-property</function> function:</para>
+
+<methodsynopsis>
+<type>xs:string</type>
+<methodname>p:system-property</methodname>
+<methodparam><type>xs:string</type><parameter>property</parameter></methodparam>
+</methodsynopsis>
+
+<para>The <varname>$property</varname> string <rfc2119>must</rfc2119> have the form of an
+<link xlink:href="https://www.w3.org/TR/xquery-30/#doc-xquery30-EQName">EQName</link>.
+If it is a QName, it is expanded using the namespace declarations in
+scope for the expression. <error code="D0015">It is a
+<glossterm>dynamic error</glossterm> if a QName is specified and it cannot be
+resolved with the in-scope namespace declarations.</error> The
+<function>p:system-property</function> function returns the string
+representing the value of the system property identified by the EQName.
+If there is no such property, the empty string <rfc2119>must</rfc2119>
+be returned.</para>
+
+<para>Implementations <rfc2119>must</rfc2119> provide the following
+system properties, which are all in the XProc namespace:</para>
+
+        <variablelist>
+          <varlistentry>
+            <term><varname>p:episode</varname></term>
+            <listitem>
+              <para>Returns a string which <rfc2119>should</rfc2119> be unique for each invocation
+                of the pipeline processor. In other words, if a processor is run several times in
+                succession, or if several processors are running simultaneously, each invocation of
+                each processor should get a distinct value from <varname>p:episode</varname>.</para>
+              <para>The unique identifier must be a valid <link
+                  xlink:href="http://www.w3.org/TR/xml/#NT-Name">XML name</link>. </para>
+            </listitem>
+          </varlistentry>
+          <varlistentry>
+            <term><varname>p:locale</varname></term>
+            <listitem>
+              <para>Returns a string which identifies the current environment (usually the OS)
+                language. This is useful for, for example, message
+                localization purposes. <impl>The exact format of the language string is
+                    <glossterm>implementation-defined</glossterm> but <rfc2119>should</rfc2119> be
+                  consistent with the <tag class="attribute">xml:lang</tag> attribute.</impl></para>
+            </listitem>
+          </varlistentry>
+          <varlistentry>
+            <term><varname>p:product-name</varname></term>
+            <listitem>
+              <para>Returns a string containing the name of the implementation, as defined by the
+                implementer. This should normally remain constant from one release of the product to
+                the next. It should also be constant across platforms in cases where the same source
+                code is used to produce compatible products for multiple execution platforms.</para>
+            </listitem>
+          </varlistentry>
+          <varlistentry>
+            <term><varname>p:product-version</varname></term>
+            <listitem>
+              <para>Returns a string identifying the version of the implementation, as defined by
+                the implementer. This should normally vary from one release of the product to the
+                next, and at the discretion of the implementer it may also vary across different
+                execution platforms. </para>
+            </listitem>
+          </varlistentry>
+          <varlistentry>
+            <term><varname>p:vendor</varname></term>
+            <listitem>
+              <para>Returns a string which identifies the vendor of the processor.</para>
+            </listitem>
+          </varlistentry>
+          <varlistentry>
+            <term><varname>p:vendor-uri</varname></term>
+            <listitem>
+              <para>Returns a URI which identifies the vendor of the processor. Often, this is the
+                URI of the vendor's web site.</para>
+            </listitem>
+          </varlistentry>
+          <varlistentry>
+            <term><varname>p:version</varname></term>
+            <listitem>
+              <para>Returns the version(s) of XProc implemented by the processor
+                as a space-separated list. For example, a processor that
+                supports XProc 1.0 would return “1.0”; a processor that supports
+                XProc 1.0 and 3.0 would return “1.0 3.0”; a processor that
+                supports only XProc 3.0 would return “3.0”.</para>
+            </listitem>
+          </varlistentry>
+          <varlistentry>
+            <term><varname>p:xpath-version</varname></term>
+            <listitem>
+              <para>Returns the version(s) of XPath implemented by the processor
+                for evaluating XPath expressions on XProc elements. The result
+                is a space-separated list of versions supported. For example, a
+                processor that only supports XPath 3.1 would return “3.1”; a
+                processor that supports XPath 3.1 and XPath 3.2 could return
+                “3.1 3.2”.</para>
+            </listitem>
+          </varlistentry>
+          <varlistentry>
+            <term><varname>p:psvi-supported</varname></term>
+            <listitem>
+              <para>Returns true if the implementation supports passing PSVI annotations between
+                steps, false otherwise.</para>
+            </listitem>
+          </varlistentry>
+        </variablelist>
+
+<para>Implementations may support additional system properties but such properties
+<rfc2119>must</rfc2119> be in a namespace and <rfc2119>must not</rfc2119> be
+in the XProc namespace.</para>
+
+<para><impl>The value of the <function>p:system-property</function> function during
+static analysis is <glossterm>implementation-defined</glossterm>.</impl></para>
+
+      </section>

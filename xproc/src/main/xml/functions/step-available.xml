@@ -1,0 +1,28 @@
+      <section xmlns="http://docbook.org/ns/docbook"
+               xmlns:xlink="http://www.w3.org/1999/xlink"
+               xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax"
+               xmlns:xi="http://www.w3.org/2001/XInclude"
+               xml:id="f.step-available"
+               version="5.0-extension w3c-xproc">
+        <title>Step Available</title>
+        <para>The <function>p:step-available</function> function reports whether or not a particular
+          type of step is understood by the processor.</para>
+
+<methodsynopsis>
+<type>xs:boolean</type>
+<methodname>p:step-available</methodname>
+<methodparam><type>xs:string</type><parameter>step-type</parameter></methodparam>
+</methodsynopsis>
+
+<para>The <varname>$step-type</varname> string <rfc2119>must</rfc2119>
+have the form of an
+<link xlink:href="https://www.w3.org/TR/xquery-30/#doc-xquery30-EQName">EQName</link>.
+If it is a QName, it is expanded using the namespace declarations in
+scope for the expression. The
+<function>p:step-available</function> function returns true if and
+only if the processor knows how to evaluate steps of the specified
+type.</para>
+
+<para><impl>The value of the <function>p:step-available</function> function during
+static analysis is <glossterm>implementation-dependent</glossterm>.</impl></para>
+</section>

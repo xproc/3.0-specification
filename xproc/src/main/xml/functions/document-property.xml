@@ -1,0 +1,47 @@
+<section xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xml:id="f.document-property"
+         version="5.0-extension w3c-xproc">
+<title>Document property</title>
+
+<para>This function retrieves a single value from the
+<glossterm>document properties</glossterm> of a document.</para>
+
+<methodsynopsis>
+<type>item()*</type>
+<methodname>p:document-property</methodname>
+<methodparam><type>item()</type><parameter>doc</parameter></methodparam>
+<methodparam><type>item()</type><parameter>key</parameter></methodparam>
+</methodsynopsis>
+
+  <para>The item returned is the value of the property named <code>$key</code> 
+in the document properties. An empty sequence is returned if <code>$doc</code> is
+not associated with a document or no such key exists. <code>$key</code> is 
+interpreted as follows:</para>
+  
+  <itemizedlist>
+    <listitem>
+      <para>If <code>$key</code> is of type <type>xs:QName</type>, its value is used unchanged.</para>
+    </listitem>
+    <listitem>
+      <para>If <code>$key</code> is an instance of type <type>xs:string</type> (or a type derived from
+        <type>xs:string</type>) its value is transformed into a <type>xs:Qname</type> using the <link
+          xlink:href="https://www.w3.org/TR/xpath-31/#doc-xpath31-EQName"
+          >XPath EQName production rules</link>. That is, it can be written
+        as a local-name only, as a prefix plus local-name or as a URI plus
+        local-name (using the <code>Q{}</code> syntax).</para>
+      <para>
+        <error code="D0061">It is a <glossterm>dynamic error</glossterm>
+          if <code>$key</code> is of type <type>xs:string</type> and cannot be converted into a <type>xs:Qname</type>.</error>
+      </para>
+    </listitem>
+    <listitem>
+      <para>If <code>$key</code> is of any other type, the function returns the empty sequence.</para>
+    </listitem>
+  </itemizedlist>
+
+<para>The <function>p:document-property</function> function behaves
+normally during static analysis.</para>
+</section>

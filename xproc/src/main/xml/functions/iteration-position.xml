@@ -1,0 +1,28 @@
+<section xmlns="http://docbook.org/ns/docbook"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax"
+         xmlns:xi="http://www.w3.org/2001/XInclude"
+         xml:id="f.iteration-position"
+         version="5.0-extension w3c-xproc">
+<title>Iteration Position</title>
+
+<para>Some compound steps, such as <tag>p:for-each</tag> and <tag>p:viewport</tag>, process a
+sequence of documents. The iteration position is the position of the
+current document in that sequence: the first document has position 1, the
+second 2, etc. The <function>p:iteration-position</function> function
+returns the iteration position of the nearest compound step that processes
+a sequence of documents.</para>
+
+<methodsynopsis>
+<type>xs:integer</type>
+<methodname>p:iteration-position</methodname>
+<void/>
+</methodsynopsis>
+
+<para>If there is no compound step that processes a sequence of documents
+among the ancestors of the element on which the expression involving
+<function>p:iteration-position</function> occurs, it returns 1.</para>
+
+<para>The value of the <function>p:iteration-position</function> function during
+static analysis is 1.</para>
+</section>
