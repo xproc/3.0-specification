@@ -1141,7 +1141,7 @@ analysis</firstterm>
 consists of
 those tasks that can be performed by inspection of the pipeline
 alone, including the binding of
-<link linkend="statics">static options and variables</link>,
+<link linkend="statics">static variables</link>,
 computation of serialization properties and document-properties,
 <link linkend="use-when">evaluation of <code>use-when</code> expressions</link>,
 performing a static analysis of all XPath expressions, and detecting static errors.</termdef>
@@ -1170,8 +1170,7 @@ declaration exists.</impl></para>
 
 <orderedlist>
 <listitem>
-<para>The <tag class="attribute">select</tag> expressions on static
-options and static variables.</para>
+<para>The <tag class="attribute">select</tag> expressions on static variables.</para>
 </listitem>
 <listitem>
 <para>
@@ -1908,17 +1907,16 @@ Variable names are always expressed as
     </section>
 
     <section xml:id="statics">
-      <title>Static Options and Variables</title>
+      <title>Static Variables</title>
 
       <para>Any <tag>p:variable</tag> that is part of the
 <glossterm>prologue</glossterm> of a step (as a direct child of
           <tag>p:declare-step</tag> declared before the start of the sub-pipeline) <rfc2119>must</rfc2119> be declared
         “static”. Any <tag>p:variable</tag> that is part of the sub-pipeline of a step <rfc2119>must not</rfc2119> be
         declared “static”.</para>
-      <para>A <tag>p:option</tag> may be declared “static”. </para>
-      <para><error code="S0109">It is a <glossterm>static error</glossterm> if options and variables that are the direct children of 
+      <para><error code="S0109">It is a <glossterm>static error</glossterm> if variables that are the direct children of
         <tag>p:library</tag> are not declared “static”</error>.</para>
-      <para>The values of static options and variables are computed during <link linkend="initiating">static
+      <para>The values of variables are computed during <link linkend="initiating">static
           analysis</link>.</para>
     </section>
 
@@ -4575,9 +4573,9 @@ a <glossterm>static error</glossterm> if the name attribute on
 bound to a namespace.</error>
 </para>
 <para><error code="S0088">It is
-a <glossterm>static error</glossterm> if the qualified name of a
+a <glossterm>static error</glossterm> if the name of a
 <tag>p:variable</tag> <glossterm baseform="shadow">shadows</glossterm>
-the name of a static variable or option.</error>
+the name of a static variable.</error>
 </para>
 </listitem>
 </varlistentry>
@@ -4702,7 +4700,9 @@ appears on the connection that provides the context.</error>
 <para>Since all <glossterm>in-scope bindings</glossterm> are present
 in the Processor XPath Context as variable bindings, <tag
 class="attribute">select</tag> expressions may refer to the value of
-<glossterm>in-scope bindings</glossterm> by variable reference.</para>
+<glossterm>in-scope bindings</glossterm> by variable reference.
+For static variables, only references to other in-scope static variables are
+permitted.</para>
 </section>
 
 <!-- ============================================================ -->
@@ -4736,7 +4736,10 @@ bound to a namespace.</error>
 <para><error code="S0088">It is
 a <glossterm>static error</glossterm> if the qualified name of a
 <tag>p:option</tag> <glossterm baseform="shadow">shadows</glossterm>
-the name of a static variable or option.</error>
+the name of a static variable.</error>
+<error code="S0004">It is a <glossterm>static error</glossterm>
+to declare two or more options on the same step with the same
+name.</error>
 </para>
 </listitem>
 </varlistentry>
@@ -4769,14 +4772,6 @@ actual values (for example, <code>as="xs:integer"</code> and
 to specify a value for the option.</para>
 </listitem>
 </varlistentry>
-<varlistentry><term><tag class="attribute">static</tag></term>
-<listitem>
-<para>An indication of whether the option is to be evaluated
-statically or not. See <link linkend="statics"/>.
-If <tag class="attribute">static</tag> is not specified, it
-defaults to “<code>false</code>”.</para>
-</listitem>
-</varlistentry>
 <varlistentry><term><tag class="attribute">required</tag></term>
 <listitem>
 <para>An option may declare that it is required by specifying
@@ -4802,15 +4797,15 @@ which will be evaluated to provide the default value for the option.
 
 <para>The default value of an option is specified with an XPath
 expression on the <tag>p:declare-step</tag> that defines the step
-signature. It must be a statically valid expression at that point.
-Consequently, if it contains variable references, they can only be
-references to preceding options on the step.
+signature. It must be a valid expression at that point. Consequently,
+if it contains variable references, they can only be references to
+in-scope static variables or preceding options on the same step.
 <error code="D0026">It is a <glossterm>dynamic error</glossterm> if
 the <tag class="attribute">select</tag> expression makes reference to
 the context node, size, or position.</error></para>
 
-<para><impl>The precise details about what XPath expressions are allowed
-(for example, can the expression declare a function) is
+<para><impl>The precise details about what XPath expressions are
+allowed (for example, can the expression declare a function) is
 <glossterm>implementation-defined</glossterm>.</impl>
 </para>
 </listitem>
@@ -4831,22 +4826,11 @@ any pipeline importing the <tag>p:library</tag>. If the visibility attribute is
 </varlistentry>
 </variablelist>
 
-<para><error code="S0004">It is a <glossterm>static error</glossterm>
-to declare two or more options on the same step with the same
-name.</error></para>
-
-<para>The following errors apply to options:</para>
-
 <itemizedlist>
 <listitem>
 <para><error code="S0017">It is a <glossterm>static error</glossterm>
 to specify that an option is both <tag class="attribute">required</tag>
 <emphasis>and</emphasis> has a default value.</error></para>
-</listitem>
-<listitem>
-<para><error code="S0095">It is a <glossterm>static error</glossterm>
-to specify that an option is both <tag class="attribute">required</tag>
-<emphasis>and</emphasis> static.</error></para>
 </listitem>
 </itemizedlist>
 
@@ -5276,7 +5260,7 @@ is, of course, an error to attempt to evaluate such steps.</para>
 <section xml:id="p.library">
 <title>p:library</title>
 
-<para>A <tag>p:library</tag> is a collection of static variables, static options,
+<para>A <tag>p:library</tag> is a collection of static variables
 and step declarations.</para>
 
 <e:rng-pattern name="Library"/>

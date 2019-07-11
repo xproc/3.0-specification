@@ -202,7 +202,7 @@ Library =
       common.attributes,
       global.attributes,
       (Import|ImportFunctions|Documentation|PipeInfo)*,
-      (DeclareStep|StaticVariable|StaticOption|Documentation|PipeInfo)*
+      (DeclareStep|StaticVariable|Documentation|PipeInfo)*
    }
 
 [
@@ -391,25 +391,8 @@ Option =
       name.qname.attr,
       as.attr?,
       attribute values { text }?,
-      static.attr?,
       required.attr?,
       select.attr?,
-      common.attributes,
-      global.attributes,
-      visibility.attr?,
-      (Documentation|PipeInfo)*
-   }
-
-[
-   sa:class = "language-construct"
-]
-StaticOption =
-   element option {
-      name.qname.attr,
-      as.attr?,
-      attribute values { text }?,
-      attribute static { "true" },
-      select.attr,
       common.attributes,
       global.attributes,
       visibility.attr?,
