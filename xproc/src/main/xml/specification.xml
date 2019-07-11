@@ -3686,7 +3686,7 @@ expressions.</para>
 
 <para>A <tag>p:choose</tag> contains an arbitrary number of
 alternative <glossterm
-baseform="subpipeline">subpipelines</glossterm>, exactly one of which
+baseform="subpipeline">subpipelines</glossterm>, at most one of which
 will be evaluated. <error code="S0074">It is a <glossterm>static
 error</glossterm> if a <tag>p:choose</tag> has neither a
 <tag>p:when</tag> nor a <tag>p:otherwise</tag>.</error></para>
@@ -3701,8 +3701,7 @@ expression evaluates to true in its context. After a subpipeline is
 selected, no further guard expressions are evaluated. If there are no
 subpipelines for which the expression evaluates to true then,
 if a default subpipeline was specified, it is selected, otherwise,
-no subpipeline runs and an empty sequence appears on all of the
-outputs.</para>
+no subpipeline is selected.</para>
 
 <para>After a <glossterm>subpipeline</glossterm> is selected, it is
 evaluated as if only it had been present.</para>
@@ -3773,8 +3772,7 @@ elements and the <tag>p:otherwise</tag> element are not in
         port. No documents will be written to the primary output port if there isn’t a default readable port, but that
         is not an error in this case. No documents will ever be written to any non-primary output ports in this case.</para>
       <para>Informally: the default sub-pipeline for a missing <tag>p:otherwise</tag> is a <tag>p:identity</tag> step
-        (with the additional feature that it isn’t an error if there’s no default readable port). A primary output port
-        on the <tag>p:when</tag> branches for this is required.</para>
+        (with the additional feature that it isn’t an error if there’s no default readable port). If the <tag>p:when</tag> branches do not have a primary output port, no output will be produced on any port.</para>
   
   
 
