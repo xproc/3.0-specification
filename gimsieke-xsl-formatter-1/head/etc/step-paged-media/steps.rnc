@@ -1,0 +1,29 @@
+default namespace p = "http://www.w3.org/ns/xproc"
+namespace local = ""
+
+# This schema could be made more constrained.
+
+Step = Step-css-formatter | Step-xsl-formatter
+
+Step-css-formatter =
+  element css-formatter {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute parameters { xsd:string }?,
+    attribute content-type { xsd:string? }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-xsl-formatter =
+  element xsl-formatter {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute parameters { xsd:string }?,
+    attribute content-type { xsd:string? }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
