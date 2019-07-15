@@ -3597,18 +3597,29 @@ port</glossterm>. If the <tag>p:viewport</tag> input is a sequence,
 each document in the sequence is processed in turn producing a sequence
 on the output.</para>
 
-<para>The <tag class="attribute">match</tag> attribute specifies
-  an XSLT <glossterm>selection pattern</glossterm>. Each matching node in the source document is wrapped in a document
-        node, as necessary, and provided, one at a time, to the viewport's
-          <glossterm>subpipeline</glossterm> on a port named <port>current</port>. The base URI of
-        the resulting document that is passed to the subpipeline is the base URI of the matched
-        element or document. <error code="D0010">It is a <glossterm>dynamic error</glossterm> if the
-            <tag class="attribute">match</tag> expression on <tag>p:viewport</tag> does not match an
-          element or document.</error>
-      </para>
-<para>After a match is found, the entire subtree rooted at that match is processed as a
-        unit. No further attempts are made to match nodes among the descendants of any matched
-        node.</para>
+<para>The <tag class="attribute">match</tag> attribute specifies an
+XSLT <glossterm>selection pattern</glossterm>. Each matching node in
+the source document is wrapped in a document node, as necessary, and
+provided, one at a time, to the viewport's
+<glossterm>subpipeline</glossterm> on a port named
+<port>current</port>. The base URI of the resulting document that is
+passed to the subpipeline is the base URI of the matched element or
+document. <error code="D0010">It is a <glossterm>dynamic
+error</glossterm> if the <tag class="attribute">match</tag> expression
+on <tag>p:viewport</tag> does not match an element or
+document.</error></para>
+
+<note>
+<para>The <tag class="attribute">match</tag> attribute on
+<tag>p:viewport</tag> is a selection pattern and may contain references
+to in-scope variables and options, but it is
+not an <glossterm>attribute value template</glossterm>.
+</para>
+</note>
+
+<para>After a match is found, the entire subtree rooted at that match
+is processed as a unit. No further attempts are made to match nodes
+among the descendants of any matched node.</para>
 <para>The environment inherited by the <glossterm>contained steps</glossterm> of
         a <tag>p:viewport</tag> is the <glossterm>inherited environment</glossterm> with these
         modifications:</para><itemizedlist>
