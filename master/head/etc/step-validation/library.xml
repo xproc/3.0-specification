@@ -31,7 +31,7 @@
    </p:declare-step>
    <p:declare-step type="p:validate-with-xml-schema" xml:id="validate-with-xml-schema">
       <p:input port="source" primary="true" content-types="xml html"/>
-      <p:input port="schema" content-types="xml"/>
+      <p:input port="schema" sequence="true" content-types="xml"/>
       <p:output port="result" primary="true" content-types="xml html"/>
       <p:output port="report" sequence="true" content-types="application/xml json"/>
       <p:option name="use-location-hints" select="false()" as="xs:boolean"/>
