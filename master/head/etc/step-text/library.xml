@@ -10,6 +10,6 @@
                 primary="true"
                 sequence="false"
                 content-types="application/xhtml+xml"/>
-      <p:option name="parameters" required="false" as="xs:string"/>
+      <p:option name="parameters" as="xs:string"/>
    </p:declare-step>
 </p:library>
