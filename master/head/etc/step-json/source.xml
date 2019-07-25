@@ -21,7 +21,7 @@
 </authorgroup>
 
 <abstract>
-<para>This specification describes the <code>p:join-json</code> step
+<para>This specification describes the <code>p:json-join</code> step
 for
 <citetitle>XProc 3.0: An XML Pipeline Language</citetitle>.</para>
 </abstract>
@@ -42,7 +42,7 @@ An XML Pipeline Language</link> published by the W3C.</para>
 <title>Introduction</title>
 
 <para>This specification describes the
-<code>p:join-json</code> XProc step.
+<code>p:json-join</code> XProc step.
 A machine-readable description of
 these steps may be found in
 <link xlink:href="steps.xpl">steps.xpl</link>.
@@ -54,23 +54,29 @@ steps is assumed; for background details, see
 <biblioref linkend="xproc30-steps"/>.</para>
 </section>
 
-<section xml:id="c.join-json" version="5.0-extension w3c-xproc">
+<section xml:id="c.json-join" version="5.0-extension w3c-xproc">
 <title>p:json-join</title>
 
-<para>The <code>p:json-join</code> step joins a sequence of JSON documents into a single JSON document (an array).
-If the sequence on port <code>source</code> is empty, the empty sequence is returned on port <code>result</code>.</para>
+<para>The <code>p:json-join</code> step joins a sequence of JSON
+documents into a single JSON document (an array). If the sequence on
+port <code>source</code> is empty, the empty sequence is returned on
+port <code>result</code>.</para>
 
-<p:declare-step type="p:join-json">
+<p:declare-step type="p:json-join">
   <p:input port="source" sequence="true" content-types="json"> </p:input>
   <p:output port="result" content-types="application/json"/>
   <p:option name="flatten-arrays" as="xs:boolean" select="false()"/>
 </p:declare-step>
 
-<para>If option <code>flatten-arrays</code> is <literal>false</literal>, a member in the array is created for each document in
-the sequence appearing on port<code>source</code>. Therefore the produced array with have the same number of
-members as the number of documents appearing on port <code>source</code>. However if <code>flatten-arrays</code> is
-<literal>true</literal>, for each member of an array appearing at the top level of a JSON document 
-on port <code>source</code> a new member in the resulting array will be created.</para>
+<para>If option <code>flatten-arrays</code> is
+<literal>false</literal>, a member in the array is created for each
+document in the sequence appearing on port<code>source</code>.
+Therefore the produced array with have the same number of members as
+the number of documents appearing on port <code>source</code>. However
+if <code>flatten-arrays</code> is <literal>true</literal>, for each
+member of an array appearing at the top level of a JSON document on
+port <code>source</code> a new member in the resulting array will be
+created.</para>
 
 </section>
 
