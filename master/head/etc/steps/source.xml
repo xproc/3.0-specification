@@ -1309,6 +1309,10 @@ value of the attribute in the output.
 If the attribute is named “<tag class="attribute">xml:base</tag>”, the base URI
 of the element <rfc2119>must</rfc2119> also be amended accordingly.</para>
 
+<para>If the document node is matched, the entire document is replaced by a text node
+with the hash. What appears on port <port>result</port> is a text document with the
+text node wrapped in a document node.</para>
+
 <para>If the expression matches any
 other kind of node, the entire node (and <emphasis>not</emphasis> just
   its contents) is replaced by the hash.</para>
@@ -2497,15 +2501,18 @@ its primary input with the top-level node(s) of the
 <para>The value of the <option>match</option> option
 <rfc2119>must</rfc2119> be an XSLTSelectionPattern. <error code="C0023">It
 is a <glossterm>dynamic error</glossterm> if that pattern matches
-anything other than element, text, processing-instruction, or comment
-nodes. </error> Multiple matches are allowed, in which case multiple
+an attribute or a namespace nodes. </error> Multiple matches are allowed, in which case multiple
 copies of the <port>replacement</port> document will occur.</para>
 
 <para>Every node in the primary input matching the specified
-   pattern is replaced in the output by the top-level node(s)
+pattern is replaced in the output by the top-level node(s)
 of the <port>replacement</port> document. Only non-nested matches are
 replaced. That is, once a node is replaced, its descendants cannot
 be matched.</para>
+   
+<para>If the document node is matched and port <port>replacement</port> contains
+a text document, the entire document is replaced by the text node. What appears on port 
+<port>result</port> is a text document with the text node wrapped in a document node.</para>
 
 <simplesect>
 <title>Document properties</title>
@@ -2748,6 +2755,10 @@ matches an <emphasis>attribute</emphasis>, the string value of the
 expression is used as the new value of the attribute in the output.
 If the attribute is named “<tag class="attribute">xml:base</tag>”, the base URI
 of the element <rfc2119>must</rfc2119> also be amended accordingly.</para>
+
+<para>If the document node is matched, the entire document is replaced by the string
+value of the <option>replace</option> expression. What appears on port <port>result</port> 
+is a text document with the text node wrapped in a document node.</para>
 
 <para>If the expression matches any other kind of node, the entire
 node (and <emphasis>not</emphasis> just its contents) is replaced by
@@ -3198,8 +3209,8 @@ children.</para>
 
  <para>The value of the <option>match</option> option <rfc2119>must</rfc2119> be an
  XSLTSelectionPattern. <error code="C0023">It is a <glossterm>dynamic
- error</glossterm> if that pattern matches anything other than element
- nodes.</error></para>
+ error</glossterm> if that pattern matches anything other than the document node
+ or element nodes.</error></para>
 
 <para>Every element in the <port>source</port> document that matches
 the specified <option>match</option> pattern is replaced by its children,
@@ -3265,6 +3276,10 @@ match are copied without change.</para>
 matches an <emphasis>attribute</emphasis>, the UUID is used as the new
 value of the attribute in the output. If the attribute is named “<tag class="attribute">xml:base</tag>”, the base URI of the element
 <rfc2119>must</rfc2119> also be amended accordingly.</para>
+
+<para>If the document node is matched, the entire document is replaced by a text node
+with the UUID. What appears on port <port>result</port> is a text document with the
+text node wrapped in a document node.</para>
 
 <para>If the expression matches any
 other kind of node, the entire node (and <emphasis>not</emphasis> just

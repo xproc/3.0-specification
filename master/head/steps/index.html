@@ -1,4 +1,4 @@
-<html xmlns="http://www.w3.org/1999/xhtml"><head><title>XProc 3.0: Standard Step Library</title><meta charset="utf-8" /><link rel="alternate" title="XML" href="specification.xml" /><link rel="alternate" title="Latest editor's draft" href="http://www.w3.org/XML/XProc/docs/langspec.html" /><link rel="alternate" title="Latest Public Working Draft" href="http://www.w3.org/TR/xproc/" /><meta name="generator" content="DocBook XSL 2.0 Stylesheets V2.3.9" /><meta name="description" content="Abstract This specification describes the standard step vocabulary of&#xA;  XProc 3.0: An XML Pipeline Language." /><link href="css/prism.css" rel="stylesheet" type="text/css" /><link href="css/db-prism.css" rel="stylesheet" type="text/css" /><link rel="stylesheet" type="text/css" href="css/base.css" /><link rel="stylesheet" type="text/css" href="css/xproc.css" /><link rel="stylesheet" type="text/css" href="css/base.css" /><link rel="stylesheet" type="text/css" href="css/print.css" media="print" /><script type="text/javascript" src="js/dbmodnizr.js"></script></head><body><article class="specification"><div class="head" id="spec.head"><h1>XProc 3.0: Standard Step Library</h1><h2>Editor's Draft  <time datetime="2019-07-25T17:08:27Z">25 July 2019 at 17:08 UTC (<a href="https://github.com/xproc/3.0-steps/commit/3bcd41d407440ffca9c033f8270f2c31e6f65074">build 144</a>)</time></h2><dl><dt>This Version:</dt><dd><a href="https://xproc.github.io/3.0-steps/master/head/steps/">https://xproc.github.io/3.0-steps/master/head/steps/</a></dd><dt>Latest Version:</dt><dd><a href="http://spec.xproc.org/master/head/steps/">http://spec.xproc.org/master/head/steps/</a></dd><dt>Editors:</dt><dd><span class="personname">Norman Walsh</span></dd><dd><span class="personname">Achim Berndzen</span></dd><dd><span class="personname">Gerrit Imsieke</span></dd><dd><span class="personname">Erik Siegel</span></dd><dt>Repository:</dt><dd><a href="http://github.com/xproc/3.0-steps">This specification on GitHub</a></dd><dd><a href="http://github.com/xproc/3.0-specification/issues">Report an issue</a></dd><dt>Changes:</dt><dd><a href="diff.html">Diff against current “status quo” draft</a></dd><dd><a href="http://github.com/xproc/3.0-steps/commits/master">Commits for this specification</a></dd></dl><p>This document is also available in these non-normative formats: <a href="specification.xml">XML</a>, 
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>XProc 3.0: Standard Step Library</title><meta charset="utf-8" /><link rel="alternate" title="XML" href="specification.xml" /><link rel="alternate" title="Latest editor's draft" href="http://www.w3.org/XML/XProc/docs/langspec.html" /><link rel="alternate" title="Latest Public Working Draft" href="http://www.w3.org/TR/xproc/" /><meta name="generator" content="DocBook XSL 2.0 Stylesheets V2.3.9" /><meta name="description" content="Abstract This specification describes the standard step vocabulary of&#xA;  XProc 3.0: An XML Pipeline Language." /><link href="css/prism.css" rel="stylesheet" type="text/css" /><link href="css/db-prism.css" rel="stylesheet" type="text/css" /><link rel="stylesheet" type="text/css" href="css/base.css" /><link rel="stylesheet" type="text/css" href="css/xproc.css" /><link rel="stylesheet" type="text/css" href="css/base.css" /><link rel="stylesheet" type="text/css" href="css/print.css" media="print" /><script type="text/javascript" src="js/dbmodnizr.js"></script></head><body><article class="specification"><div class="head" id="spec.head"><h1>XProc 3.0: Standard Step Library</h1><h2>Editor's Draft  <time datetime="2019-07-25T17:10:19Z">25 July 2019 at 17:10 UTC (<a href="https://github.com/xproc/3.0-steps/commit/12f31861aa8468e35d8faf12ea780d8874b752a4">build 145</a>)</time></h2><dl><dt>This Version:</dt><dd><a href="https://xproc.github.io/3.0-steps/master/head/steps/">https://xproc.github.io/3.0-steps/master/head/steps/</a></dd><dt>Latest Version:</dt><dd><a href="http://spec.xproc.org/master/head/steps/">http://spec.xproc.org/master/head/steps/</a></dd><dt>Editors:</dt><dd><span class="personname">Norman Walsh</span></dd><dd><span class="personname">Achim Berndzen</span></dd><dd><span class="personname">Gerrit Imsieke</span></dd><dd><span class="personname">Erik Siegel</span></dd><dt>Repository:</dt><dd><a href="http://github.com/xproc/3.0-steps">This specification on GitHub</a></dd><dd><a href="http://github.com/xproc/3.0-specification/issues">Report an issue</a></dd><dt>Changes:</dt><dd><a href="diff.html">Diff against current “status quo” draft</a></dd><dd><a href="http://github.com/xproc/3.0-steps/commits/master">Commits for this specification</a></dd></dl><p>This document is also available in these non-normative formats: <a href="specification.xml">XML</a>, 
 	  automatic <a href="diff.html">change markup</a> from the previous draft
           courtesy of <a href="http://www.deltaxml.com/">DeltaXML</a>.</p><p class="copyright"><span class="copyright">Copyright © <span class="years">2018</span> <span class="holders"><span class="holder">@@FIXME:</span></span></span></p><hr /><div class="abstract"><h2>Abstract</h2>
   <p>This specification describes the standard step vocabulary of
@@ -1155,11 +1155,15 @@ value of the attribute in the output.
 If the attribute is named “<code class="tag-attribute">xml:base</code>”, the base URI
 of the element <span class="rfc2119" id="c.hash.10.4">must</span> also be amended accordingly.</p>
 
+<p>If the document node is matched, the entire document is replaced by a text node
+with the hash. What appears on port <code class="port">result</code> is a text document with the
+text node wrapped in a document node.</p>
+
 <p>If the expression matches any
 other kind of node, the entire node (and <em>not</em> just
   its contents) is replaced by the hash.</p>
 
-  <section id="c.hash.12" class="simplesect"><div class="section-titlepage"><h4>Document properties</h4></div><div class="content">
+  <section id="c.hash.13" class="simplesect"><div class="section-titlepage"><h4>Document properties</h4></div><div class="content">
     
     <p>If the resulting document contains exactly one text node,
       the <code class="literal">content-type</code> property is changed to <code class="literal">text/plain</code> and the 
@@ -1200,7 +1204,7 @@ if the document element of the document that arrives on the
 
 <p>An HTTP request is represented by a <code class="tag-element">c:request</code> element.</p>
 
-<p id="d1085e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:request<br />  <strong>method</strong> = <var>NCName</var><br />  href? = <var>anyURI</var><br />  detailed? = <var>boolean</var><br />  status-only? = <var>boolean</var><br />  username? = <var>string</var><br />  password? = <var>string</var><br />  auth-method? = <var>string</var><br />  send-authorization? = <var>boolean</var><br />  override-content-type? = <var>ContentType</var><br />  timeout? = <var>positiveInteger</var><br />  fail-on-timeout? = <var>boolean</var>&gt;<br />    (<a href="#cv.header">c:header</a>*,<br />     (<a href="#cv.multipart">c:multipart</a> | <br />      <a href="#cv.body">c:body</a>)?)<br />&lt;/c:request&gt;</code></p>
+<p id="d1086e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:request<br />  <strong>method</strong> = <var>NCName</var><br />  href? = <var>anyURI</var><br />  detailed? = <var>boolean</var><br />  status-only? = <var>boolean</var><br />  username? = <var>string</var><br />  password? = <var>string</var><br />  auth-method? = <var>string</var><br />  send-authorization? = <var>boolean</var><br />  override-content-type? = <var>ContentType</var><br />  timeout? = <var>positiveInteger</var><br />  fail-on-timeout? = <var>boolean</var>&gt;<br />    (<a href="#cv.header">c:header</a>*,<br />     (<a href="#cv.multipart">c:multipart</a> | <br />      <a href="#cv.body">c:body</a>)?)<br />&lt;/c:request&gt;</code></p>
 
 <p><a id="err.inline.C0006"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic error</a></em> (<a href="#err.C0006"><code class="errqname">err:XC0006</code></a>) if the
 <code class="tag-attribute">method</code> is not specified on a <code class="tag-element">c:request</code>.
@@ -2291,17 +2295,20 @@ its primary input with the top-level node(s) of the
 <p>The value of the <code class="option">match</code> option
 <span class="rfc2119" id="c.replace.4.2">must</span> be an XSLTSelectionPattern. <a id="err.inline.C0023.6"></a>It
 is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic error</a></em> (<a href="#err.C0023"><code class="errqname">err:XC0023</code></a>) if that pattern matches
-anything other than element, text, processing-instruction, or comment
-nodes.  Multiple matches are allowed, in which case multiple
+an attribute or a namespace nodes.  Multiple matches are allowed, in which case multiple
 copies of the <code class="port">replacement</code> document will occur.</p>
 
 <p>Every node in the primary input matching the specified
-   pattern is replaced in the output by the top-level node(s)
+pattern is replaced in the output by the top-level node(s)
 of the <code class="port">replacement</code> document. Only non-nested matches are
 replaced. That is, once a node is replaced, its descendants cannot
 be matched.</p>
+   
+<p>If the document node is matched and port <code class="port">replacement</code> contains
+a text document, the entire document is replaced by the text node. What appears on port 
+<code class="port">result</code> is a text document with the text node wrapped in a document node.</p>
 
-<section id="c.replace.6" class="simplesect"><div class="section-titlepage"><h4>Document properties</h4></div><div class="content">
+<section id="c.replace.7" class="simplesect"><div class="section-titlepage"><h4>Document properties</h4></div><div class="content">
 
 <p>If the resulting document contains exactly one text node,
 the <code class="literal">content-type</code> property is changed to <code class="literal">text/plain</code> and the 
@@ -2514,11 +2521,15 @@ expression is used as the new value of the attribute in the output.
 If the attribute is named “<code class="tag-attribute">xml:base</code>”, the base URI
 of the element <span class="rfc2119" id="c.string-replace.7.5">must</span> also be amended accordingly.</p>
 
+<p>If the document node is matched, the entire document is replaced by the string
+value of the <code class="option">replace</code> expression. What appears on port <code class="port">result</code> 
+is a text document with the text node wrapped in a document node.</p>
+
 <p>If the expression matches any other kind of node, the entire
 node (and <em>not</em> just its contents) is replaced by
 the string value of the <code class="option">replace</code> expression.</p>
 
-<section id="c.string-replace.9" class="simplesect"><div class="section-titlepage"><h4>Document properties</h4></div><div class="content">
+<section id="c.string-replace.10" class="simplesect"><div class="section-titlepage"><h4>Document properties</h4></div><div class="content">
 
    <p>If the resulting document contains exactly one text node,
       the <code class="literal">content-type</code> property is changed to <code class="literal">text/plain</code> and the 
@@ -2912,8 +2923,8 @@ children.</p>
 
  <p>The value of the <code class="option">match</code> option <span class="rfc2119" id="c.unwrap.4.2">must</span> be an
  XSLTSelectionPattern. <a id="err.inline.C0023.8"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic
- error</a></em> (<a href="#err.C0023"><code class="errqname">err:XC0023</code></a>) if that pattern matches anything other than element
- nodes.</p>
+ error</a></em> (<a href="#err.C0023"><code class="errqname">err:XC0023</code></a>) if that pattern matches anything other than the document node
+ or element nodes.</p>
 
 <p>Every element in the <code class="port">source</code> document that matches
 the specified <code class="option">match</code> pattern is replaced by its children,
@@ -2975,11 +2986,15 @@ matches an <em>attribute</em>, the UUID is used as the new
 value of the attribute in the output. If the attribute is named “<code class="tag-attribute">xml:base</code>”, the base URI of the element
 <span class="rfc2119" id="c.uuid.8.4">must</span> also be amended accordingly.</p>
 
+<p>If the document node is matched, the entire document is replaced by a text node
+with the UUID. What appears on port <code class="port">result</code> is a text document with the
+text node wrapped in a document node.</p>
+
 <p>If the expression matches any
 other kind of node, the entire node (and <em>not</em> just
 its contents) is replaced by the UUID.</p>
 
-<section id="c.uuid.10" class="simplesect"><div class="section-titlepage"><h4>Document properties</h4></div><div class="content">
+<section id="c.uuid.11" class="simplesect"><div class="section-titlepage"><h4>Document properties</h4></div><div class="content">
 
   <p>If the resulting document contains exactly one text node,
     the <code class="literal">content-type</code> property is changed to <code class="literal">text/plain</code> and the 
@@ -3184,7 +3199,7 @@ is empty.</p>
 <ul><li>
 <p>If the document root element is <a href="#cv.query"><code id="cv.query" class="tag-element">c:query</code></a>, the text
 descendants of this element are considered the query.</p>
-<p id="d2318e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:query&gt;<br />    <var>string</var><br />&lt;/c:query&gt;</code></p>
+<p id="d2324e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:query&gt;<br />    <var>string</var><br />&lt;/c:query&gt;</code></p>
 </li><li>
 <p>If the document root element is in the XQueryX namespace, the
 document is treated as an XQueryX-encoded query. <span id="impl-51">Support for
