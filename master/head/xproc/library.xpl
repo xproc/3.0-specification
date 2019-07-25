@@ -29,9 +29,9 @@
                 content-types="application/*"
                 sequence="false"/>
       <p:output port="report" content-types="application/xml" sequence="false"/>
-      <p:option name="format" as="xs:QName" required="false" select="'zip'"/>
-      <p:option name="relative-to" as="xs:anyURI" required="false"/>
-      <p:option name="parameters" as="xs:string" required="false"/>
+      <p:option name="format" as="xs:QName" select="'zip'"/>
+      <p:option name="relative-to" as="xs:anyURI?"/>
+      <p:option name="parameters" as="xs:string"/>
    </p:declare-step>
    <p:declare-step type="p:archive-manifest" xml:id="archive-manifest">
       <p:input port="source"
@@ -42,8 +42,8 @@
                 primary="true"
                 content-types="application/xml"
                 sequence="false"/>
-      <p:option name="format" as="xs:QName?" required="false"/>
-      <p:option name="parameters" as="xs:string" required="false"/>
+      <p:option name="format" as="xs:QName?"/>
+      <p:option name="parameters" as="xs:string"/>
    </p:declare-step>
    <p:declare-step type="p:cast-content-type" xml:id="cast-content-type">
       <p:input port="source" content-types="*/*"/>
@@ -84,8 +84,8 @@
       <p:option name="path" required="true" as="xs:anyURI"/>
       <p:option name="detailed" as="xs:boolean" select="false()"/>
       <p:option name="max-depth" as="xs:string?" select="'1'"/>
-      <p:option name="include-filter" as="xs:string*" e:type="RegularExpression"/>
-      <p:option name="exclude-filter" as="xs:string*" e:type="RegularExpression"/>
+      <p:option name="include-filter" as="xs:string*"/>
+      <p:option name="exclude-filter" as="xs:string*"/>
    </p:declare-step>
    <p:declare-step type="p:error" xml:id="error">
       <p:input port="source" sequence="true" content-types="text xml"/>
@@ -220,13 +220,13 @@
                 primary="true"
                 sequence="false"
                 content-types="application/xhtml+xml"/>
-      <p:option name="parameters" required="false" as="xs:string"/>
+      <p:option name="parameters" as="xs:string"/>
    </p:declare-step>
    <p:declare-step type="p:namespace-rename" xml:id="namespace-rename">
       <p:input port="source" content-types="xml html"/>
       <p:output port="result" content-types="xml html"/>
-      <p:option name="from" as="xs:anyURI"/>
-      <p:option name="to" as="xs:anyURI"/>
+      <p:option name="from" as="xs:anyURI?"/>
+      <p:option name="to" as="xs:anyURI?"/>
       <p:option name="apply-to"
                 as="xs:token"
                 select="'all'"
@@ -242,14 +242,14 @@
       <p:output port="exit-status"/>
       <p:option name="command" required="true" as="xs:string"/>
       <p:option name="args" select="''" as="xs:string"/>
-      <p:option name="cwd" as="xs:string"/>
+      <p:option name="cwd" as="xs:string?"/>
       <p:option name="source-is-xml" select="true()" as="xs:boolean"/>
       <p:option name="result-is-xml" select="true()" as="xs:boolean"/>
       <p:option name="wrap-result-lines" select="false()" as="xs:boolean"/>
       <p:option name="errors-is-xml" select="false()" as="xs:boolean"/>
       <p:option name="wrap-error-lines" select="false()" as="xs:boolean"/>
-      <p:option name="path-separator" as="xs:string"/>
-      <p:option name="failure-threshold" as="xs:integer"/>
+      <p:option name="path-separator" as="xs:string?"/>
+      <p:option name="failure-threshold" as="xs:integer?"/>
       <p:option name="arg-separator" select="' '" as="xs:string"/>
       <p:option name="serialization" as="xs:string"/>
    </p:declare-step>
@@ -303,7 +303,7 @@
       <p:input port="source" content-types="any"/>
       <p:output port="result" content-types="any"/>
       <p:option name="properties" required="true" as="xs:string"/>
-      <p:option name="merge" default="false()" as="xs:boolean"/>
+      <p:option name="merge" select="false()" as="xs:boolean"/>
    </p:declare-step>
    <p:declare-step type="p:sink" xml:id="sink">
       <p:input port="source" content-types="any" sequence="true"/>
@@ -370,10 +370,10 @@
                 primary="true"
                 sequence="false"
                 content-types="text/plain"/>
-      <p:option name="separator" required="false" as="xs:string"/>
-      <p:option name="prefix" required="false" as="xs:string"/>
-      <p:option name="suffix" required="false" as="xs:string"/>
-      <p:option name="override-content-type" required="false" as="xs:string"/>
+      <p:option name="separator" as="xs:string?"/>
+      <p:option name="prefix" as="xs:string?"/>
+      <p:option name="suffix" as="xs:string?"/>
+      <p:option name="override-content-type" as="xs:string?"/>
    </p:declare-step>
    <p:declare-step type="p:text-replace" xml:id="text-replace">
       <p:input port="source"
@@ -386,7 +386,7 @@
                 content-types="text"/>
       <p:option name="pattern" required="true" as="xs:string"/>
       <p:option name="replacement" required="true" as="xs:string"/>
-      <p:option name="flags" required="false" as="xs:string"/>
+      <p:option name="flags" as="xs:string?"/>
    </p:declare-step>
    <p:declare-step type="p:text-sort" xml:id="text-sort">
       <p:input port="source"
@@ -398,25 +398,21 @@
                 sequence="false"
                 content-types="text"/>
       <p:option name="order"
-                required="false"
                 as="xs:string"
                 select="'ascending'"
                 values="('ascending', 'descending')"/>
       <p:option name="case-order"
-                required="false"
-                as="xs:string"
+                as="xs:string?"
                 values="('upper-first', 'lower-first')"/>
-      <p:option name="lang" required="false" as="xs:language"/>
+      <p:option name="lang" as="xs:language?"/>
       <p:option name="data-type"
-                required="false"
                 as="xs:string"
                 select="'text'"
                 values="('text', 'number')"/>
       <p:option name="collation"
-                required="false"
                 as="xs:string"
                 select="'https://www.w3.org/2005/xpath-functions/collation/codepoint'"/>
-      <p:option name="stable" required="false" as="xs:boolean" select="true()"/>
+      <p:option name="stable" as="xs:boolean" select="true()"/>
    </p:declare-step>
    <p:declare-step type="p:text-tail" xml:id="text-tail">
       <p:input port="source"
@@ -438,16 +434,10 @@
                 primary="true"
                 content-types="*/*"
                 sequence="true"/>
-      <p:option name="include-filter"
-                as="xs:string*"
-                e:type="RegularExpression"
-                required="false"/>
-      <p:option name="exclude-filter"
-                as="xs:string*"
-                e:type="RegularExpression"
-                required="false"/>
-      <p:option name="format" as="xs:QName" required="false"/>
-      <p:option name="parameters" as="xs:string" required="false"/>
+      <p:option name="include-filter" as="xs:string*" e:type="RegularExpression"/>
+      <p:option name="exclude-filter" as="xs:string*" e:type="RegularExpression"/>
+      <p:option name="format" as="xs:QName?"/>
+      <p:option name="parameters" as="xs:string"/>
    </p:declare-step>
    <p:declare-step type="p:unescape-markup" xml:id="unescape-markup">
       <p:input port="source" content-types="xml html"/>
@@ -504,7 +494,7 @@
    </p:declare-step>
    <p:declare-step type="p:validate-with-xml-schema" xml:id="validate-with-xml-schema">
       <p:input port="source" primary="true" content-types="xml html"/>
-      <p:input port="schema" content-types="xml"/>
+      <p:input port="schema" sequence="true" content-types="xml"/>
       <p:output port="result" primary="true" content-types="xml html"/>
       <p:output port="report" sequence="true" content-types="application/xml json"/>
       <p:option name="use-location-hints" select="false()" as="xs:boolean"/>

@@ -847,14 +847,14 @@ Step-os-exec =
     step.attributes,
     attribute command { xsd:string }?,
     attribute args { xsd:string }?,
-    attribute cwd { xsd:string }?,
+    attribute cwd { xsd:string? }?,
     attribute source-is-xml { xsd:boolean }?,
     attribute result-is-xml { xsd:boolean }?,
     attribute wrap-result-lines { xsd:boolean }?,
     attribute errors-is-xml { xsd:boolean }?,
     attribute wrap-error-lines { xsd:boolean }?,
-    attribute path-separator { xsd:string }?,
-    attribute failure-threshold { xsd:integer }?,
+    attribute path-separator { xsd:string? }?,
+    attribute failure-threshold { xsd:integer? }?,
     attribute arg-separator { xsd:string }?,
     attribute serialization { xsd:string }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
@@ -971,7 +971,7 @@ Step-archive =
     use-when.attr?,
     step.attributes,
     attribute format { xsd:QName }?,
-    attribute relative-to { xsd:anyURI }?,
+    attribute relative-to { xsd:anyURI? }?,
     attribute parameters { xsd:string }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
   }
@@ -1146,8 +1146,8 @@ Step-namespace-rename =
     common.attributes,
     use-when.attr?,
     step.attributes,
-    attribute from { xsd:anyURI }?,
-    attribute to { xsd:anyURI }?,
+    attribute from { xsd:anyURI? }?,
+    attribute to { xsd:anyURI? }?,
     attribute apply-to { "all" | "elements" | "attributes" }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
   }
@@ -1260,10 +1260,10 @@ Step-text-join =
     common.attributes,
     use-when.attr?,
     step.attributes,
-    attribute separator { xsd:string }?,
-    attribute prefix { xsd:string }?,
-    attribute suffix { xsd:string }?,
-    attribute override-content-type { xsd:string }?,
+    attribute separator { xsd:string? }?,
+    attribute prefix { xsd:string? }?,
+    attribute suffix { xsd:string? }?,
+    attribute override-content-type { xsd:string? }?,
     (WithOption* & (Documentation | PipeInfo)*)
   }
 Step-text-replace =
@@ -1274,7 +1274,7 @@ Step-text-replace =
     step.attributes,
     attribute pattern { xsd:string }?,
     attribute replacement { xsd:string }?,
-    attribute flags { xsd:string }?,
+    attribute flags { xsd:string? }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
   }
 Step-text-sort =
@@ -1285,7 +1285,7 @@ Step-text-sort =
     step.attributes,
     attribute order { "ascending" | "descending" }?,
     attribute case-order { "upper-first" | "lower-first" }?,
-    attribute lang { xsd:language }?,
+    attribute lang { xsd:language? }?,
     attribute data-type { "text" | "number" }?,
     attribute collation { xsd:string }?,
     attribute stable { xsd:boolean }?,
@@ -1308,7 +1308,7 @@ Step-unarchive =
     step.attributes,
     attribute include-filter { xsd:string }?,
     attribute exclude-filter { xsd:string }?,
-    attribute format { xsd:QName }?,
+    attribute format { xsd:QName? }?,
     attribute parameters { xsd:string }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
   }
