@@ -279,7 +279,7 @@
       <p:output port="result"
                 primary="true"
                 sequence="false"
-                content-types="text/plain"/>
+                content-types="text"/>
       <p:option name="separator" as="xs:string?"/>
       <p:option name="prefix" as="xs:string?"/>
       <p:option name="suffix" as="xs:string?"/>

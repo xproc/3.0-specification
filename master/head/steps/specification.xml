@@ -2837,7 +2837,7 @@ the string value of the <option>replace</option> expression.</para>
   
   <p:declare-step type="p:text-join">
     <p:output port="source" primary="true" sequence="true" content-types="text"/>
-    <p:output port="result" primary="true" sequence="false" content-types="text/plain"/>
+    <p:output port="result" primary="true" sequence="false" content-types="text"/>
     <p:option name="separator" as="xs:string?"/>
     <p:option name="prefix" as="xs:string?"/>
     <p:option name="suffix" as="xs:string?"/>
@@ -2866,7 +2866,9 @@ the string value of the <option>replace</option> expression.</para>
       error</glossterm> if the supplied <option>content-type</option> is not
       a valid media type of the form
       “<literal><replaceable>type</replaceable>/<replaceable>subtype</replaceable>+<replaceable>ext</replaceable></literal>” 
-      where “<literal>+<replaceable>ext</replaceable></literal>” is optional.</error>
+      where “<literal>+<replaceable>ext</replaceable></literal>” is optional.</error> <error code="C0001">It is a
+      <glossterm>dynamic error</glossterm> if the value of option <option>overwrite-content-type</option> 
+      is not a text media type.</error>
   </para>
   <simplesect>
     <title>Document properties</title>
