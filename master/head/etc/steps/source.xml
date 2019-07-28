@@ -3687,147 +3687,132 @@ validation before using XQuery:</para>
 </section>
 </section>
 <section xml:id="c.xslt">
-<title>p:xslt</title>
-
-<para>The <tag>p:xslt</tag> step applies an XSLT stylesheet to a document.</para>
-
-<p:declare-step type="p:xslt">
-  <p:input port="source" content-types="any" sequence="true" primary="true"/>
-  <p:input port="stylesheet" content-types="xml"/>
-  <p:output port="result" primary="true" sequence="false" content-types="any"/>
-  <p:output port="secondary" sequence="true" content-types="*/*"/>
-  <p:option name="parameters" as="map(xs:QName,item()*)?"/>
-  <p:option name="initial-mode" as="xs:QName?"/>
-  <p:option name="template-name" as="xs:QName?"/>
-  <p:option name="output-base-uri" as="xs:anyURI?"/>
-  <p:option name="version" as="xs:string?"/>
-</p:declare-step>
-
-<para>If present, the value of the <option>initial-mode</option>
-option <rfc2119>must</rfc2119> be a <type>QName</type>.</para>
-
-<para>If present, the value of the <option>template-name</option>
-option <rfc2119>must</rfc2119> be a <type>QName</type>.</para>
-
-<para>If present, the value of the <option>output-base-uri</option>
-option <rfc2119>must</rfc2119> be an <type>anyURI</type>. If it is
-relative, it is made absolute against the base URI of the element on
-which it is specified (<tag>p:with-option</tag> or <tag>p:xslt</tag> in the
-case of a syntactic shortcut
-value).</para>
-
-<para>If the step specifies a <option>version</option>, then that version
-of XSLT <rfc2119>must</rfc2119> be used to process the transformation.
-<error code="C0038">It is a
-<glossterm>dynamic error</glossterm> if the specified version
-is not available.</error> If the step does not specify a version, the
-implementation may use any version it has available and may use any means
-to determine what version to use, including, but not limited to,
-examining the version of the stylesheet.</para>
-
-<para>The XSLT stylesheet provided on the <port>stylesheet</port> port
-is applied to the document on the <port>source</port> port. <error code="C0093">
-It is a <glossterm>dynamic error</glossterm> if a static error occurs during 
-the static analysis of the XSLT stylesheet.</error> Any
-parameters passed in the <option>parameters</option> option are used
-to define top-level stylesheet parameters. The primary result document
-of the transformation, if there is one, appears on the
-<port>result</port> port. At most one document can appear on the
-<port>result</port> port. All other result documents appear on the
-<port>secondary</port> port. <impl>The order in which result documents
-appear on the <port>secondary</port> port is
-<glossterm>implementation-dependent</glossterm>.</impl> If XSLT 1.0 is
-used, an empty sequence of documents <rfc2119>must</rfc2119> appear on
-the <port>secondary</port> port.</para>
-
-<para>If a sequence of documents is provided on the
-<port>source</port> port, the first document is used as the
-primary input document. The whole sequence is also the default
-collection.
-If no documents are provided on the <port>source</port> port,
-the primary input document is undefined and the default collection
-is empty.<error code="C0094">It is a <glossterm>dynamic error</glossterm> if 
-any document supplied on the source port is not an XML document, 
-an HTML documents, or a Text document if XSLT 2.0 is used.</error>
-<error code="C0039">It is a
-<glossterm>dynamic error</glossterm> if the source port does not contain
-exactly one XML document or one HTML document if XSLT 1.0 is used.</error>
-</para>
-
-<para><error code="C0094">It is a <glossterm>dynamic error</glossterm> if 
-an error occurred during the transformation.</error> <error code="C0095">It
-is a <glossterm>dynamic error</glossterm> if the transformation is terminated 
-by XSLT message termination.</error> <impl>How XSLT message termination
-errors are reported to the XProc processor is
-<glossterm>implementation-dependent</glossterm>.</impl>
-Implementations <rfc2119>should</rfc2119> raise an error using the error code
-from the XSLT step (for example, the <tag class="attribute">error-code</tag>
-specified on the <tag>xsl:message</tag> or
-<code>err:XTTM9000</code> if no code is provided).</para>
-
-<para>The invocation of the transformation is controlled by the
-<option>initial-mode</option> and <option>template-name</option>
-options that set the initial mode and/or named template in the XSLT
-transformation where processing begins. <error code="C0056">It is a
-<glossterm>dynamic error</glossterm> if the specified initial mode
-or named template cannot be applied to the specified stylesheet.</error>
-</para>
-
-<para>The <option>output-base-uri</option> option sets the context's
-output base URI per the XSLT 2.0 specification, otherwise the base URI
-of the <port>result</port> document is the base URI of the first
-document in the <code>source</code> port's sequence. If the value of
-the <option>output-base-uri</option> option is not absolute, it will
-be resolved using the base URI of its <tag>p:option</tag>
-element. An XSLT 1.0 step <rfc2119>should</rfc2119> use the value of the
-<option>output-base-uri</option> as the base URI of its output, if the
-option is specified.</para>
-
-<para>If XSLT 2.0 is used, the outputs of this step
-<rfc2119>may</rfc2119> include PSVI annotations.</para>
-
-
-<para>The static and initial dynamic contexts of the XSLT processor
-are the contexts defined in the step XPath context
-with the following adjustments.</para>
-
-<para>The dynamic context is augmented as follows:</para>
-
-<variablelist>
-<varlistentry>
-<term>Context item</term>
-<listitem>
-<para>The first document that appears on the <port>source</port> port.
-</para>
-</listitem>
-</varlistentry>
-<varlistentry>
-<term>Variable values</term>
-<listitem>
-<para>Any parameters
-passed in the <option>parameters</option> option are available as variable bindings
-to the XSLT processor.</para>
-</listitem>
-</varlistentry>
-<varlistentry>
-<term>Function implementations</term>
-<listitem>
-<para>The function implementations provided by the XSLT processor.</para>
-</listitem>
-</varlistentry>
-<varlistentry>
-<term>Default collection</term>
-<listitem>
-<para>The sequence of documents provided on the <port>source</port> port.
-</para>
-</listitem>
-</varlistentry>
-</variablelist>
-
-<simplesect>
-<title>Document properties</title>
-<para feature="xslt-preserves-none">No document properties are preserved.</para>
-</simplesect>
+  <title>p:xslt</title>
+  <para>The <tag>p:xslt</tag> step invokes an XSLT stylesheet.</para>
+  <p:declare-step type="p:xslt">
+    <p:input port="source" content-types="any" sequence="true" primary="true"/>
+    <p:input port="stylesheet" content-types="xml"/>
+    <p:output port="result" primary="true" sequence="true" content-types="any"/>
+    <p:output port="secondary" sequence="true" content-types="any"/>
+    <p:option name="parameters" as="map(xs:QName,item()*)?"/>
+    <p:option name="global-context-item" as="item()?"/>
+    <p:option name="initial-mode" as="xs:QName?"/>
+    <p:option name="template-name" as="xs:QName?"/>
+    <p:option name="output-base-uri" as="xs:anyURI?"/>
+    <p:option name="version" as="xs:string?"/>
+  </p:declare-step>
+  <para>If <option>output-base-uri</option> is relative, it is made absolute against the base URI of
+    the element on which it is specified (<tag>p:with-option</tag> or <tag>p:xslt</tag> in the case
+    of a syntactic shortcut value).</para>
+  <para>If the step specifies a <option>version</option>, then that version of XSLT
+    <rfc2119>must</rfc2119> be used to process the transformation. <error code="C0038">It is a
+      <glossterm>dynamic error</glossterm> if the specified version is not available.</error> If
+    the step does not specify a version, the implementation may use any version it has available and
+    may use any means to determine what version to use, including, but not limited to, examining the
+    version of the stylesheet.</para>
+  <para>The XSLT stylesheet provided on the <port>stylesheet</port> port is invoked. <error code="C0093"> It is a <glossterm>dynamic error</glossterm> if a static error occurs during the
+    static analysis of the XSLT stylesheet.</error> Any parameters passed in the
+    <option>parameters</option> option are used to define top-level stylesheet parameters.</para>
+  <para><error code="C0094">It is a <glossterm>dynamic error</glossterm> if an error occurred during
+    the transformation.</error>
+    <error code="C0095">It is a <glossterm>dynamic error</glossterm> if the transformation is
+      terminated by XSLT message termination.</error>
+    <impl>How XSLT message termination errors are reported to the XProc processor is
+      <glossterm>implementation-dependent</glossterm>.</impl> Implementations
+    <rfc2119>should</rfc2119> raise an error using the error code from the XSLT step (for example,
+    the <tag class="attribute">error-code</tag> specified on the <tag>xsl:message</tag> or
+    <code>err:XTTM9000</code> if no code is provided).</para>
+  <para>If XSLT 2.0 or XSLT 3.0 is used, the outputs of this step <rfc2119>may</rfc2119> include
+    PSVI annotations.</para>
+  <para>The interpretation of the input and output ports as well as for the other options depends on
+    the selected XSLT version.</para>
+  <section>
+    <title>Invoking an XSLT 3.0 stylesheet</title>
+    <para>The value of <option>global-context-item</option> is used as global context item for the
+      stylesheet invocation. If no value is supplied, the empty sequence is supplied to the
+      invocation.</para>
+    <para>If no value is supplied for <option>template-name</option> option an “Apply-template
+      invocation” is performed. The documents that appear on <port>source</port> are taken to be the
+      initial match selection. If a value is supplied for the <option>initial-mode</option> option,
+      this value is used as the initial-mode for the invocation. <error code="C0056">It is a
+        <glossterm>dynamic error</glossterm> if the supplied mode cannot be applied to the
+        supplied stylesheet.</error> If no value is supplied, nothing is supplied to the invocation,
+      so the default behaviour defined for XSLT 3.0 could be applied.</para>
+    <para>If a value is supplied for option <option>template-name</option> a “Call template
+      invocation” is performed. The documents on port <port>source</port> are taken as the default
+      collection in this case. Option <option>initial-mode</option> is ignored. <error code="C0056">It is a <glossterm>dynamic error</glossterm> if the specified template name cannot be
+        applied to the supplied stylesheet.</error></para>
+    <para>Independent of the way the stylesheet is invoked, the principal result(s) will appear on
+      output port <port>result</port> while secondary result(s) will appear on output port
+      <port>secondary</port>. Whether the raw results are delivered or a result tree is
+      constructed, depends on the (explicit or implicit) setting for attribute
+      <literal>build-tree</literal> of in the output-definition for the respective result. If a
+      result tree is constructed, the result will be a text document if it is a single text node
+      wrapped into a document node. Otherwise it will be either an XML document or an HTML document
+      depending on the attribute <literal>method</literal> on the output-definition for the
+      respective result. If no result tree is constructed, the stylesheet invocation may
+      additionally deliver a sequence of atomic values, maps, or arrays. For each item in this
+      sequence a JSON document will be constructed and appear on the steps output port.</para>
+    <para>Option <option>output-base-uri</option> sets the base output URI per XSLT 3.0
+      specification. If a final result tree is constructed, this URI is used to resolve a relative
+      URI reference. If no value is supplied for <option>output-base-uri</option>, the base URI of
+      the first document in the <port>source</port> port's sequence is used.</para>
+    <note>
+      <para>If no result tree is constructed for one of secondary results, a sequence of documents
+        sharing the same value for attribute <literal>href</literal> may appear on output port
+        <port>result</port>.</para>
+    </note>
+  </section>
+  <section>
+    <title>Invoking an XSLT 2.0 stylesheet</title>
+    <para>If a sequence of documents is provided on the <port>source</port> port, the first document
+      is used as the initial context node. The whole sequence is also the default collection. If no
+      documents are provided on the <port>source</port> port, the initial context node is undefined
+      and the default collection is empty. <error code="C0094">It is a <glossterm>dynamic
+        error</glossterm> if any document supplied on the source port is not an XML document, an
+        HTML documents, or a Text document if XSLT 2.0 is used.</error></para> 
+    <para>The value of option <option>global-context-item</option> is ignored if a stylesheet is
+      invoked as per XSLT 2.0. The invocation of the transformation is controlled by the
+      <option>initial-mode</option> and <option>template-name</option> options that set the
+      initial mode and/or named template in the XSLT transformation where processing begins. <error code="C0007">It is a <glossterm>dynamic error</glossterm> if any key in
+        <option>parameters</option> is associated to a value with is not an instance of the XQuery
+        1.0 and XPath 2.0 Data Model, e.g. with a map, an array, or a function.</error>
+      <error code="C0056">It is a <glossterm>dynamic error</glossterm> if the specified initial mode
+        or named template cannot be applied to the specified stylesheet.</error>
+    </para>
+    <para>The primary result document of the transformation, if there is one, appears on the
+      <port>result</port> port. At most one document can appear on the <port>result</port> port.
+      All other result documents appear on the <port>secondary</port> port. <impl>The order in which 
+        result documents appear on the <port>secondary</port> port is
+        <glossterm>implementation dependent</glossterm>.</impl>
+    </para>
+    <para>The <option>output-base-uri</option> option sets the context's output base URI per the
+      XSLT 2.0 specification, otherwise the base URI of the <port>result</port> document is the base
+      URI of the first document in the <code>source</code> port's sequence.</para>
+  </section>
+  
+  <section>
+    <title>Invoking an XSLT 1.0 stylesheet</title>
+    <para>The document provided for <port>source</port> is used the transformations source tree.
+      <error code="C0039">It is a <glossterm>dynamic error</glossterm> if the source port does not
+        contain exactly one XML document or one HTML document if XSLT 1.0 is used.</error> The
+      values supplied for options <option>global-context-item</option>,
+      <option>initial-mode</option>, and <option>template-name</option> are ignored. If XSLT 1.0
+      is used, an empty sequence of documents <rfc2119>must</rfc2119> appear on the
+      <port>secondary</port> port. An XSLT 1.0 step <rfc2119>should</rfc2119> use the value of the
+      <option>output-base-uri</option> as the base URI of its output, if the option is
+      specified.</para>
+    <para>The key/value pairs supplied in <option>parameters</option> are used to set top-level
+      parameters in the stylesheet. 
+    </para>
+    <note role="editorial">
+      <title>Editorial Note</title><para>I am not sure whether it makes sense to spell out in detail, how XDM 3.0 values are
+      mapped to XSLT 1.0 parameters. There are no rules in the XProc 1.0 specs.</para></note>
+  </section>
+  <simplesect>
+    <title>Document properties</title>
+    <para feature="xslt-preserves-none">No document properties are preserved.</para>
+  </simplesect>
 </section>
 </section>
 
