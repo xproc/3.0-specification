@@ -369,7 +369,7 @@
       <p:output port="result"
                 primary="true"
                 sequence="false"
-                content-types="text/plain"/>
+                content-types="text"/>
       <p:option name="separator" as="xs:string?"/>
       <p:option name="prefix" as="xs:string?"/>
       <p:option name="suffix" as="xs:string?"/>
@@ -561,10 +561,11 @@
       <p:input port="stylesheet" content-types="xml"/>
       <p:output port="result"
                 primary="true"
-                sequence="false"
+                sequence="true"
                 content-types="any"/>
-      <p:output port="secondary" sequence="true" content-types="*/*"/>
+      <p:output port="secondary" sequence="true" content-types="any"/>
       <p:option name="parameters" as="xs:string"/>
+      <p:option name="global-context-item" as="xs:string"/>
       <p:option name="initial-mode" as="xs:QName?"/>
       <p:option name="template-name" as="xs:QName?"/>
       <p:option name="output-base-uri" as="xs:anyURI?"/>

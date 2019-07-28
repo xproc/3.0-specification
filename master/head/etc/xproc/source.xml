@@ -6261,12 +6261,11 @@ depends on the document's content type.
   <section xml:id="inline-xml-content">
     <title>Inline XML and HTML content</title>
     
-    <para>If the <tag class="attribute">document-properties</tag> is not
-      specified or the map does not contain a key "content-type" or specifies
+    <para>If <tag class="attribute">content-type</tag> is not
+      specified or specifies
       an <glossterm>XML media type</glossterm> or an <glossterm>HTML media type</glossterm>, then
       the content is XML. A new XML document is created by wrapping a document node
-      around the nodes which appear as children of <tag>p:inline</tag>. Any preceding or
-      following whitespace-only text nodes will be discarded.</para>
+      around the nodes which appear as children of <tag>p:inline</tag>.</para>
     
     <para>The in-scope namespaces of the inline document differ from the
       in-scope namespace of the content of the <tag>p:inline</tag> element
@@ -6348,9 +6347,11 @@ depends on the document's content type.
     
     <para>which might produce a result like this:</para>
     
-    <programlisting language="xml">&lt;doc xmlns:c="http://example.com/c"&gt;
-   &lt;b:part xmlns:b="http://example.com/b"/&gt;
- &lt;/doc&gt;</programlisting>
+    <programlisting language="xml"> 
+        &lt;doc xmlns:c="http://example.com/c"&gt;
+           &lt;b:part xmlns:b="http://example.com/b"/&gt;
+        &lt;/doc&gt;
+ </programlisting>
     
     <para>The declaration for “<literal>c</literal>” must
       be present because it was not excluded. The “<literal>part</literal>” element
@@ -6398,14 +6399,15 @@ text values of children of p:inline together and parse it as JSON.</para>
 <section xml:id="implicit-inlines">
 <title>Implicit inlines</title>
 
-<para>As an authoring convenience, if one or more element nodes,
-optionally preceded and/or followed by whitespace, in any namespace
-other than the XProc namespace, occurs where a <tag>p:inline</tag> is
-allowed, each is treated as if it was enclosed within a
-<tag>p:inline</tag> element (with no attributes). Any preceding or
-following whitespace is discarded. Elements in the XProc namespace are
-forbidden except for <tag>p:documentation</tag>
-and <tag>p:pipeinfo</tag> which are ignored.</para>
+<para>As an authoring convenience, <tag>p:inline</tag> may be omitted
+if one or more element nodes, optionally preceded and/or followed by
+whitespace occurs where a <tag>p:inline</tag> is allowed. Whitespace
+around each element is ignored and the element is treated as if it was
+enclosed within a <tag>p:inline</tag> element (with no attributes).
+Elements in the XProc namespace are forbidden except for
+<tag>p:documentation</tag> and <tag>p:pipeinfo</tag> which are
+ignored.
+</para>
 
 <para>The following example demonstrates this implicit behaviour:</para>
 
