@@ -154,6 +154,11 @@
       <p:option name="content-type" as="xs:string?"/>
       <p:option name="document-properties" as="xs:string"/>
    </p:declare-step>
+   <p:declare-step type="p:json-join" xml:id="json-join">
+      <p:input port="source" sequence="true" content-types="json"/>
+      <p:output port="result" content-types="application/json"/>
+      <p:option name="flatten-arrays" as="xs:boolean" select="false()"/>
+   </p:declare-step>
    <p:declare-step type="p:make-absolute-uris" xml:id="make-absolute-uris">
       <p:input port="source" content-types="xml html"/>
       <p:output port="result" content-types="xml html"/>
