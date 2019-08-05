@@ -181,6 +181,11 @@
                 values="('first-child','last-child','before','after')"
                 select="'after'"/>
    </p:declare-step>
+   <p:declare-step type="p:json-join" xml:id="json-join">
+      <p:input port="source" sequence="true" content-types="json"/>
+      <p:output port="result" content-types="application/json"/>
+      <p:option name="flatten-arrays" as="xs:boolean" select="false()"/>
+   </p:declare-step>
    <p:declare-step type="p:label-elements" xml:id="label-elements">
       <p:input port="source" content-types="xml html"/>
       <p:output port="result" content-types="xml html"/>
