@@ -3759,7 +3759,7 @@ validation before using XQuery:</para>
     <para>If no value is supplied for <option>template-name</option> option an “Apply-template
       invocation” is performed. The documents that appear on <port>source</port> are taken to be the
       initial match selection. If a value is supplied for the <option>initial-mode</option> option,
-      this value is used as the initial-mode for the invocation. <error code="C0056">It is a
+      this value is used as the initial-mode for the invocation. <error code="C0008">It is a
         <glossterm>dynamic error</glossterm> if the supplied mode cannot be applied to the
         supplied stylesheet.</error> If no value is supplied, nothing is supplied to the invocation,
       so the default behaviour defined for XSLT 3.0 could be applied.</para>
@@ -3781,7 +3781,9 @@ validation before using XQuery:</para>
     <para>Option <option>output-base-uri</option> sets the base output URI per XSLT 3.0
       specification. If a final result tree is constructed, this URI is used to resolve a relative
       URI reference. If no value is supplied for <option>output-base-uri</option>, the base URI of
-      the first document in the <port>source</port> port's sequence is used.</para>
+      the first document in the <port>source</port> port's sequence is used. If no document is
+      supplied on port <port>source</port> the base URI of the document on port <port>stylesheet</port>
+      is used.</para>
     <note>
       <para>If no result tree is constructed for one of secondary results, a sequence of documents
         sharing the same value for attribute <literal>href</literal> may appear on output port
@@ -3802,8 +3804,10 @@ validation before using XQuery:</para>
       initial mode and/or named template in the XSLT transformation where processing begins. <error code="C0007">It is a <glossterm>dynamic error</glossterm> if any key in
         <option>parameters</option> is associated to a value with is not an instance of the XQuery
         1.0 and XPath 2.0 Data Model, e.g. with a map, an array, or a function.</error>
-      <error code="C0056">It is a <glossterm>dynamic error</glossterm> if the specified initial mode
-        or named template cannot be applied to the specified stylesheet.</error>
+      <error code="C0008">It is a <glossterm>dynamic error</glossterm> if the specified initial mode
+        cannot be applied to the specified stylesheet.</error> 
+      <error code="C0056">It is a <glossterm>dynamic error</glossterm> if the specified template 
+        name cannot be applied to the specified stylesheet.</error>
     </para>
     <para>The primary result document of the transformation, if there is one, appears on the
       <port>result</port> port. At most one document can appear on the <port>result</port> port.
@@ -3813,7 +3817,9 @@ validation before using XQuery:</para>
     </para>
     <para>The <option>output-base-uri</option> option sets the context's output base URI per the
       XSLT 2.0 specification, otherwise the base URI of the <port>result</port> document is the base
-      URI of the first document in the <code>source</code> port's sequence.</para>
+      URI of the first document in the <code>source</code> port's sequence. If no document is
+      supplied on port <port>source</port> the base URI of the document on port <port>stylesheet</port>
+      is used.</para>
   </section>
   
   <section>
