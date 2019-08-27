@@ -2495,7 +2495,7 @@ Variable names are always expressed as
 
       <para>If a variable or option declares a type, the supplied value of the variable or option is converted to the
         required type, using the function conversion rules specified by XPath 3.1. <error code="D0036">It is a
-            <glossterm>dynamic error</glossterm> if the supplied value of a variable or option cannot be converted to
+            <glossterm>dynamic error</glossterm> if the supplied or defaulted value of a variable or option cannot be converted to
           the required type.</error></para>
       
     </section>
@@ -5512,7 +5512,7 @@ which will be evaluated to provide the default value for the option.
 expression on the <tag>p:declare-step</tag> that defines the step
 signature. It must be a statically valid expression at that point.
 Consequently, if it contains variable references, they can only be
-references to preceding options on the step.
+references to preceding options on the step or to in-scope static variables.
 <error code="D0001">It is a <glossterm>dynamic error</glossterm> if an
 XPath expression makes reference to the context item, size, or position when
 the context item is undefined.</error></para>
