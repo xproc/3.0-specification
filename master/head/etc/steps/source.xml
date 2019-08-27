@@ -405,6 +405,30 @@ element's [base URI].</para>
       </listitem>
     </varlistentry>
   </variablelist>
+  
+  <para>The format of the archive is determined as follows:</para>
+  <itemizedlist>
+    <listitem>
+      <para>If the <option>format</option> option is specified, this determines the format of the
+        archive. Implementations <rfc2119>must</rfc2119> support the <biblioref linkend="zip"/>
+        format, specified with the value <code>zip</code>. <impl>It is
+          <glossterm>implementation-defined</glossterm> what other formats are
+          supported.</impl> <error code="C0081">It is a <glossterm>dynamic error</glossterm> if the format of the
+            archive does not match the format as specified in the <option>format</option>
+            option.</error></para>
+    </listitem>
+    <listitem>
+      <para>If no <option>format</option> option is specified or if its value is the empty sequence,
+        the archive's format will be determined by the step, using the <code>content-type</code>
+        document-property of the document on the <port>archive</port> port and/or by inspecting its
+        contents. <impl>It is <glossterm>implementation-defined</glossterm> how the step determines
+          the archive's format.</impl> Implementations <rfc2119>should</rfc2119> recognize archives
+        in <biblioref linkend="zip"/> format. </para>
+    </listitem>
+  </itemizedlist>
+  
+  <para><error code="C0085">It is a <glossterm>dynamic error</glossterm> if the format of the
+    archive cannot be understood, determined and/or processed.</error></para>
 
   <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
