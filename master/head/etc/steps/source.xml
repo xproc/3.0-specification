@@ -298,10 +298,10 @@ element's [base URI].</para>
     information about the archiving.</para>
 
   <p:declare-step type="p:archive">
-    <p:input port="source" primary="true" content-types="*/*" sequence="true"/>
+    <p:input port="source" primary="true" content-types="any" sequence="true"/>
     <p:input port="manifest" content-types="application/xml" sequence="true"/>
-    <p:input port="archive" content-types="application/*" sequence="true"/>
-    <p:output port="result" primary="true" content-types="application/*" sequence="false"/>
+    <p:input port="archive" content-types="any" sequence="true"/>
+    <p:output port="result" primary="true" content-types="any" sequence="false"/>
     <p:output port="report" content-types="application/xml" sequence="false"/>
     <p:option name="format" as="xs:QName" select="'zip'"/>
     <p:option name="relative-to" as="xs:anyURI?"/>
@@ -619,7 +619,7 @@ element's [base URI].</para>
     the archive appearing on its <port>source</port> port.</para>
 
   <p:declare-step type="p:archive-manifest">
-    <p:input port="source" primary="true" content-types="*/*" sequence="false"/>
+    <p:input port="source" primary="true" content-types="any" sequence="false"/>
     <p:output port="result" primary="true" content-types="application/xml" sequence="false"/>
     <p:option name="format" as="xs:QName?"/>
     <p:option name="parameters" as="map(xs:Qname, item()*)?"/>
@@ -3032,8 +3032,8 @@ the string value of the <option>replace</option> expression.</para>
     in an archive (for instance from a zip file).</para>
 
   <p:declare-step type="p:unarchive">
-    <p:input port="source" primary="true" content-types="*/*" sequence="false"/>
-    <p:output port="result" primary="true" content-types="*/*" sequence="true"/>
+    <p:input port="source" primary="true" content-types="any" sequence="false"/>
+    <p:output port="result" primary="true" content-types="any" sequence="true"/>
     <p:option name="include-filter" as="xs:string*" e:type="RegularExpression"/>
     <p:option name="exclude-filter" as="xs:string*" e:type="RegularExpression"/>
     <p:option name="format" as="xs:QName?"/>
