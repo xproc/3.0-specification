@@ -333,7 +333,10 @@ element's [base URI].</para>
       <listitem>
         <para>The <port>manifest</port> port can receive a manifest document that tells the step how
           to construct the archive. If no manifest document is provided on this port, a default
-          manifest is constructed automatically. See <xref linkend="cv.archive-manifest"/>.</para>
+          manifest is constructed automatically. See <xref linkend="cv.archive-manifest"/>. 
+          <error code="XC0100">It is a <glossterm>dynamic error</glossterm> if the document on port
+          <port>report</port> does not conform to the given schema.</error>
+        </para>
       </listitem>
     </varlistentry>
     <varlistentry>
@@ -510,7 +513,7 @@ element's [base URI].</para>
         <code>base-uri</code> property, which in turn will be used for the entry’s <tag role="attribute">href</tag> attribute. Both the URI that is given in
         <option>relative-to</option> and the value of the <code>base-uri</code> property should be
       normalized with respect to slash deduplication, parent path elimination, and drive letter case
-      folding. The the step will remove the leading (normalized) <option>relative-to</option> option
+      folding. The step will remove the leading (normalized) <option>relative-to</option> option
       value from the <port>source</port> document’s (normalized) base URI. If there is no match, the
       manifest entry’s <tag role="attribute">name</tag> attribute will consist of the path part of
       the <port>source</port> document’s base URI, without any leading slashes.</para>
