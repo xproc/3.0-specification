@@ -649,11 +649,18 @@ etc.
           <para>If the item is a document node, content-type "application/xml" is used.</para>
         </listitem>
         <listitem>
-          <para>If the item is a <code>map</code>, <code>array</code> or any atomic value, a JSON
-            document is created and content-type <literal>application/json</literal> is used.</para>
+          <para>If the item is a <code>map</code>, <code>array</code> or any atomic value,
+            content-type <literal>application/json</literal> is used.</para>
+          <note>
+            <para>Setting the content-type to <literal>application/json</literal> for <emphasis>any</emphasis> map, array
+              or atomic value means that a document with content-type
+                <literal>application/json</literal> is <emphasis>not</emphasis> guaranteed
+              serializable using the <code>json</code> serialization method. For instance, a map
+              with values that contain sequences of strings cannot be serialized.</para>
+          </note>
         </listitem>
-
       </itemizedlist>
+      
     </section>
 
 <section xml:id="specified-content-types">
