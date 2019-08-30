@@ -4957,303 +4957,135 @@ document</emphasis> and provide it on the output port. It
 <emphasis>does not</emphasis> cause the processor to
 <emphasis>write</emphasis> the output to that document.</para>
 
-<section xml:id="serialization">
-<title>Serialization parameters</title>
-
-<!-- This ID exists so that old links to the p.serialization section
+  <section xml:id="serialization">
+    <title>Serialization parameters</title>
+    
+    <!-- This ID exists so that old links to the p.serialization section
      will come here. Not that it will matter, but that's why.
 -->
-<para xml:id="p.serialization">The <tag class="attribute">serialization</tag>
-attribute allows the user to request serialization parameters on an
-output port. These parameters control XML serialization as defined
-by <biblioref linkend="xml-serialization-31"/>.
-</para>
-
-        <para>If the pipeline processor serializes the output on a port, it <rfc2119 feature="ser-must-use">must</rfc2119> use the serialization parameters specified. If a
-            <code>serialization</code> document property is present, the serialization properties
-          specified by the <code>serialization</code> document property must be merged with the
-          properties specified with the <tag class="attribute">serialization</tag> attribute first.
-          For further details see the explanation of the <code>serialization</code> document
-          property in <xref linkend="document-properties"/>.</para>
-        <para>If the processor is not serializing (if, for example, the pipeline has been called
-          from another pipeline), then serialization does not apply. The serialization parameter map
-          is computed (and must therefore be statically and syntactically valid), but the processor
-            <rfc2119 feature="ser-must-ignore">must not</rfc2119> raise an error if the output could
-          not be serialized with those parameters. </para>
-
-<para><impl>The default value of any serialization parameters not specified on a particular output
-            is <glossterm>implementation-defined</glossterm>.</impl> However if the serialization
-          parameter <literal>method</literal> is not specified the processor
-            <rfc2119>should</rfc2119> select a method based on the document's
-            <literal>content-type</literal> property:</para>
-  <itemizedlist>
-    <listitem>
-      <para>For documents with content types <literal>application/xml</literal>,
-                <literal>text/xml</literal>, and <literal>application/*+xml</literal> (except for
-                <literal>application/xhtml+xml</literal>), serialization method
-                <literal>xml</literal> should be used.</para>
-    </listitem>
-    <listitem>
-      <para>For documents with content type <literal>application/xhtml+xml</literal> serialization
-              method <literal>xhtml</literal> should be used.</para>
-    </listitem>
-    <listitem>
-      <para>For documents with content type <literal>text/html</literal> serialization method
-                <literal>html</literal> should be used.</para>
-    </listitem>
-    <listitem>
-      <para>For documents with <glossterm baseform="text media type">text media types</glossterm> serialization method
-                <literal>text</literal> should be used.</para>
-    </listitem>
-    <listitem>
-      <para>For documents with <glossterm baseform="JSON media type">JSON media types</glossterm> serialization method
-                <literal>json</literal> should be used.</para>
-    </listitem>
-    <listitem>
-      <para><impl>The serialization method for documents with other media types is 
-        <glossterm>implementation-defined</glossterm>.</impl></para>
-    </listitem>
-  </itemizedlist>
-<para>If serialization method <literal>xml</literal> is choosen either explicitly or
-implicitly, the following default values <rfc2119>must</rfc2119> be used:</para>
-<itemizedlist>
-  <listitem><para>Parameter <literal>version</literal> is set to <literal>1.0</literal>.</para></listitem>
-  <listitem><para>Parameter <literal>encoding</literal> is set to <literal>UTF-8</literal>.</para></listitem>
-  <listitem><para>Parameter <literal>omit-xml-declaration</literal> is set to <literal>true</literal>.</para></listitem>
-</itemizedlist>
-<para>These default values also apply to serialization method <literal>XHTML</literal> (if it is supported).</para>
-<para><error code="D0020">It is a <glossterm>dynamic error</glossterm> if
-the combination of serialization options specified or defaulted is not
-allowed.</error> Implementations <rfc2119>must</rfc2119> check that
-all of the specified serialization options are allowed if they
-serialize the specified output. If the specified output is not being
-serialized implementations
-<rfc2119>may</rfc2119> but are not required to check that the
-specified options are allowed.</para>
-
-<para>For XML outputs, see <xref linkend="xproc-xml-serialization"/>.
-For non-XML outputs, see <xref linkend="xproc-non-xml-serialization"/>.</para>
-
-<section xml:id="xproc-xml-serialization">
-<title>XML serialization</title>
-
-<para>The names and values of XML serialization parameters are defined
-by <biblioref linkend="xml-serialization-31"/>.</para>
-
-<para>The following parameters may be present in the serialization
-map:</para>
-
-<variablelist>
-<varlistentry>
-<term><option>byte-order-mark</option></term>
-<listitem>
-<para>The value of this option <rfc2119>must</rfc2119> be a boolean.
-If it's not specified, the default varies by encoding: for UTF-16 it's
-true, for all others, it's false.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><option>cdata-section-elements</option></term>
-<listitem>
-<para>The value of this option <rfc2119>must</rfc2119> be a list of
-<type>EQName</type>s. They are interpreted as element names.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><option>doctype-public</option></term>
-<listitem>
-<para>The value of this option <rfc2119>must</rfc2119> be a string.
-The public identifier of the doctype.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><option>doctype-system</option></term>
-<listitem>
-<para>The value of this option <rfc2119>must</rfc2119> be an
-<type>anyURI</type>. The system identifier of the doctype. It need not
-be absolute, and is not resolved.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><option>encoding</option></term>
-<listitem>
-<para>A character set name. <impl>If no <option>encoding</option> is
-specified, the encoding used is <glossterm>implementation-defined</glossterm>.
-If the <option>method</option> is
-“<literal>xml</literal>” or “<literal>xhtml</literal>”, the
-implementation defined encoding <rfc2119>must</rfc2119> be either
-UTF-8 or UTF-16.</impl></para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><option>escape-uri-attributes</option></term>
-<listitem>
-<para>The value of this option <rfc2119>must</rfc2119> be a
-boolean. It is ignored unless the specified method is
-“<literal>xhtml</literal>” or “<literal>html</literal>”.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><option>include-content-type</option></term>
-<listitem>
-<para>The value of this option <rfc2119>must</rfc2119> be a boolean.
-It is ignored unless the specified method is
-“<literal>xhtml</literal>” or “<literal>html</literal>”.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><option>indent</option></term>
-<listitem>
-<para>The value of this option <rfc2119>must</rfc2119> be a
-boolean.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><option>media-type</option></term>
-<listitem>
-<para>The value of this option <rfc2119>must</rfc2119> be a string. It
-specifies the media type (MIME content type). If not specified, the
-default varies according to the <option>method</option>:</para>
-
-<variablelist>
-<varlistentry><term><literal>xml</literal></term>
-<listitem><simpara><literal>application/xml</literal></simpara></listitem>
-</varlistentry>
-<varlistentry><term><literal>html</literal></term>
-<listitem><simpara><literal>text/html</literal></simpara></listitem>
-</varlistentry>
-<varlistentry><term><literal>xhtml</literal></term>
-<listitem><simpara><literal>application/xhtml+xml</literal></simpara></listitem>
-</varlistentry>
-<varlistentry><term><literal>text</literal></term>
-<listitem><simpara><literal>text/plain</literal></simpara></listitem>
-</varlistentry>
-  <varlistentry><term><literal>json</literal></term>
-    <listitem><simpara><literal>application/json</literal></simpara></listitem>
-  </varlistentry>
-</variablelist>
-
-<para><impl>For methods other than <literal>xml</literal>, <literal>html</literal>,
-<literal>xhtml</literal>, <literal>text</literal>, and <literal>json</literal>; the
-<option>media-type</option> is <glossterm>implementation-defined</glossterm>.
-</impl></para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><option>method</option></term>
-<listitem>
-<para>The value of this option <rfc2119>must</rfc2119> be an
-<type>EQName</type>. It specifies the serialization method.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><option>normalization-form</option></term>
-<listitem>
-<para>The value of this option <rfc2119>must</rfc2119> be an NMTOKEN,
-one of the enumerated values <code>NFC</code>, <code>NFD</code>,
-<code>NFKC</code>, <code>NFKD</code>, <code>fully-normalized</code>,
-<code>none</code> or an implementation-defined value.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><option>omit-xml-declaration</option></term>
-<listitem>
-<para>The value of this option <rfc2119>must</rfc2119> be a
-boolean.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><option>standalone</option></term>
-<listitem>
-<para>The value of this option <rfc2119>must</rfc2119> be an NMTOKEN,
-one of the enumerated values <code>true</code>, <code>false</code>, or
-<code>omit</code>.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><option>undeclare-prefixes</option></term>
-<listitem>
-<para>The value of this option <rfc2119>must</rfc2119> be a
-boolean.</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><option>use-character-maps</option></term>
-<listitem>
-<para>The value of this option <rfc2119>must</rfc2119> be a map
-(<code>map(xs:string, xs:string)</code>). The keys are the characters
-to be mapped (as <code>xs:string</code> instances). The corresponding
-value for each key is the string to be substituted for that character.
-</para>
-</listitem>
-</varlistentry>
-
-<varlistentry>
-<term><option>version</option></term>
-<listitem>
-<para>The value of this option <rfc2119>must</rfc2119> be a
-string.</para>
-</listitem>
-</varlistentry>
-</variablelist>
-
-<para>In order to be consistent with the rest of this specification,
-boolean values for the serialization parameters must use one of the
-XML Schema lexical forms for boolean: "true", "false", "1", or "0".
-This is different from the <biblioref linkend="xml-serialization-31"/>
-specification which uses “yes” and “no”. No change in
-semantics is implied by this different spelling.</para>
-
-<para>The <option>method</option> option controls the serialization
-method used by this component with standard values of 'html', 'xml',
-'xhtml', 'text' and 'json' but only the 'xml' value is required to be
-supported. The interpretation of the remaining options is as
-specified in <biblioref linkend="xml-serialization-31"/>.</para>
-
-<para><impl>Implementations may support other method values but their
-results are <glossterm>implementation-defined</glossterm>.</impl>
-</para>
-
-<para>A minimally conforming implementation must support the
-<code>xml</code> output method with the following option
-values:</para>
-
-<itemizedlist>
-   <listitem><para>The <code>version</code> must support the value <code>1.0</code>.</para></listitem>
-   <listitem><para>The <code>encoding</code> must support the values <code>UTF-8</code>.</para></listitem>
-   <listitem><para>The <code>omit-xml-declaration</code> must be supported.  If the value is not 
-     specified or has the value <code>no</code>, an XML declaration must be produced.</para></listitem>
-</itemizedlist>
-
-<para>All other option values may be ignored for the <code>xml</code>
-output method.</para>
-
-<para>If a processor chooses to implement an option for serialization,
-it must conform to the semantics defined in the <biblioref linkend="xml-serialization-31"/> specification.</para>
-
-</section>
-<section xml:id="xproc-non-xml-serialization">
-<title>Non-XML serialization</title>
-
-<para><impl>The names and values of non-XML serialization parameters are
-<glossterm>implementation-defined</glossterm>.</impl></para>
-</section>
-
-</section>
+    <para xml:id="p.serialization">The <tag class="attribute">serialization</tag> attribute
+      allows the user to request serialization parameters on an output port. These parameters
+      control serialization as defined by <biblioref linkend="xml-serialization-31"/>.</para>
+    
+    <para>If the pipeline processor serializes the output on a port, it <rfc2119 feature="ser-must-use">must</rfc2119> use the serialization parameters specified. If a
+      <code>serialization</code> document property is present, the serialization properties
+      specified by the <code>serialization</code> document property must be merged with the
+      properties specified with the <tag class="attribute">serialization</tag> attribute first.
+      For further details see the explanation of the <code>serialization</code> document
+      property in <xref linkend="document-properties"/>.</para>
+    <para>If the processor is not serializing (if, for example, the pipeline has been called
+      from another pipeline), then serialization does not apply. The serialization parameter map
+      is computed (and must therefore be statically and syntactically valid), but the processor
+      <rfc2119 feature="ser-must-ignore">must not</rfc2119> raise an error if the output could
+      not be serialized with those parameters. </para>
+    
+    <para><error code="D0020">It is a <glossterm>dynamic error</glossterm> if the combination
+      of serialization options specified or defaulted is not allowed.</error>
+      Implementations <rfc2119>must</rfc2119> check that all of the specified serialization
+      options are allowed if they serialize the specified output. If the specified output is
+      not being serialized implementations <rfc2119>may</rfc2119> but are not required to
+      check that the specified options are allowed.</para>
+    
+    <para>In order to be consistent with the rest of this specification, values for boolean
+      serialization parameters can also use one of the XML Schema lexical forms for boolean:
+      <literal>true</literal>, <literal>false</literal>, <literal>1</literal>, or <literal>0</literal>. This is different from the <biblioref linkend="xml-serialization-31"/> specification, which uses <literal>yes</literal> and <literal>no</literal>. No change in
+      semantics is implied by this different spelling.</para>
+    
+    <para><impl>The default value of any serialization parameters not specified on a
+      particular output is <glossterm>implementation-defined</glossterm>.</impl></para>
+    
+    <section xml:id="serialization-method">
+      <title>Serialization method</title>
+      
+      <para>The <option>method</option> option controls the serialization method used by this
+        component with standard values of <literal>html</literal>, <literal>xml</literal>,
+        <literal>xhtml</literal>, <literal>text</literal> and <literal>json</literal>. Only
+        the <literal>xml</literal> value is required to be supported. <impl>Implementations may
+          support other method values but their results are
+          <glossterm>implementation-defined</glossterm>.</impl></para>
+      
+      <para>If the serialization parameter <literal>method</literal> is not specified, the
+        processor <rfc2119>should</rfc2119> select a method based on the document's
+        <literal>content-type</literal> property:</para>
+      
+      <itemizedlist>
+        <listitem>
+          <para>For documents with content types <literal>application/xml</literal>,
+            <literal>text/xml</literal>, and <literal>application/*+xml</literal> (except for
+            <literal>application/xhtml+xml</literal>), serialization method
+            <literal>xml</literal> should be used.</para>
+        </listitem>
+        <listitem>
+          <para>For documents with content type <literal>application/xhtml+xml</literal>
+            serialization method <literal>xhtml</literal> should be used.</para>
+        </listitem>
+        <listitem>
+          <para>For documents with content type <literal>text/html</literal> serialization
+            method <literal>html</literal> should be used.</para>
+        </listitem>
+        <listitem>
+          <para>For documents with <glossterm baseform="text media type">text media
+            types</glossterm> serialization method <literal>text</literal> should be
+            used.</para>
+        </listitem>
+        <listitem>
+          <para>For documents with <glossterm baseform="JSON media type">JSON media
+            types</glossterm> serialization method <literal>json</literal> should be
+            used.</para>
+        </listitem>
+        <listitem>
+          <para>
+            <impl>The serialization method for documents with other media types is
+              <glossterm>implementation-defined</glossterm>.</impl>
+          </para>
+        </listitem>
+      </itemizedlist>
+      <para>If serialization method <literal>xml</literal> or <literal>html</literal> (if
+        supported) is choosen, either explicitly or implicitly, the following default values
+        <rfc2119>must</rfc2119> be used:</para>
+      <itemizedlist>
+        <listitem>
+          <para>Parameter <literal>version</literal> is set to <literal>1.0</literal>.</para>
+        </listitem>
+        <listitem>
+          <para>Parameter <literal>encoding</literal> is set to <literal>UTF-8</literal>.</para>
+        </listitem>
+        <listitem>
+          <para>Parameter <literal>omit-xml-declaration</literal> is set to
+            <literal>true</literal>.</para>
+        </listitem>
+      </itemizedlist>
+      
+    </section>
+    
+    <section xml:id="serialization-minimal-conformance">
+      <title>Minimal conformance</title>
+      
+      <para>A minimally conforming implementation must support the <code>xml</code> output
+        method with the following option values:</para>
+      
+      <itemizedlist>
+        <listitem>
+          <para>The <code>version</code> must support the value <code>1.0</code>.</para>
+        </listitem>
+        <listitem>
+          <para>The <code>encoding</code> must support the value <code>UTF-8</code>.</para>
+        </listitem>
+        <listitem>
+          <para>The <code>omit-xml-declaration</code> must be supported. If the value is not
+            specified or has the value <code>no</code>, an XML declaration must be
+            produced.</para>
+        </listitem>
+      </itemizedlist>
+      
+      <para>All other option values may be ignored for the <code>xml</code> output
+        method.</para>
+      
+      <para>If a processor chooses to implement an option for serialization, it
+        <rfc2119>must</rfc2119> conform to the semantics defined in the <biblioref linkend="xml-serialization-31"/> specification.</para>
+    </section>
+    
+  </section>
 </section>
 
 <!-- ============================================================ -->
