@@ -312,6 +312,10 @@
                 primary="true"
                 sequence="false"
                 content-types="text"/>
+      <p:option name="sort-key"
+                as="xs:string"
+                select="'.'"
+                e:type="XPathExpression"/>
       <p:option name="order"
                 as="xs:string"
                 select="'ascending'"
@@ -320,10 +324,6 @@
                 as="xs:string?"
                 values="('upper-first', 'lower-first')"/>
       <p:option name="lang" as="xs:language?"/>
-      <p:option name="data-type"
-                as="xs:string"
-                select="'text'"
-                values="('text', 'number')"/>
       <p:option name="collation"
                 as="xs:string"
                 select="'https://www.w3.org/2005/xpath-functions/collation/codepoint'"/>

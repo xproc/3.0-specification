@@ -2964,20 +2964,30 @@ the string value of the <option>replace</option> expression.</para>
   <p:declare-step type="p:text-sort">
     <p:input port="source" primary="true" sequence="false" content-types="text"/>
     <p:output port="result" primary="true" sequence="false" content-types="text"/>
+    <p:option name="sort-key" as="xs:string" select="'.'" e:type="XPathExpression"/>
     <p:option name="order" as="xs:string" select="'ascending'" values="('ascending', 'descending')"/>
     <p:option name="case-order" as="xs:string?" values="('upper-first', 'lower-first')"/>
     <p:option name="lang" as="xs:language?"/>
-    <p:option name="data-type" as="xs:string" select="'text'" values="('text', 'number')"/>
     <p:option name="collation" as="xs:string" select="'https://www.w3.org/2005/xpath-functions/collation/codepoint'"/>
     <p:option name="stable" as="xs:boolean" select="true()"/>
   </p:declare-step>
 
   <para>The <tag>p:text-sort</tag> step sorts the lines in the text document appearing on its <port>source</port> port
-    and returns the result as another text document on its <port>result</port> port. The full lines are used as the
-    sorting key.</para>
+    and returns the result as another text document on its <port>result</port> port. The sort key is obtained by applying
+    the XPath expression in <option>sort-key</option> to each line in turn.</para>
   <itemizedlist>
     <listitem>
-      <para>The <option>order</option> option defines whether the lines are processed in ascending or descending order.
+      <para>The <option>sort-key</option> is used to obtain a sort key for each of the lines in the document
+       appearing on <port>source</port>. The <code>context item</code> is the line as an instance of <code>xs:string</code>,
+       the <code>context position</code> is the number of the line in the document on port <port>source</port>, the
+       <code>context size</code> is the number of lines in this document. <error code="C0098">It is a 
+       <glossterm>dynamic error</glossterm> if a dynamic XPath error occurred while applying sort-key to a line.</error>
+       <error code="C0099">It is a <glossterm>dynamic error</glossterm> if the result of applying <code>sort-key</code>
+       to a given line results in a sequence with more than one item.</error>
+      </para>
+    </listitem>
+    <listitem>
+     <para>The <option>order</option> option defines whether the lines are processed in ascending or descending order.
         Its value <rfc2119>must</rfc2119> be one of <code>ascending</code> or <code>descending</code>. The default is
           <code>ascending</code>.</para>
     </listitem>
@@ -2991,12 +3001,7 @@ the string value of the <option>replace</option> expression.</para>
         default depends on the processing environment. Its value must be a valid language code (e.g.
         <code>en-EN</code>).</para>
     </listitem>
-    <listitem>
-      <para>The <option>data-type</option> option defines whether the lines are to be collated alphabetically or
-        numerically. Its value <rfc2119>must</rfc2119> be one of <code>text</code> or <code>number</code>. The default
-        is <code>text</code>.</para>
-    </listitem>
-    <listitem>
+     <listitem>
       <para>The <option>collation</option> option identifies how strings are to be compared with each other. Its value
         must be a valid collation URI. The only collation XProc processors <rfc2119>must</rfc2119> support is the
         Unicode Codepoint Collation <link xlink:href="https://www.w3.org/2005/xpath-functions/collation/codepoint/"><code>https://www.w3.org/2005/xpath-functions/collation/codepoint</code></link>. This is also its default.
@@ -3010,7 +3015,10 @@ the string value of the <option>replace</option> expression.</para>
 
   <para>Lines are identified as described in <link xlink:href="https://www.w3.org/TR/xml/#sec-line-ends">XML, 2.11
       End-of-Line Handling</link>.</para>
-
+  <para>The sort process performed by this step is the same as described in 
+    <link xlink:href="https://www.w3.org/TR/xslt-30/#xsl-sort">The xsl:sort Element</link>. Options <option>lang</option>
+    and <option>case-order</option> are only taken into consideration if no value is selected for option
+    <option>collation</option>.</para>
   <simplesect>
     <title>Document properties</title>
     <para feature="add-attribute-preserves-all">All document properties are preserved.</para>
