@@ -202,7 +202,7 @@ Library =
       common.attributes,
       global.attributes,
       (Import|ImportFunctions|Documentation|PipeInfo)*,
-      (DeclareStep|StaticVariable|StaticOption|Documentation|PipeInfo)*
+      (DeclareStep|StaticOption|Documentation|PipeInfo)*
    }
 
 [
@@ -442,11 +442,10 @@ WithOption =
 [
    sa:class = "language-construct"
 ]
-GeneralVariable =
+Variable =
    element variable {
       name.qname.attr,
       as.attr?,
-      static.attr?,
       select.attr,
       [ sa:avt = "true" ]
          collection.attr?,
@@ -459,51 +458,6 @@ GeneralVariable =
       visibility.attr?,
       ( ( (\Empty | (Document|Pipe|Inline)*) & (Documentation|PipeInfo)* ) | AnyElement* )
    }
-
-[
-   sa:class = "language-construct"
-]
-DynamicVariable =
-   element variable {
-      name.qname.attr,
-      attribute static { "false" }?,
-      as.attr?,
-      select.attr,
-      [ sa:avt = "true" ]
-         collection.attr?,
-      [ sa:avt = "true" ]
-         href.attr?,
-       pipe.attr?,
-      common.attributes,
-      global.attributes,
-      inline.attributes,
-      ( ( (\Empty | (Document|Pipe|Inline)*) & (Documentation|PipeInfo)* ) | AnyElement* )
-   }
-
-[
-   sa:class = "language-construct"
-]
-StaticVariable =
-   element variable {
-      name.qname.attr,
-      attribute static { "true" },
-      as.attr?,
-      select.attr,
-      [ sa:avt = "true" ]
-         collection.attr?,
-      [ sa:avt = "true" ]
-         href.attr?,
-      common.attributes,
-      global.attributes,
-      inline.attributes,
-      visibility.attr?,
-      ( ( (\Empty | (Document|Inline)*) & (Documentation|PipeInfo)* ) | AnyElement* )
-   }
-
-[
-   sa:element = "variable"
-]
-Variable = DynamicVariable | StaticVariable
 
 # ============================================================
 
@@ -519,7 +473,7 @@ DeclarePipelineStep =
       common.attributes,
       global.attributes,
       (Import|ImportFunctions|Documentation|PipeInfo)*,
-      (Input|Output|Option|StaticVariable|Documentation|PipeInfo)*,
+      (Input|Output|Option|Documentation|PipeInfo)*,
       (DeclareStep|Documentation|PipeInfo)*,Subpipeline?
    }
 

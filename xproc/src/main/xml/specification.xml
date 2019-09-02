@@ -1153,7 +1153,7 @@ analysis</firstterm>
 consists of
 those tasks that can be performed by inspection of the pipeline
 alone, including the binding of
-<link linkend="statics">static options and variables</link>,
+<link linkend="statics">static options</link>,
 computation of serialization properties and document-properties,
 <link linkend="use-when">evaluation of <code>use-when</code> expressions</link>,
 performing a static analysis of all XPath expressions, and detecting static errors.</termdef>
@@ -1183,7 +1183,7 @@ declaration exists.</impl></para>
 <orderedlist>
 <listitem>
 <para>The <tag class="attribute">select</tag> expressions on static
-options and static variables.</para>
+options.</para>
 </listitem>
 <listitem>
 <para>
@@ -1201,9 +1201,10 @@ for <link linkend="use-when">conditional element exclusion</link>.</para>
 <para>For the purposes of evaluating a these expressions,
 the initial context node, position, and size are all undefined. The
 <glossterm>in-scope bindings</glossterm> are limited to the lexically preceding,
-statically declared options and variables. There are no available collections
-except the default collection on <tag>p:variable</tag>s which explicitly create
-a collection.</para>
+statically declared options. There are no available collections.</para>
+
+<para>Options declared as the direct children of <tag>p:library</tag> in imported libraries
+are considered in-scope for the declarations that follow.</para>
 
 <para>The entire expression must be evaluated without reference to the
 non-static inputs to the pipeline. Expressions can access documents as long
@@ -1214,12 +1215,11 @@ as they are available statically.</para>
 <programlisting language="xml"><![CDATA[<p:declare-step version="3.0"
                 xmlns:p="http://www.w3.org/ns/xproc">
   <p:input port="source"/>
-  <p:variable name="D" select="count(//*)"/>
-
   <p:option name="A" static="true" select="5"/>
-  <p:variable name="B" static="true" select="$A + count(//*)">
+  <p:option name="B" static="true" select="$A + count(//*)">
     <p:document href="doc.xml"/>
   </p:variable>
+  <p:variable name="D" select="count(//*)"/>
 
   …
 </p:declare-step>]]></programlisting>
@@ -1230,8 +1230,7 @@ be the value of <code>$A</code> plus the number of elements in
 <uri>doc.xml</uri> <emphasis>which must be successfully resolved during
 static analysis</emphasis>. Although <code>$D</code> can reference
 the document provided dynamically on the <port>source</port> port,
-any attempt to refer to <code>$D</code> in the expression(s) that
-initialize <code>$A</code> and <code>$B</code> would be an error.</para>
+neither <code>$A</code> nor <code>$B</code> may.</para>
 
 <note>
 <title>Note</title>
@@ -2442,18 +2441,17 @@ Variable names are always expressed as
     </section>
 
     <section xml:id="statics">
-      <title>Static Options and Variables</title>
+      <title>Static Options</title>
 
-      <para>Any <tag>p:variable</tag> that is part of the
-<glossterm>prologue</glossterm> of a step (as a direct child of
-          <tag>p:declare-step</tag> declared before the start of the sub-pipeline) <rfc2119>must</rfc2119> be declared
-        “static”. Any <tag>p:variable</tag> that is part of the sub-pipeline of a step <rfc2119>must not</rfc2119> be
-        declared “static”.</para>
-      <para>A <tag>p:option</tag> may be declared “static”. </para>
-      <para><error code="S0109">It is a <glossterm>static error</glossterm> if options and variables that are the direct children of 
+      <para>A <tag>p:option</tag> may be declared “static”; options declared within a <tag>p:library</tag> <rfc2119>must</rfc2119>
+      be static.</para>
+      <para><error code="S0109">It is a <glossterm>static error</glossterm> if options that are the direct children of 
         <tag>p:library</tag> are not declared “static”</error>.</para>
-      <para>The values of static options and variables are computed during <link linkend="initiating">static
+      <para>The values of static options are computed during <link linkend="initiating">static
           analysis</link>.</para>
+
+      <para>XProc defines a single, global namespace for static options. Every static option must have exactly one
+      in-scope declaration.</para>
     </section>
 
     <section xml:id="varopt-types">
@@ -4950,7 +4948,7 @@ of the variable using an
 <link xlink:href="https://www.w3.org/TR/xpath-31/#dt-sequence-type">sequence Type</link>.
 </para>
 
-<e:rng-pattern name="GeneralVariable"/>
+<e:rng-pattern name="Variable"/>
 
 <para>The attributes that can appear on <tag>p:variable</tag> are
 <link linkend="common-attr">the common attributes</link> and:</para>
@@ -4969,7 +4967,7 @@ bound to a namespace.</error>
 <para><error code="S0088">It is
 a <glossterm>static error</glossterm> if the qualified name of a
 <tag>p:variable</tag> <glossterm baseform="shadow">shadows</glossterm>
-the name of a static variable or option.</error>
+the name of a static option.</error>
 </para>
 </listitem>
 </varlistentry>
@@ -4979,18 +4977,6 @@ the name of a static variable or option.</error>
 <tag class="attribute">as</tag> attribute using an
 XProc sequence type, see <xref linkend="varopt-types"/>.
 </para>
-</listitem>
-</varlistentry>
-<varlistentry><term><tag class="attribute">static</tag></term>
-<listitem>
-<para>An indication of whether the variable is to be evaluated
-statically or not. See <link linkend="statics"/>.
-If <tag class="attribute">static</tag> is not specified, it
-defaults to “<code>false</code>”.</para>
-<para><error code="S0098">It is a <glossterm>static error</glossterm> 
-if a variable is declared as static and the <tag>p:variable</tag> has 
-a <tag class="attribute">pipe</tag> attribute or <tag>p:pipe</tag> 
-children.</error></para>
 </listitem>
 </varlistentry>
 <varlistentry><term><tag class="attribute">select</tag></term>
@@ -5127,7 +5113,7 @@ bound to a namespace.</error>
 <para><error code="S0088">It is
 a <glossterm>static error</glossterm> if the qualified name of a
 <tag>p:option</tag> <glossterm baseform="shadow">shadows</glossterm>
-the name of a static variable or option.</error>
+the name of a static option.</error>
 </para>
 </listitem>
 </varlistentry>
@@ -5566,8 +5552,7 @@ subpipeline, may be empty.</para>
 <para>The prologue follows the imports.
 <termdef xml:id="dt-prologue">The <firstterm>prologue</firstterm> consists of
 the <tag>p:input</tag>, <tag>p:output</tag>, and <tag>p:option</tag> elements.
-The prologue may also contain <tag>p:variable</tag> elements, but if it does,
-they must be declared statically.</termdef>
+</termdef>
 </para>
 </listitem>
 <listitem>
@@ -5579,21 +5564,13 @@ elements that declare additional steps.</para>
 </listitem>
 </orderedlist>
 
-<note>
-<para>In the absence of any inline declared steps, it is possible for the
-prologue to end with a <tag>p:variable</tag> and the subpipeline to begin
-with a <tag>p:variable</tag>. This does not introduce any ambiguity. In this
-case, the first non-static variable marks the beginning of the subpipeline.
-</para>
-</note>
-
-<para>Neither options nor variables in the prologue may shadow
-each other. <error code="S0091">It is a <glossterm>static
-error</glossterm> if a <tag>p:option</tag> or <tag>p:variable</tag>
-declared before the subpipeline begins shadows another option or
-variable declared within the same <tag>p:declare-step</tag>.</error>
-(Within the subpipeline, variables may shadow options and lexically
-preceding (non-static) variables.)
+<para>Options in the prologue may not shadow each other.
+<error code="S0091">It is a <glossterm>static error</glossterm> if a
+<tag>p:option</tag> declared before the
+subpipeline begins shadows another option declared within
+the same <tag>p:declare-step</tag>.</error> (Within the subpipeline,
+variables may shadow (non-static) options and lexically preceding
+variables.)
 </para>
 
 <para>The prologue ends with additional <tag>p:declare-step</tag>
@@ -5618,7 +5595,7 @@ the default readable port is undefined.</para>
 <listitem>
 <para>The <glossterm>in-scope bindings</glossterm> at the beginning of
 a <tag>p:declare-step</tag> are limited to the lexically preceding,
-statically declared options and variables.</para>
+statically declared options.</para>
 </listitem>
 </itemizedlist>
 
@@ -5641,7 +5618,7 @@ subpipeline. An atomic step declaration does not have a subpipeline.
 </para>
 
 <para>Atomic step declarations may not import other pipelines or
-functions, may not declare static variables, and may not declare
+functions, may not declare static options, and may not declare
 additional steps. In other words, the content of an atomic step
 declaration consists exclusively of <tag>p:input</tag>,
 <tag>p:output</tag>, and <tag>p:option</tag> elements.</para>
@@ -5666,7 +5643,7 @@ is, of course, an error to attempt to evaluate such steps.</para>
 <section xml:id="p.library">
 <title>p:library</title>
 
-<para>A <tag>p:library</tag> is a collection of static variables, static options,
+<para>A <tag>p:library</tag> is a collection of static options,
 and step declarations.</para>
 
 <e:rng-pattern name="Library"/>
