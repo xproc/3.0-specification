@@ -327,7 +327,6 @@
       <zeroOrMore>
         <choice>
           <ref name="DeclareStep"/>
-          <ref name="StaticVariable"/>
           <ref name="StaticOption"/>
           <ref name="Documentation"/>
           <ref name="PipeInfo"/>
@@ -781,14 +780,11 @@
     </element>
   </define>
   <!-- ============================================================ -->
-  <define name="GeneralVariable" sa:class="language-construct">
+  <define name="Variable" sa:class="language-construct">
     <element name="variable">
       <ref name="name.qname.attr"/>
       <optional>
         <ref name="as.attr"/>
-      </optional>
-      <optional>
-        <ref name="static.attr"/>
       </optional>
       <ref name="select.attr"/>
       <optional>
@@ -830,107 +826,6 @@
         </zeroOrMore>
       </choice>
     </element>
-  </define>
-  <define name="DynamicVariable" sa:class="language-construct">
-    <element name="variable">
-      <ref name="name.qname.attr"/>
-      <optional>
-        <attribute name="static">
-          <value>false</value>
-        </attribute>
-      </optional>
-      <optional>
-        <ref name="as.attr"/>
-      </optional>
-      <ref name="select.attr"/>
-      <optional>
-        <ref name="collection.attr" sa:avt="true"/>
-      </optional>
-      <optional>
-        <ref name="href.attr" sa:avt="true"/>
-      </optional>
-      <optional>
-        <ref name="pipe.attr"/>
-      </optional>
-      <ref name="common.attributes"/>
-      <ref name="global.attributes"/>
-      <ref name="inline.attributes"/>
-      <choice>
-        <interleave>
-          <choice>
-            <ref name="Empty"/>
-            <zeroOrMore>
-              <choice>
-                <ref name="Document"/>
-                <ref name="Pipe"/>
-                <ref name="Inline"/>
-              </choice>
-            </zeroOrMore>
-          </choice>
-          <zeroOrMore>
-            <choice>
-              <ref name="Documentation"/>
-              <ref name="PipeInfo"/>
-            </choice>
-          </zeroOrMore>
-        </interleave>
-        <zeroOrMore>
-          <ref name="AnyElement"/>
-        </zeroOrMore>
-      </choice>
-    </element>
-  </define>
-  <define name="StaticVariable" sa:class="language-construct">
-    <element name="variable">
-      <ref name="name.qname.attr"/>
-      <attribute name="static">
-        <value>true</value>
-      </attribute>
-      <optional>
-        <ref name="as.attr"/>
-      </optional>
-      <ref name="select.attr"/>
-      <optional>
-        <ref name="collection.attr" sa:avt="true"/>
-      </optional>
-      <optional>
-        <ref name="href.attr" sa:avt="true"/>
-      </optional>
-      <ref name="common.attributes"/>
-      <ref name="global.attributes"/>
-      <ref name="inline.attributes"/>
-      <optional>
-        <ref name="visibility.attr"/>
-      </optional>
-      <choice>
-        <interleave>
-          <choice>
-            <ref name="Empty"/>
-            <zeroOrMore>
-              <choice>
-                <ref name="Document"/>
-                <ref name="Inline"/>
-              </choice>
-            </zeroOrMore>
-          </choice>
-          <zeroOrMore>
-            <choice>
-              <ref name="Documentation"/>
-              <ref name="PipeInfo"/>
-            </choice>
-          </zeroOrMore>
-        </interleave>
-        <zeroOrMore>
-          <ref name="AnyElement"/>
-        </zeroOrMore>
-      </choice>
-    </element>
-  </define>
-  <define name="Variable" sa:element="variable">
-    <choice>
-      <ref name="DynamicVariable"/>
-      <ref name="StaticVariable"/>
-    </choice>
   </define>
   <!-- ============================================================ -->
   <define name="DeclarePipelineStep" sa:class="language-construct">
@@ -962,7 +857,6 @@
           <ref name="Input"/>
           <ref name="Output"/>
           <ref name="Option"/>
-          <ref name="StaticVariable"/>
           <ref name="Documentation"/>
           <ref name="PipeInfo"/>
         </choice>
@@ -3843,6 +3737,11 @@
       </optional>
       <ref name="step.attributes"/>
       <optional>
+        <attribute name="sort-key">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <optional>
         <attribute name="order">
           <choice>
             <value>ascending</value>
@@ -3863,14 +3762,6 @@
           <optional>
             <data type="language"/>
           </optional>
-        </attribute>
-      </optional>
-      <optional>
-        <attribute name="data-type">
-          <choice>
-            <value>text</value>
-            <value>number</value>
-          </choice>
         </attribute>
       </optional>
       <optional>
