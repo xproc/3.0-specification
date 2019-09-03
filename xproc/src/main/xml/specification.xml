@@ -2450,7 +2450,7 @@ Variable names are always expressed as
       <para>The values of static options are computed during <link linkend="initiating">static
           analysis</link>.</para>
 
-      <para>XProc defines a single, global namespace for static options. Every static option must have exactly one
+      <para>XProc defines a single, global scope for static options. Every static option must have exactly one
       in-scope declaration.</para>
     </section>
 
@@ -5566,8 +5566,7 @@ elements that declare additional steps.</para>
 
 <para>Options in the prologue may not shadow each other.
 <error code="S0091">It is a <glossterm>static error</glossterm> if a
-<tag>p:option</tag> declared before the
-subpipeline begins shadows another option declared within
+<tag>p:option</tag> shadows another option declared within
 the same <tag>p:declare-step</tag>.</error> (Within the subpipeline,
 variables may shadow (non-static) options and lexically preceding
 variables.)
