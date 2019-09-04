@@ -632,17 +632,17 @@ etc.
     <section>
       <title>Creating documents from XDM step results</title>
       <para>Some steps like <tag>p:xslt</tag>, <tag>p:xquery</tag> etc. create a sequence of new XDM
-        instances. Every item in such a sequence is converted into a <emphasis>separate</emphasis>
+        instances. Values in such a sequence can be of any XDM type (except attribute). Every item in such a sequence is converted into a <emphasis>separate</emphasis>
         document that will appear on the output port of that particular step. The following rules
         apply to each of the items in the output sequence:</para>
       <itemizedlist>
         <listitem>
-          <para>If the item is a single text node, it is wrapped in a document node and the
+          <para>If the item is a text node, it is wrapped in a document node and the
             document's content-type is <literal>text/plain</literal>.</para>
         </listitem>
         <listitem>
-          <para>If the item is any other node (except for a document node), a document node is
-            wrapped around the node and the document's content-type is
+          <para>If the item is an element, comment or processing-instruction node, a document node is
+            wrapped around the node and the document's content-type is set to
               <literal>application/xml</literal>.</para>
         </listitem>
         <listitem>
@@ -660,7 +660,6 @@ etc.
           </note>
         </listitem>
       </itemizedlist>
-      
     </section>
 
 <section xml:id="specified-content-types">
