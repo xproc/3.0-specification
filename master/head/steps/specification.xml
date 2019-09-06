@@ -3555,9 +3555,9 @@ XQuery query to the sequence of documents
 provided on the <port>source</port> port.</para>
 
 <p:declare-step type="p:xquery">
-  <p:input port="source" content-types="application/xml text/xml */*+xml" sequence="true" primary="true"/>
-  <p:input port="query" content-types="application/xml */*+xml text/*"/>
-  <p:output port="result" sequence="true" content-types="*/*"/>
+  <p:input port="source" content-types="any" sequence="true" primary="true"/>
+  <p:input port="query" content-types="text xml"/>
+  <p:output port="result" sequence="true" content-types="any"/>
   <p:option name="parameters" as="map(xs:QName,item()*)?"/>
   <p:option name="version" as="xs:string?"/>
 </p:declare-step>
@@ -3569,45 +3569,53 @@ collection. If no documents are provided on the <port>source</port> port,
 the initial context item is undefined and the default collection
 is empty.</para>
 
-<para>The <port>query</port> port must receive a single document:</para>
-
+<para>The <port>query</port> port must receive a single document which is either an XML
+  document or a text document. A text document <rfc2119>must</rfc2119> be treated as
+  the query. For an XML document the following rules apply:</para>
+ 
 <itemizedlist>
-<listitem>
-<para>If the document root element is <tag xml:id="cv.query">c:query</tag>, the text
-descendants of this element are considered the query.</para>
-<e:rng-pattern name="VocabQuery"/>
-</listitem>
-
-<listitem>
-<para>If the document root element is in the XQueryX namespace, the
-document is treated as an XQueryX-encoded query. <impl>Support for
-XQueryX is <glossterm>implementation-defined</glossterm>.</impl>
-</para>
-</listitem>
-
-<listitem>
-<para>If the <port>query</port> document has an XML media type, then
-the string value of the document <rfc2119>must</rfc2119> be treated as
-the query. If the media type has a “<literal>text</literal>” type,
-then it <rfc2119>must</rfc2119> be interpreted as the query.</para>
-</listitem>
-
-<listitem>
-<para><impl>Otherwise, the interpretation of the query
-is <glossterm>implementation-defined</glossterm>.</impl>
-</para>
-</listitem>
+  <listitem>
+    <para>If the document root element is <tag xml:id="cv.query">c:query</tag>, the text
+      descendants of this element are considered the query.</para>
+    <e:rng-pattern name="VocabQuery"/>
+  </listitem>
+  <listitem>
+      <para>If the document root element is in the XQueryX namespace, the
+        document is treated as an XQueryX-encoded query. <impl>Support for
+          XQueryX is <glossterm>implementation-defined</glossterm>.</impl>
+      </para>
+    </listitem>
+    <listitem>
+      <para>Otherwise the string value of the document <rfc2119>must</rfc2119> be treated as
+        the query.</para>
+    </listitem>
 </itemizedlist>
-
+ 
 <para>If the step specifies a <option>version</option>, then that version
 of XQuery <rfc2119>must</rfc2119> be used to process the transformation.
 <error code="C0009">It is a
-<glossterm>dynamic error</glossterm> if the specified xquery version
+<glossterm>dynamic error</glossterm> if the specified XQuery version
 is not available.</error> If the step does not specify a version, the
 implementation may use any version it has available and may use any means
 to determine what version to use, including, but not limited to,
-examining the version of the query.</para>
+examining the version of the query.<impl>It is <glossterm>implementation defined</glossterm>
+which XQuery version(s) is/are supported.</impl></para>
 
+<para>The name/value pairs in option <option>parameters</option> are used to set the query’s
+external variables.</para>
+  
+<para><error code="C0101">It is a <glossterm>dynamic error</glossterm> if a document
+appearing on port <port>source</port> cannot be represented in the XDM version associated with
+  the chosen XQuery version, e.g. when a JSON document contains a map and XDM 2.0 is used.</error> 
+  <error code="C0102">It is a <glossterm>dynamic error</glossterm> if any key in option 
+    <option>parameters</option> is associated to a value that cannot be represented in 
+    the XDM version associated with the chosen XQuery version, e.g. with a map, an array, 
+    or a function when XDM 2.0 is used.</error></para>
+
+<para><error code="C0103">It is a <glossterm>dynamic error</glossterm> if any error occurs during
+    XQuery’s static analysis phase.</error> <error code="C0104">It is a <glossterm>dynamic error</glossterm>
+    if any error occurs during XQuery’s dynamic evaluation phase.</error></para>
+      
 <para>The output of this step
 <rfc2119>may</rfc2119> include PSVI annotations.</para>
 

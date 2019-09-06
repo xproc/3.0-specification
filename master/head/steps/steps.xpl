@@ -411,11 +411,11 @@
    </p:declare-step>
    <p:declare-step type="p:xquery" xml:id="xquery">
       <p:input port="source"
-               content-types="application/xml text/xml */*+xml"
+               content-types="any"
                sequence="true"
                primary="true"/>
-      <p:input port="query" content-types="application/xml */*+xml text/*"/>
-      <p:output port="result" sequence="true" content-types="*/*"/>
+      <p:input port="query" content-types="text xml"/>
+      <p:output port="result" sequence="true" content-types="any"/>
       <p:option name="parameters" as="xs:string"/>
       <p:option name="version" as="xs:string?"/>
    </p:declare-step>
