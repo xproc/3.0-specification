@@ -2265,19 +2265,22 @@ port <code>result</code>.</para>
 <p:declare-step type="p:json-join">
   <p:input port="source" sequence="true" content-types="json"> </p:input>
   <p:output port="result" content-types="application/json"/>
-  <p:option name="flatten-arrays" as="xs:boolean" select="false()"/>
+  <p:option name="flatten-to-depth" as="xs:string?" select="'0'"/>
 </p:declare-step>
 
-<para>If option <code>flatten-arrays</code> is
-<literal>false</literal>, a member in the array is created for each
-document in the sequence appearing on port<code>source</code>.
-Therefore the produced array with have the same number of members as
-the number of documents appearing on port <code>source</code>. However
-if <code>flatten-arrays</code> is <literal>true</literal>, for each
-member of an array appearing at the top level of a JSON document on
-port <code>source</code> a new member in the resulting array will be
-created.</para>
-
+<para>The option <option>flatten-to-depth</option> controls whether and to which
+depth members of an array appearing on port <port>source</port> are flattened.
+The <option>flatten-to-depth</option> option may contain either the 
+string “<literal>unbounded</literal>” or a string that may be cast to a non-negative integer. 
+An integer value of <literal>0</literal>, which is the default, means that no 
+flattening takes place, so the array appearing on port <port>source</port> will
+be contained as an array in the resulting array. An integer value of <literal>1</literal>
+means that an array on port <port>source</port> is flattened, i.e. the members
+of that array will appear as individual members in the resulting array. Any value greater
+than <literal>1</literal> means that the flattening is applied recursively to arrays in
+arrays up to the given depth. A value of “<literal>unbounded</literal>” means that all
+arrays in arrays will be flattened. As a consequence, the resulting array appearing on
+port <port>result</port> will not have any arrays as members.</para>
 </section>
 <section xml:id="c.make-absolute-uris">
 <title>p:make-absolute-uris</title>

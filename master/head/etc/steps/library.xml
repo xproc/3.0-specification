@@ -157,7 +157,7 @@
    <p:declare-step type="p:json-join" xml:id="json-join">
       <p:input port="source" sequence="true" content-types="json"/>
       <p:output port="result" content-types="application/json"/>
-      <p:option name="flatten-arrays" as="xs:boolean" select="false()"/>
+      <p:option name="flatten-to-depth" as="xs:string?" select="'0'"/>
    </p:declare-step>
    <p:declare-step type="p:make-absolute-uris" xml:id="make-absolute-uris">
       <p:input port="source" content-types="xml html"/>
