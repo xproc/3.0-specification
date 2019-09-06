@@ -2737,25 +2737,8 @@ xml:id="dt-visible">If two names are in the same scope, we say that
 they are <firstterm>visible</firstterm> to each other.
 </termdef></para>
 
-    <para>Six kinds of things are named in XProc:</para>
-    <orderedlist spacing="compact">
-      <listitem>
-        <simpara>Step types,</simpara>
-      </listitem>
-      <listitem>
-        <simpara>Steps,</simpara>
-      </listitem>
-      <listitem>
-        <simpara>Input ports,</simpara>
-      </listitem>
-      <listitem>
-        <simpara>Output ports,</simpara>
-      </listitem>
-      <listitem>
-        <simpara>Options and variables</simpara>
-      </listitem>
-    </orderedlist>
-
+<section>
+  <title>Scoping of step type names</title>
       <para>The scope of the names of the step types is the pipeline in which they are declared,
         including any declarations imported from libraries via <tag>p:import</tag>. Nested pipelines
         inherit the step types in scope for their parent.</para>
@@ -2812,8 +2795,11 @@ they are <firstterm>visible</firstterm> to each other.
       <para><error code="S0036">All the step types in a pipeline or library <rfc2119>must</rfc2119>
           have unique names: it is a <glossterm>static error</glossterm> if any step type name is
           built-in and/or declared or defined more than once in the same scope.</error></para>
-
-<para>The scope of the names of the steps themselves is determined by
+</section>
+      
+<section>
+  <title>Scoping of step names</title>
+<para>The scope of the names of the steps (the values of the step's <code>name</code> attributes) is determined by
 the <glossterm>environment</glossterm> of each step. In general, the
 name of a step, the names of its sibling steps, the names of any steps
 that it contains directly, the names of its ancestors, and the names
@@ -2821,22 +2807,40 @@ of the siblings of its ancestors are all in a common scope. <error
 code="S0002">All steps in the same scope <rfc2119>must</rfc2119> have
 unique names: it is a <glossterm>static error</glossterm> if two steps
 with the same name appear in the same scope.</error></para>
-
+</section>
+<section>
+  <title>Scoping of port names</title>
 <para>The scope of an input or output port name is the step on which
 it is defined. The names of all the ports on any step
 <rfc2119>must</rfc2119> be unique.</para>
-
-<para>Taken together, these uniqueness constraints guarantee that the
+      
+<para>Taken together with the scoping of step names, these uniqueness constraints guarantee that the
 combination of a step name and a port name uniquely identifies exactly
 one port on exactly one in-scope step.</para>
-
-<para>The scope of option and variable names is determined by where
-they are declared. When an option is declared with <tag>p:option</tag>
-(or a variable with <tag>p:variable</tag>), unless otherwise
-specified, its scope consists of the sibling elements that follow its
+</section>
+      
+<section>
+  <title>Scoping of non-static options and variables</title>
+<para>The scope of non-static option and variable names is determined by where
+they are declared. Their scope consists of the sibling elements that follow its
 declaration and the descendants of those siblings.
 </para>
+<para>Non-static options and variables declared in parent step declarations are not visible in child step declarations.</para>
 </section>
+      
+<section>
+  <title>Scoping of static options</title>
+
+  <note  role="editorial">
+    <title>TBD</title>
+    <para>Fill in this section as soon as we have consensus about this</para>
+  </note>
+</section>
+      
+</section>
+    
+  
+  
     <section xml:id="xml-base-attribute">
       <title>Base URIs and xml:base</title>
 
