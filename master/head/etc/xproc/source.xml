@@ -3694,9 +3694,9 @@ with the <link linkend="dt-standard-modifications">standard modifications</link>
 <title>p:viewport</title>
 
 <para>A viewport is specified by the <tag>p:viewport</tag> element. It
-is a <glossterm>compound step</glossterm> that processes a single XML
-document, applying its <glossterm>subpipeline</glossterm> to one or
-more subtrees of the document. </para>
+is a <glossterm>compound step</glossterm> that processes single XML or 
+HTML documents, applying its <glossterm>subpipeline</glossterm> to one or
+more subtrees of each document in turn.</para>
 
 <e:rng-pattern name="Viewport"/>
 
@@ -3710,7 +3710,9 @@ the results of applying the subpipeline to them.</para>
 then the viewport source is read from the <glossterm>default readable
 port</glossterm>. If the <tag>p:viewport</tag> input is a sequence,
 each document in the sequence is processed in turn producing a sequence
-on the output.</para>
+on the output. <error code="D0072">It is a <glossterm>dynamic error</glossterm>
+if a document appearing on the input port of <tag>p:viewport</tag> is neither 
+an XML document nor an HTML document.</error></para>
 
 <para>The <tag class="attribute">match</tag> attribute specifies an
 XSLT <glossterm>selection pattern</glossterm>. Each matching node in
@@ -3721,8 +3723,7 @@ provided, one at a time, to the viewport's
 passed to the subpipeline is the base URI of the matched element or
 document. <error code="D0010">It is a <glossterm>dynamic
 error</glossterm> if the <tag class="attribute">match</tag> expression
-on <tag>p:viewport</tag> does not match an element or
-document.</error></para>
+on <tag>p:viewport</tag> matches an attribute or a namespace node.</error></para>
 
 <note>
 <para>The <tag class="attribute">match</tag> attribute on
@@ -3756,21 +3757,34 @@ among the descendants of any matched node.</para>
 <para>What appears on the output from the <tag>p:viewport</tag> will
         be a copy of the input document where each matching node is replaced by the result of
         applying the subpipeline to the subtree rooted at that node. In other words, if the 
-        <glossterm>selection pattern</glossterm> matches a particular element then that element is wrapped in a document node and
+        <glossterm>selection pattern</glossterm> matches a particular node then that 
+        node is wrapped in a document node and
         provided on the <port>current</port> port, the subpipeline in the <tag>p:viewport</tag> is
         evaluated, and the result that appears on the <port>output</port> port replaces the matched
-        element. </para>
+        node.</para>
+<para>If a document resulting from applying the subpipeline to the matched node is an XML document, 
+an HTML document, or a text document, all child nodes of the document node will be used to replace 
+the matched node. <error code="D0073">It is a <glossterm>dynamic error</glossterm> if the document 
+returned by applying the subpipeline to the matched node is not an XML document, an HTML document, 
+or a text document.</error>
+</para>
 <para>If no documents appear on the <port>output</port> port, the matched
-        element will effectively be deleted. If exactly one document appears, the contents of that
-        document will replace the matched element. If a sequence of documents appears, then the
+        node will effectively be deleted. If exactly one document appears, the contents of that
+        document will replace the matched node. If a sequence of documents appears, then the
         contents of each document in that sequence (in the order it appears in the sequence) will
-        replace the matched element.</para>
+        replace the matched node.</para>
 <para>The output of the <tag>p:viewport</tag> itself is a
-        single document that appears on a port named “<literal>result</literal>”. Note that the
+        sequence of documents that appear on a port named “<literal>result</literal>”. Note that the
         semantics of <tag>p:viewport</tag> are special. The <port>output</port> port in the
           <tag>p:viewport</tag> is used only to access the results of the subpipeline. The output of
         the step itself appears on a port with the fixed name “<literal>result</literal>” that is
-        never explicitly declared.</para><section xml:id="viewport-xpath-context">
+        never explicitly declared.</para>
+<para>For the documents appearing on port <port>result</port> all document properties will be preserved,
+except when option <option>match</option> matches a document node and the result from applying the 
+  subpipeline to the document node is a (sequence of) text document(s). In this case the content-type 
+  property is changed  to “<literal>text/plain</literal>” and the serialization property is removed, 
+  while all other document properties are preserved.</para>  
+  <section xml:id="viewport-xpath-context">
         <title>XPath Context</title>
         <para>Within a <tag>p:viewport</tag>, the <function>p:iteration-position</function> and
             <function>p:iteration-size</function> are taken from the sequence of documents that will
@@ -7857,6 +7871,10 @@ draft:</para>
       </listitem>
       <listitem>
         <para>Introduction of the <code>serialization</code> document property. See <xref linkend="document-properties"/>.</para>
+      </listitem>
+      <listitem>
+        <para>The semantics pf <tag>p:viewport</tag> have been changed. HTML documents are now allowed as input and
+        <option>match</option> may now match every node type except attributes and namespace nodes.</para>
       </listitem>
     </itemizedlist>
 </appendix>
