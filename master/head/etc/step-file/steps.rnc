@@ -3,7 +3,21 @@ namespace local = ""
 
 # This schema could be made more constrained.
 
-Step = Step-file-copy | Step-file-delete | Step-file-info | Step-file-mkdir | Step-file-move | Step-file-create-tempfile | Step-file-touch
+Step = Step-directory-list | Step-file-copy | Step-file-delete | Step-file-info | Step-file-mkdir | Step-file-move | Step-file-create-tempfile | Step-file-touch
+
+Step-directory-list =
+  element directory-list {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute path { xsd:anyURI }?,
+    attribute detailed { xsd:boolean }?,
+    attribute max-depth { xsd:string? }?,
+    attribute include-filter { xsd:string }?,
+    attribute exclude-filter { xsd:string }?,
+    (WithOption* & (Documentation|PipeInfo)*)
+  }
 
 Step-file-copy =
   element file-copy {
