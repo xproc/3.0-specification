@@ -883,6 +883,71 @@ summary of the differences between the two documents may appear on the
 <para feature="compare-preserves-none">No document properties are preserved.</para>
 </simplesect>
 </section>
+<section xml:id="c.compress">
+
+  <title>p:compress</title>
+
+  <para>The <tag>p:compress</tag> step serializes the document appearing on its
+      <port>source</port> port and outputs a compressed version of this on its <port>result</port>
+    port.</para>
+
+  <p:declare-step type="p:compress">
+    <p:input port="source" primary="true" content-types="any" sequence="false"/>
+    <p:output port="result" primary="true" content-types="any" sequence="false"/>
+    <p:option name="format" as="xs:QName" select="'gzip'"/>
+    <p:option name="serialization" as="map(xs:QName,item()*)?"/>
+    <p:option name="parameters" as="map(xs:Qname, item()*)?"/>
+  </p:declare-step>
+
+  <para>The <tag>p:compress</tag> step first serializes the document appearing on its
+      <port>source</port>. It then compresses the outcome of this serialization and outputs the
+    result on its <port>result</port> port.</para>
+
+  <para>The <tag>p:compress</tag> step has the following options:</para>
+  <variablelist>
+    <varlistentry>
+      <term><option>format</option></term> 
+      <listitem>
+        <para>The format of the compression can be specified using the <option>format</option> option.
+          Implementations <rfc2119>must</rfc2119> support the <biblioref linkend="gzip"/> format,
+          specified with the value <code>gzip</code>. <impl>It is
+            <glossterm>implementation-defined</glossterm> what other formats are
+            supported.</impl></para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term><option>parameters</option></term>
+      <listitem>
+        <para>The <option>parameters</option> option can be used to supply parameters to control the
+          compression. <impl>The semantics of the keys and the allowed values for these keys are
+              <glossterm>implementation-defined</glossterm>.</impl>
+          <error code="C0079">It is a <glossterm>dynamic error</glossterm> if the map
+              <option>parameters</option> contains an entry whose key is defined by the
+            implementation and whose value is not valid for that key.</error></para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term><option>serialization</option></term>
+      <listitem>
+        <para>The <option>serialization</option> option is provided to control the serialization of
+          content before compression takes place. If the document to be stored has a
+            <code>serialization</code> property, the serialization is controlled by the merger of
+          the two maps where the entries in the <code>serialization</code> property take precedence.
+          Serialization is described in <biblioref linkend="xproc30"/>.</para>
+      </listitem>
+    </varlistentry>
+  </variablelist>
+
+  <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+  <simplesect>
+    <title>Document properties</title>
+    <para feature="compress-preserves-some">All document properties are preserved, except for the
+        <code>content-type</code> property which is updated accordingly and the
+        <code>serialization</code> property which is removed.</para>
+  </simplesect>
+
+</section>
 <section xml:id="c.count">
 <title>p:count</title>
 
@@ -3858,6 +3923,8 @@ and their use as ASN.1 Object Identifier components</citetitle>.
 1995.</bibliomixed>
     <bibliomixed xml:id="zip"><abbrev>ZIP</abbrev>
     <citetitle xlink:href="https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT">.ZIP File Format Specification</citetitle>.</bibliomixed>
+    <bibliomixed xml:id="gzip"><abbrev>GZIP</abbrev>
+    <citetitle xlink:href="https://tools.ietf.org/html/rfc1952">GZIP file format specification version 4.3</citetitle>.</bibliomixed>
   </bibliolist>
 </section>
 <section xml:id="informative-references">
