@@ -1738,6 +1738,7 @@
       <ref name="Step-archive-manifest"/>
       <ref name="Step-cast-content-type"/>
       <ref name="Step-compare"/>
+      <ref name="Step-compress"/>
       <ref name="Step-count"/>
       <ref name="Step-delete"/>
       <ref name="Step-error"/>
@@ -2747,6 +2748,47 @@
       <optional>
         <attribute name="fail-if-not-equal">
           <data type="boolean"/>
+        </attribute>
+      </optional>
+      <interleave>
+        <zeroOrMore>
+          <ref name="WithInput"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="WithOption"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <choice>
+            <ref name="Documentation"/>
+            <ref name="PipeInfo"/>
+          </choice>
+        </zeroOrMore>
+      </interleave>
+    </element>
+  </define>
+  <define name="Step-compress">
+    <element name="compress">
+      <optional>
+        <ref name="name.ncname.attr"/>
+      </optional>
+      <ref name="common.attributes"/>
+      <optional>
+        <ref name="use-when.attr"/>
+      </optional>
+      <ref name="step.attributes"/>
+      <optional>
+        <attribute name="format">
+          <data type="QName"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="serialization">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="parameters">
+          <data type="string"/>
         </attribute>
       </optional>
       <interleave>

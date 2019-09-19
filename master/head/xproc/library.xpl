@@ -60,6 +60,19 @@
       <p:option name="method" as="xs:QName?"/>
       <p:option name="fail-if-not-equal" as="xs:boolean" select="false()"/>
    </p:declare-step>
+   <p:declare-step type="p:compress" xml:id="compress">
+      <p:input port="source"
+               primary="true"
+               content-types="any"
+               sequence="false"/>
+      <p:output port="result"
+                primary="true"
+                content-types="any"
+                sequence="false"/>
+      <p:option name="format" as="xs:QName" select="'gzip'"/>
+      <p:option name="serialization" as="xs:string"/>
+      <p:option name="parameters" as="xs:string"/>
+   </p:declare-step>
    <p:declare-step type="p:count" xml:id="count">
       <p:input port="source" content-types="*/*" sequence="true"/>
       <p:output port="result" content-types="application/xml"/>
