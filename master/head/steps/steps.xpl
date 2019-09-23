@@ -359,6 +359,19 @@
       <p:option name="format" as="xs:QName?"/>
       <p:option name="parameters" as="xs:string"/>
    </p:declare-step>
+   <p:declare-step type="p:uncompress" xml:id="uncompress">
+      <p:input port="source"
+               primary="true"
+               content-types="any"
+               sequence="false"/>
+      <p:output port="result"
+                primary="true"
+                content-types="any"
+                sequence="false"/>
+      <p:option name="format" as="xs:QName?"/>
+      <p:option name="parameters" as="xs:string"/>
+      <p:option name="content-type" as="xs:string" select="'application/binary'"/>
+   </p:declare-step>
    <p:declare-step type="p:unescape-markup" xml:id="unescape-markup">
       <p:input port="source" content-types="xml html"/>
       <p:output port="result" content-types="xml html"/>

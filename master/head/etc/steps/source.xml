@@ -3021,6 +3021,77 @@ the string value of the <option>replace</option> expression.</para>
     <para feature="archive-preserves-none">No document properties are preserved.</para>
   </simplesect>
 </section>
+<section xml:id="c.uncompress">
+
+  <title>p:uncompress</title>
+
+  <para>The <tag>p:uncompress</tag> step expects on its <port>source</port> port a compressed
+    document. It outputs an uncompressed version of this on its <port>result</port> port.</para>
+
+  <p:declare-step type="p:uncompress">
+    <p:input port="source" primary="true" content-types="any" sequence="false"/>
+    <p:output port="result" primary="true" content-types="any" sequence="false"/>
+    <p:option name="format" as="xs:QName?"/>
+    <p:option name="parameters" as="map(xs:QName,item()*)?"/>
+    <p:option name="content-type" as="xs:string" select="'application/binary'"/>
+  </p:declare-step>
+
+  <para>The compression format of the document appearing on the <port>source</port> port is
+    determined as follows:</para>
+  <itemizedlist>
+    <listitem>
+      <para>If the <option>format</option> option is specified, this determines the compression
+        format. Implementations <rfc2119>must</rfc2119> support the <biblioref linkend="gzip"/>
+        format, specified with the value <code>gzip</code>. <impl>It is
+            <glossterm>implementation-defined</glossterm> what other formats are supported.</impl>
+        <error code="C0200">It is a <glossterm>dynamic error</glossterm> if the compression format
+          does not match the format as specified in the <option>format</option>
+        option.</error></para>
+    </listitem>
+    <listitem>
+      <para>If no <option>format</option> option is specified or its value is the empty sequence,
+        the compression format will be determined by the step, using the <code>content-type</code>
+        document-property of the document on the <port>source</port> port and/or by inspecting its
+        contents. <impl>It is <glossterm>implementation-defined</glossterm> how the step determines
+          the compression format.</impl> Implementations <rfc2119>should</rfc2119> recognize
+        archives in <biblioref linkend="gzip"/> format. </para>
+    </listitem>
+  </itemizedlist>
+  
+  <para>The <option>parameters</option> option can be used to supply parameters to control the
+    uncompression. <impl>The semantics of the keys and the allowed values for these keys are
+      <glossterm>implementation-defined</glossterm>.</impl>
+    <error code="C0079">It is a <glossterm>dynamic error</glossterm> if the map
+      <option>parameters</option> contains an entry whose key is defined by the
+      implementation and whose value is not valid for that key.</error></para>
+
+  <para>Identification of the uncompressed document's content-type is done as follows:</para>
+  <orderedlist>
+    <listitem>
+      <para>If the <option>content-type</option> option is specified, the uncompressed document
+          <rfc2119>must</rfc2119> be interpreted according to that content-type. <error code="C0070">It is a <glossterm>dynamic error</glossterm> if the supplied
+            <option>content-type</option> is not a valid media type of the form
+              “<literal><replaceable>type</replaceable>/<replaceable>subtype</replaceable>+<replaceable>ext</replaceable></literal>”
+          where “<literal>+<replaceable>ext</replaceable></literal>” is optional.</error>
+        <error code="C0201">It is a <glossterm>dynamic error</glossterm> if the
+            <tag>p:uncompress</tag> step cannot perform the requested content-type cast.</error>
+      </para>
+    </listitem>
+    <listitem>
+      <para><impl>In the absence of an explicit type, the content will be interpreted as content
+          type <code>application/binary</code></impl>.</para>
+    </listitem>
+  </orderedlist>
+
+  <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+  <simplesect>
+    <title>Document properties</title>
+    <para feature="uncompress-preserves-some">All document properties are preserved, except for the
+        <code>content-type</code> property which is updated accordingly.</para>
+  </simplesect>
+
+</section>
 <section xml:id="c.unescape-markup">
 <title>p:unescape-markup</title>
 
