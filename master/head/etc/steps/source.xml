@@ -887,9 +887,8 @@ summary of the differences between the two documents may appear on the
 
   <title>p:compress</title>
 
-  <para>The <tag>p:compress</tag> step serializes the document appearing on its
-      <port>source</port> port and outputs a compressed version of this on its <port>result</port>
-    port.</para>
+  <para>The <tag>p:compress</tag> step serializes the document appearing on its <port>source</port>
+    port and outputs a compressed version of this on its <port>result</port> port.</para>
 
   <p:declare-step type="p:compress">
     <p:input port="source" primary="true" content-types="any" sequence="false"/>
@@ -906,13 +905,15 @@ summary of the differences between the two documents may appear on the
   <para>The <tag>p:compress</tag> step has the following options:</para>
   <variablelist>
     <varlistentry>
-      <term><option>format</option></term> 
+      <term><option>format</option></term>
       <listitem>
-        <para>The format of the compression can be specified using the <option>format</option> option.
-          Implementations <rfc2119>must</rfc2119> support the <biblioref linkend="gzip"/> format,
-          specified with the value <code>gzip</code>. <impl>It is
-            <glossterm>implementation-defined</glossterm> what other formats are
-            supported.</impl></para>
+        <para>The format of the compression can be specified using the <option>format</option>
+          option. Implementations <rfc2119>must</rfc2119> support the <biblioref linkend="gzip"/>
+          format, specified with the value <code>gzip</code>. <impl>It is
+              <glossterm>implementation-defined</glossterm> what other formats are supported.</impl>
+          <error code="C0202">It is a <glossterm>dynamic error</glossterm> if the compression
+              format cannot be understood, determined and/or processed.</error>
+        </para>
       </listitem>
     </varlistentry>
     <varlistentry>
@@ -3046,7 +3047,8 @@ the string value of the <option>replace</option> expression.</para>
             <glossterm>implementation-defined</glossterm> what other formats are supported.</impl>
         <error code="C0200">It is a <glossterm>dynamic error</glossterm> if the compression format
           does not match the format as specified in the <option>format</option>
-        option.</error></para>
+          option.</error> <error code="C0202">It is a <glossterm>dynamic error</glossterm> if the compression
+            format cannot be understood, determined and/or processed.</error></para>
     </listitem>
     <listitem>
       <para>If no <option>format</option> option is specified or its value is the empty sequence,
