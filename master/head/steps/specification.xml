@@ -2502,7 +2502,7 @@ properties on the source document.</para>
    <p:input port="source" content-types="any"/>
    <p:output port="result" content-types="any"/>
    <p:option name="properties" required="true" as="map(xs:QName,item()*)"/>
-   <p:option name="merge" select="false()" as="xs:boolean"/>
+   <p:option name="merge" select="true()" as="xs:boolean"/>
 </p:declare-step>
 
  <para>The document properties of the document
@@ -2513,7 +2513,8 @@ adjusted property values.</para>
 
 <para feature="p-set-properties-merge">If the <option>merge</option>
 option is true, then the supplied properties are added to the existing
-properties. If it is false, the document’s properties are replaced by
+properties, overwriting already existing values for a given key. 
+If it is false, the document’s properties are replaced by
 the new set.</para>
 
 <para><error code="C0069">It is a <glossterm>dynamic

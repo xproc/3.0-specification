@@ -223,7 +223,7 @@
       <p:input port="source" content-types="any"/>
       <p:output port="result" content-types="any"/>
       <p:option name="properties" required="true" as="xs:string"/>
-      <p:option name="merge" select="false()" as="xs:boolean"/>
+      <p:option name="merge" select="true()" as="xs:boolean"/>
    </p:declare-step>
    <p:declare-step type="p:sink" xml:id="sink">
       <p:input port="source" content-types="any" sequence="true"/>
