@@ -2203,6 +2203,36 @@ the results are <glossterm>implementation-dependent</glossterm>.</impl>
 <para feature="make-absolute-uris-preserves-all">All document properties are preserved.</para>
 </simplesect>
 </section>
+<section xml:id="c.sink">
+<title>p:namespace-delete</title>
+
+<para>The <tag>p:namespace-delete</tag> step deletes all of the namespaces identified by the specified 
+      prefixes from the document appearing on port <port>source</port>.</para>
+
+<p:declare-step type="p:namespace-delete">
+   <p:input port="source" content-types="xml html"/>
+   <p:output port="result" content-types="xml html"/>
+   <p:option name="prefixes" required="true" as="xs:string"/>
+</p:declare-step>
+
+<para>The value of option <option>prefixes</option> is taken as a space separated list of
+prefixes. <error code="C0108">It is a <glossterm>dynamic error</glossterm> if any
+prefix is not in-scope at the point where the <code>p:namespace-delete</code> occurs.</error></para>
+
+<para>For any prefix the associated namespace is removed from the elements and 
+attributes in the document appearing on port <port>source</port>. The respective
+elements or attributes in the document appearing on port <port>result</port> will be
+in no namespace.</para>
+
+<para><error code="C0109">It is a <glossterm>dynamic error</glossterm> if
+a namespace is to be removed from an attribute and the element already has an attribute
+with the resulting name.</error></para>
+
+<simplesect>
+<title>Document properties</title>
+<para feature="namespace-delete-preserves-all">All document properties are preserved.</para>
+</simplesect>
+</section>
 <section xml:id="c.namespace-rename">
 <title>p:namespace-rename</title>
 

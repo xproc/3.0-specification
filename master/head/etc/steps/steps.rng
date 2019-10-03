@@ -23,6 +23,7 @@
       <ref name="Step-load"/>
       <ref name="Step-json-join"/>
       <ref name="Step-make-absolute-uris"/>
+      <ref name="Step-namespace-delete"/>
       <ref name="Step-namespace-rename"/>
       <ref name="Step-pack"/>
       <ref name="Step-rename"/>
@@ -778,6 +779,37 @@
           <optional>
             <data type="anyURI"/>
           </optional>
+        </attribute>
+      </optional>
+      <interleave>
+        <zeroOrMore>
+          <ref name="WithInput"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="WithOption"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <choice>
+            <ref name="Documentation"/>
+            <ref name="PipeInfo"/>
+          </choice>
+        </zeroOrMore>
+      </interleave>
+    </element>
+  </define>
+  <define name="Step-namespace-delete">
+    <element name="namespace-delete">
+      <optional>
+        <ref name="name.ncname.attr"/>
+      </optional>
+      <ref name="common.attributes"/>
+      <optional>
+        <ref name="use-when.attr"/>
+      </optional>
+      <ref name="step.attributes"/>
+      <optional>
+        <attribute name="prefixes">
+          <data type="string"/>
         </attribute>
       </optional>
       <interleave>

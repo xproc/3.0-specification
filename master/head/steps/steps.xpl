@@ -173,6 +173,11 @@
                 e:type="XSLTSelectionPattern"/>
       <p:option name="base-uri" as="xs:anyURI?"/>
    </p:declare-step>
+   <p:declare-step type="p:namespace-delete" xml:id="namespace-delete">
+      <p:input port="source" content-types="xml html"/>
+      <p:output port="result" content-types="xml html"/>
+      <p:option name="prefixes" required="true" as="xs:string"/>
+   </p:declare-step>
    <p:declare-step type="p:namespace-rename" xml:id="namespace-rename">
       <p:input port="source" content-types="xml html"/>
       <p:output port="result" content-types="xml html"/>
