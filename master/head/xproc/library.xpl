@@ -240,6 +240,11 @@
                 content-types="application/xhtml+xml"/>
       <p:option name="parameters" as="xs:string"/>
    </p:declare-step>
+   <p:declare-step type="p:namespace-delete" xml:id="namespace-delete">
+      <p:input port="source" content-types="xml html"/>
+      <p:output port="result" content-types="xml html"/>
+      <p:option name="prefixes" required="true" as="xs:string"/>
+   </p:declare-step>
    <p:declare-step type="p:namespace-rename" xml:id="namespace-rename">
       <p:input port="source" content-types="xml html"/>
       <p:output port="result" content-types="xml html"/>
@@ -321,7 +326,7 @@
       <p:input port="source" content-types="any"/>
       <p:output port="result" content-types="any"/>
       <p:option name="properties" required="true" as="xs:string"/>
-      <p:option name="merge" select="false()" as="xs:boolean"/>
+      <p:option name="merge" select="true()" as="xs:boolean"/>
    </p:declare-step>
    <p:declare-step type="p:sink" xml:id="sink">
       <p:input port="source" content-types="any" sequence="true"/>
@@ -456,6 +461,19 @@
       <p:option name="exclude-filter" as="xs:string*" e:type="RegularExpression"/>
       <p:option name="format" as="xs:QName?"/>
       <p:option name="parameters" as="xs:string"/>
+   </p:declare-step>
+   <p:declare-step type="p:uncompress" xml:id="uncompress">
+      <p:input port="source"
+               primary="true"
+               content-types="any"
+               sequence="false"/>
+      <p:output port="result"
+                primary="true"
+                content-types="any"
+                sequence="false"/>
+      <p:option name="format" as="xs:QName?"/>
+      <p:option name="parameters" as="xs:string"/>
+      <p:option name="content-type" as="xs:string" select="'application/binary'"/>
    </p:declare-step>
    <p:declare-step type="p:unescape-markup" xml:id="unescape-markup">
       <p:input port="source" content-types="xml html"/>

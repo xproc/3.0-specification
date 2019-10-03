@@ -684,6 +684,7 @@ StandardStep =
   | Step-load
   | Step-json-join
   | Step-make-absolute-uris
+  | Step-namespace-delete
   | Step-namespace-rename
   | Step-pack
   | Step-rename
@@ -701,6 +702,7 @@ StandardStep =
   | Step-text-sort
   | Step-text-tail
   | Step-unarchive
+  | Step-uncompress
   | Step-unescape-markup
   | Step-unwrap
   | Step-uuid
@@ -1117,6 +1119,15 @@ Step-make-absolute-uris =
     attribute base-uri { xsd:anyURI? }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
   }
+Step-namespace-delete =
+  element namespace-delete {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute prefixes { xsd:string }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
 Step-namespace-rename =
   element namespace-rename {
     name.ncname.attr?,
@@ -1287,6 +1298,17 @@ Step-unarchive =
     attribute exclude-filter { xsd:string }?,
     attribute format { xsd:QName? }?,
     attribute parameters { xsd:string }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-uncompress =
+  element uncompress {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute format { xsd:QName? }?,
+    attribute parameters { xsd:string }?,
+    attribute content-type { xsd:string }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
   }
 Step-unescape-markup =
