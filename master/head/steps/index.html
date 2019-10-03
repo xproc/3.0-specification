@@ -1,4 +1,4 @@
-<html xmlns="http://www.w3.org/1999/xhtml"><head><title>XProc 3.0: Standard Step Library</title><meta charset="utf-8" /><link rel="alternate" title="XML" href="specification.xml" /><link rel="alternate" title="Latest editor's draft" href="http://www.w3.org/XML/XProc/docs/langspec.html" /><link rel="alternate" title="Latest Public Working Draft" href="http://www.w3.org/TR/xproc/" /><meta name="generator" content="DocBook XSL 2.0 Stylesheets V2.3.9" /><meta name="description" content="Abstract This specification describes the standard step vocabulary of&#xA;  XProc 3.0: An XML Pipeline Language." /><link href="css/prism.css" rel="stylesheet" type="text/css" /><link href="css/db-prism.css" rel="stylesheet" type="text/css" /><link rel="stylesheet" type="text/css" href="css/base.css" /><link rel="stylesheet" type="text/css" href="css/xproc.css" /><link rel="stylesheet" type="text/css" href="css/base.css" /><link rel="stylesheet" type="text/css" href="css/print.css" media="print" /><script type="text/javascript" src="js/dbmodnizr.js"></script></head><body><article class="specification"><div class="head" id="spec.head"><h1>XProc 3.0: Standard Step Library</h1><h2>Editor's Draft  <time datetime="2019-10-03T09:29:22Z">3 October 2019 at 09:29 UTC (<a href="https://github.com/xproc/3.0-steps/commit/b778cfd7e4a5bdec90811d6553e1ef902a36a34d">build 216</a>)</time></h2><dl><dt>This Version:</dt><dd><a href="https://xproc.github.io/3.0-steps/master/head/steps/">https://xproc.github.io/3.0-steps/master/head/steps/</a></dd><dt>Latest Version:</dt><dd><a href="http://spec.xproc.org/master/head/steps/">http://spec.xproc.org/master/head/steps/</a></dd><dt>Editors:</dt><dd><span class="personname">Norman Walsh</span></dd><dd><span class="personname">Achim Berndzen</span></dd><dd><span class="personname">Gerrit Imsieke</span></dd><dd><span class="personname">Erik Siegel</span></dd><dt>Repository:</dt><dd><a href="http://github.com/xproc/3.0-steps">This specification on GitHub</a></dd><dd><a href="http://github.com/xproc/3.0-specification/issues">Report an issue</a></dd><dt>Changes:</dt><dd><a href="diff.html">Diff against current “status quo” draft</a></dd><dd><a href="http://github.com/xproc/3.0-steps/commits/master">Commits for this specification</a></dd></dl><p>This document is also available in these non-normative formats: <a href="specification.xml">XML</a>, 
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>XProc 3.0: Standard Step Library</title><meta charset="utf-8" /><link rel="alternate" title="XML" href="specification.xml" /><link rel="alternate" title="Latest editor's draft" href="http://www.w3.org/XML/XProc/docs/langspec.html" /><link rel="alternate" title="Latest Public Working Draft" href="http://www.w3.org/TR/xproc/" /><meta name="generator" content="DocBook XSL 2.0 Stylesheets V2.3.9" /><meta name="description" content="Abstract This specification describes the standard step vocabulary of&#xA;  XProc 3.0: An XML Pipeline Language." /><link href="css/prism.css" rel="stylesheet" type="text/css" /><link href="css/db-prism.css" rel="stylesheet" type="text/css" /><link rel="stylesheet" type="text/css" href="css/base.css" /><link rel="stylesheet" type="text/css" href="css/xproc.css" /><link rel="stylesheet" type="text/css" href="css/base.css" /><link rel="stylesheet" type="text/css" href="css/print.css" media="print" /><script type="text/javascript" src="js/dbmodnizr.js"></script></head><body><article class="specification"><div class="head" id="spec.head"><h1>XProc 3.0: Standard Step Library</h1><h2>Editor's Draft  <time datetime="2019-10-03T09:38:28Z">3 October 2019 at 09:38 UTC (<a href="https://github.com/xproc/3.0-steps/commit/0924c47087a373b46376524f62986b9520c13678">build 218</a>)</time></h2><dl><dt>This Version:</dt><dd><a href="https://xproc.github.io/3.0-steps/master/head/steps/">https://xproc.github.io/3.0-steps/master/head/steps/</a></dd><dt>Latest Version:</dt><dd><a href="http://spec.xproc.org/master/head/steps/">http://spec.xproc.org/master/head/steps/</a></dd><dt>Editors:</dt><dd><span class="personname">Norman Walsh</span></dd><dd><span class="personname">Achim Berndzen</span></dd><dd><span class="personname">Gerrit Imsieke</span></dd><dd><span class="personname">Erik Siegel</span></dd><dt>Repository:</dt><dd><a href="http://github.com/xproc/3.0-steps">This specification on GitHub</a></dd><dd><a href="http://github.com/xproc/3.0-specification/issues">Report an issue</a></dd><dt>Changes:</dt><dd><a href="diff.html">Diff against current “status quo” draft</a></dd><dd><a href="http://github.com/xproc/3.0-steps/commits/master">Commits for this specification</a></dd></dl><p>This document is also available in these non-normative formats: <a href="specification.xml">XML</a>, 
 	  automatic <a href="diff.html">change markup</a> from the previous draft
           courtesy of <a href="http://www.deltaxml.com/">DeltaXML</a>.</p><p class="copyright"><span class="copyright">Copyright © <span class="years">2018</span> <span class="holders"><span class="holder">@@FIXME:</span></span></span></p><hr /><div class="abstract"><h2>Abstract</h2>
   <p>This specification describes the standard step vocabulary of
@@ -2329,12 +2329,17 @@ properties, overwriting already existing values for a given key.
 If it is false, the document’s properties are replaced by
 the new set.</p>
 
+<p><a id="err.inline.D0070"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic error</a></em> (<a href="#err.D0070"><code class="errqname">err:XD0070</code></a>) if a value is 
+assigned to the <code class="code">serialization</code> document property cannot be converted 
+into <code class="code">map(xs:QName, item()*)</code> according
+to the rules in section “QName handling” of [<a href="#xproc30"><span class="abbrev">XProc 3.0</span></a>].</p>
+
 <p><a id="err.inline.C0069"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic
 error</a></em> (<a href="#err.C0069"><code class="errqname">err:XC0069</code></a>) if the <code class="option">properties</code> map contains
 a key equal to the string “<code class="literal">content-type</code>”.
 </p>
 
-<section id="c.set-properties.7" class="simplesect"><div class="section-titlepage"><h4>Document properties</h4></div><div class="content">
+<section id="c.set-properties.8" class="simplesect"><div class="section-titlepage"><h4>Document properties</h4></div><div class="content">
 
 <p>If <code class="option">merge</code> is
 true, document properties not overridden by settings in the <code class="option">properties</code>
@@ -3228,7 +3233,7 @@ is empty.</p>
 <ul><li>
     <p>If the document root element is <a href="#cv.query"><code id="cv.query" class="tag-element">c:query</code></a>, the text
       descendants of this element are considered the query.</p>
-    <p id="d2312e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:query&gt;<br />    <var>string</var><br />&lt;/c:query&gt;</code></p>
+    <p id="d2315e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:query&gt;<br />    <var>string</var><br />&lt;/c:query&gt;</code></p>
   </li><li>
       <p>If the document root element is in the XQueryX namespace, the
         document is treated as an XQueryX-encoded query. <span id="impl-55">Support for
@@ -3538,7 +3543,10 @@ if the content-type is specified and the
 document-properties has a “content-type” that is not the
 same.</p><p>See: <a href="#err.inline.D0062">p:load</a></p></dd><dt id="err.D0064"><code class="errqname">err:XD0064</code></dt><dd><p>It is a dynamic error if the
                   c:entry/@href attribute in a p:archive step manifest
-                is present and its value is not a valid xs:anyURI.</p><p>See: <a href="#err.inline.D0064">The archive manifest</a>, <a href="#err.inline.D0064.1">p:load</a></p></dd></dl></div>
+                is present and its value is not a valid xs:anyURI.</p><p>See: <a href="#err.inline.D0064">The archive manifest</a>, <a href="#err.inline.D0064.1">p:load</a></p></dd><dt id="err.D0070"><code class="errqname">err:XD0070</code></dt><dd><p>It is a dynamic error if a value is 
+assigned to the serialization document property cannot be converted 
+into map(xs:QName, item()*) according
+to the rules in section “QName handling” of .</p><p>See: <a href="#err.inline.D0070">p:set-properties</a></p></dd></dl></div>
 
 <div id="step-error-summary"><h5>Step Errors</h5><dl class="errs"><dt id="err.C0001"><code class="errqname">err:XC0001</code></dt><dd><p>It is a
       dynamic error if the value of option overwrite-content-type 
