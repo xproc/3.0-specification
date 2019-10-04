@@ -683,6 +683,7 @@ StandardStep =
   | Step-label-elements
   | Step-load
   | Step-json-join
+  | Step-json-merge
   | Step-make-absolute-uris
   | Step-namespace-delete
   | Step-namespace-rename
@@ -1107,6 +1108,18 @@ Step-json-join =
     use-when.attr?,
     step.attributes,
     attribute flatten-to-depth { xsd:string? }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-json-merge =
+  element json-merge {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute duplicates {
+      "reject" | "use-first" | "use-last" | "use-any" | "combine"
+    }?,
+    attribute key { xsd:string }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
   }
 Step-make-absolute-uris =

@@ -1751,6 +1751,7 @@
       <ref name="Step-label-elements"/>
       <ref name="Step-load"/>
       <ref name="Step-json-join"/>
+      <ref name="Step-json-merge"/>
       <ref name="Step-make-absolute-uris"/>
       <ref name="Step-namespace-delete"/>
       <ref name="Step-namespace-rename"/>
@@ -3218,6 +3219,48 @@
           <optional>
             <data type="string"/>
           </optional>
+        </attribute>
+      </optional>
+      <interleave>
+        <zeroOrMore>
+          <ref name="WithInput"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="WithOption"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <choice>
+            <ref name="Documentation"/>
+            <ref name="PipeInfo"/>
+          </choice>
+        </zeroOrMore>
+      </interleave>
+    </element>
+  </define>
+  <define name="Step-json-merge">
+    <element name="json-merge">
+      <optional>
+        <ref name="name.ncname.attr"/>
+      </optional>
+      <ref name="common.attributes"/>
+      <optional>
+        <ref name="use-when.attr"/>
+      </optional>
+      <ref name="step.attributes"/>
+      <optional>
+        <attribute name="duplicates">
+          <choice>
+            <value>reject</value>
+            <value>use-first</value>
+            <value>use-last</value>
+            <value>use-any</value>
+            <value>combine</value>
+          </choice>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="key">
+          <data type="string"/>
         </attribute>
       </optional>
       <interleave>
