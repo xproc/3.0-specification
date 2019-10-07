@@ -1901,6 +1901,83 @@ as the source.</para>
 <port>insertion</port> port are preserved.</para>
 </simplesect>
 </section>
+<section xml:id="c.json-join" version="5.0-extension w3c-xproc">
+<title>p:json-join</title>
+
+<para>The <code>p:json-join</code> step joins a sequence of JSON
+documents into a single JSON document (an array). If the sequence on
+port <code>source</code> is empty, the empty sequence is returned on
+port <code>result</code>.</para>
+
+<p:declare-step type="p:json-join">
+  <p:input port="source" sequence="true" content-types="json"> </p:input>
+  <p:output port="result" content-types="application/json"/>
+  <p:option name="flatten-to-depth" as="xs:string?" select="'0'"/>
+</p:declare-step>
+
+<para>The option <option>flatten-to-depth</option> controls whether and to which
+depth members of an array appearing on port <port>source</port> are flattened.
+The <option>flatten-to-depth</option> option may contain either the 
+string “<literal>unbounded</literal>” or a string that may be cast to a non-negative integer. 
+An integer value of <literal>0</literal>, which is the default, means that no 
+flattening takes place, so the array appearing on port <port>source</port> will
+be contained as an array in the resulting array. An integer value of <literal>1</literal>
+means that an array on port <port>source</port> is flattened, i.e. the members
+of that array will appear as individual members in the resulting array. Any value greater
+than <literal>1</literal> means that the flattening is applied recursively to arrays in
+arrays up to the given depth. A value of “<literal>unbounded</literal>” means that all
+arrays in arrays will be flattened. As a consequence, the resulting array appearing on
+port <port>result</port> will not have any arrays as members.</para>
+</section>
+<section xml:id="c.json-merge" version="5.0-extension w3c-xproc">
+<title>p:json-merge</title>
+
+<para>The <tag>p:json-merge</tag> step merges the sequence of appearing
+on port <port>source</port> into a single JSON object appearing on port
+<port>result</port>. If the sequence on
+port <port>source</port> is empty, the empty sequence is returned on
+port <port>result</port>.</para>
+
+<p:declare-step type="p:json-merge">
+  <p:input port="source" sequence="true" content-types="any"> </p:input>
+  <p:output port="result" content-types="application/json"/>
+  <p:option name="duplicates" as="xs:token" values="('reject', 'use-first', 'use-last', 'use-any', 'combine')" select="'use-first'"/>
+  <p:option name="key" as="xs:string" select="'concat(&#34;_&#34;,$p:index)'" e:type="XPathExpression"/>
+</p:declare-step>
+
+<para>The step inspects the documents on port <port>source</port> in turn to create the resulting
+  map:</para>
+<itemizedlist>
+  <listitem>
+    <para>If the document under inspection is a JSON document representing a map,
+    all key-value pairs are copied into the result map unless this map already contains
+    an entry with the given key. In this case the value of option <option>duplicates</option>
+    determines the policy for handling duplicate keys as specified for function <code>map:merge</code>
+      in <biblioref linkend="xpath31-functions"/>.  
+      <error code="C0106">It is a <glossterm>dynamic error</glossterm> if duplicate keys are encountered and 
+      option <option>duplicates</option> has value “<literal>reject</literal>”.</error></para>
+  </listitem>
+  <listitem>
+    <para>For every other type of JSON document, for XML documents, HTML documents, or text documents a
+    new key-value pair is created and put into the resulting map. The key is created by evaluating
+    the XPath expression in option <option>key</option> with the inspected document as context item. Duplicate
+    keys are handled as described above. The XDM representation of the inspected document is taken as value of
+    the key-value pair.</para>
+  </listitem>
+  <listitem>
+    <para><impl>It is <glossterm>implementation defined</glossterm> if <code>p:json-merge</code> is
+    able to process document types not mentioned yet, i.e. types of binary documents.</impl> If a processor
+    supports a given type of documents, the key-value pair is created as described above. <error code="C0107">
+    It is a <glossterm>dynamic error</glossterm> if a document of a not supported document type appears on 
+      port <port>source</port> of <code>p:json-merge</code>.</error>
+    </para>
+  </listitem>
+</itemizedlist> 
+  <para>An implementation must bind the variable “<code>p:index</code>” in the static context of 
+    each evaluation of the XPath expression to the position of the document in the sequence 
+    of documents on port <port>source</port>, starting with “<literal>1</literal>”.
+    </para>
+</section>
 <section xml:id="c.label-elements">
 <title>p:label-elements</title>
 
@@ -2123,83 +2200,6 @@ are <glossterm>implementation-defined</glossterm>.
 The properties specified in <option>document-properties</option> are applied.
 </para>
 </simplesect>
-</section>
-<section xml:id="c.json-join" version="5.0-extension w3c-xproc">
-<title>p:json-join</title>
-
-<para>The <code>p:json-join</code> step joins a sequence of JSON
-documents into a single JSON document (an array). If the sequence on
-port <code>source</code> is empty, the empty sequence is returned on
-port <code>result</code>.</para>
-
-<p:declare-step type="p:json-join">
-  <p:input port="source" sequence="true" content-types="json"> </p:input>
-  <p:output port="result" content-types="application/json"/>
-  <p:option name="flatten-to-depth" as="xs:string?" select="'0'"/>
-</p:declare-step>
-
-<para>The option <option>flatten-to-depth</option> controls whether and to which
-depth members of an array appearing on port <port>source</port> are flattened.
-The <option>flatten-to-depth</option> option may contain either the 
-string “<literal>unbounded</literal>” or a string that may be cast to a non-negative integer. 
-An integer value of <literal>0</literal>, which is the default, means that no 
-flattening takes place, so the array appearing on port <port>source</port> will
-be contained as an array in the resulting array. An integer value of <literal>1</literal>
-means that an array on port <port>source</port> is flattened, i.e. the members
-of that array will appear as individual members in the resulting array. Any value greater
-than <literal>1</literal> means that the flattening is applied recursively to arrays in
-arrays up to the given depth. A value of “<literal>unbounded</literal>” means that all
-arrays in arrays will be flattened. As a consequence, the resulting array appearing on
-port <port>result</port> will not have any arrays as members.</para>
-</section>
-<section xml:id="c.json-merge" version="5.0-extension w3c-xproc">
-<title>p:json-merge</title>
-
-<para>The <tag>p:json-merge</tag> step merges the sequence of appearing
-on port <port>source</port> into a single JSON object appearing on port
-<port>result</port>. If the sequence on
-port <port>source</port> is empty, the empty sequence is returned on
-port <port>result</port>.</para>
-
-<p:declare-step type="p:json-merge">
-  <p:input port="source" sequence="true" content-types="any"> </p:input>
-  <p:output port="result" content-types="application/json"/>
-  <p:option name="duplicates" as="xs:token" values="('reject', 'use-first', 'use-last', 'use-any', 'combine')" select="'use-first'"/>
-  <p:option name="key" as="xs:string" select="'concat(&#34;_&#34;,$p:index)'" e:type="XPathExpression"/>
-</p:declare-step>
-
-<para>The step inspects the documents on port <port>source</port> in turn to create the resulting
-  map:</para>
-<itemizedlist>
-  <listitem>
-    <para>If the document under inspection is a JSON document representing a map,
-    all key-value pairs are copied into the result map unless this map already contains
-    an entry with the given key. In this case the value of option <option>duplicates</option>
-    determines the policy for handling duplicate keys as specified for function <code>map:merge</code>
-      in <biblioref linkend="xpath31-functions"/>.  
-      <error code="C0106">It is a <glossterm>dynamic error</glossterm> if duplicate keys are encountered and 
-      option <option>duplicates</option> has value “<literal>reject</literal>”.</error></para>
-  </listitem>
-  <listitem>
-    <para>For every other type of JSON document, for XML documents, HTML documents, or text documents a
-    new key-value pair is created and put into the resulting map. The key is created by evaluating
-    the XPath expression in option <option>key</option> with the inspected document as context item. Duplicate
-    keys are handled as described above. The XDM representation of the inspected document is taken as value of
-    the key-value pair.</para>
-  </listitem>
-  <listitem>
-    <para><impl>It is <glossterm>implementation defined</glossterm> if <code>p:json-merge</code> is
-    able to process document types not mentioned yet, i.e. types of binary documents.</impl> If a processor
-    supports a given type of documents, the key-value pair is created as described above. <error code="C0107">
-    It is a <glossterm>dynamic error</glossterm> if a document of a not supported document type appears on 
-      port <port>source</port> of <code>p:json-merge</code>.</error>
-    </para>
-  </listitem>
-</itemizedlist> 
-  <para>An implementation must bind the variable “<code>p:index</code>” in the static context of 
-    each evaluation of the XPath expression to the position of the document in the sequence 
-    of documents on port <port>source</port>, starting with “<literal>1</literal>”.
-    </para>
 </section>
 <section xml:id="c.make-absolute-uris">
 <title>p:make-absolute-uris</title>

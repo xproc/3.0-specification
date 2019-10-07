@@ -138,6 +138,23 @@
                 values="('first-child','last-child','before','after')"
                 select="'after'"/>
    </p:declare-step>
+   <p:declare-step type="p:json-join" xml:id="json-join">
+      <p:input port="source" sequence="true" content-types="json"/>
+      <p:output port="result" content-types="application/json"/>
+      <p:option name="flatten-to-depth" as="xs:string?" select="'0'"/>
+   </p:declare-step>
+   <p:declare-step type="p:json-merge" xml:id="json-merge">
+      <p:input port="source" sequence="true" content-types="any"/>
+      <p:output port="result" content-types="application/json"/>
+      <p:option name="duplicates"
+                as="xs:token"
+                values="('reject', 'use-first', 'use-last', 'use-any', 'combine')"
+                select="'use-first'"/>
+      <p:option name="key"
+                as="xs:string"
+                select="'concat(&#34;_&#34;,$p:index)'"
+                e:type="XPathExpression"/>
+   </p:declare-step>
    <p:declare-step type="p:label-elements" xml:id="label-elements">
       <p:input port="source" content-types="xml html"/>
       <p:output port="result" content-types="xml html"/>
@@ -158,23 +175,6 @@
       <p:option name="parameters" as="xs:string"/>
       <p:option name="content-type" as="xs:string?"/>
       <p:option name="document-properties" as="xs:string"/>
-   </p:declare-step>
-   <p:declare-step type="p:json-join" xml:id="json-join">
-      <p:input port="source" sequence="true" content-types="json"/>
-      <p:output port="result" content-types="application/json"/>
-      <p:option name="flatten-to-depth" as="xs:string?" select="'0'"/>
-   </p:declare-step>
-   <p:declare-step type="p:json-merge" xml:id="json-merge">
-      <p:input port="source" sequence="true" content-types="any"/>
-      <p:output port="result" content-types="application/json"/>
-      <p:option name="duplicates"
-                as="xs:token"
-                values="('reject', 'use-first', 'use-last', 'use-any', 'combine')"
-                select="'use-first'"/>
-      <p:option name="key"
-                as="xs:string"
-                select="'concat(&#34;_&#34;,$p:index)'"
-                e:type="XPathExpression"/>
    </p:declare-step>
    <p:declare-step type="p:make-absolute-uris" xml:id="make-absolute-uris">
       <p:input port="source" content-types="xml html"/>
