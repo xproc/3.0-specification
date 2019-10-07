@@ -1986,7 +1986,11 @@ port <port>result</port>.</para>
   <listitem>
     <para>For every other type of JSON document, for XML documents, HTML documents, or text documents a
     new key-value pair is created and put into the resulting map. The key is created by evaluating
-    the XPath expression in option <option>key</option> with the inspected document as context item. Duplicate
+    the XPath expression in option <option>key</option> with the inspected document as context item. If the
+      evaluation result is a single atomic value, it is taken as key. If the evaluation result is a node, its
+      string value is taken as key. <error code="C0110">It is a <glossterm>dynamic error</glossterm> if the
+      evaluation of the XPath expression in option <option>key</option> for a given item returns either a
+      sequence, an array, a map, or a function.</error> Duplicate
     keys are handled as described above. The XDM representation of the inspected document is taken as value of
     the key-value pair.</para>
   </listitem>
@@ -2003,6 +2007,10 @@ port <port>result</port>.</para>
     each evaluation of the XPath expression to the position of the document in the sequence 
     of documents on port <port>source</port>, starting with “<literal>1</literal>”.
     </para>
+  <simplesect>
+    <title>Document properties</title>
+    <para feature="json-merge-preserves-none">No document properties are preserved.</para>
+  </simplesect>
 </section>
 <section xml:id="c.label-elements">
 <title>p:label-elements</title>
