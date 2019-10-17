@@ -12,15 +12,13 @@
 		exclude-result-prefixes="f h db m t xlink xs tp"
                 version="2.0">
 
-<xsl:import href="https://cdn.docbook.org/release/latest/xslt/base/html/final-pass.xsl"/>
+<xsl:import href="https://cdn.docbook.org/release/xsl20/current/xslt/base/html/final-pass.xsl"/>
 
 <xsl:param name="js-navigation" select="false()"/>
 
 <xsl:param name="w3c-doctype" select="/db:specification/@class"/>
 
 <xsl:param name="toc.section.depth">3</xsl:param>
-
-<xsl:param name="docbook.css" select="'css/base.css'"/>
 
 <xsl:param name="publication.root.uri"
 	   select="if (/processing-instruction(publication-root))
