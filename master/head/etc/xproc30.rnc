@@ -680,10 +680,10 @@ StandardStep =
   | Step-http-request
   | Step-identity
   | Step-insert
-  | Step-label-elements
-  | Step-load
   | Step-json-join
   | Step-json-merge
+  | Step-label-elements
+  | Step-load
   | Step-make-absolute-uris
   | Step-namespace-delete
   | Step-namespace-rename
@@ -1077,6 +1077,27 @@ Step-insert =
     }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
   }
+Step-json-join =
+  element json-join {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute flatten-to-depth { xsd:string? }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-json-merge =
+  element json-merge {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute duplicates {
+      "reject" | "use-first" | "use-last" | "use-any" | "combine"
+    }?,
+    attribute key { xsd:string }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
 Step-label-elements =
   element label-elements {
     name.ncname.attr?,
@@ -1100,27 +1121,6 @@ Step-load =
     attribute content-type { xsd:string? }?,
     attribute document-properties { xsd:string }?,
     (WithOption* & (Documentation | PipeInfo)*)
-  }
-Step-json-join =
-  element json-join {
-    name.ncname.attr?,
-    common.attributes,
-    use-when.attr?,
-    step.attributes,
-    attribute flatten-to-depth { xsd:string? }?,
-    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
-  }
-Step-json-merge =
-  element json-merge {
-    name.ncname.attr?,
-    common.attributes,
-    use-when.attr?,
-    step.attributes,
-    attribute duplicates {
-      "reject" | "use-first" | "use-last" | "use-any" | "combine"
-    }?,
-    attribute key { xsd:string }?,
-    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
   }
 Step-make-absolute-uris =
   element make-absolute-uris {

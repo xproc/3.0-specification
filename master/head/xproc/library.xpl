@@ -195,7 +195,7 @@
                 select="'after'"/>
    </p:declare-step>
    <p:declare-step type="p:json-join" xml:id="json-join">
-      <p:input port="source" sequence="true" content-types="json"/>
+      <p:input port="source" sequence="true" content-types="any"/>
       <p:output port="result" content-types="application/json"/>
       <p:option name="flatten-to-depth" as="xs:string?" select="'0'"/>
    </p:declare-step>
