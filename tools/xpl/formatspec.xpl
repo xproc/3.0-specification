@@ -18,7 +18,7 @@
 <p:option name="diff" select="''"/>
 <p:option name="specid" select="''"/>
 
-<p:import href="https://cdn.docbook.org/release/latest/xslt/base/pipelines/docbook.xpl"/>
+<p:import href="https://cdn.docbook.org/release/xsl20/current/xslt/base/pipelines/docbook.xpl"/>
 
 <p:declare-step type="cx:message">
   <p:input port="source" sequence="true"/>
