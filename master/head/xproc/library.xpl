@@ -22,8 +22,12 @@
                primary="true"
                content-types="any"
                sequence="true"/>
-      <p:input port="manifest" content-types="application/xml" sequence="true"/>
-      <p:input port="archive" content-types="any" sequence="true"/>
+      <p:input port="manifest" content-types="application/xml" sequence="true">
+         <p:empty/>
+      </p:input>
+      <p:input port="archive" content-types="any" sequence="true">
+         <p:empty/>
+      </p:input>
       <p:output port="result"
                 primary="true"
                 content-types="any"
