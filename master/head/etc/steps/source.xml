@@ -299,8 +299,12 @@ element's [base URI].</para>
 
   <p:declare-step type="p:archive">
     <p:input port="source" primary="true" content-types="any" sequence="true"/>
-    <p:input port="manifest" content-types="application/xml" sequence="true"/>
-    <p:input port="archive" content-types="any" sequence="true"/>
+    <p:input port="manifest" content-types="application/xml" sequence="true">
+      <p:empty/>
+    </p:input>
+    <p:input port="archive" content-types="any" sequence="true">
+      <p:empty/>
+    </p:input>
     <p:output port="result" primary="true" content-types="any" sequence="false"/>
     <p:output port="report" content-types="application/xml" sequence="false"/>
     <p:option name="format" as="xs:QName" select="'zip'"/>
@@ -337,6 +341,7 @@ element's [base URI].</para>
           <error code="C0100">It is a <glossterm>dynamic error</glossterm> if the document on port
           <port>report</port> does not conform to the given schema.</error>
         </para>
+        <para>The default input for this port is the empty sequence.</para>
       </listitem>
     </varlistentry>
     <varlistentry>
@@ -351,6 +356,7 @@ element's [base URI].</para>
             <port>archive</port> port. <error code="C0081">It is a <glossterm>dynamic
               error</glossterm> if the format of the archive does not match the format as specified 
               in <option>format</option> option.</error></para>
+        <para>The default input for this port is the empty sequence.</para>
       </listitem>
     </varlistentry>
   </variablelist>
