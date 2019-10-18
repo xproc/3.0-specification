@@ -3775,7 +3775,9 @@ subpipelines declare outputs that can produce sequences and some do
 not. Each output of the <tag>p:choose</tag> is declared to produce a
 sequence. The content types that can appear on the port are the union
 of the content types that might be produced by any of the <tag>p:when</tag> 
-or the <tag>p:otherwise</tag>.
+or the <tag>p:otherwise</tag>. If a primary output port is (explicitly or 
+implicitly) defined and <tag>p:otherwise</tag> is missing, documents 
+with <emphasis>any</emphasis> content type can appear on that port.
 </para>
 
 <para>The <tag>p:choose</tag> can specify the context item against
@@ -3921,6 +3923,13 @@ ports if the test expression is false.</para>
 feature that it isn’t an error if there’s no default readable port). A
 primary output port is required in order to make these semantics
 meaningful and consistent.</para>
+  
+<para>The <tag class="attribute">sequence</tag> attribute and
+the <tag class="attribute">content-types</tag> attribute of the primary output port 
+only apply to the subpipeline of <tag>p:if</tag>. From the outside a primary output
+port of a <tag>p:if</tag> produces sequences and allows documents of any content type. 
+For all other output ports the <tag class="attribute">sequence</tag> attribute only
+applies to the subpipeline, while on the outside these port produce sequences.</para>
 </section>
 
     <section xml:id="p.group"><title>p:group</title><para>A group is specified by the
