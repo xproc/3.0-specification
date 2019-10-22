@@ -397,8 +397,8 @@
     </script>
   </xsl:if>
 
+  <link rel="stylesheet" type="text/css" href="css/base.css"/>
   <link rel="stylesheet" type="text/css" href="css/xproc.css"/>
-  <link rel="stylesheet" type="text/css" href="{$docbook.css}"/>
   <link rel="stylesheet" type="text/css" href="css/print.css" media="print"/>
 </xsl:template>
 
@@ -777,7 +777,10 @@
 <xsl:template match="db:xspecref">
   <xsl:variable name="spec" select="string(@spec)"/>
   <xsl:variable name="xref" select="@xref/string()"/>
-  <xsl:variable name="tocfn" select="concat('../../', @spec, '/build/toc.xml')"/>
+  <xsl:variable name="tocfn"
+                select="if (@spec = 'xproc')
+                        then concat('../../', @spec, '/build/toc.xml')
+                        else concat('../../build/', @spec, '/toc.xml')"/>
 
   <xsl:choose>
     <xsl:when test="doc-available($tocfn)">

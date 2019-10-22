@@ -1,7 +1,11 @@
-dist: trusty
+dist: xenial
 language: java
+jdk: openjdk12
 install: true
 script: ./gradlew --stacktrace
+
+before_install:
+  - tools/difftools.sh
 
 after_success:
   - tools/travis-publish-spec.sh

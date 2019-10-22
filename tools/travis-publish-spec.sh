@@ -1,38 +1,43 @@
 #!/bin/bash
 
-set | grep TRAVIS
+if [ "$TRAVIS_PULL_REQUEST" != "false" ]; then
+    echo "Cannot publish pull requests."
+    exit
+fi
 
 if [ "$TRAVIS_REPO_SLUG" == "$GIT_PUB_REPO" ]; then
-    echo -e "Setting up for publication...\n"
-
-    mkdir $HOME/pubroot
-    cp -R build/dist/* $HOME/pubroot
-
-    mkdir $HOME/tools
-    cp -R tools/* $HOME/tools
-
+    echo "Preparing to publish..."
     cd $HOME
     git config --global user.email ${GIT_EMAIL}
     git config --global user.name ${GIT_NAME}
-    git clone --quiet --branch=gh-pages https://${GH_TOKEN}@github.com/${GIT_PUB_REPO} gh-pages > /dev/null
 
-    if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
-        echo -e "Publishing specification...\n"
+    if [ "$GH_TOKEN" != "" ]; then
+        echo "Publishing..."
+
+        git clone --quiet --branch=gh-pages \
+            https://${GH_TOKEN}@github.com/${GIT_PUB_REPO} gh-pages > /dev/null
 
         TIP=${TRAVIS_TAG:="head"}
 
+        # N.B. gh-pages here is updated by two different repositories.
+        # Consequently, we don't try to remove the old files.
+        # Occasional manual cleanup may be required.
+
         cd gh-pages
-        git rm -rf ./${TRAVIS_BRANCH}/${TIP}
         mkdir -p ./${TRAVIS_BRANCH}/${TIP}
-        cp -Rf $HOME/pubroot/* ./${TRAVIS_BRANCH}/${TIP}
+        cp -Rf $TRAVIS_BUILD_DIR/build/dist/* ./${TRAVIS_BRANCH}/${TIP}
 
         if [ "$GITHUB_CNAME" != "" ]; then
             echo $GITHUB_CNAME > CNAME
         fi
 
-        perl $HOME/tools/make-index.pl > index.html
+        # Copy the homepage furniture to gh-pages
+        mkdir -p homepage
+        cp $TRAVIS_BUILD_DIR/src/homepage/index.html .
+        cp $TRAVIS_BUILD_DIR/src/homepage/homepage/* homepage/
+        date +"%d %B %Y" > pubdate
 
-        git add -f .
+        git add --verbose -f .
         git commit -m "Successful travis build $TRAVIS_BUILD_NUMBER"
         git push -fq origin gh-pages > /dev/null
 

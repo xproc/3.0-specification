@@ -12,15 +12,13 @@
 		exclude-result-prefixes="f h db m t xlink xs tp"
                 version="2.0">
 
-<xsl:import href="https://cdn.docbook.org/release/2.3.7/xslt/base/html/final-pass.xsl"/>
+<xsl:import href="https://cdn.docbook.org/release/xsl20/current/xslt/base/html/final-pass.xsl"/>
 
 <xsl:param name="js-navigation" select="false()"/>
 
 <xsl:param name="w3c-doctype" select="/db:specification/@class"/>
 
 <xsl:param name="toc.section.depth">3</xsl:param>
-
-<xsl:param name="docbook.css" select="'css/base.css'"/>
 
 <xsl:param name="publication.root.uri"
 	   select="if (/processing-instruction(publication-root))
@@ -94,7 +92,7 @@
     </xsl:message>
   </xsl:if>
 
-  <div class="{local-name(.)}">
+  <article class="{local-name(.)}">
     <xsl:if test="$revisionflags">
       <p>The presentation of this document has been augmented to
       identify changes from a previous version. Three kinds of changes
@@ -112,7 +110,7 @@
 	<xsl:call-template name="format-specification"/>
       </xsl:otherwise>
     </xsl:choose>
-  </div>
+  </article>
 </xsl:template>
 
 <xsl:template name="format-specification">
@@ -315,7 +313,9 @@
 
         <xsl:if test="$auto-diff">
           <xsl:text>, </xsl:text>
-	  automatic <a href="diff.html">change markup</a> from the previous draft
+	  automatic change markup
+          <a href="diff.html">from the previous draft</a>
+          and <a href="lcdiff.html">from the last call draft</a>
           courtesy of <a href="http://www.deltaxml.com/">DeltaXML</a>
         </xsl:if>
 

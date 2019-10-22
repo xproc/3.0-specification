@@ -60,7 +60,7 @@ required.attr = attribute required { xsd:boolean }
 sequence.attr = attribute sequence { xsd:boolean }
 primary.attr = attribute primary { xsd:boolean }
 select.attr = attribute select { XPathExpression }
-xpath-version.attr = attribute xpath-version { text }
+xpath-version.attr = attribute xpath-version { xsd:decimal }
 psvi-required.attr = attribute psvi-required { xsd:boolean }
 document-properties.attr = attribute document-properties { PropertyMap }
 serialization.attr = attribute serialization { SerializationMap }
@@ -164,7 +164,7 @@ message.attr = attribute message { text }
 ]
 p_message.attr = attribute p:message { text }
 
-version.attr = attribute version { "3.0" }
+version.attr = attribute version { xsd:decimal }
 
 common.attributes = xmlid.attr?, xmlbase.attr?, extension.attr*
 
@@ -186,7 +186,7 @@ decl.attributes = psvi-required.attr?,
 start = Library | DeclareStep
  | VocabParam | VocabParamSet | VocabResult | VocabHttpRequest
  | VocabHeader | VocabMultipart | VocabBody | VocabHttpResponse | VocabQuery
- | VocabLine | VocabData | VocabDirectory | Errors | StandardStep | ExtraStep
+ | VocabLine | VocabData | VocabDirectory | VocabArchive | Errors | StandardStep | ExtraStep
 
 # StandardStep is explicitly unspecified because this is not a complete schema
 ExtraStep = notAllowed
@@ -202,7 +202,7 @@ Library =
       common.attributes,
       global.attributes,
       (Import|ImportFunctions|Documentation|PipeInfo)*,
-      (DeclareStep|StaticVariable|StaticOption|Documentation|PipeInfo)*
+      (DeclareStep|StaticOption|Documentation|PipeInfo)*
    }
 
 [
@@ -224,6 +224,8 @@ ImportFunctions =
       common.attributes,
       global.attributes,
       href.attr,
+      content-type.attr?,
+      attribute namespace { text }?,
       (Documentation|PipeInfo)*
    }
 
@@ -312,6 +314,7 @@ PipelineOutputDeclaration =
       port.attr?,
       sequence.attr?,
       primary.attr?,
+      content-types.attr?,
       [ sa:avt = "true" ]
          href.attr?,
       pipe.attr?,
@@ -439,11 +442,10 @@ WithOption =
 [
    sa:class = "language-construct"
 ]
-GeneralVariable =
+Variable =
    element variable {
       name.qname.attr,
       as.attr?,
-      static.attr?,
       select.attr,
       [ sa:avt = "true" ]
          collection.attr?,
@@ -456,51 +458,6 @@ GeneralVariable =
       visibility.attr?,
       ( ( (\Empty | (Document|Pipe|Inline)*) & (Documentation|PipeInfo)* ) | AnyElement* )
    }
-
-[
-   sa:class = "language-construct"
-]
-DynamicVariable =
-   element variable {
-      name.qname.attr,
-      attribute static { "false" }?,
-      as.attr?,
-      select.attr,
-      [ sa:avt = "true" ]
-         collection.attr?,
-      [ sa:avt = "true" ]
-         href.attr?,
-       pipe.attr?,
-      common.attributes,
-      global.attributes,
-      inline.attributes,
-      ( ( (\Empty | (Document|Pipe|Inline)*) & (Documentation|PipeInfo)* ) | AnyElement* )
-   }
-
-[
-   sa:class = "language-construct"
-]
-StaticVariable =
-   element variable {
-      name.qname.attr,
-      attribute static { "true" },
-      as.attr?,
-      select.attr,
-      [ sa:avt = "true" ]
-         collection.attr?,
-      [ sa:avt = "true" ]
-         href.attr?,
-      common.attributes,
-      global.attributes,
-      inline.attributes,
-      visibility.attr?,
-      ( ( (\Empty | (Document|Inline)*) & (Documentation|PipeInfo)* ) | AnyElement* )
-   }
-
-[
-   sa:element = "variable"
-]
-Variable = DynamicVariable | StaticVariable
 
 # ============================================================
 
@@ -516,7 +473,7 @@ DeclarePipelineStep =
       common.attributes,
       global.attributes,
       (Import|ImportFunctions|Documentation|PipeInfo)*,
-      (Input|Output|Option|StaticVariable|Documentation|PipeInfo)*,
+      (Input|Output|Option|Documentation|PipeInfo)*,
       (DeclareStep|Documentation|PipeInfo)*,Subpipeline?
    }
 
@@ -561,8 +518,7 @@ ForEach =
 Viewport =
    element viewport {
       name.ncname.attr?,
-      [ sa:avt = "true" ]
-         attribute match { XSLTSelectionPattern },
+      attribute match { XSLTSelectionPattern },
       common.attributes,
       global.attributes,
       step.attributes,
@@ -665,7 +621,9 @@ Try =
       common.attributes,
       global.attributes,
       step.attributes,
-      ((Output*, Subpipeline, ((Catch+, Finally?)|(Catch*, Finally))) & (Documentation|PipeInfo)*)
+      ((Output|Documentation|PipeInfo)*,
+        Subpipeline,
+        (((Catch+, Finally?)|(Catch*, Finally)) & (Documentation|PipeInfo)*))
    }
 
 [
@@ -769,6 +727,14 @@ AnyElement =
    }
 
 [
+   sa:model = "anyNonXProcElement"
+]
+AnyNonXProcElement =
+   element * - (c:* | p:*) {
+      (_any.attr | text | AnyElement)*
+   }
+
+[
    sa:model = "anyNode"
 ]
 Any =
@@ -786,8 +752,9 @@ VocabParam =
    element c:param {
       name.qname.attr,
       attribute namespace { xsd:anyURI }?,
-      attribute value { text },
-      empty
+      attribute value { text }?,
+      as.attr?,
+      AnyElement*
    }
 
 [
@@ -804,6 +771,7 @@ VocabParamSet =
 VocabDirectory =
    element c:directory {
       attribute name { text },
+      attribute uri { xsd:anyURI },
       ((VocabFile|VocabDirectory|VocabOther)*)
    }
 [
@@ -812,6 +780,7 @@ VocabDirectory =
 VocabFile =
    element c:file {
       attribute name { text },
+      attribute uri { xsd:anyURI },
       content-types.attr?,
       empty
    }
@@ -821,6 +790,7 @@ VocabFile =
 VocabOther =
    element c:other {
       attribute name { text },
+      attribute uri { xsd:anyURI },
       empty
    }
 [
@@ -916,6 +886,29 @@ VocabData =
       attribute charset { text }?,
       attribute encoding { text }?,
       text
+   }
+
+[
+   sa:class = "step-vocabulary"
+]
+VocabArchive =
+   element c:archive {
+      VocabEntry* &
+      AnyNonXProcElement*
+   }
+
+[
+   sa:class = "step-vocabulary"
+]
+VocabEntry =
+   element c:entry {
+      attribute name { text },
+      attribute href { xsd:anyURI },
+      attribute comment { text }?,
+      attribute method { text }?,
+      attribute level { text }?,
+      attribute (* - (local:* | p:* | c:*)) { text }*,
+      AnyElement*
    }
 
 # ============================================================

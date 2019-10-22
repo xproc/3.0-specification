@@ -1,7 +1,9 @@
 # XProc 3.0: An XML Pipeline Language
 
-This is the home of the XProc 3.0 specification developed by the
+This is the home of the XProc 3.0 language specification developed by the
 [XProc next community group](https://www.w3.org/community/xproc-next/).
+The specifications for the step libraries are maintained in
+[the step repository](https://github.com/xproc/3.0-steps/).
 
 Drafts are published automatically at [spec.xproc.org](http://spec.xproc.org/).
 
@@ -15,7 +17,9 @@ propose changes in the form of pull requests.
 
 The XProc specification is built automatically with Travis CI.
 
-To build and publish the spec on your gh-pages, create the following
+To build and publish the spec on your `gh-pages`, setup the `gh-pages` branch,
+configure Travis CI to
+run for your repo, and then create the following
 secure environment variables for your repo in the Travis CI Settings
 page for your fork:
 
@@ -23,24 +27,25 @@ page for your fork:
 * GIT_EMAIL="you@example.com"
 * GIT_NAME="Your Name"
 * GIT_PUB_REPO="you/3.0-specification"
-* GIT_PUB_BRANCH="master"
 
-You also have to setup a `gh-pages` branch, naturally.
+The `GIT_TOKEN` must be a
+[personal access token](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/). The `GIT_PUB_REPO` must be the repository where you wish
+to publish the results. The publications scripts will push the published documents
+to the `gh-pages` branch.
+
+Travis CI will then publish your changes everytime you do a commit
+to your `master` branch. Travis CI cannot publish `gh-pages` for
+pull requests.
 
 ## How it works
 
 The documents are built by a gradle task that runs XML Calabash and
 other tools. The individual specifications are in sub-projects.
-At the time of this writing, there are seven specifications (there may
-be more by the time you read this):
+At the time of this writing, there are two specifications
+in this repository:
 
 * `overview` is the overview page that points to all the specs
 * `xproc` is _XProc 3.0: A Pipeline Language_
-* `steps-intro` is introductory information about all steps
-* `steps` is _XProc 3.0: Standard Step Library_
-* `step-validate-relax-ng` is the `p:validate-with-relax-ng` step
-* `step-validate-schematron` is the `p:validate-with-schematron` step
-* `step-validate-xml-schema` is the `p:validate-with-xml-schema` step
 
 The default gradle target, `allspecs`, will build all of the specifications.
 The built specifications are in the `build/dist/` directory or directories

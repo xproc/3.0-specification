@@ -13,12 +13,19 @@ buildscript {
   }
 
   dependencies {
+    classpath fileTree(dir: 'lib/', include: ['*.jar'])
     classpath group: 'org.docbook', name: 'docbook-xslt2', version: docbookXsltVersion
     classpath group: 'org.docbook', name: 'docbook-schemas', version: '5.1-1'
+    classpath group: 'com.xmlcalabash', name: 'xmlcalabash1-print', version: '1.1.5'
     classpath group: 'com.xmlcalabash', name: 'xmlcalabash1-gradle', version: '1.3.5'
-    classpath group: 'com.xmlcalabash', name: 'xmlcalabash', version: '1.1.22-98'
-    classpath group: 'org.xmlresolver', name: 'xmlresolver', version: '0.13.2'
+    classpath group: 'com.xmlcalabash', name: 'xmlcalabash', version: '1.1.29-99'
+    classpath group: 'org.xmlresolver', name: 'xmlresolver', version: '1.0.1'
   }
+}
+
+plugins {
+  id "de.undercouch.download" version "3.4.3"
+  id "groovy"
 }
 
 repositories {
@@ -30,6 +37,7 @@ repositories {
 configurations.all {
   resolutionStrategy {
     force 'xml-apis:xml-apis:1.4.01'
+    force 'org.xmlresolver:xmlresolver:1.0.1'
   }
 }
 
@@ -51,14 +59,17 @@ defaultTasks 'allspecs'
 
 apply plugin: 'org.docbook.task'
 apply plugin: 'com.xmlcalabash.task'
-apply plugin: 'groovy'
 
 import org.docbook.DocBookTask
 import com.xmlcalabash.XMLCalabashTask
+import de.undercouch.gradle.tasks.download.Download
 
 // ======================================================================
 
-task allspecs() {
+task allspecs(dependsOn: [ "buildspecs", "make_etc" ]) {
+}
+
+task buildspecs() {
   // dependencies are added by the specs
 }
 
@@ -70,412 +81,57 @@ def getenv(String name) {
   }
 }
 
-// ======================================================================
-// overview
-
-task overview(dependsOn: [ "xproc_schemas", "spec_schemas",
-                           "overview:specification", "overview_assets",
-                           "overview_src" ],
-              type: DocBookTask) {
-  inputs.files fileTree(dir: "tools/xsl/")
-  inputs.files fileTree(dir: "tools/xpl/")
-  input("source", "overview/build/source.xml")
-  output("result", "build/dist/index.html")
-
-  param("schemaext.schema", new File("build/schema/dbspec.rng"))
-  param("travis", getenv("TRAVIS"))
-  param("travis-commit", getenv("TRAVIS_COMMIT"))
-  param("travis-build-number", getenv("TRAVIS_BUILD_NUMBER"))
-  param("travis-user", getenv("TRAVIS_USER"))
-  param("travis-repo", getenv("TRAVIS_REPO"))
-  param("travis-branch", getenv("TRAVIS_BRANCH"))
-  param("travis-tag", getenv("TRAVIS_TAG"))
-
-  option("style", new File("tools/xsl/xproc-specs.xsl"))
-  pipeline "tools/xpl/formatspec.xpl"
-}
-allspecs.dependsOn "overview"
-
-task overview_assets(type: Copy) {
-  from "src/main/resources"
-  into "build/dist/"
-}
-
-task overview_src(dependsOn: ["overview:source"], type: Copy) {
-  from "overview/build/"
-  into "build/dist/"
-  include "source.xml"
-  rename ("source.xml", "specification.xml")
-}
-
-// ================================================================================
-
-task xproc(dependsOn: [ "xproc_schemas", "spec_schemas",
-                        "xproc:specification", "xproc_assets", "xproc_src",
-                        "xproc_ancillary", "xproc_library"],
-             type: DocBookTask) {
-  inputs.files fileTree(dir: "tools/xsl/")
-  inputs.files fileTree(dir: "tools/xpl/")
-  input("source", "xproc/build/source.xml")
-  output("result", "build/dist/xproc/index.html")
-
-  param("schemaext.schema", new File("build/schema/dbspec.rng"))
-  param("travis", getenv("TRAVIS"))
-  param("travis-commit", getenv("TRAVIS_COMMIT"))
-  param("travis-build-number", getenv("TRAVIS_BUILD_NUMBER"))
-  param("travis-user", getenv("TRAVIS_USER"))
-  param("travis-repo", getenv("TRAVIS_REPO"))
-  param("travis-branch", getenv("TRAVIS_BRANCH"))
-  param("travis-tag", getenv("TRAVIS_TAG"))
-
-  option("style", new File("tools/xsl/xproc-specs.xsl"))
-  option("diffkey", getenv("DELTAXML_DIFF_KEY"))
-  option("webid", "xproc")
-  option("diffloc", new File("build/dist/xproc/diff.html").getAbsolutePath())
-
-  pipeline "tools/xpl/formatspec.xpl"
-}
-allspecs.dependsOn "xproc"
-overview.dependsOn "xproc"
-
-task xproc_ancillary(dependsOn: [ "xproc10_rng", "xproc30_rnc", "xproc_rng" ], type: Copy) {
-  from "build/"
-  into "build/dist/xproc/"
-  include "xproc*.rnc"
-  include "xproc*.rng"
-}
-xproc_ancillary.doFirst {
-  mkdir("build/dist/xproc")
-}
-
-task xproc_library(type: XMLCalabashTask,
-                   dependsOn: [ "steps_xpl", "step_validation_xpl",
-                                "step_exec_xpl", "step_run_xpl", "step_xquery_xpl",
-                                "step_xsl_formatter_xpl"]) {
-  // N.B. Because Travis jobs cannot see the filesystem, we have
-  // to list the dependencies twice. :-(
-  String steps = ""
-  ["steps", "validation", "exec", "run", "xquery", "xsl-formatter"].each { s->
-    steps = steps + " ../../build/dist/" + s + "/steps.xpl"
+def deltaxml() {
+  def dxml = file("deltaxml")
+  if (dxml.exists() && dxml.isDirectory()) {
+    return "diff"
+  } else {
+    return ""
   }
-
-  inputs.files(fileTree(dir: 'build').include("**/steps.xpl"))
-  inputs.file "tools/xpl/make-library.xpl"
-  inputs.file "tools/xsl/make-library.xsl"
-  input("source", "build/dist/steps/steps.xpl")
-  output("result", "build/dist/xproc/library.xpl")
-  param("libraries", steps)
-  pipeline "tools/xpl/make-library.xpl"
-}
-xproc_library.doFirst {
-  mkdir("build/dist/xproc")
-}
-
-task xproc_assets(dependsOn: [ "xproc:images", "xproc_web_assets" ], type: Copy) {
-  from "xproc/build/graphics"
-  into "build/dist/xproc/graphics/"
-}
-
-task xproc_web_assets(type: Copy) {
-  from "src/main/resources"
-  into "build/dist/xproc/"
-}
-
-task xproc_src(dependsOn: ["xproc:source"], type: Copy) {
-  from "xproc/build/"
-  into "build/dist/xproc/"
-  include "source.xml"
-  rename ("source.xml", "specification.xml")
 }
 
 // ======================================================================
-// steps
+// Make sure that some build artifacts get published so that they
+// can be used by the build process for the steps
 
-task steps(dependsOn: [ "xproc", "xproc_schemas", "spec_schemas",
-                        "steps:specification", "steps_assets", "steps_src",
-                        "steps_xpl" ],
-           type: DocBookTask) {
-  inputs.files fileTree(dir: "tools/xsl/")
-  inputs.files fileTree(dir: "tools/xpl/")
-  input("source", "steps/build/source.xml")
-  output("result", "build/dist/steps/index.html")
-
-  param("schemaext.schema", new File("build/schema/dbspec.rng"))
-  param("travis", getenv("TRAVIS"))
-  param("travis-commit", getenv("TRAVIS_COMMIT"))
-  param("travis-build-number", getenv("TRAVIS_BUILD_NUMBER"))
-  param("travis-user", getenv("TRAVIS_USER"))
-  param("travis-repo", getenv("TRAVIS_REPO"))
-  param("travis-branch", getenv("TRAVIS_BRANCH"))
-  param("travis-tag", getenv("TRAVIS_TAG"))
-
-  option("style", new File("tools/xsl/xproc-specs.xsl"))
-  option("diffkey", getenv("DELTAXML_DIFF_KEY"))
-  option("webid", "steps")
-  option("diffloc", new File("build/dist/steps/diff.html").getAbsolutePath())
-
-  pipeline "tools/xpl/formatspec.xpl"
-}
-allspecs.dependsOn "steps"
-overview.dependsOn "steps"
-
-task steps_assets(type: Copy) {
-  from "src/main/resources"
-  into "build/dist/steps/"
+task make_etc(dependsOn: [ "copy_core_schemas", "copy_xproc_build" ]) {
+    // nop
 }
 
-task steps_src(dependsOn: ["steps:source"], type: Copy) {
-  from "steps/build/"
-  into "build/dist/steps/"
-  include "source.xml"
-  rename ("source.xml", "specification.xml")
+task copy_core_schemas(dependsOn: [ "buildspecs" ], type: Copy) {
+    from "build/core30.rng", "build/xproc.rng", "build/xproc.rnc",
+         "build/xproc10.rng", "build/xproc10.rnc", "build/xproc30.rng",
+         "build/xproc30.rnc"
+    into "build/dist/etc/"
+    doFirst { mkdir "$buildDir/dist/etc" }
 }
 
-task steps_xpl(dependsOn: ["steps:library"], type: Copy) {
-  from "steps/build/"
-  into "build/dist/steps/"
-  include "library.xml"
-  rename ("library.xml", "steps.xpl")
+task copy_xproc_build(dependsOn: [ "buildspecs" ], type: Copy) {
+    from "xproc/build/"
+    exclude "xinclude.xml", "examples/**", "graphics/**", "glossary.xml"
+    into "build/dist/etc/xproc/"
+    doFirst { mkdir "$buildDir/dist/etc/xproc" }
 }
 
 // ======================================================================
-// step-validation
-
-task step_validation(type: DocBookTask,
-                     dependsOn: [ "xproc", "steps", "xproc_schemas", "spec_schemas",
-                                  "step-validation:specification",
-                                  "step_validation_assets", "step_validation_src",
-                                  "step_validation_xpl" ]) {
-  inputs.files fileTree(dir: "tools/xsl/")
-  inputs.files fileTree(dir: "tools/xpl/")
-  inputs.file "xproc/build/toc.xml"
-  input("source", "step-validation/build/source.xml")
-  output("result", "build/dist/validation/index.html")
-
-  param("schemaext.schema", new File("build/schema/dbspec.rng"))
-  param("travis", getenv("TRAVIS"))
-  param("travis-commit", getenv("TRAVIS_COMMIT"))
-  param("travis-build-number", getenv("TRAVIS_BUILD_NUMBER"))
-  param("travis-user", getenv("TRAVIS_USER"))
-  param("travis-repo", getenv("TRAVIS_REPO"))
-  param("travis-branch", getenv("TRAVIS_BRANCH"))
-  param("travis-tag", getenv("TRAVIS_TAG"))
-
-  option("style", new File("tools/xsl/xproc-specs.xsl"))
-  pipeline "tools/xpl/formatspec.xpl"
-}
-allspecs.dependsOn "step_validation"
-overview.dependsOn "step_validation"
-
-task step_validation_assets(type: Copy) {
-  from "src/main/resources"
-  into "build/dist/validation/"
+// We need the steps for their schema grammar contributions
+task step_schemas() {
+    // nop
 }
 
-task step_validation_src(dependsOn: ["step-validation:source"], type: Copy) {
-  from "step-validation/build/"
-  into "build/dist/validation/"
-  include "source.xml"
-  rename ("source.xml", "specification.xml")
-}
+def stepList = [ "step-file", "step-os", "step-paged-media",
+                 "step-run", "step-text", "step-validation", "steps" ]
 
-task step_validation_xpl(dependsOn: ["step-validation:library"], type: Copy) {
-  from "step-validation/build/"
-  into "build/dist/validation/"
-  include "library.xml"
-  rename ("library.xml", "steps.xpl")
-}
-
-// ======================================================================
-// step-exec
-
-task step_exec(type: DocBookTask,
-               dependsOn: [ "xproc", "steps", "xproc_schemas", "spec_schemas",
-                            "step-exec:specification",
-                            "step_exec_assets",
-                            "step_exec_src", "step_exec_xpl" ]) {
-  inputs.files fileTree(dir: "tools/xsl/")
-  inputs.files fileTree(dir: "tools/xpl/")
-  inputs.file "xproc/build/toc.xml"
-  input("source", "step-exec/build/source.xml")
-  output("result", "build/dist/exec/index.html")
-
-  param("schemaext.schema", new File("build/schema/dbspec.rng"))
-  param("travis", getenv("TRAVIS"))
-  param("travis-commit", getenv("TRAVIS_COMMIT"))
-  param("travis-build-number", getenv("TRAVIS_BUILD_NUMBER"))
-  param("travis-user", getenv("TRAVIS_USER"))
-  param("travis-repo", getenv("TRAVIS_REPO"))
-  param("travis-branch", getenv("TRAVIS_BRANCH"))
-  param("travis-tag", getenv("TRAVIS_TAG"))
-
-  option("style", new File("tools/xsl/xproc-specs.xsl"))
-  pipeline "tools/xpl/formatspec.xpl"
-}
-allspecs.dependsOn "step_exec"
-overview.dependsOn "step_exec"
-
-task step_exec_assets(type: Copy) {
-  from "src/main/resources"
-  into "build/dist/exec/"
-}
-
-task step_exec_src(dependsOn: ["step-exec:source"], type: Copy) {
-  from "step-exec/build/"
-  into "build/dist/exec/"
-  include "source.xml"
-  rename ("source.xml", "specification.xml")
-}
-
-task step_exec_xpl(dependsOn: ["step-exec:library"], type: Copy) {
-  from "step-exec/build/"
-  into "build/dist/exec/"
-  include "library.xml"
-  rename ("library.xml", "steps.xpl")
-}
-
-// ======================================================================
-// step-run
-
-task step_run(type: DocBookTask,
-               dependsOn: [ "xproc", "steps", "xproc_schemas", "spec_schemas",
-                            "step-run:specification",
-                            "step_run_assets",
-                            "step_run_src", "step_run_xpl" ]) {
-  inputs.files fileTree(dir: "tools/xsl/")
-  inputs.files fileTree(dir: "tools/xpl/")
-  inputs.file "xproc/build/toc.xml"
-  input("source", "step-run/build/source.xml")
-  output("result", "build/dist/run/index.html")
-
-  param("schemaext.schema", new File("build/schema/dbspec.rng"))
-  param("travis", getenv("TRAVIS"))
-  param("travis-commit", getenv("TRAVIS_COMMIT"))
-  param("travis-build-number", getenv("TRAVIS_BUILD_NUMBER"))
-  param("travis-user", getenv("TRAVIS_USER"))
-  param("travis-repo", getenv("TRAVIS_REPO"))
-  param("travis-branch", getenv("TRAVIS_BRANCH"))
-  param("travis-tag", getenv("TRAVIS_TAG"))
-
-  option("style", new File("tools/xsl/xproc-specs.xsl"))
-  pipeline "tools/xpl/formatspec.xpl"
-}
-allspecs.dependsOn "step_run"
-overview.dependsOn "step_run"
-
-task step_run_assets(type: Copy) {
-  from "src/main/resources"
-  into "build/dist/run/"
-}
-
-task step_run_src(dependsOn: ["step-run:source"], type: Copy) {
-  from "step-run/build/"
-  into "build/dist/run/"
-  include "source.xml"
-  rename ("source.xml", "specification.xml")
-}
-
-task step_run_xpl(dependsOn: ["step-run:library"], type: Copy) {
-  from "step-run/build/"
-  into "build/dist/run/"
-  include "library.xml"
-  rename ("library.xml", "steps.xpl")
-}
-
-// ======================================================================
-// step-xquery
-
-task step_xquery(type: DocBookTask,
-               dependsOn: [ "xproc", "steps", "xproc_schemas", "spec_schemas",
-                            "step-xquery:specification",
-                            "step_xquery_assets",
-                            "step_xquery_src", "step_xquery_xpl" ]) {
-  inputs.files fileTree(dir: "tools/xsl/")
-  inputs.files fileTree(dir: "tools/xpl/")
-  inputs.file "xproc/build/toc.xml"
-  input("source", "step-xquery/build/source.xml")
-  output("result", "build/dist/xquery/index.html")
-
-  param("schemaext.schema", new File("build/schema/dbspec.rng"))
-  param("travis", getenv("TRAVIS"))
-  param("travis-commit", getenv("TRAVIS_COMMIT"))
-  param("travis-build-number", getenv("TRAVIS_BUILD_NUMBER"))
-  param("travis-user", getenv("TRAVIS_USER"))
-  param("travis-repo", getenv("TRAVIS_REPO"))
-  param("travis-branch", getenv("TRAVIS_BRANCH"))
-  param("travis-tag", getenv("TRAVIS_TAG"))
-
-  option("style", new File("tools/xsl/xproc-specs.xsl"))
-  pipeline "tools/xpl/formatspec.xpl"
-}
-allspecs.dependsOn "step_xquery"
-overview.dependsOn "step_xquery"
-
-task step_xquery_assets(type: Copy) {
-  from "src/main/resources"
-  into "build/dist/xquery/"
-}
-
-task step_xquery_src(dependsOn: ["step-xquery:source"], type: Copy) {
-  from "step-xquery/build/"
-  into "build/dist/xquery/"
-  include "source.xml"
-  rename ("source.xml", "specification.xml")
-}
-
-task step_xquery_xpl(dependsOn: ["step-xquery:library"], type: Copy) {
-  from "step-xquery/build/"
-  into "build/dist/xquery/"
-  include "library.xml"
-  rename ("library.xml", "steps.xpl")
-}
-
-// ======================================================================
-// step-xsl-formatter
-
-task step_xsl_formatter(type: DocBookTask,
-               dependsOn: [ "xproc", "steps", "xproc_schemas", "spec_schemas",
-                            "step-xsl-formatter:specification",
-                            "step_xsl_formatter_assets",
-                            "step_xsl_formatter_src", "step_xsl_formatter_xpl" ]) {
-  inputs.files fileTree(dir: "tools/xsl/")
-  inputs.files fileTree(dir: "tools/xpl/")
-  inputs.file "xproc/build/toc.xml"
-  input("source", "step-xsl-formatter/build/source.xml")
-  output("result", "build/dist/xsl-formatter/index.html")
-
-  param("schemaext.schema", new File("build/schema/dbspec.rng"))
-  param("travis", getenv("TRAVIS"))
-  param("travis-commit", getenv("TRAVIS_COMMIT"))
-  param("travis-build-number", getenv("TRAVIS_BUILD_NUMBER"))
-  param("travis-user", getenv("TRAVIS_USER"))
-  param("travis-repo", getenv("TRAVIS_REPO"))
-  param("travis-branch", getenv("TRAVIS_BRANCH"))
-  param("travis-tag", getenv("TRAVIS_TAG"))
-
-  option("style", new File("tools/xsl/xproc-specs.xsl"))
-  pipeline "tools/xpl/formatspec.xpl"
-}
-allspecs.dependsOn "step_xsl_formatter"
-overview.dependsOn "step_xsl_formatter"
-
-task step_xsl_formatter_assets(type: Copy) {
-  from "src/main/resources"
-  into "build/dist/xsl-formatter/"
-}
-
-task step_xsl_formatter_src(dependsOn: ["step-xsl-formatter:source"], type: Copy) {
-  from "step-xsl-formatter/build/"
-  into "build/dist/xsl-formatter/"
-  include "source.xml"
-  rename ("source.xml", "specification.xml")
-}
-
-task step_xsl_formatter_xpl(dependsOn: ["step-xsl-formatter:library"], type: Copy) {
-  from "step-xsl-formatter/build/"
-  into "build/dist/xsl-formatter/"
-  include "library.xml"
-  rename ("library.xml", "steps.xpl")
+stepList.each { spec ->
+    [ "library.xml", "source.xml", "steps.rnc", "steps.rng", "toc.xml" ].each { fn ->
+        Task t = task "download_${spec}_${fn}"(type: Download) {
+            src "$stepsBaseUri/$spec/$fn"
+            dest "$buildDir/$spec/$fn"
+            doFirst { mkdir "$buildDir/$spec" }
+        }
+        t.onlyIf { ! file("$buildDir/$spec/$fn".toString()).exists() }
+        step_schemas.dependsOn t
+    }
 }
 
 // ======================================================================
@@ -508,6 +164,162 @@ spec_sch.doFirst {
 }
 
 // ======================================================================
+// overview
+
+task overview(dependsOn: [ "xproc_schemas", "spec_schemas",
+                           "overview:specification", "overview_assets",
+                           "overview_src" ],
+              type: DocBookTask) {
+  inputs.files fileTree(dir: "tools/xsl/")
+  inputs.files fileTree(dir: "tools/xpl/")
+  input("source", "overview/build/source.xml")
+  output("result", "build/dist/overview/index.html")
+
+  param("schemaext.schema", file("build/schema/dbspec.rng"))
+  param("travis", getenv("TRAVIS"))
+  param("travis-commit", getenv("TRAVIS_COMMIT"))
+  param("travis-build-number", getenv("TRAVIS_BUILD_NUMBER"))
+  param("travis-user", getenv("TRAVIS_USER"))
+  param("travis-repo", getenv("TRAVIS_REPO"))
+  param("travis-branch", getenv("TRAVIS_BRANCH"))
+  param("travis-tag", getenv("TRAVIS_TAG"))
+
+  option("style", file("tools/xsl/xproc-specs.xsl"))
+  option("diff", deltaxml())
+  option("specid", "overview")
+  //option("diffloc", "../../build/dist/overview/diff.html")
+
+  pipeline "tools/xpl/formatspec.xpl"
+}
+buildspecs.dependsOn "overview"
+
+task overview_assets(type: Copy) {
+  from "src/main/resources"
+  into "build/dist/overview/"
+}
+
+task overview_src(dependsOn: ["overview:source"], type: Copy) {
+  from "overview/build/"
+  into "build/dist/overview/"
+  include "source.xml"
+  rename ("source.xml", "specification.xml")
+}
+
+// ================================================================================
+
+task xproc(dependsOn: [ "xproc_schemas", "spec_schemas",
+                        "xproc:specification", "xproc_assets", "xproc_src",
+                        "xproc_ancillary", "xproc_library"],
+             type: DocBookTask) {
+  inputs.files fileTree(dir: "tools/xsl/")
+  inputs.files fileTree(dir: "tools/xpl/")
+  input("source", "xproc/build/source.xml")
+  output("result", "build/dist/xproc/index.html")
+
+  param("schemaext.schema", file("build/schema/dbspec.rng"))
+  param("travis", getenv("TRAVIS"))
+  param("travis-commit", getenv("TRAVIS_COMMIT"))
+  param("travis-build-number", getenv("TRAVIS_BUILD_NUMBER"))
+  param("travis-user", getenv("TRAVIS_USER"))
+  param("travis-repo", getenv("TRAVIS_REPO"))
+  param("travis-branch", getenv("TRAVIS_BRANCH"))
+  param("travis-tag", getenv("TRAVIS_TAG"))
+
+  option("style", file("tools/xsl/xproc-specs.xsl"))
+  option("diff", deltaxml())
+  option("specid", "xproc")
+  //option("diffloc", file("build/dist/xproc/diff.html"))
+  //option("lcdiffloc", file("build/dist/xproc/lcdiff.html"))
+
+  pipeline "tools/xpl/formatspec.xpl"
+}
+buildspecs.dependsOn "xproc"
+overview.dependsOn "xproc"
+
+task xproc_pdf_xform(dependsOn: [ "xproc" ], type: DocBookTask) {
+  inputs.files fileTree(dir: "tools/xsl/")
+  inputs.files fileTree(dir: "tools/xpl/")
+  input("source", "xproc/build/source.xml")
+  output("result", "build/dist/xproc/pdfhtml.html")
+
+  param("schemaext.schema", "../../build/schema/dbspec.rng")
+  param("travis", getenv("TRAVIS"))
+  param("travis-commit", getenv("TRAVIS_COMMIT"))
+  param("travis-build-number", getenv("TRAVIS_BUILD_NUMBER"))
+  param("travis-user", getenv("TRAVIS_USER"))
+  param("travis-repo", getenv("TRAVIS_REPO"))
+  param("travis-branch", getenv("TRAVIS_BRANCH"))
+  param("travis-tag", getenv("TRAVIS_TAG"))
+
+  option("style", file("tools/xsl/xproc-pdf.xsl"))
+  option("postprocess", file("tools/xsl/post-pdf.xsl"))
+
+  pipeline "tools/xpl/pdfspec.xpl"
+}
+
+task xproc_pdf(dependsOn: [ "xproc_pdf_xform" ], type: XMLCalabashTask) {
+  inputs.files fileTree(dir: "tools/xsl/")
+  inputs.files fileTree(dir: "tools/xpl/")
+  inputs.files fileTree(dir: "src/main/css")
+
+  input("source", "build/dist/xproc/pdfhtml.html")
+  outputs.file "build/dist/xproc/xproc.pdf"
+
+  option("css", "src/main/css/print.css")
+  option("pdf", file("build/dist/xproc/xproc.pdf"))
+
+  pipeline "tools/xpl/css-format.xpl"
+}
+
+task xproc_ancillary(dependsOn: [ "xproc10_rng", "xproc30_rnc", "xproc_rng" ], type: Copy) {
+  from "build/"
+  into "build/dist/xproc/"
+  include "xproc*.rnc"
+  include "xproc*.rng"
+}
+xproc_ancillary.doFirst {
+  mkdir("build/dist/xproc")
+}
+
+task xproc_library(type: XMLCalabashTask,
+                   dependsOn: [ "step_schemas" ]) {
+  // N.B. Because Travis jobs cannot see the filesystem, we have
+  // to list the dependencies twice. :-(
+  String steps = ""
+  stepList.each { s ->
+    steps = steps + " ../../build/" + s + "/library.xml"
+  }
+
+  inputs.files(fileTree(dir: 'build').include("**/library.xml"))
+  inputs.file "tools/xpl/make-library.xpl"
+  inputs.file "tools/xsl/make-library.xsl"
+  input("source", "build/steps/library.xml")
+  output("result", "build/dist/xproc/library.xpl")
+  param("libraries", steps)
+  pipeline "tools/xpl/make-library.xpl"
+}
+xproc_library.doFirst {
+  mkdir("build/dist/xproc")
+}
+
+task xproc_assets(dependsOn: [ "xproc:images", "xproc_web_assets" ], type: Copy) {
+  from "xproc/build/graphics"
+  into "build/dist/xproc/graphics/"
+}
+
+task xproc_web_assets(type: Copy) {
+  from "src/main/resources"
+  into "build/dist/xproc/"
+}
+
+task xproc_src(dependsOn: ["xproc:source"], type: Copy) {
+  from "xproc/build/"
+  into "build/dist/xproc/"
+  include "source.xml"
+  rename ("source.xml", "specification.xml")
+}
+
+// ======================================================================
 // XProc schemas
 
 task core_rng(type: JavaExec) {
@@ -520,17 +332,13 @@ core_rng.doFirst {
 }
 
 task xproc30_rng(type: XMLCalabashTask,
-               dependsOn: [ "core_rng",
-                            "steps:rng", "step-validation:rng",
-                            "step-exec:rng", "step-run:rng", "step-xquery:rng",
-                            "step-xsl-formatter:rng" ]) {
+               dependsOn: [ "core_rng", "step_schemas" ]) {
   // This is bogus; I'm having trouble getting the filesystem read to
   // happen at the right time:
   // https://discuss.gradle.org/t/controlling-order-of-execution-of-statements-wrt-execution-of-a-task/26291
   String files = ""
-  ["step-exec", "step-run", "step-xsl-formatter", "steps",
-   "step-validation", "step-xquery"].each { s ->
-    files = files + " ../../" + s + "/build/steps.rng"
+  stepList.each { s->
+    files = files + " ../../build/" + s + "/steps.rng"
   }
 
   inputs.file "build/core30.rng"
@@ -544,6 +352,8 @@ task xproc30_rng(type: XMLCalabashTask,
 }
 
 task xproc30_rnc(dependsOn: [ "xproc30_rng" ], type: JavaExec) {
+  inputs.file "build/xproc30.rng"
+  outputs.file "build/xproc30.rnc"
   classpath = configurations.tools
   main = 'com.thaiopensource.relaxng.translate.Driver'
   args = ["build/xproc30.rng", "build/xproc30.rnc"]
@@ -588,8 +398,13 @@ task xproc_rng(dependsOn: [ "xproc_rnc" ], type: JavaExec) {
   args = ["build/xproc.rnc", "build/xproc.rng"]
 }
 
-task xproc_schemas(dependsOn: [ "xproc30_rnc", "xproc30_rng", "xproc10_rng", "xproc_rng" ]) {
-  // nop
+task xproc_schemas(dependsOn: [ "xproc30_rnc", "xproc30_rng", "xproc10_rng", "xproc_rng" ],
+                   type: JavaExec) {
+  inputs.file "tools/xpl/smoke-test.xpl"
+
+  classpath = configurations.tools
+  main = 'com.thaiopensource.relaxng.util.Driver'
+  args = ["-i", "-c", "build/xproc.rnc", "tools/xpl/smoke-test.xpl" ]
 }
 
 // ======================================================================
