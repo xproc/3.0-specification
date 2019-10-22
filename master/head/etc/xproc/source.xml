@@ -433,9 +433,9 @@ XProc pipeline as a map (<code>map(xs:QName, item()*)</code>).</termdef></para>
           </term>
           <listitem>
             <para>The value of the (optional) “<code>base-uri</code>” property identifies the base URI of the
-              document. If no such key is present, the document has no base URI. The processor is
-              responsible for assuring that the <code>base-uri</code> property matches the base URI
-              of each document produced on every output port.</para>
+              document. For XML documents, HTML documents, and text documents, the value of “<code>base-uri</code>”
+              is the base URI property of the document node. For other document types it is a property 
+              the processor keeps track of. If no such key is present, the document has no base URI.</para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -6050,7 +6050,10 @@ the <tag class="attribute">document-properties</tag> map contains a
 from the statically determined content type.</error></para>
 
 <para>The base URI of the document is the base URI of the
-<tag>p:inline</tag> element.</para>
+<tag>p:inline</tag> element or of the parent element in
+the case of an implicit inline. If <tag class="attribute">document-properties</tag>
+provides a value for “<literal>base-uri</literal>”, this value is the
+base URI of the document.</para>
 
 <para>How the content of a <tag>p:inline</tag>
 element is interpreted depends on the document's content type and the
