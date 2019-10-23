@@ -430,7 +430,7 @@ XProc pipeline as a map (<code>map(xs:QName, item()*)</code>).</termdef></para>
 transformed as documents flow through them. Many steps claim that the
 specified properties are preserved. Generally, it is the
 responsibility of the pipeline author to determine when this is
-inapropriate and take corrective action. However, it is the
+inappropriate and take corrective action. However, it is the
 responsibility of the pipeline processor to assure that the
 <code>content-type</code> property is correct. If a step transforms a
 document in a manner that is inconsistent with the
@@ -438,8 +438,7 @@ document in a manner that is inconsistent with the
 source port but producing a text document on the result, for example), the
 processor must assure that the <code>content-type</code> property is appropriate.
 If a step changes the <code>content-type</code> in this way, it <rfc2119>must</rfc2119> also
-remove the <code>serialization</code> property
-</para>
+remove the <code>serialization</code> property.</para>
 
     </section>
 
@@ -2861,6 +2860,10 @@ the pipeline document with the <tag class="attribute">xml:base</tag>
 attribute. The <tag class="attribute">xml:base</tag> attribute
 <rfc2119>may</rfc2119> appear on any element in a pipeline and has the
 semantics outlined in <biblioref linkend="xml-base"/>.</para>
+
+<para>For XML, documents, HTML documents, and text documents, the pipeline author 
+can control the base URI of the document node by manipulating the document property 
+“<code>base-uri</code>”.</para>
 
 </section>
     <section xml:id="xml-id-attribute">
