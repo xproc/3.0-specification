@@ -1,0 +1,105 @@
+default namespace p = "http://www.w3.org/ns/xproc"
+namespace local = ""
+
+# This schema could be made more constrained.
+
+Step = Step-directory-list | Step-file-copy | Step-file-delete | Step-file-info | Step-file-mkdir | Step-file-move | Step-file-create-tempfile | Step-file-touch
+
+Step-directory-list =
+  element directory-list {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute path { xsd:anyURI }?,
+    attribute detailed { xsd:boolean }?,
+    attribute max-depth { xsd:string? }?,
+    attribute include-filter { xsd:string }?,
+    attribute exclude-filter { xsd:string }?,
+    (WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-file-copy =
+  element file-copy {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute href { xsd:anyURI }?,
+    attribute target { xsd:anyURI }?,
+    attribute fail-on-error { xsd:boolean }?,
+    (WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-file-delete =
+  element file-delete {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute href { xsd:anyURI }?,
+    attribute recursive { xsd:boolean }?,
+    attribute fail-on-error { xsd:boolean }?,
+    (WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-file-info =
+  element file-info {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute href { xsd:anyURI }?,
+    attribute fail-on-error { xsd:boolean }?,
+    (WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-file-mkdir =
+  element file-mkdir {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute href { xsd:anyURI }?,
+    attribute fail-on-error { xsd:boolean }?,
+    (WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-file-move =
+  element file-move {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute href { xsd:anyURI }?,
+    attribute target { xsd:anyURI }?,
+    attribute fail-on-error { xsd:boolean }?,
+    (WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-file-create-tempfile =
+  element file-create-tempfile {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute href { xsd:anyURI? }?,
+    attribute suffix { xsd:string? }?,
+    attribute prefix { xsd:string? }?,
+    attribute delete-on-exit { xsd:boolean }?,
+    attribute fail-on-error { xsd:boolean }?,
+    (WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-file-touch =
+  element file-touch {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute href { xsd:anyURI }?,
+    attribute timestamp { xsd:dateTime? }?,
+    attribute fail-on-error { xsd:boolean }?,
+    (WithOption* & (Documentation|PipeInfo)*)
+  }
+

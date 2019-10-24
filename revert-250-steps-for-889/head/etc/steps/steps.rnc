@@ -1,0 +1,565 @@
+default namespace p = "http://www.w3.org/ns/xproc"
+namespace local = ""
+
+# This schema could be made more constrained.
+
+Step = Step-add-attribute | Step-add-xml-base | Step-archive | Step-archive-manifest | Step-cast-content-type | Step-compare | Step-compress | Step-count | Step-delete | Step-error | Step-escape-markup | Step-filter | Step-hash | Step-http-request | Step-identity | Step-insert | Step-json-join | Step-json-merge | Step-label-elements | Step-load | Step-make-absolute-uris | Step-namespace-delete | Step-namespace-rename | Step-pack | Step-rename | Step-replace | Step-set-attributes | Step-set-properties | Step-sink | Step-split-sequence | Step-store | Step-string-replace | Step-text-count | Step-text-head | Step-text-join | Step-text-replace | Step-text-sort | Step-text-tail | Step-unarchive | Step-uncompress | Step-unescape-markup | Step-unwrap | Step-uuid | Step-wrap-sequence | Step-wrap | Step-www-form-urldecode | Step-www-form-urlencode | Step-xinclude | Step-xquery | Step-xslt
+
+Step-add-attribute =
+  element add-attribute {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute match { xsd:string }?,
+    attribute attribute-name { xsd:QName }?,
+    attribute attribute-value { xsd:string }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-add-xml-base =
+  element add-xml-base {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute all { xsd:boolean }?,
+    attribute relative { xsd:boolean }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-archive =
+  element archive {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute format { xsd:QName }?,
+    attribute relative-to { xsd:anyURI? }?,
+    attribute parameters { xsd:string }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-archive-manifest =
+  element archive-manifest {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute format { xsd:QName? }?,
+    attribute parameters { xsd:string }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-cast-content-type =
+  element cast-content-type {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute content-type { xsd:string }?,
+    attribute parameters { xsd:string }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-compare =
+  element compare {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute parameters { xsd:string }?,
+    attribute method { xsd:QName? }?,
+    attribute fail-if-not-equal { xsd:boolean }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-compress =
+  element compress {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute format { xsd:QName }?,
+    attribute serialization { xsd:string }?,
+    attribute parameters { xsd:string }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-count =
+  element count {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute limit { xsd:integer }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-delete =
+  element delete {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute match { xsd:string }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-error =
+  element error {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute code { xsd:QName }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-escape-markup =
+  element escape-markup {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute serialization { xsd:string }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-filter =
+  element filter {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute select { xsd:string }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-hash =
+  element hash {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute parameters { xsd:string }?,
+    attribute value { xsd:string }?,
+    attribute algorithm { xsd:QName }?,
+    attribute match { xsd:string }?,
+    attribute version { xsd:string? }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-http-request =
+  element http-request {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute serialization { xsd:string }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-identity =
+  element identity {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    (WithInput* & (Documentation|PipeInfo)*)
+  }
+
+Step-insert =
+  element insert {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute match { xsd:string }?,
+    attribute position { 'first-child' | 'last-child' | 'before' | 'after' }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-json-join =
+  element json-join {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute flatten-to-depth { xsd:string? }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-json-merge =
+  element json-merge {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute duplicates { 'reject' | 'use-first' | 'use-last' | 'use-any' | 'combine' }?,
+    attribute key { xsd:string }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-label-elements =
+  element label-elements {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute attribute { xsd:QName }?,
+    attribute label { xsd:string }?,
+    attribute match { xsd:string }?,
+    attribute replace { xsd:boolean }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-load =
+  element load {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute href { xsd:anyURI }?,
+    attribute parameters { xsd:string }?,
+    attribute content-type { xsd:string? }?,
+    attribute document-properties { xsd:string }?,
+    (WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-make-absolute-uris =
+  element make-absolute-uris {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute match { xsd:string }?,
+    attribute base-uri { xsd:anyURI? }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-namespace-delete =
+  element namespace-delete {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute prefixes { xsd:string }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-namespace-rename =
+  element namespace-rename {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute from { xsd:anyURI? }?,
+    attribute to { xsd:anyURI? }?,
+    attribute apply-to { 'all' | 'elements' | 'attributes' }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-pack =
+  element pack {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute wrapper { xsd:QName }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-rename =
+  element rename {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute match { xsd:string }?,
+    attribute new-name { xsd:QName }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-replace =
+  element replace {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute match { xsd:string }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-set-attributes =
+  element set-attributes {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute match { xsd:string }?,
+    attribute attributes { xsd:string }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-set-properties =
+  element set-properties {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute properties { xsd:string }?,
+    attribute merge { xsd:boolean }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-sink =
+  element sink {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    (WithInput* & (Documentation|PipeInfo)*)
+  }
+
+Step-split-sequence =
+  element split-sequence {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute initial-only { xsd:boolean }?,
+    attribute test { xsd:string }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-store =
+  element store {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute href { xsd:anyURI }?,
+    attribute serialization { xsd:string }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-string-replace =
+  element string-replace {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute match { xsd:string }?,
+    attribute replace { xsd:string }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-text-count =
+  element text-count {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    (WithInput* & (Documentation|PipeInfo)*)
+  }
+
+Step-text-head =
+  element text-head {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute count { xsd:integer }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-text-join =
+  element text-join {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute separator { xsd:string? }?,
+    attribute prefix { xsd:string? }?,
+    attribute suffix { xsd:string? }?,
+    attribute override-content-type { xsd:string? }?,
+    (WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-text-replace =
+  element text-replace {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute pattern { xsd:string }?,
+    attribute replacement { xsd:string }?,
+    attribute flags { xsd:string? }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-text-sort =
+  element text-sort {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute sort-key { xsd:string }?,
+    attribute order { 'ascending' | 'descending' }?,
+    attribute case-order { 'upper-first' | 'lower-first' }?,
+    attribute lang { xsd:language? }?,
+    attribute collation { xsd:string }?,
+    attribute stable { xsd:boolean }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-text-tail =
+  element text-tail {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute count { xsd:integer }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-unarchive =
+  element unarchive {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute include-filter { xsd:string }?,
+    attribute exclude-filter { xsd:string }?,
+    attribute format { xsd:QName? }?,
+    attribute parameters { xsd:string }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-uncompress =
+  element uncompress {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute format { xsd:QName? }?,
+    attribute parameters { xsd:string }?,
+    attribute content-type { xsd:string }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-unescape-markup =
+  element unescape-markup {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute namespace { xsd:anyURI? }?,
+    attribute content-type { xsd:string }?,
+    attribute encoding { xsd:string? }?,
+    attribute charset { xsd:string? }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-unwrap =
+  element unwrap {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute match { xsd:string }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-uuid =
+  element uuid {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute match { xsd:string }?,
+    attribute version { xsd:integer? }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-wrap-sequence =
+  element wrap-sequence {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute wrapper { xsd:QName }?,
+    attribute group-adjacent { xsd:string? }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-wrap =
+  element wrap {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute wrapper { xsd:QName }?,
+    attribute match { xsd:string }?,
+    attribute group-adjacent { xsd:string? }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-www-form-urldecode =
+  element www-form-urldecode {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute value { xsd:string }?,
+    (WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-www-form-urlencode =
+  element www-form-urlencode {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute parameters { xsd:string }?,
+    (WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-xinclude =
+  element xinclude {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute fixup-xml-base { xsd:boolean }?,
+    attribute fixup-xml-lang { xsd:boolean }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-xquery =
+  element xquery {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute parameters { xsd:string }?,
+    attribute version { xsd:string? }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-xslt =
+  element xslt {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute parameters { xsd:string }?,
+    attribute global-context-item { xsd:string }?,
+    attribute initial-mode { xsd:QName? }?,
+    attribute template-name { xsd:QName? }?,
+    attribute output-base-uri { xsd:anyURI? }?,
+    attribute version { xsd:string? }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
