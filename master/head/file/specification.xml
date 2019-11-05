@@ -73,7 +73,7 @@ steps is assumed; for background details, see
       <glossterm>implementation-defined</glossterm> what other schemes are
       supported by <tag>p:directory-list</tag>, and what the interpretation
       of 'directory', 'file' and 'contents' is for those schemes.</impl>
-      <error code="C0102">It is a <glossterm>dynamic error</glossterm> if an
+      <error code="C0090">It is a <glossterm>dynamic error</glossterm> if an
         implementation does not support directory listing for a specified scheme.</error>
     </para>
     
@@ -338,7 +338,7 @@ steps is assumed; for background details, see
             <option>href</option> option does not exist, cannot be accessed or is not a file or directory.</error></para>
     </listitem>
     <listitem>
-      <para><error code="XXXXX">It is a <glossterm>dynamic error</glossterm> if an attempt is made to delete a non-empty
+      <para><error code="C0113">It is a <glossterm>dynamic error</glossterm> if an attempt is made to delete a non-empty
       directory and the <option>recursive</option> option was set to <code>false</code>.</error></para>
     </listitem>
   </itemizedlist>
@@ -486,7 +486,7 @@ steps is assumed; for background details, see
     raised:</para>
   <itemizedlist>
     <listitem>
-      <para><error code="XXXX">It is a <glossterm>dynamic error</glossterm> if the directory referenced by the
+      <para><error code="C0114">It is a <glossterm>dynamic error</glossterm> if the directory referenced by the
             <option>href</option> option cannot be created.</error></para>
     </listitem>
   </itemizedlist>
@@ -538,7 +538,7 @@ steps is assumed; for background details, see
         directory.</error></para>
     </listitem>
     <listitem>
-      <para><error code="XXXXX">It is a <glossterm>dynamic error</glossterm> if the resource referenced by the
+      <para><error code="C0115">It is a <glossterm>dynamic error</glossterm> if the resource referenced by the
         <option>target</option> option is an existing file or other file system object.</error></para>
     </listitem>
     <listitem>
@@ -559,14 +559,6 @@ steps is assumed; for background details, see
   <title>p:file-create-tempfile</title>
  
   <para>The <code>p:file-create-tempfile</code> step creates a temporary file.</para>
-
-  <note role="editorial">
-    <title>Editorial Note</title>
-    <para>TBD: This is an almost direct port from EXProc. Details might still change.</para>
-    <para>Check the error codes. ANd is the name ok? <tag>p:file-create-tempfile</tag> sounds better to me?</para>
-    <para>I added the option to leave out the <option>href</option> option and have the tempfile created in the system's
-      temp directory. Ok?</para>
-  </note>
 
   <p:declare-step type="p:file-create-tempfile">
     <p:output port="result" primary="true" content-types="application/xml"/>
@@ -611,7 +603,7 @@ steps is assumed; for background details, see
             <option>href</option> option does not exist, cannot be accessed or is not a directory.</error></para>
     </listitem>
     <listitem>
-      <para><error code="XXXXX">It is a <glossterm>dynamic error</glossterm> if the temporary file could not be
+      <para><error code="C0116">It is a <glossterm>dynamic error</glossterm> if the temporary file could not be
           created.</error></para>
     </listitem>
   </itemizedlist>
@@ -637,7 +629,7 @@ timestamp of a file.</para>
   </p:declare-step>
 
 <para>The <tag>p:file-touch</tag> step updates the modification
-timestamp of the fiel specified in the <option>href</option>
+timestamp of the file specified in the <option>href</option>
 option.</para>
 
 <para><error code="D0064">It is a <glossterm>dynamic error</glossterm>
@@ -676,7 +668,7 @@ or exists and cannot be accessed.</error></para>
 <section xml:id="errors">
 <title>Step Errors</title>
 
-<para>This step can raise
+<para>These steps can raise
 <glossterm baseform="dynamic-error">dynamic errors</glossterm>.
 </para>
 
@@ -694,7 +686,7 @@ upwards until either a <tag>p:try</tag> is encountered or the entire
 pipeline fails. In other words, outside of a <tag>p:try</tag>, step
 failure causes the entire pipeline to fail.</para>
 
-<para>The following errors can be raised by this step:</para>
+<para>The following specific errors can be raised by these steps:</para>
 
 <?step-error-list level="none"?>
 
