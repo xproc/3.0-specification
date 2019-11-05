@@ -1814,7 +1814,9 @@ normally during static analysis.</para>
       <para>The function may be implemented as an operation on strings; it need not try to determine
         the existence of a file or directory, and it <rfc2119>should not</rfc2119> follow symbolic
         links. However, two pieces of information need to be known from the environment: Whether the
-        operating system identifies as “Windows” and the value of the path separator.</para>
+        operating system identifies as “Windows” and the value of the path separator. If they are
+      not known, it is assumed that the operating system is not Windows and the path separator is
+      the forward slash, “<literal>/</literal>”.</para>
 
       <para>The function should support *nix-like (for example, Linux, Solaris, Mac OS X) and
         Windows file system paths. For Windows paths, the forward slash and the backslash
@@ -1830,14 +1832,17 @@ normally during static analysis.</para>
 
       <orderedlist>
         <listitem>
-          <para>If the argument matches the regular expression <literal>^[a-z][a-z]+:</literal> (in
-            a case-insensitive manner), then it will be treated as a “<glossterm>fixable
-              URI</glossterm>”.</para>
-          <para><termdef xml:id="dt-fixable-uri">A <firstterm>fixable URI</firstterm> is a string
-              that is already an absolute URI that complies with <biblioref linkend="rfc3986"/> or
-              that can be turned into a compliant absolute URI after applying corrections such as
-              percent-encoding or adjusting the number of slashes after the URI
-            scheme.</termdef></para>
+          <para>If the argument starts with “<literal>file:</literal>” (independent of case), followed by any other 
+            permitted (after the scheme part of a URI) character than a slash (“<literal>/</literal>”), then it is
+            interpreted as a relative file URI.</para>
+          <para>If the argument starts with a string that may match a URI scheme as specified in <biblioref linkend="rfc3986"/>,
+            with the exception of single-letter strings followed by a colon on Windows, then it will be treated as a
+              “<glossterm>fixable URI</glossterm>”.</para>
+          <para>
+            <termdef xml:id="dt-fixable-uri">A <firstterm>fixable URI</firstterm> is a string that is already an absolute URI
+              that complies with <biblioref linkend="rfc3986"/> or that can be turned into a compliant absolute URI after
+              applying the following corrections as set forth in this list: Percent-encoding, path contraction, and adjusting
+              the number of slashes after the URI scheme.</termdef></para>
         </listitem>
         <listitem>
           <para>Otherwise, if the operating system’s path separator equals the backslash
@@ -1855,14 +1860,10 @@ normally during static analysis.</para>
         <listitem>
           <para>If the operating system identifier starts with “<literal>Windows</literal>” and the
             argument starts with exactly two slashes, it will be interpreted as a Windows UNC path,
-            with the part up to the next slash interpreted as the authority part
+            with the part up to the next slash interpreted as the authority component
               (“<literal>hostname:port</literal>”).</para>
           <para>In this case, “<literal>file:</literal>” will be prepended to the (complete) path
             string.</para>
-          <para>On non-Windows systems, file URIs with an authority component are forebidden. <error
-              code="D0076">It is a <glossterm>dynamic error</glossterm> if the operating system does
-              not identify as “Windows” and if a file system path or a file URI has an authority
-              (host name) component.</error></para>
         </listitem>
         <listitem>
           <para>Otherwise, if the (remaining) string starts with at least one slash and the argument
@@ -1917,6 +1918,16 @@ normally during static analysis.</para>
               <para>The drive letter is removed from the relative file system path.</para>
             </listitem>
             <listitem>
+              <para>If the argument starts with “<literal>file:</literal>” (independent of case), it is a 
+                relative URI.</para>
+              <para>Any absolute URI that is supposed to resolve such a relative path to an absolute
+                URI must satisfy an additional constraint: It must also be in the <literal>file:</literal>
+                scheme. <error code="D0077">It is a <glossterm>dynamic
+                    error</glossterm> if a relative path in the file scheme is attempted to be
+                  resolved against a path with a different scheme.</error>
+              </para>
+            </listitem>
+            <listitem>
               <para>If the result of the second invocation is a URI in the <literal>file:</literal>
                 scheme, the first argument is interpreted as a relative file system path.</para>
               <para>As a consequence, the characters “<literal>?</literal>” and
@@ -1956,6 +1967,17 @@ normally during static analysis.</para>
             so far:</para>
           <orderedlist>
             <listitem>
+              <para>Leading slash normalization: If the fixable URI starts with “<literal>file:/</literal>”
+                (case-independently), then it will be made sure that the number of slashes after “<literal>file:</literal>”
+                amounts to exactly three, unless the number is already exactly two, in which case the two slashes remain in
+                place unchanged.</para>
+              <para>On non-Windows systems, file URIs with an authority component are forebidden. <error
+              code="D0076">It is a <glossterm>dynamic error</glossterm> if the operating system does
+              not identify as “Windows” and if a file system path or a file URI has an authority
+              (host name) component.</error></para>
+            </listitem>
+            <listitem>
+              
               <para>Path contraction for path segments “<literal>.</literal>” and
                   “<literal>..</literal>” according to Sect. 3.3 of <biblioref linkend="rfc3986"
                 />;</para>
