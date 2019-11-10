@@ -2104,12 +2104,14 @@ result a document (or documents) specified by an IRI.</para>
   <p:option name="document-properties" as="map(xs:QName, item()*)?"/>
 </p:declare-step>
 
-<para><error code="D0064">It is a <glossterm>dynamic error</glossterm> if
-the <option>href</option> URI is not a valid <type>xs:anyURI</type>.</error>
-If the <option>href</option> is relative, it is made absolute
-against the base URI of the element on which it is specified
-(<tag>p:with-option</tag> or <tag>p:load</tag> in the case of a
-syntactic shortcut value).</para>
+  <para>
+    <error code="D0064">It is a <glossterm>dynamic error</glossterm> if the <option>href</option>
+      option is not a valid URI according to <biblioref linkend="rfc3986"/>.</error> If the option is relative, it
+    is made absolute against the base URI of the element on which it is specified
+      (<tag>p:with-option</tag> or the step in case of a syntactic shortcut value). If the
+      <option>href</option> is relative, it is made absolute against the base URI of the element on
+    which it is specified (<tag>p:with-option</tag> or <tag>p:load</tag> in the case of a syntactic
+    shortcut value).</para>
 
 <para>The document or documents identified by the
 <option>href</option> URI are loaded and returned. If the URI protocol
