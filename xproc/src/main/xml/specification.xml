@@ -6147,15 +6147,16 @@ that would be treated as an implicit inline.</error>
 
 <e:rng-pattern name="Document"/>
 
-<para>The value of the <tag class="attribute">href</tag> attribute,
-after expanding any <glossterm baseform="attribute value
-template">attribute value templates</glossterm>, is a URI.
-<error code="D0064">It is a <glossterm>dynamic error</glossterm> if
-the URI is not a valid <type>xs:anyURI</type>.</error> The URI is
-interpreted as an IRI reference. If it is relative, it is made
-absolute against the base URI of the <tag>p:document</tag> element.
-</para>
-
+  <para>The value of the <tag class="attribute">href</tag> attribute,
+    after expanding any <glossterm baseform="attribute value
+      template">attribute value templates</glossterm>, is a URI.
+    <error code="D0064">It is a
+      <glossterm>dynamic error</glossterm> if the URI is not valid according to
+      <biblioref linkend="rfc3986"/>.</error> The URI is
+    interpreted as an IRI reference. If it is relative, it is made
+    absolute against the base URI of the <tag>p:document</tag> element.
+  </para>
+  
 <para>The semantics of <tag>p:document</tag> are the same as a the
 semantics of <tag>p:load</tag> where the <option>href</option> option
 is the URI, the
