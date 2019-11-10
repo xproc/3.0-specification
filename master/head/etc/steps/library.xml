@@ -48,6 +48,7 @@
                 sequence="false"/>
       <p:option name="format" as="xs:QName?"/>
       <p:option name="parameters" as="xs:string"/>
+      <p:option name="relative-to" as="xs:anyURI?"/>
    </p:declare-step>
    <p:declare-step type="p:cast-content-type" xml:id="cast-content-type">
       <p:input port="source" content-types="*/*"/>
@@ -379,6 +380,7 @@
       <p:option name="exclude-filter" as="xs:string*" e:type="RegularExpression"/>
       <p:option name="format" as="xs:QName?"/>
       <p:option name="parameters" as="xs:string"/>
+      <p:option name="relative-to" as="xs:anyURI?"/>
    </p:declare-step>
    <p:declare-step type="p:uncompress" xml:id="uncompress">
       <p:input port="source"
