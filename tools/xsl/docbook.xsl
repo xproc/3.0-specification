@@ -247,6 +247,11 @@
 
       <xsl:if test="$travis-build-number != '' or $auto-diff">
         <dt>Changes:</dt>
+        <xsl:if test="/*/@xml:id = 'xproc'">
+          <dd>
+            <a href="lcdiff.html">Diff against the “last call” draft</a>
+          </dd>
+        </xsl:if>
         <xsl:if test="$auto-diff">
           <dd>
             <a href="diff.html">Diff against current “status quo” draft</a>
@@ -315,8 +320,10 @@
 
   <xsl:apply-templates select="." mode="m:toc"/>
 
-  <xsl:apply-templates/>
-  <xsl:call-template name="t:process-footnotes"/>
+  <article class="{local-name(.)}">
+    <xsl:apply-templates/>
+    <xsl:call-template name="t:process-footnotes"/>
+  </article>
 
   <xsl:if test="$js-navigation">
     <div id="jsnavbar" class="navbar">&#160;</div>
@@ -391,8 +398,10 @@
 
   <hr/>
 
-  <xsl:apply-templates/>
-  <xsl:call-template name="t:process-footnotes"/>
+  <article class="{local-name(.)}">
+    <xsl:apply-templates/>
+    <xsl:call-template name="t:process-footnotes"/>
+  </article>
 </xsl:template>
 
 <xsl:template match="db:specification/db:info/db:title"

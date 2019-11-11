@@ -199,6 +199,8 @@ task overview_src(dependsOn: ["overview:source"], type: Copy) {
 
 // ================================================================================
 
+def buildAbsDir = file("build/dist/xproc").getAbsolutePath()
+
 task xproc(dependsOn: [ "spec_schemas",
                         "xproc:specification", "xproc_assets", "xproc_src" ],
              type: DocBookTask) {
@@ -219,8 +221,8 @@ task xproc(dependsOn: [ "spec_schemas",
   option("style", file("tools/xsl/xproc-specs.xsl"))
   option("diff", deltaxml())
   option("specid", "xproc")
-  //option("diffloc", file("build/dist/xproc/diff.html"))
-  //option("lcdiffloc", file("build/dist/xproc/lcdiff.html"))
+  option("diffloc", buildAbsDir + "/diff.html")
+  option("lcdiffloc", buildAbsDir + "/lcdiff.html")
 
   pipeline "tools/xpl/formatspec.xpl"
 }
