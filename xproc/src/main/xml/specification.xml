@@ -1714,9 +1714,9 @@ associated with the <parameter>doc</parameter> specified.
 If the item is not associated with a document, the <tag>c:document-properties</tag>
 element will be empty.</para>
 
-<para>The underlying properties are serialized as follows:</para>
+<para>The underlying properties are serialized using the following rules:</para>
 
-<itemizedlist>
+<orderedlist>
 <listitem>
 <para>Each property/value pair in the map becomes an element in the
 document. The property name is used as the name of the element and the
@@ -1731,26 +1731,28 @@ repeated for each item in the sequence.
 <listitem>
 <para>If a map appears as a value, the property element will have an
 attribute named <tag class="attribute">map</tag> with the value “<code>true</code>”.
-<impl>It is <glossterm>implementation-defined</glossterm> how or if a
-processor attempts to serialize maps that appear in document properties.</impl>
-If the implementation does not serialize maps, the property element will be empty.
-</para>
+Each property/value pair in the map will be serialized according to this rules.</para>
 </listitem>
 <listitem>
 <para>If an array appears as a value, the property element will have an
 attribute named <tag class="attribute">array</tag> with the value “<code>true</code>”.
-<impl>It is <glossterm>implementation-defined</glossterm> how or if a
-processor attempts to serialize arrays that appear in document properties.</impl>
-If the implementation does not serialize arrays, the property element will be empty.
-</para>
+The members of the array will be serialized in order according to this rules.</para>
 </listitem>
 <listitem>
-<para>For atomic values other than maps, arrays, and strings, an <tag
-class="attribute">xsi:type</tag> attribute is added to the element to
-identify the type of the value.
+<para>If a node appears as a value, it will be copied to the resulting document.</para>
+</listitem>
+<listitem>
+  <para><impl>It is <glossterm>implementation-defined</glossterm> how or if a processor 
+    attempts to serialize function items that appear in document properties. 
+    If the implementation does not serialize function items, the property element will 
+    be empty.</impl></para>
+</listitem>
+<listitem>
+<para>For atomic values an <tag class="attribute">xsi:type</tag> attribute is 
+added to the element to identify the type of the value.
 </para>
 </listitem>
-</itemizedlist>
+</orderedlist>
 
 <para>If any values in the properties map cannot be serialized, an empty string
 is used for their value. Construction of the <tag>c:document-properties</tag> document
