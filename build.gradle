@@ -139,6 +139,23 @@ schemaList.each { schema ->
 }
 
 // ======================================================================
+// ToC files for step specifications; again just make sure they're 
+// downloaded early.
+
+def stepList = [ "step-file", "step-os", "step-paged-media", "step-rdf",
+                 "step-run", "step-text", "step-validation", "steps" ]
+stepList.each { step ->
+  def taskname = "download_" + step + "_toc"
+  Task t = task "${taskname}"(type: Download) {
+    src "$stepsBaseUri/$step/toc.xml"
+    dest "$buildDir/$step/toc.xml"
+    doFirst { mkdir "$buildDir" }
+  }
+  t.onlyIf { ! file("$buildDir/$step/toc.xml".toString()).exists() }
+  spec_schemas.dependsOn t
+}
+
+// ======================================================================
 // overview
 
 task overview(dependsOn: [ "spec_schemas",
