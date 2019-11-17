@@ -512,7 +512,7 @@ remove the <code>serialization</code> property
 <para>XProc 3.0 has been designed to make it possible to process any kind of
 document. Each document has a representation in the <biblioref linkend="xpath-datamodel"/>.
 This is necessary so that any kind of document can be passed as an argument to XPath functions,
-such as <tag>p:document-properties</tag>.
+such as <function>p:document-properties</function>.
 Practically speaking, there are five kinds of documents:</para>
 
 <orderedlist>
@@ -1724,6 +1724,19 @@ of a document as a map.</para>
 <para>The map returned contains (exclusively) the document properties
 associated with the <parameter>doc</parameter> specified. If the item
 is not associated with a document, the resulting map will be empty.</para>
+
+<para>Document properties are associated with documents that flow out
+of steps. Documents loaded with XPath functions or through other
+out-of-band means may not have properties associated with them. In
+order to provide a consistent interface for pipeline authors, the
+base URI of a node is always returned in the <code>base-uri</code>
+property and the <code>content-type</code> property always contains at
+least the most general appropriate content type
+(<code>application/xml</code> for any XML node,
+<code>text/plain</code> for any text node, and
+<code>application/octet-stream</code> if no more specific type is
+known).
+</para>
 
 <para>The <function>p:document-properties</function> function behaves
 normally during static analysis.</para>
@@ -7824,7 +7837,7 @@ draft:</para>
 
     <itemizedlist>
       <listitem>
-        <para>The <function>p:document-properties-document()</function> function was removed</para>
+        <para>The <code>p:document-properties-document()</code> function was removed</para>
       </listitem>
       <listitem>
         <para>The semantics of <tag>p:if</tag> have been changed. If the test expression is false, <tag>p:if</tag>
