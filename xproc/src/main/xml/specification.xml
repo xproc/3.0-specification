@@ -1275,10 +1275,21 @@ be raised statically.</para>
 <section xml:id="dynamic-evaluation">
 <title>Dynamic evaluation of the pipeline</title>
 
-<para>Dynamic evaluation of the pipeline occurs when it begins to process documents.
-The processor evaluates any expressions necessary to provide all of the input documents
-and options required. The step processes the input documents and produces outputs which
-flow through the pipeline.</para>
+<para>Dynamic evaluation of the pipeline occurs when it begins to
+process documents. The processor evaluates any expressions necessary
+to provide all of the input documents and options required. The step
+processes the input documents and produces outputs which flow through
+the pipeline.</para>
+
+<para>Unless otherwise specified, expressions that appear in
+attribute values
+(<glossterm baseform="attribute value template">attribute value
+templates</glossterm>,
+map and array initializers that are always
+<link linkend="syntax-summaries">treated as expressions</link>,
+etc.) get their context item from
+the <glossterm>default readable port</glossterm>. If there is no
+default readable port, the context item is undefined.</para>
 
     <section xml:id="environment">
       <title>Environment</title>
