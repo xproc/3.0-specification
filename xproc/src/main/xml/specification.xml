@@ -2791,12 +2791,51 @@ declaration and the descendants of those siblings.
 </section>
       
 <section>
-  <title>Scoping of static options</title>
+  <title>Scoping of static option names</title>
 
-  <note  role="editorial">
-    <title>TBD</title>
-    <para>Fill in this section as soon as we have consensus about this</para>
-  </note>
+<para>The scope of the names of static options is the pipeline in
+which they are declared, including any declarations imported from
+libraries via <tag>p:import</tag>. Nested pipelines inherit the static
+options in scope for their parent.</para>
+
+<para>In other words, the step options that are in scope in a
+<tag>p:declare-step</tag> are:</para>
+
+<itemizedlist>
+  <listitem>
+    <para>Any static options declared in the step.</para>
+  </listitem>
+  <listitem>
+    <para>Any static options that are in the scope of any
+    <tag>p:library</tag> that is imported.
+    </para>
+  </listitem>
+  <listitem>
+    <para>Any static option that are in scope for the pipeline’s parent
+    <tag>p:declare-step</tag>, if it has one.</para>
+  </listitem>
+</itemizedlist>
+
+<para>The static options that are in scope in a <tag>p:library</tag>
+are:</para>
+
+<itemizedlist>
+  <listitem>
+    <para>Any static options declared in the library (the
+    <tag>p:option</tag> children of the <tag>p:library</tag>
+    element).</para>
+  </listitem>
+  <listitem>
+    <para>Any static options that are in the scope of any
+    <tag>p:library</tag> that is imported.
+    </para>
+  </listitem>
+</itemizedlist>
+
+<para><error code="S0071">All the static options in a pipeline or
+library <rfc2119>must</rfc2119> have unique names: it is a
+<glossterm>static error</glossterm> if any static option name is
+declared more than once in the same scope.</error></para>
 </section>
       
 </section>
