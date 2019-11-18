@@ -66,7 +66,7 @@ import de.undercouch.gradle.tasks.download.Download
 
 // ======================================================================
 
-task allspecs(dependsOn: [ "buildspecs", "make_etc" ]) {
+task allspecs(dependsOn: [ "buildspecs" ]) {
 }
 
 task buildspecs() {
@@ -91,50 +91,6 @@ def deltaxml() {
 }
 
 // ======================================================================
-// Make sure that some build artifacts get published so that they
-// can be used by the build process for the steps
-
-task make_etc(dependsOn: [ "copy_core_schemas", "copy_xproc_build" ]) {
-    // nop
-}
-
-task copy_core_schemas(dependsOn: [ "buildspecs" ], type: Copy) {
-    from "build/core30.rng", "build/xproc.rng", "build/xproc.rnc",
-         "build/xproc10.rng", "build/xproc10.rnc", "build/xproc30.rng",
-         "build/xproc30.rnc"
-    into "build/dist/etc/"
-    doFirst { mkdir "$buildDir/dist/etc" }
-}
-
-task copy_xproc_build(dependsOn: [ "buildspecs" ], type: Copy) {
-    from "xproc/build/"
-    exclude "xinclude.xml", "examples/**", "graphics/**", "glossary.xml"
-    into "build/dist/etc/xproc/"
-    doFirst { mkdir "$buildDir/dist/etc/xproc" }
-}
-
-// ======================================================================
-// We need the steps for their schema grammar contributions
-task step_schemas() {
-    // nop
-}
-
-def stepList = [ "step-file", "step-os", "step-paged-media",
-                 "step-run", "step-text", "step-validation", "steps" ]
-
-stepList.each { spec ->
-    [ "library.xml", "source.xml", "steps.rnc", "steps.rng", "toc.xml" ].each { fn ->
-        Task t = task "download_${spec}_${fn}"(type: Download) {
-            src "$stepsBaseUri/$spec/$fn"
-            dest "$buildDir/$spec/$fn"
-            doFirst { mkdir "$buildDir/$spec" }
-        }
-        t.onlyIf { ! file("$buildDir/$spec/$fn".toString()).exists() }
-        step_schemas.dependsOn t
-    }
-}
-
-// ======================================================================
 // Specification schemas
 
 task spec_schemas(dependsOn: [ "spec_rng", "spec_sch" ]) {
@@ -148,9 +104,9 @@ task spec_rng(type: JavaExec) {
   classpath = configurations.tools
   main = 'com.thaiopensource.relaxng.translate.Driver'
   args = ["schema/dbspec.rnc", "build/schema/dbspec.rng"]
-}
-spec_rng.doFirst {
-  mkdir("build/schema")
+  doFirst {
+    mkdir("build/schema")
+  }
 }
 
 task spec_sch(type: Copy) {
@@ -158,15 +114,51 @@ task spec_sch(type: Copy) {
     include "docbook.sch"
   }
   into "build/schema"
+  doFirst {
+    mkdir("build/schema")
+  }
 }
-spec_sch.doFirst {
-  mkdir("build/schema")
+
+// ======================================================================
+// XProc schemas (just make sure they're downloaded early)
+
+def schemaList = ["core30.rng",
+                  "xproc.rnc", "xproc.rng",
+                  "xproc10.rnc", "xproc10.rng",
+                  "xproc30.rnc", "xproc30.rng"]
+
+schemaList.each { schema ->
+  def taskname = "download_" + schema.replace(".", "_")
+  Task t = task "${taskname}"(type: Download) {
+    src "$grammarBaseUri/$schema"
+    dest "$buildDir/$schema"
+    doFirst { mkdir "$buildDir" }
+  }
+  t.onlyIf { ! file("$buildDir/$schema".toString()).exists() }
+  spec_schemas.dependsOn t
+}
+
+// ======================================================================
+// ToC files for step specifications; again just make sure they're 
+// downloaded early.
+
+def stepList = [ "step-file", "step-os", "step-paged-media", "step-rdf",
+                 "step-run", "step-text", "step-validation", "steps" ]
+stepList.each { step ->
+  def taskname = "download_" + step + "_toc"
+  Task t = task "${taskname}"(type: Download) {
+    src "$stepsBaseUri/$step/toc.xml"
+    dest "$buildDir/$step/toc.xml"
+    doFirst { mkdir "$buildDir" }
+  }
+  t.onlyIf { ! file("$buildDir/$step/toc.xml".toString()).exists() }
+  spec_schemas.dependsOn t
 }
 
 // ======================================================================
 // overview
 
-task overview(dependsOn: [ "xproc_schemas", "spec_schemas",
+task overview(dependsOn: [ "spec_schemas",
                            "overview:specification", "overview_assets",
                            "overview_src" ],
               type: DocBookTask) {
@@ -207,9 +199,10 @@ task overview_src(dependsOn: ["overview:source"], type: Copy) {
 
 // ================================================================================
 
-task xproc(dependsOn: [ "xproc_schemas", "spec_schemas",
-                        "xproc:specification", "xproc_assets", "xproc_src",
-                        "xproc_ancillary", "xproc_library"],
+def buildAbsDir = file("build/dist/xproc").getAbsolutePath()
+
+task xproc(dependsOn: [ "spec_schemas",
+                        "xproc:specification", "xproc_assets", "xproc_src" ],
              type: DocBookTask) {
   inputs.files fileTree(dir: "tools/xsl/")
   inputs.files fileTree(dir: "tools/xpl/")
@@ -228,8 +221,8 @@ task xproc(dependsOn: [ "xproc_schemas", "spec_schemas",
   option("style", file("tools/xsl/xproc-specs.xsl"))
   option("diff", deltaxml())
   option("specid", "xproc")
-  //option("diffloc", file("build/dist/xproc/diff.html"))
-  //option("lcdiffloc", file("build/dist/xproc/lcdiff.html"))
+  option("diffloc", buildAbsDir + "/diff.html")
+  option("lcdiffloc", buildAbsDir + "/lcdiff.html")
 
   pipeline "tools/xpl/formatspec.xpl"
 }
@@ -271,37 +264,6 @@ task xproc_pdf(dependsOn: [ "xproc_pdf_xform" ], type: XMLCalabashTask) {
   pipeline "tools/xpl/css-format.xpl"
 }
 
-task xproc_ancillary(dependsOn: [ "xproc10_rng", "xproc30_rnc", "xproc_rng" ], type: Copy) {
-  from "build/"
-  into "build/dist/xproc/"
-  include "xproc*.rnc"
-  include "xproc*.rng"
-}
-xproc_ancillary.doFirst {
-  mkdir("build/dist/xproc")
-}
-
-task xproc_library(type: XMLCalabashTask,
-                   dependsOn: [ "step_schemas" ]) {
-  // N.B. Because Travis jobs cannot see the filesystem, we have
-  // to list the dependencies twice. :-(
-  String steps = ""
-  stepList.each { s ->
-    steps = steps + " ../../build/" + s + "/library.xml"
-  }
-
-  inputs.files(fileTree(dir: 'build').include("**/library.xml"))
-  inputs.file "tools/xpl/make-library.xpl"
-  inputs.file "tools/xsl/make-library.xsl"
-  input("source", "build/steps/library.xml")
-  output("result", "build/dist/xproc/library.xpl")
-  param("libraries", steps)
-  pipeline "tools/xpl/make-library.xpl"
-}
-xproc_library.doFirst {
-  mkdir("build/dist/xproc")
-}
-
 task xproc_assets(dependsOn: [ "xproc:images", "xproc_web_assets" ], type: Copy) {
   from "xproc/build/graphics"
   into "build/dist/xproc/graphics/"
@@ -317,94 +279,6 @@ task xproc_src(dependsOn: ["xproc:source"], type: Copy) {
   into "build/dist/xproc/"
   include "source.xml"
   rename ("source.xml", "specification.xml")
-}
-
-// ======================================================================
-// XProc schemas
-
-task core_rng(type: JavaExec) {
-  classpath = configurations.tools
-  main = 'com.thaiopensource.relaxng.translate.Driver'
-  args = ["src/main/schema/core30.rnc", "build/core30.rng"]
-}
-core_rng.doFirst {
-  mkdir("build")
-}
-
-task xproc30_rng(type: XMLCalabashTask,
-               dependsOn: [ "core_rng", "step_schemas" ]) {
-  // This is bogus; I'm having trouble getting the filesystem read to
-  // happen at the right time:
-  // https://discuss.gradle.org/t/controlling-order-of-execution-of-statements-wrt-execution-of-a-task/26291
-  String files = ""
-  stepList.each { s->
-    files = files + " ../../build/" + s + "/steps.rng"
-  }
-
-  inputs.file "build/core30.rng"
-  inputs.file "tools/xpl/make-rng.xpl"
-  inputs.file "tools/xsl/make-rng.xsl"
-  outputs.file "build/xproc30.rng"
-  input("source", "build/core30.rng")
-  output("result", "build/xproc30.rng")
-  param("libraries", files)
-  pipeline "tools/xpl/make-rng.xpl"
-}
-
-task xproc30_rnc(dependsOn: [ "xproc30_rng" ], type: JavaExec) {
-  inputs.file "build/xproc30.rng"
-  outputs.file "build/xproc30.rnc"
-  classpath = configurations.tools
-  main = 'com.thaiopensource.relaxng.translate.Driver'
-  args = ["build/xproc30.rng", "build/xproc30.rnc"]
-}
-xproc30_rnc.doFirst {
-  mkdir("build")
-}
-
-task xproc10_rnc(type: Copy) {
-  from "src/main/schema/"
-  into "build/"
-  include "xproc10.rnc"
-}
-xproc10_rnc.doFirst {
-  mkdir("build")
-}
-
-task xproc_rnc(type: Copy) {
-  from "src/main/schema/"
-  into "build/"
-  include "xproc.rnc"
-}
-xproc_rnc.doFirst {
-  mkdir("build")
-}
-
-task xproc10_rng(dependsOn: [ "xproc10_rnc" ], type: JavaExec) {
-  inputs.file "build/xproc10.rnc"
-  outputs.file "build/xproc10.rng"
-
-  classpath = configurations.tools
-  main = 'com.thaiopensource.relaxng.translate.Driver'
-  args = ["build/xproc10.rnc", "build/xproc10.rng"]
-}
-
-task xproc_rng(dependsOn: [ "xproc_rnc" ], type: JavaExec) {
-  inputs.file "build/xproc.rnc"
-  outputs.file "build/xproc.rng"
-
-  classpath = configurations.tools
-  main = 'com.thaiopensource.relaxng.translate.Driver'
-  args = ["build/xproc.rnc", "build/xproc.rng"]
-}
-
-task xproc_schemas(dependsOn: [ "xproc30_rnc", "xproc30_rng", "xproc10_rng", "xproc_rng" ],
-                   type: JavaExec) {
-  inputs.file "tools/xpl/smoke-test.xpl"
-
-  classpath = configurations.tools
-  main = 'com.thaiopensource.relaxng.util.Driver'
-  args = ["-i", "-c", "build/xproc.rnc", "tools/xpl/smoke-test.xpl" ]
 }
 
 // ======================================================================

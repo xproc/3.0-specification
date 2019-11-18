@@ -4,12 +4,13 @@
 		xmlns:f="http://docbook.org/xslt/ns/extension"
 		xmlns:h="http://www.w3.org/1999/xhtml"
 		xmlns:db="http://docbook.org/ns/docbook"
+                xmlns:mp="http://docbook.org/xslt/ns/mode/private"
                 xmlns:tp="http://docbook.org/xslt/ns/template/private"
                 xmlns:m="http://docbook.org/xslt/ns/mode"
 		xmlns:t="http://docbook.org/xslt/ns/template"
 		xmlns:xlink="http://www.w3.org/1999/xlink"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
-		exclude-result-prefixes="f h db m t xlink xs tp"
+		exclude-result-prefixes="f h db m mp t xlink xs tp"
                 version="2.0">
 
 <xsl:import href="https://cdn.docbook.org/release/xsl20/current/xslt/base/html/final-pass.xsl"/>
@@ -92,64 +93,66 @@
     </xsl:message>
   </xsl:if>
 
-  <article class="{local-name(.)}">
-    <xsl:if test="$revisionflags">
+  <xsl:if test="$revisionflags">
+    <div class="augment">
       <p>The presentation of this document has been augmented to
       identify changes from a previous version. Three kinds of changes
       are highlighted: <span class="revision-added">new, added text</span>,
       <span class="revision-changed">changed text</span>, and
       <span class="revision-deleted">deleted text</span>.</p>
       <hr/>
-    </xsl:if>
+    </div>
+  </xsl:if>
 
-    <xsl:choose>
-      <xsl:when test="$w3c-doctype = 'namespace'">
-	<xsl:call-template name="format-namespace"/>
-      </xsl:when>
-      <xsl:otherwise>
-	<xsl:call-template name="format-specification"/>
-      </xsl:otherwise>
-    </xsl:choose>
-  </article>
+  <xsl:choose>
+    <xsl:when test="$w3c-doctype = 'namespace'">
+      <xsl:call-template name="format-namespace"/>
+    </xsl:when>
+    <xsl:otherwise>
+      <xsl:call-template name="format-specification"/>
+    </xsl:otherwise>
+  </xsl:choose>
 </xsl:template>
 
 <xsl:template name="format-specification">
   <xsl:variable name="revisionflags" select="//*[@revisionflag][1]"/>
 
   <div class="head" id='spec.head'>
+    <a class="logo" href="https://www.w3.org/">
+      <img alt="W3C"
+           height="48"
+           src="https://www.w3.org/StyleSheets/TR/2016/logos/W3C"
+           width="72"/>
+    </a>
+
     <xsl:apply-templates select="db:info/db:title[1]"
 			 mode="m:titlepage-mode"/>
+
     <h2>
-      <xsl:choose>
-	<xsl:when test="$w3c-doctype='ed'">
-	  <xsl:choose>
-	    <xsl:when test="count(/*/db:info//db:editor) &gt; 1">
-	      <xsl:text>Editors' Draft </xsl:text>
-	    </xsl:when>
-	    <xsl:otherwise>
-	      <xsl:text>Editor's Draft </xsl:text>
-	    </xsl:otherwise>
-	  </xsl:choose>
-	</xsl:when>
-	<xsl:when test="$w3c-doctype='fpwd'">First Public Working Draft</xsl:when>
-	<xsl:when test="$w3c-doctype='wd'">Working Draft</xsl:when>
-	<xsl:when test="$w3c-doctype='rec'">Recommendation</xsl:when>
-	<xsl:when test="$w3c-doctype='pr'">Proposed Recommendation</xsl:when>
-	<xsl:when test="$w3c-doctype='per'">Proposed Edited Recommendation</xsl:when>
-	<xsl:when test="$w3c-doctype='cr'">Candidate Recommendation</xsl:when>
-	<xsl:when test="$w3c-doctype='note'">Working Group Note</xsl:when>
-	<xsl:when test="$w3c-doctype='memsub'">Member Submission</xsl:when>
-	<xsl:when test="$w3c-doctype='teamsub'">Team Submission</xsl:when>
-	<xsl:otherwise>Unknown document type</xsl:otherwise>
-      </xsl:choose>
+      <xsl:text>Draft Community Group Report </xsl:text>
 
-      <xsl:if test="$revisionflags">
-	<xsl:text> (with revision marks)</xsl:text>
-      </xsl:if>
-
-      <xsl:text> </xsl:text>
-      <time datetime="{$pubdt}">
+      <time class="dt-published" datetime="2019-01-04">
         <xsl:value-of select="format-date($pubdate, '[D1] [MNn] [Y0001]')"/>
+      </time>
+    </h2>
+
+    <xsl:if test="$w3c-doctype='ed'">
+      <div class="editors-draft">
+	<xsl:choose>
+	  <xsl:when test="count(/*/db:info//db:editor) &gt; 1">
+	    <xsl:text>Editors' Draft </xsl:text>
+	  </xsl:when>
+	  <xsl:otherwise>
+	    <xsl:text>Editor's Draft </xsl:text>
+	  </xsl:otherwise>
+	</xsl:choose>
+
+        <xsl:if test="$revisionflags">
+	  <xsl:text> (with revision marks)</xsl:text>
+        </xsl:if>
+
+        <xsl:text> </xsl:text>
+
         <xsl:if test="not(db:info/db:pubdate)">
           <xsl:text> at </xsl:text>
           <xsl:value-of select="format-dateTime($dtz, '[H01]:[m01]&#160;UTC')"/>
@@ -162,56 +165,20 @@
             <xsl:text>)</xsl:text>
           </xsl:if>
         </xsl:if>
-      </time>
-    </h2>
+      </div>
+    </xsl:if>
 
     <dl>
-      <dt>This Version:</dt>
-      <dd>
-        <xsl:choose>
-          <xsl:when test="$travis = 'true'">
-            <xsl:variable name="tip" select="if ($travis-tag = '')
-                                             then 'head'
-                                             else $travis-tag"/>
-            <a href="https://{$travis-user}.github.io/{$travis-repo}/{$travis-branch}/{$tip}/{$spec}">
-              <xsl:value-of select="concat('https://',
-                                           $travis-user,
-                                           '.github.io/',
-                                           $travis-repo, '/', $travis-branch, '/', $tip,
-                                           '/', $spec)"/>
-            </a>
-          </xsl:when>
-          <xsl:otherwise>
-            <xsl:text>Local build</xsl:text>
-          </xsl:otherwise>
-        </xsl:choose>
-      </dd>
-
-      <dt>Latest Version:</dt>
+      <dt>Latest editor’s draft:</dt>
       <dd>
         <a href="http://spec.xproc.org/master/head/{$spec}">
           <xsl:value-of select="concat('http://spec.xproc.org/master/head/', $spec)" />
         </a>
-<!--
-	<xsl:choose>
-	  <xsl:when test="$latest.version.uri">
-	    <a href="{$latest.version.uri}">
-	      <xsl:value-of select="$latest.version.uri"/>
-	    </a>
-	  </xsl:when>
-	  <xsl:otherwise>
-	    <a href="{$publication.root.uri}{db:info/db:w3c-shortname}/">
-	      <xsl:value-of select="$publication.root.uri"/>
-	      <xsl:value-of select="db:info/db:w3c-shortname"/>
-	      <xsl:text>/</xsl:text>
-	    </a>
-	  </xsl:otherwise>
-	</xsl:choose>
--->
       </dd>
 
       <xsl:if test="db:info/db:bibliorelation[@type='replaces']">
-	<xsl:variable name="vers" select="db:info/db:bibliorelation[@type='replaces']"/>
+	<xsl:variable name="vers"
+                      select="db:info/db:bibliorelation[@type='replaces']"/>
 	<dt>
 	  <xsl:text>Previous version</xsl:text>
 	  <xsl:if test="count($vers) &gt; 1">s</xsl:if>
@@ -247,6 +214,7 @@
 	<xsl:if test="count($editors) &gt; 1">s</xsl:if>
 	<xsl:text>:</xsl:text>
       </dt>
+
       <xsl:for-each select="$editors">
 	<dd>
 	  <xsl:apply-templates select="db:personname"/>
@@ -261,33 +229,40 @@
 	</dd>
       </xsl:for-each>
 
-      <xsl:if test="not(db:info/db:pubdate)">
-        <dt>Repository:</dt>
-        <dd>
-          <a href="http://github.com/{$travis-user}/{$travis-repo}">
-            <xsl:text>This specification on GitHub</xsl:text>
-          </a>
-        </dd>
-        <dd>
-          <a href="http://github.com/xproc/3.0-specification/issues">
-            <xsl:text>Report an issue</xsl:text>
-          </a>
-        </dd>
+      <xsl:variable name="repo"
+                    select="db:info/db:bibliomisc[@role='github-repo']"/>
 
-        <xsl:if test="$travis-build-number != '' or $auto-diff">
-          <dt>Changes:</dt>
-          <xsl:if test="$auto-diff">
-            <dd>
-              <a href="diff.html">Diff against current “status quo” draft</a>
-            </dd>
-          </xsl:if>
-          <xsl:if test="$travis-build-number != ''">
-            <dd>
-              <a href="http://github.com/{$travis-user}/{$travis-repo}/commits/{$travis-branch}">
-                <xsl:text>Commits for this specification</xsl:text>
-              </a>
-            </dd>
-          </xsl:if>
+      <dt>Participate:</dt>
+      <dd>
+        <a href="http://github.com/{$repo}">
+          <xsl:text>GitHub </xsl:text>
+          <xsl:value-of select="$repo"/>
+        </a>
+      </dd>
+      <dd>
+        <a href="http://github.com/{$repo}/issues">
+          <xsl:text>Report an issue</xsl:text>
+        </a>
+      </dd>
+
+      <xsl:if test="$travis-build-number != '' or $auto-diff">
+        <dt>Changes:</dt>
+        <xsl:if test="/*/@xml:id = 'xproc'">
+          <dd>
+            <a href="lcdiff.html">Diff against the “last call” draft</a>
+          </dd>
+        </xsl:if>
+        <xsl:if test="$auto-diff">
+          <dd>
+            <a href="diff.html">Diff against current “status quo” draft</a>
+          </dd>
+        </xsl:if>
+        <xsl:if test="$travis-build-number != ''">
+          <dd>
+            <a href="http://github.com/{$travis-user}/{$travis-repo}/commits/{$travis-branch}">
+              <xsl:text>Commits for this specification</xsl:text>
+            </a>
+          </dd>
         </xsl:if>
       </xsl:if>
     </dl>
@@ -330,11 +305,11 @@
         </p>
       </xsl:when>
       <xsl:otherwise>
-        <p class="copyright">Copyright © 2018 FIXME:</p>
+        <p class="copyright">Copyright © 2018 FIXME: NO COPYRIGHT ELEMENT?</p>
       </xsl:otherwise>
     </xsl:choose>
 
-    <hr/>
+    <hr title="Separator for header"/>
 
     <xsl:apply-templates select="db:info/db:abstract"
 			 mode="m:titlepage-mode"/>
@@ -342,17 +317,53 @@
     <xsl:apply-templates select="db:info/db:legalnotice"
 			 mode="m:titlepage-mode"/>
   </div>
-  <hr/>
 
   <xsl:apply-templates select="." mode="m:toc"/>
 
-  <xsl:apply-templates/>
-
-  <xsl:call-template name="t:process-footnotes"/>
+  <article class="{local-name(.)}">
+    <xsl:apply-templates/>
+    <xsl:call-template name="t:process-footnotes"/>
+  </article>
 
   <xsl:if test="$js-navigation">
     <div id="jsnavbar" class="navbar">&#160;</div>
   </xsl:if>
+</xsl:template>
+
+<xsl:template match="db:copyright">
+  <p class="copyright">
+    <a href="https://www.w3.org/Consortium/Legal/ipr-notice#Copyright"
+       >Copyright</a>
+
+    <xsl:text>&#160;©&#160;</xsl:text>
+
+    <span class="years">
+      <xsl:call-template name="t:copyright-years">
+        <xsl:with-param name="years" select="db:year"/>
+        <xsl:with-param name="print.ranges" select="$make.year.ranges"/>
+        <xsl:with-param name="single.year.ranges"
+                        select="$make.single.year.ranges"/>
+      </xsl:call-template>
+    </span>
+
+    <xsl:variable name="cg" select="../db:bibliomisc[@role='w3c-cg']"/>
+
+    <xsl:text> the Contributors to the </xsl:text>
+    <cite>
+      <xsl:value-of select="/db:specification/db:info/db:title"/>
+    </cite>
+    <xsl:text> specification, published by the </xsl:text>
+    <a href="{$cg/@xlink:href}">
+      <xsl:value-of select="$cg"/>
+      <xsl:text> Community Group</xsl:text>
+    </a>
+    <xsl:text> under the </xsl:text>
+    <a href="https://www.w3.org/community/about/agreements/cla/">W3C
+    Community Contributor License Agreement (CLA)</a>
+    <xsl:text>. A human-readable </xsl:text>
+    <a href="https://www.w3.org/community/about/agreements/cla-deed/">summary</a>
+    <xsl:text> is available.</xsl:text>
+  </p>
 </xsl:template>
 
 <xsl:template match="db:bibliorelation[@type='references'
@@ -387,15 +398,16 @@
 
   <hr/>
 
-  <xsl:apply-templates/>
-
-  <xsl:call-template name="t:process-footnotes"/>
+  <article class="{local-name(.)}">
+    <xsl:apply-templates/>
+    <xsl:call-template name="t:process-footnotes"/>
+  </article>
 </xsl:template>
 
 <xsl:template match="db:specification/db:info/db:title"
 	      mode="m:titlepage-mode"
 	      priority="100">
-  <h1>
+  <h1 id="title" class="title p-name">
     <xsl:apply-templates/>
   </h1>
 </xsl:template>
@@ -403,16 +415,16 @@
 <xsl:template match="db:specification/db:info/db:abstract"
 	      mode="m:titlepage-mode"
 	      priority="100">
-  <div class="abstract">
+  <section id="abstract" class="introductory">
     <h2>Abstract</h2>
     <xsl:apply-templates/>
-  </div>
+  </section>
 </xsl:template>
 
 <xsl:template match="db:specification/db:info/db:legalnotice"
 	      mode="m:titlepage-mode"
 	      priority="100">
-  <div class="status">
+  <section id="sotd" class="introductory">
     <h2>Status of this Document</h2>
 
     <xsl:if test="/db:specification/@class='ed'">
@@ -433,7 +445,7 @@
     </xsl:if>
 
     <xsl:apply-templates/>
-  </div>
+  </section>
 </xsl:template>
 
 <xsl:template name="t:user-localization-data">
@@ -482,6 +494,36 @@
   <!-- nop -->
 </xsl:template>
 
+<xsl:template name="tp:make-toc">
+  <xsl:param name="toc-context" select="."/>
+  <xsl:param name="toc.title" select="true()"/>
+  <xsl:param name="nodes" select="()"/>
+
+  <xsl:variable name="toc.title">
+    <xsl:if test="$toc.title">
+      <xsl:call-template name="t:format-toc-title">
+        <xsl:with-param name="toc-context" as="element()" select="$toc-context"/>
+        <xsl:with-param name="toc-title" as="node()*">
+          <xsl:call-template name="gentext">
+            <xsl:with-param name="key">TableofContents</xsl:with-param>
+          </xsl:call-template>
+        </xsl:with-param>
+      </xsl:call-template>
+    </xsl:if>
+  </xsl:variable>
+
+  <xsl:if test="$nodes">
+    <nav id="toc">
+      <xsl:copy-of select="$toc.title"/>
+      <ol class="toc">
+        <xsl:apply-templates select="$nodes" mode="mp:toc">
+          <xsl:with-param name="toc-context" select="$toc-context"/>
+        </xsl:apply-templates>
+      </ol>
+    </nav>
+  </xsl:if>
+</xsl:template>
+
 <xsl:template name="t:format-toc-title">
   <xsl:param name="toc-context" as="element()"/>
   <xsl:param name="toc-title" as="node()*"/>
@@ -495,13 +537,16 @@
   <xsl:param name="depth" select="1"/>
   <xsl:param name="depth.from.context" select="8"/>
 
-  <span>
-    <xsl:apply-templates select="." mode="m:label-content"/>
-    <xsl:text> </xsl:text>
-    <a href="{f:href(/,.)}">
-      <xsl:apply-templates select="." mode="m:titleabbrev-content"/>
-    </a>
-  </span>
+  <xsl:attribute name="class" select="'tocline'"/>
+
+  <a class="tocxref" href="{f:href(/,.)}">
+    <bdi class="secno">
+      <xsl:apply-templates select="." mode="m:label-content"/>
+      <xsl:if test="not($toc-context/parent::db:section)">.</xsl:if>
+      <xsl:text> </xsl:text>
+    </bdi>
+    <xsl:apply-templates select="." mode="m:titleabbrev-content"/>
+  </a>
 </xsl:template>
 
 <xsl:template match="h:li" mode="fixup-toc" priority="10">
@@ -534,6 +579,17 @@
 <xsl:template match="comment()|text()|attribute()|processing-instruction()"
               mode="fixup-toc">
   <xsl:copy/>
+</xsl:template>
+
+<xsl:template match="db:section|db:appendix" mode="m:object-title-markup">
+  <bdi class="secno">
+    <xsl:apply-templates select="." mode="m:label-content"/>
+    <xsl:text>. </xsl:text>
+  </bdi>
+  <xsl:apply-templates select="." mode="m:title-content">
+    <xsl:with-param name="template" select="'%t'"/>
+  </xsl:apply-templates>
+  <a aria-label="§" class="self-link" href="#{@xml:id}"/>
 </xsl:template>
 
 <!-- ============================================================ -->

@@ -59,6 +59,17 @@ Use XInclude to break specs into pieces if you wish.
 
 It’s all a bit complicated. These are some notes.
 
+* The [published specs](http://spec.xproc.org/) are the `gh-pages`
+  branch of this repository.
+  
+* Three repositories update the `gh-pages` branch: this repository publishes
+  the language specification; the `3.0-steps` repository publishes the steps;
+  the `3.0-grammar` repository publishes the grammar.
+  
+* Publishing the grammar relies on the steps! So `3.0-grammar` should be rebuilt
+  whenever the steps change and this repos should be rebuilt whenever the
+  core grammar changes!
+
 * All specifications have a glossary; if the glossary turns out to be
   empty, because there are no term definitions (`firstterm` elements)
   in a specification, it will be elided automatically.

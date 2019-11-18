@@ -11,7 +11,14 @@
 <info>
 <title>XProc 3.0: An XML Pipeline Language</title>
 <!-- defaults to date formatted <pubdate>2014-12-18</pubdate> -->
-<copyright><year>2018</year><year>2019</year><holder>@@FIXME:</holder></copyright>
+
+<copyright><year>2018</year><year>2019</year>
+<holder>the Contributors to the XProc 3.0 Specification</holder>
+</copyright>
+
+<bibliomisc role="github-repo">xproc/3.0-specification</bibliomisc>
+<bibliomisc role="w3c-cg"
+            xlink:href="https://www.w3.org/community/xproc-next/">XProc Next</bibliomisc>
 
 <bibliorelation type="isformatof" xlink:href="specification.xml">XML</bibliorelation>
 <authorgroup>
@@ -42,11 +49,24 @@ conditionals, iterations, and exception handlers which control which
 steps are executed.</para>
 </abstract>
 
-<legalnotice role="status">
-
-<para><emphasis>This section describes the status of this document at
-the time of its publication. Other documents may supersede this
-document.</emphasis></para>
+<legalnotice xml:id="sotd" role="status">
+  <para>This specification was published by the
+  <link xlink:href="https://www.w3.org/community/xproc-next/">XProc
+  Next Community Group</link>. It is not a W3C Standard nor is it on
+  the W3C Standards Track. Please note that under the
+  <link xlink:href="https://www.w3.org/community/about/agreements/cla/">W3C
+  Community Contributor License Agreement (CLA)</link> there is a limited
+  opt-out and other conditions apply. Learn more about <link
+  xlink:href="https://www.w3.org/community/">W3C Community and Business
+  Groups</link>.
+  </para>
+  
+  <para>If you wish to make comments regarding this document, please
+  send them to
+  <link xlink:href="mailto:xproc-dev@w3.org">xproc-dev@w3.org</link>.
+  (<link xlink:href="mailto:xproc-dev-request@w3.org?subject=subscribe">subscribe</link>,
+  <link xlink:href="https://lists.w3.org/Archives/Public/xproc-dev/">archives</link>).
+  </para>
 
 <note role="editorial">
 <para>This draft is the “editor’s working draft” and may include changes made
@@ -388,11 +408,14 @@ XProc pipeline as a map (<code>map(xs:QName, item()*)</code>).</termdef></para>
           <term>
             <code>base-uri</code>
           </term>
-          <listitem>
-            <para>The value of the (optional) “<code>base-uri</code>” property identifies the base URI of the
-              document. For XML documents, HTML documents, and text documents, the value of “<code>base-uri</code>”
-              is the base URI property of the document node. For other document types it is a property 
-              the processor keeps track of. If no such key is present, the document has no base URI.</para>
+<listitem>
+<para>The value of the “<code>base-uri</code>” property identifies the
+base URI of the document; it will only be present if the document
+has a base URI. For XML documents, HTML documents, and text
+documents, the value of “<code>base-uri</code>” is the base URI
+property of the document node. For other document types it is a
+property the processor keeps track of. If no such key is present, the
+document has no base URI.</para>
           </listitem>
         </varlistentry>
         <varlistentry>
@@ -449,7 +472,7 @@ remove the <code>serialization</code> property
 <para>XProc 3.0 has been designed to make it possible to process any kind of
 document. Each document has a representation in the <biblioref linkend="xpath-datamodel"/>.
 This is necessary so that any kind of document can be passed as an argument to XPath functions,
-such as <tag>p:document-properties</tag>.
+such as <function>p:document-properties</function>.
 Practically speaking, there are five kinds of documents:</para>
 
 <orderedlist>
@@ -1252,10 +1275,21 @@ be raised statically.</para>
 <section xml:id="dynamic-evaluation">
 <title>Dynamic evaluation of the pipeline</title>
 
-<para>Dynamic evaluation of the pipeline occurs when it begins to process documents.
-The processor evaluates any expressions necessary to provide all of the input documents
-and options required. The step processes the input documents and produces outputs which
-flow through the pipeline.</para>
+<para>Dynamic evaluation of the pipeline occurs when it begins to
+process documents. The processor evaluates any expressions necessary
+to provide all of the input documents and options required. The step
+processes the input documents and produces outputs which flow through
+the pipeline.</para>
+
+<para>Unless otherwise specified, expressions that appear in
+attribute values
+(<glossterm baseform="attribute value template">attribute value
+templates</glossterm>,
+map and array initializers that are always
+<link linkend="syntax-summaries">treated as expressions</link>,
+etc.) get their context item from
+the <glossterm>default readable port</glossterm>. If there is no
+default readable port, the context item is undefined.</para>
 
     <section xml:id="environment">
       <title>Environment</title>
@@ -1669,71 +1703,20 @@ of a document as a map.</para>
 associated with the <parameter>doc</parameter> specified. If the item
 is not associated with a document, the resulting map will be empty.</para>
 
+<para>Document properties are associated with documents that flow out
+of steps. Documents loaded with XPath functions or through other
+out-of-band means may not have properties associated with them. In
+order to provide a consistent interface for pipeline authors, the
+base URI of a node is always returned in the <code>base-uri</code>
+property and the <code>content-type</code> property always contains at
+least the most general appropriate content type
+(<code>application/xml</code> for any XML node,
+<code>text/plain</code> for any text node, and
+<code>application/octet-stream</code> if no more specific type is
+known).
+</para>
+
 <para>The <function>p:document-properties</function> function behaves
-normally during static analysis.</para>
-</section>
-
-<section xml:id="f.document-properties-document">
-<title>Document properties document</title>
-
-<para>This function retrieves the <glossterm>document properties</glossterm>
-of a document as an XML document.</para>
-
-<methodsynopsis>
-<type>document-node()</type>
-<methodname>p:document-properties-document</methodname>
-<methodparam><type>item()</type><parameter>doc</parameter></methodparam>
-</methodsynopsis>
-
-<para>The document returned is a <tag>c:document-properties</tag>
-document that contains (exclusively) the document properties
-associated with the <parameter>doc</parameter> specified.
-If the item is not associated with a document, the <tag>c:document-properties</tag>
-element will be empty.</para>
-
-<para>The underlying properties are serialized as follows:</para>
-
-<itemizedlist>
-<listitem>
-<para>Each property/value pair in the map becomes an element in the
-document. The property name is used as the name of the element and the
-value becomes the element content.
-</para>
-</listitem>
-<listitem>
-<para>If the property value is a sequence, then the element is
-repeated for each item in the sequence.
-</para>
-</listitem>
-<listitem>
-<para>If a map appears as a value, the property element will have an
-attribute named <tag class="attribute">map</tag> with the value “<code>true</code>”.
-<impl>It is <glossterm>implementation-defined</glossterm> how or if a
-processor attempts to serialize maps that appear in document properties.</impl>
-If the implementation does not serialize maps, the property element will be empty.
-</para>
-</listitem>
-<listitem>
-<para>If an array appears as a value, the property element will have an
-attribute named <tag class="attribute">array</tag> with the value “<code>true</code>”.
-<impl>It is <glossterm>implementation-defined</glossterm> how or if a
-processor attempts to serialize arrays that appear in document properties.</impl>
-If the implementation does not serialize arrays, the property element will be empty.
-</para>
-</listitem>
-<listitem>
-<para>For atomic values other than maps, arrays, and strings, an <tag
-class="attribute">xsi:type</tag> attribute is added to the element to
-identify the type of the value.
-</para>
-</listitem>
-</itemizedlist>
-
-<para>If any values in the properties map cannot be serialized, an empty string
-is used for their value. Construction of the <tag>c:document-properties</tag> document
-never fails.</para>
-
-<para>The <function>p:document-properties-document</function> function behaves
 normally during static analysis.</para>
 </section>
 
@@ -2737,8 +2720,14 @@ variables. Step types, options, and variables are named with EQNames.
 Steps and ports are named with NCNames. The scope of a name is a
 measure of where it is available in a pipeline. <termdef
 xml:id="dt-visible">If two names are in the same scope, we say that
-they are <firstterm>visible</firstterm> to each other.
-</termdef></para>
+they are <firstterm>visible</firstterm> to each other.</termdef></para>
+
+<para>Within a <tag>p:library</tag>, declaring that the
+<tag class="attribute">visibility</tag> of a step or static option is
+“<code>private</code>” limits its visibility outside of the library.
+Note, however, that if other declarations of the same name are visible
+from the point where the private declaration occurs, that is still
+an error.</para>
 
 <section>
   <title>Scoping of step type names</title>
@@ -2762,7 +2751,7 @@ they are <firstterm>visible</firstterm> to each other.
             imported. </para>
         </listitem>
         <listitem>
-          <para>Any types that are in the scope of any <tag>p:library</tag> that is imported.
+          <para>Any public types that are in the scope of any <tag>p:library</tag> that is imported.
           </para>
         </listitem>
         <listitem>
@@ -2788,10 +2777,10 @@ they are <firstterm>visible</firstterm> to each other.
         </listitem>
         <listitem>
           <para>The types of <tag>p:declare-step</tag>s that are imported
-            into the library. </para>
+            into the library.</para>
         </listitem>
         <listitem>
-          <para>Any types that are in the scope of any <tag>p:library</tag> that is imported.
+          <para>Any public types that are in the scope of any <tag>p:library</tag> that is imported.
           </para>
         </listitem>
       </itemizedlist>
@@ -2832,12 +2821,51 @@ declaration and the descendants of those siblings.
 </section>
       
 <section>
-  <title>Scoping of static options</title>
+  <title>Scoping of static option names</title>
 
-  <note  role="editorial">
-    <title>TBD</title>
-    <para>Fill in this section as soon as we have consensus about this</para>
-  </note>
+<para>The scope of the names of static options is the pipeline in
+which they are declared, including any declarations imported from
+libraries via <tag>p:import</tag>. Nested pipelines inherit the static
+options in scope for their parent.</para>
+
+<para>In other words, the step options that are in scope in a
+<tag>p:declare-step</tag> are:</para>
+
+<itemizedlist>
+  <listitem>
+    <para>Any static options declared in the step.</para>
+  </listitem>
+  <listitem>
+    <para>Any public static options that are in the scope of any
+    <tag>p:library</tag> that is imported.
+    </para>
+  </listitem>
+  <listitem>
+    <para>Any static options that are in scope for the pipeline’s parent
+    <tag>p:declare-step</tag>, if it has one.</para>
+  </listitem>
+</itemizedlist>
+
+<para>The static options that are in scope in a <tag>p:library</tag>
+are:</para>
+
+<itemizedlist>
+  <listitem>
+    <para>Any static options declared in the library (the
+    <tag>p:option</tag> children of the <tag>p:library</tag>
+    element).</para>
+  </listitem>
+  <listitem>
+    <para>Any public static options that are in the scope of any
+    <tag>p:library</tag> that is imported.
+    </para>
+  </listitem>
+</itemizedlist>
+
+<para><error code="S0071">All the static options in a pipeline or
+library <rfc2119>must</rfc2119> have unique names: it is a
+<glossterm>static error</glossterm> if any static option name is
+declared more than once in the same scope.</error></para>
 </section>
       
 </section>
@@ -6144,15 +6172,16 @@ that would be treated as an implicit inline.</error>
 
 <e:rng-pattern name="Document"/>
 
-<para>The value of the <tag class="attribute">href</tag> attribute,
-after expanding any <glossterm baseform="attribute value
-template">attribute value templates</glossterm>, is a URI.
-<error code="D0064">It is a <glossterm>dynamic error</glossterm> if
-the URI is not a valid <type>xs:anyURI</type>.</error> The URI is
-interpreted as an IRI reference. If it is relative, it is made
-absolute against the base URI of the <tag>p:document</tag> element.
-</para>
-
+  <para>The value of the <tag class="attribute">href</tag> attribute,
+    after expanding any <glossterm baseform="attribute value
+      template">attribute value templates</glossterm>, is a URI.
+    <error code="D0064">It is a
+      <glossterm>dynamic error</glossterm> if the URI is not valid according to
+      <biblioref linkend="rfc3986"/>.</error> The URI is
+    interpreted as an IRI reference. If it is relative, it is made
+    absolute against the base URI of the <tag>p:document</tag> element.
+  </para>
+  
 <para>The semantics of <tag>p:document</tag> are the same as a the
 semantics of <tag>p:load</tag> where the <option>href</option> option
 is the URI, the
@@ -6300,6 +6329,9 @@ February 2019
 draft:</para>
 
     <itemizedlist>
+      <listitem>
+        <para>The <code>p:document-properties-document()</code> function was removed</para>
+      </listitem>
       <listitem>
         <para>The semantics of <tag>p:if</tag> have been changed. If the test expression is false, <tag>p:if</tag>
           behaves roughly like an identity step. Previously it produced no outputs.</para>
