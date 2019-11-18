@@ -2696,8 +2696,14 @@ variables. Step types, options, and variables are named with EQNames.
 Steps and ports are named with NCNames. The scope of a name is a
 measure of where it is available in a pipeline. <termdef
 xml:id="dt-visible">If two names are in the same scope, we say that
-they are <firstterm>visible</firstterm> to each other.
-</termdef></para>
+they are <firstterm>visible</firstterm> to each other.</termdef></para>
+
+<para>Within a <tag>p:library</tag>, declaring that the
+<tag class="attribute">visibility</tag> of a step or static option is
+“<code>private</code>” limits its visibility outside of the library.
+Note, however, that if other declarations of the same name are visible
+from the point where the private declaration occurs, that is still
+an error.</para>
 
 <section>
   <title>Scoping of step type names</title>
@@ -2721,7 +2727,7 @@ they are <firstterm>visible</firstterm> to each other.
             imported. </para>
         </listitem>
         <listitem>
-          <para>Any types that are in the scope of any <tag>p:library</tag> that is imported.
+          <para>Any public types that are in the scope of any <tag>p:library</tag> that is imported.
           </para>
         </listitem>
         <listitem>
@@ -2747,10 +2753,10 @@ they are <firstterm>visible</firstterm> to each other.
         </listitem>
         <listitem>
           <para>The types of <tag>p:declare-step</tag>s that are imported
-            into the library. </para>
+            into the library.</para>
         </listitem>
         <listitem>
-          <para>Any types that are in the scope of any <tag>p:library</tag> that is imported.
+          <para>Any public types that are in the scope of any <tag>p:library</tag> that is imported.
           </para>
         </listitem>
       </itemizedlist>
@@ -2806,12 +2812,12 @@ options in scope for their parent.</para>
     <para>Any static options declared in the step.</para>
   </listitem>
   <listitem>
-    <para>Any static options that are in the scope of any
+    <para>Any public static options that are in the scope of any
     <tag>p:library</tag> that is imported.
     </para>
   </listitem>
   <listitem>
-    <para>Any static option that are in scope for the pipeline’s parent
+    <para>Any static options that are in scope for the pipeline’s parent
     <tag>p:declare-step</tag>, if it has one.</para>
   </listitem>
 </itemizedlist>
@@ -2826,7 +2832,7 @@ are:</para>
     element).</para>
   </listitem>
   <listitem>
-    <para>Any static options that are in the scope of any
+    <para>Any public static options that are in the scope of any
     <tag>p:library</tag> that is imported.
     </para>
   </listitem>
