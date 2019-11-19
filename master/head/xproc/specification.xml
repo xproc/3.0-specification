@@ -4517,15 +4517,80 @@ can provide some sort of default for the rest of the pipeline.</para>
 </section>
 </section>
 
-<section xml:id="p.atomic"><title>Atomic Steps</title><para>In addition to the six step types
+<section xml:id="p.atomic">
+  <title>Atomic Steps</title>
+      <para><termdef xml:id="dt-atomic-step">An <firstterm>atomic step</firstterm> is a step that does 
+        not have a subpipeline when it is used in a pipeline.</termdef></para>
+  <para>Whether the <emphasis>declaration</emphasis> of an atomic step has a subpipeline depends on whether it is declared 
+  and implemented in XProc or whether it is implemented in another technology, made available by the 
+  XProc processor in an <glossterm>implementation-dependent</glossterm> way.</para>
+  <para>The following table gives an overview over the types of atomic steps and the terms associated with these types:</para>
+  <informaltable>
+    <tgroup cols="4">
+      <thead>
+        <row>
+          <entry>Provider</entry>
+          <entry>Namespace (Prefix)</entry>
+          <entry>Implemented in</entry>
+          <entry>Term</entry>
+        </row>
+      </thead>
+      <tbody>
+        <row>
+          <entry morerows="3">XProc processor</entry>
+          <entry morerows="1"><uri type="xmlnamespace">http://www.w3.org/ns/xproc</uri> (<literal>p:</literal>)</entry>
+          <entry>XProc</entry>
+          <entry>Processor-provided or standard (atomic) step implemented in XProc (there are currently no such steps
+            defined)</entry>
+        </row>
+        <row>
+          <entry>Other technology</entry>
+          <entry>Processor-provided or standard (atomic) step</entry>
+        </row>
+        <row>
+          <entry morerows="1">Other namespace</entry>
+          <entry>XProc</entry>
+          <entry>Processor-provided extension (atomic) step implemented in XProc</entry>
+        </row>
+        <row>
+          <entry>Other technology</entry>
+          <entry>Processor-provided extension (atomic) step</entry>
+        </row>
+        <row>
+          <entry morerows="1">Other (pipeline author or third party)</entry>
+          <entry morerows="1">Other namespace</entry>
+          <entry>XProc</entry>
+          <entry>User-defined (atomic) (extension) step</entry>
+        </row>
+        <row>
+          <entry>Other technology</entry>
+          <entry>(Third-party) (atomic) extension step</entry>
+        </row>
+      </tbody>
+    </tgroup>
+  </informaltable>
+  <section xml:id="p.standard">
+    <title>Processor-provided standard atomic steps</title>
+  <para>In addition to the six step types
         described in the preceding sections, XProc provides a standard library of atomic step types.
         The full vocabulary of standards steps is described in <biblioref linkend="steps30"/>.</para>
-<para>All of the standard, atomic steps are invoked in the same way:</para>
+    <para>In addition to these standard atomic steps, other specifications by the same standardization 
+      body may define other optional steps in the XProc namespace, for example, validation or file system
+    related steps.</para>
+    <para>Whether all steps in the XProc namespace are referred to as “standard (atomic) steps” or only the steps
+    in the standard step library, depends on context and is intentionally kept fuzzy. Steps in the XProc 
+    namespace that are not included in the standard step library may also be referred to as “optional standard 
+    steps” if further distinction is required.</para>
+  <para>All of the standard (inluding optional), atomic steps are invoked in the same way:</para>
       <e:rng-pattern name="OtherAtomicStep"/>
       <para>Where “<replaceable>p:atomic-step</replaceable>” <rfc2119>must</rfc2119> be in the XProc
-        namespace and <rfc2119>must</rfc2119> be declared in either the standard library for the
-        XProc version supported by the processor or explicitly imported by the surrounding pipeline
-        (see <xref linkend="versioning-considerations"/>). </para></section>
+        namespace and <rfc2119>must</rfc2119> either be declared in the standard library or in an optional
+        standard library for the XProc version supported by the processor
+        (see <xref linkend="versioning-considerations"/>). </para>
+  <para>Like the aforementioned processor-provided steps, hypothetical processor-provided atomic steps 
+          <emphasis>implemented in XProc</emphasis> are also in the XProc namespace and need not be explicitly 
+    imported by the surrounding pipeline.</para>
+  </section>
     <section xml:id="p.extension"><title>Extension Steps</title><para>Pipeline authors may also have
         access to additional steps not defined or described by this specification. Atomic extension
         steps are invoked just like standard steps:</para>
@@ -4553,8 +4618,7 @@ can provide some sort of default for the rest of the pipeline.</para>
           defining them or describing what they can contain.</impl>
         <error code="S0048">It is a <glossterm>static error</glossterm> to use a declared step as a
             <glossterm>compound step</glossterm>.</error></para>
-
-
+    </section>
 </section>
 </section>
 
@@ -7189,7 +7253,8 @@ step</glossterm><glossdef><para>An <firstterm>atomic
 step</firstterm> is a step that performs a unit of processing
 on its input,
 such as validation or transformation, and has no internal
-<glossterm>subpipeline</glossterm>.</para></glossdef></glossentry><glossentry><glossterm>attribute value
+<glossterm>subpipeline</glossterm>.</para></glossdef></glossentry><glossentry><glossterm>atomic step</glossterm><glossdef><para>An <firstterm>atomic step</firstterm> is a step that does 
+        not have a subpipeline when it is used in a pipeline.</para></glossdef></glossentry><glossentry><glossterm>attribute value
 template</glossterm><glossdef><para>In an attribute
 that is designated as an <firstterm>attribute value
 template</firstterm>, an expression can be used by surrounding the
