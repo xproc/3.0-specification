@@ -3182,8 +3182,7 @@ the string value of the <option>replace</option> expression.</para>
     </listitem>
     <listitem>
       <para>The <option>relative-to</option> option, when present, is used in creating the base URI
-        of the unarchived documents. <error code="D0064">It is a <glossterm>dynamic
-            error</glossterm> if the option is not a valid URI according to <biblioref linkend="rfc3986"/>.</error> If the option is relative, it is made absolute against the
+        of the unarchived documents. If the option is relative, it is made absolute against the
         base URI of the element on which it is specified (<tag>p:with-option</tag> or the step in
         case of a syntactic shortcut value).</para>
     </listitem>
@@ -3192,16 +3191,22 @@ the string value of the <option>replace</option> expression.</para>
   <para>The base URI of an unarchived document appearing on the <port>result</port> port is: </para>
   <itemizedlist>
     <listitem>
-      <para>If the <option>relative-to</option> option is present: The value of this option appended
-        with the relative path of this document as it was in the archive</para>
+      <para>If the <option>relative-to</option> option is present: Function <code>p:urify()</code> is
+        called with the value of this option as second parameter (<code>$basedir</code>) and
+        with the relative path of this document as it was in the archive as first parameter</para>
     </listitem>
     <listitem>
-      <para>If the <option>relative-to</option> option is <emphasis>not</emphasis> present: The
-        value of the base URI of the archive appended with the relative path of this document as it
-        was in the archive</para>
+      <para>If the <option>relative-to</option> option is <emphasis>not</emphasis> present: Function
+        <code>p:urify()</code>is called with the
+        value of the base URI of the archive appended with a “<literal>/</literal>” as second
+        parameter (<code>$baseDir</code>) and the relative path of this document as it
+        was in the archive as first parameter</para>
     </listitem>
   </itemizedlist>
-
+  
+  <para><error code="D0064">It is a <glossterm>dynamic error</glossterm> if the resolved base URI of an unarchived
+    document is not a valid URI according to <biblioref linkend="rfc3986"/>.</error></para>
+  
   <para>For instance, the base URI of an unarchived file called <code>xyz.xml</code> that resided in
     the <code>specs</code> subdirectory in an archive with base URI <code>file:///a/b/c.zip</code>
     will become: </para>
@@ -3215,7 +3220,7 @@ the string value of the <option>replace</option> expression.</para>
           <code>file:///a/b/c.zip/specs/xyz.xml</code></para>
     </listitem>
   </itemizedlist>
-
+  
   <simplesect>
     <title>Document properties</title>
     <para feature="archive-preserves-none">No document properties are preserved.</para>
