@@ -529,24 +529,38 @@ VocabParamSet = element c:param-set { VocabParam* }
 VocabDirectory =
   element c:directory {
     attribute name { text },
-    attribute uri { xsd:anyURI },
+    xmlbase.attr,
+    file-info.attributes*,
     (VocabFile | VocabDirectory | VocabOther)*
   }
 [ sa:class = "step-vocabulary" ]
 VocabFile =
   element c:file {
     attribute name { text },
-    attribute uri { xsd:anyURI },
-    content-types.attr?,
+    xmlbase.attr,
+    file-info.attributes*,
+    content-type.attr?,
     empty
   }
 [ sa:class = "step-vocabulary" ]
 VocabOther =
   element c:other {
     attribute name { text },
-    attribute uri { xsd:anyURI },
+    xmlbase.attr,
+    file-info.attributes*,
     empty
   }
+file-info.attributes =
+  size.attr
+  | readable.attr
+  | writable.attr
+  | last-modified.attr
+  | hidden.attr
+size.attr = attribute size { xsd:integer }
+readable.attr = attribute readable { xsd:boolean }
+writable.attr = attribute writable { xsd:boolean }
+hidden.attr = attribute hidden { xsd:boolean }
+last-modified.attr = attribute last-modified { xsd:dateTime }
 [ sa:class = "step-vocabulary" ] VocabResult = element c:result { text }
 [ sa:class = "step-vocabulary" ]
 VocabHttpRequest =

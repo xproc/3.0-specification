@@ -1414,9 +1414,10 @@
   <define name="VocabDirectory" sa:class="step-vocabulary">
     <element name="c:directory">
       <attribute name="name"/>
-      <attribute name="uri">
-        <data type="anyURI"/>
-      </attribute>
+      <ref name="xmlbase.attr"/>
+      <zeroOrMore>
+        <ref name="file-info.attributes"/>
+      </zeroOrMore>
       <zeroOrMore>
         <choice>
           <ref name="VocabFile"/>
@@ -1429,11 +1430,12 @@
   <define name="VocabFile" sa:class="step-vocabulary">
     <element name="c:file">
       <attribute name="name"/>
-      <attribute name="uri">
-        <data type="anyURI"/>
-      </attribute>
+      <ref name="xmlbase.attr"/>
+      <zeroOrMore>
+        <ref name="file-info.attributes"/>
+      </zeroOrMore>
       <optional>
-        <ref name="content-types.attr"/>
+        <ref name="content-type.attr"/>
       </optional>
       <empty/>
     </element>
@@ -1441,11 +1443,46 @@
   <define name="VocabOther" sa:class="step-vocabulary">
     <element name="c:other">
       <attribute name="name"/>
-      <attribute name="uri">
-        <data type="anyURI"/>
-      </attribute>
+      <ref name="xmlbase.attr"/>
+      <zeroOrMore>
+        <ref name="file-info.attributes"/>
+      </zeroOrMore>
       <empty/>
     </element>
+  </define>
+  <define name="file-info.attributes">
+    <choice>
+      <ref name="size.attr"/>
+      <ref name="readable.attr"/>
+      <ref name="writable.attr"/>
+      <ref name="last-modified.attr"/>
+      <ref name="hidden.attr"/>
+    </choice>
+  </define>
+  <define name="size.attr">
+    <attribute name="size">
+      <data type="integer"/>
+    </attribute>
+  </define>
+  <define name="readable.attr">
+    <attribute name="readable">
+      <data type="boolean"/>
+    </attribute>
+  </define>
+  <define name="writable.attr">
+    <attribute name="writable">
+      <data type="boolean"/>
+    </attribute>
+  </define>
+  <define name="hidden.attr">
+    <attribute name="hidden">
+      <data type="boolean"/>
+    </attribute>
+  </define>
+  <define name="last-modified.attr">
+    <attribute name="last-modified">
+      <data type="dateTime"/>
+    </attribute>
   </define>
   <define name="VocabResult" sa:class="step-vocabulary">
     <element name="c:result">
