@@ -1708,12 +1708,9 @@ out-of-band means may not have properties associated with them. In
 order to provide a consistent interface for pipeline authors, the
 base URI of a node is always returned in the <code>base-uri</code>
 property and the <code>content-type</code> property always contains at
-least the most general appropriate content type
-(<code>application/xml</code> for any XML node,
-<code>text/plain</code> for any text node, and
-<code>application/octet-stream</code> if no more specific type is
-known).
-</para>
+least the most general appropriate content type: If the document node
+has a single text node child, <code>text/plain</code> is used, 
+<code>application/xml</code> otherwise.</para>
 
 <para>The <function>p:document-properties</function> function behaves
 normally during static analysis.</para>
