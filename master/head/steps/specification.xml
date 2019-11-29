@@ -428,11 +428,10 @@ element's [base URI].</para>
       <term><option>relative-to</option></term>
       <listitem>
         <para>The <option>relative-to</option> option is used in creating a manifest when no
-          manifest is provided on the <port>manifest</port> port. <error code="D0064">It is a
-              <glossterm>dynamic error</glossterm> if the option is not a valid URI according to
-              <biblioref linkend="rfc3986"/>.</error> If the option is relative, it is made absolute
+          manifest is provided on the <port>manifest</port> port. If the option is relative, it is made absolute
           against the base URI of the element on which it is specified (<tag>p:with-option</tag> or
-          the step in case of a syntactic shortcut value).</para>
+          the step in case of a syntactic shortcut value). <error code="D0064">It is a <glossterm>dynamic 
+            error</glossterm> if the base URI is not both absolute and valid according to <biblioref linkend="rfc3986"/>.</error></para>
       </listitem>
     </varlistentry>
   </variablelist>
@@ -719,10 +718,10 @@ element's [base URI].</para>
       whose value is not valid for that key.</error></para>
 
   <para>The <option>relative-to</option> option, when present, is used in creating the value of the
-    manifest's <code>c:entry/@href</code> attribute. <error code="D0064">It is a <glossterm>dynamic
-        error</glossterm> if the option is not a valid URI according to <biblioref linkend="rfc3986"/>.</error> If the option is relative, it is made absolute against the base URI of the element
-    on which it is specified (<tag>p:with-option</tag> or the step in case of a syntactic shortcut
-    value).</para>
+    manifest's <code>c:entry/@href</code> attribute. If the option is relative, it is made absolute 
+    against the base URI of the element on which it is specified (<tag>p:with-option</tag> or the step 
+    in case of a syntactic shortcut value). <error code="D0064">It is a <glossterm>dynamic 
+      error</glossterm> if the base URI is not both absolute and valid according to <biblioref linkend="rfc3986"/>.</error></para>
 
   <para>The generated manifest has the format as described in <xref linkend="cv.archive-manifest"/>.
     Implementations <rfc2119>must</rfc2119> supply an <tag>c:entry</tag> element and its
@@ -2122,14 +2121,13 @@ result a document (or documents) specified by an IRI.</para>
   <p:option name="document-properties" as="map(xs:QName, item()*)?"/>
 </p:declare-step>
 
-  <para>
-    <error code="D0064">It is a <glossterm>dynamic error</glossterm> if the <option>href</option>
-      option is not a valid URI according to <biblioref linkend="rfc3986"/>.</error> If the option is relative, it
+  <para>If the option is relative, it
     is made absolute against the base URI of the element on which it is specified
       (<tag>p:with-option</tag> or the step in case of a syntactic shortcut value). If the
       <option>href</option> is relative, it is made absolute against the base URI of the element on
     which it is specified (<tag>p:with-option</tag> or <tag>p:load</tag> in the case of a syntactic
-    shortcut value).</para>
+    shortcut value). <error code="D0064">It is a <glossterm>dynamic 
+      error</glossterm> if the base URI is not both absolute and valid according to <biblioref linkend="rfc3986"/>.</error></para>
 
 <para>The document or documents identified by the
 <option>href</option> URI are loaded and returned. If the URI protocol
@@ -3210,8 +3208,8 @@ the string value of the <option>replace</option> expression.</para>
     </listitem>
   </itemizedlist>
   
-  <para><error code="D0064">It is a <glossterm>dynamic error</glossterm> if the resolved base URI of an unarchived
-    document is not a valid URI according to <biblioref linkend="rfc3986"/>.</error></para>
+  <para><error code="D0064">It is a <glossterm>dynamic
+    error</glossterm> if the option is not a valid URI according to <biblioref linkend="rfc3986"/>.</error></para>
   
   <para>For instance, the base URI of an unarchived file called <code>xyz.xml</code> that resided in
     the <code>specs</code> subdirectory in an archive with base URI <code>file:///a/b/c.zip</code>
