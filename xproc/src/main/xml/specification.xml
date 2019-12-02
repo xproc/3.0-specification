@@ -902,7 +902,7 @@ the pipeline is
 <glossterm>implementation-defined</glossterm>.</impl></para>
 
 <para>Input ports <rfc2119>may</rfc2119> specify a content type, or list of
-content types, that they accept, se <xref linkend="specified-content-types"/>.</para>
+content types, that they accept, see <xref linkend="specified-content-types"/>.</para>
 
 <section xml:id="external-docs">
         <title>External Documents</title>
@@ -1251,7 +1251,7 @@ neither <code>$A</code> nor <code>$B</code> may.</para>
 <note>
 <title>Note</title>
 <para>There is no guarantee that the document read from <uri>doc.xml</uri> during
-static anlaysis will be the same as the document read later during dynamic evaluation.
+static analysis will be the same as the document read later during dynamic evaluation.
 See <xref linkend="external-docs"/> for further discussion.</para>
 </note>
 
@@ -1387,7 +1387,7 @@ are visible.</para>
                an environment as specified in <xref linkend="declare-pipelines"/>.</para>
             <para>When constructing an <glossterm>initial environment</glossterm>, an implementation
                is free to provide any set of mechanisms to construct connections for the input ports
-               of the invoked step. These mechanisms are not limited to the variety of mechnisms
+               of the invoked step. These mechanisms are not limited to the variety of mechanisms
                described within this specification. Any extensions are implementation
                defined.</para>
             <para>The set of <glossterm>in-scope bindings</glossterm> are constructed from a set of
@@ -1732,14 +1732,14 @@ interpreted as follows:</para>
     </listitem>
     <listitem>
       <para>If <code>$key</code> is an instance of type <type>xs:string</type> (or a type derived from
-        <type>xs:string</type>) its value is transformed into a <type>xs:Qname</type> using the <link
+        <type>xs:string</type>) its value is transformed into a <type>xs:QName</type> using the <link
           xlink:href="https://www.w3.org/TR/xpath-31/#doc-xpath31-EQName"
           >XPath EQName production rules</link>. That is, it can be written
         as a local-name only, as a prefix plus local-name or as a URI plus
         local-name (using the <code>Q{}</code> syntax).</para>
       <para>
         <error code="D0061">It is a <glossterm>dynamic error</glossterm>
-          if <code>$key</code> is of type <type>xs:string</type> and cannot be converted into a <type>xs:Qname</type>.</error>
+          if <code>$key</code> is of type <type>xs:string</type> and cannot be converted into a <type>xs:QName</type>.</error>
       </para>
     </listitem>
     <listitem>
@@ -2304,7 +2304,7 @@ node, all the children of the document node are inserted.</para>
 <listitem>
 <para>If the content type is an <glossterm>XML media type</glossterm> or an
   <glossterm>HTML media type</glossterm>,
-the nodes are added to the XML document where they occur. This is analagous
+the nodes are added to the XML document where they occur. This is analogous
 to the way element constructors work in <biblioref linkend="xquery10"/>.
 </para>
 <para>If the node is an attribute
@@ -2465,7 +2465,7 @@ element.</para>
     {{ "name": "{$name/node()}" }}
   </p:inline>]]></programlisting>
 
-<para>the result is the concatentation of the serialization of the nodes:</para>
+<para>the result is the concatenation of the serialization of the nodes:</para>
 
 <programlisting
 ><![CDATA[  { "name": "<given>Mary</given> <surname>Smith</surname>" }]]></programlisting>
@@ -2619,13 +2619,13 @@ Variable names are always expressed as
         </listitem>
         <listitem>
           <para>If the entry&#x2019;s key is an instance of type <type>xs:string</type> (or a type derived from
-            <type>xs:string</type>) it is transformed into an <type>xs:Qname</type> using the <link
+            <type>xs:string</type>) it is transformed into an <type>xs:QName</type> using the <link
               xlink:href="https://www.w3.org/TR/xpath-31/#doc-xpath31-EQName">XPath EQName production rules</link>. That
             is, it can be written as a local-name only, as a prefix plus local-name or as a URI plus local-name (using
             the <code>Q{}</code> syntax).</para>
           <para>
             <error code="D0061">It is a <glossterm>dynamic error</glossterm> if the entry&#x2019;s key is of type
-              <type>xs:string</type> and cannot be converted into a <type>xs:Qname</type>.</error>
+              <type>xs:string</type> and cannot be converted into a <type>xs:QName</type>.</error>
           </para>
         </listitem>
         <listitem>
@@ -2823,7 +2823,7 @@ specification.</para>
       <para>This specification also makes use of the prefix “<literal>xs:</literal>” to refer to the
           <biblioref linkend="xmlschema-1"/> namespace <uri type="xmlnamespace"
           >http://www.w3.org/2001/XMLSchema</uri> and the prefix “<literal>xsi:</literal>”
-          to refer to the namepace <uri type="xmlnamespace"
+          to refer to the namespace <uri type="xmlnamespace"
           >http://www.w3.org/2001/XMLSchema-instance</uri>
       </para>
     </section>
@@ -4532,7 +4532,7 @@ can provide some sort of default for the rest of the pipeline.</para>
     in the standard step library, depends on context and is intentionally kept fuzzy. Steps in the XProc 
     namespace that are not included in the standard step library may also be referred to as “optional standard 
     steps” if further distinction is required.</para>
-  <para>All of the standard (inluding optional), atomic steps are invoked in the same way:</para>
+  <para>All of the standard (including optional), atomic steps are invoked in the same way:</para>
       <e:rng-pattern name="OtherAtomicStep"/>
       <para>Where “<replaceable>p:atomic-step</replaceable>” <rfc2119>must</rfc2119> be in the XProc
         namespace and <rfc2119>must</rfc2119> either be declared in the standard library or in an optional
@@ -5113,7 +5113,7 @@ document</emphasis> and provide it on the output port. It
         </listitem>
       </itemizedlist>
       <para>If serialization method <literal>xml</literal> or <literal>html</literal> (if
-        supported) is choosen, either explicitly or implicitly, the following default values
+        supported) is chosen, either explicitly or implicitly, the following default values
         <rfc2119>must</rfc2119> be used:</para>
       <itemizedlist>
         <listitem>
@@ -5852,7 +5852,7 @@ subpipeline does not have a primary output port.</error></para>
 <title>Declaring atomic steps</title>
 
 <para>The distinction between an atomic step declaration and a
-pipeline declaration hinges on the presence or absense of a
+pipeline declaration hinges on the presence or absence of a
 subpipeline. An atomic step declaration does not have a subpipeline.
 </para>
 
@@ -6167,7 +6167,7 @@ class="attribute">encoding</tag> attribute.</error>
 value templates are never expanded. The value of
 <tag class="attribute">[p:]expand-text</tag> is irrelevant and always ignored.</para>
 
-<para>The interpretation of the (possibily decoded) content
+<para>The interpretation of the (possibly decoded) content
 depends on the document&#x2019;s content type.
 </para>
   <note>
