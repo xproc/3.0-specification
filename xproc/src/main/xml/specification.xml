@@ -1967,41 +1967,50 @@ normally during static analysis.</para>
         </listitem>
       </orderedlist>
 
-      <example xml:id="ex.relative-uris">
-        <title>Examples</title>
-        <para>When <function>p:urify</function> is called to resolve URIs that are to be resolved
-            <emphasis>relative to another document</emphasis>, for example “<literal>#B</literal>”,
-            “<literal>index.html</literal>”, “<literal>/en/index.html</literal>”, or
+      <para>Example:</para>
+      <itemizedlist>
+        <listitem>
+          <para>When <function>p:urify</function> is called to resolve URIs that are to be resolved
+              <emphasis>relative to another document</emphasis>, for example
+            “<literal>#B</literal>”, “<literal>index.html</literal>”,
+              “<literal>/en/index.html</literal>”, or
             “<literal>//www.acme.com/lib/acme.js</literal>”, the absolute base URI of the document
-          that they should be resolved against must be given in the second argument of
-            <function>p:urify</function>.</para>
-        <para>Suppose that this document’s base URI is
-            “<literal>https://wiki.acme.com/fr/categories.html</literal>” and it is supplied as the
-          second argument, the relative URIs above resolve to
-            “<literal>https://wiki.acme.com/fr/categories.html#B</literal>”,
-            “<literal>https://wiki.acme.com/fr/index.html</literal>”,
-            “<literal>https://wiki.acme.com/en/index.html</literal>”, and
-            “<literal>https://www.acme.com/lib/acme.js</literal>”, respectively.</para>
-        <para>If the second argument is absent and supposing that the current working directory is
-          “<literal>C:\Program Files (x86)\acmeXProc\bin</literal>” on a
-          Windows machine, then its absolute base URI computes to
-            “<literal>file:///C:/Program%20Files%20(x86)/acmeXProc/bin/</literal>”, and the examples
-          above resolve to
-          “<literal>file:///C:/Program%20Files%20(x86)/acmeXProc/bin/%23B</literal>” (the number
-          sign, “<literal>#</literal>”, is treated as a path component),
-            “<literal>file:///C:/Program%20Files%20(x86)/acmeXProc/bin/index.html</literal>”,
-            “<literal>file:///C:/en/index.html</literal>”, and
-            “<literal>file://www.acme.com/lib/acme.js</literal>” (a UNC path URI),
-          respectively.</para>
-        <para>If the current working directory is “<literal>/tmp/foo</literal>” on a Linux machine, 
-          the base URI computes to “<literal>file:///tmp/foo/</literal>”, and the
-          relative paths resolve to “<literal>file:///tmp/foo/%23B</literal>”,
-            “<literal>file:///tmp/foo/index.html</literal>”, and
-            “<literal>file:///en/index.html</literal>”. The relative URI
-            “<literal>//www.acme.com/lib/acme.js</literal>” cannot be resolved on non-Windows
-          platforms, and an error is thrown.</para>
-      </example>
-
+            that they should be resolved against must be given in the second argument of
+              <function>p:urify</function>.</para>
+        </listitem>
+        <listitem>
+          <para>Suppose that this document’s base URI is
+              “<literal>https://wiki.acme.com/fr/categories.html</literal>” and it is supplied as
+            the second argument, the relative URIs above resolve to
+              “<literal>https://wiki.acme.com/fr/categories.html#B</literal>”,
+              “<literal>https://wiki.acme.com/fr/index.html</literal>”,
+              “<literal>https://wiki.acme.com/en/index.html</literal>”, and
+              “<literal>https://www.acme.com/lib/acme.js</literal>”, respectively.</para>
+        </listitem>
+        <listitem>
+          <para>If the second argument is absent and supposing that the current working directory is
+              “<literal>C:\Program Files (x86)\acmeXProc\bin</literal>” on a Windows machine, then
+            its absolute base URI computes to
+              “<literal>file:///C:/Program%20Files%20(x86)/acmeXProc/bin/</literal>”, and the
+            examples above resolve to
+              “<literal>file:///C:/Program%20Files%20(x86)/acmeXProc/bin/%23B</literal>” (the number
+            sign, “<literal>#</literal>”, is treated as a path component),
+              “<literal>file:///C:/Program%20Files%20(x86)/acmeXProc/bin/index.html</literal>”,
+              “<literal>file:///C:/en/index.html</literal>”, and
+              “<literal>file://www.acme.com/lib/acme.js</literal>” (a UNC path URI),
+            respectively.</para>
+        </listitem>
+        <listitem>
+          <para>If the current working directory is “<literal>/tmp/foo</literal>” on a Linux
+            machine, the base URI computes to “<literal>file:///tmp/foo/</literal>”, and the
+            relative paths resolve to “<literal>file:///tmp/foo/%23B</literal>”,
+              “<literal>file:///tmp/foo/index.html</literal>”, and
+              “<literal>file:///en/index.html</literal>”. The relative URI
+              “<literal>//www.acme.com/lib/acme.js</literal>” cannot be resolved on non-Windows
+            platforms, and an error is thrown.</para>
+        </listitem>
+      </itemizedlist>
+  
       <note xml:id="note-urify-encoding">
         <para>Sometimes file names are created in an encoding that does not match the system’s
           locale. This function does not aim at solving these issues. Implementations should not try
