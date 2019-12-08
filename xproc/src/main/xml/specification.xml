@@ -1566,7 +1566,7 @@ be returned.</para>
       <section xml:id="f.step-available">
         <title>Step Available</title>
         <para>The <function>p:step-available</function> function reports whether or not a particular
-          type of step is understood by the processor and in scope on call position.</para>
+          type of step is understood by the processor and in scope where the function is called.</para>
 
 <methodsynopsis>
 <type>xs:boolean</type>
@@ -1583,7 +1583,7 @@ scope for the expression. <error code="D0015">It is a
   resolved with the in-scope namespace declarations.</error> The
 <function>p:step-available</function> function returns true if and
 only if the processor knows how to evaluate a step of the specified
-type on call position.</para>
+type where the function is called.</para>
 
 <para>The <function>p:step-available</function> behaves normally during static analysis.</para>
 </section>
@@ -5813,8 +5813,8 @@ the code which implements steps of this type.</para>
 <para>It is not an error for a pipeline to include declarations for
 steps that a particular processor does not know how to implement. It
 is, of course, an error to attempt to evaluate such steps. 
-Function <function>p:step-available</function> will return <literal>false</literal>
-when called with the type name of such a steps.</para>
+The function <function>p:step-available</function> will return <literal>false</literal>
+when called with the type name of such a step.</para>
 </section>
 </section>
 
