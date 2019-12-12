@@ -2686,10 +2686,13 @@ a key equal to the string “<literal>content-type</literal>”.</error>
 
 <simplesect>
 <title>Document properties</title>
-<para feature="set-properties-preserves-some">If <option>merge</option> is
-true, document properties not overridden by settings in the <option>properties</option>
-map are  preserved, otherwise the resulting document has the properties specified in
-the <option>properties</option> map.
+<para feature="set-properties-preserves-some">If <option>merge</option> is true, document 
+properties not overridden by settings in the <option>properties</option> map are preserved, 
+otherwise the resulting document has only the <literal>content-type</literal> property and the
+properties specified in the <option>properties</option> map. In particular, if <option>merge</option> 
+is false, the <literal>base-uri</literal> property will not be preserved. This means that the resulting
+document will not have a base URI if the <option>properties</option> map does not contain 
+a <literal>base-uri</literal> entry.
 </para>
 </simplesect>
 </section>
