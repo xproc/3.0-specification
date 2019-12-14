@@ -1974,8 +1974,8 @@ port <code>result</code>.</para>
   
 <para>The option <option>flatten-to-depth</option> controls whether and to which
 depth members of an array appearing on port <port>source</port> are flattened.
-The <option>flatten-to-depth</option> option may contain either the 
-string “<literal>unbounded</literal>” or a string that may be cast to a non-negative integer. 
+<error code="C0119">It is a <glossterm>dynamic error</glossterm> if <option>flatten</option> is
+neither “<literal>unbounded</literal>”, nor a string that may be cast to a non-negative integer.</error>
 An integer value of <literal>0</literal>, which is the default, means that no 
 flattening takes place, so the array appearing on port <port>source</port> will
 be contained as an array in the resulting array. An integer value of <literal>1</literal>
@@ -1984,7 +1984,7 @@ of that array will appear as individual members in the resulting array. Any valu
 than <literal>1</literal> means that the flattening is applied recursively to arrays in
 arrays up to the given depth. A value of “<literal>unbounded</literal>” means that all
 arrays in arrays will be flattened. As a consequence, the resulting array appearing on
-port <port>result</port> will not have any arrays as members.</para>
+port <port>result</port> will not have any arrays as members. </para>
 
 
 <simplesect>
