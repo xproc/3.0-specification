@@ -393,7 +393,9 @@
                 sequence="false"/>
       <p:option name="format" as="xs:QName?"/>
       <p:option name="parameters" as="xs:string"/>
-      <p:option name="content-type" as="xs:string" select="'application/binary'"/>
+      <p:option name="content-type"
+                as="xs:string"
+                select="'application/octet-stream'"/>
    </p:declare-step>
    <p:declare-step type="p:unescape-markup" xml:id="unescape-markup">
       <p:input port="source" content-types="xml html"/>
