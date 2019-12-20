@@ -372,9 +372,7 @@ element's [base URI].</para>
             <impl>The list of archive formats that can be modified by <tag>p:archive</tag> is
               <glossterm>implementation-defined</glossterm>.</impl> For instance an implementation
           that supports archive merging may accept more than one document on the
-            <port>archive</port> port. <error code="C0081">It is a <glossterm>dynamic
-              error</glossterm> if the format of the archive does not match the format as specified
-            in <option>format</option> option.</error></para>
+            <port>archive</port> port.</para>
         <para>The default input for this port is the empty sequence.</para>
       </listitem>
     </varlistentry>
@@ -457,8 +455,8 @@ element's [base URI].</para>
     </listitem>
   </itemizedlist>
 
-  <para><error code="C0085">It is a <glossterm>dynamic error</glossterm> if the format of the
-      archive cannot be understood, determined and/or processed.</error></para>
+  <para><error code="C0085">It is a <glossterm>dynamic error</glossterm> if the format of the archive 
+    does not match the specified format, cannot be understood, determined and/or processed.</error></para>
 
   <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
@@ -693,9 +691,7 @@ element's [base URI].</para>
         archive. Implementations <rfc2119>must</rfc2119> support the <biblioref linkend="zip"/>
         format, specified with the value <code>zip</code>. <impl>It is
             <glossterm>implementation-defined</glossterm> what other formats are supported.</impl>
-        <error code="C0081">It is a <glossterm>dynamic error</glossterm> if the format of the
-          archive does not match the format as specified in the <option>format</option>
-          option.</error></para>
+        </para>
     </listitem>
     <listitem>
       <para>If no <option>format</option> option is specified or if its value is the empty sequence,
@@ -707,8 +703,8 @@ element's [base URI].</para>
     </listitem>
   </itemizedlist>
 
-  <para><error code="C0085">It is a <glossterm>dynamic error</glossterm> if the format of the
-      archive cannot be understood, determined and/or processed.</error></para>
+  <para><error code="C0085">It is a <glossterm>dynamic error</glossterm> if the format of the archive 
+    does not match the specified format, cannot be understood, determined and/or processed.</error></para>
 
   <para>The <option>parameters</option> option can be used to supply parameters to control the
     archive manifest generation. <impl>The semantics of the keys and the allowed values for these
@@ -3226,10 +3222,7 @@ the string value of the <option>replace</option> expression.</para>
           <para>If the <option>format</option> option is specified, this determines the format of
             the archive. Implementations <rfc2119>must</rfc2119> support the <biblioref linkend="zip"/> format, specified with the value <code>zip</code>. <impl>It is
                 <glossterm>implementation-defined</glossterm> what other formats are
-              supported.</impl>
-            <error code="C0081">It is a <glossterm>dynamic error</glossterm> if the format of the
-              archive does not match the format as specified in the <option>format</option>
-              option.</error></para>
+              supported.</impl></para>
         </listitem>
         <listitem>
           <para>If no <option>format</option> option is specified or if its value is the empty
@@ -3239,6 +3232,9 @@ the string value of the <option>replace</option> expression.</para>
                 <glossterm>implementation-defined</glossterm> how the step determines the archive's
               format.</impl> Implementations <rfc2119>should</rfc2119> recognize archives in
               <biblioref linkend="zip"/> format. </para>
+        </listitem>
+        <listitem><para><error code="C0085">It is a <glossterm>dynamic error</glossterm> if the format of the archive 
+          does not match the specified format, cannot be understood, determined and/or processed.</error></para>
         </listitem>
       </itemizedlist>
     </listitem>
