@@ -235,13 +235,11 @@ it sends result documents, and options which influence its behavior.</para>
 
 <para>There are two kinds of steps: atomic and compound:</para>
 
-<para><termdef xml:id="dt-atomic-step">An <firstterm>atomic
-step</firstterm> is a step that performs a unit of processing
-on its input,
-such as validation or transformation, and has no internal
-<glossterm>subpipeline</glossterm>.</termdef> Atomic steps carry out
-fundamental operations and can perform arbitrary amounts of
-computation, but they are indivisible.</para>
+<para>An atomic step is a step that performs a unit of processing on
+its input, such as validation or transformation, and has no internal
+subpipeline. Atomic steps carry out fundamental operations and can
+perform arbitrary amounts of computation, but they are
+indivisible.</para>
 
 <para>There are many <emphasis>types</emphasis> of atomic steps. The
 standard library of atomic steps is described in <biblioref
@@ -1811,7 +1809,7 @@ normally during static analysis.</para>
           <para>Otherwise, if the argument starts with a string that may match a URI scheme as specified in <biblioref linkend="rfc3986"/>,
             with the exception of single-letter strings followed by a colon on Windows, then it will be treated as a
               “<glossterm>fixable URI</glossterm>”.</para>
-          <para><termdef xml:id="dt-fixable-uri">A <firstterm>fixable URI</firstterm> is a string that is already an absolute URI
+          <para><termdef xml:id="dt-fixable-URI">A <firstterm>fixable URI</firstterm> is a string that is already an absolute URI
               that complies with <biblioref linkend="rfc3986"/> or that can be turned into a compliant absolute URI after
               applying the following corrections as set forth in this list: Percent-encoding, path contraction, and adjusting
               the number of slashes after the URI scheme.</termdef></para>
@@ -4408,13 +4406,25 @@ can provide some sort of default for the rest of the pipeline.</para>
 </section>
 
 <section xml:id="p.atomic">
-  <title>Atomic Steps</title>
-      <para><termdef xml:id="dt-atomic-step">An <firstterm>atomic step</firstterm> is a step that does 
-        not have a subpipeline when it is used in a pipeline.</termdef></para>
-  <para>Whether the <emphasis>declaration</emphasis> of an atomic step has a subpipeline depends on whether it is declared 
-  and implemented in XProc or whether it is implemented in another technology, made available by the 
-  XProc processor in an <glossterm>implementation-dependent</glossterm> way.</para>
-  <para>The following table gives an overview over the types of atomic steps and the terms associated with these types:</para>
+<title>Atomic Steps</title>
+
+<para><termdef xml:id="dt-atomic-step">An <firstterm>atomic
+step</firstterm> is a step that does not contain a subpipline when it
+is invoked.</termdef> The built-in steps described in <biblioref
+linkend="steps30"/> are atomic. Steps like <tag>p:for-each</tag> and
+<tag>p:try</tag> that always have a subpipline are
+<emphasis>not</emphasis> atomic.
+</para>
+
+<para>Steps declared with <tag>p:declare-step</tag> are atomic
+<emphasis>when they are invoked</emphasis>. <impl>It is
+<glossterm>implementation-dependent</glossterm> whether or not
+atomic steps can be defined through some other means.</impl>
+</para>
+
+<para>The following table gives an overview over the types of atomic
+steps and the terms associated with these types:</para>
+
   <informaltable>
     <tgroup cols="4">
       <thead>
