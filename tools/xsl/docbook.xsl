@@ -249,14 +249,16 @@
         <dt>Changes:</dt>
         <xsl:if test="/*/@xml:id = 'xproc'">
           <dd>
-            <a href="lcdiff.html">Diff against the “last call” draft</a>
+            <a href="lcdiff.html">Diff against the previous “last call” draft</a>
           </dd>
         </xsl:if>
+<!--
         <xsl:if test="$auto-diff">
           <dd>
             <a href="diff.html">Diff against current “status quo” draft</a>
           </dd>
         </xsl:if>
+-->
         <xsl:if test="$travis-build-number != ''">
           <dd>
             <a href="http://github.com/{$travis-user}/{$travis-repo}/commits/{$travis-branch}">
