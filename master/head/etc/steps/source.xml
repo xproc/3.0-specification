@@ -335,7 +335,7 @@ element's [base URI].</para>
     format, provide services like update, freshen or even merge. The only format implementations
       <rfc2119>must</rfc2119> support is <biblioref linkend="zip"/>. <impl>The list of formats
       supported by the <tag>p:archive</tag> step is
-      <glossterm>implementation-defined</glossterm>.</impl></para>
+      <glossterm>implementation defined</glossterm>.</impl></para>
 
   <para>The <code>p:archive</code> step has the following input ports:</para>
   <variablelist>
@@ -370,7 +370,7 @@ element's [base URI].</para>
           operations like update, freshen or merge. Handling of ZIP files supports modifying
           archives appearing on the <port>archive</port> port (<xref linkend="cv.archive-zips"/>).
             <impl>The list of archive formats that can be modified by <tag>p:archive</tag> is
-              <glossterm>implementation-defined</glossterm>.</impl> For instance an implementation
+              <glossterm>implementation defined</glossterm>.</impl> For instance an implementation
           that supports archive merging may accept more than one document on the
             <port>archive</port> port.</para>
         <para>The default input for this port is the empty sequence.</para>
@@ -394,7 +394,7 @@ element's [base URI].</para>
           automatically created if there was no manifest provided), optionally amended with
           additional attributes and/or elements. <impl>The semantics of any additional attributes,
             elements and their values are
-          <glossterm>implementation-defined</glossterm>.</impl></para>
+          <glossterm>implementation defined</glossterm>.</impl></para>
       </listitem>
     </varlistentry>
   </variablelist>
@@ -407,7 +407,7 @@ element's [base URI].</para>
         <para>The format of the archive can be specified using the <option>format</option> option.
           Implementations <rfc2119>must</rfc2119> support the <biblioref linkend="zip"/> format,
           specified with the value <code>zip</code>. <impl>It is
-              <glossterm>implementation-defined</glossterm> what other formats are
+              <glossterm>implementation defined</glossterm> what other formats are
           supported.</impl></para>
       </listitem>
     </varlistentry>
@@ -416,7 +416,7 @@ element's [base URI].</para>
       <listitem>
         <para>The <option>parameters</option> option can be used to supply parameters to control the
           archiving. <impl>The semantics of the keys and the allowed values for these keys are
-              <glossterm>implementation-defined</glossterm>.</impl>
+              <glossterm>implementation defined</glossterm>.</impl>
           <error code="C0079">It is a <glossterm>dynamic error</glossterm> if the map
               <option>parameters</option> contains an entry whose key is defined by the
             implementation and whose value is not valid for that key.</error></para>
@@ -440,7 +440,7 @@ element's [base URI].</para>
       <para>If the <option>format</option> option is specified, this determines the format of the
         archive. Implementations <rfc2119>must</rfc2119> support the <biblioref linkend="zip"/>
         format, specified with the value <code>zip</code>. <impl>It is
-            <glossterm>implementation-defined</glossterm> what other formats are supported.</impl>
+            <glossterm>implementation defined</glossterm> what other formats are supported.</impl>
         <error code="C0081">It is a <glossterm>dynamic error</glossterm> if the format of the
           archive does not match the format as specified in the <option>format</option>
           option.</error></para>
@@ -449,7 +449,7 @@ element's [base URI].</para>
       <para>If no <option>format</option> option is specified or if its value is the empty sequence,
         the archive's format will be determined by the step, using the <code>content-type</code>
         document-property of the document on the <port>archive</port> port and/or by inspecting its
-        contents. <impl>It is <glossterm>implementation-defined</glossterm> how the step determines
+        contents. <impl>It is <glossterm>implementation defined</glossterm> how the step determines
           the archive's format.</impl> Implementations <rfc2119>should</rfc2119> recognize archives
         in <biblioref linkend="zip"/> format. </para>
     </listitem>
@@ -469,7 +469,7 @@ element's [base URI].</para>
     <e:rng-pattern name="VocabArchive" xml:id="cv.archive"/>
 
     <para><impl>The <code>c:archive</code> root element may contain additional
-          <glossterm>implementation-defined</glossterm> attributes.</impl></para>
+          <glossterm>implementation defined</glossterm> attributes.</impl></para>
 
     <para>All entries in the archive must be present as <tag>c:entry</tag> child elements:</para>
 
@@ -506,15 +506,15 @@ element's [base URI].</para>
       </listitem>
       <listitem>
         <para>The <code>method</code> attribute specifies how the entry should be compressed.
-            <impl>The default compression method is <glossterm>implementation-defined</glossterm>.
+            <impl>The default compression method is <glossterm>implementation defined</glossterm>.
           </impl>Implementations <rfc2119>must</rfc2119> support no compression, specified with the
-          value <code>none</code>. <impl>It is <glossterm>implementation-defined</glossterm> what
+          value <code>none</code>. <impl>It is <glossterm>implementation defined</glossterm> what
             other compression methods are supported.</impl></para>
       </listitem>
       <listitem>
         <para>The <code>level</code> attribute specifies the level of compression. <impl>The default
-            compression method is <glossterm>implementation-defined</glossterm>. </impl>
-          <impl>It is <glossterm>implementation-defined</glossterm> what compression levels are
+            compression method is <glossterm>implementation defined</glossterm>. </impl>
+          <impl>It is <glossterm>implementation defined</glossterm> what compression levels are
             supported.</impl></para>
       </listitem>
     </itemizedlist>
@@ -525,7 +525,7 @@ element's [base URI].</para>
       construct such an archive using <code>p:archive</code>.</para>
 
     <para><impl>The <code>c:entry</code> elements may contain additional
-          <glossterm>implementation-defined</glossterm> attributes.</impl></para>
+          <glossterm>implementation defined</glossterm> attributes.</impl></para>
 
     <para>If no manifest entry is provided for a document appearing on the <port>source</port> port,
       the step will manufacture a manifest entry from the document’s <code>base-uri</code> property.
@@ -561,65 +561,92 @@ element's [base URI].</para>
         <term><code>command</code></term>
         <listitem>
           <para>Specifies what operation to perform. If not specified, its default value is
-              <code>update</code>. Possible values are:</para>
+              <literal>update</literal>. Implementations must support the values <literal>update</literal>,
+              <literal>create</literal>, <literal>freshen</literal>, and <literal>delete</literal>.
+              <impl>The <tag>p:archive</tag> step may support additional,
+              <glossterm>implementation defined</glossterm> commands for ZIP files.</impl>
+              Unless otherwise specified, exactly zero or one ZIP archive can appear on the
+              <port>archive</port> port for the commands described below. If no archive appears,
+              a new archive will be created.
+          </para>
+
           <variablelist>
             <varlistentry>
               <term><code>update</code></term>
               <listitem>
-                <para>When the <code>command</code> parameter is set to <code>update</code> or not
-                  specified, zero or exactly one document in ZIP format can appear on the
-                    <port>archive</port> port. If there is no document on the <port>archive</port>
-                  port, an empty ZIP archive is assumed.</para>
-                <para>The contents of the manifest (either provided or automatically constructed, see
-                    <xref linkend="cv.archive-manifest"/>) is held against the entries in the ZIP
-                  file provided on the <port>archive</port> port: </para>
-                <itemizedlist>
+                <para>When the <code>command</code> parameter is set to <code>update</code>, the
+                ZIP archive will be updated:</para>
+
+                <orderedlist>
                   <listitem>
-                    <para>Any entry in the manifest that does not exist in the ZIP file provided on
-                      the <port>archive</port> port is added.</para>
+                    <para>For every entry in the ZIP file:</para>
+                    <itemizedlist>
+                      <listitem>
+                        <para>If the manifest contains a <tag>c:entry</tag> with a matching
+                        <tag class="attribute">name</tag>, the entry in the ZIP file is updated with
+                        the document identified by the <tag>c:entry</tag> in the manifest.</para>
+                      </listitem>
+                      <listitem>
+                        <para>If the manifest does not contain a matching <tag>c:entry</tag>, the
+                        ZIP entry name is resolved against the base URI of the ZIP file.</para>
+                        <itemizedlist>
+                          <listitem>
+                            <para>If a document exists at that URI and either has no timestamp or has a timestamp
+                            more than the timestamp in the ZIP file, the entry in the ZIP file will be updated
+                            with the document at the resolved URI.</para>
+                          </listitem>
+                          <listitem>
+                            <para>If no document exists at that URI, or the document cannot be accessed,
+                            or the document has a timestamp and the timestamp in the ZIP archive is more recent
+                            than the timestamp of the document, then the ZIP entry is unchanged.</para>
+                          </listitem>
+                        </itemizedlist>
+                      </listitem>
+                    </itemizedlist>
                   </listitem>
                   <listitem>
-                    <para>For any entry that does exist in the ZIP file provided on the
-                        <port>archive</port> port, a timestamp compare is done. When the entry in
-                      the manifest is newer than the entry in the ZIP file provided on the
-                        <port>archive</port> port, it is replaced. Documents that are either
-                      specified in the manifest or come from the <port>source</port> port have no
-                      timestamp and will <emphasis>always</emphasis> cause a replace to be
-                      done.</para>
+                    <para>For every <tag>c:entry</tag> in the manifest that does not have a matching
+                    entry in the ZIP file, the ZIP file will be updated by adding the document identified
+                    by the <tag>c:entry</tag> to the ZIP file.</para>
                   </listitem>
-                </itemizedlist>
-                <para>If the archive that is updated contains entries that are not mentioned in the
-                  manifest, these entries are moved to the end of the archive. In other words:
-                  entries in the manifest come first.</para>
+                </orderedlist>
               </listitem>
             </varlistentry>
             <varlistentry>
               <term><code>create</code></term>
               <listitem>
-                <para>When the <code>command</code> parameter is set to <code>create</code>, the
-                    <code>p:archive</code> step will behave exactly as for <code>update</code>,
-                  except that existing entries will <emphasis>always</emphasis> be updated,
-                  regardless of their timestamp.</para>
+                <para>When the <code>command</code> parameter is set to <code>create</code>,
+                the ZIP archive will be created. Creating a ZIP archive behaves exactly like
+                <literal>update</literal> except that any timestamps
+                are ignored; every ZIP entry will be updated or created if there is a <tag>c:entry</tag> or
+                matching document for it.</para>
               </listitem>
             </varlistentry>
             <varlistentry>
               <term><code>freshen</code></term>
               <listitem>
-                <para>When the <code>command</code> parameter is set to <code>freshen</code>, the
-                    <code>p:archive</code> step will behave exactly as for <code>update</code>,
-                  except that no new entries will be added. Any entries in the manifest that do not
-                  match an entry in the archive are ignored.</para>
+                <para>When the <code>command</code> parameter is set to <code>freshen</code>,
+                existing files in the ZIP archive may be updated, but no new files will be added.
+                Freshing a ZIP archive behaves exactly like <literal>update</literal> except that
+                only entries that already exist in the ZIP archive are considered.</para>
               </listitem>
             </varlistentry>
             <varlistentry>
               <term><code>delete</code></term>
               <listitem>
-                <para>When the <code>command</code> parameter is set to <code>delete</code>, exactly
-                  one document in ZIP format must appear on the <port>archive</port> port. The
-                  contents of the manifest (either provided or (partially) constructed, see <xref linkend="cv.archive-manifest"/>) is held against the entries in the ZIP file
-                  provided on the <port>archive</port> port. Any entries in the manifest file that
-                  match an entry in the ZIP archive will be deleted. All other entries in the
-                  manifest are ignored.</para>
+                <para>When the <code>command</code> parameter is set to <code>delete</code>,
+                exactly one document in ZIP format must appear on the <port>archive</port> port.
+                For every entry in the ZIP file:</para>
+                <itemizedlist>
+                  <listitem>
+                    <para>If the manifest contains a <tag>c:entry</tag> with a matching
+                    <tag class="attribute">name</tag>, the entry in the ZIP file is removed from
+                    the ZIP archive.</para>
+                  </listitem>
+                </itemizedlist>
+                <para>If the manifest contains <tag>c:entry</tag>
+                elements which do not have a matching entry in the ZIP
+                archive, they are simply ignored.</para>
               </listitem>
             </varlistentry>
           </variablelist>
@@ -629,19 +656,21 @@ element's [base URI].</para>
         <term><code>level</code></term>
         <listitem>
           <para>Specifies the default compression level for files added to or updated in the
-            archive. It can be overruled on a per-entry basis with a <code>c:entry/@level</code>
-            attribute in the manifest. Values that must be supported for ZIP files are:
-              “<code>smallest</code>” | “<code>fastest</code>” | “<code>default</code>” |
-              “<code>huffman</code>” | “<code>none</code>”.</para>
+            archive. If the <tag class="attribute">level</tag> attribute is specified on a
+            <tag>c:entry</tag>, its value takes precedence for that entry.
+            Values that must be supported for ZIP files are:
+              “<code>smallest</code>”, “<code>fastest</code>”, “<code>default</code>”,
+              “<code>huffman</code>”, and “<code>none</code>”.</para>
         </listitem>
       </varlistentry>
       <varlistentry>
         <term><code>method</code></term>
         <listitem>
           <para>Specifies the default compression method for files added to or updated in the
-            archive. It can be overruled on a per-entry basis with a <code>c:entry/@method</code>
-            attribute in the manifest. Values that must be supported for ZIP files are:
-              “<code>none</code>” | “<code>deflated</code>”.</para>
+            archive. If the <tag class="attribute">method</tag> attribute is specified on a
+            <tag>c:entry</tag>, its value takes precedence for that entry.
+            Values that must be supported for ZIP files are:
+              “<code>none</code>” and “<code>deflated</code>”.</para>
         </listitem>
       </varlistentry>
     </variablelist>
@@ -653,7 +682,7 @@ element's [base URI].</para>
     <para>Implementations of other archive formats <rfc2119>should</rfc2119> use the same parameter
       names if applicable. The value spaces for these parameters may be format-specific though.
         <impl>The actual parameter names supported by <tag>p:archive</tag> for a particular format
-        are <glossterm>implementation-defined</glossterm>.</impl></para>
+        are <glossterm>implementation defined</glossterm>.</impl></para>
 
   </section>
 
