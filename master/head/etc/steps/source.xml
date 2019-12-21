@@ -3007,7 +3007,11 @@ the string value of the <option>replace</option> expression.</para>
       <tag>c:result</tag> element whose contents is the string representing this count.</para>
 
   <para>Lines are identified as described in <link xlink:href="https://www.w3.org/TR/xml/#sec-line-ends">XML, 2.11
-      End-of-Line Handling</link>.</para>
+      End-of-Line Handling</link>.
+For the purpose of identifying lines, if the very last character in the text
+document is a newline (&amp;#10;), that newline is ignored. (It is not a separator
+between that line and a following line that contains no characters.)
+</para>
 
   <simplesect>
     <title>Document properties</title>
@@ -3042,7 +3046,9 @@ the string value of the <option>replace</option> expression.</para>
   </itemizedlist>
 
   <para>Lines are identified as described in <link xlink:href="https://www.w3.org/TR/xml/#sec-line-ends">XML, 2.11
-      End-of-Line Handling</link>.</para>
+      End-of-Line Handling</link>.
+All lines returned by <tag>p:text-head</tag> are terminated with a single
+newline (&amp;#10;).</para>
 
   <simplesect>
     <title>Document properties</title>
@@ -3089,6 +3095,11 @@ the string value of the <option>replace</option> expression.</para>
       <glossterm>dynamic error</glossterm> if the value of option <option>overwrite-content-type</option> 
       is not a text media type.</error>
   </para>
+
+  <para>Concatenating text documents does not require identifying individual
+lines in each document, consequently no special end-of-line handling is
+performed.</para>
+
   <simplesect>
     <title>Document properties</title>
     <para feature="load-preserves-none">No document properties are preserved.</para>
@@ -3117,6 +3128,10 @@ the string value of the <option>replace</option> expression.</para>
   <para>The <option>pattern</option>, <option>replacement</option> and <option>flags</option> options are specified the
     same as the parameters with the same names of the <link xlink:href="https://www.w3.org/TR/xpath-functions-31/#func-replace"><function>fn:replace</function></link>
     function.</para>
+
+  <para>Replacing strings in text documents does not require identifying individual
+lines in each document, consequently no special end-of-line handling is
+performed.</para>
 
   <simplesect>
     <title>Document properties</title>
@@ -3181,14 +3196,20 @@ the string value of the <option>replace</option> expression.</para>
   </itemizedlist>
 
   <para>Lines are identified as described in <link xlink:href="https://www.w3.org/TR/xml/#sec-line-ends">XML, 2.11
-      End-of-Line Handling</link>.</para>
+      End-of-Line Handling</link>.
+For the purpose of identifying lines, if the very last character in the text
+document is a newline (&amp;#10;), that newline is ignored. (It is not a separator
+between that line and a following line that contains no characters.)
+All lines returned by <tag>p:text-sort</tag> are terminated with a single
+newline (&amp;#10;).</para>
+
   <para>The sort process performed by this step is the same as described in 
     <link xlink:href="https://www.w3.org/TR/xslt-30/#xsl-sort">The xsl:sort Element</link>. Options <option>lang</option>
     and <option>case-order</option> are only taken into consideration if no value is selected for option
     <option>collation</option>.</para>
   <simplesect>
     <title>Document properties</title>
-    <para feature="add-attribute-preserves-all">All document properties are preserved.</para>
+    <para feature="text-sort-preserves-all">All document properties are preserved.</para>
   </simplesect>
 </section>
 <section xml:id="c.text-tail">
@@ -3219,7 +3240,9 @@ the string value of the <option>replace</option> expression.</para>
   </itemizedlist>
   
   <para>Lines are identified as described in <link xlink:href="https://www.w3.org/TR/xml/#sec-line-ends">XML, 2.11
-    End-of-Line Handling</link>.</para>
+    End-of-Line Handling</link>.
+All lines returned by <tag>p:text-tail</tag> are terminated with a single
+newline (&amp;#10;).</para>
   
   <simplesect>
     <title>Document properties</title>
