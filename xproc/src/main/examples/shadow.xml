@@ -1,19 +1,18 @@
-<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" version="3.0" name="main">
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" 
+  xmlns:xs="http://www.w3.org/2001/XMLSchema" version="3.0">
+  
   <p:option name="bname" as="xs:integer" select="1"/>
-
-  <p:message message="NAME1={$bname}">
-    <p:input port="source">
+  <p:identity message="NAME1={$bname}">
+    <p:with-input port="source">
       <p:empty/>
-    </p:input>
-  </p:message>
-
+    </p:with-input>
+  </p:identity>
+  
+  
   <p:variable name="bname" select="$bname + 1"/>
-
-  <p:message message="NAME2={$bname}"/>
-
+  <p:identity message="NAME2={$bname}"/>
+  
   <p:variable name="bname" select="7"/>
-
-  <p:message message="NAME3={$bname}"/>
-
-  <p:sink/>
+  <p:identity message="NAME3={$bname}"/>
+  
 </p:declare-step>
