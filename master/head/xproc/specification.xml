@@ -2465,24 +2465,23 @@ Variable names are always expressed as
 
       <para>Consider this pipeline:</para>
 
-      <programlisting language="xml">&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc" version="3.0" name="main"&gt;
+      <programlisting language="xml">&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc" 
+  xmlns:xs="http://www.w3.org/2001/XMLSchema" version="3.0"&gt;
+  
   &lt;p:option name="bname" as="xs:integer" select="1"/&gt;
-
-  &lt;p:message message="NAME1={$bname}"&gt;
-    &lt;p:input port="source"&gt;
+  &lt;p:identity message="NAME1={$bname}"&gt;
+    &lt;p:with-input port="source"&gt;
       &lt;p:empty/&gt;
-    &lt;/p:input&gt;
-  &lt;/p:message&gt;
-
+    &lt;/p:with-input&gt;
+  &lt;/p:identity&gt;
+  
+  
   &lt;p:variable name="bname" select="$bname + 1"/&gt;
-
-  &lt;p:message message="NAME2={$bname}"/&gt;
-
+  &lt;p:identity message="NAME2={$bname}"/&gt;
+  
   &lt;p:variable name="bname" select="7"/&gt;
-
-  &lt;p:message message="NAME3={$bname}"/&gt;
-
-  &lt;p:sink/&gt;
+  &lt;p:identity message="NAME3={$bname}"/&gt;
+  
 &lt;/p:declare-step&gt;</programlisting>
 
       <para>If no overriding value is provided for <varname>$bname</varname> at runtime, the pipeline will produce three
