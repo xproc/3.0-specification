@@ -87,11 +87,10 @@ implemented.
     conformant Expression per <biblioref linkend="xpath31"/>.
     </para>
   </listitem>
-  <listitem>
+  <listitem xml:id="dt-selection-pattern">
     <para><type>XSLTSelectionPattern</type>:
-<termdef xml:id="dt-selection-pattern">A <firstterm>selection pattern</firstterm> is an
-XSLT selection pattern. FIXME:</termdef>
-    </para>
+    As a string per <biblioref linkend="xslt30"/> conforming to an XSLT
+    <emphasis>selection pattern</emphasis>.</para>
   </listitem>
   <listitem>
     <para><type>XPathSequenceType</type>: An XPath
@@ -2409,6 +2408,10 @@ document that contains a tree of elements, attributes, and other nodes.</para>
 XPath data model is <glossterm>implementation-defined</glossterm>.</impl>
 </para>
 
+<para><error code="D0078">It is a <glossterm>dynamic error</glossterm>
+if the loaded document cannot be represented as an HTML document in
+the XPath data model.</error></para>
+
 <para><impl>HTML parameters are <glossterm>implementation-defined</glossterm>.
 </impl></para>
 </section>
@@ -3734,7 +3737,8 @@ Whenever
 two or more sequentially adjacent documents have the same “group
 adjacent” value, they are wrapped together in a single wrapper
 element.
-</para>
+Two “group adjacent” values are the same if the
+standard XPath function <code>deep-equal()</code> returns true for them.</para>
 
 <simplesect>
 <title>Document properties</title>
@@ -3786,7 +3790,8 @@ adjacent matching nodes in a single wrapper element. The specified
 XPath expression is evaluated for each matching node with that node
 as the XPath context node. Whenever two or more adjacent matching nodes
 have the same “group adjacent” value, they are wrapped together in
-a single wrapper element.</para>
+a single wrapper element. Two “group adjacent” values are the same if the
+standard XPath function <code>deep-equal()</code> returns true for them.</para>
 
 <para>Two matching nodes are considered adjacent if and only if they
 are siblings and either there are no nodes between them or all
@@ -4328,6 +4333,10 @@ W3C Recommendation. 21 March 2017.</bibliomixed>
     <bibliomixed xml:id="xpath31-functions"><abbrev>XPath and XQuery Functions and Operators 3.1</abbrev>
 <citetitle xlink:href="https://www.w3.org/TR/xpath-functions-31/">XPath and XQuery Functions and  Operators 3.1</citetitle>. Michael Kay, editor.
 W3C Recommendation. 21 March 2017</bibliomixed>
+    <bibliomixed xml:id="xslt30"><abbrev>XSLT 3.0</abbrev>
+<citetitle xlink:href="http://www.w3.org/TR/xslt-30/">XSL Transformations (XSLT)
+Version 3.0</citetitle>. Michael Kay, editor.
+W3C Recommendation. 8 June 2017.</bibliomixed>
     <bibliomixed xml:id="xinclude"><abbrev>XInclude</abbrev>
 <citetitle xlink:href="http://www.w3.org/TR/xinclude/">XML Inclusions
 (XInclude) Version 1.0 (Second Edition)</citetitle>. Jonathan Marsh,
@@ -4341,12 +4350,6 @@ Andrew Coleman and C. M. Sperberg-McQueen, editors. W3C Recommendation. 21 March
 <citetitle xlink:href="https://doi.org/10.17487/RFC1321">RFC 1321:
 The MD5 Message-Digest Algorithm</citetitle>.
 R. Rivest. Network Working Group, IETF, April 1992.</bibliomixed>
-    <bibliomixed xml:id="rfc2045"><abbrev>RFC 2045</abbrev>
-<citetitle xlink:href="https://doi.org/10.17487/RFC2045">RFC 2045:
-MIME (Multipurpose Internet Mail Extensions) Part One: Mechanisms for
-Specifying and Describing the Format of Internet Message
-Bodies</citetitle>. N. Freed, N. Borenstein, editors. Internet
-Engineering Task Force. November, 1996.</bibliomixed>
     <bibliomixed xml:id="rfc2046"><abbrev>RFC 2046</abbrev>
 <citetitle xlink:href="https://doi.org/10.17487/RFC2046">RFC 2046:
 Multipurpose Internet Mail Extensions (MIME) Part Two: Media
@@ -4426,8 +4429,7 @@ how <glossterm role="unwrapped">implementation-defined</glossterm> features are 
 <firstterm>implementation-dependent</firstterm> feature is one where the
 implementation has discretion in how it is performed.
 Implementations are not required to document or explain
-how <glossterm role="unwrapped">implementation-dependent</glossterm> features are performed.</para></glossdef></glossentry><glossentry><glossterm>selection pattern</glossterm><glossdef><para>A <firstterm>selection pattern</firstterm> is an
-XSLT selection pattern. FIXME:</para></glossdef></glossentry></glosslist></appendix>
+how <glossterm role="unwrapped">implementation-dependent</glossterm> features are performed.</para></glossdef></glossentry></glosslist></appendix>
 
 <appendix version="5.0-extension w3c-xproc" xml:id="ancillary-files">
 <title>Ancillary files</title>
