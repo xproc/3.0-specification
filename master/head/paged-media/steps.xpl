@@ -2,7 +2,8 @@
            xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax"
            version="3.0">
    <p:declare-step type="p:css-formatter" xml:id="css-formatter">
-      <p:input port="source" content-types="application/xml text/xml */*+xml"/>
+      <p:input port="source" content-types="xml html"/>
+      <p:input port="stylesheet" content-types="text" sequence="true"/>
       <p:output port="result" content-types="*/*"/>
       <p:option name="parameters" as="xs:string"/>
       <p:option name="content-type" as="xs:string?"/>

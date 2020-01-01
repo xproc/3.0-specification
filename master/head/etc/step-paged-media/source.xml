@@ -77,16 +77,52 @@ steps is assumed; for background details, see
 <section xml:id="c.css-formatter">
 <title>p:css-formatter</title>
 
-<para>T.B.D.</para>
+<para>The <tag>p:css-formatter</tag> step applies <biblioref linkend="CSS"/>
+formatting to an XML or HTML document.
+The output of this step is often, but not necessarily, a PDF document.</para>
 
 <p:declare-step type="p:css-formatter">
-  <p:input port="source" content-types="application/xml text/xml */*+xml"/>
+  <p:input port="source" content-types="xml html"/>
+  <p:input port="stylesheet" content-types="text" sequence="true"/>
   <p:output port="result" content-types="*/*"/>
   <p:option name="parameters" as="map(xs:QName,item()*)?"/>
   <p:option name="content-type" as="xs:string?"/>
 </p:declare-step>
 
-<para>T.B.D.</para>
+<para>The document on the <port>source</port> port is formatted using one
+or more CSS stylesheets.
+The content-type of the output is controlled by the
+<option>content-type</option> option. This option specifies a media
+type as defined by <biblioref linkend="media-types"/>. The option may
+include media type parameters as well (e.g.
+"application/someformat; charset=UTF-8"). <impl>The use of media type
+parameters on the <option>content-type</option> option is
+<glossterm>implementation-defined</glossterm>.</impl>
+<impl>If the <option>content-type</option> option is not
+specified, the output type is
+<glossterm>implementation-defined</glossterm>.</impl> The default
+<rfc2119>should</rfc2119> be PDF.
+</para>
+
+<para>If one or more stylesheets are provided on the <port>stylesheet</port> port,
+they <rfc2119>should</rfc2119> be used. 
+<impl>The precise way that the <tag>p:css-formatter</tag> step selects
+stylesheets is <glossterm>implementation-defined</glossterm>.</impl>
+Because CSS stylesheets may have import statements that rely on relative
+URI references, it may be more convenient for authors and implementors to
+allow stylesheets to be specified as a list of URIs (in, for example,
+one of the <option>parameters</option>).</para>
+
+<para><impl>A formatter may take any number of optional rendering
+parameters via the step's <option>parameters</option>; such parameters
+are defined by the CSS implementation used and are
+<glossterm>implementation-defined</glossterm>.</impl></para>
+
+<para>
+<impl>The CSS level and the particular CSS features supported by
+<tag>p:css-formatter</tag> are
+<glossterm>implementation-defined</glossterm>.</impl>
+</para>
 
 <simplesect>
 <title>Document properties</title>
@@ -214,6 +250,10 @@ Norman Walsh, Achim Berndzen, Gerrit Imsieke and Erik Siegel, editors.
 An Introduction</citetitle>.
 Norman Walsh, Achim Berndzen, Gerrit Imsieke and Erik Siegel, editors.
 </bibliomixed>
+<bibliomixed xml:id="CSS"><abbrev>CSS</abbrev>
+<citetitle xlink:href="https://www.w3.org/TR/css-2018/">CSS Snapshot 2018</citetitle>.
+Tab Atkins Jr., Elika J. Etemad, and Florial Rivoal editors.
+W3C Note 22 January 2019.</bibliomixed>
 <bibliomixed xml:id="xsl11"><abbrev>XSL 1.1</abbrev>
 <citetitle xlink:href="http://www.w3.org/TR/xsl/">Extensible Stylesheet
 Language (XSL) Version 1.1</citetitle>.

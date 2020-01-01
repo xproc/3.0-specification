@@ -61,26 +61,25 @@ specifications</holder>
 
   <!-- Include step descriptions: -->
   <section xml:id="c.markdown-to-html">
-  <title>p:markdown-to-html</title>
+<title>p:markdown-to-html</title>
 
-  <para>The <code>p:markdown-to-html</code> step converts a text document in Markdown to XHTML.</para>
+<para>The <code>p:markdown-to-html</code> step converts a text document in Markdown to XHTML.</para>
 
-  <p:declare-step type="p:markdown-to-html">
-    <p:input port="source" primary="true" sequence="false" content-types="text/*"/>
-    <p:output port="result" primary="true" sequence="false" content-types="application/xhtml+xml"/>
-    <p:option name="parameters" as="map(xs:QName, item()*)?"/>
-  </p:declare-step>
+<p:declare-step type="p:markdown-to-html">
+  <p:input port="source" primary="true" content-types="text"/>
+  <p:output port="result" primary="true" content-types="html"/>
+  <p:option name="parameters" as="map(xs:QName, item()*)?"/>
+</p:declare-step>
 
-  <para>The <tag>p:markdown-to-html</tag> step expects on its <port>source</port> port a text document 
-    in Markdown syntax (TBD: REF TO MARKDOWN SPEC?) and converts this into XHTML. The result is returned 
-    on its <port>result</port> port.</para>
-  
-  <para>TBD</para>
+<para>The <tag>p:markdown-to-html</tag> step transforms a text document containing
+Markdown, for example <biblioref linkend="commonmark"/>, into HTML.
+<impl>The flavor(s) of Markdown supported and the parameters allowed are
+<glossterm>implementation-defined</glossterm>.</impl>.</para>
 
-  <simplesect>
-    <title>Document properties</title>
-    <para feature="load-preserves-none">No document properties are preserved.</para>
-  </simplesect>
+<simplesect>
+  <title>Document properties</title>
+  <para feature="load-preserves-none">No document properties are preserved.</para>
+</simplesect>
 </section>
 
   <section xml:id="errors">
@@ -148,6 +147,10 @@ how <glossterm role="unwrapped">implementation-defined</glossterm> features are 
   <appendix xml:id="references">
     <title>References</title>
     <bibliolist>
+      <bibliomixed xml:id="commonmark"><abbrev>CommonMark</abbrev>
+<citetitle xlink:href="https://spec.commonmark.org/current/">CommonMark Spec</citetitle>.
+John MacFarlane. 6 April 2019.
+</bibliomixed>
       <bibliomixed xml:id="xproc30"><abbrev>XProc 3.0</abbrev>
 <citetitle xlink:href="http://spec.xproc.org/">XProc 3.0:
 An XML Pipeline Language</citetitle>.
