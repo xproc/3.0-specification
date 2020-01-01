@@ -722,7 +722,8 @@ element's [base URI].</para>
 
   <simplesect>
     <title>Document properties</title>
-    <para feature="archive-preserves-none">No document properties are preserved.</para>
+    <para feature="archive-preserves-none">No document properties are preserved.
+The archive has no <property>base-uri</property>.</para>
   </simplesect>
 
 </section>
@@ -795,9 +796,9 @@ element's [base URI].</para>
 
   <simplesect>
     <title>Document properties</title>
-    <para feature="archive-preserves-none">No document properties are preserved.</para>
+    <para feature="archive-manifest-preserves-none">No document properties are preserved.
+The manifest has no <property>base-uri</property>.</para>
   </simplesect>
-
 </section>
 <section xml:id="c.cast-content-type">
    <title>p:cast-content-type</title>
@@ -1076,7 +1077,8 @@ summary of the differences between the two documents may appear on the
 
 <simplesect>
 <title>Document properties</title>
-<para feature="compare-preserves-none">No document properties are preserved.</para>
+<para feature="compare-preserves-none">No document properties are preserved.
+The comparison document has no <property>base-uri</property>.</para>
 </simplesect>
 </section>
 <section xml:id="c.compress">
@@ -1170,7 +1172,8 @@ continue.</para>
 
 <simplesect>
 <title>Document properties</title>
-<para feature="count-preserves-none">No document properties are preserved.</para>
+<para feature="count-preserves-none">No document properties are preserved.
+The count document has no <property>base-uri</property>.</para>
 </simplesect>
 </section>
 <section xml:id="c.delete">
@@ -1263,7 +1266,8 @@ element in the pipeline.</para>
 
 <simplesect>
 <title>Document properties</title>
-<para feature="error-preserves-none">No document properties are preserved.</para>
+<para feature="error-preserves-none">No document properties are preserved but
+that’s irrelevant as no document is ever produced.</para>
 </simplesect>
 </section>
 <section xml:id="c.escape-markup">
@@ -1339,7 +1343,10 @@ expression is computed dynamically.</para>
 
 <simplesect>
 <title>Document properties</title>
-<para feature="filter-preserves-none">No document properties are preserved.</para>
+<para feature="filter-preserves-none">No document properties are preserved.
+The <property>base-uri</property> property of each document will reflect the
+base URI of the selected node(s).
+</para>
 </simplesect>
 </section>
 <section xml:id="c.hash">
@@ -2009,7 +2016,10 @@ name=W3C&amp;amp;spec=XProc
 
 <simplesect>
 <title>Document properties</title>
-<para feature="http-request-preserves-none">No document properties are preserved.</para>
+<para feature="http-request-preserves-none">No document properties are preserved.
+The <property>base-uri</property> property of the document(s) produced will reflect
+the base URI of the retrieved document(s).
+</para>
 </simplesect>
 </section>
 <section xml:id="c.identity">
@@ -2093,8 +2103,8 @@ as the source.</para>
 <simplesect>
 <title>Document properties</title>
 <para feature="insert-preserves-all">All document properties on the
-<port>source</port> port are preserved. No document properties on the
-<port>insertion</port> port are preserved.</para>
+<port>source</port> port are preserved. The document properties on the
+<port>insertion</port> port are not preserved or present in the result document.</para>
 </simplesect>
 </section>
 <section xml:id="c.json-join" version="5.0-extension w3c-xproc">
@@ -2148,7 +2158,9 @@ port <port>result</port> will not have any arrays as members. </para>
 
 <simplesect>
   <title>Document properties</title>
-  <para feature="json-join-preserves-none">No document properties are preserved.</para>
+  <para feature="json-join-preserves-none">No document properties are preserved.
+The joined document has no <property>base-uri</property>.
+</para>
 </simplesect>
 </section>
 <section xml:id="c.json-merge" version="5.0-extension w3c-xproc">
@@ -2205,7 +2217,9 @@ port <port>result</port>.</para>
     </para>
   <simplesect>
     <title>Document properties</title>
-    <para feature="json-merge-preserves-none">No document properties are preserved.</para>
+    <para feature="json-merge-preserves-none">No document properties are preserved.
+The merged document has no <property>base-uri</property>.
+</para>
   </simplesect>
 </section>
 <section xml:id="c.label-elements">
@@ -2431,8 +2445,9 @@ are <glossterm>implementation-defined</glossterm>.
 
 <simplesect>
 <title>Document properties</title>
-<para feature="load-preserves-none">No document properties are preserved.
-The properties specified in <option>document-properties</option> are applied.
+<para>The properties specified in <option>document-properties</option> are applied.
+If the properties do not specify a <property>base-uri</property>, the 
+<property>base-uri</property> property will reflect the base URI of the loaded document.
 </para>
 </simplesect>
 </section>
@@ -2670,7 +2685,9 @@ this step does not attempt to distinguish which one.</para>
 
 <simplesect>
 <title>Document properties</title>
-<para feature="pack-preserves-none">No document properties are preserved.</para>
+<para feature="pack-preserves-none">No document properties are preserved.
+The result documents do not have a <property>base-uri</property> property.
+</para>
 </simplesect>
 </section>
 <section xml:id="c.rename">
@@ -3051,7 +3068,9 @@ between that line and a following line that contains no characters.)
 
   <simplesect>
     <title>Document properties</title>
-    <para feature="count-preserves-none">No document properties are preserved.</para>
+    <para feature="text-count-preserves-none">No document properties are preserved.
+The count document does not have a <property>base-uri</property> property.
+</para>
   </simplesect>
 </section>
 <section xml:id="c.text-head">
@@ -3138,7 +3157,9 @@ performed.</para>
 
   <simplesect>
     <title>Document properties</title>
-    <para feature="load-preserves-none">No document properties are preserved.</para>
+    <para feature="text-join-preserves-none">No document properties are preserved.
+The joined document has no <property>base-uri</property> property.
+</para>
   </simplesect>
 </section>
 <section xml:id="c.text-replace">
@@ -3282,7 +3303,7 @@ newline (&amp;#10;).</para>
   
   <simplesect>
     <title>Document properties</title>
-    <para feature="add-attribute-preserves-all">All document properties are preserved.</para>
+    <para feature="text-tail-preserves-all">All document properties are preserved.</para>
   </simplesect>
 </section>
 <section xml:id="c.unarchive">
@@ -3419,7 +3440,10 @@ newline (&amp;#10;).</para>
   
   <simplesect>
     <title>Document properties</title>
-    <para feature="archive-preserves-none">No document properties are preserved.</para>
+    <para feature="unarchive-preserves-none">No document properties are preserved.
+The <property>base-uri</property> property of each unarchived document is reflective of
+the base URI of the document.
+</para>
   </simplesect>
 </section>
 <section xml:id="c.uncompress">
@@ -3637,7 +3661,7 @@ document node with a single text child, the result will have content type
 
 <simplesect>
 <title>Document properties</title>
-<para feature="unwrap-preserves-none">No document properties are preserved.</para>
+<para feature="unwrap-preserves-all">All document properties are preserved.</para>
 </simplesect>
 </section>
 <section xml:id="c.uuid">
@@ -3742,7 +3766,9 @@ standard XPath function <code>deep-equal()</code> returns true for them.</para>
 
 <simplesect>
 <title>Document properties</title>
-<para feature="wrap-sequence-preserves-none">No document properties are preserved.</para>
+<para feature="wrap-sequence-preserves-none">No document properties are preserved.
+The document produced has no <property>base-uri</property> property.
+</para>
 </simplesect>
 </section>
 <section xml:id="c.wrap">
@@ -3800,7 +3826,7 @@ instruction nodes.</para>
 
 <simplesect>
 <title>Document properties</title>
-<para feature="wrap-preserves-none">No document properties are preserved.</para>
+<para feature="wrap-preserves-all">All document properties are preserved.</para>
 </simplesect>
 </section>
 <section xml:id="c.www-form-urldecode">
@@ -3833,7 +3859,9 @@ retains the order of name/value pairs in the encoded string.</para>
 
 <simplesect>
 <title>Document properties</title>
-<para feature="www-form-urldecode-preserves-none">No document properties are preserved.</para>
+<para feature="www-form-urldecode-preserves-none">No document properties are preserved.
+The resulting value has no <property>base-uri</property> property.
+</para>
 </simplesect>
 </section>
 <section xml:id="c.www-form-urlencode">
@@ -3857,7 +3885,9 @@ option, a name/value pair is created for each value.</para>
 
 <simplesect>
 <title>Document properties</title>
-<para feature="www-form-urlencode-preserves-none">No document properties are preserved.</para>
+<para feature="www-form-urlencode-preserves-none">No document properties are preserved.
+The resulting value has no <property>base-uri</property> property.
+</para>
 </simplesect>
 </section>
 <section xml:id="c.xinclude">
@@ -4097,7 +4127,11 @@ validation before using XQuery:</para>
 
 <section>
 <title>Document properties</title>
-<para feature="xquery-preserves-none">No document properties are preserved.</para>
+<para feature="xquery-preserves-none">No document properties are preserved.
+The <property>base-uri</property> property of each document will
+reflect the base URI specified by the query. If the query does not
+establish a base URI, the document will not have one.
+</para>
 </section>
 </section>
 <section xml:id="c.xslt">
@@ -4233,7 +4267,12 @@ validation before using XQuery:</para>
   </section>
   <simplesect>
     <title>Document properties</title>
-    <para feature="xslt-preserves-none">No document properties are preserved.</para>
+    <para feature="xslt-preserves-none">No document properties are
+    preserved. The <property>base-uri</property> property of each
+    document will reflect the base URI specified by the tranformation.
+    If the transformation does not establish a base URI, the document
+    will not have one.
+</para>
   </simplesect>
 </section>
 </section>
