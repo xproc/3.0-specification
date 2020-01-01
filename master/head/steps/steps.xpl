@@ -22,7 +22,7 @@
                primary="true"
                content-types="any"
                sequence="true"/>
-      <p:input port="manifest" content-types="application/xml" sequence="true">
+      <p:input port="manifest" content-types="xml" sequence="true">
          <p:empty/>
       </p:input>
       <p:input port="archive" content-types="any" sequence="true">
@@ -51,16 +51,16 @@
       <p:option name="relative-to" as="xs:anyURI?"/>
    </p:declare-step>
    <p:declare-step type="p:cast-content-type" xml:id="cast-content-type">
-      <p:input port="source" content-types="*/*"/>
-      <p:output port="result" content-types="*/*"/>
+      <p:input port="source" content-types="any"/>
+      <p:output port="result" content-types="any"/>
       <p:option name="content-type" required="true" as="xs:string"/>
       <p:option name="parameters" as="xs:string"/>
    </p:declare-step>
    <p:declare-step type="p:compare" xml:id="compare">
-      <p:input port="source" primary="true" content-types="*/*"/>
-      <p:input port="alternate" content-types="*/*"/>
+      <p:input port="source" primary="true" content-types="any"/>
+      <p:input port="alternate" content-types="any"/>
       <p:output port="result" content-types="application/xml"/>
-      <p:output port="differences" content-types="*/*" sequence="true"/>
+      <p:output port="differences" content-types="any" sequence="true"/>
       <p:option name="parameters" as="xs:string"/>
       <p:option name="method" as="xs:QName?"/>
       <p:option name="fail-if-not-equal" as="xs:boolean" select="false()"/>
@@ -79,7 +79,7 @@
       <p:option name="parameters" as="xs:string"/>
    </p:declare-step>
    <p:declare-step type="p:count" xml:id="count">
-      <p:input port="source" content-types="*/*" sequence="true"/>
+      <p:input port="source" content-types="any" sequence="true"/>
       <p:output port="result" content-types="application/xml"/>
       <p:option name="limit" as="xs:integer" select="0"/>
    </p:declare-step>
@@ -122,8 +122,8 @@
       <p:option name="version" as="xs:string?"/>
    </p:declare-step>
    <p:declare-step type="p:http-request" xml:id="http-request">
-      <p:input port="source" content-types="*/*"/>
-      <p:output port="result" sequence="true" content-types="*/*"/>
+      <p:input port="source" content-types="any"/>
+      <p:output port="result" sequence="true" content-types="any"/>
       <p:option name="serialization" as="xs:string"/>
    </p:declare-step>
    <p:declare-step type="p:identity" xml:id="identity">
@@ -304,14 +304,8 @@
       <p:option name="count" required="true" as="xs:integer"/>
    </p:declare-step>
    <p:declare-step type="p:text-join" xml:id="text-join">
-      <p:output port="source"
-                primary="true"
-                sequence="true"
-                content-types="text"/>
-      <p:output port="result"
-                primary="true"
-                sequence="false"
-                content-types="text"/>
+      <p:input port="source" sequence="true" content-types="text"/>
+      <p:output port="result" content-types="text/plain"/>
       <p:option name="separator" as="xs:string?"/>
       <p:option name="prefix" as="xs:string?"/>
       <p:option name="suffix" as="xs:string?"/>

@@ -5,7 +5,7 @@
       <p:input port="source"
                primary="true"
                sequence="true"
-               content-types="*/*"/>
-      <p:output port="result" primary="true" content-types="*/*"/>
+               content-types="any"/>
+      <p:output port="result" primary="true" content-types="any"/>
    </p:declare-step>
 </p:library>

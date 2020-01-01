@@ -5,11 +5,11 @@
       <p:input port="source"
                primary="true"
                sequence="false"
-               content-types="text/*"/>
+               content-types="text"/>
       <p:output port="result"
                 primary="true"
                 sequence="false"
-                content-types="application/xhtml+xml"/>
+                content-types="html"/>
       <p:option name="parameters" as="xs:string"/>
    </p:declare-step>
 </p:library>

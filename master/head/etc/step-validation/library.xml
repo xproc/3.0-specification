@@ -6,7 +6,7 @@
       <p:input port="nvdl" content-types="xml"/>
       <p:input port="schemas" sequence="true" content-types="text xml"/>
       <p:output port="result" primary="true" content-types="xml html"/>
-      <p:output port="report" sequence="true" content-types="application/xml json"/>
+      <p:output port="report" sequence="true" content-types="xml json"/>
       <p:option name="assert-valid" select="true()" as="xs:boolean"/>
       <p:option name="parameters" as="xs:string"/>
    </p:declare-step>
@@ -14,7 +14,7 @@
       <p:input port="source" primary="true" content-types="xml html"/>
       <p:input port="schema" content-types="text xml"/>
       <p:output port="result" primary="true" content-types="xml html"/>
-      <p:output port="report" sequence="true" content-types="application/xml json"/>
+      <p:output port="report" sequence="true" content-types="xml json"/>
       <p:option name="dtd-attribute-values" select="false()" as="xs:boolean"/>
       <p:option name="dtd-id-idref-warnings" select="false()" as="xs:boolean"/>
       <p:option name="assert-valid" select="true()" as="xs:boolean"/>
@@ -23,8 +23,8 @@
    <p:declare-step type="p:validate-with-schematron" xml:id="validate-with-schematron">
       <p:input port="source" primary="true" content-types="xml html"/>
       <p:input port="schema" content-types="xml"/>
-      <p:output port="result" primary="true" content-types="application/xml"/>
-      <p:output port="report" sequence="true" content-types="application/xml json"/>
+      <p:output port="result" primary="true" content-types="xml"/>
+      <p:output port="report" sequence="true" content-types="xml json"/>
       <p:option name="parameters" as="xs:string"/>
       <p:option name="phase" select="'#DEFAULT'" as="xs:string"/>
       <p:option name="assert-valid" select="true()" as="xs:boolean"/>
@@ -33,7 +33,7 @@
       <p:input port="source" primary="true" content-types="xml html"/>
       <p:input port="schema" sequence="true" content-types="xml"/>
       <p:output port="result" primary="true" content-types="xml html"/>
-      <p:output port="report" sequence="true" content-types="application/xml json"/>
+      <p:output port="report" sequence="true" content-types="xml json"/>
       <p:option name="use-location-hints" select="false()" as="xs:boolean"/>
       <p:option name="try-namespaces" select="false()" as="xs:boolean"/>
       <p:option name="assert-valid" select="true()" as="xs:boolean"/>

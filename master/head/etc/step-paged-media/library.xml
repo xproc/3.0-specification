@@ -4,13 +4,13 @@
    <p:declare-step type="p:css-formatter" xml:id="css-formatter">
       <p:input port="source" content-types="xml html"/>
       <p:input port="stylesheet" content-types="text" sequence="true"/>
-      <p:output port="result" content-types="*/*"/>
+      <p:output port="result" content-types="any"/>
       <p:option name="parameters" as="xs:string"/>
       <p:option name="content-type" as="xs:string?"/>
    </p:declare-step>
    <p:declare-step type="p:xsl-formatter" xml:id="xsl-formatter">
-      <p:input port="source" content-types="application/xml text/xml */*+xml"/>
-      <p:output port="result" content-types="*/*"/>
+      <p:input port="source" content-types="xml"/>
+      <p:output port="result" content-types="any"/>
       <p:option name="parameters" as="xs:string"/>
       <p:option name="content-type" as="xs:string?"/>
    </p:declare-step>
