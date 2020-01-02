@@ -305,7 +305,7 @@
    </p:declare-step>
    <p:declare-step type="p:text-join" xml:id="text-join">
       <p:input port="source" sequence="true" content-types="text"/>
-      <p:output port="result" content-types="text/plain"/>
+      <p:output port="result" content-types="text"/>
       <p:option name="separator" as="xs:string?"/>
       <p:option name="prefix" as="xs:string?"/>
       <p:option name="suffix" as="xs:string?"/>
