@@ -62,25 +62,14 @@ step for
 
 <para>This specification describes the <code>p:validate-with-relax-ng</code>,
 <code>p:validate-with-schematron</code>, <code>p:validate-with-xml-schema</code>,
-<code>p:validate-with-nvdl</code>, and the generic <code>p:validate</code>
-steps. Each is independently optional.
+and <code>p:validate-with-nvdl</code> steps. Each is independently optional.
 A machine-readable description of
 these steps may be found in
 <link xlink:href="steps.xpl">steps.xpl</link>.
 </para>
+  <para>Steps for validating non-XML documents, such as JSON, might be added in a future revision
+  of this specification.</para>
   
-  <note role="editorial">
-      <para><tag>p:validate</tag> is not included yet. We should discuss <link xlink:href="https://github.com/xproc/1.0-specification/issues/135#issuecomment-83043122">Norm’s
-          proposal</link> and decide whether we want to include such a step. In addition, an idea was floating that such
-        a generic step might also look at the <code>xml-model</code> processing instructions that might be prepended to
-        a document. What makes it problematic might be that these PIs are missing after parsing the document, unless an
-        extra effort is made to re-attach them to the document node after parsing. This could be a document property
-          <code>models</code> that holds a <code>c:models</code> document with an XML representation of the
-          <code>xml-model</code> PIs, but all kinds of document loading mechanisms (<tag>p:load</tag>,
-          <tag>p:document</tag>, <tag>p:http-request</tag>) would need to be extended to process these prepended
-          <code>xml-model</code> PIs when loading a document.</para>
-  </note>
-
 <para>Familiarity with the
 general nature of <biblioref linkend="xproc30"/>
 steps is assumed; for background details, see
@@ -104,30 +93,30 @@ steps is assumed; for background details, see
         <literal>info</literal> or <literal>warning</literal> in <code>sch:report/@role</code>.</para>
     </note>
     <para>If no such error is raised, each step generates at least one validation report document on its
-        <port>report</port> port. Unless another serialization format is requested, the mandatory report document
-        <rfc2119>should</rfc2119> be valid with respect to the <biblioref linkend="xvrl"/> schema. There may be multiple
-      report documents on the <port>report</port> port, including other vocabularies such as SVRL. If a step performs
-      multiple validations, as may be the case for <code>p:validate</code>, all individual XVRL reports
-        <rfc2119>should</rfc2119> be consolidated into a single XVRL report by the step.</para>
-    <note role="editorial">
-      <para>Should the XVRL spec be built using the XProc infrastructure? I added a preliminary biblioref that points
-      to <uri>http://spec.xproc.org/xvrl/</uri></para>
-    </note>
-    <note role="editorial">
-      <para>Should we allow also text and json content types for the report port? Only as an additional alternative,
-      or instead of the XML report?</para>
-      <para>Should we add a parameter to <code>p:cast-content-type</code> that allows to convert between XML and JSON
-      XVRL serialization formats (once JSON serialization is specified for XVRL)?</para>
-    </note>
+        <port>report</port> port. Unless another format is requested, the mandatory report document for all steps
+      except <tag>p:validate-with-schematron</tag>
+        <rfc2119>should</rfc2119> be an <biblioref linkend="xvrl"/> document. A report format may be requested
+    by the <option>report-format</option> option. <impl>The supported values for the <option>report-format</option>
+    option are <glossterm>implementation-defined</glossterm>. A processor <rfc2119>should</rfc2119> at least support
+    the value “<literal>xvrl</literal>” for the XML validation steps and “<literal>svrl</literal>” for
+      <tag>p:validate-with-schematron</tag>.</impl>
+    </para>
+    <para><error code="C0117">It is a <glossterm>dynamic error</glossterm> if a <option>report-format</option> option 
+      was specified that the processor does not support.</error></para>
+    <para>If a step performs multiple validations on a single document (for example, embedded Schematron validations 
+      in a Relax NG schema), all individual XVRL reports need to be consolidated into a single XVRL report by the step.</para>
     <para>Each of the validation steps has a <option>parameters</option> option. <impl>The parameters supported by the
 validation steps and their semantics are
-        <glossterm>implementation-defined</glossterm>, and they can be different for each validation step.</impl> Keys in the
-        <literal>c</literal> namespace, <uri type="namespace">http://www.w3.org/ns/xproc-step</uri>, namely
-        <literal>c:compile</literal> and <literal>c:xvrl</literal>, hold maps themselves that control schema compilation and XVRL
-      generation, respectively. Schema compilation is, for example, the process of converting a Schematron schema into an XSLT
-      stylesheet. For the <literal>c:xvrl</literal> map, XProc implementations that implement any of the validation steps
-        <rfc2119>should</rfc2119> also support the basic parameters that are defined in the <biblioref linkend="xvrl"/>
-      specification, <literal>format</literal> and <literal>severity</literal>.</para>
+        <glossterm>implementation-defined</glossterm>, and they can be different for each validation step.</impl> A special key in the
+        <literal>c</literal> namespace, <uri type="namespace">http://www.w3.org/ns/xproc-step</uri>, called
+        <literal>c:compile</literal>, can hold a map itself that controls schema compilation. 
+      Schema compilation is, for example, the process of converting a Schematron schema into an XSLT
+      stylesheet. The <literal>c:compile</literal> map will be used as parameters for the compilation process.</para>
+    <para>Map entries in the <literal>xvrl</literal> namespace, <uri type="namespace">http://www.xproc.org/ns/xvrl</uri> 
+      will be passed as parameters to the XVRL generation process. XProc implementations that implement any of the XML validation steps
+        <rfc2119>should</rfc2119> support the basic parameters that are defined in the <biblioref linkend="xvrl"/>
+      specification, <literal>xvrl:default-severity</literal>, <literal>xvrl:language</literal>, 
+      <literal>xvrl:map-to-severity</literal>, and <literal>xvrl:xpath-notation</literal>.</para>
   </section>
 
   <section xml:id="c.validate-with-nvdl">
@@ -143,15 +132,17 @@ validation steps and their semantics are
       <p:output port="result" primary="true" content-types="xml html"/>
       <p:output port="report" sequence="true" content-types="xml json"/>
       <p:option name="assert-valid" select="true()" as="xs:boolean"/>
+      <p:option name="report-format" select="'xvrl'" as="xs:string"/>
       <p:option name="parameters" as="map(xs:QName,item()*)?"/>
     </p:declare-step>
 
     <para>The <port>source</port> document is validated using the namespace dispatching rules contained in the 
       <port>nvdl</port> document.</para>
 
-    <para>The dispatching rules may contain URI references that point to the actual schemas to be used. As long as these schemas
-      are accessible, it is not necessary to pass anything on the schemas port. However, if one or more schemas are provided on
-      the <port>schemas</port> port, then these schemas should be used in validation.</para>
+    <para>The dispatching rules may contain URI references that point to the actual schemas to be
+      used. As long as these schemas are accessible, it is not necessary to pass anything on the
+      schemas port. However, if one or more schemas are provided on the <port>schemas</port> port,
+      then these schemas should be used in validation.</para>
 
     <para><error code="C0053">It is a <glossterm>dynamic error</glossterm> if the <option>assert-valid</option> option is
           <literal>true</literal> and the input document is not valid.</error></para>
@@ -176,9 +167,8 @@ validation steps and their semantics are
   <section xml:id="c.validate-with-relax-ng">
 <title>Validate with RELAX NG</title>
 
-<para>The <tag>p:validate-with-relax-ng</tag> step applies
-<biblioref linkend="iso19757-2"/>
-validation to the <port>source</port> document.</para>
+<para>The <tag>p:validate-with-relax-ng</tag> step applies <biblioref linkend="iso19757-2"/> validation 
+  to the <port>source</port> document.</para>
 
 <p:declare-step type="p:validate-with-relax-ng">
   <p:input port="source" primary="true" content-types="xml html"/>
@@ -188,11 +178,11 @@ validation to the <port>source</port> document.</para>
   <p:option name="dtd-attribute-values" select="false()" as="xs:boolean"/>
   <p:option name="dtd-id-idref-warnings" select="false()" as="xs:boolean"/>
   <p:option name="assert-valid" select="true()" as="xs:boolean"/>
+  <p:option name="report-format" select="'xvrl'" as="xs:string"/>
   <p:option name="parameters" as="map(xs:QName,item()*)?"/>
 </p:declare-step>
 
-<para>The values of the <option>dtd-attribute-values</option> and
-<option>dtd-id-idref-warnings</option> options
+<para>The values of the <option>dtd-attribute-values</option> and <option>dtd-id-idref-warnings</option> options
 <rfc2119>must</rfc2119> be booleans.</para>
 
 <para>If the <port>schema</port> document has an XML media type, then
@@ -243,17 +233,26 @@ processing to the <port>source</port> document.</para>
 <p:declare-step type="p:validate-with-schematron">
   <p:input port="source" primary="true" content-types="xml html"/>
   <p:input port="schema" content-types="xml"/>
-  <p:output port="result" primary="true" content-types="xml"/>
+  <p:output port="result" primary="true" content-types="xml html"/>
   <p:output port="report" sequence="true" content-types="xml json"/>
   <p:option name="parameters" as="map(xs:QName,item()*)?"/>
   <p:option name="phase" select="'#DEFAULT'" as="xs:string"/>
   <p:option name="assert-valid" select="true()" as="xs:boolean"/>
+  <p:option name="report-format" select="'svrl'" as="xs:string"/>
 </p:declare-step>
 
 <para><error code="C0054">It is a <glossterm>dynamic error</glossterm>
 if the <option>assert-valid</option> option is <literal>true</literal>
 and any Schematron assertions fail or reports succeed.</error></para>
 
+    <note xml:id="note-assert-valid_schematron">
+      <para>A Schematron validation with <literal>assert-valid="true"</literal> will fail if any validation message is
+        produced by <tag>sch:assert</tag> or <tag>sch:report</tag>, even if the severity level of the failed assertion or
+        the successful report is below a certain threshold, for example if there is only an <literal>info</literal>
+        message. (The severity is conventionally conveyed by the <literal>@role</literal> attribute on <tag>sch:assert</tag> or 
+        <tag>sch:report</tag>.) </para>
+    </note>
+    
 <para>The value of the <option>phase</option> option identifies the
 Schematron validation phase with which validation begins.</para>
 
@@ -261,18 +260,25 @@ Schematron validation phase with which validation begins.</para>
 correspond to Schematron external variables, to parameters that influence
 code generation, or to parameters that influence SVRL to XVRL conversion.</para>
 
-    <para>There are multiple Schematron implementations. An XProc processor that implements this step <rfc2119>should</rfc2119>
-      at least support the <biblioref linkend="schematron-skeleton"/> implementation.</para>
-    <para><impl>How the Schematron implementation is selected is
-    <glossterm>implementation-defined</glossterm>.</impl> A processor might select an implementation based on the schema’s 
-      <code role="attribute">queryBinding</code> attribute and/or provide configuration options.</para>
+    <para>There are multiple Schematron implementations. <impl>How the Schematron implementation is selected is
+          <glossterm>implementation-defined</glossterm>.</impl> A processor might select an implementation based on the
+      schema’s <code role="attribute">queryBinding</code> attribute and/or provide configuration options. In addition,
+      the special parameter map entry <literal>c:implementation</literal> (value: QName) may be used to select a
+      Schematron implementation that the processor supports. <impl>The list of supported Schematron implementations and
+        their associated values is <glossterm>implementation-defined</glossterm>.</impl> If a requested implementation
+      is not available, the processor may throw an error or select another implementation.</para>
     
     <para>The <option>parameters</option> map may contain two special entries, <literal>c:compile</literal> and
-        <literal>c:xvrl</literal>, both are maps. If a code-generating implementation such as Skeleton is used, the entries of
-      the <literal>c:compile</literal> map, for example <literal>allow-foreign</literal>, will be passed to the code
-      generator.</para>
-    <para>The SVRL to XVRL conversion can be influenced by the entries of the <literal>c:xvrl</literal> map. <impl>Which parameters
-the SVRL to XVRL conversion supports is <glossterm>implementation-defined</glossterm>.</impl></para>
+        <literal>c:xvrl</literal>, both are maps. If a code-generating implementation such as <biblioref linkend="schematron-skeleton"/> is used, the entries of the <literal>c:compile</literal> map, for example
+        <literal>allow-foreign</literal>, will be passed to the code generator. 
+      <impl>Which parameters the 
+        <literal>c:compile</literal> map supports for a given Schematron implementation is
+          <glossterm>implementation-defined</glossterm>.</impl></para>
+    <para>If the Schematron implementation produces SVRL by default, the SVRL to XVRL conversion can be influenced by the
+      entries of the <literal>c:xvrl</literal> map. The same map, with potentially another set of allowed keys and
+      values, can be used to influence XVRL generation from another reporting language. 
+      <impl>Which parameters this conversion from native reporting format to XVRL supports is
+          <glossterm>implementation-defined</glossterm>.</impl></para>
     <para>All other parameters of the <option>parameters</option> option will be passed to the generated code if applicable,
       or to a hypothetical native Schematron validator that does without code generation.</para>
 
@@ -313,6 +319,7 @@ validity assessment to the <port>source</port> input.</para>
   <p:option name="parameters" as="map(xs:QName,item()*)?"/>
   <p:option name="mode" select="'strict'" as="xs:token" values="('strict','lax')"/>
   <p:option name="version" as="xs:string?"/>
+  <p:option name="report-format" select="'xvrl'" as="xs:string"/>
 </p:declare-step>
 
 <para>The values of the <option>use-location-hints</option>,
