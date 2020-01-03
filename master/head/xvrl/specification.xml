@@ -1,0 +1,649 @@
+<?xml-model href="../../../schema/dbspec.rnc" type="application/relax-ng-compact-syntax"?><specification xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns="http://docbook.org/ns/docbook" xml:id="xvrl" class="ed" version="5.0-extension w3c-xproc">
+  <info>
+    <title>Extensible Validation Report Language (XVRL)</title>
+    <!-- defaults to date formatted <pubdate>2014-12-18</pubdate> -->
+    <copyright>
+      <year>2019</year>
+      <holder>@@FIXME:</holder>
+    </copyright>
+
+    <bibliorelation type="isformatof" xlink:href="specification.xml">XML</bibliorelation>
+    <authorgroup>
+      <author>
+        <personname>Gerrit Imsieke</personname>
+      </author>
+      <author>
+        <personname>Matthieu Ricaud-Dussarget</personname>
+      </author>
+      <author>
+        <personname>Norman Walsh</personname>
+      </author>
+    </authorgroup>
+    <abstract>
+      <para>This specification describes a unified vocabulary for validation reports. Its main focus is to express the
+        findings of the most common XML validation languages, Schematron, XML Schema, DTD, and Relax NG. It is meant to
+        be extensible in multiple ways. It should both be able to express the results of other XML validation methods
+        and of validation methods that apply to non-XML formats such as JSON or RDF graphs (irrespective of their
+        serialization format). Another extension axis is that it allows addition of custom attributes or elements. While
+        XVRL at its core is specified in terms of an XML vocabulary with a Relax NG schema, there may also be
+        non-normative serialization formats and schemas, namely a JSON serialization and schema.</para>
+    </abstract>
+
+    <legalnotice role="status">
+      <para><emphasis>This section describes the status of this document at the time of its publication. Other documents
+          may supersede this document.</emphasis></para>
+    </legalnotice>
+  </info>
+
+  <section xml:id="introduction">
+    <title>Introduction</title>
+
+    <para>XVRL provides a unified format for expressing possibly multiple validation methods, applied to possibly 
+      multiple documents. The need arises because not every validation language has a standardized report format,
+    making it difficult to render the results of multiple validations in a single report.</para>
+  </section>
+  
+  <section xml:id="xvrl-vocabulary">
+    <title>XVRL Vocabulary</title>
+    
+    <para>XVRL elements are in the namespace <uri>http://www.xproc.org/ns/xvrl</uri>. XVRL documents may contain
+      elements in other namespaces at certain locations. The XVRL elements and attributes and their semantics are given
+      in the following lists. More details about the XVRL grammar are encoded in the Relax NG Compact Syntax version of
+      the XVRL schema, which is also normative.</para>
+    
+    <section xml:id="xvrl-vocabulary-structure">
+      <title>Document Structure</title>
+      <glosslist>
+        <glossentry xml:id="v.detection">
+          <glossterm><tag>detection</tag> element</glossterm>
+          <glossdef>
+            <para>A single finding, typically with an associated error code and/or message(s). A <tag>report</tag>
+              element primarily contains <tag>detection</tag> elements. See <xref linkend="xvrl-vocabulary-detection"/>
+              for details.</para>
+          </glossdef>
+        </glossentry>
+        <glossentry xml:id="v.digest">
+          <glossterm><tag>digest</tag> element</glossterm>
+          <glossdef>
+            <para>A <tag>report</tag> may contain a <tag>digest</tag> element in order to provide a summary of the
+                <tag>detection</tag> elements. For the distinct severity levels, counts of the <tag>detection</tag>
+              elements for a given level may be specified on <tag>digest</tag>, for example in an <tag class="attribute">@error-count</tag> attribute. In addition, the <tag class="attribute">@worst</tag> attribute may give
+              the highest severity level that occurs in the <tag>detection</tag> elements that are contained by the
+                <tag>digest</tag>’s parent element.</para>
+            <para>A <tag>digest</tag> element may occur in addition to or instead of <tag>detection</tag> elements. If
+              no <tag>detection</tag> element is included, a <tag>digest</tag> element <rfc2119>must</rfc2119> be
+              included.</para>
+            <para>All information in digest is understood to be aggregated at some point from the actual detection
+              elements. It is the responsibility of an XVRL creating/processing application to keep them up to date or
+              to remove them when the underlying detection information is changed. A digest may be inserted either
+              before or after the detection elements.</para>
+          </glossdef>
+        </glossentry>
+        <glossentry xml:id="v.metadata">
+          <glossterm><tag>metadata</tag> element</glossterm>
+          <glossdef>
+            <para>Information about the time of validation, the validator used, the document(s) under test, etc. See
+                <xref linkend="xvrl-vocabulary-metadata"/> for details.</para>
+            <para>A single <tag>metadata</tag> element need not contain all relevant metadata. Metadata infomation will
+              be inherited from surrounding <code language="xpath">reports/metadata</code> elements, that is, if a given
+                <tag>metadata</tag> does not provide <tag linkend="v.validator">validator</tag> information but the
+              parent <code language="xpath">reports/metadata</code> does, the parent’s <code language="xpath">metadata/validator</code> will also pertain
+              to the current <tag>metadata</tag> element’s siblings and their descendants, unless overridden further
+              down.</para>
+          </glossdef>
+        </glossentry>
+        <glossentry xml:id="v.report">
+          <glossterm><tag>report</tag> element</glossterm>
+          <glossdef>
+            <para>The result of a single validation method, typically using a single schema, typically applied to
+              a single document (also referred to as the <firstterm>source document</firstterm>). The individual errors
+              (or other findings) are included as <tag>detection</tag> elements.</para>
+            <note role="editorial" xml:id="ednote.naming-things">
+              <title>Naming things…</title>
+              <para>Previously, what is called “detection” here was called “report”, while a collection of detections
+                was called “validation-report”. Now this collection ist called “report”, while a collection of
+                (new-terminology) reports is now called “reports” (previously: “validation-reports”). I changed the
+                names because I didn’t think that both an individual finding and a collection of individual findings
+                should both be called a “report”, with the prefix “validation-” discerning between both. Since the
+                individual finding is also the result of a validation, there is no reason it couldn’t have been called
+                “validation-report” in the first place. It took quite some time to come up with a term for the
+                individual findings. Candidates were: “finding”, “observation”, “detection”, “incidence”, and
+                “incident”. I’m willing to rename it to something that seems more fitting.</para>
+            </note>
+          </glossdef>
+        </glossentry>
+        <glossentry xml:id="v.reports">
+          <glossterm><tag>reports</tag> element</glossterm>
+          <glossdef>
+            <para>A collection of <tag>report</tag> elements. It may contain the same <tag>metadata</tag> information as
+              a single <tag>report</tag> in order to denote common information, for example if all validations have been
+              applied to the same document or if all validations use the same schema or validation engine.</para>
+            <para><tag>reports</tag> elements may nest in order to group <tag>report</tag> elements with common sets of
+              metadata.</para>
+          </glossdef>
+        </glossentry>
+      </glosslist>
+    </section>
+    
+    <section xml:id="xvrl-vocabulary-detection">
+      <title>Detection</title>
+      <para>As described in <xref linkend="xvrl-vocabulary-structure"/>, <tag>detection</tag> is the main container for individual
+        validation findings. It contains optional <tag class="attribute" linkend="v.severity">severity</tag> and 
+        <tag class="attribute" linkend="v.code">code</tag> attributes, and the following elements in arbitrary order:</para>
+      <glosslist>
+        <glossentry xml:id="v.category">
+          <glossterm><tag>category</tag> element(s)</glossterm>
+          <glossdef>
+            <para>In order to filter or group messages for a formatted report, individual <tag>detection</tag>s may be categorized
+            according to arbitrary category systems, using the repeatable <tag>category</tag> element. Its optional attribute
+            <tag class="attribute">vocabulary</tag> can hold a string that designates the category system. There are no 
+              pre-defined values to choose from.</para>
+            <para>Categorization that applies to all <tag>detection</tag>s in a <tag>report</tag> can be included
+            in the <tag>report</tag>’s <tag>metadata</tag>.</para>
+          </glossdef>
+        </glossentry>
+        <glossentry xml:id="v.code">
+          <glossterm><tag class="attribute">code</tag> attribute</glossterm>
+          <glossdef>
+            <para>An error code. The term “error code” is used in a colloquial sense here. It need not relate to an error, but
+            to any kind of message that has a distinctive identifying string.</para>
+          </glossdef>
+        </glossentry>
+        <glossentry xml:id="v.context">
+          <glossterm><tag>context</tag> element</glossterm>
+          <glossdef>
+            <para>The purpose of this element is to present a piece of content that surrounds the element that the detection
+              pertains to. It contains an optional <tag linkend="v.location">location</tag> element, followed by (optional) 
+              arbitrary text or non-XVRL element content.</para>
+          </glossdef>
+        </glossentry>
+        <glossentry xml:id="v.location">
+          <glossterm><tag>location</tag> element</glossterm>
+          <glossdef>
+            <para>Within a single <tag>detection</tag> element, the location in the source document that the validation
+              error, warning, etc. pertains to is given by the <tag>location</tag> element’s attributes.</para>
+            <para>If not present, <tag class="attribute">href</tag> is taken from the closest ancestor’s
+                <code language="xpath">metadata/document/@href</code> attribute. If there are multiple <code language="xpath">document/@href</code>
+              attributes in the closest ancestor’s metadata, the <tag class="attribute">href</tag> attribute should not
+              be omitted on <tag>location</tag>, or at least a disambiguating relative URI should be given in the <code language="xpath">location/@href</code>
+              attribute.</para>
+            <para>The attribute <tag class="attribute">xpath</tag> contains an XPath expression that gives the location
+              within the document. The in-scope value of the attribute <tag class="attribute">xpath-default-namespace</tag>
+              that is permitted on any element may give a namespace for the element names in this XPath expression.
+              Apart from that, the <code language="xpath">Q{namespace-uri}local-name</code> syntax <rfc2119>should</rfc2119> be used, but
+              in-scope namespace prefixes or XPath predicates like <code language="xpath">[namespace-uri() = 'uri']</code> may also be
+              used.</para>
+            <para>The attributes <tag class="attribute">line</tag> and <tag class="attribute">column</tag> may also be
+              used to point at lines and columns in a textual representation of the source document.</para>
+            <para>The attribute <tag class="attribute">octet-position</tag> may be used to give the byte position
+              (1-offset) of the error. This may be useful for binary documents.</para>
+            <para>In order to support JSON document validations, the attributes <tag class="attribute">jsonpath</tag> and
+                <tag class="attribute">jsonpointer</tag> may be used.</para>
+            <para>Giving multiple alternative pointers is not forbidden. However, it is beyond the scope of this
+              specification to define mechanisms to enforce or check consistency between the attribute values. It is
+              evident that <tag class="attribute">jsonpointer</tag> or <tag class="attribute">jsonpath</tag> are
+              meaningless in the context of XML documents.</para>
+            <para>Other attributes are permitted if they are in a non-XVRL namespace.</para>
+          </glossdef>
+        </glossentry>
+        <glossentry xml:id="v.message">
+          <glossterm><tag>message</tag> element</glossterm>
+          <glossdef>
+            <para>An error message that pertains to a <tag>detection</tag>. There may be multiple <tag>message</tag>
+              elements in a single <tag>detection</tag> element, typically to convey localized versions of essentially
+              the same message. A message may contain arbitrary markup in non-XVRL namespaces. Messages are typically
+              generated for consumption by humans.</para>
+            <note xml:id="n.error-msg-code-colloquial">
+              <para>Whenever the term “error message” is used in a colloquial sense (that is, not highlighted as the
+                severity level “<literal>error</literal>” or as the XVRL element “<tag>message</tag>”) throughout this
+                specification, a <tag>detection</tag> element with any <tag class="attribute">@severity</tag> level, not
+                necessarily “<literal>error</literal>”, and any number of localized <tag>message</tag>s is implied.
+                Likewise, the term “error code” does not imply the severity level “<literal>error</literal>”.</para>
+            </note>
+          </glossdef>
+        </glossentry>
+        <glossentry xml:id="v.provenance">
+          <glossterm><tag>provenance</tag> element</glossterm>
+          <glossdef>
+            <para>In multi-step conversion pipelines it is sometimes required to save a common origin location that a portion
+            of the validated document is derived from. This may be necessary in order to patch back error messages of later 
+            conversion stages into the source document.</para>
+            <para>The optional <tag>provenance</tag> element within a <tag>detection</tag> conveys exactly this information, in a
+              contained <tag>location</tag> element that points to the provenance location in the original source document.
+                A <tag>provenance</tag> element may contain multiple <tag>location</tag> elements; it is up to processing
+              applications to discern between different roles that they may have.</para>
+            <para>Although it is possible to omit the <tag class="attribute">@href</tag> attribute in the contained
+                <tag>location</tag> elements, this URI is not inherited from a containing element’s
+                <code language="xpath">metadata/document/@href</code> attribute.</para>
+          </glossdef>
+        </glossentry>
+        <glossentry xml:id="v.severity">
+          <glossterm><tag class="attribute">severity</tag> attribute</glossterm>
+          <glossdef>
+            <para>The <tag class="attribute">severity</tag> attribute is permitted on a <tag>detection</tag> element.
+              XVRL establishes a finite set of error levels that correspond to the impact of a detected issue. Each
+                <tag>detection</tag> element may have a severity level, from highest (worst impact) to lowest, of
+                “<literal>fatal-error</literal>”, “<literal>error</literal>”, “<literal>warning</literal>”, or
+                “<literal>info</literal>”. In addition, the <tag class="attribute">severity</tag> attribute may have the
+              value “<literal>unspecified</literal>” which is equivalent to omitting the attribute.</para>
+            <note xml:id="n.severities">
+              <para>Which severity level is attached to a given error code depends on, among other things, the audience
+                that the validation report is prepared for. For Schematron’s SVRL output, the values of 
+                <code language="xpath">@role</code> will typically translate to XVRL <code language="xpath">@severity</code>
+                attributes, but this mapping may be configured, see below.</para>
+            </note>
+          </glossdef>
+        </glossentry>
+        <glossentry xml:id="v.summary">
+          <glossterm><tag>summary</tag> element(s)</glossterm>
+          <glossdef>
+            <para>An abstract of a <tag>report</tag>, a <tag>reports</tag> collection, or an individual <tag>detection</tag>.
+              This element is repeatable, for example, in order to support multiple natural languages. In the context of
+                <tag>detection</tag>, it can serve as an abridged version of a full message that contains lengthy lists and the
+              like.</para>
+          </glossdef>
+        </glossentry>
+        <glossentry xml:id="v.supplemental">
+          <glossterm><tag>supplemental</tag> element(s)</glossterm>
+          <glossdef>
+            <para>This repeatable element may contain arbitrary textual or non-XVRL element content. It may appear in
+                <tag>metadata</tag> and in <tag>detection</tag>. Its <tag class="attribute">role</tag> attribute may be used to
+              further classify the purpose of its content. Like any other XVRL element, it may be localized using the <tag class="attribute">xml:lang</tag> attribute.</para>
+            <para>Purposes can be, but are not limited to, conveying the SVRL source that the XVRL report was created from,
+              or a disclaimer, a confidentiality statement, or introductory content that should be included in a rendered report.</para>
+          </glossdef>
+        </glossentry>
+      </glosslist>
+    </section>
+    
+    <section xml:id="xvrl-vocabulary-metadata">
+      <title>Metadata</title>
+      <para>All elements in this section are optional within <tag linkend="v.metadata">metadata</tag>.
+      The order in which they appear is arbitrary. Some are repeatable.</para>
+      <glosslist>
+        <glossentry xml:id="v.creator">
+          <glossterm><tag>creator</tag> element</glossterm>
+          <glossdef>
+            <para>Information about the tool that created the source document. There is no content, only the optional attributes 
+              <tag class="attribute">@name</tag>, <tag class="attribute">@version</tag>, and <tag class="attribute">@invocation</tag>.
+            The <tag class="attribute">@invocation</tag> attribute is meant to hold a command line that contains the invocation of the 
+            program that was responsible for generating the source document. This information can be useful for later diagnosing
+            dependencies between errors and command line options.</para>
+          </glossdef>
+        </glossentry>
+        <glossentry>
+          <glossterm><tag>category</tag> element(s)</glossterm>
+          <glossdef>
+            <para>See <xref linkend="v.category"/></para>
+          </glossdef>
+        </glossentry>
+        <glossentry xml:id="v.document">
+          <glossterm><tag>document</tag> element(s)</glossterm>
+          <glossdef>
+            <para>The URI of a source document may be specified in the <tag class="attribute">href</tag> attribute.
+              In addition or instead, the document may be given as the element content.
+              See also <xref linkend="v.location"/> about inheritance of <tag class="attribute">href</tag>.</para>
+          </glossdef>
+        </glossentry>
+        <glossentry xml:id="v.schema">
+          <glossterm><tag>schema</tag> element(s)</glossterm>
+          <glossdef>
+            <para>The URI of a schema document may be specified in the <tag class="attribute">href</tag> attribute.
+              In addition or instead, the document may be given as the element content. The namespace of the 
+            schema may be given in the attribute <tag class="attribute">schematypens</tag>. The version of the 
+            schema language may be given in the attribute <tag class="attribute">version</tag>.</para>
+          </glossdef>
+        </glossentry>
+        <glossentry>
+          <glossterm><tag>summary</tag> element(s)</glossterm>
+          <glossdef>
+            <para>See <xref linkend="v.summary"/>.</para>
+          </glossdef>
+        </glossentry>
+        <glossentry>
+          <glossterm><tag>supplemental</tag> element(s)</glossterm>
+          <glossdef>
+            <para>See <xref linkend="v.supplemental"/>.</para>
+          </glossdef>
+        </glossentry>        
+        <glossentry xml:id="v.timestamp">
+          <glossterm><tag>timestamp</tag> element</glossterm>
+          <glossdef>
+            <para>&gt;The content needs to be an <literal>xsd:dateTime</literal> value, for example 
+              “<literal>2017-12-04T12:21:37.381+01:00</literal>”.</para>
+          </glossdef>
+        </glossentry>
+        <glossentry xml:id="v.title">
+          <glossterm><tag>title</tag> element(s)</glossterm>
+          <glossdef>
+            <para>The title of a <tag>report</tag>, a <tag>reports</tag> collection, or an individual <tag>detection</tag>.
+            This element is repeatable, for example, in order to support multiple natural languages.</para>
+          </glossdef>
+        </glossentry>
+        <glossentry xml:id="v.validator">
+          <glossterm><tag>validator</tag> element</glossterm>
+          <glossdef>
+            <para>Information about the validation program that generated the report(s) or the underlying messages (if XVRL was
+              not generated natively by the program). There are optional attributes <tag class="attribute">@name</tag> and <tag class="attribute">@version</tag>, both are arbitrary strings. Arbitrary text or element (in a non-XVRL namespace)
+            content may be contained, for example to describe a configuration or to include an actual configuration file.</para>
+          </glossdef>
+        </glossentry>
+      </glosslist>
+    </section>
+  </section>
+  
+  <appendix xml:id="xvrl-schema">
+    <title>The XVRL Schema</title>
+    <programlisting># Schema for XML Validation Report Language; adapted from a proposal
+# by Matthieu Ricaud incorporating some suggestions by Gerrit Imsieke
+# See https://github.com/xproc/3.0-steps/issues/15
+
+namespace a = "http://relaxng.org/ns/compatibility/annotations/1.0"
+namespace local = ""
+default namespace xvrl = "http://www.xproc.org/ns/xvrl"
+
+start = reports | report
+
+xmllang.attr = attribute xml:lang { xsd:language }
+xmlid.attr = attribute xml:id { xsd:ID }
+xmlbase.attr = attribute xml:base { xsd:anyURI }
+# Default namespace URI for location XPaths:
+xpdns.attr = attribute xpath-default-namespace { xsd:anyURI }
+anyother.attr = attribute * - (local:* | xvrl:* | xml:*) { text }
+any.attr = attribute * - xvrl:* { text }
+message.attr  = attribute (* - (xvrl:* | xml:*)) { text }
+
+
+common.attr =
+  xmllang.attr?
+  &amp; xmlid.attr?
+  &amp; xmlbase.attr?
+  &amp; xpdns.attr?
+  &amp; anyother.attr*
+
+href.attr =
+  attribute href { xsd:anyURI }
+  
+any.element = 
+  element * - xvrl:* { (any.attr | text | any.element)* }
+
+reports =
+  element reports {
+    common.attr,
+    report.metadata,
+    (report | reports | digest)+
+  }
+report =
+  element report {
+    common.attr,
+    report.metadata,
+    ((digest?, detection+) | (detection+, digest) | digest)
+  }
+
+## All information in digest is understood to be aggregated at some point from the actual detection elements. 
+## It is the responsibility of an XVRL creating/processing application to keep them up to date or to remove them 
+## when the underlying detection information is changed. If the individual detections are omitted, a digest must be present. 
+## A digest may be inserted either before or after the detection elements.
+digest =
+  element digest {
+    common.attr,
+    attribute valid { "true" | "false" | "partial" | "undetermined" }?,
+    attribute fatal-error-count { xsd:integer }?,
+    attribute error-count { xsd:integer }?,
+    attribute warning-count { xsd:integer }?,
+    attribute info-count { xsd:integer }?,
+    attribute unspecified-count { xsd:integer }?,
+    attribute fatal-error-codes { list { token* } }?,
+    attribute error-codes { list { token* } }?,
+    attribute warning-codes { list { token* } }?,
+    attribute info-codes { list { token* } }?,
+    attribute unspecified-codes { list { token* } }?,
+    attribute worst { "fatal-error" | "error" | "warning" | "info" | "nothing" | "unspecified" }?
+  }
+report.metadata =
+  element metadata {
+    common.attr,
+    (timestamp?
+     &amp; validator?
+     &amp; creator?
+     &amp; document*
+     &amp; title*
+     &amp; summary*
+     &amp; category*
+     &amp; schema*
+     &amp; supplemental*)
+  }
+
+document = 
+  element document {
+    common.attr,
+    href.attr?,
+    (text | any.element)
+  }
+  
+detection =
+  element detection {
+    common.attr,
+    attribute severity { "info" | "warning" | "error" | "fatal-error" | "unspecified" }?,
+    attribute code { text }?,
+    (location?
+     &amp; provenance?
+     &amp; title*
+     &amp; summary*
+     &amp; category*
+     &amp; (let*, message*)
+     &amp; supplemental*
+     &amp; context?)
+  }
+
+let =
+    element let {
+        common.attr,
+        attribute name { xsd:QName },
+        (attribute value {xsd:string} | (text | any.element))*
+    }
+
+value-of =
+    element value-of {
+        attribute name { xsd:QName }
+    }
+
+location = element location { location.model }
+location.model =
+  xpdns.attr?,
+  # XPaths may use the Q{namespace-uri}local-name notation.
+  attribute xpath { text }?,
+  # These are different syntaxes to address JSON documents.
+  # JSON docs may be represented as XPath maps and arrays
+  # and then addressed via, e.g., xpath=".(3)('foo')"
+  # for the 3rd array item, which is a map, and then the map’s
+  # value for the 'foo' key.
+  attribute jsonpointer { text }?,
+  attribute jsonpath { text }?,
+  attribute href { xsd:anyURI }?,
+  attribute line { xsd:positiveInteger }?,
+  attribute column { xsd:positiveInteger }?,
+  # For binary data:
+  attribute octet-position { xsd:positiveInteger }?,
+  anyother.attr*
+provenance = element provenance { location+ }
+
+message =
+  element message {
+    common.attr,
+    (text | message.element)*
+  }
+message.element =
+    element (* - (xvrl:* - xvrl:value-of)) {
+      (message.attr | text | message.element | value-of)*
+  }
+
+supplemental =
+  element supplemental { common.attr, (text | any.element)* }
+context =
+  element context {
+  common.attr, location?, (text | any.element)* }
+validator =
+  element validator {
+    common.attr,
+    attribute name { text },
+    attribute version { text }?,
+    (text | any.element)*
+  }
+creator =
+  element creator {
+    common.attr,
+    attribute name { text },
+    attribute version { text }?,
+    element invocation { text }?
+  }
+schema =
+  element schema {
+    common.attr,
+    attribute href { xsd:anyURI }?,
+    attribute schematypens { xsd:anyURI },
+    attribute version { text }?,
+    (text | any.element)?
+  }
+title = element title { common.attr, (text | any.element)* }
+summary = element summary { common.attr, (text | any.element)* }
+category =
+  element category {
+    common.attr,
+    attribute vocabulary { xsd:token }?,
+    (text | any.element)*
+  }
+timestamp = element timestamp { common.attr, xsd:dateTime }</programlisting>
+  </appendix>
+  
+  <appendix xml:id="xvrl-generation">
+    <title>Parameters for Controlling XVRL Generation</title>
+    <para>The following parameters should be understood by XVRL report generators when converting underlying validation
+      reports, for example, from SVRL or from the XProc error vocabulary, <tag>c:errors</tag> etc.</para>
+    <variablelist>
+      <varlistentry>
+        <term><literal>xvrl:default-severity</literal></term>
+        <listitem>
+          <para>When no severity is associated with a source vocabulary element that is mapped to <tag>detection</tag>,
+            this property can be specified in order to assign a default severity to any of these source vocabulary
+            constructs. It can be argued that the XProc error vocabulary, <tag>c:error</tag>, already conveys the
+            severity level <literal>error</literal>. The view that this specification takes is to regard these messages
+            as generic findings of severity “<literal>error</literal>”, but that the
+              <literal>xvrl:default-severity</literal> may be given to override this.</para>
+          <para>Implementations are free to provide other parameters, in a different namespace, that permit a more
+            detailed mapping, for example from error code to severity.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><literal>xvrl:serialization-format</literal></term>
+        <listitem>
+          <para>Anticipates future alternative serialization If no value is given, <literal>xml</literal> is assumed.
+            Other possible values may be, but are not limited to, <literal>json</literal>, <literal>rdf/xml</literal>,
+              <literal>turtle</literal>.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><literal>xvrl:language</literal></term>
+        <listitem>
+          <para>A space separated list of language abbreviations, typically according to ISO 639-1. The preferred
+            language is given first, followed by fallback languages. The result is that localized elements within a
+              <tag>detection</tag> will be reduced to messages, categories, or summaries in the preferred language.
+            Example: <literal>de en</literal> instructs the XVRL generator to include German messages only and to use an
+            English message when no German message is present. If no language matches for a given localizable element in
+            a <tag>detection</tag> context, a corresponding element with the same attributes, but with no <tag class="attribute">xml:lang</tag> attribute, should be included. Localizable elements with an <tag class="attribute">xml:lang</tag> attribute that is not listed in this property should be ignored.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><literal>xvrl:map-to-severity</literal></term>
+        <listitem>
+          <para>This parameter contains space-separated QNames that correspond to elements or attributes of an
+            underlying reporting language, in particular SVRL attributes. A value of <literal>flag role</literal>
+          instructs an SVRL to XVRL converter to preferentially map the SVRL <tag class="attribute">flag</tag> attribute
+          to the XVRL <tag class="attribute">severity</tag> attribute. If it is not present or its value cannot be mapped,
+          it should try to map the SVRL <tag class="attribute">role</tag> value to XVRL’s 
+            <tag class="attribute">severity</tag>.</para>
+          <para>The following attribute values are considered mappable, after folding the source value to lower case:
+            “information”, “informational” map to “info”; “warn” maps to “warning”; “fatal” maps to ”fatal-error”.
+            A conversion tool may consider other variants, including translations that correspond to the natural 
+          language of the corresponding error message, for mapping.</para>
+          <para>If the content of an (for example) SVRL attribute cannot be mapped, it should be attached to the corresponding
+            XVRL <tag>detection</tag> either as a category or as a namespaced attribute (that is,
+              <literal>role="foo"</literal> in SVRL may become <literal>svrl:role="foo"</literal> in XVRL, with
+          <literal>xmlns:svrl="http://purl.oclc.org/dsdl/svrl"</literal>).</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><literal>xvrl:xpath-notation</literal></term>
+        <listitem>
+          <para>This parameter controls how XPath attributes given in <tag>location</tag> elements should be structured.
+          Possible values are “<literal>Q</literal>”, “<literal>namespace-uri</literal>“, and “<literal>name</literal>”.</para>
+          <para>Example: The path <code language="xpath">/TEI/text[1]</code> in the namespace
+              <literal>http://www.tei-c.org/ns/1.0</literal> will be represented in these notations as follows:</para>
+          <variablelist>
+            <varlistentry>
+              <term><literal>Q</literal></term>
+              <listitem>
+                <para><code language="xpath">/Q{http://www.tei-c.org/ns/1.0}TEI/Q{http://www.tei-c.org/ns/1.0}text[1]</code></para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term><literal>namespace-uri</literal></term>
+              <listitem>
+                <para><code language="xpath">/*:TEI[namespace-uri()='http://www.tei-c.org/ns/1.0']/*:text[namespace-uri()='http://www.tei-c.org/ns/1.0'][1]</code></para>
+                <para>This corresponds to the parameter setting <literal>full-path-notation=1</literal> in the SVRL output 
+                  of the Schematron skeleton implementation.</para>
+              </listitem>
+            </varlistentry>
+            <varlistentry>
+              <term><literal>name</literal></term>
+              <listitem>
+                <para><code language="xpath">/tei:TEI/tei:text[1]</code></para>
+                <para>This corresponds to the parameter setting <literal>full-path-notation=2</literal> in the SVRL output 
+                  of the Schematron skeleton implementation. It takes namespace prefix declarations from the source 
+                document and it needs to copy these declarations to an appropriate location in the resulting XVRL document.</para>
+              </listitem>
+            </varlistentry>
+          </variablelist>
+          <para>If the XVRL attribute <tag class="attribute">xpath-default-namespace</tag> is present on an ancestor
+            element, the namespace URI given in this attribute on the closest ancestor should be used to omit this
+            namespace from the resulting XPath. If <literal>xpath-default-uri="http://www.tei-c.org/ns/1.0"</literal> 
+            is in force in a given context, the paths in any of the three notations should reduce to 
+            <code language="xpath">/TEI/text[1]</code>.</para>
+          <para>If an XVRL-generating application is unable to generate the preferred notation, any XPath notation that 
+          it can produce is acceptable.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+  </appendix>
+  
+  <appendix xml:id="xvrl-xslt">
+    <title>XSLT Stylesheets (Non-Normative)</title>
+    <para>As a convenience, XSLT stylesheets will be made available for the following purposes:</para>
+    <variablelist>
+      <varlistentry>
+        <term>SVRL → XVRL conversion</term>
+        <listitem>
+          <para>It is recommended that XProc processor vendors make this XSLT available under the import URI
+          <uri>http://xproc.org/xvrl/xsl/svrl2xvrl.xsl</uri>.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term><tag>c:errors</tag> → XVRL conversion</term>
+        <listitem>
+          <para>It is recommended that XProc processor vendors make this XSLT available under the import URI
+          <uri>http://xproc.org/xvrl/xsl/c-errors2xvrl.xsl</uri>.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>Filter/transform XVRL</term>
+        <listitem>
+          <para>It is recommended that XProc processor vendors make this XSLT available under the import URI
+          <uri>http://xproc.org/xvrl/xsl/xvrl2xvrl.xsl</uri>.</para>
+        </listitem>
+      </varlistentry>
+    </variablelist>
+    <para>All stylesheets accept the parameters given in <xref linkend="xvrl-generation"/>.</para>
+  </appendix>
+    
+
+</specification>
