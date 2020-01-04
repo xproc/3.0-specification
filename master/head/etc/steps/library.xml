@@ -96,11 +96,6 @@
       <p:output port="result" sequence="true" content-types="any"/>
       <p:option name="code" required="true" as="xs:QName"/>
    </p:declare-step>
-   <p:declare-step type="p:escape-markup" xml:id="escape-markup">
-      <p:input port="source" content-types="xml html"/>
-      <p:output port="result" content-types="xml html"/>
-      <p:option name="serialization" as="xs:string"/>
-   </p:declare-step>
    <p:declare-step type="p:filter" xml:id="filter">
       <p:input port="source" content-types="xml html"/>
       <p:output port="result" sequence="true" content-types="text xml html"/>
@@ -390,14 +385,6 @@
       <p:option name="content-type"
                 as="xs:string"
                 select="'application/octet-stream'"/>
-   </p:declare-step>
-   <p:declare-step type="p:unescape-markup" xml:id="unescape-markup">
-      <p:input port="source" content-types="xml html"/>
-      <p:output port="result" content-types="xml html"/>
-      <p:option name="namespace" as="xs:anyURI?"/>
-      <p:option name="content-type" as="xs:string" select="'application/xml'"/>
-      <p:option name="encoding" as="xs:string?"/>
-      <p:option name="charset" as="xs:string?"/>
    </p:declare-step>
    <p:declare-step type="p:unwrap" xml:id="unwrap">
       <p:input port="source" content-types="xml html"/>

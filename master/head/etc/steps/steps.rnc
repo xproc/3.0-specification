@@ -3,7 +3,7 @@ namespace local = ""
 
 # This schema could be made more constrained.
 
-Step = Step-add-attribute | Step-add-xml-base | Step-archive | Step-archive-manifest | Step-cast-content-type | Step-compare | Step-compress | Step-count | Step-delete | Step-error | Step-escape-markup | Step-filter | Step-hash | Step-http-request | Step-identity | Step-insert | Step-json-join | Step-json-merge | Step-label-elements | Step-load | Step-make-absolute-uris | Step-namespace-delete | Step-namespace-rename | Step-pack | Step-rename | Step-replace | Step-set-attributes | Step-set-properties | Step-sink | Step-split-sequence | Step-store | Step-string-replace | Step-text-count | Step-text-head | Step-text-join | Step-text-replace | Step-text-sort | Step-text-tail | Step-unarchive | Step-uncompress | Step-unescape-markup | Step-unwrap | Step-uuid | Step-wrap-sequence | Step-wrap | Step-www-form-urldecode | Step-www-form-urlencode | Step-xinclude | Step-xquery | Step-xslt
+Step = Step-add-attribute | Step-add-xml-base | Step-archive | Step-archive-manifest | Step-cast-content-type | Step-compare | Step-compress | Step-count | Step-delete | Step-error | Step-filter | Step-hash | Step-http-request | Step-identity | Step-insert | Step-json-join | Step-json-merge | Step-label-elements | Step-load | Step-make-absolute-uris | Step-namespace-delete | Step-namespace-rename | Step-pack | Step-rename | Step-replace | Step-set-attributes | Step-set-properties | Step-sink | Step-split-sequence | Step-store | Step-string-replace | Step-text-count | Step-text-head | Step-text-join | Step-text-replace | Step-text-sort | Step-text-tail | Step-unarchive | Step-uncompress | Step-unwrap | Step-uuid | Step-wrap-sequence | Step-wrap | Step-www-form-urldecode | Step-www-form-urlencode | Step-xinclude | Step-xquery | Step-xslt
 
 Step-add-attribute =
   element add-attribute {
@@ -114,16 +114,6 @@ Step-error =
     use-when.attr?,
     step.attributes,
     attribute code { xsd:QName }?,
-    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
-  }
-
-Step-escape-markup =
-  element escape-markup {
-    name.ncname.attr?,
-    common.attributes,
-    use-when.attr?,
-    step.attributes,
-    attribute serialization { xsd:string }?,
     (WithInput* & WithOption* & (Documentation|PipeInfo)*)
   }
 
@@ -448,19 +438,6 @@ Step-uncompress =
     attribute format { xsd:QName? }?,
     attribute parameters { xsd:string }?,
     attribute content-type { xsd:string }?,
-    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
-  }
-
-Step-unescape-markup =
-  element unescape-markup {
-    name.ncname.attr?,
-    common.attributes,
-    use-when.attr?,
-    step.attributes,
-    attribute namespace { xsd:anyURI? }?,
-    attribute content-type { xsd:string }?,
-    attribute encoding { xsd:string? }?,
-    attribute charset { xsd:string? }?,
     (WithInput* & WithOption* & (Documentation|PipeInfo)*)
   }
 
