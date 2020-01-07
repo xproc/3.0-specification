@@ -1373,598 +1373,365 @@ other kind of node, the entire node (and <emphasis>not</emphasis> just
 <title>p:http-request</title>
 
 <para>The <code>p:http-request</code> step provides for interaction
-with resources over HTTP or related protocols.
-The input
-document provided on the <port>source</port> port specifies a request
-by a single <tag>c:request</tag> element. This element specifies
-the method, resource, and other request properties as well as possibly
-including an entity body (content) for the request.</para>
+with resources over HTTP or related protocols.</para>
 
 <p:declare-step type="p:http-request">
-  <p:input port="source" content-types="any"/>
-  <p:output port="result" sequence="true" content-types="any"/>
+  <p:input port="source" content-types="any" sequence="true"/>
+  <p:output port="result" primary="true" content-types="any" sequence="true"/>
+  <p:output port="report" content-types="application/json"/>
+  <p:option name="href" as="xs:anyURI" required="true"/>
+  <p:option name="method" as="xs:string?" select="'GET'"/>
   <p:option name="serialization" as="map(xs:QName,item()*)?"/>
+  <p:option name="headers" as="map(xs:string, xs:string)?"/>
+  <p:option name="auth" as="map(xs:string, item()+)?"/>
+  <p:option name="parameters" as="map(xs:QName, item()*)?"/>
+  <p:option name="assert" as="xs:string" select="'.?status-code lt 400'"/>
 </p:declare-step>
-
-<para>The <option>serialization</option> option is provided to control the
-serialization of any content which is sent as part of the request.
-The effect of these options is as specified in <biblioref linkend="xproc30"/>.
-See <link linkend="c.request_body"/> for a discussion of when serialization
-occurs in constructing a request.</para>
-
-<para><error code="C0040">It is a <glossterm>dynamic error</glossterm>
-if the document element of the document that arrives on the
-<port>source</port> port is not <tag>c:request</tag>.</error></para>
-
-<note xml:id="ednote-json" role="editorial">
-<title>Editorial Note</title>
-<para>Can the input document be JSON?</para>
-</note>
-
-<section xml:id="cv.request">
-<title>Specifying a request</title>
-
-<para>An HTTP request is represented by a <tag>c:request</tag> element.</para>
-
-<e:rng-pattern name="VocabHttpRequest"/>
-
-<para><error code="C0006">It is a <glossterm>dynamic error</glossterm> if the
-<tag class="attribute">method</tag> is not specified on a <tag>c:request</tag>.
-</error>
-<error code="C0005">It is a <glossterm>dynamic error</glossterm> if the
-request contains a <tag>c:body</tag> or <tag>c:multipart</tag> but the
-<tag class="attribute">method</tag> does not allow for an entity body being sent with the request.</error></para>
-
-<para><error code="C0004">It is a <glossterm>dynamic error</glossterm> if the
-<code>status-only</code> attribute has the value <literal>true</literal> and
-the <code>detailed</code> attribute does not have the value <literal>true</literal>.</error></para>
-
-<para>The <code>method</code> attribute specifies the method to be
-used against the IRI specified by the <code>href</code> attribute,
-e.g. <code>GET</code> or <code>POST</code> (the value is not case-sensitive).
-If the <code>href</code>
-attribute is not absolute, it will be resolved against the base URI of
-the element on which it is occurs.</para>
-
-<note xml:id="note-http-get">
-<para>In the case of simple “GET” requests, implementors are encouraged
-to support as many protocols as practical. In particular, pipeline authors may
-attempt to use <tag>p:http-request</tag> to load documents with computed
-URIs using the <literal>file:</literal> scheme.</para></note>
-
-<para>If the <code>username</code> attribute is specified, the
-<code>username</code>, <code>password</code>,
-<code>auth-method</code>, and <code>send-authorization</code>
-attributes are used to handle authentication according to the selected
-authentication method.</para>
-
-<para>For the purposes of avoiding an authentication challenge, if the
-<code>send-authorization</code> attribute has the value
-<literal>true</literal> and the authentication method specified by the
-<code>auth-method</code> supports generation of an
-<code>Authorization</code> header without a challenge, then an
-<code>Authorization</code> header is generated and sent on the first
-request. If the <code>send-authorization</code> attribute is absent or
-has the value
-<literal>false</literal>, then the first request is sent without an
-<code>Authorization</code> header.</para>
-
-<para>If the initial response to the request is an
-authentication challenge, the <code>auth-method</code>,
-<code>username</code>, <code>password</code> and any relevant data from
-the challenge are used to generate an
-<code>Authorization</code> header and the request is sent again. If
-that authorization fails, the request is not retried.</para>
-
-<para>Appropriate values for the <code>auth-method</code> attribute
-are “Basic” or “Digest” but other values are allowed.
-If the authentication method is “Basic” or “Digest”, authentication
-is handled as per <biblioref linkend="rfc2617"/>.
-<impl>The
-interpretation of <code>auth-method</code> values on
-<tag>c:request</tag> other than “Basic” or “Digest” is
-<glossterm>implementation-defined</glossterm>.</impl></para>
-
-<para><error code="C0003">It
-is a <glossterm>dynamic error</glossterm> if a <option>username</option>
-or <option>password</option> is specified without specifying an
-<option>auth-method</option>, if
-the requested
-<option>auth-method</option> isn't supported, or the authentication
-challenge contains an authentication method that isn't
-supported.</error> All implementations are required to support "Basic"
-and "Digest" authentication per <biblioref linkend="rfc2617"/>.</para>
-
-<para>The attribute <code>timeout</code> controls the time the XProc processor is
-waiting for the request to be answered. If a value is given for <code>timeout</code>
-it is taken as the number of seconds to wait for the response to be delivered.
-If no response is received after that time, the request is terminated.</para>
-
-<itemizedlist>
-<listitem>
-<para><error code="C0078">It is a <glossterm>dynamic error</glossterm>
-if <option>fail-on-timeout</option> is specified as
-<literal>true</literal> and a value is given for
-<option>timeout</option> and the <tag>p:http-request</tag> is not finished in the
-time specified by <option>timeout</option>.</error>
-</para>
-</listitem>
-<listitem>
-<para>If <code>fail-on-timeout</code> is <literal>false</literal>, a
-<code>c:response</code> document with <code>status=408</code> is
-generated.</para>
-</listitem>
-<listitem>
-<para>If no value is given for <code>fail-on-timeout</code>,
-<literal>false</literal> is assumed. If no value is given for
-<code>timeout</code>, <code>fail-on-timeout</code> is ignored.</para>
-</listitem>
-</itemizedlist>
-
-<note>
-<title>Note</title>
-<para>Please note the difference between option <code>p:timeout</code>
-on <code>p:http-request</code> and the attribute <code>timeout</code>
-in combination with <code>fail-on-timeout="true"</code> on
-<code>c:request</code>. If the step does not finish in the set time,
-<code>D0053</code> is raised. If the request does not finish in time
-and fail-on-timeout is true, <code>C0078</code> is raised. The actual
-times after which a timeout is detected may also differ slightly.
-</para>
-</note>
-
-  <para>The <code>c:header</code> element specifies a
-header name and value, either for inclusion in a request, or as received in a response.</para>
-
-<e:rng-pattern name="VocabHeader" xml:id="cv.header"/>
-
-<para>The request is formulated from the attribute values on the
-<tag>c:request</tag> element and its
-<tag>c:header</tag> and <tag>c:multipart</tag> or <tag>c:body</tag> children,
-if present, and transmitted to the host (and port, if present) specified by the
-<code>href</code> attribute.  The details of how the request entity body, if any, is
-constructed are given in <xref linkend="c.response_body"/>.</para>
-
-<para>When the request is formulated, the step and/or protocol
-implementation may add headers as necessary to either complete the
-request or as appropriate for the content specified (e.g. transfer
-encodings). A user of this step is guaranteed that their requested
-headers and content will be sent with the exception of any conflicts
-with protocol-related headers.</para>
-
-<para>The <tag>p:http-request</tag> step allows users to specify
-independently values that are not always independent. For example,
-some combinations of <tag>c:header</tag> values
-(e.g., <literal>Content-Type</literal>)
-may be inconsistent
-with values that the step and/or protocol implementation must set. In
-a few cases, the step provides more than one mechanism to specify what
-is actually a single value (e.g., the boundary string in multipart
-messages).
-<error code="C0020">It is a
-<glossterm>dynamic error</glossterm> if the the user specifies a value
-or values that are inconsistent with each other or with the requirements
-of the step or protocol.</error>
-</para>
-</section>
-
-<section xml:id="c.request_body">
-<title>Request Entity body conversion</title>
-
-<para>The <code>c:multipart</code> element specifies a multi-part
-body, per <biblioref linkend="rfc2046"/>, either for inclusion in a
-request or as received in a response.</para>
-
-<e:rng-pattern name="VocabMultipart" xml:id="cv.multipart"/>
-
-<para>In the context of a request, the media type of the
-<tag>c:multipart</tag> <rfc2119>must</rfc2119> be a multipart media
-type (i.e. have a main type of 'multipart'). If the
-<code>content-type</code> attribute is not specified, a value of
-“<literal>multipart/mixed</literal>” will be assumed. (<impl>Whether
-or not, and to what extent, “<literal>multipart/byte-ranges</literal>”
-responses are supported is
-<glossterm>implementation-defined</glossterm>.)</impl>
-</para>
-
-<para>The <code>boundary</code> attribute is required and is used to
-provide a multipart boundary marker. The implementation must use this
-boundary marker and must prefix the value with the string
-“<literal>--</literal>” when formulating the multipart message. <error code="C0002">It is a <glossterm>dynamic error</glossterm> if the value
-starts with the string “<literal>--</literal>”.</error></para>
-
-<para>If the boundary is also specified as a parameter in the
-<option>content-type</option> option, then the parameter value specified
-and the <option>boundary</option> value specified <rfc2119>must</rfc2119>
-be the same. If the boundary is specified in both the <option>boundary</option>
-option and the <option>content-type</option> option then the two values
-<rfc2119>must</rfc2119> be the same.</para>
-
-<para>The <tag>c:body</tag> element holds the body or body part of the message.  Each of the attributes holds controls some aspect of the encoding the request body or decoding the body element's content when the request is formulated.  These are specified as follows:</para>
-
-<e:rng-pattern name="VocabBody" xml:id="cv.body"/>
-
-<para>The <code>content-type</code> attribute specifies the media type
-of the body or body part, that is, the value of its
-<code>Content-Type</code> header. If the media type is not an XML type
-or text, the content must already be base64-encoded.</para>
-
-<para>The <code>encoding</code> attribute controls the decoding of the
-element content for formulating the body. A value of
-<literal>base64</literal> indicates the element's content is a base64
-encoded string whose byte stream should be sent as the message body.
-<impl>An implementation may support encodings other than
-<literal>base64</literal> but these encodings and their names are
-<glossterm>implementation-defined</glossterm>.</impl>
-<error code="C0052">It is a <glossterm>dynamic
-error</glossterm> if the encoding specified is not supported by the
-implementation.</error></para>
-
-<note xml:id="note-single-set-ser">
-<para>The <tag>p:http-request</tag> step provides only a single set of
-serialization options for XML media types. There's no direct support
-for sending a multipart message with two XML parts encoded
-differently.</para>
-</note>
-
-<para>For each body or body part, the <code>id</code> attribute
-specifies the value of the <code>Content-ID</code> header;
-the <code>description</code> attribute specifies the
-value of the <code>Content-Description</code> header;
-and the <code>disposition</code> attribute specifies the value
-of the <code>Content-Disposition</code> header.
-</para>
-
-<para>If an entity body is to be sent as part of a request (e.g. a
-<code>POST</code>), either a <tag>c:body</tag> element, specifying the
-request entity body, or a <tag>c:multipart</tag> element, specifying
-multiple entity body parts, may be used. When <tag>c:multipart</tag>
-is used it may contain multiple <tag>c:body</tag> children. A
-<tag>c:body</tag> specifies the construction of a body or body part as
-follows:</para>
-
-<para>If the <code>content-type</code> attribute does not specify an
-XML media type, or the <code>encoding</code> attribute is
-“<literal>base64</literal>”, then <error code="C0028">it is a
-<glossterm>dynamic error</glossterm> if the content of the
-<tag>c:body</tag> element does not consist entirely of
-characters</error>, and the entity body or body part will consist of
-exactly those characters.</para>
-
-<para>Otherwise (the <code>content-type</code> attribute
-<emphasis>does</emphasis> specify an XML media type and the
-<code>encoding</code> attribute is <emphasis>not</emphasis> 'base64'),
-<error code="C0022">it is a <glossterm>dynamic error</glossterm> if
-the content of the <tag>c:body</tag> element does not consist of
-exactly one element, optionally preceded and/or followed by any number
-of processing instructions, comments or whitespace characters</error>,
-and the entity body or body part will consist of the serialization of
-a document node containing that content. The serialization of that
-document is controlled by the serialization options on the
-<code>p:http-request</code> step itself.</para>
-
-<para>For example, the following input to a
-<code>p:http-request</code> step will POST a small XML
-document:</para>
-
-<programlisting language="xml">&lt;c:request method="POST" href="http://example.com/someservice"&gt;
-&lt;c:body xmlns:c="http://www.w3.org/ns/xproc-step" content-type="application/xml"&gt;
-&lt;doc&gt;
-&lt;title&gt;My document&lt;/title&gt;
-&lt;/doc&gt;
-&lt;/c:body&gt;
-&lt;/c:request&gt;
-</programlisting>
-  <para>The corresponding request should look something like this:</para>
-
-  <programlisting language="xml">POST http://example.com/someservice HTTP/1.1
-Host: example.com
-Content-Type: application/xml; charset="utf-8"
-
-&lt;?xml version='1.0'?&gt;
-&lt;doc&gt;
-&lt;title&gt;My document&lt;/title&gt;
-&lt;/doc&gt;
-</programlisting>
-</section>
-
-<section xml:id="c.request_response">
-<title>Managing the response</title>
-
-<note xml:id="ednote-content-types" role="editorial">
-<para>Where do we say that for URI schemes (such as
-<code>file:</code> and <code>ftp:</code>) where a content type is not
-provided by the underlying request, the content type is
-implementation-dependent?</para>
-</note>
-
-<para>The handling of the response to the request and the generation
-of the step's result document is controlled by the
-<code>status-only</code>, <code>override-content-type</code> and
-<code>detailed</code> attributes on the <tag>c:request</tag>
-input.</para>
-
-<para>The <code>override-content-type</code> attribute controls
-interpretation of the response's <code>Content-Type</code> header. If
-this attribute is present, the response will be treated as if it
-returned the <code>Content-Type</code> given by its value. This
-original <code>Content-Type</code> header will however be reflected
-unchanged as a <tag>c:header</tag> in the result document. <error code="C0030">It is a <glossterm>dynamic error</glossterm> if the
-<code>override-content-type</code> value cannot be used (e.g.
-<code>text/plain</code> to override
-<code>image/png</code>).</error></para>
-
-<para>If the <code>override-content-type</code> includes an encoding
-parameter, then that encoding <rfc2119>must</rfc2119> be used to
-read the document.</para>
-
-<para>If the <code>status-only</code> attribute has the value
-<literal>true</literal>, the result document will contain only header
-information. The entity of the response will not be processed to
-produce a <tag>c:body</tag> or <tag>c:multipart</tag> element.</para>
-
-<para>The <tag>c:response</tag> element represents an HTTP response.
-The response's status code is encoded in the <code>status</code>
-attribute and the headers and entity body are processing into
-<tag>c:header</tag> and <tag>c:multipart</tag> or <tag>c:body</tag>
-content.</para>
-
-<e:rng-pattern name="VocabHttpResponse" xml:id="c.response"/>
-
-<para>The value of the <code>detailed</code> attribute determines the
-content of the result document. If it is <literal>true</literal>, the
-response to the request is handled as follows:</para>
-
-<orderedlist>
-<listitem><para>A single <tag>c:response</tag> element is produced with the <code>status</code> attribute containing the status of the response received.</para></listitem>
-<listitem><para>Each response header is translated into a <tag>c:header</tag> element.</para></listitem>
-<listitem><para>Unless the <code>status-only</code> attribute has a value
-<literal>true</literal>, the entity body of the response is converted into
-a <tag>c:body</tag> or <tag>c:multipart</tag> element via the rules given in
- <xref linkend="c.response_body"/>.</para></listitem>
-</orderedlist>
-
-<para>Otherwise (the <code>detailed</code> attribute is not specified
-or its value is <literal>false</literal>), the response to the request
-is handled as follows:</para>
-
-<orderedlist>
-<listitem><para>If the media type (as determined by the
-<code>override-content-type</code> attribute or the
-<code>Content-Type</code> response header) is an XML media type, the
-entity is decoded if necessary, then parsed as an XML document:</para>
-
-<itemizedlist>
-<listitem>
-<para>The parser which <tag>p:http-request</tag> employs
-<rfc2119>must</rfc2119> process the external subset; all general and
-external parsed entities <rfc2119>must</rfc2119> be fully expanded.</para>
-
-<note xml:id="ednote-parser" role="editorial">
-<title>Editorial Note</title>
-<para>The requirement to process the external subset comes from p:load,
-we probably don't want to impose that on all p:http-request calls.
-Need a way to control it?</para>
-</note>
-
-</listitem>
-<listitem>
-<para>It
-<rfc2119>may</rfc2119> perform <tag class="attribute">xml:id</tag>
-processing, but it <rfc2119>must not</rfc2119> perform any other
-processing, such as expanding XIncludes.</para>
-</listitem>
-<listitem>
-<para>The parser
-<rfc2119>must</rfc2119> be conformant to <citetitle>Namespaces in
-XML</citetitle>.</para>
-</listitem>
-<listitem>
-<para>Parsing the document
-<rfc2119>must not</rfc2119> fail due to validation errors.
-</para>
-</listitem>
-</itemizedlist>
-
-<para>The resulting XML document is
-produced on the <code>result</code> output port as the entire output
-of the step.</para>
-
-</listitem>
-<listitem><para>Otherwise, the entity body of the response is converted into
-a <tag>c:body</tag> or <tag>c:multipart</tag> element via the rules given in
-<xref linkend="c.response_body"/>.</para></listitem>
-</orderedlist>
-
-<para>In either case the base URI of the output document is the resolved value
-of the <code>href</code> attribute from the input <tag>c:request</tag>.</para>
-
-<section xml:id="redirects">
-<title>Redirects</title>
-
-<para>One possible response from an HTTP request is a redirect,
-indicated by a status code in the three-hundred range. The precise
-semantics of the 3xx return codes are laid out by section
-<citetitle>10.3 Redirection 3xx</citetitle> in <biblioref linkend="rfc2616"/>.
-</para>
-
-<para>The <tag>p:http-request</tag> step <rfc2119>should</rfc2119> follow
-redirect requests (in a manner consistent with <biblioref linkend="rfc2616"/>)
-if they are returned by the server.
-</para>
-</section>
-
-<section xml:id="cookies">
-<title>Cookies</title>
-
-<para>With one exception, in version 1.0 of XProc, the
-<tag>p:http-request</tag> step does not provide any standard
-mechanisms for managing cookies. <impl>Pipeline authors that need to
-preserve cookies across several <tag>p:http-request</tag> calls in the
-same pipeline or across multiple invocations of the same or different
-pipelines will have to rely on
-<glossterm>implementation-defined</glossterm> mechanisms.</impl>
-</para>
-
-<para>The exception arises in the case of redirection. If a redirect
-response includes cookies, those cookies <rfc2119>should</rfc2119> be
-forwarded as appropriate to the redirected location when the
-redirection is followed.</para>
-
-<para>This behavior will allow the <tag>p:http-request</tag> step to
-interoperate with web services that use cookies as part of an
-authentication protocol.</para>
-
-</section>
- </section>
-
-<section xml:id="c.response_body">
-<title>Converting Response Entity Bodies</title>
-
-<para>The entity of a response may be multipart per <biblioref linkend="rfc2046"/>. In those situations, the result document will be
-a <tag>c:multipart</tag> element that contains multiple
-<tag>c:body</tag> elements inside.</para>
-
-<note xml:id="note-multipart-multipart">
-<para>Although it is technically possible for any of the individual
-parts of a multipart message to <emphasis>also</emphasis> be
-multipart, XProc does not provide a standard representation for such
-messages. <impl>The interpretation of a multipart message inside
-another multipart message is
-<glossterm>implementation-dependent</glossterm>.</impl></para>
-</note>
-
-<para>The result of the <tag>p:http-request</tag> step is an XML
-document. For media types (images, binaries, etc.) that can't be
-represented as a sequence of Unicode characters, the response is
-encoded as <literal>base64</literal>
-and then returned as text children of the <tag>c:body</tag> element.
-If the content is base64-encoded, the <tag class="attribute">encoding</tag> attribute on <tag>c:body</tag> must
-be set to “<literal>base64</literal>”.</para>
-
-<note xml:id="ednote-non-xml" role="editorial">
-<title>Editorial Note</title>
-<para>This section hasn't been updated to reflect the fact that
-non-XML documents are now possible. It should probably say
-something like:</para>
-<para>If the document identified has a non-XML content type, no extra
-processing is mandated. The number and variety of media types
-that an implementation can load is
-implementation-defined.</para>
-</note>
-
-<para>If the media type of the response
-is a text type with a
-<code>charset</code> parameter that is a Unicode character encoding
-(per <biblioref linkend="unicodetr17"/>) or
-is recognized as a non-XML media type whose contents are encoded as a
-sequence of Unicode characters (e.g. it has a character parameter or
-the definition of the media type is such that it requires Unicode),
-the content of the constructed <tag>c:body</tag> element is the translation
-of the text into a sequence of Unicode characters.</para>
-
-<para>If the response is an XML media type, the content of the
-constructed <tag>c:body</tag> element is the result of decoding the
-body as necessary, then parsing it with an XML parser.</para>
-
-<itemizedlist>
-<listitem>
-<para>The parser which <tag>p:http-request</tag> employs
-<rfc2119>must</rfc2119> process the external subset; all general and
-external parsed entities <rfc2119>must</rfc2119> be fully expanded.</para>
-
-<note xml:id="ednote-parser" role="editorial">
-<title>Editorial Note</title>
-<para>The requirement to process the external subset comes from p:load,
-we probably don't want to impose that on all p:http-request calls.
-Need a way to control it?</para>
-</note>
-
-</listitem>
-<listitem>
-<para>It
-<rfc2119>may</rfc2119> perform <tag class="attribute">xml:id</tag>
-processing, but it <rfc2119>must not</rfc2119> perform any other
-processing, such as expanding XIncludes.</para>
-</listitem>
-<listitem>
-<para>The parser
-<rfc2119>must</rfc2119> be conformant to <citetitle>Namespaces in
-XML</citetitle>.</para>
-</listitem>
-<listitem>
-<para>Parsing the document
-<rfc2119>must not</rfc2119> fail due to validation errors.
-</para>
-</listitem>
-</itemizedlist>
-
-<para>If the content
-is not well-formed, the step fails.</para>
-
-<note xml:id="ednote-combine-parsing" role="editorial">
-<title>Editorial Note</title>
-<para>This prose should be consolidated into a single place.</para>
-</note>
-
-<para>In a <tag>c:body</tag> in a response, the
-<tag class="attribute">content-type</tag> attribute <rfc2119>must</rfc2119>
-be an exact copy of the value returned in the
-<literal>Content-Type</literal> header. That is, it must reflect the
-content type actually returned, not any override value that may have been
-specified, and it must include any parameters returned by the server.</para>
-
-<para>In the case of a multipart response, the same rules apply when
-constructing a <tag>c:body</tag> element for each body part
-encountered.</para>
-
-<note xml:id="note-text-html">
-<para>Given the above description, any content identified as
-<code>text/html</code> will be encoded as (escaped) text or
-base64-encoded in the <tag>c:body</tag> element, as HTML isn't always
-well-formed XML. A user can attempt to convert such content into XML
-using the <tag>p:unescape-markup</tag> step.</para>
-</note>
-</section>
-
-<section xml:id="example-http-request">
-<title>HTTP Request Example</title>
-
-<para>A simple form might be posted as follows:</para>
-<programlisting language="xml">&lt;c:request method="POST" href="http://www.example.com/form-action" xmlns:c="http://www.w3.org/ns/xproc-step"&gt;
-&lt;c:body content-type="application/x-www-form-urlencoded"&gt;
-name=W3C&amp;amp;spec=XProc
-&lt;/c:body&gt;
-&lt;/c:request&gt;</programlisting>
-<para>and if the response was an XHTML document, the result document would be:</para>
-<programlisting language="xml">&lt;c:response status="200" xmlns:c="http://www.w3.org/ns/xproc-step"&gt;
-&lt;c:header name="Date" value=" Wed, 09 May 2007 23:12:24 GMT"/&gt;
-&lt;c:header name="Server" value="Apache/1.3.37 (Unix) PHP/4.4.5"/&gt;
-&lt;c:header name="Vary" value="negotiate,accept"/&gt;
-&lt;c:header name="TCN" value="choice"/&gt;
-&lt;c:header name="P3P" value="policyref='http://www.w3.org/2001/05/P3P/p3p.xml'"/&gt;
-&lt;c:header name="Cache-Control" value="max-age=600"/&gt;
-&lt;c:header name="Expires" value="Wed, 09 May 2007 23:22:24 GMT"/&gt;
-&lt;c:header name="Last-Modified" value="Tue, 08 May 2007 16:10:49 GMT"/&gt;
-&lt;c:header name="ETag" value="'4640a109;42380ddc'"/&gt;
-&lt;c:header name="Accept-Ranges" value="bytes"/&gt;
-&lt;c:header name="Keep-Alive" value="timeout=2, max=100"/&gt;
-&lt;c:header name="Connection" value="Keep-Alive"/&gt;
-&lt;c:body content-type="application/xhtml+xml"&gt;
-&lt;html xmlns="http://www.w3.org/1999/xhtml"&gt;
-&lt;head&gt;&lt;title&gt;OK&lt;/title&gt;&lt;/head&gt;
-&lt;body&gt;&lt;p&gt;OK!&lt;/p&gt;&lt;/body&gt;
-&lt;/html&gt;
-&lt;/c:body&gt;
-&lt;/c:response&gt;</programlisting>
-</section>
-
+  
+<para>In the most simple case, the HTTP request is controlled by the <option>href</option>
+option and the <option>method</option> option which defaults to 
+“<literal>GET</literal>”. The <option>method</option> option specifies the method 
+  to be used against the IRI specified by the <option>href</option>, 
+  e.g. GET or POST.</para>
+  
+<para>The request body is constructed using the document(s) appearing on the 
+<port>source</port> port. If exactly one document appears on that port, the 
+<option>serialization</option> option is used to
+control the serialization for this document in the request body. If the document 
+has a “<literal>serialization</literal>” property,
+the serialization is controlled by the merger of the two maps, where the entries in the
+“<literal>serialization</literal>” property take precedence. If more than one document 
+appears on the <port>source</port> port, the <option>serialization</option> option is
+ignored and serialization is controlled exclusively by the  “<literal>serialization</literal>” 
+properties of the separate documents. If no document appears on the <port>source</port> port, the request body will be
+empty. The request headers are constructed using the map provided with the <option>headers</option>
+options.</para>
+  
+  <note xml:id="note-http-methods">
+    <para>Implementors are encouraged
+      to support as many protocols as practical. In particular, pipeline authors may
+      attempt to use <tag>p:http-request</tag> to load documents with computed
+      URIs using the <literal>file:</literal> scheme.</para></note>
+  
+<para>The results of performing an HTTP request will appear on the <port>result</port>
+port and the <port>report</port> port. If the request was successful, the documents
+contained in the message body (if any) will appear on the <port>result</port> port. The
+distinction between XML documents, HTML documents, text documents etc. is made  using the
+response header's “<literal>Content-Type</literal>” or the entry “<literal>content-type</literal>”
+in the map provided as the <option>parameters</option> option (see below).
+The response's status code and the response's header fields will be made available on
+the <port>response</port> port as a <literal>map</literal>. The keys 
+“<literal>status-code</literal>” (associated with an instance of <code>xs:integer</code>) 
+and “<literal>headers</literal>” (associated with a <code>map(xs:string, xs:string)</code>)
+will always be present, although the map may be empty. Header names are
+converted to uppercase.</para>
+  
+<para>For the convenience of pipeline authors, <tag>p:http-request</tag> accepts documents
+on the <port>source</port> port even when the semantics of sending a payload with the
+specified request method (like “<literal>GET</literal>” or “<literal>HEAD</literal>”) is not defined. 
+For those methods the documents on the <port>source</port> are ignored when constructing
+  the request, unless the <option>parameters</option> option associates the key 
+  “<literal>send-body-anyway</literal>” explicitly with <code>true()</code>.</para>
+  
+<para>The <tag>p:http-request</tag> step has the following options:</para>
+  <variablelist>
+    <varlistentry>
+      <term><option>href</option></term>
+      <listitem>
+        <para>The <option>href</option> specifies the request's IRI. Relative values are resolved against the base URI of 
+                 the element on which the option is 
+          specified (<tag>p:with-option</tag>  or the step in case of a syntactic shortcut value).</para>
+        <para>Fragment identifiers will be removed. Query parameters are
+          passed through unchanged.</para>
+        <note xml:id="http-uri-query" role="editorial">
+          <title>Editorial Note</title>
+          <para>What do we say about URI escaping?</para>
+        </note>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term><option>method</option></term>
+      <listitem>
+        <para>The <option>method</option> specifies the request's method. The value is implicitly
+        turned into an uppercase string if necessary. <impl>It is <glossterm>implementation defined</glossterm>
+          which HTTP methods are supported.</impl> An implementation <rfc2119>should</rfc2119> at least implement
+          the methods <literal>GET</literal>, <literal>POST</literal>, <literal>PUT</literal>, 
+          <literal>DELETE</literal>, and <literal>HEAD</literal> (for HTTP). <error code="CXXX1">It is a
+          <glossterm>dynamic error</glossterm> if the given method is not supported.</error></para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term><option>serialization</option></term>
+      <listitem>
+        <para>If present, the map provided for the <option>serialization</option> option is used to
+        control the serialization of the documents on the <port>source</port> port. If one of this 
+          documents has a “<literal>serialization</literal>” property,
+          the serialization is controlled by the merger of the two maps where the entries in the
+          “<literal>serialization</literal>” property takes precedence.</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term><option>headers</option></term>
+      <listitem>
+        <para>If present, the key/value pairs are used to construct the request headers. The request
+        headers effectively to be send are constructed as follow:</para>
+          <orderedlist>
+            <listitem><para>If exactly one document appears on the <port>source</port> port, the document 
+              property except “<literal>base-uri</literal>” and “<literal>serialization</literal>” will be 
+              taken as request headers. Otherwise an empty map is used for the following construction steps.</para>
+            </listitem>
+            <listitem>
+              <para>This header map is then merged with the entries of the <option>headers</option> option
+                (if present), where the latter takes precedence. This means for instance that the document property 
+                “<literal>content-type</literal>” is overwritten by an entry for “<literal>Content-Type</literal>” 
+                (in the map provided for the <option>headers</option> option).</para>
+            </listitem>
+            <listitem>
+              <para>Any entry for key “<literal>Authorization</literal>” is then overwritten or removed according
+              to the values provided for the <option>auth</option> option (if present).</para>
+            </listitem>
+          </orderedlist>
+          <para>As HTTP headers are case-insensitive but keys in maps are, be careful when specifying
+            the request's headers. <error code="CXXX6">It is a <glossterm>dynamic error</glossterm> if the 
+              effective map from which the HTPP headers are constructed contains two keys which are case-blind
+            equal (<code>fn:uppercase($key1) = fn:uppercase($key2)</code>)</error></para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term><option>auth</option></term>
+      <listitem>
+        <para>The map provided for the <option>auth</option> is used to control the authentication process for
+        the HTTP request. If no value or an empty map is provided, the value provided for
+        HTTP header “<literal>Authorization</literal>” (if present) is used as authentication. The following keys and 
+          the expected type of their associated values are predefined: “<literal>username</literal>” (<code>xs:string</code>),
+          “<literal>password</literal>” (<code>xs:string</code>), “<literal>method</literal>” (<code>xs:string</code>),
+          "<literal>preemptive-auth</literal>” (<code>xs:boolean</code>), and “<literal>certificates</literal>”
+          (<code>map(xs:string, item()+)+</code>). <impl>Other key value pairs in map “<literal>auth</literal>” are 
+            <glossterm>implementation defined</glossterm>.</impl> <error code="CXXX2">It is a <glossterm>dynamic
+              error</glossterm> if any key in the “<literal>auth</literal>” map  is associated with a value that is
+            not an instance of the required type.</error></para>
+        <para>For the purposes of avoiding an authentication challenge, if the “<literal>send-authorization</literal>”
+          key is associated with <literal>true()</literal> and the authentication method specified by the value associated
+          with the “<literal>auth-method</literal>” key supports generation of an “<literal>Authorization</literal>” header 
+          without a challenge, then the header is generated and sent on the first request. If the 
+          “<literal>send-authorization</literal>” key is absent, is not associated with an instance of
+          <code>xs:boolean</code> or has the value <literal>false()</literal>, then the first request is sent 
+          without an “<literal>Authorization</literal>” header.</para>
+        <para>If the initial response to the request is an authentication challenge, the values provided for the
+          “<literal>auth-method</literal>”, “<literal>username</literal>”, “<literal>password</literal>” keys and 
+          any relevant data from the challenge are used to generate an “<literal>Authorization</literal>” header 
+          and the request is sent again. If that authorization fails, the request is not retried.</para>
+        <para>Appropriate values for the “<literal>auth-method</literal>” key are “<literal>Basic</literal>” 
+          or “<literal>Digest</literal>” but other values are allowed. If the authentication method 
+          is “<literal>Basic</literal>” or “<literal>Digest</literal>”, authentication is handled 
+          as per <biblioref linkend="rfc2617"/>. <impl>The interpretation of values 
+            associated with the “<literal>auth-method</literal>” key other 
+            than “<literal>Basic</literal>” or “<literal>Digest</literal>” is
+            <glossterm>implementation defined</glossterm>.</impl></para>
+        <para><error code="C0003">It is a <glossterm>dynamic error</glossterm> if a “<literal>username</literal>”
+          or a “<literal>password</literal>” key is present without specifying a value for the 
+          “<literal>auth-method</literal>” key, if the requested <literal>auth-method</literal> isn't supported, 
+          or the authentication challenge contains an authentication method that isn't
+          supported.</error> All implementations <rfc2119>must</rfc2119> support “Basic”
+          and “Digest” authentication per <biblioref linkend="rfc2617"/>.</para>
+        <para>Additionally certificates may be provided for authenticating the client with the server.<impl>The
+        support and interpretation of the values associated with key “<literal>certificates</literal>” are
+        implementation defined.</impl></para>
+        <note xml:id="c.http-certificate" role="editorial">
+          <title>Editorial Note</title>
+          <para>TBD: I think we need to say more about certificates.</para>
+        </note>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>parameters</term>
+      <listitem>
+        <para>The <option>parameter</option> option can be used to provide values for fine tuning the
+        construction of the request and/or the handling of the servers response. The following key-value pairs, the
+        required value type and their semantics are predefined. <impl>It is <glossterm>implementation defined</glossterm>
+        which other key-value pairs in the <option>parameters</option> option are supported.</impl> 
+          <error code="CXXX3">It is a <glossterm>dynamic error</glossterm> if any key in the “parameters” map is 
+            associated with a value that is not an instance of the required type.</error></para>
+        <variablelist>
+          <varlistentry>
+            <term>override-content-type</term>
+            <listitem>
+              <para>The value associates with the “<literal>override-content-type</literal>” key controls interpretation of the 
+                response's <literal>Content-Type</literal> header. The value must be an instance of <code>xs:string</code>.
+                If the key-value pair is present, the response will be treated as if the response contained a
+                “<literal>Content-Type</literal>” header given by its value. 
+                The original Content-Type header will however be reflected unchanged as entry in the document on the 
+                <port>report</port> port. <error code="C0030">It is a <glossterm>dynamic error</glossterm> if the 
+                  value cannot be used (e.g. application/json to override application/xml).</error></para>
+            </listitem>
+          </varlistentry>
+          <varlistentry>
+            <term>http-version</term>
+            <listitem>
+              <para>The value associated with the “<literal>http-version</literal>” key must be an instance of
+              <code>xs:string</code>. It indicated which HTTP version has to be used for the request.</para>
+            </listitem>
+          </varlistentry>
+          <varlistentry>
+            <term>multipart</term>
+            <listitem>
+              <para>The key “<literal>multipart</literal>” must be associated with an instance of 
+                <code>xs:boolean</code>. If the associated value is <code>false()</code> a <glossterm>dynamic 
+                  error</glossterm> will be raised, if a multipart response is delivered by the server. This feature
+                relieves pipeline authors from testing the number of documents delivered from 
+                <tag>p:http-request</tag> if the receiving steps have a non-sequence input port. <error code="CXXX4">It
+                is a <glossterm>dynamic error</glossterm> if key “<literal>multipart</literal>” is associated
+                with <code>false()</code> and a multipart response is detected.</error></para>
+            </listitem>
+          </varlistentry>
+          <varlistentry>
+            <term>content-encoding</term>
+            <listitem>
+              <para>The value associated with the “<literal>content-encoding</literal>” key must be an instance
+              of <code>xs:string</code>. If the key-value pair is present, the response will be treated as if the response
+              contained a “<literal>Content-Encoding</literal>” header given by its value. The original Content-Encoding
+              will however be reflected unchanged as entry in the document on the <port>report</port> port.</para>
+            </listitem>
+          </varlistentry>
+          <varlistentry>
+            <term>transfer-encoding</term>
+            <listitem>
+              <note xml:id="http-uri-transfer-encoding" role="editorial">
+                <title>Editorial Note</title>
+                <para>TBD: How does this entry differ from the "transfer-encoding" header?</para>
+              </note>
+            </listitem>
+          </varlistentry>
+          <varlistentry>
+            <term>permit-expired-ssl-certificate</term>
+            <listitem>
+              <para>The “<literal>permit-expired-ssl-certificate</literal>” key must be associated with
+              a value which is an instance of <code>xs:boolean</code>. If it is associated with 
+                <code>true()</code> it allows HTTPS requests to still work when the server
+              provides an SSL certificate which has expired.</para>
+            </listitem>
+          </varlistentry>
+          <varlistentry>
+            <term>permit-untrusted-ssl-certificate</term>
+            <listitem>
+              <para>The value associated with the “<literal>permit-untrusted-ssl-certificate</literal>” must
+                be an instance of <code>xs:boolean</code>. If it is <code>true()</code> it allows HTTPS requests 
+                to still work when the server provides an SSL certificate which is not trusted, 
+                this may be because the CA (Certificate Authority) is unknown.</para>
+            </listitem>
+          </varlistentry>
+          <varlistentry>
+            <term>follow-redirect</term>
+            <listitem>
+              <para>The “<literal>follow-redirect</literal>” must be associated with an instance of
+              <code>xs:integer</code>. It allows to specify the step’s behaviour in case of a redirect
+                response. <literal>0</literal> indicates that redirects are not to be followed, 
+                <literal>-1</literal> indicates that redirects are to be followed indefinitely, a
+                specific number indicates the maximum number of redirects to follow. <impl>The default
+              behaviour in case of a redirect response is <glossterm>implementation defined</glossterm>.</impl></para>
+            </listitem>
+          </varlistentry>
+          <varlistentry>
+            <term>timeout</term>
+            <listitem>
+              <para>The value associated with the “<literal>timeout</literal>” key must be a non-negative
+                instance of <code>xs:decimal</code>. It controls the time the XProc processor is
+                waiting for the request to be answered. If a value is given for <code>timeout</code>
+                it is taken as the number of seconds to wait for the response to be delivered.
+                If no response is received after that time, the request is terminated and a status-code
+                <literal>408</literal> is assumed.</para>
+              </listitem>
+            </varlistentry>
+          <varlistentry>
+            <term>fail-on-timeout</term>
+            <listitem>
+              <para>The value associated with the 
+                “<literal>fail-on-timeout</literal>” key which must be an instance of <code>xs:boolean</code>. If
+              the key is present and is associated with <code>true()</code>, a dynamic error is raised in case of
+                a status code <literal>408</literal> (either as a consequence of setting a value for the 
+                “<literal>timeout</literal>” key or as status code returned by a server).
+                <error code="C0078">It is a <glossterm>dynamic error</glossterm>
+                  if the value associated with the “<literal>fail-on-timeout</literal>” is associated with 
+                  <code>true()</code> and a HTTP status code <literal>408</literal> is encountered.</error></para>
+              <note>
+                <title>Note</title>
+                <para>Please note the difference between attribute <code>timeout</code>
+                  on <code>p:http-request</code> and the key “<literal>fail-on-timeout</literal>” in the
+                  <option>parameters</option> map:
+                  If the step does not finish in the set time,
+                  <code>D0053</code> is raised. If the request does not finish in time
+                  and fail-on-timeout is true, <code>C0078</code> is raised. The actual
+                  times after which a timeout is detected may also differ slightly.
+                </para>
+              </note>
+            </listitem>
+          </varlistentry>
+          <varlistentry>
+            <term>status-only</term>
+            <listitem>
+              <para>The “<literal>status-only</literal>” may be used to save resources on parsing the response 
+                when the pipeline author is only interested in the response code. The key must be associated with
+              an instance of <code>xs:boolean</code>. If it is associated with <literal>true()</literal>, an empty 
+              sequence is return on the <port>result</port> port and the map on the <port>report</port> 
+                will contain the status code and an empty map for “<literal>headers</literal>”.</para>
+            </listitem>
+          </varlistentry>
+          <varlistentry>
+            <term>suppress-cookies</term>
+            <listitem>
+              <para>The key “<literal>suppress-cookies</literal>” must be associated with an instance of 
+              <code>xs:boolean</code>. If the value is <code>true()</code>, no cookies must be send
+              with the HTTP request.</para>
+            </listitem>
+          </varlistentry>
+          <varlistentry>
+            <term>send-body-anyway</term>
+            <listitem>
+              <para>The key “<literal>send-body-anyway</literal>” must be associated with an instance of 
+                <code>xs:boolean</code>. If the value is <code>true()</code>, a request body is constructed
+              from the documents appearing on the <port>source</port> port although the semantics of
+              sending a body is not specified for the used HTTP method.</para>
+            </listitem>
+          </varlistentry>
+        </variablelist>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term>assert</term>
+      <listitem>
+        <para>The <option>assert</option> option can be used by pipeline authors to raise a dynamic error
+        if the response does not fulfill the expectations of the receiving step sequence. The option's
+        value (if present) is interpreted as an XPath expression which will be executed taking the map
+        to appear on the <port>report</port> port as context item. Function <code>fn:boolean</code> is
+        then evaluated on the expression's result. If the result is <code>false()</code>, a 
+          <glossterm>dynamic error</glossterm> is raised. <error code="CXXX5">It is a 
+            <glossterm>dynamic error</glossterm> if the XPath expression in
+            <option>assert</option> evaluates to <code>false</code>.</error> Implementations 
+          <rfc2119>should</rfc2119> provide an XML representation of the map used as context item 
+          with the error document to enable pipelines to access the error' cause.</para>
+      </listitem>
+    </varlistentry>
+  </variablelist>
+
+  <section xml:id="c.http-multipart-request">
+    <title>Construction of a multi-part request</title>
+    <note xml:id="c.http-multipart.multi-part-request" role="editorial">
+      <title>Editorial Note</title>
+      <para>TBD.</para>
+    </note>
+  </section>
+
+  <section xml:id="c.http-multipart-response">
+    <title>Managing a multi-part response</title>
+    <note xml:id="c.http-multipart.multi-part-request" role="editorial">
+      <title>Editorial Note</title>
+      <para>TBD.</para>
+    </note>
+  </section>
+  
 <simplesect>
 <title>Document properties</title>
-<para feature="http-request-preserves-none">No document properties are preserved.
-The <property>base-uri</property> property of the document(s) produced will reflect
-the base URI of the retrieved document(s).
-</para>
+<para feature="http-request-preserves-none">No document properties are preserved.</para>
 </simplesect>
 </section>
 <section xml:id="c.identity">

@@ -117,9 +117,19 @@
       <p:option name="version" as="xs:string?"/>
    </p:declare-step>
    <p:declare-step type="p:http-request" xml:id="http-request">
-      <p:input port="source" content-types="any"/>
-      <p:output port="result" sequence="true" content-types="any"/>
+      <p:input port="source" content-types="any" sequence="true"/>
+      <p:output port="result"
+                primary="true"
+                content-types="any"
+                sequence="true"/>
+      <p:output port="report" content-types="application/json"/>
+      <p:option name="href" as="xs:anyURI" required="true"/>
+      <p:option name="method" as="xs:string?" select="'GET'"/>
       <p:option name="serialization" as="xs:string"/>
+      <p:option name="headers" as="xs:string"/>
+      <p:option name="auth" as="xs:string"/>
+      <p:option name="parameters" as="xs:string"/>
+      <p:option name="assert" as="xs:string" select="'.?status-code lt 400'"/>
    </p:declare-step>
    <p:declare-step type="p:identity" xml:id="identity">
       <p:input port="source" sequence="true" content-types="any"/>
