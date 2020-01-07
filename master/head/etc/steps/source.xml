@@ -1395,17 +1395,17 @@ option and the <option>method</option> option which defaults to
   e.g. GET or POST.</para>
   
 <para>The request body is constructed using the document(s) appearing on the 
-<port>source</port> port. If exactly one document appears on that port, the 
+<port>source</port> port. The 
 <option>serialization</option> option is used to
-control the serialization for this document in the request body. If the document 
+control the serialization for these documents in the request body. If a document 
 has a “<literal>serialization</literal>” property,
 the serialization is controlled by the merger of the two maps, where the entries in the
-“<literal>serialization</literal>” property take precedence. If more than one document 
-appears on the <port>source</port> port, the <option>serialization</option> option is
-ignored and serialization is controlled exclusively by the  “<literal>serialization</literal>” 
-properties of the separate documents. If no document appears on the <port>source</port> port, the request body will be
-empty. The request headers are constructed using the map provided with the <option>headers</option>
-options.</para>
+“<literal>serialization</literal>” property take precedence.</para> 
+<para>If exactly one document appears on the <port>source</port> port, the request headers
+  are constructed using entries in the document's properties and the headers 
+  provided with the <option>headers</option> options (see below).
+  If no document appears on the <port>source</port> port, the request body will be
+empty and the headers will be constructed using the <option>headers</option> options.</para>
   
   <note xml:id="note-http-methods">
     <para>Implementors are encouraged
