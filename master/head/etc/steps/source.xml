@@ -1456,7 +1456,7 @@ For those methods the documents on the <port>source</port> are ignored when cons
         turned into an uppercase string if necessary. <impl>It is <glossterm>implementation defined</glossterm>
           which HTTP methods are supported.</impl> An implementation <rfc2119>should</rfc2119> at least implement
           the methods <literal>GET</literal>, <literal>POST</literal>, <literal>PUT</literal>, 
-          <literal>DELETE</literal>, and <literal>HEAD</literal> (for HTTP). <error code="CXXX1">It is a
+          <literal>DELETE</literal>, and <literal>HEAD</literal> (for HTTP). <error code="C0122">It is a
           <glossterm>dynamic error</glossterm> if the given method is not supported.</error></para>
       </listitem>
     </varlistentry>
@@ -1492,9 +1492,9 @@ For those methods the documents on the <port>source</port> are ignored when cons
             </listitem>
           </orderedlist>
           <para>As HTTP headers are case-insensitive but keys in maps are, be careful when specifying
-            the request's headers. <error code="CXXX6">It is a <glossterm>dynamic error</glossterm> if the 
+            the request's headers. <error code="C0127">It is a <glossterm>dynamic error</glossterm> if the 
               effective map from which the HTPP headers are constructed contains two keys which are case-blind
-            equal (<code>fn:uppercase($key1) = fn:uppercase($key2)</code>)</error></para>
+            equal (<code>fn:uppercase($key1) = fn:uppercase($key2)</code>).</error></para>
       </listitem>
     </varlistentry>
     <varlistentry>
@@ -1507,7 +1507,7 @@ For those methods the documents on the <port>source</port> are ignored when cons
           “<literal>password</literal>” (<code>xs:string</code>), “<literal>method</literal>” (<code>xs:string</code>),
           "<literal>preemptive-auth</literal>” (<code>xs:boolean</code>), and “<literal>certificates</literal>”
           (<code>map(xs:string, item()+)+</code>). <impl>Other key value pairs in map “<literal>auth</literal>” are 
-            <glossterm>implementation defined</glossterm>.</impl> <error code="CXXX2">It is a <glossterm>dynamic
+            <glossterm>implementation defined</glossterm>.</impl> <error code="C0123">It is a <glossterm>dynamic
               error</glossterm> if any key in the “<literal>auth</literal>” map  is associated with a value that is
             not an instance of the required type.</error></para>
         <para>For the purposes of avoiding an authentication challenge, if the “<literal>send-authorization</literal>”
@@ -1550,7 +1550,7 @@ For those methods the documents on the <port>source</port> are ignored when cons
         construction of the request and/or the handling of the servers response. The following key-value pairs, the
         required value type and their semantics are predefined. <impl>It is <glossterm>implementation defined</glossterm>
         which other key-value pairs in the <option>parameters</option> option are supported.</impl> 
-          <error code="CXXX3">It is a <glossterm>dynamic error</glossterm> if any key in the “parameters” map is 
+          <error code="C0124">It is a <glossterm>dynamic error</glossterm> if any key in the “parameters” map is 
             associated with a value that is not an instance of the required type.</error></para>
         <variablelist>
           <varlistentry>
@@ -1579,7 +1579,7 @@ For those methods the documents on the <port>source</port> are ignored when cons
                 <code>xs:boolean</code>. If the associated value is <code>false()</code> a <glossterm>dynamic 
                   error</glossterm> will be raised, if a multipart response is delivered by the server. This feature
                 relieves pipeline authors from testing the number of documents delivered from 
-                <tag>p:http-request</tag> if the receiving steps have a non-sequence input port. <error code="CXXX4">It
+                <tag>p:http-request</tag> if the receiving steps have a non-sequence input port. <error code="C0125">It
                 is a <glossterm>dynamic error</glossterm> if key “<literal>multipart</literal>” is associated
                 with <code>false()</code> and a multipart response is detected.</error></para>
             </listitem>
@@ -1704,7 +1704,7 @@ For those methods the documents on the <port>source</port> are ignored when cons
         value (if present) is interpreted as an XPath expression which will be executed taking the map
         to appear on the <port>report</port> port as context item. Function <code>fn:boolean</code> is
         then evaluated on the expression's result. If the result is <code>false()</code>, a 
-          <glossterm>dynamic error</glossterm> is raised. <error code="CXXX5">It is a 
+          <glossterm>dynamic error</glossterm> is raised. <error code="C0126">It is a 
             <glossterm>dynamic error</glossterm> if the XPath expression in
             <option>assert</option> evaluates to <code>false</code>.</error> Implementations 
           <rfc2119>should</rfc2119> provide an XML representation of the map used as context item 
