@@ -1,0 +1,584 @@
+<?xml-model href="../../../../../3.0-specification/schema/dbspec.rnc" type="application/relax-ng-compact-syntax"?><specification xmlns:cs="http://www.w3.org/XML/XProc/2006/04/components#" xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax" xmlns:p="http://www.w3.org/ns/xproc" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://docbook.org/ns/docbook" xml:id="step-validation" class="ed" role="step" version="5.0-extension w3c-xproc">
+<info>
+<title>XProc 3.0: validation steps</title>
+<!-- defaults to date formatted <pubdate>2014-12-18</pubdate> -->
+<copyright><year>2018</year><year>2019</year><year>2020</year>
+<holder>the Contributors to the XProc 3.0 Standard Step Library
+specifications</holder>
+</copyright>
+
+<bibliomisc role="github-repo">xproc/3.0-steps</bibliomisc>
+<bibliomisc role="w3c-cg" xlink:href="https://www.w3.org/community/xproc-next/">XProc Next</bibliomisc>
+
+<bibliorelation type="isformatof" xlink:href="specification.xml">XML</bibliorelation>
+<authorgroup>
+  <author>
+    <personname>Norman Walsh</personname>
+  </author>
+  <author>
+    <personname>Achim Berndzen</personname>
+  </author>
+  <author>
+    <personname>Gerrit Imsieke</personname>
+  </author>
+  <author>
+    <personname>Erik Siegel</personname>
+  </author>
+</authorgroup>
+
+<abstract>
+<para>This specification describes the <code>p:validate-with-nvdl</code>, <code>p:validate-with-relax-ng</code>,
+<code>p:validate-with-schematron</code>, and <code>p:validate-with-xml-schema</code>
+step for
+<citetitle>XProc 3.0: An XML Pipeline Language</citetitle>.</para>
+</abstract>
+
+<legalnotice xml:id="sotd" role="status">
+  <para>This specification was published by the
+  <link xlink:href="https://www.w3.org/community/xproc-next/">XProc
+  Next Community Group</link>. It is not a W3C Standard nor is it on
+  the W3C Standards Track. Please note that under the
+  <link xlink:href="https://www.w3.org/community/about/agreements/cla/">W3C
+  Community Contributor License Agreement (CLA)</link> there is a limited
+  opt-out and other conditions apply. Learn more about <link xlink:href="https://www.w3.org/community/">W3C Community and Business
+  Groups</link>.
+  </para>
+  
+  <para>If you wish to make comments regarding this document, please
+  send them to
+  <link xlink:href="mailto:xproc-dev@w3.org">xproc-dev@w3.org</link>.
+  (<link xlink:href="mailto:xproc-dev-request@w3.org?subject=subscribe">subscribe</link>,
+  <link xlink:href="https://lists.w3.org/Archives/Public/xproc-dev/">archives</link>).
+  </para>
+
+  <para>This document is derived from
+  <link xlink:href="https://www.w3.org/TR/2010/REC-xproc-20100511/">XProc:
+  An XML Pipeline Language</link> published by the W3C.</para>
+</legalnotice>
+</info>
+
+<section xml:id="introduction">
+<title>Introduction</title>
+
+<para>This specification describes the <code>p:validate-with-relax-ng</code>,
+<code>p:validate-with-schematron</code>, <code>p:validate-with-xml-schema</code>,
+and <code>p:validate-with-nvdl</code> steps. Each is independently optional.
+A machine-readable description of
+these steps may be found in
+<link xlink:href="steps.xpl">steps.xpl</link>.
+</para>
+  <para>Steps for validating non-XML documents, such as JSON, might be added in a future revision
+  of this specification.</para>
+  
+<para>Familiarity with the
+general nature of <biblioref linkend="xproc30"/>
+steps is assumed; for background details, see
+<biblioref linkend="xproc30-steps"/>.</para>
+</section>
+  
+  <section xml:id="validation-common">
+    <title>Common Options and Outputs</title>
+    <para>All steps in this specification provide a boolean option <option>assert-valid</option>. If any of the validated
+      documents is found to be invalid according to the respective schema, and possibly other parameters that influence
+      determination of validity, a dynamic error is raised.</para>
+    <note xml:id="note-assert-valid">
+      <para>Historically, the validation steps (apart from <tag>p:validate-with-schematron</tag>) could only report errors
+      by setting <option>assert-valid</option> to <literal>true</literal> and catching the errors. A <tag>c:errors</tag> 
+        document on the <port>error</port> port of the corresponding <tag>p:catch</tag> recovery pipeline had to be sent to an 
+        output, either verbatim or after postprocessing. Now, if <option>assert-valid</option> is <literal>false</literal>, 
+        an XVRL document will be available on the <port>report</port> port of the validation step. It uses the XVRL severity 
+        vocabulary to indicate whether the validation failed, and to which degree. This allows more nuance in reporting
+      errors. Previously, <literal>assert-valid="true"</literal> on <tag>p:validate-with-schematron</tag> would always
+      throw an error even if the reported findings were only intended as less severe, for example if the schema author used 
+        <literal>info</literal> or <literal>warning</literal> in <code>sch:report/@role</code>.</para>
+    </note>
+    <para>If no such error is raised, each step generates at least one validation report document on its
+        <port>report</port> port. Unless another format is requested, the mandatory report document for all steps
+      except <tag>p:validate-with-schematron</tag>
+        <rfc2119>should</rfc2119> be an <biblioref linkend="xvrl"/> document. A report format may be requested
+    by the <option>report-format</option> option. <impl>The supported values for the <option>report-format</option>
+    option are <glossterm>implementation-defined</glossterm>. A processor <rfc2119>should</rfc2119> at least support
+    the value “<literal>xvrl</literal>” for the XML validation steps and “<literal>svrl</literal>” for
+      <tag>p:validate-with-schematron</tag>.</impl>
+    </para>
+    <para><error code="C0117">It is a <glossterm>dynamic error</glossterm> if a <option>report-format</option> option 
+      was specified that the processor does not support.</error></para>
+    <para>If a step performs multiple validations on a single document (for example, embedded Schematron validations 
+      in a Relax NG schema), all individual XVRL reports need to be consolidated into a single XVRL report by the step.</para>
+    <para>Each of the validation steps has a <option>parameters</option> option. <impl>The parameters supported by the
+validation steps and their semantics are
+        <glossterm>implementation-defined</glossterm>, and they can be different for each validation step.</impl> A special key in the
+        <literal>c</literal> namespace, <uri type="namespace">http://www.w3.org/ns/xproc-step</uri>, called
+        <literal>c:compile</literal>, can hold a map itself that controls schema compilation. 
+      Schema compilation is, for example, the process of converting a Schematron schema into an XSLT
+      stylesheet. The <literal>c:compile</literal> map will be used as parameters for the compilation process.</para>
+    <para>Map entries in the <literal>xvrl</literal> namespace, <uri type="namespace">http://www.xproc.org/ns/xvrl</uri> 
+      will be passed as parameters to the XVRL generation process. XProc implementations that implement any of the XML validation steps
+        <rfc2119>should</rfc2119> support the basic parameters that are defined in the <biblioref linkend="xvrl"/>
+      specification, <literal>xvrl:default-severity</literal>, <literal>xvrl:language</literal>, 
+      <literal>xvrl:map-to-severity</literal>, and <literal>xvrl:xpath-notation</literal>.</para>
+  </section>
+
+  <section xml:id="c.validate-with-nvdl">
+    <title>Validate with NVDL</title>
+
+    <para>The <tag>p:validate-with-nvdl</tag> step applies <biblioref linkend="iso19757-4"/> validation to the
+        <port>source</port> document.</para>
+
+    <p:declare-step type="p:validate-with-nvdl">
+      <p:input port="source" primary="true" content-types="xml html"/>
+      <p:input port="nvdl" content-types="xml"/>
+      <p:input port="schemas" sequence="true" content-types="text xml"/>
+      <p:output port="result" primary="true" content-types="xml html"/>
+      <p:output port="report" sequence="true" content-types="xml json"/>
+      <p:option name="assert-valid" select="true()" as="xs:boolean"/>
+      <p:option name="report-format" select="'xvrl'" as="xs:string"/>
+      <p:option name="parameters" as="map(xs:QName,item()*)?"/>
+    </p:declare-step>
+
+    <para>The <port>source</port> document is validated using the namespace dispatching rules contained in the 
+      <port>nvdl</port> document.</para>
+
+    <para>The dispatching rules may contain URI references that point to the actual schemas to be
+      used. As long as these schemas are accessible, it is not necessary to pass anything on the
+      schemas port. However, if one or more schemas are provided on the <port>schemas</port> port,
+      then these schemas should be used in validation.</para>
+
+    <para><error code="C0053">It is a <glossterm>dynamic error</glossterm> if the <option>assert-valid</option> option is
+          <literal>true</literal> and the input document is not valid.</error></para>
+
+    <para>The output from this step is a copy of the input. The output of this step <rfc2119>may</rfc2119> include PSVI
+      annotations.</para>
+    
+    <note role="editorial" xml:id="ednote-nvdl">
+      <para>Should the step also provide the <option>dtd-attribute-values</option> and <option>dtd-id-idref-warnings</option>
+      options for Relax NG validations? Is there a way to instruct <link xlink:href="https://github.com/relaxng/jing-trang">Jing</link> 
+        to use these options, maybe in NVDL extension attributes? Probably not in the foreseeable future.</para>
+    </note>
+
+    <section>
+      <title>Document properties</title>
+      <para feature="validate-with-nvdl-preserves-all">All document properties on the <port>source</port> port are preserved
+        on the <port>result</port> port. No document properties on the <port>schemas</port> and <port>nvdl</port> ports 
+        are preserved. No document properties are preserved on the <port>report</port> port.</para>
+    </section>
+  </section>
+  
+  <section xml:id="c.validate-with-relax-ng">
+<title>Validate with RELAX NG</title>
+
+<para>The <tag>p:validate-with-relax-ng</tag> step applies <biblioref linkend="iso19757-2"/> validation 
+  to the <port>source</port> document.</para>
+
+<p:declare-step type="p:validate-with-relax-ng">
+  <p:input port="source" primary="true" content-types="xml html"/>
+  <p:input port="schema" content-types="text xml"/>
+  <p:output port="result" primary="true" content-types="xml html"/>
+  <p:output port="report" sequence="true" content-types="xml json"/>
+  <p:option name="dtd-attribute-values" select="false()" as="xs:boolean"/>
+  <p:option name="dtd-id-idref-warnings" select="false()" as="xs:boolean"/>
+  <p:option name="assert-valid" select="true()" as="xs:boolean"/>
+  <p:option name="report-format" select="'xvrl'" as="xs:string"/>
+  <p:option name="parameters" as="map(xs:QName,item()*)?"/>
+</p:declare-step>
+
+<para>The values of the <option>dtd-attribute-values</option> and <option>dtd-id-idref-warnings</option> options
+<rfc2119>must</rfc2119> be booleans.</para>
+
+<para>If the <port>schema</port> document has an XML media type, then
+it <rfc2119>must</rfc2119> be interpreted as a RELAX NG Grammar. If
+the <port>schema</port> document has a text media type, then it
+<rfc2119>must</rfc2119> be interpreted as a 
+<biblioref linkend="relaxng-compact-syntax"/> document for validation.</para>
+
+<para>If the <option>dtd-attribute-values</option> option is
+<literal>true</literal>, then the attribute value defaulting conventions of
+<biblioref linkend="relaxng-dtd-compat"/> are also applied.</para>
+
+<para>If the <option>dtd-id-idref-warnings</option> option is
+<literal>true</literal>, then the validator <rfc2119>should</rfc2119>
+treat a schema that is incompatible with the ID/IDREF/IDREFs feature
+of <biblioref linkend="relaxng-dtd-compat"/> as if the document
+was invalid.
+</para>
+
+<para><error code="C0053">It is a <glossterm>dynamic error</glossterm>
+if the <option>assert-valid</option> option is <literal>true</literal>
+and the input document is not valid.</error></para>
+
+<para>The output from this step is a copy of the input, possibly
+augmented by application of the
+<biblioref linkend="relaxng-dtd-compat"/>. The output of this step
+<rfc2119>may</rfc2119> include PSVI annotations.</para>
+
+<para><impl>Support for <biblioref linkend="relaxng-dtd-compat"/> is
+<glossterm>implementation defined</glossterm>.</impl></para>
+
+<section>
+<title>Document properties</title>
+<para feature="validate-with-relax-ng-preserves-all">All document properties on
+the <port>source</port> port are preserved on the <port>result</port> port.
+No document properties on the <port>schema</port> port are preserved. No document
+properties are preserved on the <port>report</port> port.</para>
+</section>
+</section>
+
+  <section xml:id="c.validate-with-schematron">
+<title>Validate with Schematron</title>
+
+<para>The <tag>p:validate-with-schematron</tag> step applies
+<biblioref linkend="iso19757-3"/>
+processing to the <port>source</port> document.</para>
+
+<p:declare-step type="p:validate-with-schematron">
+  <p:input port="source" primary="true" content-types="xml html"/>
+  <p:input port="schema" content-types="xml"/>
+  <p:output port="result" primary="true" content-types="xml html"/>
+  <p:output port="report" sequence="true" content-types="xml json"/>
+  <p:option name="parameters" as="map(xs:QName,item()*)?"/>
+  <p:option name="phase" select="'#DEFAULT'" as="xs:string"/>
+  <p:option name="assert-valid" select="true()" as="xs:boolean"/>
+  <p:option name="report-format" select="'svrl'" as="xs:string"/>
+</p:declare-step>
+
+<para><error code="C0054">It is a <glossterm>dynamic error</glossterm>
+if the <option>assert-valid</option> option is <literal>true</literal>
+and any Schematron assertions fail or reports succeed.</error></para>
+
+    <note xml:id="note-assert-valid_schematron">
+      <para>A Schematron validation with <literal>assert-valid="true"</literal> will fail if any validation message is
+        produced by <tag>sch:assert</tag> or <tag>sch:report</tag>, even if the severity level of the failed assertion or
+        the successful report is below a certain threshold, for example if there is only an <literal>info</literal>
+        message. (The severity is conventionally conveyed by the <literal>@role</literal> attribute on <tag>sch:assert</tag> or 
+        <tag>sch:report</tag>.) </para>
+    </note>
+    
+<para>The value of the <option>phase</option> option identifies the
+Schematron validation phase with which validation begins.</para>
+
+<para>The <option>parameters</option> option provides name/value pairs which
+correspond to Schematron external variables, to parameters that influence
+code generation, or to parameters that influence SVRL to XVRL conversion.</para>
+
+    <para>There are multiple Schematron implementations. <impl>How the Schematron implementation is selected is
+          <glossterm>implementation-defined</glossterm>.</impl> A processor might select an implementation based on the
+      schema’s <code role="attribute">queryBinding</code> attribute and/or provide configuration options. In addition,
+      the special parameter map entry <literal>c:implementation</literal> (value: QName) may be used to select a
+      Schematron implementation that the processor supports. <impl>The list of supported Schematron implementations and
+        their associated values is <glossterm>implementation-defined</glossterm>.</impl> If a requested implementation
+      is not available, the processor may throw an error or select another implementation.</para>
+    
+    <para>The <option>parameters</option> map may contain two special entries, <literal>c:compile</literal> and
+        <literal>c:xvrl</literal>, both are maps. If a code-generating implementation such as <biblioref linkend="schematron-skeleton"/> is used, the entries of the <literal>c:compile</literal> map, for example
+        <literal>allow-foreign</literal>, will be passed to the code generator. 
+      <impl>Which parameters the 
+        <literal>c:compile</literal> map supports for a given Schematron implementation is
+          <glossterm>implementation-defined</glossterm>.</impl></para>
+    <para>If the Schematron implementation produces SVRL by default, the SVRL to XVRL conversion can be influenced by the
+      entries of the <literal>c:xvrl</literal> map. The same map, with potentially another set of allowed keys and
+      values, can be used to influence XVRL generation from another reporting language. 
+      <impl>Which parameters this conversion from native reporting format to XVRL supports is
+          <glossterm>implementation-defined</glossterm>.</impl></para>
+    <para>All other parameters of the <option>parameters</option> option will be passed to the generated code if applicable,
+      or to a hypothetical native Schematron validator that does without code generation.</para>
+
+<para>The <port>result</port> output from this step is a copy of the
+input.</para>
+
+<para>In addition to the mandatory XVRL report, a <citetitle>Schematron
+Validation Report Language</citetitle> (SVRL) report should be provided 
+  on the <port>report</port> port.</para>
+
+<para>The output of this step
+<rfc2119>may</rfc2119> include PSVI annotations.</para>
+
+<section>
+<title>Document properties</title>
+<para feature="validate-with-schematron-preserves-all">All document properties
+on the <port>source</port> port are preserved on the <port>result</port> port.
+No document properties on the <port>schema</port> port are preserved. No document
+properties are preserved on the <port>report</port> port.</para>
+</section>
+</section>
+
+  <section xml:id="c.validate-with-xml-schema">
+<title>Validate with XML Schema</title>
+
+<para>The <tag>p:validate-with-xml-schema</tag> step applies
+<biblioref linkend="xmlschema-1"/>
+validity assessment to the <port>source</port> input.</para>
+
+<p:declare-step type="p:validate-with-xml-schema">
+  <p:input port="source" primary="true" content-types="xml html"/>
+  <p:input port="schema" sequence="true" content-types="xml"/>
+  <p:output port="result" primary="true" content-types="xml html"/>
+  <p:output port="report" sequence="true" content-types="xml json"/>
+  <p:option name="use-location-hints" select="false()" as="xs:boolean"/>
+  <p:option name="try-namespaces" select="false()" as="xs:boolean"/>
+  <p:option name="assert-valid" select="true()" as="xs:boolean"/>
+  <p:option name="parameters" as="map(xs:QName,item()*)?"/>
+  <p:option name="mode" select="'strict'" as="xs:token" values="('strict','lax')"/>
+  <p:option name="version" as="xs:string?"/>
+  <p:option name="report-format" select="'xvrl'" as="xs:string"/>
+</p:declare-step>
+
+<para>The values of the <option>use-location-hints</option>,
+<option>try-namespaces</option>, and
+<option>assert-valid</option>
+options
+ <rfc2119>must</rfc2119> be boolean.</para>
+
+<para>The value of the <option>mode</option> option
+<rfc2119>must</rfc2119> be an NMTOKEN whose value is either
+“<literal>strict</literal>” or “<literal>lax</literal>”.</para>
+
+<para>Validation is performed against the set of schemas represented
+by the documents on the <port>schema</port> port. These schemas must
+be used in preference to any schema locations provided by schema
+location hints encountered during schema validation, that is, schema
+locations supplied for <code>xs:import</code> or
+<code>xsi:schema-location</code>, or determined by
+schema-processor-defined namespace-based strategies, for the
+namespaces covered by the documents available on the schemas port.</para>
+
+<para>If <code>xs:include</code> elements occur within the supplied
+schema documents, they are treated like any other
+external documents (see <biblioref linkend="xproc30"/>).
+<impl>It is
+<glossterm>implementation-defined</glossterm> if the documents supplied
+on the <port>schemas</port> port are considered when resolving
+<code>xs:include</code> elements in the schema documents provided.</impl>
+</para>
+
+<para>The <option>use-location-hints</option> and
+<option>try-namespaces</option> options allow the pipeline author to
+control how the schema processor should attempt to locate schema
+documents necessary but not provided on the <port>schema</port>
+port. Any schema documents provided on the <port>schema</port> port
+<rfc2119>must</rfc2119> be used in preference to schema documents
+located by other means.</para>
+
+<para>If the <option>use-location-hints</option> option is
+“<literal>true</literal>”, the processor <rfc2119>should</rfc2119>
+make use of schema location hints to locate schema documents. If the
+option is “<literal>false</literal>”, the processor
+<rfc2119>should</rfc2119> ignore any such hints.</para>
+
+<para>If the <option>try-namespaces</option> option is
+“<literal>true</literal>”, the processor <rfc2119>should</rfc2119>
+attempt to dereference the namespace URI to locate schema documents.
+If the
+option is “<literal>false</literal>”, the processor
+<rfc2119>should not</rfc2119> dereference namespace URIs.</para>
+
+<para>The <option>mode</option> option allow the pipeline author to
+control how schema validation begins. The “<literal>strict</literal>”
+mode means that the document element must be declared and
+schema-valid, otherwise it will be treated as invalid. The
+“<literal>lax</literal>” mode means that the
+absence of a declaration for the document element does not itself
+count as an unsuccessful outcome of validation.</para>
+
+<para>If the step specifies a <option>version</option>, then that version
+of XML Schema <rfc2119>must</rfc2119> be used to process the validation.
+<error code="C0011">It is a
+<glossterm>dynamic error</glossterm> if the specified schema version
+is not available.</error> If the step does not specify a version, the
+implementation may use any version it has available and may use any means
+to determine what version to use, including, but not limited to,
+examining the version of the schema(s).</para>
+
+<para><error code="C0053">It is a <glossterm>dynamic error</glossterm>
+if the <option>assert-valid</option> option is <literal>true</literal>
+and the input document is not valid.</error> If the <option>assert-valid</option>
+option is <literal>false</literal>, it is not an error for the document
+to be invalid. In this case, if the implementation does not
+support the PSVI, <tag>p:validate-with-xml-schema</tag> is essentially
+just an “identity” step, but if the implementation <emphasis>does</emphasis>
+support the PSVI, then the resulting document will have additional type
+information (at least for the subtrees that are valid).</para>
+
+<para>When XML Schema validation assessment
+is performed, the processor is invoked in the mode specified by the
+<option>mode</option> option.
+<error code="C0055">It is a <glossterm>dynamic error</glossterm>
+if the implementation does not support the specified mode.</error>
+</para>
+
+<para>The <port>result</port> of the assessment is a document with the
+Post-Schema-Validation-Infoset (PSVI) (<biblioref linkend="xmlschema-1"/>) annotations, if the pipeline implementation
+supports such annotations. If not, the input document is reproduced
+with any defaulting of attributes and elements performed as specified
+by the XML Schema recommendation.</para>
+
+<section>
+<title>Document properties</title>
+<para feature="validate-with-xml-schema-preserves-all">All document properties
+on the <port>source</port> port are preserved on the <port>result</port> port.
+No document properties on the <port>schemas</port> port are preserved.</para>
+</section>
+</section>
+
+<section xml:id="errors">
+<title>Step Errors</title>
+
+<para>This step can raise
+<glossterm baseform="dynamic-error">dynamic errors</glossterm>.
+</para>
+
+<para><termdef xml:id="dt-dynamic-error">A <firstterm>dynamic
+error</firstterm> is one which occurs while a pipeline is being
+evaluated.</termdef> Examples of dynamic errors include references to
+URIs that cannot be resolved, steps which fail, and pipelines that
+exhaust the capacity of an implementation (such as memory or disk
+space). For a more complete discussion of dynamic errors, see
+<xspecref spec="xproc" xref="dynamic-errors"/>.
+</para>
+
+<para>If a step fails due to a dynamic error, failure propagates
+upwards until either a <tag>p:try</tag> is encountered or the entire
+pipeline fails. In other words, outside of a <tag>p:try</tag>, step
+failure causes the entire pipeline to fail.</para>
+
+<para>The following errors can be raised by this step:</para>
+
+<?step-error-list level="none"?>
+
+</section>
+
+<appendix xml:id="conformance">
+<title>Conformance</title>
+
+<para>Conformant processors <rfc2119>must</rfc2119> implement all of the features
+described in this specification except those that are explicitly identified
+as optional.</para>
+
+<para>Some aspects of processor behavior are not completely specified; those
+features are either <glossterm role="unwrapped">implementation-dependent</glossterm> or
+<glossterm role="unwrapped">implementation-defined</glossterm>.</para>
+
+<para><termdef xml:id="dt-implementation-dependent">An
+<firstterm>implementation-dependent</firstterm> feature is one where the
+implementation has discretion in how it is performed.
+Implementations are not required to document or explain
+how <glossterm role="unwrapped">implementation-dependent</glossterm> features are performed.</termdef>
+</para>
+
+<para><termdef xml:id="dt-implementation-defined">An
+<firstterm>implementation-defined</firstterm> feature is one where the
+implementation has discretion in how it is performed.
+Conformant implementations <rfc2119>must</rfc2119> document
+how <glossterm role="unwrapped">implementation-defined</glossterm> features are performed.</termdef>
+</para>
+
+<section xml:id="implementation-defined">
+<title>Implementation-defined features</title>
+
+<para>The following features are implementation-defined:</para>
+
+<?implementation-defined-features?>
+</section>
+
+<section xml:id="implementation-dependent">
+<title>Implementation-dependent features</title>
+
+<para>The following features are implementation-dependent:</para>
+
+<?implementation-dependent-features?>
+</section>
+</appendix>
+
+<appendix xml:id="references">
+<title>References</title>
+<bibliolist>
+<bibliomixed xml:id="xproc30"><abbrev>XProc 3.0</abbrev>
+<citetitle xlink:href="http://spec.xproc.org/">XProc 3.0:
+An XML Pipeline Language</citetitle>.
+Norman Walsh, Achim Berndzen, Gerrit Imsieke and Erik Siegel, editors.
+</bibliomixed>
+<bibliomixed xml:id="xproc30-steps"><abbrev>XProc 3.0 Steps</abbrev>
+<citetitle xlink:href="http://spec.xproc.org/">XProc 3.0 Steps:
+An Introduction</citetitle>.
+Norman Walsh, Achim Berndzen, Gerrit Imsieke and Erik Siegel, editors.
+</bibliomixed>
+<bibliomixed xml:id="xvrl"><abbrev>XVRL</abbrev><citetitle xlink:href="http://spec.xproc.org/xvrl/">Extensible 
+  Validation Reporting Language</citetitle>
+2019.
+</bibliomixed>
+<bibliomixed xml:id="iso19757-2"><abbrev>RELAX NG</abbrev>ISO/IEC JTC 1/SC 34.
+<citetitle xlink:href="http://www.iso.org/iso/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=52348">ISO/IEC 19757-2:2008(E)
+Document Schema Definition Language (DSDL) -- Part 2:
+Regular-grammar-based
+validation -- RELAX NG</citetitle>
+2008.
+</bibliomixed>
+<bibliomixed xml:id="iso19757-3"><abbrev>Schematron</abbrev>ISO/IEC JTC 1/SC 34.
+<citetitle>ISO/IEC 19757-3:2016(E) Document Schema Definition
+Languages (DSDL) — Part 3: Rule-based validation — Schematron</citetitle>
+2016.
+</bibliomixed>
+<bibliomixed xml:id="iso19757-4"><abbrev>NVDL</abbrev>ISO/IEC JTC 1/SC 34.
+<citetitle>ISO/IEC 19757-4:2006(E) Document Schema Definition
+Languages (DSDL) — Part 4: Namespace-based Validation Dispatching Language (NVDL)</citetitle>
+2006.
+</bibliomixed>
+<bibliomixed xml:id="schematron-skeleton"><abbrev>Schematron Skeleton</abbrev>
+  <citetitle xlink:href="http://schematron.com/front-page/the-schematron-skeleton-implementation/">Schematron 
+  “Skeleton” Implementation</citetitle>
+  2017.
+  </bibliomixed>
+<bibliomixed xml:id="relaxng-compact-syntax"><abbrev>RELAX NG
+Compact Syntax</abbrev>ISO/IEC JTC 1/SC 34.
+<citetitle>ISO/IEC 19757-2:2003/Amd 1:2006 Document Schema Definition
+Languages (DSDL) — Part 2: Grammar-based validation — RELAX NG AMENDMENT 1
+Compact Syntax</citetitle>
+2006.
+</bibliomixed>
+<bibliomixed xml:id="relaxng-dtd-compat"><abbrev>RELAX NG DTD Compatibility</abbrev>
+<citetitle>RELAX NG DTD Compatibility</citetitle>.
+OASIS Committee Specification.
+3 December 2001.
+</bibliomixed>
+<bibliomixed xml:id="xmlschema-1"><abbrev>W3C XML Schema: Part 1</abbrev>
+<citetitle xlink:href="http://www.w3.org/TR/xmlschema-1/">XML Schema Part 1:
+Structures Second Edition</citetitle>.
+Henry S. Thompson, David Beech, Murray Maloney, et. al., editors.
+World Wide Web Consortium, 28 October 2004.
+</bibliomixed>
+</bibliolist>
+</appendix>
+
+<!-- This glossary will automatically be elided if there are no
+     terms marked up as 'firstterm's in this specification. -->
+<appendix xmlns:db="http://docbook.org/ns/docbook" xml:id="glossary"><title>Glossary</title><glosslist><glossentry><glossterm>dynamic
+error</glossterm><glossdef><para>A <firstterm>dynamic
+error</firstterm> is one which occurs while a pipeline is being
+evaluated.</para></glossdef></glossentry><glossentry><glossterm>implementation-defined</glossterm><glossdef><para>An
+<firstterm>implementation-defined</firstterm> feature is one where the
+implementation has discretion in how it is performed.
+Conformant implementations <rfc2119>must</rfc2119> document
+how <glossterm role="unwrapped">implementation-defined</glossterm> features are performed.</para></glossdef></glossentry><glossentry><glossterm>implementation-dependent</glossterm><glossdef><para>An
+<firstterm>implementation-dependent</firstterm> feature is one where the
+implementation has discretion in how it is performed.
+Implementations are not required to document or explain
+how <glossterm role="unwrapped">implementation-dependent</glossterm> features are performed.</para></glossdef></glossentry></glosslist></appendix>
+
+<appendix version="5.0-extension w3c-xproc" xml:id="ancillary-files">
+<title>Ancillary files</title>
+
+<para>This specification includes by reference a number of
+ancillary files.</para>
+
+<variablelist>
+<varlistentry>
+<term><link xlink:href="steps.xpl"/></term>
+<listitem>
+<para>An XProc step library for the declared steps.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+</appendix>
+
+</specification>

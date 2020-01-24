@@ -1,0 +1,37 @@
+default namespace p = "http://www.w3.org/ns/xproc"
+namespace local = ""
+
+# This schema could be made more constrained.
+
+Step = Step-os-info | Step-os-exec
+
+Step-os-info =
+  element os-info {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+     (Documentation|PipeInfo)*
+  }
+
+Step-os-exec =
+  element os-exec {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute command { xsd:string }?,
+    attribute args { xsd:string }?,
+    attribute cwd { xsd:string? }?,
+    attribute source-is-xml { xsd:boolean }?,
+    attribute result-is-xml { xsd:boolean }?,
+    attribute wrap-result-lines { xsd:boolean }?,
+    attribute errors-is-xml { xsd:boolean }?,
+    attribute wrap-error-lines { xsd:boolean }?,
+    attribute path-separator { xsd:string? }?,
+    attribute failure-threshold { xsd:integer? }?,
+    attribute arg-separator { xsd:string }?,
+    attribute serialization { xsd:string }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+

@@ -1,0 +1,202 @@
+<specification xmlns:cs="http://www.w3.org/XML/XProc/2006/04/components#" xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax" xmlns:p="http://www.w3.org/ns/xproc" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://docbook.org/ns/docbook" xml:id="step-mail" class="ed" role="step" version="5.0-extension w3c-xproc">
+  <info>
+    <title>XProc 3.0: mail steps</title>
+    <!-- defaults to date formatted <pubdate>2014-12-18</pubdate> -->
+<copyright><year>2018</year><year>2019</year><year>2020</year>
+<holder>the Contributors to the XProc 3.0 Standard Step Library
+specifications</holder>
+</copyright>
+
+<bibliomisc role="github-repo">xproc/3.0-steps</bibliomisc>
+<bibliomisc role="w3c-cg" xlink:href="https://www.w3.org/community/xproc-next/">XProc Next</bibliomisc>
+
+    <bibliorelation type="isformatof" xlink:href="specification.xml">XML</bibliorelation>
+    <authorgroup>
+      <author>
+        <personname>Norman Walsh</personname>
+      </author>
+      <author>
+        <personname>Achim Berndzen</personname>
+      </author>
+      <author>
+        <personname>Gerrit Imsieke</personname>
+      </author>
+      <author>
+        <personname>Erik Siegel</personname>
+      </author>
+    </authorgroup>
+
+    <abstract>
+      <para>This specification describes optional mail related steps for
+<citetitle>XProc 3.0: An XML Pipeline Language</citetitle>.</para>
+    </abstract>
+
+<legalnotice xml:id="sotd" role="status">
+  <para>This specification was published by the
+  <link xlink:href="https://www.w3.org/community/xproc-next/">XProc
+  Next Community Group</link>. It is not a W3C Standard nor is it on
+  the W3C Standards Track. Please note that under the
+  <link xlink:href="https://www.w3.org/community/about/agreements/cla/">W3C
+  Community Contributor License Agreement (CLA)</link> there is a limited
+  opt-out and other conditions apply. Learn more about <link xlink:href="https://www.w3.org/community/">W3C Community and Business
+  Groups</link>.
+  </para>
+  
+  <para>If you wish to make comments regarding this document, please
+  send them to
+  <link xlink:href="mailto:xproc-dev@w3.org">xproc-dev@w3.org</link>.
+  (<link xlink:href="mailto:xproc-dev-request@w3.org?subject=subscribe">subscribe</link>,
+  <link xlink:href="https://lists.w3.org/Archives/Public/xproc-dev/">archives</link>).
+  </para>
+</legalnotice>
+  </info>
+
+  <section xml:id="introduction">
+    <title>Introduction</title>
+
+    <para>This specification describes optional mail related XProc steps.
+A machine-readable description of these steps may be found in
+<link xlink:href="steps.xpl">steps.xpl</link>. </para>
+
+<para>Familarity with the general nature of <biblioref linkend="xproc30"/> steps is assumed; for background details, see
+<biblioref linkend="xproc30-steps"/>.</para>
+</section>
+
+<section xml:id="c.send-mail">
+<title>p:send-mail</title>
+
+<para>The <code>p:send-mail</code> step sends an email message.</para>
+
+<p:declare-step type="p:send-mail">
+  <p:input port="source" sequence="true" content-types="xml"/>
+  <p:output port="result"/>
+</p:declare-step>
+
+<para>The first document on the source port is expected to conform to
+<biblioref linkend="id-draft-klyne"/>. Any additional documents are treated
+as attachments.</para>
+
+<para>The <tag>em:content</tag> may contain either text or HTML. To send some other type as
+the first message body, you must leave the <tag>em:content</tag> element out of the first
+document and supply the body as a second document.</para>
+
+<simplesect>
+  <title>Document properties</title>
+  <para feature="send-mail-preserves-none">No document properties are preserved.</para>
+</simplesect>
+</section>
+
+  <section xml:id="errors">
+    <title>Step Errors</title>
+
+    <para>These steps can raise <glossterm baseform="dynamic-error">dynamic errors</glossterm>. </para>
+
+    <para><termdef xml:id="dt-dynamic-error">A <firstterm>dynamic error</firstterm> is one which occurs while a pipeline
+        is being evaluated.</termdef> Examples of dynamic errors include references to URIs that cannot be resolved,
+      steps which fail, and pipelines that exhaust the capacity of an implementation (such as memory or disk space). For
+      a more complete discussion of dynamic errors, see <xspecref spec="xproc" xref="dynamic-errors"/>. </para>
+
+    <para>If a step fails due to a dynamic error, failure propagates upwards until either a <tag>p:try</tag> is
+      encountered or the entire pipeline fails. In other words, outside of a <tag>p:try</tag>, step failure causes the
+      entire pipeline to fail.</para>
+
+    <para>The following errors can be raised by this step:</para>
+
+    <?step-error-list level="none"?>
+
+  </section>
+
+  <appendix xml:id="conformance">
+<title>Conformance</title>
+
+<para>Conformant processors <rfc2119>must</rfc2119> implement all of the features
+described in this specification except those that are explicitly identified
+as optional.</para>
+
+<para>Some aspects of processor behavior are not completely specified; those
+features are either <glossterm role="unwrapped">implementation-dependent</glossterm> or
+<glossterm role="unwrapped">implementation-defined</glossterm>.</para>
+
+<para><termdef xml:id="dt-implementation-dependent">An
+<firstterm>implementation-dependent</firstterm> feature is one where the
+implementation has discretion in how it is performed.
+Implementations are not required to document or explain
+how <glossterm role="unwrapped">implementation-dependent</glossterm> features are performed.</termdef>
+</para>
+
+<para><termdef xml:id="dt-implementation-defined">An
+<firstterm>implementation-defined</firstterm> feature is one where the
+implementation has discretion in how it is performed.
+Conformant implementations <rfc2119>must</rfc2119> document
+how <glossterm role="unwrapped">implementation-defined</glossterm> features are performed.</termdef>
+</para>
+
+<section xml:id="implementation-defined">
+<title>Implementation-defined features</title>
+
+<para>The following features are implementation-defined:</para>
+
+<?implementation-defined-features?>
+</section>
+
+<section xml:id="implementation-dependent">
+<title>Implementation-dependent features</title>
+
+<para>The following features are implementation-dependent:</para>
+
+<?implementation-dependent-features?>
+</section>
+</appendix>
+
+  <appendix xml:id="references">
+    <title>References</title>
+    <bibliolist>
+      <bibliomixed xml:id="id-draft-klyne"><abbrev>XML format for mail</abbrev>
+<citetitle xlink:href="https://tools.ietf.org/html/draft-klyne-message-rfc822-xml-03">Internet Draft: An
+XML Format for mail and other messages</citetitle>.
+G. Klyne. Network Working Group, IETF, April 2002.</bibliomixed>
+      <bibliomixed xml:id="xproc30"><abbrev>XProc 3.0</abbrev>
+<citetitle xlink:href="http://spec.xproc.org/">XProc 3.0:
+An XML Pipeline Language</citetitle>.
+Norman Walsh, Achim Berndzen, Gerrit Imsieke and Erik Siegel, editors.
+</bibliomixed>
+      <bibliomixed xml:id="xproc30-steps"><abbrev>XProc 3.0 Steps</abbrev>
+<citetitle xlink:href="http://spec.xproc.org/">XProc 3.0 Steps:
+An Introduction</citetitle>.
+Norman Walsh, Achim Berndzen, Gerrit Imsieke and Erik Siegel, editors.
+</bibliomixed>
+    </bibliolist>
+  </appendix>
+
+  <!-- This glossary will automatically be elided if there are no
+     terms marked up as 'firstterm's in this specification. -->
+  <appendix xmlns:db="http://docbook.org/ns/docbook" xml:id="glossary"><title>Glossary</title><glosslist><glossentry><glossterm>dynamic error</glossterm><glossdef><para>A <firstterm>dynamic error</firstterm> is one which occurs while a pipeline
+        is being evaluated.</para></glossdef></glossentry><glossentry><glossterm>implementation-defined</glossterm><glossdef><para>An
+<firstterm>implementation-defined</firstterm> feature is one where the
+implementation has discretion in how it is performed.
+Conformant implementations <rfc2119>must</rfc2119> document
+how <glossterm role="unwrapped">implementation-defined</glossterm> features are performed.</para></glossdef></glossentry><glossentry><glossterm>implementation-dependent</glossterm><glossdef><para>An
+<firstterm>implementation-dependent</firstterm> feature is one where the
+implementation has discretion in how it is performed.
+Implementations are not required to document or explain
+how <glossterm role="unwrapped">implementation-dependent</glossterm> features are performed.</para></glossdef></glossentry></glosslist></appendix>
+
+  <appendix version="5.0-extension w3c-xproc" xml:id="ancillary-files">
+<title>Ancillary files</title>
+
+<para>This specification includes by reference a number of
+ancillary files.</para>
+
+<variablelist>
+<varlistentry>
+<term><link xlink:href="steps.xpl"/></term>
+<listitem>
+<para>An XProc step library for the declared steps.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+</appendix>
+
+</specification>

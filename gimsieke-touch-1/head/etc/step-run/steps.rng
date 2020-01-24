@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar ns="http://www.w3.org/ns/xproc" xmlns="http://relaxng.org/ns/structure/1.0">
+  <!-- This schema could be made more constrained. -->
+  <define name="Step">
+    <ref name="Step-run"/>
+  </define>
+  <define name="Step-run">
+    <element name="run">
+      <optional>
+        <ref name="name.ncname.attr"/>
+      </optional>
+      <ref name="common.attributes"/>
+      <optional>
+        <ref name="use-when.attr"/>
+      </optional>
+      <ref name="step.attributes"/>
+      <interleave>
+        <zeroOrMore>
+          <ref name="WithInput"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <choice>
+            <ref name="Documentation"/>
+            <ref name="PipeInfo"/>
+          </choice>
+        </zeroOrMore>
+      </interleave>
+    </element>
+  </define>
+</grammar>

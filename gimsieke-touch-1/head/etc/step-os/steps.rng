@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar ns="http://www.w3.org/ns/xproc" xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+  <!-- This schema could be made more constrained. -->
+  <define name="Step">
+    <choice>
+      <ref name="Step-os-info"/>
+      <ref name="Step-os-exec"/>
+    </choice>
+  </define>
+  <define name="Step-os-info">
+    <element name="os-info">
+      <optional>
+        <ref name="name.ncname.attr"/>
+      </optional>
+      <ref name="common.attributes"/>
+      <optional>
+        <ref name="use-when.attr"/>
+      </optional>
+      <ref name="step.attributes"/>
+      <zeroOrMore>
+        <choice>
+          <ref name="Documentation"/>
+          <ref name="PipeInfo"/>
+        </choice>
+      </zeroOrMore>
+    </element>
+  </define>
+  <define name="Step-os-exec">
+    <element name="os-exec">
+      <optional>
+        <ref name="name.ncname.attr"/>
+      </optional>
+      <ref name="common.attributes"/>
+      <optional>
+        <ref name="use-when.attr"/>
+      </optional>
+      <ref name="step.attributes"/>
+      <optional>
+        <attribute name="command">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="args">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="cwd">
+          <optional>
+            <data type="string"/>
+          </optional>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="source-is-xml">
+          <data type="boolean"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="result-is-xml">
+          <data type="boolean"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="wrap-result-lines">
+          <data type="boolean"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="errors-is-xml">
+          <data type="boolean"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="wrap-error-lines">
+          <data type="boolean"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="path-separator">
+          <optional>
+            <data type="string"/>
+          </optional>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="failure-threshold">
+          <optional>
+            <data type="integer"/>
+          </optional>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="arg-separator">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="serialization">
+          <data type="string"/>
+        </attribute>
+      </optional>
+      <interleave>
+        <zeroOrMore>
+          <ref name="WithInput"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="WithOption"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <choice>
+            <ref name="Documentation"/>
+            <ref name="PipeInfo"/>
+          </choice>
+        </zeroOrMore>
+      </interleave>
+    </element>
+  </define>
+</grammar>
