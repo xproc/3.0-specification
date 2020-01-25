@@ -7744,24 +7744,52 @@ either case.</para>
 as the state of the filesystem or the state of the web. Consider
 the following pipeline:</para>
 
-<programlisting>&lt;p:xslt name="generate-stylesheet"&gt;
+<programlisting>&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
+                version="3.0"&gt;
+&lt;p:input port="source"/&gt;
+&lt;p:output port="result"/&gt;
+
+  &lt;p:xslt name="generate-stylesheet"&gt;
     &lt;p:with-input port="source" href="someURI"/&gt;
     &lt;p:with-input port="stylesheet" href="someOtherURI"/&gt;
   &lt;/p:xslt&gt;
 
-  &lt;p:store name="save-xslt" href="gen-style.xsl"/&gt;</programlisting>
+  &lt;p:store name="save-xslt" href="gen-style.xsl"/&gt;
+
+  &lt;p:xslt name="style"&gt;
+    &lt;p:with-input port="source"&gt;
+      &lt;p:pipe step="main" port="source"/&gt;
+    &lt;/p:with-input&gt;
+    &lt;p:with-input port="stylesheet" href="gen-style.xsl"/&gt;
+  &lt;/p:xslt&gt;
+&lt;/p:declare-step&gt;</programlisting>
 
 <para>There’s no guarantee that “style” step will execute after the
 “save-xslt” step. In this case, the solution is straightforward. Even
 if you need the saved stylesheet, you don't need to rely on it in your
 pipeline:</para>
 
-<programlisting>&lt;p:xslt name="generate-stylesheet"&gt;
+<programlisting>&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
+                name="main" version="3.0"&gt;
+&lt;p:input port="source"/&gt;
+&lt;p:output port="result"/&gt;
+
+  &lt;p:xslt name="generate-stylesheet"&gt;
     &lt;p:with-input port="source" href="someURI"/&gt;
     &lt;p:with-input port="stylesheet" href="someOtherURI"/&gt;
   &lt;/p:xslt&gt;
 
-  &lt;p:store name="save-xslt" href="gen-style.xsl"/&gt;</programlisting>
+  &lt;p:store name="save-xslt" href="gen-style.xsl"/&gt;
+
+  &lt;p:xslt name="style"&gt;
+    &lt;p:with-input port="source"&gt;
+      &lt;p:pipe step="main" port="source"/&gt;
+    &lt;/p:with-input&gt;
+    &lt;p:with-input port="stylesheet"&gt;
+      &lt;p:pipe step="generate-stylesheet" port="result"/&gt;
+    &lt;/p:with-input&gt;
+  &lt;/p:xslt&gt;
+&lt;/p:declare-step&gt;</programlisting>
 
 <para>Now the result is independent of the implementation strategy.</para>
 
