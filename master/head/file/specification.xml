@@ -268,7 +268,9 @@ steps is assumed; for background details, see
     
     <simplesect>
       <title>Document properties</title>
-      <para feature="directory-list-preserves-none">No document properties are preserved.</para>
+      <para feature="directory-list-preserves-none">Besides the <property>content-type</property> property, 
+        the resulting document has a <property>base-uri</property>. Its value is identical to the top-level
+        element’s <tag class="attribute">xml:base</tag> attribute, that is, to the directory’s URI.</para>
     </simplesect>
   </section>
   
@@ -317,7 +319,8 @@ steps is assumed; for background details, see
 
   <simplesect>
     <title>Document properties</title>
-    <para feature="load-preserves-none">No document properties are preserved.</para>
+    <para feature="file-copy-preserves-none">The resulting document has no properties 
+  apart from <property>content-type</property>. In particular, it has no <property>base-uri</property>.</para>
   </simplesect>
   
 </section>
@@ -368,7 +371,8 @@ steps is assumed; for background details, see
 
   <simplesect>
     <title>Document properties</title>
-    <para feature="load-preserves-none">No document properties are preserved.</para>
+    <para feature="file-delete-preserves-none">The resulting document has no properties 
+  apart from <property>content-type</property>. In particular, it has no <property>base-uri</property>.</para>
   </simplesect>
 
 </section>
@@ -477,7 +481,8 @@ steps is assumed; for background details, see
 
   <simplesect>
     <title>Document properties</title>
-    <para feature="load-preserves-none">No document properties are preserved.</para>
+    <para feature="file-info-preserves-none">The resulting document has no properties 
+  apart from <property>content-type</property>. In particular, it has no <property>base-uri</property>.</para>
   </simplesect>
 
 </section>
@@ -509,7 +514,7 @@ steps is assumed; for background details, see
       <tag>c:error</tag> element which may contain additional, implementation-defined, information about the nature of
     the error.</para>
 
-  <para>If an error occurs and <option>fail-on-error</option> is <code>true</code>, one of the following errors is
+  <para>If an error occurs and <option>fail-on-error</option> is <code>true</code>, the following error is
     raised:</para>
   <itemizedlist>
     <listitem>
@@ -520,7 +525,8 @@ steps is assumed; for background details, see
 
   <simplesect>
     <title>Document properties</title>
-    <para feature="load-preserves-none">No document properties are preserved.</para>
+    <para feature="file-mkdir-preserves-none">The resulting document has no properties 
+  apart from <property>content-type</property>. In particular, it has no <property>base-uri</property>.</para>
   </simplesect>
 
 </section>
@@ -577,7 +583,8 @@ steps is assumed; for background details, see
 
   <simplesect>
     <title>Document properties</title>
-    <para feature="load-preserves-none">No document properties are preserved.</para>
+    <para feature="file-move-preserves-none">The resulting document has no properties 
+  apart from <property>content-type</property>. In particular, it has no <property>base-uri</property>.</para>
   </simplesect>
 
 </section>
@@ -637,7 +644,8 @@ steps is assumed; for background details, see
 
   <simplesect>
     <title>Document properties</title>
-    <para feature="load-preserves-none">No document properties are preserved.</para>
+    <para feature="file-create-tempfile-preserves-none">The resulting document has no properties 
+  apart from <property>content-type</property>. In particular, it has no <property>base-uri</property>.</para>
   </simplesect>
 
 </section>
@@ -672,13 +680,16 @@ value).</para>
 timestamp is set to this value. Otherwise the file's timestamp is set
 to the current system's date and time.</para>
 
+<para>If the operation is successful, the step returns a <tag>c:result</tag> element containing the absolute URI 
+of the file.</para>
+
 <para>If an error occurs and <option>fail-on-error</option> is
 <code>false</code>, the step returns a <tag>c:error</tag> element
 which may contain additional, implementation-defined, information
 about the nature of the error.</para>
 
 <para>If an error occurs and <option>fail-on-error</option> is
-<code>true</code>, one of the following errors is raised:</para>
+<code>true</code>, the following error is raised:</para>
   <itemizedlist>
     <listitem>
       <para><error code="D0011">It is a <glossterm>dynamic error</glossterm> if the resource referenced by the
@@ -689,7 +700,8 @@ or exists and cannot be accessed.</error></para>
 
   <simplesect>
     <title>Document properties</title>
-    <para feature="load-preserves-none">No document properties are preserved.</para>
+    <para feature="file-touch-preserves-none">The resulting document has no properties 
+  apart from <property>content-type</property>. In particular, it has no <property>base-uri</property>.</para>
   </simplesect>
 </section>
 
