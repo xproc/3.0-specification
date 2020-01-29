@@ -1372,8 +1372,14 @@ other kind of node, the entire node (and <emphasis>not</emphasis> just
 <section xml:id="c.http-request">
 <title>p:http-request</title>
 
-<para>The <code>p:http-request</code> step provides for interaction
-with resources over HTTP or related protocols.</para>
+<para>The <code>p:http-request</code> step allows authors to interact
+with resources over HTTP or related protocols. Implementations
+<rfc2119>must</rfc2119> support the <literal>http</literal> and
+<literal>https</literal> protocols.
+(Implementors are encouraged to support as many protocols as
+practical. In particular, pipeline authors may attempt to use
+<tag>p:http-request</tag> to load documents with computed URIs using
+the <literal>file:</literal> scheme.)</para>
 
 <p:declare-step type="p:http-request">
   <p:input port="source" content-types="any" sequence="true"/>
@@ -1387,349 +1393,466 @@ with resources over HTTP or related protocols.</para>
   <p:option name="parameters" as="map(xs:QName, item()*)?"/>
   <p:option name="assert" as="xs:string" select="'.?status-code lt 400'"/>
 </p:declare-step>
-  
-<para>In the most simple case, the HTTP request is controlled by the <option>href</option>
-option and the <option>method</option> option which defaults to 
-“<literal>GET</literal>”. The <option>method</option> option specifies the method 
-  to be used against the IRI specified by the <option>href</option>, 
-  e.g. GET or POST.</para>
-  
-<para>The request body is constructed using the document(s) appearing on the 
-<port>source</port> port. The 
-<option>serialization</option> option is used to
-control the serialization for these documents in the request body. If a document 
-has a “<literal>serialization</literal>” property,
-the serialization is controlled by the merger of the two maps, where the entries in the
-“<literal>serialization</literal>” property take precedence.</para> 
-<para>If exactly one document appears on the <port>source</port> port, the request headers
-  are constructed using entries in the document's properties and the headers 
-  provided with the <option>headers</option> options (see below).
-  If no document appears on the <port>source</port> port, the request body will be
-empty and the headers will be constructed using the <option>headers</option> options.</para>
-  
-  <note xml:id="note-http-methods">
-    <para>Implementors are encouraged
-      to support as many protocols as practical. In particular, pipeline authors may
-      attempt to use <tag>p:http-request</tag> to load documents with computed
-      URIs using the <literal>file:</literal> scheme.</para></note>
-  
-<para>The results of performing an HTTP request will appear on the <port>result</port>
-port and the <port>report</port> port. If the request was successful, the documents
-contained in the message body (if any) will appear on the <port>result</port> port. The
-distinction between XML documents, HTML documents, text documents etc. is made  using the
-response header's “<literal>Content-Type</literal>” or the entry “<literal>content-type</literal>”
-in the map provided as the <option>parameters</option> option (see below).
-The response's status code and the response's header fields will be made available on
-the <port>report</port> port as a <literal>map</literal>. The keys 
-“<literal>status-code</literal>” (associated with an instance of <code>xs:integer</code>) 
-and “<literal>headers</literal>” (associated with a <code>map(xs:string, xs:string)</code>)
-will always be present, although the map may be empty. Header names are
+
+<para>The <tag>p:http-request</tag> step performs the HTTP request
+specified by the <option>method</option> option against the URI specified in
+the <option>href</option> option. In simple cases, for example, a GET
+request on an unauthenticated URI, nothing else is necessary to form a
+complete request.</para>
+
+<para>If the method, for example, POST, supports a body, the request
+body is constructed using the document(s) appearing on the
+<port>source</port> port. For the convenience of pipeline authors,
+documents may appear on the <port>source</port> port even when the
+request method (such as GET or HEAD) does not define the semantics of
+a payload. If the semantics are undefined, the documents are
+ignored when constructing the request unless the
+<option>parameters</option> option specifies
+“<literal>send-body-anyway</literal>” as <code>true()</code>.</para>
+
+<para>The headers for the request come from the
+<option>headers</option> option (see below). If exactly one document
+appears on the <port>source</port> port, its document properties also
+contribute to the overall request headers.</para>
+
+<para>The response from the HTTP request appears on the
+<port>result</port> and <port>report</port> ports. Any documents
+contained in the response body will appear on the <port>result</port>
+port. Each document in the response will be parsed according to
+its content-type (but see “<literal>override-content-type</literal>”
+in the <option>parameters</option> option).
+Details about the outcome of the request will appear as a map on
+the <port>report</port> port. The map will always contain
+“<literal>status-code</literal>” (an <code>xs:integer</code>) and
+“<literal>headers</literal>” (a <code>map(xs:string,
+xs:string)</code>). The header map may be empty. Header names are
 converted to uppercase.</para>
-  
-<para>For the convenience of pipeline authors, <tag>p:http-request</tag> accepts documents
-on the <port>source</port> port even when the semantics of sending a payload with the
-specified request method (like “<literal>GET</literal>” or “<literal>HEAD</literal>”) is not defined. 
-For those methods the documents on the <port>source</port> are ignored when constructing
-  the request, unless the <option>parameters</option> option associates the key 
-  “<literal>send-body-anyway</literal>” explicitly with <code>true()</code>.</para>
-  
+
+<note xml:id="http-header-uppercase" role="editorial">
+<title>Editorial Note</title>
+<para>Uppercase? I’d have expected lowercase.</para>
+</note>
+
 <para>The <tag>p:http-request</tag> step has the following options:</para>
+<variablelist>
+<varlistentry>
+  <term><option>href</option></term>
+<listitem>
+  <para>The <option>href</option> option specifies the request’s IRI.
+  Relative values are resolved against the base URI of the element on
+  which the option is specified (the relevant <tag>p:with-option</tag>
+  or the step element in the case of a syntactic shortcut value).</para>
+
+  <para>Fragment identifiers are removed before making the request.
+  Query parameters are passed through unchanged.
+  <error code="C0128">It is a <glossterm>dynamic error</glossterm> if the
+  URI’s scheme is unknown or not supported.</error> It is the pipeline
+  author’s responsibility to escape problematic UTF-8 characters in the
+  <option>href</option> value, for example with <function>escape-html-uri()</function>.
+  </para>
+</listitem>
+</varlistentry>
+<varlistentry>
+  <term><option>method</option></term>
+<listitem>
+  <para>The <option>method</option> specifies the HTTP request method.
+  The value is implicitly turned into an uppercase string if
+  necessary. <impl>It is <glossterm>implementation defined</glossterm>
+  which HTTP methods are supported.</impl> An implementation
+  <rfc2119>should</rfc2119> implement at least the methods
+  <literal>GET</literal>, <literal>POST</literal>,
+  <literal>PUT</literal>, <literal>DELETE</literal>, and
+  <literal>HEAD</literal> (for HTTP and HTTPS).
+  <error code="C0122">It is a <glossterm>dynamic error</glossterm> if
+  the given method is not supported.</error></para>
+</listitem>
+</varlistentry>
+<varlistentry>
+  <term><option>serialization</option></term>
+<listitem>
+  <para>The <option>serialization</option> option is used to control
+  the serialization of documents for the request body. If a document
+  has a “<literal>serialization</literal>” document property, the
+  effective value of the serialization options is the union of the two
+  maps, where the entries in the “<literal>serialization</literal>”
+  document property take precedence.</para>
+</listitem>
+</varlistentry>
+<varlistentry>
+  <term><option>headers</option></term>
+<listitem>
+  <para>The key/value pairs in the <option>headers</option> map are
+  used to construct the request headers. Each map key is used as a
+  header name and the value associated with that key in the map is
+  used as the header value.</para>
+
+  <para>If a single document appears on the <port>source</port> port,
+  then document properties on that document may be added as additional
+  headers. All of the document properties will be used as headers
+  <emphasis>except</emphasis> “<literal>base-uri</literal>”,
+  “<literal>serialization</literal>” and any property with a name that
+  already appears in the <option>headers</option> map. (In other words,
+  if the same header name appears in both places, the value from the map
+  is used and the value from the document properties is ignored.) If multiple
+  documents appear on the <port>source</port> port, none of their properties
+  are used in the request headers.</para>
+
+  <para>Finally, if the <option>auth</option> option is specified, any
+  key or property that would have contributed a header named
+  “<literal>authorization</literal>” (irrespective of case) is
+  ignored. The authorization header is determined exclusively by the
+  <option>auth</option> option when it is present.</para>
+
+  <para>HTTP headers are case-insensitive but keys in maps are not;
+  be careful when specifying the request headers.
+  <error code="C0127">It is a <glossterm>dynamic error</glossterm> if
+  the <option>headers</option> map contains two keys that are the same
+  when compared in a case-insensitive manner.</error>
+  (That is, when <code>fn:uppercase($key1) = fn:uppercase($key2)</code>.)
+  </para>
+</listitem>
+</varlistentry>
+<varlistentry>
+  <term><option>auth</option></term>
+<listitem>
+  <para>Many web services are only available to authenticated users,
+  that is, to users who have “logged in”. The <option>auth</option>
+  option allows the pipeline author to specify information that may be
+  required to generate an “<literal>Authorization</literal>” header.
+  The standard values support HTTP “Basic” and “Digest”
+  authentication, but other authentication methods are allowed.</para>
+
+  <para>The following standard keys are defined:</para>
+
   <variablelist>
-    <varlistentry>
-      <term><option>href</option></term>
+  <varlistentry><term><literal>username</literal> (<code>xs:string</code>)</term>
+  <listitem>
+  <para>The username.</para>
+  </listitem>
+  </varlistentry>
+  <varlistentry><term><literal>password</literal> (<code>xs:string</code>)</term>
+  <listitem>
+  <para>The password associated with the username.</para>
+  </listitem>
+  </varlistentry>
+  <varlistentry><term><literal>auth-method</literal> (<code>xs:string</code>)</term>
+  <listitem>
+  <para>The authentication method. Appropriate values for the
+  “<literal>auth-method</literal>” key are “<literal>Basic</literal>”
+  or “<literal>Digest</literal>” but other values are allowed. If the
+  authentication method is “<literal>Basic</literal>” or
+  “<literal>Digest</literal>”, authentication is handled as per
+  <biblioref linkend="rfc2617"/>. <impl>The interpretation of values
+  associated with the “<literal>auth-method</literal>” key other than
+  “<literal>Basic</literal>” or “<literal>Digest</literal>” is
+  <glossterm>implementation defined</glossterm>.</impl></para>
+  </listitem>
+  </varlistentry>
+  <varlistentry><term><literal>send-authorization</literal> (<code>xs:boolean</code>)</term>
+  <listitem>
+  <para>The “<literal>send-authorization</literal>” key can be used to
+  attempt to allow the request to avoid an authentication challenge.
+  If the “<literal>send-authorization</literal>” key is
+  “<literal>true()</literal>”, and the authentication method specified
+  by the value associated with the “<literal>auth-method</literal>”
+  key supports generation of an “<literal>Authorization</literal>”
+  header without a challenge, then the header is generated and sent on
+  the first request. If the “<literal>send-authorization</literal>”
+  key is absent or does not have the value “<literal>true</literal>”,
+  the first request is sent without an
+  “<literal>Authorization</literal>” header.</para>
+  </listitem>
+  </varlistentry>
+  </variablelist>
+
+  <para><impl>Other key value pairs in map “<literal>auth</literal>”
+  are <glossterm>implementation defined</glossterm>.</impl> <error code="C0123">It is a <glossterm>dynamic error</glossterm> if any key
+  in the “<literal>auth</literal>” map is associated with a value that
+  is not an instance of the required type.</error></para>
+
+  <para>If the initial response to the request is an authentication
+  challenge, the values provided in the <literal>auth</literal> map
+  and any relevant data from the challenge are used to generate an
+  “<literal>Authorization</literal>” header and the request is sent
+  again. If that authorization fails, the request is not
+  retried.</para>
+
+  <para><error code="C0003">It is a <glossterm>dynamic
+  error</glossterm> if a “<literal>username</literal>” or a
+  “<literal>password</literal>” key is present without specifying a
+  value for the “<literal>auth-method</literal>” key, if the requested
+  <literal>auth-method</literal> isn't supported, or the
+  authentication challenge contains an authentication method that
+  isn't supported.</error> All implementations <rfc2119>must</rfc2119>
+  support “Basic” and “Digest” authentication per <biblioref linkend="rfc2617"/>.</para>
+
+</listitem>
+</varlistentry>
+<varlistentry>
+  <term>parameters</term>
+  <listitem>
+    <para>The <option>parameter</option> option can be used to provide
+    values for fine tuning the construction of the request and/or
+    handling of the server response. A number of parameters are
+    defined in this specification. <impl>It is
+    <glossterm>implementation defined</glossterm> which other
+    key/value pairs in the <option>parameters</option> option are
+    supported.</impl></para>
+
+    <variablelist>
+      <varlistentry>
+        <term>override-content-type (<code>xs:string</code>)</term>
       <listitem>
-        <para>The <option>href</option> specifies the request's IRI. Relative values are resolved against the base URI of 
-                 the element on which the option is 
-          specified (<tag>p:with-option</tag>  or the step in case of a syntactic shortcut value).</para>
-        <para>Fragment identifiers will be removed. Query parameters are
-          passed through unchanged. <error code="C0128">It is a <glossterm>dynamic error</glossterm> if
-          the URI’s scheme is unknown or not supported.</error></para>
-        <note xml:id="http-uri-query" role="editorial">
-          <title>Editorial Note</title>
-          <para>What do we say about URI escaping?</para>
-        </note>
+      <para>Ordinarily, the value of the
+      <literal>content-type</literal> header provided in the server
+      response controls the interpretation of any body in the
+      response. If the “<literal>override-content-type</literal>”
+      parameter is provided, then its value is used to interpret the
+      body. The content-type header that appears on the
+      <port>report</port> port is not changed. <error code="C0030">It
+      is a <glossterm>dynamic error</glossterm> if the response body cannot
+      be interpreted as requested (e.g. <literal>application/json</literal>
+      to override <literal>application/xml</literal> content).</error></para>
       </listitem>
-    </varlistentry>
-    <varlistentry>
-      <term><option>method</option></term>
+      </varlistentry>
+      <varlistentry>
+        <term>http-version (<code>xs:string</code>)</term>
       <listitem>
-        <para>The <option>method</option> specifies the request's method. The value is implicitly
-        turned into an uppercase string if necessary. <impl>It is <glossterm>implementation defined</glossterm>
-          which HTTP methods are supported.</impl> An implementation <rfc2119>should</rfc2119> at least implement
-          the methods <literal>GET</literal>, <literal>POST</literal>, <literal>PUT</literal>, 
-          <literal>DELETE</literal>, and <literal>HEAD</literal> (for HTTP). <error code="C0122">It is a
-          <glossterm>dynamic error</glossterm> if the given method is not supported.</error></para>
+        <para>The <literal>http-version</literal> parameter indicates
+        which version of HTTP <rfc2119>must</rfc2119> be used for the request.</para>
       </listitem>
-    </varlistentry>
-    <varlistentry>
-      <term><option>serialization</option></term>
+      </varlistentry>
+      <varlistentry>
+        <term>accept-multipart (<code>xs:boolean</code>)</term>
       <listitem>
-        <para>If present, the map provided for the <option>serialization</option> option is used to
-        control the serialization of the documents on the <port>source</port> port. If one of this 
-          documents has a “<literal>serialization</literal>” property,
-          the serialization is controlled by the merger of the two maps where the entries in the
-          “<literal>serialization</literal>” property takes precedence.</para>
+        <para>If the <literal>accept-multipart</literal> parameter is
+        present and explicitly has the value <code>false()</code>, a
+        dynamic error will be raised, if a multipart response is
+        received from the server. This feature is a convenience for
+        pipeline authors as it will raise an error when the multipart
+        request is received, rather than having the presence of a
+        sequence raise an error further along in the pipeline, or
+        simply producing anomalous results. <error code="C0125">It is
+        a <glossterm>dynamic error</glossterm> if the key
+        “<literal>accept-multipart</literal>” as the value
+        <code>false()</code> and a multipart response is
+        detected.</error></para>
       </listitem>
-    </varlistentry>
-    <varlistentry>
-      <term><option>headers</option></term>
+      </varlistentry>
+      <varlistentry>
+        <term>multipart-boundary (<code>xs:string</code>)</term>
       <listitem>
-        <para>If present, the key/value pairs are used to construct the request headers. The request
-        headers effectively to be send are constructed as follow:</para>
-          <orderedlist>
-            <listitem><para>If exactly one document appears on the <port>source</port> port, the document 
-              property except “<literal>base-uri</literal>” and “<literal>serialization</literal>” will be 
-              taken as request headers. Otherwise an empty map is used for the following construction steps.</para>
-            </listitem>
-            <listitem>
-              <para>This header map is then merged with the entries of the <option>headers</option> option
-                (if present), where the latter takes precedence. This means for instance that the document property 
-                “<literal>content-type</literal>” is overwritten by an entry for “<literal>Content-Type</literal>” 
-                (in the map provided for the <option>headers</option> option).</para>
-            </listitem>
-            <listitem>
-              <para>Any entry for key “<literal>Authorization</literal>” is then overwritten or removed according
-              to the values provided for the <option>auth</option> option (if present).</para>
-            </listitem>
-          </orderedlist>
-          <para>As HTTP headers are case-insensitive but keys in maps are not, be careful when specifying
-            the request's headers. <error code="C0127">It is a <glossterm>dynamic error</glossterm> if the 
-              effective map from which the HTPP headers are constructed contains two keys which are case-blind
-            equal (<code>fn:uppercase($key1) = fn:uppercase($key2)</code>).</error></para>
+        <para>If more than one document appears on the <port>source</port> port,
+        a multipart request will be sent. The “<literal>multipart-boundary</literal>”
+        parameter can be used to specify the boundary marker. The boundary marker
+        <rfc2119>must not</rfc2119> begin with “<code>--</code>”.</para>
       </listitem>
-    </varlistentry>
-    <varlistentry>
-      <term><option>auth</option></term>
+      </varlistentry>
+      <varlistentry>
+        <term>multipart-content-type (<code>xs:string</code>)</term>
       <listitem>
-        <para>The map provided for the <option>auth</option> is used to control the authentication process for
-        the HTTP request. If no value or an empty map is provided, the value provided for
-        HTTP header “<literal>Authorization</literal>” (if present) is used as authentication. The following keys and 
-          the expected type of their associated values are predefined: “<literal>username</literal>” (<code>xs:string</code>),
-          “<literal>password</literal>” (<code>xs:string</code>), “<literal>auth-method</literal>” (<code>xs:string</code>),
-          "<literal>preemptive-auth</literal>” (<code>xs:boolean</code>), and “<literal>certificates</literal>”
-          (<code>map(xs:string, item()+)+</code>). <impl>Other key value pairs in map “<literal>auth</literal>” are 
-            <glossterm>implementation defined</glossterm>.</impl> <error code="C0123">It is a <glossterm>dynamic
-              error</glossterm> if any key in the “<literal>auth</literal>” map  is associated with a value that is
-            not an instance of the required type.</error></para>
-        <para>For the purposes of avoiding an authentication challenge, if the “<literal>send-authorization</literal>”
-          key is associated with <literal>true()</literal> and the authentication method specified by the value associated
-          with the “<literal>auth-method</literal>” key supports generation of an “<literal>Authorization</literal>” header 
-          without a challenge, then the header is generated and sent on the first request. If the 
-          “<literal>send-authorization</literal>” key is absent, is not associated with an instance of
-          <code>xs:boolean</code> or has the value <literal>false()</literal>, then the first request is sent 
-          without an “<literal>Authorization</literal>” header.</para>
-        <para>If the initial response to the request is an authentication challenge, the values provided for the
-          “<literal>auth-method</literal>”, “<literal>username</literal>”, “<literal>password</literal>” keys and 
-          any relevant data from the challenge are used to generate an “<literal>Authorization</literal>” header 
-          and the request is sent again. If that authorization fails, the request is not retried.</para>
-        <para>Appropriate values for the “<literal>auth-method</literal>” key are “<literal>Basic</literal>” 
-          or “<literal>Digest</literal>” but other values are allowed. If the authentication method 
-          is “<literal>Basic</literal>” or “<literal>Digest</literal>”, authentication is handled 
-          as per <biblioref linkend="rfc2617"/>. <impl>The interpretation of values 
-            associated with the “<literal>auth-method</literal>” key other 
-            than “<literal>Basic</literal>” or “<literal>Digest</literal>” is
-            <glossterm>implementation defined</glossterm>.</impl></para>
-        <para><error code="C0003">It is a <glossterm>dynamic error</glossterm> if a “<literal>username</literal>”
-          or a “<literal>password</literal>” key is present without specifying a value for the 
-          “<literal>auth-method</literal>” key, if the requested <literal>auth-method</literal> isn't supported, 
-          or the authentication challenge contains an authentication method that isn't
-          supported.</error> All implementations <rfc2119>must</rfc2119> support “Basic”
-          and “Digest” authentication per <biblioref linkend="rfc2617"/>.</para>
-        <para>Additionally certificates may be provided for authenticating the client with the server.<impl>The
-        support and interpretation of the values associated with key “<literal>certificates</literal>” are
-        implementation defined.</impl></para>
-        <note xml:id="c.http-certificate" role="editorial">
-          <title>Editorial Note</title>
-          <para>TBD: I think we need to say more about certificates.</para>
-        </note>
+        <para>If more than one document appears on the
+        <port>source</port> port, a multipart request will be sent.
+        The “<literal>multipart-content-type</literal>” parameter can
+        be used to specify the content-type of the request. The
+        content type <rfc2119>must</rfc2119> be a multipart content
+        type (it must begin “<literal>multipart/</literal>”).
+        </para>
       </listitem>
-    </varlistentry>
-    <varlistentry>
-      <term>parameters</term>
-      <listitem>
-        <para>The <option>parameter</option> option can be used to provide values for fine tuning the
-        construction of the request and/or the handling of the servers response. The following key-value pairs, the
-        required value type and their semantics are predefined. <impl>It is <glossterm>implementation defined</glossterm>
-        which other key-value pairs in the <option>parameters</option> option are supported.</impl> 
-          <error code="C0124">It is a <glossterm>dynamic error</glossterm> if any key in the “parameters” map is 
-            associated with a value that is not an instance of the required type.</error></para>
-        <variablelist>
-          <varlistentry>
-            <term>override-content-type</term>
-            <listitem>
-              <para>The value associates with the “<literal>override-content-type</literal>” key controls interpretation of the 
-                response's <literal>Content-Type</literal> header. The value must be an instance of <code>xs:string</code>.
-                If the key-value pair is present, the response will be treated as if the response contained a
-                “<literal>Content-Type</literal>” header given by its value. 
-                The original Content-Type header will however be reflected unchanged as entry in the document on the 
-                <port>report</port> port. <error code="C0030">It is a <glossterm>dynamic error</glossterm> if the 
-                  value cannot be used (e.g. application/json to override application/xml).</error></para>
-            </listitem>
-          </varlistentry>
-          <varlistentry>
-            <term>http-version</term>
-            <listitem>
-              <para>The value associated with the “<literal>http-version</literal>” key must be an instance of
-              <code>xs:string</code>. It indicated which HTTP version has to be used for the request.</para>
-            </listitem>
-          </varlistentry>
-          <varlistentry>
-            <term>multipart</term>
-            <listitem>
-              <para>The key “<literal>multipart</literal>” must be associated with an instance of 
-                <code>xs:boolean</code>. If the associated value is <code>false()</code> a dynamic 
-                  error will be raised, if a multipart response is delivered by the server. This feature
-                relieves pipeline authors from testing the number of documents delivered from 
-                <tag>p:http-request</tag> if the receiving steps have a non-sequence input port.
-                <error code="C0125">It
-                is a <glossterm>dynamic error</glossterm> if key “<literal>multipart</literal>” is associated
-                with <code>false()</code> and a multipart response is detected.</error></para>
-            </listitem>
-          </varlistentry>
-          <varlistentry>
-            <term>content-encoding</term>
-            <listitem>
-              <para>The value associated with the “<literal>content-encoding</literal>” key must be an instance
-              of <code>xs:string</code>. If the key-value pair is present, the response will be treated as if the response
-              contained a “<literal>Content-Encoding</literal>” header given by its value. The original Content-Encoding
-              will however be reflected unchanged as entry in the document on the <port>report</port> port.</para>
-            </listitem>
-          </varlistentry>
-          <varlistentry>
-            <term>transfer-encoding</term>
-            <listitem>
-              <note xml:id="http-uri-transfer-encoding" role="editorial">
-                <title>Editorial Note</title>
-                <para>TBD: How does this entry differ from the "transfer-encoding" header?</para>
-              </note>
-            </listitem>
-          </varlistentry>
-          <varlistentry>
-            <term>permit-expired-ssl-certificate</term>
-            <listitem>
-              <para>The “<literal>permit-expired-ssl-certificate</literal>” key must be associated with
-              a value which is an instance of <code>xs:boolean</code>. If it is associated with 
-                <code>true()</code> it allows HTTPS requests to still work when the server
-              provides an SSL certificate which has expired.</para>
-            </listitem>
-          </varlistentry>
-          <varlistentry>
-            <term>permit-untrusted-ssl-certificate</term>
-            <listitem>
-              <para>The value associated with the “<literal>permit-untrusted-ssl-certificate</literal>” must
-                be an instance of <code>xs:boolean</code>. If it is <code>true()</code> it allows HTTPS requests 
-                to still work when the server provides an SSL certificate which is not trusted, 
-                this may be because the CA (Certificate Authority) is unknown.</para>
-            </listitem>
-          </varlistentry>
-          <varlistentry>
-            <term>follow-redirect</term>
-            <listitem>
-              <para>The “<literal>follow-redirect</literal>” must be associated with an instance of
-              <code>xs:integer</code>. It allows to specify the step’s behaviour in case of a redirect
-                response. <literal>0</literal> indicates that redirects are not to be followed, 
-                <literal>-1</literal> indicates that redirects are to be followed indefinitely, a
-                specific number indicates the maximum number of redirects to follow. <impl>The default
-              behaviour in case of a redirect response is <glossterm>implementation defined</glossterm>.</impl></para>
-            </listitem>
-          </varlistentry>
-          <varlistentry>
-            <term>timeout</term>
-            <listitem>
-              <para>The value associated with the “<literal>timeout</literal>” key must be a non-negative
-                instance of <code>xs:decimal</code>. It controls the time the XProc processor is
-                waiting for the request to be answered. If a value is given for <code>timeout</code>
-                it is taken as the number of seconds to wait for the response to be delivered.
-                If no response is received after that time, the request is terminated and a status-code
-                <literal>408</literal> is assumed.</para>
-              </listitem>
-            </varlistentry>
-          <varlistentry>
-            <term>fail-on-timeout</term>
-            <listitem>
-              <para>The value associated with the 
-                “<literal>fail-on-timeout</literal>” key which must be an instance of <code>xs:boolean</code>. If
-              the key is present and is associated with <code>true()</code>, a dynamic error is raised in case of
-                a status code <literal>408</literal> (either as a consequence of setting a value for the 
-                “<literal>timeout</literal>” key or as status code returned by a server).
-                <error code="C0078">It is a <glossterm>dynamic error</glossterm>
-                  if the value associated with the “<literal>fail-on-timeout</literal>” is associated with 
-                  <code>true()</code> and a HTTP status code <literal>408</literal> is encountered.</error></para>
-              <note>
-                <title>Note</title>
-                <para>Please note the difference between attribute <code>timeout</code>
-                  on <code>p:http-request</code> and the key “<literal>fail-on-timeout</literal>” in the
-                  <option>parameters</option> map:
-                  If the step does not finish in the set time,
-                  <code>D0053</code> is raised. If the request does not finish in time
-                  and fail-on-timeout is true, <code>C0078</code> is raised. The actual
-                  times after which a timeout is detected may also differ slightly.
-                </para>
-              </note>
-            </listitem>
-          </varlistentry>
-          <varlistentry>
-            <term>status-only</term>
-            <listitem>
-              <para>The “<literal>status-only</literal>” may be used to save resources on parsing the response 
-                when the pipeline author is only interested in the response code. The key must be associated with
-              an instance of <code>xs:boolean</code>. If it is associated with <literal>true()</literal>, an empty 
-              sequence is return on the <port>result</port> port and the map on the <port>report</port> 
-                will contain the status code and an empty map for “<literal>headers</literal>”.</para>
-            </listitem>
-          </varlistentry>
-          <varlistentry>
-            <term>suppress-cookies</term>
-            <listitem>
-              <para>The key “<literal>suppress-cookies</literal>” must be associated with an instance of 
-              <code>xs:boolean</code>. If the value is <code>true()</code>, no cookies must be send
-              with the HTTP request.</para>
-            </listitem>
-          </varlistentry>
-          <varlistentry>
-            <term>send-body-anyway</term>
-            <listitem>
-              <para>The key “<literal>send-body-anyway</literal>” must be associated with an instance of 
-                <code>xs:boolean</code>. If the value is <code>true()</code>, a request body is constructed
-              from the documents appearing on the <port>source</port> port although the semantics of
-              sending a body is not specified for the used HTTP method.</para>
+      </varlistentry>
+      <varlistentry>
+        <term>override-content-encoding (<code>xs:string</code>)</term>
+        <listitem>
+          <para>If the “<literal>override-content-encoding</literal>”
+          parameter is present, the response will be treated as if the
+          response contained a “<literal>content-encoding</literal>”
+          header with the specified value. The content-encoding header
+          that appears on the <port>report</port> port is not changed.
+          </para>
+          <!-- FIXME: Don't we need an error for the case where the implementation doesn't
+               understand how to interpret the override-content-encoding provided? -->
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>transfer-encoding (<code>xs:string</code>)</term>
+        <listitem>
+          <para>If the “<literal>transfer-encoding</literal>”
+          parameter is present, the request must be sent with the specified transfer
+          encoding.</para>
+          <!-- FIXME: Don't we need an error for the case where the implementation doesn't
+               understand how to interpret the override-content-encoding provided? -->
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>permit-expired-ssl-certificate (<code>xs:boolean</code>)</term>
+        <listitem>
+          <para>If “<literal>permit-expired-ssl-certificate</literal>” is true, then the processor
+          should not reject responses where the server provides an expired SSL certificate.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>permit-untrusted-ssl-certificate (<code>xs:boolean</code>)</term>
+        <listitem>
+          <para>If “<literal>permit-untrusted-ssl-certificate</literal>” is true, then the
+          processor should not reject response where the server provides an SSL certificate which
+          is not trusted, for example, because the certificate authority (CA) is unknown.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>follow-redirect (<code>xs:integer</code>)</term>
+        <listitem>
+          <para>The “<literal>follow-redirect</literal>” parameter
+          allows the pipeline author to specify the step’s behaviour in the case of a redirect
+          response. A value of <literal>0</literal> indicates that redirects are not to be followed, 
+          <literal>-1</literal> indicates that redirects are to be followed indefinitely, and a
+          specific number indicates the maximum number of redirects to follow. <impl>The default
+          behaviour in case of a redirect response is <glossterm>implementation defined</glossterm>.</impl>
+          </para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>timeout (<code>xs:integer</code>)</term>
+        <listitem>
+          <para>If a “<literal>timeout</literal>” is specified, it
+          <rfc2119>must</rfc2119> be a non-negative integer. It
+          controls the time the XProc processor waits for the request
+          to be answered. If a value is given, it is taken as the
+          number of seconds to wait for the response to be delivered.
+          If no response is received after that time, the request is
+          terminated and a status-code <literal>408</literal> is
+          assumed.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>fail-on-timeout (<code>xs:boolean</code>)</term>
+        <listitem>
+          <para>If “<literal>fail-on-timeout</literal>” is true, a
+          dynamic error is raised if a <literal>408</literal> response
+          is received (either as a consequence of setting a value for
+          the “<literal>timeout</literal>” parameter or as status code
+          returned by a server). <error code="C0078">It is a
+          <glossterm>dynamic error</glossterm> if the value associated
+          with the “<literal>fail-on-timeout</literal>” is associated
+          with <code>true()</code> and a HTTP status code
+          <literal>408</literal> is encountered.</error></para>
+          <note>
+            <title>Note</title>
+            <para>Please note that the “<literal>fail-on-timeout</literal>” parameter
+            is different from the “<literal>timeout</literal>” option on the
+            <tag>p:http-request</tag> step (see <xspecref spec="xproc" xref="timeout"/>).
+            If the <emphasis>step</emphasis> does not finish in the specified time,
+            <code>D0053</code> is raised. If the <emphasis>request</emphasis> does not finish in time,
+            and <literal>fail-on-timeout</literal> is true,
+            <code>C0078</code> is raised. The actual
+            times after which a timeout is detected may also differ slightly.
+            </para>
+          </note>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>status-only (<code>xs:boolean</code>)</term>
+        <listitem>
+          <para>If the “<literal>status-only</literal>” parameter is
+          true, this indicates that the pipeline author is only
+          interested in the response code. An empty sequence is always
+          returned on the <port>result</port> port in this case. The
+          implementation may save resources by ignoring the response
+          body. The map on the <port>report</port> will contain the
+          status code and an empty map for
+          “<literal>headers</literal>”.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>suppress-cookies (<code>xs:boolean</code>)</term>
+        <listitem>
+          <para>If the “<literal>suppress-cookies</literal>” parameter is true,
+          the implementation <rfc2119>must not</rfc2119> send any cookies with the request.</para>
+        </listitem>
+      </varlistentry>
+      <varlistentry>
+        <term>send-body-anyway (<code>xs:boolean</code>)</term>
+        <listitem>
+          <para>If the “<literal>send-body-anyway</literal>” parameter
+          is true, and one or more documents appear on the
+          <port>source</port> port, a request body is constructed from
+          the documents and sent with the request, even if the
+          semantics of sending a body are not specified for the HTTP method in use.
+          </para>
             </listitem>
           </varlistentry>
         </variablelist>
+        <para><error code="C0124">It is a <glossterm>dynamic
+        error</glossterm> if any key in the “parameters” map is
+        associated with a value that is not an instance of the
+        required type.</error></para>
       </listitem>
     </varlistentry>
     <varlistentry>
-      <term>assert</term>
+      <term>assert (<code>xs:string</code>)</term>
       <listitem>
-        <para>The <option>assert</option> option can be used by pipeline authors to raise a dynamic error
-        if the response does not fulfill the expectations of the receiving step sequence. The option's
-        value (if present) is interpreted as an XPath expression which will be executed taking the map
-        to appear on the <port>report</port> port as context item. Function <code>fn:boolean</code> is
-        then evaluated on the expression's result. If the result is <code>false()</code>, a 
-          dynamic error is raised. <error code="C0126">It is a 
-            <glossterm>dynamic error</glossterm> if the XPath expression in
-            <option>assert</option> evaluates to <code>false</code>.</error> Implementations 
-          <rfc2119>should</rfc2119> provide an XML representation of the map used as context item 
-          with the error document to enable pipelines to access the error' cause.</para>
+        <para>The <option>assert</option> option can be used by
+        pipeline authors to raise a dynamic error if the response does
+        not fulfill the expectations of the receiver. The option's
+        value (if present) is interpreted as an XPath expression which
+        will be executed using the map that appears on the
+        <port>report</port> port as its context item. If the effective
+        boolean value of the expression is <code>false()</code>, a
+        dynamic error is raised. <error code="C0126">It is a
+        <glossterm>dynamic error</glossterm> if the XPath expression
+        in <option>assert</option> evaluates to
+        <code>false</code>.</error> Implementations
+        <rfc2119>should</rfc2119> provide an XML representation of the
+        map used as the context item with the error document to enable
+        pipelines to access the error's cause.</para>
       </listitem>
     </varlistentry>
   </variablelist>
 
-  <section xml:id="c.http-multipart-request">
-    <title>Construction of a multi-part request</title>
-    <note xml:id="c.http-multipart.multi-part-request" role="editorial">
-      <title>Editorial Note</title>
-      <para>TBD.</para>
-    </note>
-  </section>
+<section xml:id="c.http-multipart-request">
+<title>Construction of a multipart request</title>
 
-  <section xml:id="c.http-multipart-response">
-    <title>Managing a multi-part response</title>
-    <note xml:id="c.http-multipart.multi-part-request" role="editorial">
-      <title>Editorial Note</title>
-      <para>TBD.</para>
-    </note>
-  </section>
+<para>If more than one document appears on the <port>source</port>
+port, a multipart request will be constructed, per <biblioref linkend="rfc1521"/>. The overall content type of the request is taken
+from the “<literal>multipart-content-type</literal>” parameter; if
+that parameter is absent, the value
+“<literal>multipart/mixed</literal>” is used.</para>
+
+<para>A multipart request must have a boundary marker. This can be
+specified either as a parameter on the content type specified in
+<literal>multipart-content-type</literal> or using the
+“<literal>multipart-boundary</literal>” parameter. If it is specified
+in both places, the specified values must be identical. If no boundary
+is specified, the implementation <rfc2119>must</rfc2119> construct
+one. <impl>It is <glossterm>implementation-defined</glossterm> how a
+multipart boundary is constructed.</impl> Implementations
+<emphasis>are not</emphasis> required to guarantee that the
+constructed value does not appear accidentally in the multipart data.
+If it does, the request will be malformed; pipeline authors must
+provide a boundary if they wish to assure that this cannot
+happen.</para>
+
+<para>Each document in the sequence is serialized. If the document has
+a “<literal>serialization</literal>” document property, its values
+are used to determine how serialization is performed.</para>
+
+<para>All of the document properties <emphasis>except</emphasis>
+“<literal>base-uri</literal>” and “<literal>serialization</literal>”
+will be used as headers for the MIME part. In particular, this is now the
+“<literal>id</literal>”, “<literal>description</literal>”, “<literal>disposition</literal>”
+and other multipart headers can be provided.</para>
+</section>
+
+<section xml:id="c.http-multipart-response">
+<title>Managing a multipart response</title>
+
+<para>When a multipart response is received, each part is interpreted
+according to it’s content type and a pipeline document is constructed.
+Any additional headers associated with the part are added to the
+document properties of the constructed document.</para>
+
+<para>The multipart response is the resulting sequence of documents.</para>
+
+</section>
   
 <simplesect>
 <title>Document properties</title>
@@ -3992,10 +4115,14 @@ W3C Recommendation. 15 November 2006.</bibliomixed>
 <citetitle xlink:href="https://www.w3.org/TR/xslt-xquery-serialization-31/">XSLT
 and XQuery Serialization 3.1</citetitle>.
 Andrew Coleman and C. M. Sperberg-McQueen, editors. W3C Recommendation. 21 March 2017.</bibliomixed>
-    <bibliomixed xml:id="rfc1321"><abbrev>MD5</abbrev>
+    <bibliomixed xml:id="rfc1321"><abbrev>RFC 1321</abbrev>
 <citetitle xlink:href="https://doi.org/10.17487/RFC1321">RFC 1321:
 The MD5 Message-Digest Algorithm</citetitle>.
 R. Rivest. Network Working Group, IETF, April 1992.</bibliomixed>
+    <bibliomixed xml:id="rfc1521"><abbrev>RFC 1521</abbrev> <citetitle xlink:href="https://doi.org/10.17487/RFC1521">RFC 1521: MIME
+(Multipurpose Internet Mail Extensions) Part One: Mechanisms for
+Specifying and Describing the Format of Internet Message Bodies</citetitle>.
+N. Borenstein. Network Working Group, IETF, September 1993.</bibliomixed>
     <bibliomixed xml:id="rfc2046"><abbrev>RFC 2046</abbrev>
 <citetitle xlink:href="https://doi.org/10.17487/RFC2046">RFC 2046:
 Multipurpose Internet Mail Extensions (MIME) Part Two: Media
