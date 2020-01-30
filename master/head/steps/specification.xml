@@ -1426,12 +1426,7 @@ the <port>report</port> port. The map will always contain
 “<literal>status-code</literal>” (an <code>xs:integer</code>) and
 “<literal>headers</literal>” (a <code>map(xs:string,
 xs:string)</code>). The header map may be empty. Header names are
-converted to uppercase.</para>
-
-<note xml:id="http-header-uppercase" role="editorial">
-<title>Editorial Note</title>
-<para>Uppercase? I’d have expected lowercase.</para>
-</note>
+converted to lowercase.</para>
 
 <para>The <tag>p:http-request</tag> step has the following options:</para>
 <variablelist>
@@ -1497,11 +1492,44 @@ converted to uppercase.</para>
   documents appear on the <port>source</port> port, none of their properties
   are used in the request headers.</para>
 
-  <para>Finally, if the <option>auth</option> option is specified, any
-  key or property that would have contributed a header named
-  “<literal>authorization</literal>” (irrespective of case) is
-  ignored. The authorization header is determined exclusively by the
-  <option>auth</option> option when it is present.</para>
+  <para>The behavior of the <tag>p:http-request</tag> depends on the
+  headers specified. In particular:</para>
+
+  <variablelist>
+  <varlistentry>
+    <term><literal>content-type</literal></term>
+    <listitem>
+      <para>If a <literal>content-type</literal> header is provided,
+      it will be used. For a single document request, this overrides
+      the content type value of the document. If the content type
+      specified begins with “<literal>multipart/</literal>”, a
+      multipart request will be sent to the server.</para>
+      <para><error code="C0130">It is a <glossterm>dynamic error</glossterm> if
+      the content-type specified is not a valid content type.</error></para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term><literal>transfer-encoding</literal></term>
+    <listitem>
+      <para>If a <literal>transfer-encoding</literal> header is provided,
+      the request <rfc2119>must</rfc2119> be sent with that encoding.
+      <error code="C0131">It is a <glossterm>dynamic error</glossterm> if
+      the processor cannot support the requested encoding.</error></para>
+    </listitem>
+  </varlistentry>
+  <varlistentry>
+    <term><literal>authorization</literal></term>
+    <listitem>
+      <para>The <literal>authorization</literal> header is used to
+      authenticate a request. If the <option>auth</option>
+      <emphasis>option</emphasis> is specified, any key or property
+      that would have contributed a header named
+      “<literal>authorization</literal>” (irrespective of case) is
+      ignored. The authorization header is determined exclusively by
+      the <option>auth</option> option when it is present.</para>
+    </listitem>
+  </varlistentry>
+  </variablelist>
 
   <para>HTTP headers are case-insensitive but keys in maps are not;
   be careful when specifying the request headers.
@@ -1619,7 +1647,9 @@ converted to uppercase.</para>
         <term>http-version (<code>xs:string</code>)</term>
       <listitem>
         <para>The <literal>http-version</literal> parameter indicates
-        which version of HTTP <rfc2119>must</rfc2119> be used for the request.</para>
+        which version of HTTP <rfc2119>must</rfc2119> be used for the request.
+        <error code="C0129">It is a <glossterm>dynamic error</glossterm> if the
+        requested HTTP version is not supported.</error></para>
       </listitem>
       </varlistentry>
       <varlistentry>
@@ -1640,27 +1670,6 @@ converted to uppercase.</para>
       </listitem>
       </varlistentry>
       <varlistentry>
-        <term>multipart-boundary (<code>xs:string</code>)</term>
-      <listitem>
-        <para>If more than one document appears on the <port>source</port> port,
-        a multipart request will be sent. The “<literal>multipart-boundary</literal>”
-        parameter can be used to specify the boundary marker. The boundary marker
-        <rfc2119>must not</rfc2119> begin with “<code>--</code>”.</para>
-      </listitem>
-      </varlistentry>
-      <varlistentry>
-        <term>multipart-content-type (<code>xs:string</code>)</term>
-      <listitem>
-        <para>If more than one document appears on the
-        <port>source</port> port, a multipart request will be sent.
-        The “<literal>multipart-content-type</literal>” parameter can
-        be used to specify the content-type of the request. The
-        content type <rfc2119>must</rfc2119> be a multipart content
-        type (it must begin “<literal>multipart/</literal>”).
-        </para>
-      </listitem>
-      </varlistentry>
-      <varlistentry>
         <term>override-content-encoding (<code>xs:string</code>)</term>
         <listitem>
           <para>If the “<literal>override-content-encoding</literal>”
@@ -1668,19 +1677,9 @@ converted to uppercase.</para>
           response contained a “<literal>content-encoding</literal>”
           header with the specified value. The content-encoding header
           that appears on the <port>report</port> port is not changed.
+          <error code="C0132">It is a <glossterm>dynamic error</glossterm> if
+          the override content type cannot be supported.</error>
           </para>
-          <!-- FIXME: Don't we need an error for the case where the implementation doesn't
-               understand how to interpret the override-content-encoding provided? -->
-        </listitem>
-      </varlistentry>
-      <varlistentry>
-        <term>transfer-encoding (<code>xs:string</code>)</term>
-        <listitem>
-          <para>If the “<literal>transfer-encoding</literal>”
-          parameter is present, the request must be sent with the specified transfer
-          encoding.</para>
-          <!-- FIXME: Don't we need an error for the case where the implementation doesn't
-               understand how to interpret the override-content-encoding provided? -->
         </listitem>
       </varlistentry>
       <varlistentry>
@@ -1812,24 +1811,41 @@ converted to uppercase.</para>
 <title>Construction of a multipart request</title>
 
 <para>If more than one document appears on the <port>source</port>
-port, a multipart request will be constructed, per <biblioref linkend="rfc1521"/>. The overall content type of the request is taken
-from the “<literal>multipart-content-type</literal>” parameter; if
-that parameter is absent, the value
-“<literal>multipart/mixed</literal>” is used.</para>
+port, or if the specified “<literal>content-type</literal>” header
+begins “<literal>multipart/</literal>”, a multipart request will be
+constructed, per <biblioref linkend="rfc1521"/>. The content type of
+the request is derived from the “<literal>content-type</literal>”
+header:</para>
 
-<para>A multipart request must have a boundary marker. This can be
-specified either as a parameter on the content type specified in
-<literal>multipart-content-type</literal> or using the
-“<literal>multipart-boundary</literal>” parameter. If it is specified
-in both places, the specified values must be identical. If no boundary
-is specified, the implementation <rfc2119>must</rfc2119> construct
-one. <impl>It is <glossterm>implementation-defined</glossterm> how a
-multipart boundary is constructed.</impl> Implementations
-<emphasis>are not</emphasis> required to guarantee that the
-constructed value does not appear accidentally in the multipart data.
-If it does, the request will be malformed; pipeline authors must
-provide a boundary if they wish to assure that this cannot
-happen.</para>
+<itemizedlist>
+<listitem>
+<para>If the “<literal>content-type</literal>” header specifies a
+multipart content type, that value will be used as the content type. If the
+header includes a <literal>boundary</literal> parameter, that value
+will be used as the boundary.</para>
+</listitem>
+<listitem>
+<para>If the “<literal>content-type</literal>” header is not specified,
+“<literal>multipart/mixed</literal>” will be used.</para>
+</listitem>
+<listitem>
+<para><error code="C0133">It is a <glossterm>dynamic error</glossterm>
+if more than one document appears on the <port>source</port> port and
+a <literal>content-type</literal> header is present and the content
+type specified is not a multipart content type.</error>
+</para>
+</listitem>
+</itemizedlist>
+
+<para>A multipart request must have a boundary marker, if one isn’t
+specified in the content type, the implementation
+<rfc2119>must</rfc2119> construct one. <impl>It is
+<glossterm>implementation-defined</glossterm> how a multipart boundary
+is constructed.</impl> Implementations <emphasis>are not</emphasis>
+required to guarantee that the constructed value does not appear
+accidentally in the multipart data. If it does, the request will be
+malformed; pipeline authors must provide a boundary if they wish to
+assure that this cannot happen.</para>
 
 <para>Each document in the sequence is serialized. If the document has
 a “<literal>serialization</literal>” document property, its values
