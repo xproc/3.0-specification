@@ -393,14 +393,23 @@ steps is assumed; for background details, see
   <para>The <tag>p:file-info</tag> step returns information about the file, directory or other file system object named
     in the <option>href</option> option.</para>
 
-  <para><error code="D0064">It is a <glossterm>dynamic error</glossterm> if the <option>href</option> option value is
-      not a valid <type>xs:anyURI</type>.</error> If the <option>href</option> option is relative, it is made absolute
-    against the base URI of the element on which it is specified (<tag>p:with-option</tag> or <tag>p:file-info</tag> in
-    the case of a syntactic shortcut value).</para>
-
-  <para>If the <option>href</option> option is not a <code>file:</code> URI, the result is implementation
-    defined.</para>
-
+  <para><impl>Conformant processors <rfc2119>must</rfc2119> support file infos whose
+    scheme is <code>file</code>. It is
+    <glossterm>implementation-defined</glossterm> what other schemes are
+    supported by <tag>p:file-info</tag>, and what the interpretation
+    of 'directory', 'file' and 'contents' is for those schemes.</impl>
+    <error code="C0134">It is a <glossterm>dynamic error</glossterm> if an
+      implementation does not support file info for a specified scheme.</error>
+  </para>
+  
+  <para>If <option>href</option> is relative, it is made absolute against the 
+    base URI of the element on which it is specified 
+    (<tag>p:with-option</tag> or <tag>p:file-info</tag> in the case of a 
+    syntactic shortcut value). <error code="D0064">It is a <glossterm>dynamic 
+      error</glossterm> if the base URI is not both absolute and valid according to <biblioref linkend="rfc3986"/>.</error> <error code="C0135">It is a
+          <glossterm>dynamic error</glossterm> if file infos are not available to the step due to access restrictions 
+          in the environment in which the pipeline is run.</error></para>
+  
   <para>If the <option>href</option> option is a <code>file:</code> URI, the step returns:</para>
   <itemizedlist>
     <listitem>
