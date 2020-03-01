@@ -4581,18 +4581,14 @@ that more than one input port is the primary.</error></para>
 <tag class="attribute">select</tag> may be used to select a portion of the
 input identified by the <tag>p:empty</tag>, <tag>p:document</tag>,
 or <tag>p:inline</tag> elements in the
-<tag>p:input</tag>. This select expression <rfc2119>must</rfc2119> be an XPath
-expression.
-The selected nodes are returned as separate documents.
-If such a document consists exclusively of text nodes, then it has a content
-type of <literal>text/plain</literal>, otherwise it has a content type
-of <literal>application/xml</literal>. <error code="D0016">It is a
-<glossterm>dynamic error</glossterm> if the select expression on a p:input or
-p:with-input returns anything other than document nodes, element nodes,
-processing instruction nodes, comment nodes, text nodes or an empty sequence.</error></para>
+<tag>p:input</tag>.</para>
+
+<para>With the exception that <tag>p:input</tag> cannot establish a connection 
+to another step, what is said about the <tag class="attribute">select</tag> 
+attribute in <tag>p:with-input</tag> equally applies to <tag>p:input</tag>.</para>
 
 <para>The
-<tag class="attribute">select</tag> expression applies
+<tag class="attribute">select</tag> expression on <tag>p:input</tag> applies
 <emphasis>only</emphasis> if the default connection is used. If an
 explicit connection is provided by the caller, then the default select
 expression is ignored.</para>
