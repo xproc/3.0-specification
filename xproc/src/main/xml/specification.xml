@@ -1232,7 +1232,7 @@ as they are available statically.</para>
   <p:option name="A" static="true" select="5"/>
   <p:option name="B" static="true" select="$A + count(//*)">
     <p:document href="doc.xml"/>
-  </p:variable>
+  </p:option>
   <p:variable name="D" select="count(//*)"/>
 
   …
@@ -5349,10 +5349,9 @@ which will be evaluated to provide the default value for the option.
 </para>
 
 <para>The default value of an option is specified with an XPath
-expression on the <tag>p:declare-step</tag> that defines the step
-signature. It must be a statically valid expression at that point.
-Consequently, if it contains variable references, they can only be
-references to preceding options on the step or to in-scope static variables.
+expression. It must be a statically valid expression at that point.
+Consequently, if it contains option references, these can only be
+references to preceding non-static options on the step or to in-scope static options.
 <error code="D0001">It is a <glossterm>dynamic error</glossterm> if an
 XPath expression makes reference to the context item, size, or position when
 the context item is undefined.</error></para>
@@ -6449,6 +6448,10 @@ possible set of parameter values.</para>
   <itemizedlist>
     <listitem>
       <para>The <code>visibility</code> attribute of <tag>p:variable</tag> was removed.</para>
+    </listitem>
+    <listitem>
+        <para>The description of the <code>select</code> attribute of <tag>p:option</tag> no longer
+          mentions static variables.</para>
     </listitem>
     
   </itemizedlist>
