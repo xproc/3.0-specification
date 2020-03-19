@@ -1494,14 +1494,16 @@ converted to lowercase.</para>
 
   <para>If a single document appears on the <port>source</port> port,
   then document properties on that document may be added as additional
-  headers. All of the document properties will be used as headers
-  <emphasis>except</emphasis> “<literal>base-uri</literal>”,
-  “<literal>serialization</literal>” and any property with a name that
-  already appears in the <option>headers</option> map. (In other words,
-  if the same header name appears in both places, the value from the map
-  is used and the value from the document properties is ignored.) If multiple
-  documents appear on the <port>source</port> port, none of their properties
-  are used in the request headers.</para>
+  headers. Properties in the <code>http://www.w3.org/ns/xproc-http</code>
+  namespace will be added to the headers, using the local-name of the
+  property QName as the header name. These properties are only copied
+  if they are not specified in the <option>header</option> map. In
+  other words, if the same header name appears in both places, the
+  value from the map is used and the value from the document
+  properties is ignored. (Header names are case-insensitive, so a case-insensitive
+  comparison must be performed.) If multiple documents appear on the
+  <port>source</port> port, none of their properties are used in the
+  request headers.</para>
 
   <para>The behavior of the <tag>p:http-request</tag> depends on the
   headers specified. In particular:</para>
@@ -1862,11 +1864,13 @@ assure that this cannot happen.</para>
 a “<literal>serialization</literal>” document property, its values
 are used to determine how serialization is performed.</para>
 
-<para>All of the document properties <emphasis>except</emphasis>
-“<literal>base-uri</literal>” and “<literal>serialization</literal>”
-will be used as headers for the MIME part. In particular, this is now the
-“<literal>id</literal>”, “<literal>description</literal>”, “<literal>disposition</literal>”
-and other multipart headers can be provided.</para>
+<para>All of the document properties in the
+<code>http://www.w3.org/ns/xproc-http</code> namespace will be added
+as headers for the part, using the local-name of the property QName as
+the header name. In particular, this is how the
+“<literal>id</literal>”, “<literal>description</literal>”,
+“<literal>disposition</literal>” and other multipart headers can be
+provided.</para>
 </section>
 
 <section xml:id="c.http-multipart-response">
@@ -4261,18 +4265,25 @@ Norman Walsh, Alex Miłowski, and Henry Thompson.</para>
 who contributed to this document and all of the versions that came before it.</para>
 </appendix>
 
-  <appendix xml:id="changelog">
-    <title>Change Log</title>
-    <para>This appendix catalogs non-editorial changes made after the
-      February 2020
-      “<link xlink:href="https://spec.xproc.org/lastcall-2020-02/head/steps/">last call</link>”
-      draft:</para>
-  <itemizedlist>
-    <listitem>
-      <para>For <tag>p:cast-content-type</tag> the expected result type for casting a 
-        <literal>c:param-set</literal> document to “<literal>application/json</literal>” was
-      specified as <literal>map(xs:QName, xs:string)</literal>.</para>
-    </listitem>
-  </itemizedlist>
-  </appendix>
+<appendix xml:id="changelog">
+<title>Change Log</title>
+
+<para>This appendix catalogs non-editorial changes made after the February 2020
+“<link xlink:href="https://spec.xproc.org/lastcall-2020-02/head/steps/">last call</link>”
+draft:</para>
+
+<itemizedlist>
+  <listitem>
+    <para>In <tag>p:http-request</tag>, instead of using all document properties (with a few
+    explicit exceptions) as headers, only document properties in the
+    <code>http://www.w3.org/ns/xproc-http</code> namespace will be used.</para>
+  </listitem>
+  <listitem>
+    <para>For <tag>p:cast-content-type</tag> the expected result type for casting a 
+    <literal>c:param-set</literal> document to “<literal>application/json</literal>” was
+    specified as <literal>map(xs:QName, xs:string)</literal>.</para>
+  </listitem>
+</itemizedlist>
+</appendix>
+
 </specification>

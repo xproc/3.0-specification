@@ -1,4 +1,4 @@
-<html xmlns="http://www.w3.org/1999/xhtml"><head><title>XProc 3.0: Standard Step Library</title><meta charset="utf-8" /><meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport" /><link class="removeOnSave" crossorigin="anonymous" href="https://www.w3.org" rel="preconnect" /><link as="script" class="removeOnSave" href="js/fixup.js" rel="preload" /><link as="style" class="removeOnSave" href="css/base.css" rel="preload" /><link as="image" class="removeOnSave" href="https://www.w3.org/StyleSheets/TR/2016/logos/W3C" rel="preload" /><link rel="stylesheet" href="css/cg-draft.css" /><link rel="stylesheet" href="css/respec.css" /><link rel="alternate" title="XML" href="specification.xml" /><meta name="generator" content="DocBook XSL 2.0 Stylesheets V2.4.2" /><meta name="description" content="Abstract This specification describes the standard step vocabulary of&#xA;  XProc 3.0: An XML Pipeline Language." /><link href="css/default.css" rel="stylesheet" type="text/css" /><link href="css/db-prism.css" rel="stylesheet" type="text/css" /><link rel="stylesheet" type="text/css" href="css/base.css" /><link rel="stylesheet" type="text/css" href="css/xproc.css" /><link rel="stylesheet" type="text/css" href="css/print.css" media="print" /><script type="text/javascript" src="js/dbmodnizr.js"></script></head><body><attribute name="class" select="'h-entry informative toc-sidebar'"></attribute><div class="head" id="spec.head"><a class="logo" href="https://www.w3.org/"><img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2016/logos/W3C" width="72" /></a><h1 id="title" class="title p-name">XProc 3.0: Standard Step Library</h1><h2>Draft Community Group Report <time class="dt-published" datetime="2019-01-04">15 March 2020</time></h2><dl><dt>Latest editor’s draft:</dt><dd><a href="http://spec.xproc.org/master/head/steps/">http://spec.xproc.org/master/head/steps/</a></dd><dt>Editors:</dt><dd><span class="personname">Norman Walsh</span></dd><dd><span class="personname">Achim Berndzen</span></dd><dd><span class="personname">Gerrit Imsieke</span></dd><dd><span class="personname">Erik Siegel</span></dd><dt>Participate:</dt><dd><a href="http://github.com/xproc/3.0-steps">GitHub xproc/3.0-steps</a></dd><dd><a href="http://github.com/xproc/3.0-steps/issues">Report an issue</a></dd><dt>Changes:</dt><dd><a href="diff.html">Diff against current “status quo” draft</a></dd><dd><a href="http://github.com/xproc/3.0-steps/commits/master">Commits for this specification</a></dd></dl><p>This document is also available in these non-normative formats: <a href="specification.xml">XML</a>, 
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>XProc 3.0: Standard Step Library</title><meta charset="utf-8" /><meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport" /><link class="removeOnSave" crossorigin="anonymous" href="https://www.w3.org" rel="preconnect" /><link as="script" class="removeOnSave" href="js/fixup.js" rel="preload" /><link as="style" class="removeOnSave" href="css/base.css" rel="preload" /><link as="image" class="removeOnSave" href="https://www.w3.org/StyleSheets/TR/2016/logos/W3C" rel="preload" /><link rel="stylesheet" href="css/cg-draft.css" /><link rel="stylesheet" href="css/respec.css" /><link rel="alternate" title="XML" href="specification.xml" /><meta name="generator" content="DocBook XSL 2.0 Stylesheets V2.4.2" /><meta name="description" content="Abstract This specification describes the standard step vocabulary of&#xA;  XProc 3.0: An XML Pipeline Language." /><link href="css/default.css" rel="stylesheet" type="text/css" /><link href="css/db-prism.css" rel="stylesheet" type="text/css" /><link rel="stylesheet" type="text/css" href="css/base.css" /><link rel="stylesheet" type="text/css" href="css/xproc.css" /><link rel="stylesheet" type="text/css" href="css/print.css" media="print" /><script type="text/javascript" src="js/dbmodnizr.js"></script></head><body><attribute name="class" select="'h-entry informative toc-sidebar'"></attribute><div class="head" id="spec.head"><a class="logo" href="https://www.w3.org/"><img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2016/logos/W3C" width="72" /></a><h1 id="title" class="title p-name">XProc 3.0: Standard Step Library</h1><h2>Draft Community Group Report <time class="dt-published" datetime="2019-01-04">19 March 2020</time></h2><dl><dt>Latest editor’s draft:</dt><dd><a href="http://spec.xproc.org/master/head/steps/">http://spec.xproc.org/master/head/steps/</a></dd><dt>Editors:</dt><dd><span class="personname">Norman Walsh</span></dd><dd><span class="personname">Achim Berndzen</span></dd><dd><span class="personname">Gerrit Imsieke</span></dd><dd><span class="personname">Erik Siegel</span></dd><dt>Participate:</dt><dd><a href="http://github.com/xproc/3.0-steps">GitHub xproc/3.0-steps</a></dd><dd><a href="http://github.com/xproc/3.0-steps/issues">Report an issue</a></dd><dt>Changes:</dt><dd><a href="diff.html">Diff against current “status quo” draft</a></dd><dd><a href="http://github.com/xproc/3.0-steps/commits/master">Commits for this specification</a></dd></dl><p>This document is also available in these non-normative formats: <a href="specification.xml">XML</a>, 
 	  automatic change markup
           <a href="diff.html">from the previous draft</a>
           and <a href="lcdiff.html">from the last call draft</a>
@@ -1324,14 +1324,16 @@ converted to lowercase.</p>
 
   <p>If a single document appears on the <code class="port">source</code> port,
   then document properties on that document may be added as additional
-  headers. All of the document properties will be used as headers
-  <em>except</em> “<code class="literal">base-uri</code>”,
-  “<code class="literal">serialization</code>” and any property with a name that
-  already appears in the <code class="option">headers</code> map. (In other words,
-  if the same header name appears in both places, the value from the map
-  is used and the value from the document properties is ignored.) If multiple
-  documents appear on the <code class="port">source</code> port, none of their properties
-  are used in the request headers.</p>
+  headers. Properties in the <code class="code">http://www.w3.org/ns/xproc-http</code>
+  namespace will be added to the headers, using the local-name of the
+  property QName as the header name. These properties are only copied
+  if they are not specified in the <code class="option">header</code> map. In
+  other words, if the same header name appears in both places, the
+  value from the map is used and the value from the document
+  properties is ignored. (Header names are case-insensitive, so a case-insensitive
+  comparison must be performed.) If multiple documents appear on the
+  <code class="port">source</code> port, none of their properties are used in the
+  request headers.</p>
 
   <p>The behavior of the <code class="tag-element">p:http-request</code> depends on the
   headers specified. In particular:</p>
@@ -1625,11 +1627,13 @@ assure that this cannot happen.</p>
 a “<code class="literal">serialization</code>” document property, its values
 are used to determine how serialization is performed.</p>
 
-<p>All of the document properties <em>except</em>
-“<code class="literal">base-uri</code>” and “<code class="literal">serialization</code>”
-will be used as headers for the MIME part. In particular, this is now the
-“<code class="literal">id</code>”, “<code class="literal">description</code>”, “<code class="literal">disposition</code>”
-and other multipart headers can be provided.</p>
+<p>All of the document properties in the
+<code class="code">http://www.w3.org/ns/xproc-http</code> namespace will be added
+as headers for the part, using the local-name of the property QName as
+the header name. In particular, this is how the
+“<code class="literal">id</code>”, “<code class="literal">description</code>”,
+“<code class="literal">disposition</code>” and other multipart headers can be
+provided.</p>
 </div></section>
 
 <section id="c.http-multipart-response" class="section"><div class="section-titlepage"><h4><bdi class="secno">2.13.2. </bdi>Managing a multipart response<a aria-label="§" class="self-link" href="#c.http-multipart-response"></a></h4></div><div class="content">
@@ -3296,7 +3300,7 @@ is empty.</p>
 <ul><li>
     <p>If the document root element is <a href="#cv.query"><code id="cv.query" class="tag-element">c:query</code></a>, the text
       descendants of this element are considered the query.</p>
-    <p id="d2233e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:query&gt;<br />    <var>string</var><br />&lt;/c:query&gt;</code></p>
+    <p id="d2231e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:query&gt;<br />    <var>string</var><br />&lt;/c:query&gt;</code></p>
   </li><li>
       <p>If the document root element is in the XQueryX namespace, the
         document is treated as an XQueryX-encoded query. <span id="impl-64">Support for
@@ -4053,18 +4057,25 @@ Norman Walsh, Alex Miłowski, and Henry Thompson.</p>
 who contributed to this document and all of the versions that came before it.</p>
 </div></article>
 
-  <article id="changelog" class="appendix"><header class="appendix-titlepage"><h2><bdi class="secno">F. </bdi>Change Log<a aria-label="§" class="self-link" href="#changelog"></a></h2></header><div class="content">
-    
-    <p>This appendix catalogs non-editorial changes made after the
-      February 2020
-      “<a href="https://spec.xproc.org/lastcall-2020-02/head/steps/">last call</a>”
-      draft:</p>
-  <div class="itemizedlist">
-    
-  <ul><li>
-      <p>For <a href="#c.cast-content-type"><code class="tag-element">p:cast-content-type</code></a> the expected result type for casting a 
-        <code class="literal">c:param-set</code> document to “<code class="literal">application/json</code>” was
-      specified as <code class="literal">map(xs:QName, xs:string)</code>.</p>
-    </li></ul></div>
-  </div></article>
+<article id="changelog" class="appendix"><header class="appendix-titlepage"><h2><bdi class="secno">F. </bdi>Change Log<a aria-label="§" class="self-link" href="#changelog"></a></h2></header><div class="content">
+
+
+<p>This appendix catalogs non-editorial changes made after the February 2020
+“<a href="https://spec.xproc.org/lastcall-2020-02/head/steps/">last call</a>”
+draft:</p>
+
+<div class="itemizedlist">
+  
+  
+<ul><li>
+    <p>In <a href="#c.http-request"><code class="tag-element">p:http-request</code></a>, instead of using all document properties (with a few
+    explicit exceptions) as headers, only document properties in the
+    <code class="code">http://www.w3.org/ns/xproc-http</code> namespace will be used.</p>
+  </li><li>
+    <p>For <a href="#c.cast-content-type"><code class="tag-element">p:cast-content-type</code></a> the expected result type for casting a 
+    <code class="literal">c:param-set</code> document to “<code class="literal">application/json</code>” was
+    specified as <code class="literal">map(xs:QName, xs:string)</code>.</p>
+  </li></ul></div>
+</div></article>
+
 </article><script src="js/prism.js"></script><script src="js/fixup.js"></script></body></html>
