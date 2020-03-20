@@ -316,7 +316,6 @@ Variable =
     common.attributes,
     global.attributes,
     inline.attributes,
-    visibility.attr?,
     (((Empty | (Document | Pipe | Inline)*)
       & (Documentation | PipeInfo)*)
      | AnyElement*)
@@ -628,6 +627,7 @@ VocabEntry =
     attribute comment { text }?,
     attribute method { text }?,
     attribute level { text }?,
+    content-type.attr?,
     attribute * - (local:* | p:* | c:*) { text }*,
     AnyElement*
   }
@@ -688,7 +688,6 @@ StandardStep =
   | Step-count
   | Step-delete
   | Step-error
-  | Step-escape-markup
   | Step-filter
   | Step-hash
   | Step-http-request
@@ -718,7 +717,6 @@ StandardStep =
   | Step-text-tail
   | Step-unarchive
   | Step-uncompress
-  | Step-unescape-markup
   | Step-unwrap
   | Step-uuid
   | Step-wrap-sequence
@@ -890,6 +888,7 @@ Step-validate-with-nvdl =
     use-when.attr?,
     step.attributes,
     attribute assert-valid { xsd:boolean }?,
+    attribute report-format { xsd:string }?,
     attribute parameters { xsd:string }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
   }
@@ -902,6 +901,7 @@ Step-validate-with-relax-ng =
     attribute dtd-attribute-values { xsd:boolean }?,
     attribute dtd-id-idref-warnings { xsd:boolean }?,
     attribute assert-valid { xsd:boolean }?,
+    attribute report-format { xsd:string }?,
     attribute parameters { xsd:string }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
   }
@@ -914,6 +914,7 @@ Step-validate-with-schematron =
     attribute parameters { xsd:string }?,
     attribute phase { xsd:string }?,
     attribute assert-valid { xsd:boolean }?,
+    attribute report-format { xsd:string }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
   }
 Step-validate-with-xml-schema =
@@ -928,6 +929,7 @@ Step-validate-with-xml-schema =
     attribute parameters { xsd:string }?,
     attribute mode { "strict" | "lax" }?,
     attribute version { xsd:string? }?,
+    attribute report-format { xsd:string }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
   }
 Step-add-attribute =
@@ -1032,15 +1034,6 @@ Step-error =
     attribute code { xsd:QName }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
   }
-Step-escape-markup =
-  element escape-markup {
-    name.ncname.attr?,
-    common.attributes,
-    use-when.attr?,
-    step.attributes,
-    attribute serialization { xsd:string }?,
-    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
-  }
 Step-filter =
   element filter {
     name.ncname.attr?,
@@ -1069,7 +1062,13 @@ Step-http-request =
     common.attributes,
     use-when.attr?,
     step.attributes,
+    attribute href { xsd:anyURI }?,
+    attribute method { xsd:string? }?,
     attribute serialization { xsd:string }?,
+    attribute headers { xsd:string }?,
+    attribute auth { xsd:string }?,
+    attribute parameters { xsd:string }?,
+    attribute assert { xsd:string }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
   }
 Step-identity =
@@ -1280,7 +1279,7 @@ Step-text-join =
     attribute prefix { xsd:string? }?,
     attribute suffix { xsd:string? }?,
     attribute override-content-type { xsd:string? }?,
-    (WithOption* & (Documentation | PipeInfo)*)
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
   }
 Step-text-replace =
   element text-replace {
@@ -1338,18 +1337,6 @@ Step-uncompress =
     attribute format { xsd:QName? }?,
     attribute parameters { xsd:string }?,
     attribute content-type { xsd:string }?,
-    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
-  }
-Step-unescape-markup =
-  element unescape-markup {
-    name.ncname.attr?,
-    common.attributes,
-    use-when.attr?,
-    step.attributes,
-    attribute namespace { xsd:anyURI? }?,
-    attribute content-type { xsd:string }?,
-    attribute encoding { xsd:string? }?,
-    attribute charset { xsd:string? }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
   }
 Step-unwrap =
