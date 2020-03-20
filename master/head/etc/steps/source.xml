@@ -533,6 +533,11 @@ element's [base URI].</para>
           <impl>It is <glossterm>implementation-defined</glossterm> what compression levels are
             supported.</impl></para>
       </listitem>
+      <listitem>
+        <para>The <code>content-type</code> attribute specifies the content-type of the entry as
+          detected by the processor. It will be set by <tag>p:archive-manifest</tag> in constructing
+          the manifest. It will be ignored by <tag>p:archive</tag>.</para>
+      </listitem>
     </itemizedlist>
 
     <para>The <code>p:archive</code> step <rfc2119>should</rfc2119> strive to retain the order of
@@ -793,13 +798,12 @@ The archive has no <property>base-uri</property>.</para>
 
   <para>The generated manifest has the format as described in <xref linkend="cv.archive-manifest"/>.
     Implementations <rfc2119>must</rfc2119> supply an <tag>c:entry</tag> element and its
-      <code>name</code> attribute for every entry in the archive. The value of the generated
-    manifest's <code>c:entry/@href</code> attribute will be determined in the same way as a base URI
-    of an unarchived document by <xref linkend="c.unarchive"/>. 
-    <error code="C0120">It is a <glossterm>dynamic error</glossterm> if the 
-      <option>relative-to</option> option is not present and the document on the 
-      <port>source</port> port does not have a base URI.</error> <impl>Additional information
-      provided for entries in <tag>p:archive-manifest</tag> is
+      <code>name</code> and <code>content-type</code> attributes for every entry in the archive. The
+    value of the generated manifest's <code>c:entry/@href</code> attribute will be determined in the
+    same way as a base URI of an unarchived document by <xref linkend="c.unarchive"/>. <error code="C0120">It is a <glossterm>dynamic error</glossterm> if the <option>relative-to</option>
+      option is not present and the document on the <port>source</port> port does not have a base
+      URI.</error>
+    <impl>Additional information provided for entries in <tag>p:archive-manifest</tag> is
         <glossterm>implementation-defined</glossterm>.</impl></para>
 
   <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
@@ -4273,7 +4277,7 @@ who contributed to this document and all of the versions that came before it.</p
 draft:</para>
 
  <orderedlist>
-  <listitem>
+   <listitem>
     <para>For <tag>p:cast-content-type</tag> the expected result type for casting a 
     <literal>c:param-set</literal> document to “<literal>application/json</literal>” was
     specified as <literal>map(xs:QName, xs:string)</literal>. (2020-03-15)</para>
@@ -4283,6 +4287,11 @@ draft:</para>
       explicit exceptions) as headers, only document properties in the
       <code>http://www.w3.org/ns/xproc-http</code> namespace will be used. (2020-03-18)</para>
   </listitem>
+   <listitem>
+     <para><xref linkend="cv.archive-manifest"/>: An attribute
+       <code>c:entry/@content-type</code> was added to the archive manifest, to be filled by the
+       <tag>p:archive-manifest</tag> step. (2020-03-20)</para>
+   </listitem>
 </orderedlist>
 </appendix>
 
