@@ -122,16 +122,23 @@ task spec_sch(type: Copy) {
 // ======================================================================
 // XProc schemas (just make sure they're downloaded early)
 
-def schemaList = ["core30.rng",
-                  "xproc.rnc", "xproc.rng",
+task download_core30_rng(type: Download) {
+  src "$grammarBaseUri/lib/core30.rng"
+  dest "$buildDir/"
+  doFirst { mkdir "$buildDir" }
+}
+download_core30_rng.onlyIf { ! file("$buildDir/core30.rng".toString()).exists() }
+spec_schemas.dependsOn download_core30_rng
+
+def schemaList = ["xproc.rnc", "xproc.rng",
                   "xproc10.rnc", "xproc10.rng",
                   "xproc30.rnc", "xproc30.rng"]
 
 schemaList.each { schema ->
   def taskname = "download_" + schema.replace(".", "_")
   Task t = task "${taskname}"(type: Download) {
-    src "$grammarBaseUri/$schema"
-    dest "$buildDir/$schema"
+    src "$grammarBaseUri/relax-ng/$schema"
+    dest "$buildDir/"
     doFirst { mkdir "$buildDir" }
   }
   t.onlyIf { ! file("$buildDir/$schema".toString()).exists() }
