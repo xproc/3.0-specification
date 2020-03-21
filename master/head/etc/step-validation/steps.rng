@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<grammar ns="http://www.w3.org/ns/xproc" xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+<grammar ns="http://www.w3.org/ns/xproc" xmlns="http://relaxng.org/ns/structure/1.0">
   <!-- This schema could be made more constrained. -->
   <define name="Step">
     <choice>
@@ -21,17 +21,17 @@
       <ref name="step.attributes"/>
       <optional>
         <attribute name="assert-valid">
-          <data type="boolean"/>
+          <ref name="avt.datatype"/>
         </attribute>
       </optional>
       <optional>
         <attribute name="report-format">
-          <data type="string"/>
+          <ref name="avt.datatype"/>
         </attribute>
       </optional>
       <optional>
         <attribute name="parameters">
-          <data type="string"/>
+          <ref name="avt.datatype"/>
         </attribute>
       </optional>
       <interleave>
@@ -62,27 +62,27 @@
       <ref name="step.attributes"/>
       <optional>
         <attribute name="dtd-attribute-values">
-          <data type="boolean"/>
+          <ref name="avt.datatype"/>
         </attribute>
       </optional>
       <optional>
         <attribute name="dtd-id-idref-warnings">
-          <data type="boolean"/>
+          <ref name="avt.datatype"/>
         </attribute>
       </optional>
       <optional>
         <attribute name="assert-valid">
-          <data type="boolean"/>
+          <ref name="avt.datatype"/>
         </attribute>
       </optional>
       <optional>
         <attribute name="report-format">
-          <data type="string"/>
+          <ref name="avt.datatype"/>
         </attribute>
       </optional>
       <optional>
         <attribute name="parameters">
-          <data type="string"/>
+          <ref name="avt.datatype"/>
         </attribute>
       </optional>
       <interleave>
@@ -113,22 +113,22 @@
       <ref name="step.attributes"/>
       <optional>
         <attribute name="parameters">
-          <data type="string"/>
+          <ref name="avt.datatype"/>
         </attribute>
       </optional>
       <optional>
         <attribute name="phase">
-          <data type="string"/>
+          <ref name="avt.datatype"/>
         </attribute>
       </optional>
       <optional>
         <attribute name="assert-valid">
-          <data type="boolean"/>
+          <ref name="avt.datatype"/>
         </attribute>
       </optional>
       <optional>
         <attribute name="report-format">
-          <data type="string"/>
+          <ref name="avt.datatype"/>
         </attribute>
       </optional>
       <interleave>
@@ -159,42 +159,37 @@
       <ref name="step.attributes"/>
       <optional>
         <attribute name="use-location-hints">
-          <data type="boolean"/>
+          <ref name="avt.datatype"/>
         </attribute>
       </optional>
       <optional>
         <attribute name="try-namespaces">
-          <data type="boolean"/>
+          <ref name="avt.datatype"/>
         </attribute>
       </optional>
       <optional>
         <attribute name="assert-valid">
-          <data type="boolean"/>
+          <ref name="avt.datatype"/>
         </attribute>
       </optional>
       <optional>
         <attribute name="parameters">
-          <data type="string"/>
+          <ref name="avt.datatype"/>
         </attribute>
       </optional>
       <optional>
         <attribute name="mode">
-          <choice>
-            <value>strict</value>
-            <value>lax</value>
-          </choice>
+          <ref name="avt.datatype"/>
         </attribute>
       </optional>
       <optional>
         <attribute name="version">
-          <optional>
-            <data type="string"/>
-          </optional>
+          <ref name="avt.datatype"/>
         </attribute>
       </optional>
       <optional>
         <attribute name="report-format">
-          <data type="string"/>
+          <ref name="avt.datatype"/>
         </attribute>
       </optional>
       <interleave>
