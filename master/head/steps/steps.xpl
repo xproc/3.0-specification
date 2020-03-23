@@ -465,6 +465,7 @@
                 content-types="any"/>
       <p:output port="secondary" sequence="true" content-types="any"/>
       <p:option name="parameters" as="xs:string"/>
+      <p:option name="static-parameters" as="xs:string"/>
       <p:option name="global-context-item" as="xs:string"/>
       <p:option name="initial-mode" as="xs:QName?"/>
       <p:option name="template-name" as="xs:QName?"/>
