@@ -745,6 +745,7 @@ The archive has no <property>base-uri</property>.</para>
     <p:option name="format" as="xs:QName?"/>
     <p:option name="parameters" as="map(xs:QName, item()*)?"/>
     <p:option name="relative-to" as="xs:anyURI?"/>
+    <p:option name="override-content-types" as="array(array(xs:string))?"/>
   </p:declare-step>
 
   <para>The <code>p:archive-manifest</code> step inspects the archive appearing on its
@@ -758,7 +759,7 @@ The archive has no <property>base-uri</property>.</para>
         archive. Implementations <rfc2119>must</rfc2119> support the <biblioref linkend="zip"/>
         format, specified with the value <code>zip</code>. <impl>It is
             <glossterm>implementation-defined</glossterm> what other formats are supported.</impl>
-        </para>
+      </para>
     </listitem>
     <listitem>
       <para>If no <option>format</option> option is specified or if its value is the empty sequence,
@@ -770,8 +771,9 @@ The archive has no <property>base-uri</property>.</para>
     </listitem>
   </itemizedlist>
 
-  <para><error code="C0085">It is a <glossterm>dynamic error</glossterm> if the format of the archive 
-    does not match the specified format, cannot be understood, determined and/or processed.</error></para>
+  <para><error code="C0085">It is a <glossterm>dynamic error</glossterm> if the format of the
+      archive does not match the specified format, cannot be understood, determined and/or
+      processed.</error></para>
 
   <para>The <option>parameters</option> option can be used to supply parameters to control the
     archive manifest generation. <impl>The semantics of the keys and the allowed values for these
@@ -781,10 +783,10 @@ The archive has no <property>base-uri</property>.</para>
       whose value is not valid for that key.</error></para>
 
   <para>The <option>relative-to</option> option, when present, is used in creating the value of the
-    manifest's <code>c:entry/@href</code> attribute. If the option is relative, it is made absolute 
-    against the base URI of the element on which it is specified (<tag>p:with-option</tag> or the step 
-    in case of a syntactic shortcut value). <error code="D0064">It is a <glossterm>dynamic 
-      error</glossterm> if the base URI is not both absolute and valid according to <biblioref linkend="rfc3986"/>.</error></para>
+    manifest's <code>c:entry/@href</code> attribute. If the option is relative, it is made absolute
+    against the base URI of the element on which it is specified (<tag>p:with-option</tag> or the
+    step in case of a syntactic shortcut value). <error code="D0064">It is a <glossterm>dynamic
+        error</glossterm> if the base URI is not both absolute and valid according to <biblioref linkend="rfc3986"/>.</error></para>
 
   <para>The generated manifest has the format as described in <xref linkend="cv.archive-manifest"/>.
     Implementations <rfc2119>must</rfc2119> supply an <tag>c:entry</tag> element and its
@@ -798,10 +800,69 @@ The archive has no <property>base-uri</property>.</para>
 
   <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
+  <section xml:id="override-content-type">
+    <title>Overriding content types</title>
+
+    <para>The <option>override-content-types</option> option can be used to partially override the
+      content-type determination mechanism. If present, it must be an array of arrays, where the
+      inner arrays consist of exactly two strings: </para>
+    <itemizedlist>
+      <listitem>
+        <para>The first member in an inner array <rfc2119>must</rfc2119> be a regular expression as
+          specified in <biblioref linkend="xpath31-functions"/>, section 7.61 “<literal>Regular
+            Expression Syntax</literal>”. <error code="C0147">It is a <glossterm>dynamic
+              error</glossterm> if the specified value is not a valid XPath regular
+            expression.</error></para>
+      </listitem>
+      <listitem>
+        <para>The second member in an inner array <rfc2119>must</rfc2119> be a valid a MIME
+          content-type. <error code="C0130">It is a <glossterm>dynamic error</glossterm> if the
+            content-type specified is not a valid content type.</error></para>
+      </listitem>
+    </itemizedlist>
+
+    <para><error code="C0146">It is a <glossterm>dynamic error</glossterm> if the specified value
+        for the <option>override-content-types</option> option is not an array of arrays, where the
+        inner arrays have exactly two members of type <code>xs:string</code>.</error></para>
+
+    <para>Determining an archive entry's content-type is as follows:</para>
+    <itemizedlist>
+      <listitem>
+        <para>The XPath regular expressions (the first members of the inner arrays) will be matched
+          against the relative filename of the archive's entry (the relative path
+            <emphasis>in</emphasis> the archive, leading up to the entry, for instance
+            <code>img/logos/company-logo.png</code>). This will be done in the order of appearance
+          in the outer array (so order is significant). The matching is done unanchored: it is a
+          match if the regular expression matches part of the filename. Informally: matching behaves
+          like applying the XPath <code>matches#2</code> function, like in 
+          <code>matches($path-in-archive, $regular-expression)</code>.</para>
+      </listitem>
+      <listitem>
+        <para>If a match is found, the content-type (the second member of the inner array for which
+          the match was found) is used as the entry's content-type.</para>
+      </listitem>
+      <listitem>
+        <para>If no match was found for all inner arrays, the normal
+            (<glossterm>implementation-defined</glossterm>) mechanism for determining the
+          content-type is used. </para>
+      </listitem>
+    </itemizedlist>
+
+    <para>For example: setting the <option>override-content-types</option> option to <code>[
+        ['.rels$', 'application/xml'], ['^special/', 'application/octet-stream'] ]</code> means that
+      all files ending with <code>.rels</code> will get the content-type
+        <code>application/xml</code>. All files in the archive's <code>special</code> directory
+      (including sub-directories) will get the content-type
+      <code>application/octet-stream</code>.</para>
+
+  </section>
+
+  <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
   <simplesect>
     <title>Document properties</title>
-    <para feature="archive-manifest-preserves-none">No document properties are preserved.
-The manifest has no <property>base-uri</property>.</para>
+    <para feature="archive-manifest-preserves-none">No document properties are preserved. The
+      manifest has no <property>base-uri</property>.</para>
   </simplesect>
 </section>
 <section xml:id="c.cast-content-type">
@@ -3183,6 +3244,7 @@ newline (&amp;#10;).</para>
     <p:option name="format" as="xs:QName?"/>
     <p:option name="parameters" as="map(xs:QName, item()*)?"/>
     <p:option name="relative-to" as="xs:anyURI?"/>
+    <p:option name="override-content-types" as="array(array(xs:string))?"/>
   </p:declare-step>
 
   <para>The meaning and interpretation of the <code>p:unarchive</code> step's options is as
@@ -3261,6 +3323,10 @@ newline (&amp;#10;).</para>
         of the unarchived documents. If the option is relative, it is made absolute against the
         base URI of the element on which it is specified (<tag>p:with-option</tag> or the step in
         case of a syntactic shortcut value).</para>
+    </listitem>
+    <listitem>
+      <para>The <option>override-content-types</option> option can be used to partially override the
+        content-type determination mechanism, as described in <xref linkend="override-content-type"/>.</para>
     </listitem>
   </itemizedlist>
 
@@ -4289,6 +4355,9 @@ draft:</para>
    </listitem>
    <listitem>
      <para>A <option>static-parameters</option> was added to <tag>p:xslt</tag>. (2020-03-23)</para>
+   </listitem>
+   <listitem>
+     <para>The <option>override-content-types</option> option was added to <tag>p:archive-manifest</tag> and <tag>p:unarchive</tag>. (2020-03-30)</para>
    </listitem>
  </orderedlist>
 </appendix>
