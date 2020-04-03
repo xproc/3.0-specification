@@ -86,7 +86,7 @@ steps is assumed; for background details, see
       scheme is <code>file</code>. It is
       <glossterm>implementation-defined</glossterm> what other schemes are
       supported by <tag>p:directory-list</tag>, and what the interpretation
-      of 'directory', 'file' and 'contents' is for those schemes.</impl>
+      of ‘directory’, ‘file’ and ‘contents’ is for those schemes.</impl>
       <error code="C0090">It is a <glossterm>dynamic error</glossterm> if an
         implementation does not support directory listing for a specified scheme.</error>
     </para>
@@ -291,10 +291,23 @@ steps is assumed; for background details, see
       <option>target</option>. If the target is a directory, the step attempts to move the file into that directory,
     preserving its base name.</para>
 
-  <para><error code="D0064">It is a <glossterm>dynamic error</glossterm> if the <option>href</option> or
-        <option>target</option> option value is not a valid <type>xs:anyURI</type>.</error> If the <option>href</option>
-    or <option>target</option> is relative, it is made absolute against the base URI of the element on which it is
-    specified (<tag>p:with-option</tag> or <tag>p:file-copy</tag> in the case of a syntactic shortcut value).</para>
+    <para><impl>Conformant processors <rfc2119>must</rfc2119> support URIs whose
+      scheme is <code>file</code> for the <option>href</option> and <option>target</option> options
+      of <tag>p:file-copy</tag>.
+      It is <glossterm>implementation-defined</glossterm> what other schemes are
+      supported by <tag>p:file-copy</tag>, and what the interpretation
+      of ‘directory’, ‘file’ and ‘contents’ is for those schemes.</impl>
+      <error code="C0144">It is a <glossterm>dynamic error</glossterm> if an
+        implementation does not support <tag>p:file-copy</tag> for a specified scheme.</error>
+    </para>
+    
+    <para>If <option>href</option> or <option>target</option> are relative, they are made absolute against the 
+      base URI of the element on which they are specified 
+      (<tag>p:with-option</tag> or <tag>p:file-copy</tag> in the case of a 
+      syntactic shortcut value). <error code="D0064">It is a <glossterm>dynamic 
+        error</glossterm> if the base URI is not both absolute and valid according to <biblioref linkend="rfc3986"/>.</error> <error code="C0145">It is a
+            <glossterm>dynamic error</glossterm> if <tag>p:file-copy</tag> is not available to the step due to access restrictions 
+            in the environment in which the pipeline is run.</error></para>
 
   <para>If the copy is successful, the step returns a <tag>c:result</tag> element containing the absolute URI of the
     target.</para>
@@ -311,9 +324,8 @@ steps is assumed; for background details, see
             <option>href</option> option does not exist, cannot be accessed or is not a file or directory.</error></para>
     </listitem>
     <listitem>
-      <para><error code="C0050">It is a <glossterm>dynamic error</glossterm> if the URI scheme of the
-            <option>target</option> option is not supported or the file or directory cannot be copied to the specified
-          location.</error></para>
+      <para><error code="C0050">It is a <glossterm>dynamic error</glossterm> the file or directory cannot be copied 
+        to the specified location.</error></para>
     </listitem>
   </itemizedlist>
 
@@ -341,10 +353,23 @@ steps is assumed; for background details, see
   <para>The <tag>p:file-delete</tag> step attempts to delete the file or directory named in
     <option>href</option>.</para>
 
-  <para><error code="D0064">It is a <glossterm>dynamic error</glossterm> if the <option>href</option> option value is
-      not a valid <type>xs:anyURI</type>.</error> If the <option>href</option> option is relative, it is made absolute
-    against the base URI of the element on which it is specified (<tag>p:with-option</tag> or <tag>p:file-delete</tag>
-    in the case of a syntactic shortcut value).</para>
+  <para><impl>Conformant processors <rfc2119>must</rfc2119> support URIs whose
+    scheme is <code>file</code> for the <option>href</option> option of <tag>p:file-delete</tag>.
+    It is <glossterm>implementation-defined</glossterm> what other schemes are
+    supported by <tag>p:file-delete</tag>, and what the interpretation
+    of ‘directory’, ‘file’ and ‘contents’ is for those schemes.</impl>
+    <error code="C0142">It is a <glossterm>dynamic error</glossterm> if an
+      implementation does not support <tag>p:file-delete</tag> for a specified scheme.</error>
+  </para>
+  
+  <para>If <option>href</option> is relative, it is made absolute against the 
+    base URI of the element on which it is specified 
+    (<tag>p:with-option</tag> or <tag>p:file-delete</tag> in the case of a 
+    syntactic shortcut value). <error code="D0064">It is a <glossterm>dynamic 
+      error</glossterm> if the base URI is not both absolute and valid according to <biblioref linkend="rfc3986"/>.</error> <error code="C0143">It is a
+          <glossterm>dynamic error</glossterm> if <tag>p:file-delete</tag> is not available to the step due to access restrictions 
+          in the environment in which the pipeline is run.</error></para>
+  
 
   <para>If <option>href</option> specifies a directory, it can only be deleted if the <option>recursive</option> option
     is <code>true</code> or if the specified directory is empty.</para>
@@ -397,9 +422,9 @@ steps is assumed; for background details, see
     scheme is <code>file</code> for the <option>href</option> option of <tag>p:file-info</tag>.
     It is <glossterm>implementation-defined</glossterm> what other schemes are
     supported by <tag>p:file-info</tag>, and what the interpretation
-    of 'directory', 'file' and 'contents' is for those schemes.</impl>
+    of ‘directory’, ‘file’ and ‘contents’ is for those schemes.</impl>
     <error code="C0134">It is a <glossterm>dynamic error</glossterm> if an
-      implementation does not support file info for a specified scheme.</error>
+      implementation does not support <tag>p:file-info</tag> for a specified scheme.</error>
   </para>
   
   <para>If <option>href</option> is relative, it is made absolute against the 
@@ -407,7 +432,7 @@ steps is assumed; for background details, see
     (<tag>p:with-option</tag> or <tag>p:file-info</tag> in the case of a 
     syntactic shortcut value). <error code="D0064">It is a <glossterm>dynamic 
       error</glossterm> if the base URI is not both absolute and valid according to <biblioref linkend="rfc3986"/>.</error> <error code="C0135">It is a
-          <glossterm>dynamic error</glossterm> if file infos are not available to the step due to access restrictions 
+          <glossterm>dynamic error</glossterm> if <tag>p:file-info</tag> is not available to the step due to access restrictions 
           in the environment in which the pipeline is run.</error></para>
   
   <para>If the <option>href</option> option is a <code>file:</code> URI, the step returns:</para>
@@ -512,10 +537,23 @@ steps is assumed; for background details, see
     more than one directory component, all of the intermediate components are created. The path separator is
     implementation-defined.</para>
 
-  <para><error code="D0064">It is a <glossterm>dynamic error</glossterm> if the <option>href</option> option value is
-      not a valid <type>xs:anyURI</type>.</error> If the <option>href</option> option is relative, it is made absolute
-    against the base URI of the element on which it is specified (<tag>p:with-option</tag> or <tag>p:file-mkdir</tag> in
-    the case of a syntactic shortcut value).</para>
+  <para><impl>Conformant processors <rfc2119>must</rfc2119> support URIs whose
+    scheme is <code>file</code> for the <option>href</option> option of <tag>p:file-mkdir</tag>.
+    It is <glossterm>implementation-defined</glossterm> what other schemes are
+    supported by <tag>p:file-mkdir</tag>, and what the interpretation
+    of ‘directory’, ‘file’ and ‘contents’ is for those schemes.</impl>
+    <error code="C0140">It is a <glossterm>dynamic error</glossterm> if an
+      implementation does not support <tag>p:file-mkdir</tag> for a specified scheme.</error>
+  </para>
+  
+  <para>If <option>href</option> is relative, it is made absolute against the 
+    base URI of the element on which it is specified 
+    (<tag>p:with-option</tag> or <tag>p:file-mkdir</tag> in the case of a 
+    syntactic shortcut value). <error code="D0064">It is a <glossterm>dynamic 
+      error</glossterm> if the base URI is not both absolute and valid according to <biblioref linkend="rfc3986"/>.</error> <error code="C0141">It is a
+          <glossterm>dynamic error</glossterm> if <tag>p:file-mkdir</tag> not available to the step due to access restrictions 
+          in the environment in which the pipeline is run.</error></para>
+  
 
   <para>If the create is successful, the step returns a <tag>c:result</tag> element containing the absolute URI of the
     directory created.</para>
@@ -557,10 +595,24 @@ steps is assumed; for background details, see
       <emphasis>existing</emphasis> directory, the step attempts to move the file or directory <emphasis>into</emphasis>
     that directory, preserving its base name.</para>
 
-  <para><error code="D0064">It is a <glossterm>dynamic error</glossterm> if the <option>href</option> or
-        <option>target</option> option value is not a valid <type>xs:anyURI</type>.</error> If the <option>href</option>
-    or <option>target</option> is relative, it is made absolute against the base URI of the element on which it is
-    specified (<tag>p:with-option</tag> or <tag>p:file-move</tag> in the case of a syntactic shortcut value).</para>
+  <para><impl>Conformant processors <rfc2119>must</rfc2119> support URIs whose
+    scheme is <code>file</code> for the <option>href</option> and <option>target</option> options
+    of <tag>p:file-move</tag>.
+    It is <glossterm>implementation-defined</glossterm> what other schemes are
+    supported by <tag>p:file-move</tag>, and what the interpretation
+    of ‘directory’, ‘file’ and ‘contents’ is for those schemes.</impl>
+    <error code="C0148">It is a <glossterm>dynamic error</glossterm> if an
+      implementation does not support <tag>p:file-move</tag> for a specified scheme.</error>
+  </para>
+  
+  <para>If <option>href</option> or <option>target</option> are relative, they are made absolute against the 
+    base URI of the element on which they are specified 
+    (<tag>p:with-option</tag> or <tag>p:file-move</tag> in the case of a 
+    syntactic shortcut value). <error code="D0064">It is a <glossterm>dynamic 
+      error</glossterm> if the base URI is not both absolute and valid according to <biblioref linkend="rfc3986"/>.</error> <error code="C0149">It is a
+          <glossterm>dynamic error</glossterm> if <tag>p:file-move</tag> is not available to the step due to access restrictions 
+          in the environment in which the pipeline is run.</error></para>
+  
 
   <para>If the <option>href</option> option specifies a device or other special kind of object, the results are
     implementation-defined.</para>
@@ -585,9 +637,8 @@ steps is assumed; for background details, see
         <option>target</option> option is an existing file or other file system object.</error></para>
     </listitem>
     <listitem>
-      <para><error code="C0050">It is a <glossterm>dynamic error</glossterm> if the URI scheme of the
-            <option>target</option> option is not supported or the file or directory cannot be moved to the specified
-          location.</error></para>
+      <para><error code="C0050">It is a <glossterm>dynamic error</glossterm> if the directory cannot be 
+        moved to the specified location.</error></para>
     </listitem>
   </itemizedlist>
 
@@ -620,10 +671,23 @@ steps is assumed; for background details, see
     is created here. If there is no <option>href</option> option specified the location of the temporary file is
     implementation defined, usually the operating system's default location for temporary files.</para>
 
-  <para><error code="D0064">It is a <glossterm>dynamic error</glossterm> if the <option>href</option> option value is
-      not a valid <type>xs:anyURI</type>.</error> If the <option>href</option> is relative, it is made absolute against
-    the base URI of the element on which it is specified (<tag>p:with-option</tag> or <tag>p:file-create-tempfile</tag> in the
-    case of a syntactic shortcut value).</para>
+  <para><impl>Conformant processors <rfc2119>must</rfc2119> support URIs whose
+    scheme is <code>file</code> for the <option>href</option> option of <tag>p:file-create-tempfile</tag>. It is
+    <glossterm>implementation-defined</glossterm> what other schemes are
+    supported by <tag>p:file-create-tempfile</tag>, and what the interpretation
+    of ‘directory’, ‘file’ and ‘contents’ is for those schemes.</impl>
+    <error code="C0138">It is a <glossterm>dynamic error</glossterm> if an
+      implementation does not support <tag>p:file-create-tempfile</tag> for a specified scheme.</error>
+  </para>
+  
+  <para>If <option>href</option> is relative, it is made absolute against the 
+    base URI of the element on which it is specified 
+    (<tag>p:with-option</tag> or <tag>p:file-create-tempfile</tag> in the case of a 
+    syntactic shortcut value). <error code="D0064">It is a <glossterm>dynamic 
+      error</glossterm> if the base URI is not both absolute and valid according to <biblioref linkend="rfc3986"/>.</error> <error code="C0139">It is a
+          <glossterm>dynamic error</glossterm> if <tag>p:file-create-tempfile</tag> cannot be completed due to access 
+          restrictions in the environment in which the pipeline is run.</error></para>
+  
 
   <para>If the <option>prefix</option> option is specified, the filename will begin with that prefix. If the
       <option>suffix</option> option is specified, the filename will end with that suffix.</para>
@@ -682,9 +746,9 @@ exist, an empty file will be created at the given location.</para>
     scheme is <code>file</code> for the <option>href</option> option of <tag>p:file-touch</tag>. It is
     <glossterm>implementation-defined</glossterm> what other schemes are
     supported by <tag>p:file-touch</tag>, and what the interpretation
-    of 'directory', 'file' and 'contents' is for those schemes.</impl>
+    of ‘directory’, ‘file’ and ‘contents’ is for those schemes.</impl>
     <error code="C0136">It is a <glossterm>dynamic error</glossterm> if an
-      implementation does not support p:file-touch for a specified scheme.</error>
+      implementation does not support <tag>p:file-touch</tag> for a specified scheme.</error>
   </para>
   
   <para>If <option>href</option> is relative, it is made absolute against the 
@@ -692,7 +756,7 @@ exist, an empty file will be created at the given location.</para>
     (<tag>p:with-option</tag> or <tag>p:file-touch</tag> in the case of a 
     syntactic shortcut value). <error code="D0064">It is a <glossterm>dynamic 
       error</glossterm> if the base URI is not both absolute and valid according to <biblioref linkend="rfc3986"/>.</error> <error code="C0137">It is a
-          <glossterm>dynamic error</glossterm> if p:file-touch cannot be completed due to access 
+          <glossterm>dynamic error</glossterm> if <tag>p:file-touch</tag> cannot be completed due to access 
           restrictions in the environment in which the pipeline is run.</error></para>
 
 <para>If the <option>timestamp</option> option is set, the file's
