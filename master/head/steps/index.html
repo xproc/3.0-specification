@@ -716,8 +716,10 @@ The archive has no <code class="property">base-uri</code>.</p>
             expression.</p>
       </li><li>
         <p>The second member in an inner array <span class="rfc2119" id="override-content-type.3.2.1.1">must</span> be a valid a MIME
-          content-type. <a id="err.inline.C0130"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic error</a></em> (<a href="#err.C0130"><code class="errqname">err:XC0130</code></a>) if the
-            content-type specified is not a valid content type.</p>
+          content-type. <a id="err.inline.D0079"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic error</a></em> (<a href="#err.D0079"><code class="errqname">err:XD0079</code></a>) if a supplied 
+            content-type is not a valid media type of the form 
+            “<code class="literal"><em class="replaceable"><code>type</code></em>/<em class="replaceable"><code>subtype</code></em>+<em class="replaceable"><code>ext</code></em></code>” 
+            or “<code class="literal"><em class="replaceable"><code>type</code></em>/<em class="replaceable"><code>subtype</code></em></code>”.</p>
       </li></ul></div>
 
     <p><a id="err.inline.C0146"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic error</a></em> (<a href="#err.C0146"><code class="errqname">err:XC0146</code></a>) if the specified value
@@ -775,11 +777,10 @@ The archive has no <code class="property">base-uri</code>.</p>
    <p class="element-syntax element-syntax-declare-step"><span class="decl"><code>&lt;p:declare-step</code> <code class="attr type-attr">type</code><code>="</code><code class="value type-value">p:cast-content-type</code><code>"</code><code>&gt;</code></span><br />     <span class="input"><code>&lt;p:input</code> <code class="attr port-attr">port</code><code>="</code><code class="value port-value">source</code><code>"</code> <code class="attr content-types-attr">content-types</code><code>="</code><code class="value content-types-value">any</code><code>"</code><code>/&gt;</code></span><br />     <span class="input"><code>&lt;p:output</code> <code class="attr port-attr">port</code><code>="</code><code class="value port-value">result</code><code>"</code> <code class="attr content-types-attr">content-types</code><code>="</code><code class="value content-types-value">any</code><code>"</code><code>/&gt;</code></span><br />     <span class="opt-req"><code>&lt;p:option</code> <code class="attr name-attr">name</code><code>="</code><code class="value name-value">content-type</code><code>"</code> <code class="attr required-attr">required</code><code>="</code><code class="value required-value">true</code><code>"</code> <code class="attr as-attr">as</code><code>="</code><code class="value as-value">xs:string</code><code>"</code><code>/&gt;</code><code></code></span><br />     <span class="opt-opt"><code>&lt;p:option</code> <code class="attr name-attr">name</code><code>="</code><code class="value name-value">parameters</code><code>"</code> <code class="attr as-attr">as</code><code>="</code><code class="value as-value">map(xs:QName,item()*)?</code><code>"</code><code>/&gt;</code><code>     </code></span><br /><code>&lt;/p:declare-step&gt;</code></p>
    
    <p>The input document is transformed from one media type to another.
-      <a id="err.inline.C0070"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic
-         error</a></em> (<a href="#err.C0070"><code class="errqname">err:XC0070</code></a>) if the supplied <code class="option">content-type</code> is not
-         a valid media type of the form
-         “<code class="literal"><em class="replaceable"><code>type</code></em>/<em class="replaceable"><code>subtype</code></em>+<em class="replaceable"><code>ext</code></em></code>”
-         where “<code class="literal">+<em class="replaceable"><code>ext</code></em></code>” is optional.
+      <a id="err.inline.D0079.1"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic error</a></em> (<a href="#err.D0079"><code class="errqname">err:XD0079</code></a>) if a supplied content-type is not 
+         a valid media type of the form 
+         “<code class="literal"><em class="replaceable"><code>type</code></em>/<em class="replaceable"><code>subtype</code></em>+<em class="replaceable"><code>ext</code></em></code>” 
+         or “<code class="literal"><em class="replaceable"><code>type</code></em>/<em class="replaceable"><code>subtype</code></em></code>”.
       <a id="err.inline.C0071"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic
          error</a></em> (<a href="#err.C0071"><code class="errqname">err:XC0071</code></a>) if the <code class="tag-element">p:cast-content-type</code> step
          cannot perform the requested cast.
@@ -968,7 +969,7 @@ The archive has no <code class="property">base-uri</code>.</p>
                <code class="tag-attribute">content-type</code> attribute on the
                <a href="#c.data"><code class="tag-element">c:data</code></a> element.</p>
             
-            <p id="d785e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:data<br />  <strong>content-type</strong> = <var>ContentType</var><br />  charset? = <var>string</var><br />  encoding? = <var>string</var>&gt;<br />    <var>string</var><br />&lt;/c:data&gt;</code></p>
+            <p id="d792e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:data<br />  <strong>content-type</strong> = <var>ContentType</var><br />  charset? = <var>string</var><br />  encoding? = <var>string</var>&gt;<br />    <var>string</var><br />&lt;/c:data&gt;</code></p>
             
             <p>The content of the <a href="#c.data"><code class="tag-element">c:data</code></a> element is the base64 encoded
                representation of the non-XML content. The serialization property is removed.</p>
@@ -1402,8 +1403,10 @@ converted to lowercase.</p>
       the content type value of the document. If the content type
       specified begins with “<code class="literal">multipart/</code>”, a
       multipart request will be sent to the server.</p>
-      <p><a id="err.inline.C0130.1"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic error</a></em> (<a href="#err.C0130"><code class="errqname">err:XC0130</code></a>) if
-      the content-type specified is not a valid content type.</p>
+      <p><a id="err.inline.D0079.2"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic error</a></em> (<a href="#err.D0079"><code class="errqname">err:XD0079</code></a>) if a supplied content-type is not 
+        a valid media type of the form 
+        “<code class="literal"><em class="replaceable"><code>type</code></em>/<em class="replaceable"><code>subtype</code></em>+<em class="replaceable"><code>ext</code></em></code>” 
+        or “<code class="literal"><em class="replaceable"><code>type</code></em>/<em class="replaceable"><code>subtype</code></em></code>”.</p>
     </dd><dt><span class="term"><code class="literal">transfer-encoding</code></span></dt><dd>
       <p>If a <code class="literal">transfer-encoding</code> header is provided,
       the request <span class="rfc2119" id="c.http-request.9.4.2.4.2.2.1.2">must</span> be sent with that encoding.
@@ -2723,11 +2726,10 @@ newline (&amp;#10;).</p>
         port will always end with its value (also when there are no documents on the <code class="port">source</code> port).</p>
     </li></ul></div>
   <p>When the <code class="option">override-content-type</code> option is specified, the document appearing on the port <code class="port">result</code>
-    will have this media type as part of its document properties. <a id="err.inline.C0070.1"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic
-      error</a></em> (<a href="#err.C0070"><code class="errqname">err:XC0070</code></a>) if the supplied <code class="option">content-type</code> is not
-      a valid media type of the form
+    will have this media type as part of its document properties. <a id="err.inline.D0079.3"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic 
+      error</a></em> (<a href="#err.D0079"><code class="errqname">err:XD0079</code></a>) if a supplied content-type is not  a valid media type of the form 
       “<code class="literal"><em class="replaceable"><code>type</code></em>/<em class="replaceable"><code>subtype</code></em>+<em class="replaceable"><code>ext</code></em></code>” 
-      where “<code class="literal">+<em class="replaceable"><code>ext</code></em></code>” is optional. <a id="err.inline.C0001"></a>It is a
+      or “<code class="literal"><em class="replaceable"><code>type</code></em>/<em class="replaceable"><code>subtype</code></em></code>”. <a id="err.inline.C0001"></a>It is a
         <em class="glossterm"><a href="#dt-dynamic-error">dynamic error</a></em> (<a href="#err.C0001"><code class="errqname">err:XC0001</code></a>) if the value of option <code class="option">override-content-type</code> 
       is not a text media type.
   </p>
@@ -3057,10 +3059,11 @@ the base URI of the document.
     
   <ol style="list-style: decimal;"><li>
       <p>If the <code class="option">content-type</code> option is specified, the uncompressed document
-          <span class="rfc2119" id="c.uncompress.8.1.1.2">must</span> be interpreted according to that content-type. <a id="err.inline.C0070.2"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic error</a></em> (<a href="#err.C0070"><code class="errqname">err:XC0070</code></a>) if the supplied
-            <code class="option">content-type</code> is not a valid media type of the form
-              “<code class="literal"><em class="replaceable"><code>type</code></em>/<em class="replaceable"><code>subtype</code></em>+<em class="replaceable"><code>ext</code></em></code>”
-          where “<code class="literal">+<em class="replaceable"><code>ext</code></em></code>” is optional.
+        <span class="rfc2119" id="c.uncompress.8.1.1.2">must</span> be interpreted according to that content-type. 
+        <a id="err.inline.D0079.4"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic error</a></em> (<a href="#err.D0079"><code class="errqname">err:XD0079</code></a>) if a supplied content-type is not 
+          a valid media type of the form 
+          “<code class="literal"><em class="replaceable"><code>type</code></em>/<em class="replaceable"><code>subtype</code></em>+<em class="replaceable"><code>ext</code></em></code>” 
+          or “<code class="literal"><em class="replaceable"><code>type</code></em>/<em class="replaceable"><code>subtype</code></em></code>”.
         <a id="err.inline.C0201"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic error</a></em> (<a href="#err.C0201"><code class="errqname">err:XC0201</code></a>) if the
             <code class="tag-element">p:uncompress</code> step cannot perform the requested content-type cast.
       </p>
@@ -3368,7 +3371,7 @@ is empty.</p>
 <ul><li>
     <p>If the document root element is <a href="#cv.query"><code id="cv.query" class="tag-element">c:query</code></a>, the text
       descendants of this element are considered the query.</p>
-    <p id="d2267e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:query&gt;<br />    <var>string</var><br />&lt;/c:query&gt;</code></p>
+    <p id="d2281e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:query&gt;<br />    <var>string</var><br />&lt;/c:query&gt;</code></p>
   </li><li>
       <p>If the document root element is in the XQueryX namespace, the
         document is treated as an XQueryX-encoded query. <span id="impl-64">Support for
@@ -3698,7 +3701,10 @@ assigned to the serialization document property that cannot be converted
 into map(xs:QName, item()*) according
 to the rules in section “QName handling” of .</p><p>See: <a href="#err.inline.D0070">p:set-properties</a></p></dd><dt id="err.D0078"><code class="errqname">err:XD0078</code></dt><dd><p>It is a dynamic error
 if the loaded document cannot be represented as an HTML document in
-the XPath data model.</p><p>See: <a href="#err.inline.D0078">Loading HTML data</a></p></dd></dl></div>
+the XPath data model.</p><p>See: <a href="#err.inline.D0078">Loading HTML data</a></p></dd><dt id="err.D0079"><code class="errqname">err:XD0079</code></dt><dd><p>It is a dynamic error if a supplied 
+            content-type is not a valid media type of the form 
+            “type/subtype+ext” 
+            or “type/subtype”.</p><p>See: <a href="#err.inline.D0079">Overriding content types</a>, <a href="#err.inline.D0079.1">p:cast-content-type</a>, <a href="#err.inline.D0079.2">p:http-request</a>, <a href="#err.inline.D0079.3">p:text-join</a>, <a href="#err.inline.D0079.4">p:uncompress</a></p></dd></dl></div>
 
 <div id="step-error-summary"><h5>Step Errors</h5><dl class="errs"><dt id="err.C0001"><code class="errqname">err:XC0001</code></dt><dd><p>It is a
         dynamic error if the value of option override-content-type 
@@ -3760,11 +3766,7 @@ error if the processor does not support the specified
 version of the UUID algorithm.</p><p>See: <a href="#err.inline.C0060">p:uuid</a></p></dd><dt id="err.C0062"><code class="errqname">err:XC0062</code></dt><dd><p>It is a dynamic error if the
 match option matches a namespace node.</p><p>See: <a href="#err.inline.C0062">p:delete</a></p></dd><dt id="err.C0069"><code class="errqname">err:XC0069</code></dt><dd><p>It is a dynamic
 error if the properties map contains
-a key equal to the string “content-type”.</p><p>See: <a href="#err.inline.C0069">p:set-properties</a></p></dd><dt id="err.C0070"><code class="errqname">err:XC0070</code></dt><dd><p>It is a dynamic
-         error if the supplied content-type is not
-         a valid media type of the form
-         “type/subtype+ext”
-         where “+ext” is optional.</p><p>See: <a href="#err.inline.C0070">p:cast-content-type</a>, <a href="#err.inline.C0070.1">p:text-join</a>, <a href="#err.inline.C0070.2">p:uncompress</a></p></dd><dt id="err.C0071"><code class="errqname">err:XC0071</code></dt><dd><p>It is a dynamic
+a key equal to the string “content-type”.</p><p>See: <a href="#err.inline.C0069">p:set-properties</a></p></dd><dt id="err.C0071"><code class="errqname">err:XC0071</code></dt><dd><p>It is a dynamic
          error if the p:cast-content-type step
          cannot perform the requested cast.</p><p>See: <a href="#err.inline.C0071">p:cast-content-type</a></p></dd><dt id="err.C0072"><code class="errqname">err:XC0072</code></dt><dd><p>It is a dynamic
                error if the c:data contains content is not
@@ -3844,8 +3846,7 @@ neither “unbounded”, nor a string that may be cast to a non-negative integer
   the headers map contains two keys that are the same
   when compared in a case-insensitive manner.</p><p>See: <a href="#err.inline.C0127">p:http-request</a></p></dd><dt id="err.C0128"><code class="errqname">err:XC0128</code></dt><dd><p>It is a dynamic error if the
   URI’s scheme is unknown or not supported.</p><p>See: <a href="#err.inline.C0128">p:http-request</a></p></dd><dt id="err.C0129"><code class="errqname">err:XC0129</code></dt><dd><p>It is a dynamic error if the
-        requested HTTP version is not supported.</p><p>See: <a href="#err.inline.C0129">p:http-request</a></p></dd><dt id="err.C0130"><code class="errqname">err:XC0130</code></dt><dd><p>It is a dynamic error if the
-            content-type specified is not a valid content type.</p><p>See: <a href="#err.inline.C0130">Overriding content types</a>, <a href="#err.inline.C0130.1">p:http-request</a></p></dd><dt id="err.C0131"><code class="errqname">err:XC0131</code></dt><dd><p>It is a dynamic error if
+        requested HTTP version is not supported.</p><p>See: <a href="#err.inline.C0129">p:http-request</a></p></dd><dt id="err.C0131"><code class="errqname">err:XC0131</code></dt><dd><p>It is a dynamic error if
       the processor cannot support the requested encoding.</p><p>See: <a href="#err.inline.C0131">p:http-request</a></p></dd><dt id="err.C0132"><code class="errqname">err:XC0132</code></dt><dd><p>It is a dynamic error if
           the override content encoding cannot be supported.</p><p>See: <a href="#err.inline.C0132">p:http-request</a></p></dd><dt id="err.C0133"><code class="errqname">err:XC0133</code></dt><dd><p>It is a dynamic error
 if more than one document appears on the source port and
@@ -4147,6 +4148,7 @@ draft:</p>
    
    
    
+   
  <ol style="list-style: decimal;"><li>
     <p>For <a href="#c.cast-content-type"><code class="tag-element">p:cast-content-type</code></a> the expected result type for casting a 
     <code class="literal">c:param-set</code> document to “<code class="literal">application/json</code>” was
@@ -4166,6 +4168,8 @@ draft:</p>
    </li><li>
         <p>Clarified the regular expression matching for <a href="#c.text-replace"><code class="tag-element">p:text-replace</code></a> and
             <a href="#c.unarchive"><code class="tag-element">p:unarchive</code></a>. Added an error code for invalid regular expressions. (2020-04-02)</p>
+   </li><li>
+     <p>Replaced errors XC0070 and XC0130 with XD0079. (2020-04-09)</p>
    </li></ol></div>
 </div></article>
 
