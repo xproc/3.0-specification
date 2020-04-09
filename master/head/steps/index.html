@@ -126,7 +126,7 @@ remove the <code class="code">serialization</code> property
 <p id="cv.result">Also, in this specification, several steps use this
 element for result information:</p>
 
-<p id="d297e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:result&gt;<br />    <var>string</var><br />&lt;/c:result&gt;</code></p>
+<p id="d301e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:result&gt;<br />    <var>string</var><br />&lt;/c:result&gt;</code></p>
 
 <p>When a step uses an XPath to compute an option value, the XPath
 context is as defined in [<a href="#xproc30"><span class="abbrev">XProc 3.0</span></a>].</p>
@@ -733,13 +733,16 @@ The archive has no <code class="property">base-uri</code>.</p>
       
     <ul><li>
         <p>The XPath regular expressions (the first members of the inner arrays) will be matched
-          against the relative filename of the archive's entry (the relative path
-            <em>in</em> the archive, leading up to the entry, for instance
-            <code class="code">img/logos/company-logo.png</code>). This will be done in the order of appearance
-          in the outer array (so order is significant). The matching is done unanchored: it is a
-          match if the regular expression matches part of the filename. Informally: matching behaves
-          like applying the XPath <code class="code">matches#2</code> function, like in 
-          <code class="code">matches($path-in-archive, $regular-expression)</code>.</p>
+          against the path of the entry <em>in</em> the archive. This will be done in
+          the order of appearance in the outer array (so order is significant). The matching is done
+          unanchored: it is a match if the regular expression matches part of the entry's path.
+          Informally: matching behaves like applying the XPath <code class="code">matches#2</code> function, like
+          in <code class="code">matches($path-in-archive, $regular-expression)</code>.</p>
+        <div class="note admonition"><h3>Note</h3><div class="admonition-body">
+          <p>Depending on how archives are constructed, the path of an entry in an archive can be
+            with or without a leading slash. Usually it will be without. For archives constructed by
+              <a href="#c.archive"><code class="tag-element">p:archive</code></a> no leading slash will be present.</p>
+        </div></div>
       </li><li>
         <p>If a match is found, the content-type (the second member of the inner array for which
           the match was found) is used as the entry's content-type.</p>
@@ -969,7 +972,7 @@ The archive has no <code class="property">base-uri</code>.</p>
                <code class="tag-attribute">content-type</code> attribute on the
                <a href="#c.data"><code class="tag-element">c:data</code></a> element.</p>
             
-            <p id="d792e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:data<br />  <strong>content-type</strong> = <var>ContentType</var><br />  charset? = <var>string</var><br />  encoding? = <var>string</var>&gt;<br />    <var>string</var><br />&lt;/c:data&gt;</code></p>
+            <p id="d802e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:data<br />  <strong>content-type</strong> = <var>ContentType</var><br />  charset? = <var>string</var><br />  encoding? = <var>string</var>&gt;<br />    <var>string</var><br />&lt;/c:data&gt;</code></p>
             
             <p>The content of the <a href="#c.data"><code class="tag-element">c:data</code></a> element is the base64 encoded
                representation of the non-XML content. The serialization property is removed.</p>
@@ -2956,12 +2959,17 @@ newline (&amp;#10;).</p>
       <p>As a result: an item is included if it matches (at least) one of the
           <code class="option">include-filter</code> values and none of the <code class="option">exclude-filter</code>
         values.</p>
-      <p>Matching will be done using the relative filename of the archive's entry (the relative
-        path <em>in</em> the archive, leading up to the entry, for instance
-          <code class="code">img/logos/company-logo.png</code>). The matching is done unanchored: it is a match if
-        the regular expression matches part of the filename. Informally: matching behaves like
+      <p>The regular expressions specified in the <code class="option">include-filter</code> and
+          <code class="option">exclude-filter</code> options will be matched against the path of the entry
+          <em>in</em> the archive. The matching is done unanchored: it is a match if the
+        regular expression matches part of the entry's path. Informally: matching behaves like
         applying the XPath <code class="code">matches#2</code> function, like in <code class="code">matches($path-in-archive,
           $regular-expression)</code>.</p>
+      <div class="note admonition"><h3>Note</h3><div class="admonition-body">
+        <p>Depending on how archives are constructed, the path of an entry in an archive can be
+          with or without a leading slash. Usually it will be without. For archives constructed by
+            <a href="#c.archive"><code class="tag-element">p:archive</code></a> no leading slash will be present.</p>
+      </div></div>
     </li><li>
       <p>The <code class="option">relative-to</code> option, when present, is used in creating the base URI
         of the unarchived documents. If the option is relative, it is made absolute against the
@@ -3371,7 +3379,7 @@ is empty.</p>
 <ul><li>
     <p>If the document root element is <a href="#cv.query"><code id="cv.query" class="tag-element">c:query</code></a>, the text
       descendants of this element are considered the query.</p>
-    <p id="d2281e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:query&gt;<br />    <var>string</var><br />&lt;/c:query&gt;</code></p>
+    <p id="d2299e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:query&gt;<br />    <var>string</var><br />&lt;/c:query&gt;</code></p>
   </li><li>
       <p>If the document root element is in the XQueryX namespace, the
         document is treated as an XQueryX-encoded query. <span id="impl-64">Support for

@@ -831,13 +831,16 @@ The archive has no <property>base-uri</property>.</para>
     <itemizedlist>
       <listitem>
         <para>The XPath regular expressions (the first members of the inner arrays) will be matched
-          against the relative filename of the archive's entry (the relative path
-            <emphasis>in</emphasis> the archive, leading up to the entry, for instance
-            <code>img/logos/company-logo.png</code>). This will be done in the order of appearance
-          in the outer array (so order is significant). The matching is done unanchored: it is a
-          match if the regular expression matches part of the filename. Informally: matching behaves
-          like applying the XPath <code>matches#2</code> function, like in 
-          <code>matches($path-in-archive, $regular-expression)</code>.</para>
+          against the path of the entry <emphasis>in</emphasis> the archive. This will be done in
+          the order of appearance in the outer array (so order is significant). The matching is done
+          unanchored: it is a match if the regular expression matches part of the entry's path.
+          Informally: matching behaves like applying the XPath <code>matches#2</code> function, like
+          in <code>matches($path-in-archive, $regular-expression)</code>.</para>
+        <note>
+          <para>Depending on how archives are constructed, the path of an entry in an archive can be
+            with or without a leading slash. Usually it will be without. For archives constructed by
+              <tag>p:archive</tag> no leading slash will be present.</para>
+        </note>
       </listitem>
       <listitem>
         <para>If a match is found, the content-type (the second member of the inner array for which
@@ -3323,12 +3326,17 @@ newline (&amp;#10;).</para>
       <para>As a result: an item is included if it matches (at least) one of the
           <option>include-filter</option> values and none of the <option>exclude-filter</option>
         values.</para>
-      <para>Matching will be done using the relative filename of the archive's entry (the relative
-        path <emphasis>in</emphasis> the archive, leading up to the entry, for instance
-          <code>img/logos/company-logo.png</code>). The matching is done unanchored: it is a match if
-        the regular expression matches part of the filename. Informally: matching behaves like
+      <para>The regular expressions specified in the <option>include-filter</option> and
+          <option>exclude-filter</option> options will be matched against the path of the entry
+          <emphasis>in</emphasis> the archive. The matching is done unanchored: it is a match if the
+        regular expression matches part of the entry's path. Informally: matching behaves like
         applying the XPath <code>matches#2</code> function, like in <code>matches($path-in-archive,
           $regular-expression)</code>.</para>
+      <note>
+        <para>Depending on how archives are constructed, the path of an entry in an archive can be
+          with or without a leading slash. Usually it will be without. For archives constructed by
+            <tag>p:archive</tag> no leading slash will be present.</para>
+      </note>
     </listitem>
     <listitem>
       <para>The <option>relative-to</option> option, when present, is used in creating the base URI
