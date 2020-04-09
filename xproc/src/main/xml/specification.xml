@@ -744,7 +744,9 @@ The following shortcuts <rfc2119>must</rfc2119> be supported by the processor:</
 </listitem>
 </itemizedlist>
 
-<para><impl>It is <glossterm>implementation-defined</glossterm> if a processor accepts any other content type shortcuts.</impl>
+  <para><error code="D0079">It is a <glossterm>dynamic error</glossterm> if a supplied content-type is not 
+    a valid media type of the form “<literal>type/subtype+ext</literal>” or “<literal>type/subtype</literal>”.</error>
+  <impl>It is <glossterm>implementation-defined</glossterm> if a processor accepts any other content type shortcuts.</impl>
 <error code="S0111">It is a <glossterm>static error</glossterm> if an unrecognized content type shortcut is specified.</error>
 </para>
 
@@ -6453,7 +6455,9 @@ possible set of parameter values.</para>
         <para>The description of the <code>select</code> attribute of <tag>p:option</tag> no longer
           mentions static variables.</para>
     </listitem>
-    
+    <listitem>
+      <para>Error XD0079 added for defective content-types. (Was XS0070 or XS00130).</para>
+    </listitem>
   </itemizedlist>
   
 <para>This list contains the non-editorial changes made after the
