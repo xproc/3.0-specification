@@ -8,6 +8,7 @@
       <p:option name="max-depth" as="xs:string?" select="'1'"/>
       <p:option name="include-filter" as="xs:string*"/>
       <p:option name="exclude-filter" as="xs:string*"/>
+      <p:option name="override-content-types" as="xs:string"/>
    </p:declare-step>
    <p:declare-step type="p:file-copy" xml:id="file-copy">
       <p:output port="result" primary="true" content-types="application/xml"/>
@@ -25,6 +26,7 @@
       <p:output port="result" primary="true" content-types="application/xml"/>
       <p:option name="href" required="true" as="xs:anyURI"/>
       <p:option name="fail-on-error" as="xs:boolean" select="true()"/>
+      <p:option name="override-content-types" as="xs:string"/>
    </p:declare-step>
    <p:declare-step type="p:file-mkdir" xml:id="file-mkdir">
       <p:output port="result" primary="true" content-types="application/xml"/>
