@@ -117,10 +117,17 @@ steps is assumed; for background details, see
     <para>If present, the value of the <option>include-filter</option> or
       <option>exclude-filter</option> option <rfc2119>must</rfc2119> be a sequence of strings, each
       one representing a regular expressions as specified in <biblioref linkend="xpath31-functions"/>,
-      section 7.61 “<literal>Regular Expression Syntax</literal>”.</para>
+      section 7.61 “<literal>Regular Expression Syntax</literal>”. <error code="C0147">It is a <glossterm>dynamic
+        error</glossterm> if a specified value is not a valid XPath regular
+        expression.</error></para>
     
-    <para>The regular expressions will be matched against an item’s file system path relative to the top-level path that was
-      given in the <option>path</option> option. If the item is a directory, a trailing slash will be appended.</para>
+    <para>The regular expressions will be matched against an item’s file system path relative to the
+      top-level path that was given in the <option>path</option> option. If the item is a directory,
+      a trailing slash will be appended. The matching is done unanchored: it is a match if the
+      regular expression matches part of the relative item’s file system path. Informally: matching behaves like applying
+      the XPath <code>matches#2</code> function, like in 
+      <code>matches($path, $regular-expression)</code>.</para>
+    
     <para>Examples: A file <literal>file.txt</literal> in the directory specified by <option>path</option> will remain
       <literal>file.txt</literal>, a relative path <literal>dir1/file.txt</literal> will remain
       <literal>dir1/file.txt</literal>, while a relative path <literal>dir1/dir2</literal> will become

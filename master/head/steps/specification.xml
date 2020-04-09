@@ -3105,9 +3105,11 @@ The joined document has no <property>base-uri</property> property.
   <para>This step is a convenience wrapper around the XPath <link xlink:href="https://www.w3.org/TR/xpath-functions-31/#func-replace"><function>fn:replace</function></link>
     function to ease text replacements in the document flow of a pipeline.</para>
 
-  <para>The <option>pattern</option>, <option>replacement</option> and <option>flags</option> options are specified the
-    same as the parameters with the same names of the <link xlink:href="https://www.w3.org/TR/xpath-functions-31/#func-replace"><function>fn:replace</function></link>
-    function.</para>
+  <para>The <option>pattern</option>, <option>replacement</option> and <option>flags</option>
+    options are specified the same as the parameters with the same names of the <link xlink:href="https://www.w3.org/TR/xpath-functions-31/#func-replace"><function>fn:replace</function></link> function. The <option>pattern</option> option
+      <rfc2119>must</rfc2119> be a regular expression as specified in <biblioref linkend="xpath31-functions"/>, section 7.61 “<literal>Regular Expression Syntax</literal>”.
+      <error code="C0147">It is a <glossterm>dynamic error</glossterm> if the specified value is not
+      a valid XPath regular expression.</error></para>
 
   <para>Replacing strings in text documents does not require identifying individual
 lines in each document, consequently no special end-of-line handling is
@@ -3286,7 +3288,9 @@ newline (&amp;#10;).</para>
       <para>If present, the value of the <option>include-filter</option> or
           <option>exclude-filter</option> option <rfc2119>must</rfc2119> be a sequence of strings,
         each one representing a regular expressions as specified in <biblioref linkend="xpath31-functions"/>, section 7.61 “<literal>Regular Expression
-        Syntax</literal>”.</para>
+            Syntax</literal>”. <error code="C0147">It is a <glossterm>dynamic
+              error</glossterm> if a specified value is not a valid XPath regular
+              expression.</error></para>
 
       <para>If neither the <option>include-filter</option> option nor the
           <option>exclude-filter</option> option is specified, the <code>p:unarchive</code> step
@@ -3317,6 +3321,12 @@ newline (&amp;#10;).</para>
       <para>As a result: an item is included if it matches (at least) one of the
           <option>include-filter</option> values and none of the <option>exclude-filter</option>
         values.</para>
+      <para>Matching will be done using the relative filename of the archive's entry (the relative
+        path <emphasis>in</emphasis> the archive, leading up to the entry, for instance
+          <code>img/logos/company-logo.png</code>). The matching is done unanchored: it is a match if
+        the regular expression matches part of the filename. Informally: matching behaves like
+        applying the XPath <code>matches#2</code> function, like in <code>matches($path-in-archive,
+          $regular-expression)</code>.</para>
     </listitem>
     <listitem>
       <para>The <option>relative-to</option> option, when present, is used in creating the base URI
@@ -4358,6 +4368,10 @@ draft:</para>
    </listitem>
    <listitem>
      <para>The <option>override-content-types</option> option was added to <tag>p:archive-manifest</tag> and <tag>p:unarchive</tag>. (2020-03-30)</para>
+   </listitem>
+   <listitem>
+        <para>Clarified the regular expression matching for <tag>p:text-replace</tag> and
+            <tag>p:unarchive</tag>. Added an error code for invalid regular expressions. (2020-04-02)</para>
    </listitem>
  </orderedlist>
 </appendix>

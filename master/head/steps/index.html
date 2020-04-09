@@ -1,4 +1,4 @@
-<html xmlns="http://www.w3.org/1999/xhtml"><head><title>XProc 3.0: Standard Step Library</title><meta charset="utf-8" /><meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport" /><link class="removeOnSave" crossorigin="anonymous" href="https://www.w3.org" rel="preconnect" /><link as="script" class="removeOnSave" href="js/fixup.js" rel="preload" /><link as="style" class="removeOnSave" href="css/base.css" rel="preload" /><link as="image" class="removeOnSave" href="https://www.w3.org/StyleSheets/TR/2016/logos/W3C" rel="preload" /><link rel="stylesheet" href="css/cg-draft.css" /><link rel="stylesheet" href="css/respec.css" /><link rel="alternate" title="XML" href="specification.xml" /><meta name="generator" content="DocBook XSL 2.0 Stylesheets V2.4.2" /><meta name="description" content="Abstract This specification describes the standard step vocabulary of&#xA;  XProc 3.0: An XML Pipeline Language." /><link href="css/default.css" rel="stylesheet" type="text/css" /><link href="css/db-prism.css" rel="stylesheet" type="text/css" /><link rel="stylesheet" type="text/css" href="css/base.css" /><link rel="stylesheet" type="text/css" href="css/xproc.css" /><link rel="stylesheet" type="text/css" href="css/print.css" media="print" /><script type="text/javascript" src="js/dbmodnizr.js"></script></head><body><attribute name="class" select="'h-entry informative toc-sidebar'"></attribute><div class="head" id="spec.head"><a class="logo" href="https://www.w3.org/"><img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2016/logos/W3C" width="72" /></a><h1 id="title" class="title p-name">XProc 3.0: Standard Step Library</h1><h2>Draft Community Group Report <time class="dt-published" datetime="2019-01-04">3 April 2020</time></h2><dl><dt>Latest editor’s draft:</dt><dd><a href="http://spec.xproc.org/master/head/steps/">http://spec.xproc.org/master/head/steps/</a></dd><dt>Editors:</dt><dd><span class="personname">Norman Walsh</span></dd><dd><span class="personname">Achim Berndzen</span></dd><dd><span class="personname">Gerrit Imsieke</span></dd><dd><span class="personname">Erik Siegel</span></dd><dt>Participate:</dt><dd><a href="http://github.com/xproc/3.0-steps">GitHub xproc/3.0-steps</a></dd><dd><a href="http://github.com/xproc/3.0-steps/issues">Report an issue</a></dd><dt>Changes:</dt><dd><a href="diff.html">Diff against current “status quo” draft</a></dd><dd><a href="http://github.com/xproc/3.0-steps/commits/master">Commits for this specification</a></dd></dl><p>This document is also available in these non-normative formats: <a href="specification.xml">XML</a>, 
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>XProc 3.0: Standard Step Library</title><meta charset="utf-8" /><meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport" /><link class="removeOnSave" crossorigin="anonymous" href="https://www.w3.org" rel="preconnect" /><link as="script" class="removeOnSave" href="js/fixup.js" rel="preload" /><link as="style" class="removeOnSave" href="css/base.css" rel="preload" /><link as="image" class="removeOnSave" href="https://www.w3.org/StyleSheets/TR/2016/logos/W3C" rel="preload" /><link rel="stylesheet" href="css/cg-draft.css" /><link rel="stylesheet" href="css/respec.css" /><link rel="alternate" title="XML" href="specification.xml" /><meta name="generator" content="DocBook XSL 2.0 Stylesheets V2.4.2" /><meta name="description" content="Abstract This specification describes the standard step vocabulary of&#xA;  XProc 3.0: An XML Pipeline Language." /><link href="css/default.css" rel="stylesheet" type="text/css" /><link href="css/db-prism.css" rel="stylesheet" type="text/css" /><link rel="stylesheet" type="text/css" href="css/base.css" /><link rel="stylesheet" type="text/css" href="css/xproc.css" /><link rel="stylesheet" type="text/css" href="css/print.css" media="print" /><script type="text/javascript" src="js/dbmodnizr.js"></script></head><body><attribute name="class" select="'h-entry informative toc-sidebar'"></attribute><div class="head" id="spec.head"><a class="logo" href="https://www.w3.org/"><img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2016/logos/W3C" width="72" /></a><h1 id="title" class="title p-name">XProc 3.0: Standard Step Library</h1><h2>Draft Community Group Report <time class="dt-published" datetime="2019-01-04">9 April 2020</time></h2><dl><dt>Latest editor’s draft:</dt><dd><a href="http://spec.xproc.org/master/head/steps/">http://spec.xproc.org/master/head/steps/</a></dd><dt>Editors:</dt><dd><span class="personname">Norman Walsh</span></dd><dd><span class="personname">Achim Berndzen</span></dd><dd><span class="personname">Gerrit Imsieke</span></dd><dd><span class="personname">Erik Siegel</span></dd><dt>Participate:</dt><dd><a href="http://github.com/xproc/3.0-steps">GitHub xproc/3.0-steps</a></dd><dd><a href="http://github.com/xproc/3.0-steps/issues">Report an issue</a></dd><dt>Changes:</dt><dd><a href="diff.html">Diff against current “status quo” draft</a></dd><dd><a href="http://github.com/xproc/3.0-steps/commits/master">Commits for this specification</a></dd></dl><p>This document is also available in these non-normative formats: <a href="specification.xml">XML</a>, 
 	  automatic change markup
           <a href="diff.html">from the previous draft</a>
           and <a href="lcdiff.html">from the last call draft</a>
@@ -2757,9 +2757,11 @@ The joined document has no <code class="property">base-uri</code> property.
   <p>This step is a convenience wrapper around the XPath <a href="https://www.w3.org/TR/xpath-functions-31/#func-replace"><code class="function">fn:replace</code></a>
     function to ease text replacements in the document flow of a pipeline.</p>
 
-  <p>The <code class="option">pattern</code>, <code class="option">replacement</code> and <code class="option">flags</code> options are specified the
-    same as the parameters with the same names of the <a href="https://www.w3.org/TR/xpath-functions-31/#func-replace"><code class="function">fn:replace</code></a>
-    function.</p>
+  <p>The <code class="option">pattern</code>, <code class="option">replacement</code> and <code class="option">flags</code>
+    options are specified the same as the parameters with the same names of the <a href="https://www.w3.org/TR/xpath-functions-31/#func-replace"><code class="function">fn:replace</code></a> function. The <code class="option">pattern</code> option
+      <span class="rfc2119" id="c.text-replace.6.6">must</span> be a regular expression as specified in [<a href="#xpath31-functions"><span class="abbrev">XPath and XQuery Functions and Operators 3.1</span></a>], section 7.61 “<code class="literal">Regular Expression Syntax</code>”.
+      <a id="err.inline.C0147.1"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic error</a></em> (<a href="#err.C0147"><code class="errqname">err:XC0147</code></a>) if the specified value is not
+      a valid XPath regular expression.</p>
 
   <p>Replacing strings in text documents does not require identifying individual
 lines in each document, consequently no special end-of-line handling is
@@ -2919,7 +2921,9 @@ newline (&amp;#10;).</p>
       <p>If present, the value of the <code class="option">include-filter</code> or
           <code class="option">exclude-filter</code> option <span class="rfc2119" id="c.unarchive.5.3.1.3">must</span> be a sequence of strings,
         each one representing a regular expressions as specified in [<a href="#xpath31-functions"><span class="abbrev">XPath and XQuery Functions and Operators 3.1</span></a>], section 7.61 “<code class="literal">Regular Expression
-        Syntax</code>”.</p>
+            Syntax</code>”. <a id="err.inline.C0147.2"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic
+              error</a></em> (<a href="#err.C0147"><code class="errqname">err:XC0147</code></a>) if a specified value is not a valid XPath regular
+              expression.</p>
 
       <p>If neither the <code class="option">include-filter</code> option nor the
           <code class="option">exclude-filter</code> option is specified, the <code class="code">p:unarchive</code> step
@@ -2950,6 +2954,12 @@ newline (&amp;#10;).</p>
       <p>As a result: an item is included if it matches (at least) one of the
           <code class="option">include-filter</code> values and none of the <code class="option">exclude-filter</code>
         values.</p>
+      <p>Matching will be done using the relative filename of the archive's entry (the relative
+        path <em>in</em> the archive, leading up to the entry, for instance
+          <code class="code">img/logos/company-logo.png</code>). The matching is done unanchored: it is a match if
+        the regular expression matches part of the filename. Informally: matching behaves like
+        applying the XPath <code class="code">matches#2</code> function, like in <code class="code">matches($path-in-archive,
+          $regular-expression)</code>.</p>
     </li><li>
       <p>The <code class="option">relative-to</code> option, when present, is used in creating the base URI
         of the unarchived documents. If the option is relative, it is made absolute against the
@@ -3358,7 +3368,7 @@ is empty.</p>
 <ul><li>
     <p>If the document root element is <a href="#cv.query"><code id="cv.query" class="tag-element">c:query</code></a>, the text
       descendants of this element are considered the query.</p>
-    <p id="d2260e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:query&gt;<br />    <var>string</var><br />&lt;/c:query&gt;</code></p>
+    <p id="d2267e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:query&gt;<br />    <var>string</var><br />&lt;/c:query&gt;</code></p>
   </li><li>
       <p>If the document root element is in the XQueryX namespace, the
         document is treated as an XQueryX-encoded query. <span id="impl-64">Support for
@@ -3844,7 +3854,7 @@ type specified is not a multipart content type.</p><p>See: <a href="#err.inline.
         for the override-content-types option is not an array of arrays, where the
         inner arrays have exactly two members of type xs:string.</p><p>See: <a href="#err.inline.C0146">Overriding content types</a></p></dd><dt id="err.C0147"><code class="errqname">err:XC0147</code></dt><dd><p>It is a dynamic
               error if the specified value is not a valid XPath regular
-            expression.</p><p>See: <a href="#err.inline.C0147">Overriding content types</a></p></dd><dt id="err.C0201"><code class="errqname">err:XC0201</code></dt><dd><p>It is a dynamic error if the
+            expression.</p><p>See: <a href="#err.inline.C0147">Overriding content types</a>, <a href="#err.inline.C0147.1">p:text-replace</a>, <a href="#err.inline.C0147.2">p:unarchive</a></p></dd><dt id="err.C0201"><code class="errqname">err:XC0201</code></dt><dd><p>It is a dynamic error if the
             p:uncompress step cannot perform the requested content-type cast.</p><p>See: <a href="#err.inline.C0201">p:uncompress</a></p></dd><dt id="err.C0202"><code class="errqname">err:XC0202</code></dt><dd><p>It is a dynamic error if the compression
               format cannot be understood, determined and/or processed.</p><p>See: <a href="#err.inline.C0202">p:compress</a>, <a href="#err.inline.C0202.1">p:uncompress</a></p></dd></dl></div>
 
@@ -4136,6 +4146,7 @@ draft:</p>
    
    
    
+   
  <ol style="list-style: decimal;"><li>
     <p>For <a href="#c.cast-content-type"><code class="tag-element">p:cast-content-type</code></a> the expected result type for casting a 
     <code class="literal">c:param-set</code> document to “<code class="literal">application/json</code>” was
@@ -4152,6 +4163,9 @@ draft:</p>
      <p>A <code class="option">static-parameters</code> was added to <a href="#c.xslt"><code class="tag-element">p:xslt</code></a>. (2020-03-23)</p>
    </li><li>
      <p>The <code class="option">override-content-types</code> option was added to <a href="#c.archive-manifest"><code class="tag-element">p:archive-manifest</code></a> and <a href="#c.unarchive"><code class="tag-element">p:unarchive</code></a>. (2020-03-30)</p>
+   </li><li>
+        <p>Clarified the regular expression matching for <a href="#c.text-replace"><code class="tag-element">p:text-replace</code></a> and
+            <a href="#c.unarchive"><code class="tag-element">p:unarchive</code></a>. Added an error code for invalid regular expressions. (2020-04-02)</p>
    </li></ol></div>
 </div></article>
 
