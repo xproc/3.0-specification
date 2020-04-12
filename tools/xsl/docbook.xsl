@@ -131,7 +131,9 @@
     <h2>
       <xsl:text>Draft Community Group Report </xsl:text>
 
-      <time class="dt-published" datetime="2019-01-04">
+      <time class="dt-published">
+        <xsl:attribute name="datetime"
+                       select="format-date($pubdate, '[Y0001]-[M01]-[D01]')"/>
         <xsl:value-of select="format-date($pubdate, '[D1] [MNn] [Y0001]')"/>
       </time>
     </h2>
@@ -155,7 +157,12 @@
 
         <xsl:if test="not(db:info/db:pubdate)">
           <xsl:text> at </xsl:text>
-          <xsl:value-of select="format-dateTime($dtz, '[H01]:[m01]&#160;UTC')"/>
+          <time class="dt-timestamp">
+            <xsl:attribute name="datetime"
+                           select="format-dateTime($dtz,
+                                      '[Y0001][M01][D01]T[H01]:[m01]:[s01]Z')"/>
+            <xsl:value-of select="format-dateTime($dtz, '[H01]:[m01]&#160;UTC')"/>
+          </time>
           <xsl:if test="$travis-build-number != ''">
             <xsl:text> (</xsl:text>
             <a href="https://github.com/{$travis-user}/{$travis-repo}/commit/{$travis-commit}">
