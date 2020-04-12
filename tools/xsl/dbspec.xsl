@@ -375,7 +375,7 @@
 <!-- ============================================================ -->
 
 <xsl:template name="t:body-attributes">
-  <attribute name="class" select="'h-entry informative toc-sidebar'"/>
+  <xsl:attribute name="class" select="'h-entry informative toc-sidebar'"/>
 </xsl:template>
 
 <xsl:template match="*" mode="m:css">
