@@ -297,7 +297,9 @@
           <xsl:text>, </xsl:text>
 	  automatic change markup
           <a href="diff.html">from the previous draft</a>
-          and <a href="lcdiff.html">from the last call draft</a>
+          <xsl:if test="/*/@xml:id = 'xproc'">
+            and <a href="lcdiff.html">from the last call draft</a>
+          </xsl:if>
           courtesy of <a href="http://www.deltaxml.com/">DeltaXML</a>
         </xsl:if>
 
