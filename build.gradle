@@ -271,7 +271,8 @@ task xproc_pdf(dependsOn: [ "xproc_pdf_xform" ], type: XMLCalabashTask) {
   pipeline "tools/xpl/css-format.xpl"
 }
 
-task xproc_assets(dependsOn: [ "xproc:images", "xproc_web_assets" ], type: Copy) {
+task xproc_assets(dependsOn: [ "xproc:images", "xproc_web_assets", "xproc_schemas" ],
+                  type: Copy) {
   from "xproc/build/graphics"
   into "build/dist/xproc/graphics/"
 }
@@ -279,6 +280,12 @@ task xproc_assets(dependsOn: [ "xproc:images", "xproc_web_assets" ], type: Copy)
 task xproc_web_assets(type: Copy) {
   from "src/main/resources"
   into "build/dist/xproc/"
+}
+
+task xproc_schemas(dependsOn: [ "spec_schemas" ], type: Copy) {
+  from "build/"
+  into "build/dist/xproc/schemas/"
+  include "xp*.rn*"
 }
 
 task xproc_src(dependsOn: ["xproc:source"], type: Copy) {
