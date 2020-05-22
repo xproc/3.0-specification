@@ -257,12 +257,12 @@
       <p:input port="source" content-types="any" sequence="true"/>
    </p:declare-step>
    <p:declare-step type="p:split-sequence" xml:id="split-sequence">
-      <p:input port="source" content-types="xml html" sequence="true"/>
+      <p:input port="source" content-types="any" sequence="true"/>
       <p:output port="matched"
                 sequence="true"
                 primary="true"
-                content-types="xml html"/>
-      <p:output port="not-matched" sequence="true" content-types="xml html"/>
+                content-types="any"/>
+      <p:output port="not-matched" sequence="true" content-types="any"/>
       <p:option name="initial-only" as="xs:boolean" select="false()"/>
       <p:option name="test"
                 required="true"

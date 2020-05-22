@@ -2827,9 +2827,9 @@ discards them. It has no output.</para>
 documents and divides it into two sequences.</para>
 
 <p:declare-step type="p:split-sequence">
-  <p:input port="source" content-types="xml html" sequence="true"/>
-  <p:output port="matched" sequence="true" primary="true" content-types="xml html"/>
-  <p:output port="not-matched" sequence="true" content-types="xml html"/>
+  <p:input port="source" content-types="any" sequence="true"/>
+  <p:output port="matched" sequence="true" primary="true" content-types="any"/>
+  <p:output port="not-matched" sequence="true" content-types="any"/>
   <p:option name="initial-only" as="xs:boolean" select="false()"/>
   <p:option name="test" required="true" as="xs:string" e:type="XPathExpression"/>
 </p:declare-step>
@@ -2857,7 +2857,10 @@ appears on the <code>source</code> port, the expression is evaluated
 with that document as the context document. The context position
 (<code>position()</code>) is the position of that document within the
 sequence and the context size (<code>last()</code>) is the total
-number of documents in the sequence.</para>
+number of documents in the sequence. <error code="C0150">It is a 
+<glossterm>dynamic error</glossterm> if evaluating the XPath expression
+in option <option>test</option> on a context document results
+in an error.</error></para>
 
 <note xml:id="note-stream">
 <para>In principle, this component cannot stream because it must
@@ -4386,6 +4389,10 @@ draft:</para>
    </listitem>
    <listitem>
      <para>Replaced errors XC0070 and XC0130 with XD0079. (2020-04-09)</para>
+   </listitem>
+   <listitem>
+     <para>Changed signature of <tag>p:split-sequence</tag> so that any document can appear one port 
+       source. (2020-05-22)</para>
    </listitem>
  </orderedlist>
 </appendix>
