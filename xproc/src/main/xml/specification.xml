@@ -2137,10 +2137,15 @@ static analysis is <glossterm>implementation-defined</glossterm>.</impl></para>
               specification</link>.</termdef></para>
         </listitem>
         <listitem>
+          <para>All steps that explicitly behave like the <tag>p:identity</tag> step under
+          some circumstances must preserve PSVI properties under those circumstances.
+          In this specifications, those steps are <tag>p:if</tag> when the condition is false
+          and <tag>p:choose</tag> when no subpipline is selected.</para>
+        </listitem>
+        <listitem>
           <para>Except as specified above, or in the descriptions of individual steps,
             implementations <rfc2119>must not</rfc2119> include PSVI properties in the outputs of
-            steps. Unless the description of a step explicitly states that PSVI properties
-            may be produced, it <rfc2119>must not</rfc2119> produce them.
+            steps. 
             <impl>It is
                 <glossterm>implementation-defined</glossterm> what PSVI properties, if any, are
               produced by extension steps.</impl></para>
@@ -6545,6 +6550,9 @@ draft:</para>
       <listitem>
         <para>Changed description of <tag>p:viewport</tag> stating that the base URI of every matched node is the
         document's base URI, not just for document and element nodes.</para>
+      </listitem>
+      <listitem>
+        <para>Clarified the conditions under which steps may produce PSVI annotations.</para>
       </listitem>
     </itemizedlist>
 </appendix>
