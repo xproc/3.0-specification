@@ -4351,6 +4351,18 @@ is an opportunity for the step to identify the error in a
 machine-processable fashion. Many steps omit this because they do not
 include the concept of errors identified by EQNames.</para>
 
+<para>The <tag class="attribute">cause</tag> is an EQName which
+identifies an underlying error, if applicable. As an aide to
+interoperability, this specification mandates particular error codes
+for conditions that can arise in a variety of ways. For example,
+<code>err:XD0050</code> is raised for all errors in XPath expressions
+in value templates. The implementation may use
+<tag class="attribute">cause</tag> to record an underlying error (for
+example, the XPath error code).
+<impl>The error codes that appear in <tag class="attribute">cause</tag>
+are
+<glossterm>implementation-dependent</glossterm>.</impl></para>
+
 <para>If the error was caused by a specific document, or by the
 location of some erroneous construction in a specific document, the
 <tag class="attribute">href</tag>, <tag class="attribute" >line</tag>,
@@ -6548,6 +6560,10 @@ draft:</para>
       <listitem>
         <para>Changed description of <tag>p:viewport</tag> stating that the base URI of every matched node is the
         document's base URI, not just for document and element nodes.</para>
+      </listitem>
+      <listitem>
+        <para>Added a <tag class="attribute">cause</tag> attribute to the error vocabulary 
+for recording the error codes of underlying errors.</para>
       </listitem>
     </itemizedlist>
 </appendix>
