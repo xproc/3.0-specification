@@ -2160,16 +2160,18 @@ static analysis is <glossterm>implementation-defined</glossterm>.</impl></para>
               specification</link>.</termdef></para>
         </listitem>
         <listitem>
+          <para>All steps that explicitly behave like the <tag>p:identity</tag> step under
+          some circumstances must preserve PSVI properties under those circumstances.
+          In this specifications, those steps are <tag>p:if</tag> when the condition is false
+          and <tag>p:choose</tag> when no subpipline is selected.</para>
+        </listitem>
+        <listitem>
           <para>Except as specified above, or in the descriptions of individual steps,
             implementations <rfc2119>must not</rfc2119> include PSVI properties in the outputs of
-            steps defined by this specification. <impl>It is
+            steps. 
+            <impl>It is
                 <glossterm>implementation-defined</glossterm> what PSVI properties, if any, are
               produced by extension steps.</impl></para>
-          <para>The exceptions in the standard XProc steps are the
-              <tag>p:validate-with-xml-schema</tag>, <tag>p:validate-with-relax-ng</tag>, and
-              <tag>p:validate-with-schematron</tag> steps, <tag>p:xslt</tag> (when XSLT 2.0 is
-            used), <tag>p:xquery</tag>, <tag>p:identity</tag>, and <tag>p:split-sequence</tag>.
-          </para>
         </listitem>
       </orderedlist>
       <note xml:id="note-psvi">
@@ -8131,6 +8133,9 @@ draft:</para>
       <listitem>
         <para>Changed description of <tag>p:viewport</tag> stating that the base URI of every matched node is the
         document's base URI, not just for document and element nodes.</para>
+      </listitem>
+      <listitem>
+        <para>Clarified the conditions under which steps may produce PSVI annotations.</para>
       </listitem>
     </itemizedlist>
 </appendix>
