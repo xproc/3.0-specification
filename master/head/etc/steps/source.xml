@@ -166,6 +166,15 @@ compatible versions.</para>
         <rfc2119>should</rfc2119>, <rfc2119>should not</rfc2119>, <rfc2119>may</rfc2119> and
         <rfc2119>recommended</rfc2119> are to be interpreted as described in <biblioref linkend="rfc2119"/>.</para>
 
+<para>As described in <xspecref spec="xproc" xref="psvi-support"/>,
+steps may not produce PSVI output unless that behavior is explicitly
+described. In this specification, the steps that may produce PSVI
+output are the “identity” steps: <tag>p:identity</tag>,
+<tag>p:store</tag>, and <tag>p:split-sequence</tag> (which <rfc2119>must</rfc2119> preserve 
+PSVI properties that appear on their inputs). In addition, the
+<tag>p:xslt</tag> and <tag>p:xquery</tag> steps <rfc2119>may</rfc2119> return documents with
+PSVI annotations.</para>
+
 </section>
 
 <section xml:id="req-steps">
@@ -2883,9 +2892,10 @@ any annotations that appear in the input.</para>
 <title>p:store</title>
 
 <para>The <tag>p:store</tag> step stores (a possibly serialized
-version of) its input to a URI. The input is copied to the <port>result</port>
-port. Additionally this step outputs a reference to the
-location of the stored document on the <port>result-uri</port> port.</para>
+version of) its input to a URI. It outputs a reference to the location
+of the stored document on the <port>result-uri</port> port.
+Aside from these side-effects, it behaves like a <tag>p:identity</tag>
+step, copying its input to the <port>result</port> port.</para>
 
 <p:declare-step type="p:store">
   <p:input port="source" content-types="any"/>
@@ -4393,6 +4403,9 @@ draft:</para>
    <listitem>
      <para>Changed signature of <tag>p:split-sequence</tag> so that any document can appear one port 
        source. (2020-05-22)</para>
+   </listitem>
+   <listitem>
+     <para>Clarified which steps may produce PSVI annotations. (2020-06-09)</para>
    </listitem>
  </orderedlist>
 </appendix>
