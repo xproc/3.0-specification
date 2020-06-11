@@ -511,10 +511,7 @@ element's [base URI].</para>
         <listitem>
         <para>If no document on the <port>source</port> port has a base URI that is exactly the same
         as the (absolute) <code>href</code> value, the document at the specified URI is associated
-        with this entry. If this entry is to be added to the archive, the document must be obtained
-        by dereferencing the URI. <error code="D0011">It is a <glossterm>dynamic error</glossterm>
-        if the resource referenced by the <option>href</option> option does not exist, cannot be
-        accessed or is not a file.</error> These documents are stored in the archive “as is”; they
+        with this entry. These documents are stored in the archive “as is”; they
         <rfc2119>must not</rfc2119> be parsed and re-serialized.</para>
         </listitem>
         </itemizedlist>
@@ -665,7 +662,10 @@ element's [base URI].</para>
                 the ZIP archive will be created. Creating a ZIP archive behaves exactly like
                 <literal>update</literal> except that any timestamps
                 are ignored; every ZIP entry will be updated or created if there is a <tag>c:entry</tag> or
-                matching document for it.</para>
+                  matching document for it. The document must be obtained by dereferencing the URI in 
+                  <option>href</option>. <error code="D0011">It is a <glossterm>dynamic error</glossterm>
+                    if the resource referenced by the <option>href</option> option does not exist, cannot be
+                    accessed or is not a file.</error></para>
               </listitem>
             </varlistentry>
             <varlistentry>
