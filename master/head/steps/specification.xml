@@ -3996,6 +3996,7 @@ establish a base URI, the document will not have one.
     <p:option name="parameters" as="map(xs:QName,item()*)?"/>
     <p:option name="static-parameters" as="map(xs:QName,item()*)?"/>
     <p:option name="global-context-item" as="item()?"/>
+    <p:option name="populate-default-collection" as="xs:boolean?" select="true()"/>
     <p:option name="initial-mode" as="xs:QName?"/>
     <p:option name="template-name" as="xs:QName?"/>
     <p:option name="output-base-uri" as="xs:anyURI?"/>
@@ -4046,6 +4047,9 @@ establish a base URI, the document will not have one.
           global context item is absent.</para>
       </listitem>
     </itemizedlist>
+    <para>The <option>populate-default-collection</option> option is used to control whether all
+    the documents appearing on <port>source</port> port form the default collection for the XSLT
+    transformation.</para>
     <para>If no value is supplied for <option>template-name</option> option an “Apply-template
       invocation” is performed. The documents that appear on <port>source</port> are taken to be the
       initial match selection. The default collection is undefined. If a value is supplied for 
@@ -4090,7 +4094,10 @@ establish a base URI, the document will not have one.
       documents are provided on the <port>source</port> port, the initial context node is undefined
       and the default collection is empty. <error code="C0094">It is a <glossterm>dynamic
         error</glossterm> if any document supplied on the source port is not an XML document, an
-        HTML documents, or a Text document if XSLT 2.0 is used.</error></para> 
+        HTML documents, or a Text document if XSLT 2.0 is used.</error></para>
+    <para>The <option>populate-default-collection</option> option is used to control whether all
+      the documents appearing on <port>source</port> port form the default collection for the XSLT
+      transformation.</para>
     <para>The value of option <option>global-context-item</option> is ignored if a stylesheet is
       invoked as per XSLT 2.0. The invocation of the transformation is controlled by the
       <option>initial-mode</option> and <option>template-name</option> options that set the
@@ -4423,6 +4430,9 @@ draft:</para>
    <listitem>
      <para>Clarified the behaviour in <tag>p:archive</tag>: A missing resource referenced by
      c:archive/c:entry/@href is only an error for command = 'create'. (2020-06-11)</para>
+   </listitem>
+   <listitem>
+     <para>Option <option>populate-default-collection</option> is added to the signature of <tag>p:xslt</tag>. (2020-06-20)</para>
    </listitem>
  </orderedlist>
 </appendix>

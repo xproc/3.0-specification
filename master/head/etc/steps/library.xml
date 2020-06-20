@@ -469,6 +469,7 @@
       <p:option name="parameters" as="xs:string"/>
       <p:option name="static-parameters" as="xs:string"/>
       <p:option name="global-context-item" as="xs:string"/>
+      <p:option name="populate-default-collection" as="xs:boolean?" select="true()"/>
       <p:option name="initial-mode" as="xs:QName?"/>
       <p:option name="template-name" as="xs:QName?"/>
       <p:option name="output-base-uri" as="xs:anyURI?"/>
