@@ -828,6 +828,11 @@ output named “<literal>result</literal>”, and the same set of options.
         <termdef xml:id="dt-declared-outputs">The output ports declared on a step are its
             <firstterm>declared outputs</firstterm>.</termdef> When a step is used in a pipeline, it
         is connected to other steps through its inputs and outputs. </para>
+  
+    <para><termdef xml:id="dt-anonymous-inputs">The <glossterm>compound steps</glossterm> 
+      <tag>p:for-each</tag> and <tag>p:viewport</tag> each declare
+        a single primary input without a port name. Such an input is called an 
+      <firstterm>anonymous input</firstterm>.</termdef></para>
 
          <para>When a step is used, all of the <glossterm>declared inputs</glossterm> of the step
                <rfc2119>must</rfc2119> be connected. Each connection binds the input to a data
@@ -3614,7 +3619,7 @@ each document in the sequence in turn.</para>
         a <tag>p:for-each</tag> is an empty sequence, then the subpipeline is never run and an empty
         sequence is produced on all of the outputs. </para>
 
-<para>The <tag>p:for-each</tag> has a single anonymous input: its
+<para>The <tag>p:for-each</tag> has a single <glossterm>anonymous input</glossterm>: its
 <glossterm>connection</glossterm> is provided by the
 <tag>p:with-input</tag>. If no iteration sequence is explicitly provided,
 then the iteration source is read from the <glossterm>default readable
@@ -3698,7 +3703,7 @@ more subtrees of each document in turn.</para>
 original document where the selected subtrees have been replaced by
 the results of applying the subpipeline to them.</para>
 
-<para>The <tag>p:viewport</tag> has a single anonymous input: its
+<para>The <tag>p:viewport</tag> has a single <glossterm>anonymous input</glossterm>: its
 <glossterm>connection</glossterm> is provided by the
 <tag>p:with-input</tag>. If no document is explicitly provided,
 then the viewport source is read from the <glossterm>default readable
@@ -4675,10 +4680,10 @@ is a binding for the specified port. If no port is specified, then:</para>
 <itemizedlist>
 <listitem>
 <para>In a <tag>p:viewport</tag> or <tag>p:for-each</tag>, it is a
-binding for the step&#x2019;s single, anonymous input port.</para>
+binding for the step&#x2019;s single, <glossterm>anonymous input</glossterm> port.</para>
 </listitem>
 <listitem>
-<para>In a <tag>p:choose</tag> or <tag>p:when</tag>, it is a
+<para>In a <tag>p:choose</tag>, <tag>p:when</tag> or <tag>p:if</tag>, it is a
 binding for the context item for the test expression(s).</para>
 </listitem>
 <listitem>
@@ -4689,8 +4694,12 @@ is no primary input port.</error>
 </para>
 </listitem>
 </itemizedlist>
+<para><error code="S0043">It is a <glossterm>static error</glossterm>
+to specify a port name on <tag>p:with-input</tag> for <tag>p:for-each</tag>,
+  <tag>p:viewport</tag>, <tag>p:choose</tag>, <tag>p:when</tag>, or <tag>p:if</tag>.</error>
+</para>
 <para><error code="S0086">It is a <glossterm>static error</glossterm>
-to provide more than one p:with-input for the same port.</error>
+to provide more than one <tag>p:with-input</tag> for the same port.</error>
 </para>
 
 <para>If no connection is provided for a <glossterm>primary input
