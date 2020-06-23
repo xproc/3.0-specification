@@ -1562,7 +1562,12 @@ converted to lowercase.</para>
 
   <para>If a single document appears on the <port>source</port> port,
   then document properties on that document may be added as additional
-  headers. Properties in the <code>http://www.w3.org/ns/xproc-http</code>
+  headers. For XML, HTML, and text documents with a 
+  <literal>serialization</literal> document property having an 
+    <literal>encoding</literal> key, a <literal>charset</literal> is
+    appended to the created <literal>content-type</literal> header of
+    the HTTP request.
+  Properties in the <code>http://www.w3.org/ns/xproc-http</code>
   namespace will be added to the headers, using the local-name of the
   property QName as the header name. These properties are only copied
   if they are not specified in the <option>header</option> map. In
@@ -4433,6 +4438,10 @@ draft:</para>
    </listitem>
    <listitem>
      <para>Option <option>populate-default-collection</option> is added to the signature of <tag>p:xslt</tag>. (2020-06-20)</para>
+   </listitem>
+   <listitem>
+     <para>Clarified how the default <literal>content-type</literal> header of <tag>p:http-request</tag> is 
+     constructed if a single document appears on <port>source</port> port. (2020-06-20)</para>
    </listitem>
  </orderedlist>
 </appendix>
