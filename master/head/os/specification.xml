@@ -166,27 +166,14 @@ from standard error.</para>
   <p:output port="errors" content-types="any"/>
   <p:output port="exit-status" content-types="application/xml"/>
   <p:option name="command" required="true" as="xs:string"/>
-  <p:option name="args" select="''" as="xs:string"/>
+  <p:option name="args" select="()" as="xs:string*"/>
   <p:option name="cwd" as="xs:string?"/>
-  <p:option name="source-is-xml" select="true()" as="xs:boolean"/>
-  <p:option name="result-is-xml" select="true()" as="xs:boolean"/>
-  <p:option name="wrap-result-lines" select="false()" as="xs:boolean"/>
-  <p:option name="errors-is-xml" select="false()" as="xs:boolean"/>
-  <p:option name="wrap-error-lines" select="false()" as="xs:boolean"/>
+  <p:option name="result-content-type" select="'text/plain'" as="xs:string"/>
+  <p:option name="errors-content-type" select="'text/plain'" as="xs:string"/>
   <p:option name="path-separator" as="xs:string?"/>
   <p:option name="failure-threshold" as="xs:integer?"/>
-  <p:option name="arg-separator" select="' '" as="xs:string"/>
   <p:option name="serialization" as="map(xs:QName,item()*)?"/>
 </p:declare-step>
-
-<para>The values of the <option>command</option>, <option>args</option>,
-<option>cwd</option>, <option>path-separator</option>, and
-<option>arg-separator</option> options <rfc2119>must</rfc2119> be strings.</para>
-
-<para>The values of the <option>source-is-xml</option>,
-<option>result-is-xml</option>, <option>errors-is-xml</option>,
-and <option>fix-slashes</option> options <rfc2119>must</rfc2119> be
-boolean.</para>
 
 <para>The <tag>p:os-exec</tag> step executes the command passed on
 <option>command</option> with the arguments passed on
@@ -216,29 +203,6 @@ error</glossterm> if the <option>path-separator</option> option is
 specified and is not exactly one character long.</error>
 </para>
 
-<para>The value of the <option>args</option> option is a string. In
-order to support passing more than one argument to a command, the
-<option>args</option> string is broken into a sequence of values.
-The <option>arg-separator</option> option specifies the character
-that is used to separate values; by default it is a single space
-<error code="C0066">It is a <glossterm>dynamic error</glossterm> if
-the <option>arg-separator</option> option is specified and is not
-exactly one character long.</error>
-</para>
-
-<para>The following examples of <tag>p:os-exec</tag> are equivalent. The
-first uses the default <option>arg-separator</option>:</para>
-
-<programlisting language="xml">&lt;p:exec command="someCommand" args="arg1 arg2 arg3"/&gt;</programlisting>
-
-<para>The second specifies an alternate separator:</para>
-
-<programlisting language="xml">&lt;p:exec command="someCommand" args="arg1,arg2,arg3"
-	arg-separator=","/&gt;</programlisting>
-
-<para>If one of the arguments contains a space (e.g., a filename that
-contains a space), then you must specify an alternate separator.</para>
-
 <para>The <port>source</port> port is declared to accept a sequence so
 that it can be empty. If no document appears on the
 <port>source</port> port, then the command receives nothing on
@@ -246,40 +210,23 @@ standard input. If a document does arrive on the <port>source</port>
 port, it will be passed to the command as its standard input. <error code="D0006">It is a <glossterm>dynamic error</glossterm> if more than
 one document appears on the <port>source</port> port of the
 <tag>p:os-exec</tag> step.</error>
-If <option>source-is-xml</option> is true, the value of the
-<option>serialization</option> option is used to convert the input
-into serialized XML which is passed to the command, otherwise the
-XPath string-value of the document is passed. Serialization is
-described in <biblioref linkend="xproc30"/>.</para>
+The <option>serialization</option> option is used to control the serialization
+  of the document before passing it to the standard input. If a document has a 
+  “<literal>serialization</literal>” document property, the effective value of 
+  the serialization options is the union of the two maps, where the entries in 
+  the “<literal>serialization</literal>” document property take precedence.
+  Serialization is described in <biblioref linkend="xproc30"/>.</para>
 
-<para>The standard output of the command is read and returned on
-<port>result</port>; the standard error output is read and returned on
-<port>errors</port>. In order to assure that the result will be an
-XML document, each of the results will be wrapped in a <tag>c:result</tag>
-element.</para>
+<para>The content of standard output is read and processed as described
+in <tag>p:load</tag> with <option>result-content-type</option> taken as
+value for <tag>p:load</tag>'s <option>content-type</option> option. The
+created document is returned on <port>result</port>.</para> 
 
-<para>If <option>result-is-xml</option> is true, the standard output of
-the program is assumed to be XML and will be parsed as a single document.
-If it is false, the output is assumed <emphasis>not</emphasis> to be XML
-and will be returned as escaped text.</para>
-
-<para xml:id="cv.line">If <option>wrap-result-lines</option> is
-true, a <tag>c:line</tag> element will be wrapped around each line of output.</para>
-
-<e:rng-pattern name="VocabLine"/>
-
-<para><error code="C0035">It is a <glossterm>dynamic
-error</glossterm> to specify both <option>result-is-xml</option> and
-<option>wrap-result-lines</option>.</error></para>
-
-<para>The same rules apply to the
-standard error output of the program, with the <option>errors-is-xml</option>
-and <option>wrap-error-lines</option> options, respectively.</para>
-
-<para>If either of the results are XML, they <rfc2119>must</rfc2119> be
-parsed with namespaces enabled and validation turned off, just like
-<tag>p:document</tag>.</para>
-
+<para>The content of standard error is read and processed as described
+in <tag>p:load</tag> with <option>errors-content-type</option> taken as
+value for <tag>p:load</tag>'s <option>content-type</option> option. The
+created document is returned on <port>errors</port>.</para> 
+  
 <para>The <port>exit-status</port> port always returns a single
 <tag>c:result</tag> element which contains the system exit status that
 the process returned. <impl>The specific exit status values returned by
@@ -304,7 +251,7 @@ can be captured with a <tag>p:try</tag>.</para>
 <section xml:id="errors">
 <title>Step Errors</title>
 
-<para>This step can raise
+<para>These steps can raise
 <glossterm baseform="dynamic-error">dynamic errors</glossterm>.
 </para>
 
@@ -322,7 +269,7 @@ upwards until either a <tag>p:try</tag> is encountered or the entire
 pipeline fails. In other words, outside of a <tag>p:try</tag>, step
 failure causes the entire pipeline to fail.</para>
 
-<para>The following errors can be raised by this step:</para>
+<para>The following errors can be raised by these steps:</para>
 
 <?step-error-list level="none"?>
 

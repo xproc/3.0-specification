@@ -10,16 +10,12 @@
       <p:output port="errors" content-types="any"/>
       <p:output port="exit-status" content-types="application/xml"/>
       <p:option name="command" required="true" as="xs:string"/>
-      <p:option name="args" select="''" as="xs:string"/>
+      <p:option name="args" select="()" as="xs:string*"/>
       <p:option name="cwd" as="xs:string?"/>
-      <p:option name="source-is-xml" select="true()" as="xs:boolean"/>
-      <p:option name="result-is-xml" select="true()" as="xs:boolean"/>
-      <p:option name="wrap-result-lines" select="false()" as="xs:boolean"/>
-      <p:option name="errors-is-xml" select="false()" as="xs:boolean"/>
-      <p:option name="wrap-error-lines" select="false()" as="xs:boolean"/>
+      <p:option name="result-content-type" select="'text/plain'" as="xs:string"/>
+      <p:option name="errors-content-type" select="'text/plain'" as="xs:string"/>
       <p:option name="path-separator" as="xs:string?"/>
       <p:option name="failure-threshold" as="xs:integer?"/>
-      <p:option name="arg-separator" select="' '" as="xs:string"/>
       <p:option name="serialization" as="xs:string"/>
    </p:declare-step>
 </p:library>
