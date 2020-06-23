@@ -1725,7 +1725,11 @@ converted to lowercase.</para>
       response. If the “<literal>override-content-type</literal>”
       parameter is provided, then its value is used to interpret the
       body. The content-type header that appears on the
-      <port>report</port> port is not changed. <error code="C0030">It
+        <port>report</port> port is not changed. 
+        <error code="D0079">It is a <glossterm>dynamic error</glossterm> if a supplied content-type is not 
+          a valid media type of the form 
+          “<literal><replaceable>type</replaceable>/<replaceable>subtype</replaceable>+<replaceable>ext</replaceable></literal>” 
+          or “<literal><replaceable>type</replaceable>/<replaceable>subtype</replaceable></literal>”.</error> <error code="C0030">It
       is a <glossterm>dynamic error</glossterm> if the response body cannot
       be interpreted as requested (e.g. <literal>application/json</literal>
       to override <literal>application/xml</literal> content).</error></para>
@@ -2263,7 +2267,12 @@ determined as follows:</para>
 <para>If a <property>content-type</property> property is specified
 in <option>document-properties</option> or <option>content-type</option> is present,
 then each document <rfc2119>must</rfc2119> be interpreted according to
-that content type. <error code="D0062">It is a <glossterm>dynamic error</glossterm>
+that content type.
+  <error code="D0079">It is a <glossterm>dynamic error</glossterm> if a supplied content-type is not 
+    a valid media type of the form 
+    “<literal><replaceable>type</replaceable>/<replaceable>subtype</replaceable>+<replaceable>ext</replaceable></literal>” 
+    or “<literal><replaceable>type</replaceable>/<replaceable>subtype</replaceable></literal>”.</error> 
+<error code="D0062">It is a <glossterm>dynamic error</glossterm>
 if the <tag class="attribute">content-type</tag> is specified and the
 document-properties has a “<code>content-type</code>” that is not the
 same.</error>
@@ -4442,6 +4451,9 @@ draft:</para>
    <listitem>
      <para>Clarified how the default <literal>content-type</literal> header of <tag>p:http-request</tag> is 
      constructed if a single document appears on <port>source</port> port. (2020-06-20)</para>
+   </listitem>
+   <listitem>
+     <para>Added error (XD0079) to <tag>p:http-request</tag> and <tag>p:http-request</tag> for invalid content-types. (2020-06-23)</para>
    </listitem>
  </orderedlist>
 </appendix>
