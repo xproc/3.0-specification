@@ -181,7 +181,7 @@
       <p:option name="replace" as="xs:boolean" select="true()"/>
    </p:declare-step>
    <p:declare-step type="p:load" xml:id="load">
-      <p:output port="result" sequence="true" content-types="any"/>
+      <p:output port="result" content-types="any"/>
       <p:option name="href" required="true" as="xs:anyURI"/>
       <p:option name="parameters" as="xs:string"/>
       <p:option name="content-type" as="xs:string?"/>

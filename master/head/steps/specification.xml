@@ -2231,10 +2231,10 @@ remains the same.</para>
 <title>p:load</title>
 
 <para>The <code>p:load</code> step has no inputs but produces as its
-result a document (or documents) specified by an IRI.</para>
+result a document specified by an IRI.</para>
 
 <p:declare-step type="p:load">
-  <p:output port="result" sequence="true" content-types="any"/>
+  <p:output port="result" content-types="any"/>
   <p:option name="href" required="true" as="xs:anyURI"/>
   <p:option name="parameters" as="map(xs:QName,item()*)?"/>
   <p:option name="content-type" as="xs:string?"/>
@@ -2249,8 +2249,8 @@ result a document (or documents) specified by an IRI.</para>
     shortcut value). <error code="D0064">It is a <glossterm>dynamic 
       error</glossterm> if the base URI is not both absolute and valid according to <biblioref linkend="rfc3986"/>.</error></para>
 
-<para>The document or documents identified by the
-<option>href</option> URI are loaded and returned. If the URI protocol
+<para>The document identified by the
+<option>href</option> URI is loaded and returned. If the URI protocol
 supports redirection, then redirects <rfc2119>must</rfc2119> be
 followed.</para>
 
@@ -2259,14 +2259,14 @@ if the resource referenced by a <code>p:load</code> element does not exist
 or cannot be accessed.</error></para>
 
 <para>The behavior of this step depends on the content type of the
-document or documents loaded. The content type of each document is
+document loaded. The content type of a document is
 determined as follows:</para>
 
 <orderedlist>
 <listitem>
 <para>If a <property>content-type</property> property is specified
 in <option>document-properties</option> or <option>content-type</option> is present,
-then each document <rfc2119>must</rfc2119> be interpreted according to
+then the document <rfc2119>must</rfc2119> be interpreted according to
 that content type.
   <error code="D0079">It is a <glossterm>dynamic error</glossterm> if a supplied content-type is not 
     a valid media type of the form 
@@ -2279,7 +2279,7 @@ same.</error>
 </para>
 </listitem>
 <listitem>
-<para>If the documents are retrieved with a URI protocol that specifies
+<para>If the document is retrieved with a URI protocol that specifies
 a content type (for example, <literal>http:</literal>), then the document
 <rfc2119>must</rfc2119> be interpreted according to that content type.
 </para>
@@ -4453,7 +4453,11 @@ draft:</para>
      constructed if a single document appears on <port>source</port> port. (2020-06-20)</para>
    </listitem>
    <listitem>
-     <para>Added error (XD0079) to <tag>p:http-request</tag> and <tag>p:http-request</tag> for invalid content-types. (2020-06-23)</para>
+     <para>Added error (XD0079) to <tag>p:http-request</tag> and <tag>p:load</tag> for invalid content-types. (2020-06-23)</para>
+   </listitem>
+   <listitem>
+     <para>Changed signature of the <port>result</port> port of <tag>p:load</tag> to <literal>sequence="false"</literal> and
+       adapted the prose accordingly. (2020-06-24)</para>
    </listitem>
  </orderedlist>
 </appendix>
