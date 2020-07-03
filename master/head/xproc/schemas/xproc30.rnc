@@ -50,6 +50,9 @@ exclude-inline-prefixes.attr =
 [ sa:model = "ExcludeInlinePrefixes" ] ExcludeInlinePrefixes = text
 [ sa:model = "PrefixList" ] PrefixList = xsd:NMTOKENS
 [ sa:model = "EQNameList" ] EQNameList = xsd:NMTOKENS
+[ sa:ignore = "yes" ] xmllang.attr = attribute xml:lang { text }
+[ sa:ignore = "yes" ]
+xmlspace.attr = attribute xml:space { "default" | "preserve" }
 [ sa:ignore = "yes" ] xmlid.attr = attribute xml:id { xsd:ID }
 [ sa:ignore = "yes" ] xmlbase.attr = attribute xml:base { xsd:anyURI }
 href.attr = attribute href { xsd:anyURI }
@@ -76,7 +79,12 @@ p_timeout.attr = attribute p:timeout { xsd:nonNegativeInteger }
 [ sa:ignore = "yes" ] message.attr = attribute message { text }
 [ sa:ignore = "yes" ] p_message.attr = attribute p:message { text }
 version.attr = attribute version { xsd:decimal }
-common.attributes = xmlid.attr?, xmlbase.attr?, extension.attr*
+common.attributes =
+  xmllang.attr?
+  & xmlspace.attr?
+  & xmlid.attr?
+  & xmlbase.attr?
+  & extension.attr*
 global.attributes = use-when.attr?, expand-text.attr?
 p_global.attributes = p_use-when.attr?, p_expand-text.attr?
 step.attributes = depends.attr?, timeout.attr?, message.attr?
@@ -844,14 +852,10 @@ Step-os-exec =
     attribute command { avt.datatype }?,
     attribute args { avt.datatype }?,
     attribute cwd { avt.datatype }?,
-    attribute source-is-xml { avt.datatype }?,
-    attribute result-is-xml { avt.datatype }?,
-    attribute wrap-result-lines { avt.datatype }?,
-    attribute errors-is-xml { avt.datatype }?,
-    attribute wrap-error-lines { avt.datatype }?,
+    attribute result-content-type { avt.datatype }?,
+    attribute errors-content-type { avt.datatype }?,
     attribute path-separator { avt.datatype }?,
     attribute failure-threshold { avt.datatype }?,
-    attribute arg-separator { avt.datatype }?,
     attribute serialization { avt.datatype }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
   }
@@ -1435,6 +1439,7 @@ Step-xslt =
     attribute parameters { avt.datatype }?,
     attribute static-parameters { avt.datatype }?,
     attribute global-context-item { avt.datatype }?,
+    attribute populate-default-collection { avt.datatype }?,
     attribute initial-mode { avt.datatype }?,
     attribute template-name { avt.datatype }?,
     attribute output-base-uri { avt.datatype }?,

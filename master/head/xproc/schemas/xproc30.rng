@@ -149,6 +149,17 @@
   <define name="EQNameList" sa:model="EQNameList">
     <data type="NMTOKENS"/>
   </define>
+  <define name="xmllang.attr" sa:ignore="yes">
+    <attribute name="xml:lang"/>
+  </define>
+  <define name="xmlspace.attr" sa:ignore="yes">
+    <attribute name="xml:space">
+      <choice>
+        <value>default</value>
+        <value>preserve</value>
+      </choice>
+    </attribute>
+  </define>
   <define name="xmlid.attr" sa:ignore="yes">
     <attribute name="xml:id">
       <data type="ID"/>
@@ -226,15 +237,23 @@
     </attribute>
   </define>
   <define name="common.attributes">
-    <optional>
-      <ref name="xmlid.attr"/>
-    </optional>
-    <optional>
-      <ref name="xmlbase.attr"/>
-    </optional>
-    <zeroOrMore>
-      <ref name="extension.attr"/>
-    </zeroOrMore>
+    <interleave>
+      <optional>
+        <ref name="xmllang.attr"/>
+      </optional>
+      <optional>
+        <ref name="xmlspace.attr"/>
+      </optional>
+      <optional>
+        <ref name="xmlid.attr"/>
+      </optional>
+      <optional>
+        <ref name="xmlbase.attr"/>
+      </optional>
+      <zeroOrMore>
+        <ref name="extension.attr"/>
+      </zeroOrMore>
+    </interleave>
   </define>
   <define name="global.attributes">
     <optional>
@@ -2202,27 +2221,12 @@
         </attribute>
       </optional>
       <optional>
-        <attribute name="source-is-xml">
+        <attribute name="result-content-type">
           <ref name="avt.datatype"/>
         </attribute>
       </optional>
       <optional>
-        <attribute name="result-is-xml">
-          <ref name="avt.datatype"/>
-        </attribute>
-      </optional>
-      <optional>
-        <attribute name="wrap-result-lines">
-          <ref name="avt.datatype"/>
-        </attribute>
-      </optional>
-      <optional>
-        <attribute name="errors-is-xml">
-          <ref name="avt.datatype"/>
-        </attribute>
-      </optional>
-      <optional>
-        <attribute name="wrap-error-lines">
+        <attribute name="errors-content-type">
           <ref name="avt.datatype"/>
         </attribute>
       </optional>
@@ -2233,11 +2237,6 @@
       </optional>
       <optional>
         <attribute name="failure-threshold">
-          <ref name="avt.datatype"/>
-        </attribute>
-      </optional>
-      <optional>
-        <attribute name="arg-separator">
           <ref name="avt.datatype"/>
         </attribute>
       </optional>
@@ -4348,6 +4347,11 @@
       </optional>
       <optional>
         <attribute name="global-context-item">
+          <ref name="avt.datatype"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="populate-default-collection">
           <ref name="avt.datatype"/>
         </attribute>
       </optional>
