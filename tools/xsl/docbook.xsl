@@ -623,4 +623,32 @@
   </span>
 </xsl:template>
 
+<!-- ============================================================ -->
+
+<xsl:function name="f:syntax-highlight-class" as="xs:string*">
+  <xsl:param name="node"/>
+
+  <xsl:variable name="numbered" select="f:syntax-highlight($node)"/>
+
+  <!-- We do this irrespective of whether or not syntax highlighting is enabled.
+       If it's not enabled, these values may allow a downstream process
+       to do the highlighting. Also, output the language value untransformed. -->
+
+  <xsl:variable name="language" select="$node/@language/string()"/>
+  <xsl:variable name="mapped-language"
+                select="($syntax.highlight.map[@key=$language]/@value/string(),
+                         $language)[1]"/>
+
+  <xsl:variable name="language" as="xs:string?"
+                select="if ($mapped-language)
+                        then concat('language-', $mapped-language)
+                        else 'language-none'"/>
+
+  <!-- Prism numbers listings that have the 'line-numbers' class. -->
+  <!-- Turn off line numbers. -->
+  <xsl:variable name="numbers" as="xs:string?" select="()"/>
+
+  <xsl:sequence select="($language,$numbers,$node/@language,$node/@role)"/>
+</xsl:function>
+
 </xsl:stylesheet>
