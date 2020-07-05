@@ -2404,39 +2404,39 @@ element.</para>
 
 <para>If the media type is an XML media type:</para>
 
-<programlisting
+<programlisting language="xml"
 ><![CDATA[  <p:inline content-type="application/xml">
     <attribution>{$name/node()}</attribution>
   </p:inline>]]></programlisting>
 
 <para>the result is that sequence of nodes:</para>
 
-<programlisting
+<programlisting language="xml"
 ><![CDATA[  <attribution><given>Mary</given> <surname>Smith</surname></attribution>]]></programlisting>
 
 <para>If the media type is not an XML media type:</para>
 
-<programlisting
+<programlisting language="xml"
 ><![CDATA[  <p:inline content-type="application/json">
     {{ "name": "{$name/node()}" }}
   </p:inline>]]></programlisting>
 
 <para>the result is the concatenation of the serialization of the nodes:</para>
 
-<programlisting
+<programlisting language="javascript"
 ><![CDATA[  { "name": "<given>Mary</given> <surname>Smith</surname>" }]]></programlisting>
 
 <para>If the string value is desired, instead of escaped markup, write the
 expression such that it returns the string values:</para>
 
-<programlisting
+<programlisting language="xml"
 ><![CDATA[  <p:inline content-type="application/json">
     {{ "name": "{$name/node()/string()}" }}
   </p:inline>]]></programlisting>
 
 <para>To produce:</para>
 
-<programlisting
+<programlisting language="javascript"
 ><![CDATA[  { "name": "Mary Smith" }]]></programlisting>
 
 </simplesect>
