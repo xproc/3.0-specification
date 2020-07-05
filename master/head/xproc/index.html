@@ -1,4 +1,4 @@
-<html xmlns="http://www.w3.org/1999/xhtml"><head><title>XProc 3.0: An XML Pipeline Language</title><meta charset="utf-8" /><meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport" /><link class="removeOnSave" crossorigin="anonymous" href="https://www.w3.org" rel="preconnect" /><link as="script" class="removeOnSave" href="js/fixup.js" rel="preload" /><link as="style" class="removeOnSave" href="css/base.css" rel="preload" /><link as="image" class="removeOnSave" href="https://www.w3.org/StyleSheets/TR/2016/logos/W3C" rel="preload" /><link rel="stylesheet" href="css/cg-draft.css" /><link rel="stylesheet" href="css/respec.css" /><link rel="alternate" title="XML" href="specification.xml" /><meta name="generator" content="DocBook XSL 2.0 Stylesheets V2.5.0" /><meta name="description" content="Abstract This specification describes the syntax and semantics of&#xA;XProc 3.0: An XML Pipeline Language, a language for&#xA;describing operations to be performed on documents. An XML Pipeline specifies a sequence of operations to be&#xA;performed on documents. Pipelines generally accept&#xA;documents as input and produce documents as output.&#xA;Pipelines are made up of simple steps which&#xA;perform atomic operations on documents and constructs such as&#xA;conditionals, iterations, and exception handlers which control which&#xA;steps are executed." /><link href="css/default.css" rel="stylesheet" type="text/css" /><link href="css/db-prism.css" rel="stylesheet" type="text/css" /><link rel="stylesheet" type="text/css" href="css/base.css" /><link rel="stylesheet" type="text/css" href="css/xproc.css" /><link rel="stylesheet" type="text/css" href="css/print.css" media="print" /><script type="text/javascript" src="js/dbmodnizr.js"></script></head><body class="h-entry informative toc-sidebar"><div class="head" id="spec.head"><a class="logo" href="https://www.w3.org/"><img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2016/logos/W3C" width="72" /></a><h1 id="title" class="title p-name">XProc 3.0: An XML Pipeline Language</h1><h2>Draft Community Group Report <time class="dt-published" datetime="2020-07-03">3 July 2020</time></h2><div class="editors-draft">Editor's Draft   at <time class="dt-timestamp" datetime="20200703T10:02:18Z">10:02 UTC</time> (<a href="https://github.com/xproc/3.0-specification/commit/25f79d6190a7d9844012ed0149d1826581661ca1">build 1042</a>)</div><dl><dt>Latest editor’s draft:</dt><dd><a href="http://spec.xproc.org/master/head/xproc/">http://spec.xproc.org/master/head/xproc/</a></dd><dt>Editors:</dt><dd><span class="personname">Norman Walsh</span></dd><dd><span class="personname">Achim Berndzen</span></dd><dd><span class="personname">Gerrit Imsieke</span></dd><dd><span class="personname">Erik Siegel</span></dd><dt>Participate:</dt><dd><a href="http://github.com/xproc/3.0-specification">GitHub xproc/3.0-specification</a></dd><dd><a href="http://github.com/xproc/3.0-specification/issues">Report an issue</a></dd><dt>Changes:</dt><dd><a href="lcdiff.html">Diff against the “last call” draft</a></dd><dd><a href="diff.html">Diff against current “status quo” draft</a></dd><dd><a href="http://github.com/xproc/3.0-specification/commits/master">Commits for this specification</a></dd></dl><p>This document is also available in these non-normative formats: <a href="specification.xml">XML</a>, 
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>XProc 3.0: An XML Pipeline Language</title><meta charset="utf-8" /><meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport" /><link class="removeOnSave" crossorigin="anonymous" href="https://www.w3.org" rel="preconnect" /><link as="script" class="removeOnSave" href="js/fixup.js" rel="preload" /><link as="style" class="removeOnSave" href="css/base.css" rel="preload" /><link as="image" class="removeOnSave" href="https://www.w3.org/StyleSheets/TR/2016/logos/W3C" rel="preload" /><link rel="stylesheet" href="css/cg-draft.css" /><link rel="stylesheet" href="css/respec.css" /><link rel="alternate" title="XML" href="specification.xml" /><meta name="generator" content="DocBook XSL 2.0 Stylesheets V2.5.0" /><meta name="description" content="Abstract This specification describes the syntax and semantics of&#xA;XProc 3.0: An XML Pipeline Language, a language for&#xA;describing operations to be performed on documents. An XML Pipeline specifies a sequence of operations to be&#xA;performed on documents. Pipelines generally accept&#xA;documents as input and produce documents as output.&#xA;Pipelines are made up of simple steps which&#xA;perform atomic operations on documents and constructs such as&#xA;conditionals, iterations, and exception handlers which control which&#xA;steps are executed." /><link href="css/default.css" rel="stylesheet" type="text/css" /><link href="css/db-prism.css" rel="stylesheet" type="text/css" /><link rel="stylesheet" type="text/css" href="css/base.css" /><link rel="stylesheet" type="text/css" href="css/xproc.css" /><link rel="stylesheet" type="text/css" href="css/print.css" media="print" /><script type="text/javascript" src="js/dbmodnizr.js"></script></head><body class="h-entry informative toc-sidebar"><div class="head" id="spec.head"><a class="logo" href="https://www.w3.org/"><img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2016/logos/W3C" width="72" /></a><h1 id="title" class="title p-name">XProc 3.0: An XML Pipeline Language</h1><h2>Draft Community Group Report <time class="dt-published" datetime="2020-07-05">5 July 2020</time></h2><div class="editors-draft">Editor's Draft   at <time class="dt-timestamp" datetime="20200705T15:01:05Z">15:01 UTC</time> (<a href="https://github.com/xproc/3.0-specification/commit/1b0bdbe6c237a349cfd411ea9f16811e8dc41890">build 1045</a>)</div><dl><dt>Latest editor’s draft:</dt><dd><a href="http://spec.xproc.org/master/head/xproc/">http://spec.xproc.org/master/head/xproc/</a></dd><dt>Editors:</dt><dd><span class="personname">Norman Walsh</span></dd><dd><span class="personname">Achim Berndzen</span></dd><dd><span class="personname">Gerrit Imsieke</span></dd><dd><span class="personname">Erik Siegel</span></dd><dt>Participate:</dt><dd><a href="http://github.com/xproc/3.0-specification">GitHub xproc/3.0-specification</a></dd><dd><a href="http://github.com/xproc/3.0-specification/issues">Report an issue</a></dd><dt>Changes:</dt><dd><a href="lcdiff.html">Diff against the “last call” draft</a></dd><dd><a href="diff.html">Diff against current “status quo” draft</a></dd><dd><a href="http://github.com/xproc/3.0-specification/commits/master">Commits for this specification</a></dd></dl><p>This document is also available in these non-normative formats: <a href="specification.xml">XML</a>, 
 	  automatic change markup
           <a href="diff.html">from the previous draft</a>
             and <a href="lcdiff.html">from the last call draft</a>
@@ -103,7 +103,7 @@ document.</p>
   that is, how the output of one step becomes the input of another.</p>
 <p>The pipeline document for this pipeline is shown in <a href="#ex1" title="A simple, linear XInclude/Validate pipeline">Example 1, “A simple, linear XInclude/Validate pipeline”</a>.</p>
 
-<figure id="ex1" class="example-wrapper"><div class="title">Example 1. A simple, linear XInclude/Validate pipeline</div><div class="example"><pre class="programlisting language-markup line-numbers xml"><code>&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
+<figure id="ex1" class="example-wrapper"><div class="title">Example 1. A simple, linear XInclude/Validate pipeline</div><div class="example"><pre class="programlisting language-markup xml"><code>&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
                 name="xinclude-and-validate"
                 version="3.0"&gt;
   &lt;p:input port="source" primary="true"/&gt;
@@ -136,7 +136,7 @@ have to be made explicit.</p>
 
 <p>The same pipeline, using XProc defaults, is shown in <a href="#ex1-abbr" title="A simple, linear XInclude/Validate pipeline (simplified)">Example 2, “A simple, linear XInclude/Validate pipeline (simplified)”</a>.</p>
 
-<figure id="ex1-abbr" class="example-wrapper"><div class="title">Example 2. A simple, linear XInclude/Validate pipeline (simplified)</div><div class="example"><pre class="programlisting language-markup line-numbers xml"><code>&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
+<figure id="ex1-abbr" class="example-wrapper"><div class="title">Example 2. A simple, linear XInclude/Validate pipeline (simplified)</div><div class="example"><pre class="programlisting language-markup xml"><code>&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
                 name="xinclude-and-validate"
                 version="3.0"&gt;
   &lt;p:input port="source" primary="true"/&gt;
@@ -163,7 +163,7 @@ evaluates an XPath expression over a test document. Based on the
 result of that expression, one or another branch is run. In this
 example, each branch consists of a single validate step.</p>
 
-<figure id="ex2" class="example-wrapper"><div class="title">Example 3. A validate and transform pipeline</div><div class="example"><pre class="programlisting language-markup line-numbers xml"><code>&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
+<figure id="ex2" class="example-wrapper"><div class="title">Example 3. A validate and transform pipeline</div><div class="example"><pre class="programlisting language-markup xml"><code>&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
                 name="xinclude-and-validate"
                 version="3.0"&gt;
   &lt;p:input port="source"/&gt;
@@ -1173,7 +1173,7 @@ as they are available statically.</p>
 
 <p>Consider:</p>
 
-<pre class="programlisting language-markup line-numbers xml"><code>&lt;p:declare-step version="3.0"
+<pre class="programlisting language-markup xml"><code>&lt;p:declare-step version="3.0"
                 xmlns:p="http://www.w3.org/ns/xproc"&gt;
   &lt;p:input port="source"/&gt;
   &lt;p:option name="A" static="true" select="5"/&gt;
@@ -1347,7 +1347,7 @@ variables; on atomic steps, to compute the actual values of options.
       <p>XPath expressions are also passed to some steps. These expressions are evaluated by the
         implementations of the individual steps.</p>
       <p>This distinction can be seen in the following example:</p>
-      <pre class="programlisting language-markup line-numbers xml"><code>&lt;p:variable name="home" select="'http://example.com/docs'"/&gt;
+      <pre class="programlisting language-markup xml"><code>&lt;p:variable name="home" select="'http://example.com/docs'"/&gt;
 
 &lt;p:load name="read-from-home"&gt;
   &lt;p:with-option name="href" select="concat($home,'/document.xml')"/&gt;
@@ -2205,34 +2205,34 @@ element.</p>
 
 <p>If the media type is an XML media type:</p>
 
-<pre class="programlisting language-none line-numbers"><code>  &lt;p:inline content-type="application/xml"&gt;
+<pre class="programlisting language-markup xml"><code>  &lt;p:inline content-type="application/xml"&gt;
     &lt;attribution&gt;{$name/node()}&lt;/attribution&gt;
   &lt;/p:inline&gt;</code></pre>
 
 <p>the result is that sequence of nodes:</p>
 
-<pre class="programlisting language-none"><code>  &lt;attribution&gt;&lt;given&gt;Mary&lt;/given&gt; &lt;surname&gt;Smith&lt;/surname&gt;&lt;/attribution&gt;</code></pre>
+<pre class="programlisting language-markup xml"><code>  &lt;attribution&gt;&lt;given&gt;Mary&lt;/given&gt; &lt;surname&gt;Smith&lt;/surname&gt;&lt;/attribution&gt;</code></pre>
 
 <p>If the media type is not an XML media type:</p>
 
-<pre class="programlisting language-none line-numbers"><code>  &lt;p:inline content-type="application/json"&gt;
+<pre class="programlisting language-markup xml"><code>  &lt;p:inline content-type="application/json"&gt;
     {{ "name": "{$name/node()}" }}
   &lt;/p:inline&gt;</code></pre>
 
 <p>the result is the concatenation of the serialization of the nodes:</p>
 
-<pre class="programlisting language-none"><code>  { "name": "&lt;given&gt;Mary&lt;/given&gt; &lt;surname&gt;Smith&lt;/surname&gt;" }</code></pre>
+<pre class="programlisting language-javascript javascript"><code>  { "name": "&lt;given&gt;Mary&lt;/given&gt; &lt;surname&gt;Smith&lt;/surname&gt;" }</code></pre>
 
 <p>If the string value is desired, instead of escaped markup, write the
 expression such that it returns the string values:</p>
 
-<pre class="programlisting language-none line-numbers"><code>  &lt;p:inline content-type="application/json"&gt;
+<pre class="programlisting language-markup xml"><code>  &lt;p:inline content-type="application/json"&gt;
     {{ "name": "{$name/node()/string()}" }}
   &lt;/p:inline&gt;</code></pre>
 
 <p>To produce:</p>
 
-<pre class="programlisting language-none"><code>  { "name": "Mary Smith" }</code></pre>
+<pre class="programlisting language-javascript javascript"><code>  { "name": "Mary Smith" }</code></pre>
 
 </div></section>
 </div></section>
@@ -2260,7 +2260,7 @@ Variable names are always expressed as
 
       <p>Consider this pipeline:</p>
 
-      <pre class="programlisting language-markup line-numbers xml"><code>&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc" 
+      <pre class="programlisting language-markup xml"><code>&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc" 
   xmlns:xs="http://www.w3.org/2001/XMLSchema" version="3.0"&gt;
   
   &lt;p:option name="bname" as="xs:integer" select="1"/&gt;
@@ -2404,7 +2404,7 @@ Variable names are always expressed as
 
       <p>Variable and option values carry with them not only their literal or computed value but also a set of
         namespaces. To see why this is necessary, consider the following step:</p>
-      <pre class="programlisting language-markup line-numbers xml"><code>&lt;p:delete xmlns:p="http://www.w3.org/ns/xproc"&gt;
+      <pre class="programlisting language-markup xml"><code>&lt;p:delete xmlns:p="http://www.w3.org/ns/xproc"&gt;
   &lt;p:with-option name="match" select="'html:div'"
 	         xmlns:html="http://www.w3.org/1999/xhtml"/&gt;
 &lt;/p:delete&gt;</code></pre>
@@ -2436,7 +2436,7 @@ Variable names are always expressed as
         Unqualified names are always in no-namespace.</p>
       <p>Unfortunately, in more complex situations, there may be no single variable or option that can reliably be
         expected to have the correct set of namespace bindings. Consider this pipeline:</p>
-      <pre class="programlisting language-markup line-numbers xml"><code>&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
+      <pre class="programlisting language-markup xml"><code>&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
 	        xmlns:ex="http://example.org/ns/ex"
 	        xmlns:h="http://www.w3.org/1999/xhtml"
                 type="ex:delete-in-div" version="3.0"&gt;
@@ -2452,7 +2452,7 @@ Variable names are always expressed as
       <p>It defines an atomic step (“<code class="literal">ex:delete-in-div</code>”) that deletes elements that occur inside of
         XHTML div elements. It might be used as follows:</p>
 
-      <pre class="programlisting language-markup line-numbers xml"><code>&lt;ex:delete-in-div xmlns:p="http://www.w3.org/ns/xproc"
+      <pre class="programlisting language-markup xml"><code>&lt;ex:delete-in-div xmlns:p="http://www.w3.org/ns/xproc"
                   xmlns:ex="http://example.org/ns/ex"
 		  xmlns:html="http://www.w3.org/1999/xhtml"
     divchild="html:p[@class='delete']"/&gt;</code></pre>
@@ -2466,7 +2466,7 @@ Variable names are always expressed as
       <p>If pipeline authors cannot arrange for all of the necessary namespace bindings to be in scope, then EQNames
         can be used to remove the dependency on namespace bindings:</p>
 
-      <pre class="programlisting language-markup line-numbers xml"><code>&lt;ex:delete-in-div xmlns:p="http://www.w3.org/ns/xproc"
+      <pre class="programlisting language-markup xml"><code>&lt;ex:delete-in-div xmlns:p="http://www.w3.org/ns/xproc"
                   xmlns:ex="http://example.org/ns/ex"
     divchild="q{http://www.w3.org/1999/xhtml}p[@class='delete']"/&gt;</code></pre>
 
@@ -2812,7 +2812,7 @@ URI.]</span> The <code class="tag-attribute">href</code> attribute on the
 documents by URI.</p>
             <p>In this example, the input to the <code class="tag-element">p:identity</code> step named
                 “<code class="literal">otherstep</code>” comes from “<code class="uri">http://example.com/input.xml</code>”. </p>
-            <pre class="programlisting language-markup line-numbers xml"><code>&lt;p:output port="result"/&gt;
+            <pre class="programlisting language-markup xml"><code>&lt;p:output port="result"/&gt;
 
 &lt;p:identity name="otherstep"&gt;
   &lt;p:with-input port="source"&gt;
@@ -2831,7 +2831,7 @@ documents by URI.</p>
                 <code class="tag-element">p:xinclude</code> step named “<code class="literal">expand</code>” comes from the
                 “<code class="literal">result</code>” port of the step named
               “<code class="literal">otherstep</code>”.</p>
-            <pre class="programlisting language-markup line-numbers xml"><code>&lt;!-- there's no otherstep so this isn't expected to work... --&gt;
+            <pre class="programlisting language-markup xml"><code>&lt;!-- there's no otherstep so this isn't expected to work... --&gt;
 &lt;p:xinclude name="expand"&gt;
   &lt;p:with-input port="source"&gt;
     &lt;p:pipe step="otherstep" port="result"/&gt;
@@ -2846,7 +2846,7 @@ documents by URI.</p>
             <p>In this example, the “<code class="literal">stylesheet</code>” input to the XSLT step named
                 “<code class="literal">xform</code>” comes from the content of the <a href="#p.with-input"><code class="tag-element">p:with-input</code></a> element
               itself.</p>
-            <pre class="programlisting language-markup line-numbers xml"><code>&lt;p:xslt name="xform"&gt;
+            <pre class="programlisting language-markup xml"><code>&lt;p:xslt name="xform"&gt;
   &lt;p:with-input port="stylesheet"&gt;
     &lt;p:inline&gt;
       &lt;xsl:stylesheet version="1.0"&gt;
@@ -2867,7 +2867,7 @@ documents by URI.</p>
             </p>
             <p>In this example, the “<code class="literal">source</code>” input to the XSLT 2.0 step named
                 “<code class="literal">generate</code>” is explicitly empty:</p>
-            <pre class="programlisting language-markup line-numbers xml"><code>&lt;p:xslt name="generate" version="2.0"&gt;
+            <pre class="programlisting language-markup xml"><code>&lt;p:xslt name="generate" version="2.0"&gt;
   &lt;p:with-input port="source"&gt;
     &lt;p:empty/&gt;
   &lt;/p:with-input&gt;
@@ -3380,7 +3380,7 @@ elsewhere.</p>
 
 <p>A pipeline might accept a document as input; perform XInclude, validation, and
 transformation; and produce the transformed document as its output.</p>
-<figure id="ex.p.pipeline" class="example-wrapper"><div class="title">Example 4. A Sample Pipeline Document</div><div class="example"><pre class="programlisting language-markup line-numbers xml"><code>&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
+<figure id="ex.p.pipeline" class="example-wrapper"><div class="title">Example 4. A Sample Pipeline Document</div><div class="example"><pre class="programlisting language-markup xml"><code>&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
                 version="3.0"&gt;
 &lt;p:input port="source"/&gt;
 &lt;p:output port="result"/&gt;
@@ -3484,7 +3484,7 @@ port</a></em>.</p>
         <p>A <a href="#p.for-each"><code class="tag-element">p:for-each</code></a> might accept a sequence of chapters as its input, process each
           chapter in turn with XSLT, a step that accepts only a single input document, and produce a
           sequence of formatted chapters as its output.</p>
-        <figure id="ex.p.for-each" class="example-wrapper"><div class="title">Example 5. A Sample For-Each</div><div class="example"><pre class="programlisting language-markup line-numbers xml"><code>&lt;p:for-each name="chapters"&gt;
+        <figure id="ex.p.for-each" class="example-wrapper"><div class="title">Example 5. A Sample For-Each</div><div class="example"><pre class="programlisting language-markup xml"><code>&lt;p:for-each name="chapters"&gt;
   &lt;p:with-input select="//chapter"/&gt;
   &lt;p:output port="html-results"&gt;
     &lt;p:pipe step="make-html" port="result"/&gt;
@@ -3624,7 +3624,7 @@ except when option <code class="option">match</code> matches a document node and
             <code class="tag-element">hr</code> element at the beginning of all <code class="tag-element">div</code> elements that have the
           class value “chapter”, and return an XHTML document that is the same as the original
           except for that change.</p>
-        <figure id="ex.p.viewport" class="example-wrapper"><div class="title">Example 6. A Sample Viewport</div><div class="example"><pre class="programlisting language-markup line-numbers xml"><code>&lt;p:viewport match="h:div[@class='chapter']"
+        <figure id="ex.p.viewport" class="example-wrapper"><div class="title">Example 6. A Sample Viewport</div><div class="example"><pre class="programlisting language-markup xml"><code>&lt;p:viewport match="h:div[@class='chapter']"
             xmlns:h="http://www.w3.org/1999/xhtml"&gt;
   &lt;p:insert position="first-child"&gt;
     &lt;p:with-input port="insertion"&gt;
@@ -3775,7 +3775,7 @@ preceding <a href="#p.when"><code class="tag-element">p:when</code></a> evaluate
         
         <p>A <a href="#p.choose"><code class="tag-element">p:choose</code></a> might test the version attribute of the document element and
           validate with an appropriate schema.</p>
-        <figure id="ex.p.choose" class="example-wrapper"><div class="title">Example 7. A Sample Choose</div><div class="example"><pre class="programlisting language-markup line-numbers xml"><code>&lt;p:choose name="version"&gt;
+        <figure id="ex.p.choose" class="example-wrapper"><div class="title">Example 7. A Sample Choose</div><div class="example"><pre class="programlisting language-markup xml"><code>&lt;p:choose name="version"&gt;
   &lt;p:when test="/*[@version = 2]"&gt;
     &lt;p:validate-with-xml-schema&gt;
       &lt;p:with-input port="schema" href="v2schema.xsd"/&gt;
@@ -3879,7 +3879,7 @@ applies to the subpipeline, while on the outside these ports may produce sequenc
       <p id="d2396e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:group<br />  name? = <var>NCName</var>&gt;<br />    (<a href="#p.output">p:output</a>*,<br />     <var>subpipeline</var>)<br />&lt;/p:group&gt;</code></p>
       <p>A <code class="tag-element">p:group</code> is a convenience wrapper for a collection of steps. </p><section id="example-group" class="section tocsuppress"><div class="section-titlepage"><h4><bdi class="secno">15.6.1. </bdi>Example<a aria-label="§" class="self-link" href="#example-group"></a></h4></div><div class="content">
         
-        <figure id="ex.p.group" class="example-wrapper"><div class="title">Example 8. An Example Group</div><div class="example"><pre class="programlisting language-markup line-numbers xml"><code>&lt;p:group&gt;
+        <figure id="ex.p.group" class="example-wrapper"><div class="title">Example 8. An Example Group</div><div class="example"><pre class="programlisting language-markup xml"><code>&lt;p:group&gt;
   &lt;p:variable name="db-key"
 	      select="'some-long-string-of-nearly-random-characters'"/&gt;
 
@@ -4249,7 +4249,7 @@ message.</p>
 
 <p>Consider the following XSLT stylesheet:</p>
 
-<pre class="programlisting language-markup line-numbers xml"><code>&lt;xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+<pre class="programlisting language-markup xml"><code>&lt;xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
                 version="1.0"&gt;
 
 &lt;xsl:template match="/"&gt;
@@ -4265,7 +4265,7 @@ message.</p>
 <p>If it was used in a step named “xform” in a <a href="#p.try"><code class="tag-element">p:try</code></a>,
 the following error document might be produced:</p>
 
-<pre class="programlisting language-markup line-numbers xml"><code>&lt;c:errors xmlns:c="http://www.w3.org/ns/xproc-step"&gt;
+<pre class="programlisting language-markup xml"><code>&lt;c:errors xmlns:c="http://www.w3.org/ns/xproc-step"&gt;
   &lt;c:error name="xform" type="p:xslt"
              href="style.xsl" line="6"&gt;This stylesheet is &lt;emph&gt;pointless&lt;/emph&gt;.&lt;/c:error&gt;
 &lt;/c:errors&gt;</code></pre>
@@ -4283,7 +4283,7 @@ are passed to the rest of the pipeline. However, if the web service
 cannot be contacted or reports an error, the <a href="#p.catch"><code class="tag-element">p:catch</code></a> step
 can provide some sort of default for the rest of the pipeline.</p>
 
-<figure id="ex.p.trycatch" class="example-wrapper"><div class="title">Example 9. An Example Try/Catch</div><div class="example"><pre class="programlisting language-markup line-numbers xml"><code>&lt;p:try&gt;
+<figure id="ex.p.trycatch" class="example-wrapper"><div class="title">Example 9. An Example Try/Catch</div><div class="example"><pre class="programlisting language-markup xml"><code>&lt;p:try&gt;
   &lt;p:http-request&gt;
     &lt;p:with-input port="source"&gt;
       &lt;p:inline&gt;
@@ -4539,13 +4539,13 @@ undefined.</p>
 
   <p>For example:</p>
 
-<pre class="programlisting language-markup line-numbers xml"><code>&lt;p:with-input port="source"&gt;
+<pre class="programlisting language-markup xml"><code>&lt;p:with-input port="source"&gt;
   &lt;p:document href="http://example.org/input.html"/&gt;
 &lt;/p:with-input&gt;</code></pre>
 
 <p>provides a single document, but</p>
 
-<pre class="programlisting language-markup line-numbers xml"><code>&lt;p:with-input port="source" select="//html:div" xmlns:html="http://www.w3.org/1999/xhtml"&gt;
+<pre class="programlisting language-markup xml"><code>&lt;p:with-input port="source" select="//html:div" xmlns:html="http://www.w3.org/1999/xhtml"&gt;
   &lt;p:document href="http://example.org/input.html"/&gt;
 &lt;/p:with-input&gt;</code></pre>
 
@@ -4556,7 +4556,7 @@ will result in the same content being returned in several
 documents.)</p>
 
 <p>A select expression can equally be applied to input read from
-another step. This input:</p><pre class="programlisting language-markup line-numbers xml"><code>&lt;p:with-input port="source" select="//html:div" xmlns:html="http://www.w3.org/1999/xhtml"&gt;
+another step. This input:</p><pre class="programlisting language-markup xml"><code>&lt;p:with-input port="source" select="//html:div" xmlns:html="http://www.w3.org/1999/xhtml"&gt;
   &lt;p:pipe step="origin" port="result"/&gt;
 &lt;/p:with-input&gt;</code></pre><p>provides a sequence of zero or
 more documents, one for each <code class="code">html:div</code> in the document (or
@@ -5284,7 +5284,7 @@ See <a href="#statics" title="Static Options">Section 11.3, “Static Options�
     <p>The first step uses the standard <a href="#p.with-option"><code class="tag-element">p:with-option</code></a>
       syntax:</p>
     
-    <pre class="programlisting language-markup line-numbers xml"><code>&lt;ex:stepType&gt;
+    <pre class="programlisting language-markup xml"><code>&lt;ex:stepType&gt;
   &lt;p:with-option name="option-name" select="&amp;#x2019;some value'"/&gt;
 &lt;/ex:stepType&gt;</code></pre>
     
@@ -5902,7 +5902,7 @@ depends on the document’s content type.
     
     <p>Consider this example:</p>
     
-    <pre class="programlisting language-markup line-numbers xml"><code>&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
+    <pre class="programlisting language-markup xml"><code>&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
                 xmlns:c="http://www.w3.org/ns/xproc-step"
                 version="3.0"&gt;
   &lt;p:output port="result" serialization="map { 'indent': true() }"/&gt;
@@ -5923,7 +5923,7 @@ depends on the document’s content type.
     
     <p>which might produce a result like this:</p>
     
-    <pre class="programlisting language-markup line-numbers xml"><code> 
+    <pre class="programlisting language-markup xml"><code> 
         &lt;doc xmlns:c="http://example.com/c"&gt;
            &lt;b:part xmlns:b="http://example.com/b"/&gt;
         &lt;/doc&gt;
@@ -5987,7 +5987,7 @@ ignored.
 
 <p>The following example demonstrates this implicit behaviour:</p>
 
-<pre class="programlisting language-markup line-numbers xml"><code>&lt;p:identity name="identity" code="my:implicitinline1"&gt;
+<pre class="programlisting language-markup xml"><code>&lt;p:identity name="identity" code="my:implicitinline1"&gt;
     &lt;p:with-input port="source"&gt;
         &lt;para xmlns="http://docbook.org/ns/docbook"&gt;Some text&lt;/para&gt;
         &lt;para xmlns="http://docbook.org/ns/docbook"&gt;Some other text&lt;/para&gt;
@@ -5996,7 +5996,7 @@ ignored.
 
 <p>Is interpreted as follows:</p>
 
-<pre class="programlisting language-markup line-numbers xml"><code>&lt;p:identity name="identity" code="my:implicitinline2"&gt;
+<pre class="programlisting language-markup xml"><code>&lt;p:identity name="identity" code="my:implicitinline2"&gt;
     &lt;p:with-input port="source"&gt;
         &lt;p:inline&gt;&lt;para xmlns="http://docbook.org/ns/docbook"&gt;Some text&lt;/para&gt;&lt;/p:inline&gt;
         &lt;p:inline&gt;&lt;para xmlns="http://docbook.org/ns/docbook"&gt;Some other text&lt;/para&gt;&lt;/p:inline&gt;
@@ -7459,7 +7459,7 @@ either case.</p>
 as the state of the filesystem or the state of the web. Consider
 the following pipeline:</p>
 
-<pre class="programlisting language-none line-numbers"><code>&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
+<pre class="programlisting language-none"><code>&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
                 version="3.0"&gt;
 &lt;p:input port="source"/&gt;
 &lt;p:output port="result"/&gt;
@@ -7484,7 +7484,7 @@ the following pipeline:</p>
 if you need the saved stylesheet, you don't need to rely on it in your
 pipeline:</p>
 
-<pre class="programlisting language-none line-numbers"><code>&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
+<pre class="programlisting language-none"><code>&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
                 name="main" version="3.0"&gt;
 &lt;p:input port="source"/&gt;
 &lt;p:output port="result"/&gt;

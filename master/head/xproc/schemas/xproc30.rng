@@ -1441,9 +1441,7 @@
     <element name="c:directory">
       <attribute name="name"/>
       <ref name="xmlbase.attr"/>
-      <zeroOrMore>
-        <ref name="file-info.attributes"/>
-      </zeroOrMore>
+      <ref name="file-info.attributes"/>
       <zeroOrMore>
         <choice>
           <ref name="VocabFile"/>
@@ -1457,9 +1455,7 @@
     <element name="c:file">
       <attribute name="name"/>
       <ref name="xmlbase.attr"/>
-      <zeroOrMore>
-        <ref name="file-info.attributes"/>
-      </zeroOrMore>
+      <ref name="file-info.attributes"/>
       <optional>
         <ref name="content-type.attr"/>
       </optional>
@@ -1470,20 +1466,26 @@
     <element name="c:other">
       <attribute name="name"/>
       <ref name="xmlbase.attr"/>
-      <zeroOrMore>
-        <ref name="file-info.attributes"/>
-      </zeroOrMore>
+      <ref name="file-info.attributes"/>
       <empty/>
     </element>
   </define>
   <define name="file-info.attributes">
-    <choice>
+    <optional>
       <ref name="size.attr"/>
+    </optional>
+    <optional>
       <ref name="readable.attr"/>
+    </optional>
+    <optional>
       <ref name="writable.attr"/>
+    </optional>
+    <optional>
       <ref name="last-modified.attr"/>
+    </optional>
+    <optional>
       <ref name="hidden.attr"/>
-    </choice>
+    </optional>
   </define>
   <define name="size.attr">
     <attribute name="size">

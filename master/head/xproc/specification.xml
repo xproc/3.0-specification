@@ -2424,34 +2424,34 @@ element.</para>
 
 <para>If the media type is an XML media type:</para>
 
-<programlisting>  &lt;p:inline content-type="application/xml"&gt;
+<programlisting language="xml">  &lt;p:inline content-type="application/xml"&gt;
     &lt;attribution&gt;{$name/node()}&lt;/attribution&gt;
   &lt;/p:inline&gt;</programlisting>
 
 <para>the result is that sequence of nodes:</para>
 
-<programlisting>  &lt;attribution&gt;&lt;given&gt;Mary&lt;/given&gt; &lt;surname&gt;Smith&lt;/surname&gt;&lt;/attribution&gt;</programlisting>
+<programlisting language="xml">  &lt;attribution&gt;&lt;given&gt;Mary&lt;/given&gt; &lt;surname&gt;Smith&lt;/surname&gt;&lt;/attribution&gt;</programlisting>
 
 <para>If the media type is not an XML media type:</para>
 
-<programlisting>  &lt;p:inline content-type="application/json"&gt;
+<programlisting language="xml">  &lt;p:inline content-type="application/json"&gt;
     {{ "name": "{$name/node()}" }}
   &lt;/p:inline&gt;</programlisting>
 
 <para>the result is the concatenation of the serialization of the nodes:</para>
 
-<programlisting>  { "name": "&lt;given&gt;Mary&lt;/given&gt; &lt;surname&gt;Smith&lt;/surname&gt;" }</programlisting>
+<programlisting language="javascript">  { "name": "&lt;given&gt;Mary&lt;/given&gt; &lt;surname&gt;Smith&lt;/surname&gt;" }</programlisting>
 
 <para>If the string value is desired, instead of escaped markup, write the
 expression such that it returns the string values:</para>
 
-<programlisting>  &lt;p:inline content-type="application/json"&gt;
+<programlisting language="xml">  &lt;p:inline content-type="application/json"&gt;
     {{ "name": "{$name/node()/string()}" }}
   &lt;/p:inline&gt;</programlisting>
 
 <para>To produce:</para>
 
-<programlisting>  { "name": "Mary Smith" }</programlisting>
+<programlisting language="javascript">  { "name": "Mary Smith" }</programlisting>
 
 </simplesect>
 </section>

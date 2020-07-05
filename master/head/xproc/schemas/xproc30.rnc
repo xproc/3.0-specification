@@ -545,7 +545,7 @@ VocabDirectory =
   element c:directory {
     attribute name { text },
     xmlbase.attr,
-    file-info.attributes*,
+    file-info.attributes,
     (VocabFile | VocabDirectory | VocabOther)*
   }
 [ sa:class = "step-vocabulary" ]
@@ -553,7 +553,7 @@ VocabFile =
   element c:file {
     attribute name { text },
     xmlbase.attr,
-    file-info.attributes*,
+    file-info.attributes,
     content-type.attr?,
     empty
   }
@@ -562,15 +562,15 @@ VocabOther =
   element c:other {
     attribute name { text },
     xmlbase.attr,
-    file-info.attributes*,
+    file-info.attributes,
     empty
   }
 file-info.attributes =
-  size.attr
-  | readable.attr
-  | writable.attr
-  | last-modified.attr
-  | hidden.attr
+  size.attr?,
+  readable.attr?,
+  writable.attr?,
+  last-modified.attr?,
+  hidden.attr?
 size.attr = attribute size { xsd:integer }
 readable.attr = attribute readable { xsd:boolean }
 writable.attr = attribute writable { xsd:boolean }
