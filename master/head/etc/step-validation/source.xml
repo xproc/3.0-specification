@@ -144,12 +144,13 @@ validation steps and their semantics are
     </p:declare-step>
 
     <para>The <port>source</port> document is validated using the namespace dispatching rules contained in the 
-      <port>nvdl</port> document.</para>
+      <port>nvdl</port> document. <error code="C0154">It is a <glossterm>dynamic error</glossterm> 
+        if the document supplied on <port>nvdl</port> port is not a valid NVDL document.</error></para>
 
     <para>The dispatching rules may contain URI references that point to the actual schemas to be
       used. As long as these schemas are accessible, it is not necessary to pass anything on the
       schemas port. However, if one or more schemas are provided on the <port>schemas</port> port,
-      then these schemas should be used in validation.</para>
+      then these schemas should be used in validation. </para>
 
     <para><error code="C0053">It is a <glossterm>dynamic error</glossterm> if the <option>assert-valid</option> option is
           <literal>true</literal> and the input document is not valid.</error></para>
@@ -196,7 +197,10 @@ validation steps and their semantics are
 it <rfc2119>must</rfc2119> be interpreted as a RELAX NG Grammar. If
 the <port>schema</port> document has a text media type, then it
 <rfc2119>must</rfc2119> be interpreted as a 
-<biblioref linkend="relaxng-compact-syntax"/> document for validation.</para>
+<biblioref linkend="relaxng-compact-syntax"/> document for validation.
+<error code="C0153">It is a <glossterm>dynamic error</glossterm> 
+if the document supplied on <port>schema</port> port cannot be interpreted
+ as an RELAX NG Grammar. </error></para>
 
 <para>If the <option>dtd-attribute-values</option> option is
 <literal>true</literal>, then the attribute value defaulting conventions of
@@ -248,7 +252,11 @@ processing to the <port>source</port> document.</para>
   <p:option name="report-format" select="'svrl'" as="xs:string"/>
 </p:declare-step>
 
-<para><error code="C0054">It is a <glossterm>dynamic error</glossterm>
+<para><error code="C0151">It is a <glossterm>dynamic error</glossterm> 
+  if the document supplied on <port>schema</port> port is not a valid Schematron 
+  document.</error></para>
+
+    <para><error code="C0054">It is a <glossterm>dynamic error</glossterm>
 if the <option>assert-valid</option> option is <literal>true</literal>
 and any Schematron assertions fail or reports succeed.</error></para>
 
@@ -328,6 +336,11 @@ validity assessment to the <port>source</port> input.</para>
   <p:option name="version" as="xs:string?"/>
   <p:option name="report-format" select="'xvrl'" as="xs:string"/>
 </p:declare-step>
+
+<para><error code="C0152">It is a <glossterm>dynamic error</glossterm> 
+if the document supplied on <port>schema</port> port is not a valid XML schema 
+document.</error></para>
+    
 
 <para>The values of the <option>use-location-hints</option>,
 <option>try-namespaces</option>, and
