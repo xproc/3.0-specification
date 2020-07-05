@@ -2237,13 +2237,15 @@ containing atomic values or nodes.</error> Function, array and map items are
 explicitly excluded here because they do not have a string representation.
 </para>
 
-<para>The context item used for evaluating value templates comes from
-the <glossterm>default readable port</glossterm>. 
-<error code="D0065">It is a <glossterm>dynamic error</glossterm>
-to refer to the context item, size, or position in a value template if a sequence of documents
-appears on the default readable port.</error>
-If the value template appears in a context where no default
-readable port exists, then the context item is undefined.</para>
+  <para>A value template that contains a reference to the context
+    item reads that context item from the <glossterm>default readable port</glossterm>. 
+    This establishes a connection between the two steps.
+    <error code="D0065">It is a <glossterm>dynamic error</glossterm>
+      to refer to the context item, size, or position in a value template 
+      if a sequence of documents appears on the default readable port.</error> 
+    Value templates that do not contain a reference to the context item
+    do not establish a connection to another step and do not
+    require that a <glossterm>default readable port</glossterm> is available.</para>
 
 <section xml:id="attribute-value-templates">
 <title>Attribute Value Templates</title>
