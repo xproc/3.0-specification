@@ -152,7 +152,8 @@ validation steps and their semantics are
       schemas port. However, if one or more schemas are provided on the <port>schemas</port> port,
       then these schemas should be used in validation. </para>
 
-    <para><error code="C0053">It is a <glossterm>dynamic error</glossterm> if the <option>assert-valid</option> option is
+    <para><error code="C0053">It is a <glossterm>dynamic error</glossterm> if the <option>assert-valid</option> option on
+      <tag>p:validate-with-nvdl</tag> is
           <literal>true</literal> and the input document is not valid.</error></para>
 
     <para>The output from this step is a copy of the input. The output of this step <rfc2119>may</rfc2119> include PSVI
@@ -213,8 +214,9 @@ of <biblioref linkend="relaxng-dtd-compat"/> as if the document
 was invalid.
 </para>
 
-<para><error code="C0053">It is a <glossterm>dynamic error</glossterm>
-if the <option>assert-valid</option> option is <literal>true</literal>
+<para><error code="C0155">It is a <glossterm>dynamic error</glossterm>
+if the <option>assert-valid</option> option on <tag>p:validate-with-relax-ng</tag>
+is <literal>true</literal>
 and the input document is not valid.</error></para>
 
 <para>The output from this step is a copy of the input, possibly
@@ -258,7 +260,7 @@ processing to the <port>source</port> document.</para>
 
     <para><error code="C0054">It is a <glossterm>dynamic error</glossterm>
 if the <option>assert-valid</option> option is <literal>true</literal>
-and any Schematron assertions fail or reports succeed.</error></para>
+and any Schematron assertions fail.</error></para>
 
     <note xml:id="note-assert-valid_schematron">
       <para>A Schematron validation with <literal>assert-valid="true"</literal> will fail if any validation message is
@@ -404,8 +406,9 @@ implementation may use any version it has available and may use any means
 to determine what version to use, including, but not limited to,
 examining the version of the schema(s).</para>
 
-<para><error code="C0053">It is a <glossterm>dynamic error</glossterm>
-if the <option>assert-valid</option> option is <literal>true</literal>
+<para><error code="C0156">It is a <glossterm>dynamic error</glossterm>
+if the <option>assert-valid</option> option on <tag>p:validate-with-xml-schema</tag> 
+is <literal>true</literal>
 and the input document is not valid.</error> If the <option>assert-valid</option>
 option is <literal>false</literal>, it is not an error for the document
 to be invalid. In this case, if the implementation does not
