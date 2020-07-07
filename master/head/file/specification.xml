@@ -365,8 +365,9 @@ steps is assumed; for background details, see
     <p:option name="fail-on-error" as="xs:boolean" select="true()"/>
   </p:declare-step>
 
-  <para>The <tag>p:file-delete</tag> step attempts to delete the file or directory named in
-    <option>href</option>.</para>
+  <para>The <tag>p:file-delete</tag> step attempts to delete an existing file or directory named in
+    <option>href</option>. If the named file or directory does not exist, the step just returns a
+  <tag>c:result</tag> element as described below.</para>
 
   <para><impl>Conformant processors <rfc2119>must</rfc2119> support URIs whose
     scheme is <code>file</code> for the <option>href</option> option of <tag>p:file-delete</tag>.
@@ -389,8 +390,7 @@ steps is assumed; for background details, see
   <para>If <option>href</option> specifies a directory, it can only be deleted if the <option>recursive</option> option
     is <code>true</code> or if the specified directory is empty.</para>
 
-  <para>If the delete is successful, the step returns a <tag>c:result</tag> element containing the absolute URI of the
-    deleted file or directory.</para>
+  <para>The step returns a <tag>c:result</tag> element containing the absolute URI of the file or directory.</para>
 
   <para>If an error occurs and <option>fail-on-error</option> is <code>false</code>, the step returns a
       <tag>c:error</tag> element which may contain additional, implementation-defined, information about the nature of
@@ -556,7 +556,8 @@ steps is assumed; for background details, see
   </p:declare-step>
 
   <para>The <tag>p:file-mkdir</tag> create the directory named in the <option>href</option> option. If this includes
-    more than one directory component, all of the intermediate components are created. The path separator is
+    more than one directory component, all of the intermediate components are created. If the directory already exists 
+    the step just returns the <tag>c:result</tag> element as described below. The path separator is
     implementation-defined.</para>
 
   <para><impl>Conformant processors <rfc2119>must</rfc2119> support URIs whose
@@ -577,8 +578,7 @@ steps is assumed; for background details, see
           in the environment in which the pipeline is run.</error></para>
   
 
-  <para>If the create is successful, the step returns a <tag>c:result</tag> element containing the absolute URI of the
-    directory created.</para>
+  <para>The step returns a <tag>c:result</tag> element containing the absolute URI of the directory.</para>
 
   <para>If an error occurs and <option>fail-on-error</option> is <code>false</code>, the step returns a
       <tag>c:error</tag> element which may contain additional, implementation-defined, information about the nature of
