@@ -157,19 +157,19 @@ steps is assumed; for background details, see
 
 <para>The <tag>p:os-exec</tag> step runs an external command passing the
 input that arrives on its <port>source</port> port as standard input,
-reading <port>result</port> from standard output, and <port>errors</port>
+reading <port>result</port> from standard output, and <port>error</port>
 from standard error.</para>
 
 <p:declare-step type="p:os-exec">
   <p:input port="source" sequence="true" content-types="any"/>
   <p:output port="result" primary="true" content-types="any"/>
-  <p:output port="errors" content-types="any"/>
+  <p:output port="error" content-types="any"/>
   <p:output port="exit-status" content-types="application/xml"/>
   <p:option name="command" required="true" as="xs:string"/>
   <p:option name="args" select="()" as="xs:string*"/>
   <p:option name="cwd" as="xs:string?"/>
   <p:option name="result-content-type" select="'text/plain'" as="xs:string"/>
-  <p:option name="errors-content-type" select="'text/plain'" as="xs:string"/>
+  <p:option name="error-content-type" select="'text/plain'" as="xs:string"/>
   <p:option name="path-separator" as="xs:string?"/>
   <p:option name="failure-threshold" as="xs:integer?"/>
   <p:option name="serialization" as="map(xs:QName,item()*)?"/>
@@ -223,9 +223,9 @@ value for <tag>p:load</tag>'s <option>content-type</option> option. The
 created document is returned on <port>result</port>.</para> 
 
 <para>The content of standard error is read and processed as described
-in <tag>p:load</tag> with <option>errors-content-type</option> taken as
+in <tag>p:load</tag> with <option>error-content-type</option> taken as
 value for <tag>p:load</tag>'s <option>content-type</option> option. The
-created document is returned on <port>errors</port>.</para> 
+created document is returned on <port>error</port>.</para> 
   
 <para>The <port>exit-status</port> port always returns a single
 <tag>c:result</tag> element which contains the system exit status that
