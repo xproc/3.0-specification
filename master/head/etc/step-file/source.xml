@@ -293,18 +293,24 @@ steps is assumed; for background details, see
   <section xml:id="c.file-copy">
   <title>p:file-copy</title>
 
-  <para>The <code>p:file-copy</code> step copies a file.</para>
+  <para>The <code>p:file-copy</code> step copies a file or a directory to a given target.</para>
 
   <p:declare-step type="p:file-copy">
     <p:output port="result" primary="true" content-types="application/xml"/>
     <p:option name="href" required="true" as="xs:anyURI"/>
     <p:option name="target" required="true" as="xs:anyURI"/>
     <p:option name="fail-on-error" as="xs:boolean" select="true()"/>
+    <p:option name="overwrite" as="xs:boolean" select="true()"/>
   </p:declare-step>
 
-  <para>The <tag>p:file-copy</tag> step copies the file or directory named in <option>href</option> to the new name specified in
-      <option>target</option>. If the target is a directory, the step attempts to move the file into that directory,
-    preserving its base name.</para>
+  <para>The <tag>p:file-copy</tag> step copies the file or directory named in <option>href</option> to the new position specified in
+      <option>target</option>. Any non existent directory contained in <option>target</option> will be created before copying starts.
+    If the target is a directory, the step attempts to copy the file or directory into that directory,
+    preserving its base name. <error code="C0157">It is a <glossterm>dynamic error</glossterm> if the <option>href</option>
+    option names a directory, but the <option>target</option> option names a file.</error></para>
+  
+  <para>If the <option>overwrite</option> evaluates to <literal>false</literal>, no existing file is changed, i.e. no
+  copying will take place.</para>
 
     <para><impl>Conformant processors <rfc2119>must</rfc2119> support URIs whose
       scheme is <code>file</code> for the <option>href</option> and <option>target</option> options
@@ -324,7 +330,7 @@ steps is assumed; for background details, see
             <glossterm>dynamic error</glossterm> if <tag>p:file-copy</tag> is not available to the step due to access restrictions 
             in the environment in which the pipeline is run.</error></para>
 
-  <para>If the copy is successful, the step returns a <tag>c:result</tag> element containing the absolute URI of the
+  <para>If no error occurs, the step returns a <tag>c:result</tag> element containing the absolute URI of the
     target.</para>
 
   <para>If an error occurs and <option>fail-on-error</option> is <code>false</code>, the step returns a

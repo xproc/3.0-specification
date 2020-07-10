@@ -15,6 +15,7 @@
       <p:option name="href" required="true" as="xs:anyURI"/>
       <p:option name="target" required="true" as="xs:anyURI"/>
       <p:option name="fail-on-error" as="xs:boolean" select="true()"/>
+      <p:option name="overwrite" as="xs:boolean" select="true()"/>
    </p:declare-step>
    <p:declare-step type="p:file-delete" xml:id="file-delete">
       <p:output port="result" primary="true" content-types="application/xml"/>
