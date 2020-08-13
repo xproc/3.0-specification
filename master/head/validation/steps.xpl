@@ -4,7 +4,9 @@
    <p:declare-step type="p:validate-with-nvdl" xml:id="validate-with-nvdl">
       <p:input port="source" primary="true" content-types="xml html"/>
       <p:input port="nvdl" content-types="xml"/>
-      <p:input port="schemas" sequence="true" content-types="text xml"/>
+      <p:input port="schemas" sequence="true" content-types="text xml">
+         <p:empty/>
+      </p:input>
       <p:output port="result" primary="true" content-types="xml html"/>
       <p:output port="report" sequence="true" content-types="xml json"/>
       <p:option name="assert-valid" select="true()" as="xs:boolean"/>
