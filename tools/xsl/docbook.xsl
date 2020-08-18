@@ -294,13 +294,9 @@
 	</xsl:for-each>
 
         <xsl:if test="$auto-diff">
-          <xsl:text>, </xsl:text>
-	  automatic change markup
-          <a href="diff.html">from the previous draft</a>
-          <xsl:if test="/*/@xml:id = 'xproc'">
-            and <a href="lcdiff.html">from the last call draft</a>
-          </xsl:if>
-          courtesy of <a href="http://www.deltaxml.com/">DeltaXML</a>
+          <xsl:text> and HTML with automatic change markup </xsl:text>
+          <xsl:text> courtesy of </xsl:text>
+          <a href="http://www.deltaxml.com/">DeltaXML</a>
         </xsl:if>
 
         <xsl:text>.</xsl:text>
