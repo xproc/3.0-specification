@@ -1,0 +1,946 @@
+<specification xmlns:cs="http://www.w3.org/XML/XProc/2006/04/components#" xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax" xmlns:p="http://www.w3.org/ns/xproc" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://docbook.org/ns/docbook" xml:id="step-file" class="ed" role="step" version="5.0-extension w3c-xproc">
+<info>
+<title>XProc 3.0: file steps</title>
+<!-- defaults to date formatted <pubdate>2014-12-18</pubdate> -->
+<copyright><year>2018</year><year>2019</year><year>2020</year>
+<holder>the Contributors to the XProc 3.0 Standard Step Library
+specifications</holder>
+</copyright>
+
+<bibliomisc role="github-repo">xproc/3.0-steps</bibliomisc>
+<bibliomisc role="w3c-cg" xlink:href="https://www.w3.org/community/xproc-next/">XProc Next</bibliomisc>
+
+<bibliorelation type="isformatof" xlink:href="specification.xml">XML</bibliorelation>
+<authorgroup>
+  <author>
+    <personname>Norman Walsh</personname>
+  </author>
+  <author>
+    <personname>Achim Berndzen</personname>
+  </author>
+  <author>
+    <personname>Gerrit Imsieke</personname>
+  </author>
+  <author>
+    <personname>Erik Siegel</personname>
+  </author>
+</authorgroup>
+
+<abstract>
+<para>This specification describes the file related steps
+for
+<citetitle>XProc 3.0: An XML Pipeline Language</citetitle>.</para>
+</abstract>
+
+<legalnotice xml:id="sotd" role="status">
+  <para>This specification was published by the
+  <link xlink:href="https://www.w3.org/community/xproc-next/">XProc
+  Next Community Group</link>. It is not a W3C Standard nor is it on
+  the W3C Standards Track. Please note that under the
+  <link xlink:href="https://www.w3.org/community/about/agreements/cla/">W3C
+  Community Contributor License Agreement (CLA)</link> there is a limited
+  opt-out and other conditions apply. Learn more about <link xlink:href="https://www.w3.org/community/">W3C Community and Business
+  Groups</link>.
+  </para>
+  
+  <para>If you wish to make comments regarding this document, please
+  send them to
+  <link xlink:href="mailto:xproc-dev@w3.org">xproc-dev@w3.org</link>.
+  (<link xlink:href="mailto:xproc-dev-request@w3.org?subject=subscribe">subscribe</link>,
+  <link xlink:href="https://lists.w3.org/Archives/Public/xproc-dev/">archives</link>).
+  </para>
+</legalnotice>
+</info>
+
+<section xml:id="introduction">
+<title>Introduction</title>
+
+<para>This specification describes the file related XProc steps.
+A machine-readable description of
+these steps may be found in
+<link xlink:href="steps.xpl">steps.xpl</link>.
+</para>
+
+<para>Familarity with the
+general nature of <biblioref linkend="xproc30"/>
+steps is assumed; for background details, see
+<biblioref linkend="xproc30-steps"/>.</para>
+</section>
+
+  <section xml:id="c.directory-list">
+    <title>p:directory-list</title>
+    
+    <para>The <code>p:directory-list</code> step produces a list of the contents
+      of a specified directory.</para>
+    
+    <p:declare-step type="p:directory-list">
+      <p:output port="result" content-type="application/xml"/>
+      <p:option name="path" required="true" as="xs:anyURI"/>
+      <p:option name="detailed" as="xs:boolean" select="false()"/>
+      <p:option name="max-depth" as="xs:string?" select="'1'"/>
+      <p:option name="include-filter" as="xs:string*"/>
+      <p:option name="exclude-filter" as="xs:string*"/>
+      <p:option name="override-content-types" as="array(array(xs:string))?"/>
+    </p:declare-step>
+    
+    <para><impl>Conformant processors <rfc2119>must</rfc2119> support directory paths whose
+      scheme is <code>file</code>. It is
+      <glossterm>implementation-defined</glossterm> what other schemes are
+      supported by <tag>p:directory-list</tag>, and what the interpretation
+      of ‘directory’, ‘file’ and ‘contents’ is for those schemes.</impl>
+      <error code="C0090">It is a <glossterm>dynamic error</glossterm> if an
+        implementation does not support directory listing for a specified scheme.</error>
+    </para>
+    
+    <para>If <option>path</option> is relative, it is made absolute against the 
+      base URI of the element on which it is specified 
+      (<tag>p:with-option</tag> or <tag>p:directory-list</tag> in the case of a 
+      syntactic shortcut value). <error code="D0064">It is a <glossterm>dynamic 
+        error</glossterm> if the base URI is not both absolute and valid according to <biblioref linkend="rfc3986"/>.</error> <error code="C0017">It is a
+        <glossterm>dynamic error</glossterm> if the absolute path does not
+        identify a directory.</error> <error code="C0012">It is a
+          <glossterm>dynamic error</glossterm> if the contents of the directory
+          path are not available to the step due to access restrictions in the
+          environment in which the pipeline is run.</error></para>
+    
+    <para>If the <option>detailed</option> option is true, the pipeline
+      author is requesting additional information about the matching entries,
+      see <xref linkend="dir-list-details"/>.</para>
+    
+    <para>The <option>max-depth</option> option may contain either the string “<literal>unbounded</literal>” or a string
+      that may be cast to a non-negative integer. An integer value of <literal>0</literal> means that only information
+      about the directory that is given in the <option>path</option> option is returned. A <option>max-depth</option> of
+      <literal>1</literal>, which is the default, will effect that also information about the top-level directory’s
+      immediate children will be included. For larger values of <option>max-depth</option>, also the content of
+      directories will be considered recursively up to the maximum depth, and it will be included as children of the
+      corresponding <tag>c:directory</tag> elements.</para>
+    
+    <para>If present, the value of the <option>include-filter</option> or
+      <option>exclude-filter</option> option <rfc2119>must</rfc2119> be a sequence of strings, each
+      one representing a regular expressions as specified in <biblioref linkend="xpath31-functions"/>,
+      section 7.61 “<literal>Regular Expression Syntax</literal>”. <error code="C0147">It is a <glossterm>dynamic
+        error</glossterm> if a specified value is not a valid XPath regular
+        expression.</error></para>
+    
+    <para>The regular expressions will be matched against an item’s file system path relative to the
+      top-level path that was given in the <option>path</option> option. If the item is a directory,
+      a trailing slash will be appended. The matching is done unanchored: it is a match if the
+      regular expression matches part of the relative item’s file system path. Informally: matching behaves like applying
+      the XPath <code>matches#2</code> function, like in 
+      <code>matches($path, $regular-expression)</code>.</para>
+    
+    <para>Examples: A file <literal>file.txt</literal> in the directory specified by <option>path</option> will remain
+      <literal>file.txt</literal>, a relative path <literal>dir1/file.txt</literal> will remain
+      <literal>dir1/file.txt</literal>, while a relative path <literal>dir1/dir2</literal> will become
+      <literal>dir1/dir2/</literal> if <literal>dir2</literal> is a directory.</para>
+    <para>Regular expressions that match <literal>a/a/b/file.txt</literal> are, for example,
+      <literal>^/(\w+/){2,3}.+\.txt$</literal>, <literal>a/a/b/</literal>, or <literal>/file\.[^/]+$</literal>.</para>
+    
+    <para>If any <option>include-filter</option> pattern matches the slash-augmented relative path, the entry is included in the output. 
+      If a directory’s path matches the inclusion regex, the directory’s content will not automatically be included, too.
+      They need to match, the regular expression, too. So the filter regex <literal>^dir/</literal> will match the directory
+      content but <literal>^dir/$</literal> won’t, and as a consequence the directory’s content will not be included in the result.</para>
+    <para>If a relative path is matched by an include filter,
+      all its ancestor directories starting from the initial directory (but not their content if not included explicitly) 
+      will be included, too.</para>
+    <example xml:id="ex.c.directory-list">
+      <title>Sample Directory List Output for a Single File</title>
+      <para>For a file <literal>a/a/b/file.txt</literal> below the initial directory 
+        <literal>/home/jane</literal>, this output will be produced, omitting content that might be present in the 
+        intermediate directories:</para>
+      <literallayout>&lt;c:directory xml:base="file:///home/jane/" name="jane"&gt;
+  &lt;c:directory xml:base="a/" name="a"&gt;
+    &lt;c:directory xml:base="a/" name="a"&gt;
+      &lt;c:directory xml:base="b/" name="b"&gt;
+        &lt;c:file xml:base="file.txt" name="file.txt"/&gt;
+      &lt;/c:directory&gt;
+    &lt;/c:directory&gt;
+  &lt;/c:directory&gt;
+&lt;/c:directory&gt;</literallayout>
+    </example>
+    <para>If the <option>exclude-filter</option> pattern matches the slash-augmented relative path, the entry (and all of
+      its content in case of a directory) is excluded in the output.</para>
+    <para>If both options are
+      provided, the include filter is processed first, then the exclude
+      filter. As a result, an item is included if it matches (at least) one
+      of the <option>include-filter</option> values and none of the
+      <option>exclude-filter</option> values.</para>
+    <para>If no <option>include-filter</option> is given, that is, if <option>include-filter</option> is an empty
+      sequence, any item will be included in the result (unless it is excluded by <option>exclude-filter</option>).</para>
+    
+    <note>
+      <para>There is no way to specify a list of values using attribute value
+        templates. If the option shortcut syntax is used to provide the
+        <option>include-filter</option> or <option>exclude-filter</option> option,
+        it will consist of a single regular expression. To specify a list of
+        regular expressions, you must use the  <tag>p:with-option</tag>
+        syntax.
+      </para>
+    </note>
+    
+    <para>The <option>override-content-types</option> option can be used to partially override the
+      content-type determination mechanism. This works just like with the
+        <option>override-content-types</option> option of <tag>p:archive-manifest</tag> and
+        <tag>p:unarchive</tag> (see <xspecref spec="steps" xref="override-content-type"/>), except
+      that the regular expression matching is done against the paths as used for the matching of the
+        <option>include-filter</option> and <option>exclude-filter</option> options.</para>
+    
+    <para xml:id="cv.directory">The result document produced for the specified directory path has a <tag>c:directory</tag>
+      document element whose base URI, attached as an <tag role="attribute">xml:base</tag> attribute, is the absolute
+      directory path (expressed as a URI that ends in a slash) and whose <tag class="attribute">name</tag> attribute
+      (without a trailing slash) is the last segment of the directory path. The same base URI is attached as the 
+      resulting document’s base-uri property and, accordingly, as its document node’s base URI.</para>
+    
+    <e:rng-pattern name="VocabDirectory"/>
+    
+    <para>Its contents are determined as follows, based on the entries in the directory identified by the directory path.
+      For each entry in the directory and subject to the rules that are imposed by the <option>max-depth</option>,
+      <option>include-filter</option>, and <option>exclude-filter</option> options, a <tag>c:file</tag>, a
+      <tag>c:directory</tag>, or a <tag>c:other</tag> element is produced, as follows: </para>
+    
+    <itemizedlist>
+      <listitem>
+        <para>A <tag>c:directory</tag> is produced for each subdirectory not determined to be special. Depending on the
+          values of the three options, it may contain child elements for the directory’s content.</para>
+      </listitem>
+      <listitem>
+        <para xml:id="cv.file">A <tag>c:file</tag> is produced for each file
+          not determined to be special.</para>
+        <e:rng-pattern name="VocabFile"/>
+      </listitem>
+      <listitem>
+        <para xml:id="cv.other"><impl>Any file or directory determined to be
+          special by the <tag>p:directory-list</tag> step may be output using a
+          <tag>c:other</tag> element but the criteria for marking a file as
+          special are <glossterm>implementation-defined</glossterm>.</impl>
+        </para>
+        <e:rng-pattern name="VocabOther"/>
+      </listitem>
+    </itemizedlist>
+    
+    <para>Each of the elements <tag>c:file</tag>, <tag>c:directory</tag>,
+      and <tag>c:other</tag> has a <code>name</code> attribute, whose
+      value is a relative IRI reference, giving the (local) file or
+      directory name.</para>
+    
+    <para>Each of these element also contains the corresponding resource’s URI in an <tag role="attribute">xml:base</tag>
+      attribute, which may be a relative URI for any but the top-level <tag>c:directory</tag> element. In the case of
+      <tag>c:directory</tag>, it must end in a trailing slash. This way, users will always be able to compute the
+      absolute URI for any of these elements by applying <code>fn:base-uri()</code> to it.</para>
+    
+    <section xml:id="dir-list-details">
+      <title>Directory list details</title>
+      
+      <para>If <option>detailed</option> is false, then only the
+        <tag class="attribute">name</tag> and <tag class="attribute">xml:base</tag> attributes are expected on
+        <tag>c:file</tag>, <tag>c:directory</tag>, or <tag>c:other</tag>
+        elements.</para>
+      
+      <para>If <option>detailed</option> is true, then the pipeline author
+        is expecting additional details about each entry. The following attributes
+        <rfc2119>should</rfc2119> be provided by the implementation:</para>
+      
+      <variablelist>
+        <varlistentry><term><tag class="attribute">content-type</tag></term>
+          <listitem>
+            <para>The <tag role="attribute">content-type</tag> attribute contains
+              the content type of the respective file. The value “<literal>application/octet-stream</literal>”
+              will be used if the processor is not able to identify another content type.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry><term><tag class="attribute">readable</tag></term>
+          <listitem><para>“<code>true</code>” if the entry is readable.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry><term><tag class="attribute">writable</tag></term>
+          <listitem><para>“<code>true</code>” if the entry is writable.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry><term><tag class="attribute">hidden</tag></term>
+          <listitem><para>“<code>true</code>” if the entry is hidden.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry><term><tag class="attribute">last-modified</tag></term>
+          <listitem><para>The last modification time of the entry, expressed as a lexical
+            <code>xs:dateTime</code> in UTC.</para>
+          </listitem>
+        </varlistentry>
+        <varlistentry><term><tag class="attribute">size</tag></term>
+          <listitem><para>The size of the entry in bytes.</para>
+          </listitem>
+        </varlistentry>
+      </variablelist>
+      
+      <para><impl>The precise meaning of these properties are
+        <glossterm>implementation-defined</glossterm> and may vary according
+        to the URI scheme of the <option>path</option>.</impl>
+        If the value of an attribute is “<code>false</code>” or if it has no
+        meaningful value, the attribute may be omitted.</para>
+      
+      <para><impl>Any other attributes on
+        <tag>c:file</tag>, <tag>c:directory</tag>, or <tag>c:other</tag>
+        are <glossterm>implementation-defined</glossterm>.</impl></para>
+    </section>
+    
+    <simplesect>
+      <title>Document properties</title>
+      <para feature="directory-list-preserves-none">Besides the <property>content-type</property> property, 
+        the resulting document has a <property>base-uri</property>. Its value is identical to the top-level
+        element’s <tag class="attribute">xml:base</tag> attribute, that is, to the directory’s URI.</para>
+    </simplesect>
+  </section>
+  
+  <section xml:id="c.file-copy">
+  <title>p:file-copy</title>
+
+  <para>The <code>p:file-copy</code> step copies a file or a directory to a given target.</para>
+
+  <p:declare-step type="p:file-copy">
+    <p:output port="result" primary="true" content-types="application/xml"/>
+    <p:option name="href" required="true" as="xs:anyURI"/>
+    <p:option name="target" required="true" as="xs:anyURI"/>
+    <p:option name="fail-on-error" as="xs:boolean" select="true()"/>
+    <p:option name="overwrite" as="xs:boolean" select="true()"/>
+  </p:declare-step>
+
+  <para>The <tag>p:file-copy</tag> step copies the file or directory named in <option>href</option> to the new position specified in
+      <option>target</option>. Any non existent directory contained in <option>target</option> will be created before copying starts.
+    If the target is a directory, the step attempts to copy the file or directory into that directory,
+    preserving its base name. <error code="C0157">It is a <glossterm>dynamic error</glossterm> if the <option>href</option>
+    option names a directory, but the <option>target</option> option names a file.</error></para>
+  
+  <para>If the <option>overwrite</option> evaluates to <literal>false</literal>, no existing file is changed, i.e. no
+  copying will take place.</para>
+
+    <para><impl>Conformant processors <rfc2119>must</rfc2119> support URIs whose
+      scheme is <code>file</code> for the <option>href</option> and <option>target</option> options
+      of <tag>p:file-copy</tag>.
+      It is <glossterm>implementation-defined</glossterm> what other schemes are
+      supported by <tag>p:file-copy</tag>, and what the interpretation
+      of ‘directory’, ‘file’ and ‘contents’ is for those schemes.</impl>
+      <error code="C0144">It is a <glossterm>dynamic error</glossterm> if an
+        implementation does not support <tag>p:file-copy</tag> for a specified scheme.</error>
+    </para>
+    
+    <para>If <option>href</option> or <option>target</option> are relative, they are made absolute against the 
+      base URI of the element on which they are specified 
+      (<tag>p:with-option</tag> or <tag>p:file-copy</tag> in the case of a 
+      syntactic shortcut value). <error code="D0064">It is a <glossterm>dynamic 
+        error</glossterm> if the base URI is not both absolute and valid according to <biblioref linkend="rfc3986"/>.</error> <error code="C0145">It is a
+            <glossterm>dynamic error</glossterm> if <tag>p:file-copy</tag> is not available to the step due to access restrictions 
+            in the environment in which the pipeline is run.</error></para>
+
+  <para>If no error occurs, the step returns a <tag>c:result</tag> element containing the absolute URI of the
+    target.</para>
+
+  <para>If an error occurs and <option>fail-on-error</option> is <code>false</code>, the step returns a
+      <tag>c:error</tag> element which may contain additional, implementation-defined, information about the nature of
+    the error.</para>
+
+  <para>If an error occurs and <option>fail-on-error</option> is <code>true</code>, one of the following errors is
+    raised:</para>
+  <itemizedlist>
+    <listitem>
+      <para><error code="D0011">It is a <glossterm>dynamic error</glossterm> if the resource referenced by the
+            <option>href</option> option does not exist, cannot be accessed or is not a file or directory.</error></para>
+    </listitem>
+    <listitem>
+      <para><error code="C0050">It is a <glossterm>dynamic error</glossterm> the file or directory cannot be copied 
+        to the specified location.</error></para>
+    </listitem>
+  </itemizedlist>
+
+
+  <simplesect>
+    <title>Document properties</title>
+    <para feature="file-copy-preserves-none">The resulting document has no properties 
+  apart from <property>content-type</property>. In particular, it has no <property>base-uri</property>.</para>
+  </simplesect>
+  
+</section>
+
+<section xml:id="c.file-delete">
+  <title>p:file-delete</title>
+
+  <para>The <code>p:file-delete</code> step deletes a file or a directory.</para>
+
+  <p:declare-step type="p:file-delete">
+    <p:output port="result" primary="true" content-types="application/xml"/>
+    <p:option name="href" required="true" as="xs:anyURI"/>
+    <p:option name="recursive" as="xs:boolean" select="false()"/>
+    <p:option name="fail-on-error" as="xs:boolean" select="true()"/>
+  </p:declare-step>
+
+  <para>The <tag>p:file-delete</tag> step attempts to delete an existing file or directory named in
+    <option>href</option>. If the named file or directory does not exist, the step just returns a
+  <tag>c:result</tag> element as described below.</para>
+
+  <para><impl>Conformant processors <rfc2119>must</rfc2119> support URIs whose
+    scheme is <code>file</code> for the <option>href</option> option of <tag>p:file-delete</tag>.
+    It is <glossterm>implementation-defined</glossterm> what other schemes are
+    supported by <tag>p:file-delete</tag>, and what the interpretation
+    of ‘directory’, ‘file’ and ‘contents’ is for those schemes.</impl>
+    <error code="C0142">It is a <glossterm>dynamic error</glossterm> if an
+      implementation does not support <tag>p:file-delete</tag> for a specified scheme.</error>
+  </para>
+  
+  <para>If <option>href</option> is relative, it is made absolute against the 
+    base URI of the element on which it is specified 
+    (<tag>p:with-option</tag> or <tag>p:file-delete</tag> in the case of a 
+    syntactic shortcut value). <error code="D0064">It is a <glossterm>dynamic 
+      error</glossterm> if the base URI is not both absolute and valid according to <biblioref linkend="rfc3986"/>.</error> <error code="C0143">It is a
+          <glossterm>dynamic error</glossterm> if <tag>p:file-delete</tag> is not available to the step due to access restrictions 
+          in the environment in which the pipeline is run.</error></para>
+  
+
+  <para>If <option>href</option> specifies a directory, it can only be deleted if the <option>recursive</option> option
+    is <code>true</code> or if the specified directory is empty.</para>
+
+  <para>The step returns a <tag>c:result</tag> element containing the absolute URI of the file or directory.</para>
+
+  <para>If an error occurs and <option>fail-on-error</option> is <code>false</code>, the step returns a
+      <tag>c:error</tag> element which may contain additional, implementation-defined, information about the nature of
+    the error.</para>
+
+  <para>If an error occurs and <option>fail-on-error</option> is <code>true</code>, one of the following errors is
+    raised:</para>
+  <itemizedlist>
+    <listitem>
+      <para><error code="D0011">It is a <glossterm>dynamic error</glossterm> if the resource referenced by the
+            <option>href</option> option does not exist, cannot be accessed or is not a file or directory.</error></para>
+    </listitem>
+    <listitem>
+      <para><error code="C0113">It is a <glossterm>dynamic error</glossterm> if an attempt is made to delete a non-empty
+      directory and the <option>recursive</option> option was set to <code>false</code>.</error></para>
+    </listitem>
+  </itemizedlist>
+
+
+  <simplesect>
+    <title>Document properties</title>
+    <para feature="file-delete-preserves-none">The resulting document has no properties 
+  apart from <property>content-type</property>. In particular, it has no <property>base-uri</property>.</para>
+  </simplesect>
+
+</section>
+
+<section xml:id="c.file-info">
+  <title>p:file-info</title>
+
+  <para>The <code>p:file-info</code> step returns information about a file, directory or other file system
+    object.</para>
+
+  <p:declare-step type="p:file-info">
+    <p:output port="result" primary="true" content-types="application/xml"/>
+    <p:option name="href" required="true" as="xs:anyURI"/>
+    <p:option name="fail-on-error" as="xs:boolean" select="true()"/>
+    <p:option name="override-content-types" as="array(array(xs:string))?"/>
+  </p:declare-step>
+
+  <para>The <tag>p:file-info</tag> step returns information about the file, directory or other file system object named
+    in the <option>href</option> option.</para>
+
+  <para><impl>Conformant processors <rfc2119>must</rfc2119> support URIs whose
+    scheme is <code>file</code> for the <option>href</option> option of <tag>p:file-info</tag>.
+    It is <glossterm>implementation-defined</glossterm> what other schemes are
+    supported by <tag>p:file-info</tag>, and what the interpretation
+    of ‘directory’, ‘file’ and ‘contents’ is for those schemes.</impl>
+    <error code="C0134">It is a <glossterm>dynamic error</glossterm> if an
+      implementation does not support <tag>p:file-info</tag> for a specified scheme.</error>
+  </para>
+  
+  <para>If <option>href</option> is relative, it is made absolute against the 
+    base URI of the element on which it is specified 
+    (<tag>p:with-option</tag> or <tag>p:file-info</tag> in the case of a 
+    syntactic shortcut value). <error code="D0064">It is a <glossterm>dynamic 
+      error</glossterm> if the base URI is not both absolute and valid according to <biblioref linkend="rfc3986"/>.</error> <error code="C0135">It is a
+          <glossterm>dynamic error</glossterm> if <tag>p:file-info</tag> is not available to the step due to access restrictions 
+          in the environment in which the pipeline is run.</error></para>
+  
+  <para>If the <option>href</option> option is a <code>file:</code> URI, the step returns:</para>
+  <itemizedlist>
+    <listitem>
+      <para>If <option>href</option> option references a file: A <tag>c:file</tag> element with standard attributes (see
+        below).</para>
+    </listitem>
+    <listitem>
+      <para>If <option>href</option> option references a directory: A <tag>c:directory</tag> element with standard
+        attributes (see below).</para>
+    </listitem>
+    <listitem>
+      <para>If <option>href</option> option references any other file system object: Implementation defined (for example
+        an <tag>c:other</tag> or <tag>c:device</tag> element). It is advised to use the standard attributes (see below)
+        if applicable.</para>
+    </listitem>
+  </itemizedlist>
+  
+    <para>The <option>override-content-types</option> option can be used to partially override the
+      content-type determination mechanism for files. This works just like with the
+        <option>override-content-types</option> option of <tag>p:archive-manifest</tag> and
+        <tag>p:unarchive</tag> (see <xspecref spec="steps" xref="override-content-type"/>), except
+      that the regular expression matching is done against the absolute URI of the file.</para>
+
+  <para>The following attributes are standard on a returned <tag>c:file</tag> or <tag>c:directory</tag> element. All
+    attributes are optional and must be absent if not applicable. Additional implementation-defined attributes may be
+    present, but they must be in a namespace.</para>
+  <informaltable>
+    <tgroup cols="3">
+      <thead>
+        <row>
+          <entry>Attribute</entry>
+          <entry>Type</entry>
+          <entry>Description</entry>
+        </row>
+      </thead>
+      <tbody>
+        <row>
+          <entry><tag class="attribute">readable</tag></entry>
+          <entry><type>xs:boolean</type></entry>
+          <entry><literal>true</literal> if the object is readable.</entry>
+        </row>
+        <row>
+          <entry><tag class="attribute">writable</tag></entry>
+          <entry><type>xs:boolean</type></entry>
+          <entry><literal>true</literal> if the object file is writable.</entry>
+        </row>
+        <row>
+          <entry><tag class="attribute">hidden</tag></entry>
+          <entry><type>xs:boolean</type></entry>
+          <entry><literal>true</literal> if the object is hidden.</entry>
+        </row>
+        <row>
+          <entry><tag class="attribute">last-modified</tag></entry>
+          <entry><type>xs:dateTime</type></entry>
+          <entry>The last modification time of the object expressed in UTC.</entry>
+        </row>
+        <row>
+          <entry><tag class="attribute">size</tag></entry>
+          <entry><type>xs:integer</type></entry>
+          <entry>The size of the object in bytes.</entry>
+        </row>
+        <row>
+          <entry><tag class="attribute">content-type</tag></entry>
+          <entry><type>xs:string</type></entry>
+          <entry>The content type, if the object is a file.</entry>
+        </row>
+      </tbody>
+    </tgroup>
+  </informaltable>
+
+  <para>If an error occurs and <option>fail-on-error</option> is <code>false</code>, the step returns a
+      <tag>c:error</tag> element which may contain additional, implementation-defined, information about the nature of
+    the error.</para>
+
+  <para>If an error occurs and <option>fail-on-error</option> is <code>true</code>, one of the following errors is
+    raised:</para>
+  <itemizedlist>
+    <listitem>
+      <para><error code="D0011">It is a <glossterm>dynamic error</glossterm> if the resource referenced by the
+            <option>href</option> option does not exist, cannot be accessed or is not a file, directory or other file
+          system object.</error></para>
+    </listitem>
+  </itemizedlist>
+
+
+  <simplesect>
+    <title>Document properties</title>
+    <para feature="file-info-preserves-none">The resulting document has no properties 
+  apart from <property>content-type</property>. In particular, it has no <property>base-uri</property>.</para>
+  </simplesect>
+
+</section>
+
+<section xml:id="c.file-mkdir">
+  <title>p:file-mkdir</title>
+
+  <para>The <code>p:file-mkdir</code> step creates a directory.</para>
+
+  <p:declare-step type="p:file-mkdir">
+    <p:output port="result" primary="true" content-types="application/xml"/>
+    <p:option name="href" required="true" as="xs:anyURI"/>
+    <p:option name="fail-on-error" as="xs:boolean" select="true()"/>
+  </p:declare-step>
+
+  <para>The <tag>p:file-mkdir</tag> create the directory named in the <option>href</option> option. If this includes
+    more than one directory component, all of the intermediate components are created. If the directory already exists 
+    the step just returns the <tag>c:result</tag> element as described below. The path separator is
+    implementation-defined.</para>
+
+  <para><impl>Conformant processors <rfc2119>must</rfc2119> support URIs whose
+    scheme is <code>file</code> for the <option>href</option> option of <tag>p:file-mkdir</tag>.
+    It is <glossterm>implementation-defined</glossterm> what other schemes are
+    supported by <tag>p:file-mkdir</tag>, and what the interpretation
+    of ‘directory’, ‘file’ and ‘contents’ is for those schemes.</impl>
+    <error code="C0140">It is a <glossterm>dynamic error</glossterm> if an
+      implementation does not support <tag>p:file-mkdir</tag> for a specified scheme.</error>
+  </para>
+  
+  <para>If <option>href</option> is relative, it is made absolute against the 
+    base URI of the element on which it is specified 
+    (<tag>p:with-option</tag> or <tag>p:file-mkdir</tag> in the case of a 
+    syntactic shortcut value). <error code="D0064">It is a <glossterm>dynamic 
+      error</glossterm> if the base URI is not both absolute and valid according to <biblioref linkend="rfc3986"/>.</error> <error code="C0141">It is a
+          <glossterm>dynamic error</glossterm> if <tag>p:file-mkdir</tag> not available to the step due to access restrictions 
+          in the environment in which the pipeline is run.</error></para>
+  
+
+  <para>The step returns a <tag>c:result</tag> element containing the absolute URI of the directory.</para>
+
+  <para>If an error occurs and <option>fail-on-error</option> is <code>false</code>, the step returns a
+      <tag>c:error</tag> element which may contain additional, implementation-defined, information about the nature of
+    the error.</para>
+
+  <para>If an error occurs and <option>fail-on-error</option> is <code>true</code>, the following error is
+    raised:</para>
+  <itemizedlist>
+    <listitem>
+      <para><error code="C0114">It is a <glossterm>dynamic error</glossterm> if the directory referenced by the
+            <option>href</option> option cannot be created.</error></para>
+    </listitem>
+  </itemizedlist>
+
+  <simplesect>
+    <title>Document properties</title>
+    <para feature="file-mkdir-preserves-none">The resulting document has no properties 
+  apart from <property>content-type</property>. In particular, it has no <property>base-uri</property>.</para>
+  </simplesect>
+
+</section>
+<section xml:id="c.file-move">
+  <title>p:file-move</title>
+
+  <para>The <code>p:file-move</code> step moves a file or directory.</para>
+
+  <p:declare-step type="p:file-move">
+    <p:output port="result" primary="true" content-types="application/xml"/>
+    <p:option name="href" required="true" as="xs:anyURI"/>
+    <p:option name="target" required="true" as="xs:anyURI"/>
+    <p:option name="fail-on-error" as="xs:boolean" select="true()"/>
+  </p:declare-step>
+
+  <para>The <tag>p:file-move</tag> step moves the file or directory named in <option>href</option> to the new location
+    specified in <option>target</option>. If the <option>target</option> option specifies an
+      <emphasis>existing</emphasis> directory, the step attempts to move the file or directory <emphasis>into</emphasis>
+    that directory, preserving its base name. <error code="C0158">It is a <glossterm>dynamic error</glossterm> if the <option>href</option>
+      option names a directory, but the <option>target</option> option names a file.</error></para>
+
+  <para><impl>Conformant processors <rfc2119>must</rfc2119> support URIs whose
+    scheme is <code>file</code> for the <option>href</option> and <option>target</option> options
+    of <tag>p:file-move</tag>.
+    It is <glossterm>implementation-defined</glossterm> what other schemes are
+    supported by <tag>p:file-move</tag>, and what the interpretation
+    of ‘directory’, ‘file’ and ‘contents’ is for those schemes.</impl>
+    <error code="C0148">It is a <glossterm>dynamic error</glossterm> if an
+      implementation does not support <tag>p:file-move</tag> for a specified scheme.</error>
+  </para>
+  
+  <para>If <option>href</option> or <option>target</option> are relative, they are made absolute against the 
+    base URI of the element on which they are specified 
+    (<tag>p:with-option</tag> or <tag>p:file-move</tag> in the case of a 
+    syntactic shortcut value). <error code="D0064">It is a <glossterm>dynamic 
+      error</glossterm> if the base URI is not both absolute and valid according to <biblioref linkend="rfc3986"/>.</error> <error code="C0149">It is a
+          <glossterm>dynamic error</glossterm> if <tag>p:file-move</tag> is not available to the step due to access restrictions 
+          in the environment in which the pipeline is run.</error></para>
+  
+
+  <para>If the <option>href</option> option specifies a device or other special kind of object, the results are
+    implementation-defined.</para>
+
+  <para>If the move is successful, the step returns a <tag>c:result</tag> element containing the absolute URI of the
+    target.</para>
+
+  <para>If an error occurs and <option>fail-on-error</option> is <code>false</code>, the step returns a
+      <tag>c:error</tag> element which may contain additional, implementation-defined, information about the nature of
+    the error.</para>
+
+  <para>If an error occurs and <option>fail-on-error</option> is <code>true</code>, one of the following errors is
+    raised:</para>
+  <itemizedlist>
+    <listitem>
+      <para><error code="D0011">It is a <glossterm>dynamic error</glossterm> if the resource referenced by the
+            <option>href</option> option does not exist, cannot be accessed or is not a file or
+        directory.</error></para>
+    </listitem>
+    <listitem>
+      <para><error code="C0115">It is a <glossterm>dynamic error</glossterm> if the resource referenced by the
+        <option>target</option> option is an existing file or other file system object.</error></para>
+    </listitem>
+    <listitem>
+      <para><error code="C0050">It is a <glossterm>dynamic error</glossterm> if the directory cannot be 
+        moved to the specified location.</error></para>
+    </listitem>
+  </itemizedlist>
+
+  <simplesect>
+    <title>Document properties</title>
+    <para feature="file-move-preserves-none">The resulting document has no properties 
+  apart from <property>content-type</property>. In particular, it has no <property>base-uri</property>.</para>
+  </simplesect>
+
+</section>
+
+<section xml:id="c.file-create-tempfile">
+  <title>p:file-create-tempfile</title>
+ 
+  <para>The <code>p:file-create-tempfile</code> step creates a temporary file.</para>
+
+  <p:declare-step type="p:file-create-tempfile">
+    <p:output port="result" primary="true" content-types="application/xml"/>
+    <p:option name="href" as="xs:anyURI?"/>
+    <p:option name="suffix" as="xs:string?"/>
+    <p:option name="prefix" as="xs:string?"/>
+    <p:option name="delete-on-exit" as="xs:boolean" select="false()"/>
+    <p:option name="fail-on-error" as="xs:boolean" select="true()"/>
+  </p:declare-step>
+
+  <para>The <tag>p:file-create-tempfile</tag> creates a temporary file. The temporary file is guaranteed not to already exist
+    when the step is called.</para>
+
+  <para>If the <option>href</option> option is specified it must be the URI of an existing directory. The temporary file
+    is created here. If there is no <option>href</option> option specified the location of the temporary file is
+    implementation defined, usually the operating system's default location for temporary files.</para>
+
+  <para><impl>Conformant processors <rfc2119>must</rfc2119> support URIs whose
+    scheme is <code>file</code> for the <option>href</option> option of <tag>p:file-create-tempfile</tag>. It is
+    <glossterm>implementation-defined</glossterm> what other schemes are
+    supported by <tag>p:file-create-tempfile</tag>, and what the interpretation
+    of ‘directory’, ‘file’ and ‘contents’ is for those schemes.</impl>
+    <error code="C0138">It is a <glossterm>dynamic error</glossterm> if an
+      implementation does not support <tag>p:file-create-tempfile</tag> for a specified scheme.</error>
+  </para>
+  
+  <para>If <option>href</option> is relative, it is made absolute against the 
+    base URI of the element on which it is specified 
+    (<tag>p:with-option</tag> or <tag>p:file-create-tempfile</tag> in the case of a 
+    syntactic shortcut value). <error code="D0064">It is a <glossterm>dynamic 
+      error</glossterm> if the base URI is not both absolute and valid according to <biblioref linkend="rfc3986"/>.</error> <error code="C0139">It is a
+          <glossterm>dynamic error</glossterm> if <tag>p:file-create-tempfile</tag> cannot be completed due to access 
+          restrictions in the environment in which the pipeline is run.</error></para>
+  
+
+  <para>If the <option>prefix</option> option is specified, the filename will begin with that prefix. If the
+      <option>suffix</option> option is specified, the filename will end with that suffix.</para>
+
+  <para>If the <option>delete-on-exit</option> option is <code>true</code>, an attempt will be made to automatically
+    delete the temporary file when the processor terminates the pipeline. No error will be raised if this is
+    unsuccessful.</para>
+
+  <para>If the temporary file creation is successful, the step returns a <tag>c:result</tag> element containing the
+    absolute URI of this file.</para>
+
+  <para>If an error occurs and <option>fail-on-error</option> is <code>false</code>, the step returns a
+      <tag>c:error</tag> element which may contain additional, implementation-defined, information about the nature of
+    the error.</para>
+
+  <para>If an error occurs and <option>fail-on-error</option> is <code>true</code>, one of the following errors is
+    raised:</para>
+  <itemizedlist>
+    <listitem>
+      <para><error code="D0011">It is a <glossterm>dynamic error</glossterm> if the resource referenced by the
+            <option>href</option> option does not exist, cannot be accessed or is not a directory.</error></para>
+    </listitem>
+    <listitem>
+      <para><error code="C0116">It is a <glossterm>dynamic error</glossterm> if the temporary file could not be
+          created.</error></para>
+    </listitem>
+  </itemizedlist>
+
+  <simplesect>
+    <title>Document properties</title>
+    <para feature="file-create-tempfile-preserves-none">The resulting document has no properties 
+  apart from <property>content-type</property>. In particular, it has no <property>base-uri</property>.</para>
+  </simplesect>
+
+</section>
+
+<section xml:id="c.file-touch">
+<title>p:file-touch</title>
+
+<para>The <code>p:file-touch</code> step updates the modification
+timestamp of a file.</para>
+
+  <p:declare-step type="p:file-touch">
+    <p:output port="result" primary="true" content-types="application/xml"/>
+    <p:option name="href" required="true" as="xs:anyURI"/>
+    <p:option name="timestamp" as="xs:dateTime?"/>
+    <p:option name="fail-on-error" as="xs:boolean" select="true()"/>
+  </p:declare-step>
+
+<para>The <tag>p:file-touch</tag> step updates the modification
+timestamp of the file specified in the <option>href</option>
+option. If the file specified by <option>href</option> does not
+exist, an empty file will be created at the given location.</para>
+
+  <para><impl>Conformant processors <rfc2119>must</rfc2119> support URIs whose
+    scheme is <code>file</code> for the <option>href</option> option of <tag>p:file-touch</tag>. It is
+    <glossterm>implementation-defined</glossterm> what other schemes are
+    supported by <tag>p:file-touch</tag>, and what the interpretation
+    of ‘directory’, ‘file’ and ‘contents’ is for those schemes.</impl>
+    <error code="C0136">It is a <glossterm>dynamic error</glossterm> if an
+      implementation does not support <tag>p:file-touch</tag> for a specified scheme.</error>
+  </para>
+  
+  <para>If <option>href</option> is relative, it is made absolute against the 
+    base URI of the element on which it is specified 
+    (<tag>p:with-option</tag> or <tag>p:file-touch</tag> in the case of a 
+    syntactic shortcut value). <error code="D0064">It is a <glossterm>dynamic 
+      error</glossterm> if the base URI is not both absolute and valid according to <biblioref linkend="rfc3986"/>.</error> <error code="C0137">It is a
+          <glossterm>dynamic error</glossterm> if <tag>p:file-touch</tag> cannot be completed due to access 
+          restrictions in the environment in which the pipeline is run.</error></para>
+
+<para>If the <option>timestamp</option> option is set, the file's
+timestamp is set to this value. Otherwise the file's timestamp is set
+to the current system's date and time.</para>
+
+<para>If the operation is successful, the step returns a <tag>c:result</tag> element containing the absolute URI 
+of the file.</para>
+
+<para>If an error occurs and <option>fail-on-error</option> is
+<code>false</code>, the step returns a <tag>c:error</tag> element
+which may contain additional, implementation-defined, information
+about the nature of the error.</para>
+
+<para>If an error occurs and <option>fail-on-error</option> is
+<code>true</code>, the following error is raised:</para>
+  <itemizedlist>
+    <listitem>
+      <para><error code="D0011">It is a <glossterm>dynamic error</glossterm> if the resource referenced by the
+            <option>href</option> option does not exist and cannot be created
+or exists and cannot be accessed.</error></para>
+    </listitem>
+  </itemizedlist>
+
+  <simplesect>
+    <title>Document properties</title>
+    <para feature="file-touch-preserves-none">The resulting document has no properties 
+  apart from <property>content-type</property>. In particular, it has no <property>base-uri</property>.</para>
+  </simplesect>
+</section>
+
+<section xml:id="errors">
+<title>Step Errors</title>
+
+<para>These steps can raise
+<glossterm baseform="dynamic-error">dynamic errors</glossterm>.
+</para>
+
+<para><termdef xml:id="dt-dynamic-error">A <firstterm>dynamic
+error</firstterm> is one which occurs while a pipeline is being
+evaluated.</termdef> Examples of dynamic errors include references to
+URIs that cannot be resolved, steps which fail, and pipelines that
+exhaust the capacity of an implementation (such as memory or disk
+space). For a more complete discussion of dynamic errors, see
+<xspecref spec="xproc" xref="dynamic-errors"/>.
+</para>
+
+<para>If a step fails due to a dynamic error, failure propagates
+upwards until either a <tag>p:try</tag> is encountered or the entire
+pipeline fails. In other words, outside of a <tag>p:try</tag>, step
+failure causes the entire pipeline to fail.</para>
+
+<para>The following specific errors can be raised by these steps:</para>
+
+<?step-error-list level="none"?>
+
+</section>
+
+<appendix xml:id="conformance">
+<title>Conformance</title>
+
+<para>Conformant processors <rfc2119>must</rfc2119> implement all of the features
+described in this specification except those that are explicitly identified
+as optional.</para>
+
+<para>Some aspects of processor behavior are not completely specified; those
+features are either <glossterm role="unwrapped">implementation-dependent</glossterm> or
+<glossterm role="unwrapped">implementation-defined</glossterm>.</para>
+
+<para><termdef xml:id="dt-implementation-dependent">An
+<firstterm>implementation-dependent</firstterm> feature is one where the
+implementation has discretion in how it is performed.
+Implementations are not required to document or explain
+how <glossterm role="unwrapped">implementation-dependent</glossterm> features are performed.</termdef>
+</para>
+
+<para><termdef xml:id="dt-implementation-defined">An
+<firstterm>implementation-defined</firstterm> feature is one where the
+implementation has discretion in how it is performed.
+Conformant implementations <rfc2119>must</rfc2119> document
+how <glossterm role="unwrapped">implementation-defined</glossterm> features are performed.</termdef>
+</para>
+
+<section xml:id="implementation-defined">
+<title>Implementation-defined features</title>
+
+<para>The following features are implementation-defined:</para>
+
+<?implementation-defined-features?>
+</section>
+
+<section xml:id="implementation-dependent">
+<title>Implementation-dependent features</title>
+
+<para>The following features are implementation-dependent:</para>
+
+<?implementation-dependent-features?>
+</section>
+</appendix>
+
+<appendix xml:id="references">
+<title>References</title>
+<bibliolist>
+<bibliomixed xml:id="xproc30"><abbrev>XProc 3.0</abbrev>
+<citetitle xlink:href="http://spec.xproc.org/">XProc 3.0:
+An XML Pipeline Language</citetitle>.
+Norman Walsh, Achim Berndzen, Gerrit Imsieke and Erik Siegel, editors.
+</bibliomixed>
+<bibliomixed xml:id="xproc30-steps"><abbrev>XProc 3.0 Steps</abbrev>
+<citetitle xlink:href="http://spec.xproc.org/">XProc 3.0 Steps:
+An Introduction</citetitle>.
+Norman Walsh, Achim Berndzen, Gerrit Imsieke and Erik Siegel, editors.
+</bibliomixed>
+<bibliomixed xml:id="xpath31-functions"><abbrev>XPath and XQuery Functions and Operators 3.1</abbrev>
+<citetitle xlink:href="https://www.w3.org/TR/xpath-functions-31/">XPath and XQuery Functions and  Operators 3.1</citetitle>. Michael Kay, editor.
+W3C Recommendation. 21 March 2017</bibliomixed>
+<bibliomixed xml:id="rfc3986"><abbrev>RFC 3986</abbrev>
+<citetitle xlink:href="https://doi.org/10.17487/RFC3986">RFC 3986:
+Uniform Resource Identifier (URI): General Syntax</citetitle>.
+T. Berners-Lee, R. Fielding, and L. Masinter, editors.
+Internet Engineering Task Force. January, 2005.</bibliomixed>
+</bibliolist>
+</appendix>
+
+<!-- This glossary will automatically be elided if there are no
+     terms marked up as 'firstterm's in this specification. -->
+<appendix xmlns:db="http://docbook.org/ns/docbook" xml:id="glossary"><title>Glossary</title><glosslist><glossentry><glossterm>dynamic
+error</glossterm><glossdef><para>A <firstterm>dynamic
+error</firstterm> is one which occurs while a pipeline is being
+evaluated.</para></glossdef></glossentry><glossentry><glossterm>implementation-defined</glossterm><glossdef><para>An
+<firstterm>implementation-defined</firstterm> feature is one where the
+implementation has discretion in how it is performed.
+Conformant implementations <rfc2119>must</rfc2119> document
+how <glossterm role="unwrapped">implementation-defined</glossterm> features are performed.</para></glossdef></glossentry><glossentry><glossterm>implementation-dependent</glossterm><glossdef><para>An
+<firstterm>implementation-dependent</firstterm> feature is one where the
+implementation has discretion in how it is performed.
+Implementations are not required to document or explain
+how <glossterm role="unwrapped">implementation-dependent</glossterm> features are performed.</para></glossdef></glossentry></glosslist></appendix>
+
+<appendix version="5.0-extension w3c-xproc" xml:id="ancillary-files">
+<title>Ancillary files</title>
+
+<para>This specification includes by reference a number of
+ancillary files.</para>
+
+<variablelist>
+<varlistentry>
+<term><link xlink:href="steps.xpl"/></term>
+<listitem>
+<para>An XProc step library for the declared steps.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+</appendix>
+
+</specification>

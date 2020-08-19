@@ -1,0 +1,369 @@
+<specification xmlns:cs="http://www.w3.org/XML/XProc/2006/04/components#" xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax" xmlns:p="http://www.w3.org/ns/xproc" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://docbook.org/ns/docbook" xml:id="step-os" class="ed" role="step" version="5.0-extension w3c-xproc">
+<info>
+<title>XProc 3.0: operating system steps</title>
+<!-- defaults to date formatted <pubdate>2014-12-18</pubdate> -->
+<copyright><year>2018</year><year>2019</year><year>2020</year>
+<holder>the Contributors to the XProc 3.0 Standard Step Library
+specifications</holder>
+</copyright>
+
+<bibliomisc role="github-repo">xproc/3.0-steps</bibliomisc>
+<bibliomisc role="w3c-cg" xlink:href="https://www.w3.org/community/xproc-next/">XProc Next</bibliomisc>
+
+<bibliorelation type="isformatof" xlink:href="specification.xml">XML</bibliorelation>
+<authorgroup>
+  <author>
+    <personname>Norman Walsh</personname>
+  </author>
+  <author>
+    <personname>Achim Berndzen</personname>
+  </author>
+  <author>
+    <personname>Gerrit Imsieke</personname>
+  </author>
+  <author>
+    <personname>Erik Siegel</personname>
+  </author>
+</authorgroup>
+
+<abstract>
+<para>This specification describes the <code>p:os-exec</code> and
+<code>p:os-info</code> steps
+for
+<citetitle>XProc 3.0: An XML Pipeline Language</citetitle>.</para>
+</abstract>
+
+<legalnotice xml:id="sotd" role="status">
+  <para>This specification was published by the
+  <link xlink:href="https://www.w3.org/community/xproc-next/">XProc
+  Next Community Group</link>. It is not a W3C Standard nor is it on
+  the W3C Standards Track. Please note that under the
+  <link xlink:href="https://www.w3.org/community/about/agreements/cla/">W3C
+  Community Contributor License Agreement (CLA)</link> there is a limited
+  opt-out and other conditions apply. Learn more about <link xlink:href="https://www.w3.org/community/">W3C Community and Business
+  Groups</link>.
+  </para>
+  
+  <para>If you wish to make comments regarding this document, please
+  send them to
+  <link xlink:href="mailto:xproc-dev@w3.org">xproc-dev@w3.org</link>.
+  (<link xlink:href="mailto:xproc-dev-request@w3.org?subject=subscribe">subscribe</link>,
+  <link xlink:href="https://lists.w3.org/Archives/Public/xproc-dev/">archives</link>).
+  </para>
+</legalnotice>
+</info>
+
+<section xml:id="introduction">
+<title>Introduction</title>
+
+<para>This specification describes the
+<code>p:os-info</code> and
+<code>p:os-exec</code> XProc steps.
+A machine-readable description of
+these steps may be found in
+<link xlink:href="steps.xpl">steps.xpl</link>.
+</para>
+
+<para>Familarity with the
+general nature of <biblioref linkend="xproc30"/>
+steps is assumed; for background details, see
+<biblioref linkend="xproc30-steps"/>.</para>
+</section>
+
+<section xml:id="c.os-info">
+  <title>p:os-info</title>
+
+  <para>The <code>p:os-info</code> step returns information about the
+  operating system on which the processor is running.</para>
+
+  <p:declare-step type="p:os-info">
+    <p:output port="result" content-types="application/xml" primary="true"/>
+  </p:declare-step>
+
+  <para>The step returns a <tag>c:result</tag> element with attributes
+  describing properties of the system. It <rfc2119>should</rfc2119>
+  include the following properties:</para>
+
+  <variablelist>
+    <varlistentry>
+      <term><tag class="attribute">file-separator</tag></term>
+      <listitem>
+        <para>The file separator; usually <code>"/"</code> on Unix, <code>"\"</code> on Windows.</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term><tag class="attribute">path-separator</tag></term>
+      <listitem>
+        <para>The path separator; usually <code>":"</code> on Unix, <code>";"</code> on Windows.</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term><tag class="attribute">os-architecture</tag></term>
+      <listitem>
+        <para>The operating system architecture, for example <code>"i386"</code>.</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term><tag class="attribute">os-name</tag></term>
+      <listitem>
+        <para>The name of the operating system, for example <code>"Mac OS X"</code>.</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term><tag class="attribute">os-version</tag></term>
+      <listitem>
+        <para>The version of the operating system, for example <code>"10.5.6"</code>.</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term><tag class="attribute">cwd</tag></term>
+      <listitem>
+        <para>The current working directory. On systems which have no concept of a working directory the value of the
+          attribute will be empty.</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term><tag class="attribute">user-name</tag></term>
+      <listitem>
+        <para>The login name of the effective user, for example <code>"ndw"</code>.</para>
+      </listitem>
+    </varlistentry>
+    <varlistentry>
+      <term><tag class="attribute">user-home</tag></term>
+      <listitem>
+        <para>The home directory of the effective user, for example <code>"/home/ndw"</code>.</para>
+      </listitem>
+    </varlistentry>
+  </variablelist>
+
+    <para>The <tag>c:result</tag> element can contain zero or more <tag>c:environment</tag> elements
+      that identify the environment variables available. These elements have a mandatory
+        <code>name</code> and <code>value</code> attribute, reflecting name and value of the
+      environment variable. Implementations <rfc2119>should</rfc2119> include all available
+      operating system environment variables.</para>
+
+  <para><impl>The exact set of properties returned is <glossterm>implementation-defined</glossterm>.</impl></para>
+
+  <simplesect>
+    <title>Document properties</title>
+    <para feature="os-info-preserves-none">The resulting document has no properties 
+  apart from <property>content-type</property>. In particular, it has no <property>base-uri</property>.</para>
+  </simplesect>
+
+</section>
+
+<section xml:id="c.os-exec">
+<title>p:os-exec</title>
+
+<para>The <tag>p:os-exec</tag> step runs an external command passing the
+input that arrives on its <port>source</port> port as standard input,
+reading <port>result</port> from standard output, and <port>error</port>
+from standard error.</para>
+
+<p:declare-step type="p:os-exec">
+  <p:input port="source" sequence="true" content-types="any"/>
+  <p:output port="result" primary="true" content-types="any"/>
+  <p:output port="error" content-types="any"/>
+  <p:output port="exit-status" content-types="application/xml"/>
+  <p:option name="command" required="true" as="xs:string"/>
+  <p:option name="args" select="()" as="xs:string*"/>
+  <p:option name="cwd" as="xs:string?"/>
+  <p:option name="result-content-type" select="'text/plain'" as="xs:string"/>
+  <p:option name="error-content-type" select="'text/plain'" as="xs:string"/>
+  <p:option name="path-separator" as="xs:string?"/>
+  <p:option name="failure-threshold" as="xs:integer?"/>
+  <p:option name="serialization" as="map(xs:QName,item()*)?"/>
+</p:declare-step>
+
+<para>The <tag>p:os-exec</tag> step executes the command passed on
+<option>command</option> with the arguments passed on
+<option>args</option>. The processor does not interpolate the values
+of the <option>command</option> or <option>args</option> (for example,
+expanding references to environment variables).
+<error code="C0033">It is a <glossterm>dynamic
+error</glossterm> if the command cannot be run.</error>
+</para>
+
+<para>If <option>cwd</option> is specified, then the current working
+directory is changed to the value of that option before execution
+begins. <error code="C0034">It is a <glossterm>dynamic
+error</glossterm> if the current working directory cannot be changed
+to the value of the <option>cwd</option> option.</error>
+<impl>If <option>cwd</option> is not
+specified, the current working directory is
+<glossterm>implementation-defined</glossterm>.</impl></para>
+
+<para>If the <option>path-separator</option> option is specified,
+every occurrence of the character identified as the
+<option>path-separator</option> character that occurs in the
+<option>command</option>, <option>args</option>, or
+<option>cwd</option> will be replaced by the platform-specific path
+separator character. <error code="C0063">It is a <glossterm>dynamic
+error</glossterm> if the <option>path-separator</option> option is
+specified and is not exactly one character long.</error>
+</para>
+
+<para>The <port>source</port> port is declared to accept a sequence so
+that it can be empty. If no document appears on the
+<port>source</port> port, then the command receives nothing on
+standard input. If a document does arrive on the <port>source</port>
+port, it will be passed to the command as its standard input. <error code="D0006">It is a <glossterm>dynamic error</glossterm> if more than
+one document appears on the <port>source</port> port of the
+<tag>p:os-exec</tag> step.</error>
+The <option>serialization</option> option is used to control the serialization
+  of the document before passing it to the standard input. If a document has a 
+  “<literal>serialization</literal>” document property, the effective value of 
+  the serialization options is the union of the two maps, where the entries in 
+  the “<literal>serialization</literal>” document property take precedence.
+  Serialization is described in <biblioref linkend="xproc30"/>.</para>
+
+<para>The content of standard output is read and processed as described
+in <tag>p:load</tag> with <option>result-content-type</option> taken as
+value for <tag>p:load</tag>'s <option>content-type</option> option. The
+created document is returned on <port>result</port>.</para> 
+
+<para>The content of standard error is read and processed as described
+in <tag>p:load</tag> with <option>error-content-type</option> taken as
+value for <tag>p:load</tag>'s <option>content-type</option> option. The
+created document is returned on <port>error</port>.</para> 
+  
+<para>The <port>exit-status</port> port always returns a single
+<tag>c:result</tag> element which contains the system exit status that
+the process returned. <impl>The specific exit status values returned by
+a process invoked with <tag>p:os-exec</tag> are
+<glossterm>implementation-dependent</glossterm>.</impl></para>
+
+<para>If a <option>failure-threshold</option> value is supplied, and the
+exit status is greater than that threshold, then the <tag>p:os-exec</tag>
+step <rfc2119>must</rfc2119> fail.
+<error code="C0064">It is a <glossterm>dynamic
+error</glossterm> if the exit code from the command is greater than
+the specified <option>failure-threshold</option> value.</error>
+This failure, like any step failure,
+can be captured with a <tag>p:try</tag>.</para>
+
+<simplesect>
+<title>Document properties</title>
+<para feature="exec-preserves-none">No document properties are preserved.</para>
+</simplesect>
+</section>
+
+<section xml:id="errors">
+<title>Step Errors</title>
+
+<para>These steps can raise
+<glossterm baseform="dynamic-error">dynamic errors</glossterm>.
+</para>
+
+<para><termdef xml:id="dt-dynamic-error">A <firstterm>dynamic
+error</firstterm> is one which occurs while a pipeline is being
+evaluated.</termdef> Examples of dynamic errors include references to
+URIs that cannot be resolved, steps which fail, and pipelines that
+exhaust the capacity of an implementation (such as memory or disk
+space). For a more complete discussion of dynamic errors, see
+<xspecref spec="xproc" xref="dynamic-errors"/>.
+</para>
+
+<para>If a step fails due to a dynamic error, failure propagates
+upwards until either a <tag>p:try</tag> is encountered or the entire
+pipeline fails. In other words, outside of a <tag>p:try</tag>, step
+failure causes the entire pipeline to fail.</para>
+
+<para>The following errors can be raised by these steps:</para>
+
+<?step-error-list level="none"?>
+
+</section>
+
+<appendix xml:id="conformance">
+<title>Conformance</title>
+
+<para>Conformant processors <rfc2119>must</rfc2119> implement all of the features
+described in this specification except those that are explicitly identified
+as optional.</para>
+
+<para>Some aspects of processor behavior are not completely specified; those
+features are either <glossterm role="unwrapped">implementation-dependent</glossterm> or
+<glossterm role="unwrapped">implementation-defined</glossterm>.</para>
+
+<para><termdef xml:id="dt-implementation-dependent">An
+<firstterm>implementation-dependent</firstterm> feature is one where the
+implementation has discretion in how it is performed.
+Implementations are not required to document or explain
+how <glossterm role="unwrapped">implementation-dependent</glossterm> features are performed.</termdef>
+</para>
+
+<para><termdef xml:id="dt-implementation-defined">An
+<firstterm>implementation-defined</firstterm> feature is one where the
+implementation has discretion in how it is performed.
+Conformant implementations <rfc2119>must</rfc2119> document
+how <glossterm role="unwrapped">implementation-defined</glossterm> features are performed.</termdef>
+</para>
+
+<section xml:id="implementation-defined">
+<title>Implementation-defined features</title>
+
+<para>The following features are implementation-defined:</para>
+
+<?implementation-defined-features?>
+</section>
+
+<section xml:id="implementation-dependent">
+<title>Implementation-dependent features</title>
+
+<para>The following features are implementation-dependent:</para>
+
+<?implementation-dependent-features?>
+</section>
+</appendix>
+
+<appendix xml:id="references">
+<title>References</title>
+<bibliolist>
+<bibliomixed xml:id="xproc30"><abbrev>XProc 3.0</abbrev>
+<citetitle xlink:href="http://spec.xproc.org/">XProc 3.0:
+An XML Pipeline Language</citetitle>.
+Norman Walsh, Achim Berndzen, Gerrit Imsieke and Erik Siegel, editors.
+</bibliomixed>
+<bibliomixed xml:id="xproc30-steps"><abbrev>XProc 3.0 Steps</abbrev>
+<citetitle xlink:href="http://spec.xproc.org/">XProc 3.0 Steps:
+An Introduction</citetitle>.
+Norman Walsh, Achim Berndzen, Gerrit Imsieke and Erik Siegel, editors.
+</bibliomixed>
+</bibliolist>
+</appendix>
+
+<!-- This glossary will automatically be elided if there are no
+     terms marked up as 'firstterm's in this specification. -->
+<appendix xmlns:db="http://docbook.org/ns/docbook" xml:id="glossary"><title>Glossary</title><glosslist><glossentry><glossterm>dynamic
+error</glossterm><glossdef><para>A <firstterm>dynamic
+error</firstterm> is one which occurs while a pipeline is being
+evaluated.</para></glossdef></glossentry><glossentry><glossterm>implementation-defined</glossterm><glossdef><para>An
+<firstterm>implementation-defined</firstterm> feature is one where the
+implementation has discretion in how it is performed.
+Conformant implementations <rfc2119>must</rfc2119> document
+how <glossterm role="unwrapped">implementation-defined</glossterm> features are performed.</para></glossdef></glossentry><glossentry><glossterm>implementation-dependent</glossterm><glossdef><para>An
+<firstterm>implementation-dependent</firstterm> feature is one where the
+implementation has discretion in how it is performed.
+Implementations are not required to document or explain
+how <glossterm role="unwrapped">implementation-dependent</glossterm> features are performed.</para></glossdef></glossentry></glosslist></appendix>
+
+<appendix version="5.0-extension w3c-xproc" xml:id="ancillary-files">
+<title>Ancillary files</title>
+
+<para>This specification includes by reference a number of
+ancillary files.</para>
+
+<variablelist>
+<varlistentry>
+<term><link xlink:href="steps.xpl"/></term>
+<listitem>
+<para>An XProc step library for the declared steps.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+</appendix>
+
+</specification>
