@@ -120,3 +120,4 @@ can be raised by the <code>p:validate-with-relax-ng</code> step:</para>
 
 The build process is owned by [norm](mailto:ndw@nwalsh.com);
 bug him if you have difficulties.
+
