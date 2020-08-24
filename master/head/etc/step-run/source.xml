@@ -56,7 +56,7 @@ step for
 <title>Introduction</title>
 
 <para>This specification describes the <code>p:run</code> XProc step.
-A machine-readable description of these steps may be found in
+A machine-readable description of this step may be found in
 <link xlink:href="steps.xpl">steps.xpl</link>.
 </para>
   
@@ -76,48 +76,49 @@ steps is assumed; for background details, see
 
 <e:rng-pattern name="Step-run"/>
 
-<para>The <tag>p:run</tag> step functions mostly like an atomic step in that
-you can define inputs connections and option values for it. However,
-unlike atomic steps, it has no fixed signature. Any inputs are
-allowed and any outputs may be connected.
-</para>
-
-<para>One input port is specifically designated the pipeline input
-port. By default, that port is named <port>pipeline</port>, but its
-name can be changed by specifying a different name in the
-<option>p:pipeline</option> option.
-</para>
+<para>The <tag>p:run</tag> step has a single, anonymous input that accepts the 
+pipeline to be run. Otherwise, it functions similar to an atomic step in that
+you can define input connections and option values for it, albeit not with the
+usual <tag>p:with-input</tag> and <tag>p:with-option</tag> connections.</para>
 
 <para>The <tag>p:run</tag> step
-expects a single pipeline document on the pipeline port.
-<error code="C0080">It is a <glossterm>dynamic error</glossterm>
+expects a single pipeline document on its anonymous input port.
+<error code="C0200">It is a <glossterm>dynamic error</glossterm>
 if the pipeline input to the <tag>p:run</tag> step is not a
-valid pipeline.
-</error>
+valid pipeline.</error>
+Whether a processor accepts a pipeline as valid whose version number is not equal 
+to 3.0 or 3.1 is <glossterm>implementation-defined</glossterm>.
 </para>
 
 <para>The pipeline that appears on the pipeline port is evaluated
-using the inputs and options specified on the <tag>p:run</tag> step.
-  The default readable port of the <tag>p:run</tag> step becomes the default readable port 
-  of the pipeline.  
-<error code="C0081">It is a <glossterm>dynamic error</glossterm>
-if the pipeline has declared inputs that are not specified on the <tag>p:run</tag> step.
-</error>
-<error code="C0082">It is a <glossterm>dynamic error</glossterm>
-if the pipeline has required options that are not specified on
-the <tag>p:run</tag> invocation.
-</error>
-</para>
+using the inputs and options specified on the <tag>p:run</tag> step by means of the 
+<tag>p:run-input</tag> and <tag>p:run-option</tag> elements, respectively. In terms of binding
+inputs and options, these elements have the same syntax and semantics as <tag>p:with-input</tag> 
+and <tag>p:with-option</tag>. In addition, the boolean attribute <tag class="attribute">primary</tag>
+can be used on <tag>p:run-input</tag> to declare whether the respective port of the dynamically 
+executed pipeline is expected to be the primary input port. If the attribute is omitted, it
+is assumed to be “<literal>false</literal>” if there are multiple <tag>p:run-input</tag> connections
+and “<literal>true</literal>” if there is exactly one <tag>p:run-input</tag> connection. 
+<error code="C0201">It is a <glossterm>dynamic error</glossterm>
+if the dynamically executed pipeline implicitly or explicitly declares a primary input port with 
+a different name than implicitly or explicitly specified in the <tag>p:run</tag> invocation.</error>
+Input ports of the dynamically executed pipeline that are not declared with <tag>p:run-input</tag> on
+the <tag>p:run</tag> invocation will receive a <tag>p:empty</tag> connection.
+Input ports that are declared in <tag>p:run-input</tag> but not in the dynamically
+executed pipeline will be silently ignored.</para>
+<para>The default readable port of the <tag>p:run</tag> step becomes the default readable port 
+of the pipeline.</para>
   
-  <note role="editorial" xml:id="ednote-run-required-options">
-    <para>Do we really need to have C0082? Isn’t it sufficient that the dynamically executed pipeline
-    raises an error if a required option is missing?</para>
-    <para>If we raise this error on <tag>p:run</tag>, we might as well require that the types of the
-    options given on <tag>p:run</tag> be compatible with what the pipeline’s option expects. Instead
-    of raising such an error on <tag>p:run</tag>, we can wait until the pipeline is executed and any dynamic
-    errors occur in the pipeline.</para>
+  <para>Other than <tag>p:with-option</tag>, <tag>p:run-option</tag> accepts a boolean attribute
+  <tag class="attribute">static</tag> that defaults to “<literal>false</literal>”. If it is “<literal>true</literal>”,
+  the option value will be computed during static analysis and supplied to the dynamically executed 
+  pipeline’s static option with the same name.</para>
+  <note role="editorial">
+    <para>Will it also supply values for static options declared in libraries that the dynamically executed
+    pipeline imports? Will it overwrite these values?</para>
+    <para>Should there be an error if no such static option exists?</para>
   </note>
-
+  
     <para>Each output port of the pipeline can appear as a same-named output port of the <tag>p:run</tag> step. In order for
       this to happen, the port needs to be explicitly declared in the <tag>p:run</tag> step. In contrast to output declarations
       of compound steps or of <tag>p:declare-pipeline</tag> with a subpipeline, such an output declaration may not establish a
@@ -125,79 +126,67 @@ the <tag>p:run</tag> invocation.
     <para>If the pipeline has an output that is not declared on the <tag>p:run</tag> step, that output is discarded, and the
       corresponding port on the <tag>p:run</tag> step does not exist. If the <tag>p:run</tag> step declares an output port that
       is not provided by the pipeline, an empty sequence appears on that port.</para>
-  
-    <note role="editorial" xml:id="ednote-run-empty-input">
-      <para>Should we do a similar thing for inputs? That is, if the pipeline declares an input but the <tag>p:run</tag>
-        invocation doesn’t provide a connection, it is treated as if the connection were declared explicitly empty. If we do so,
-        C0081 is no error any more. </para>
-      <para>This might be useful in that it extends the range of pipelines that a given <tag>p:run</tag> invocation may run.
-        Suppose that you modified an EPUB building step by adding an input port that accepts a text document with extra CSS to
-        be used by every HTML page within the EPUB. So this extended EPUB step has an additional input port
-          <literal>extra-css</literal> in addition to its (hypothetic) normal ports <literal>source</literal> and
-          <literal>conf</literal>. It would be perfectly useful to run this extended EPUB building pipeline as if it were the
-        standard EPUB building pipeline. It will see zero documents on its <literal>extra-css</literal> port, which is
-        fine.</para>
-      <para>In that sense, a <tag>p:run</tag> invocation declares an <emphasis>interface</emphasis> that
-      the dynamically executed pipelines must implement but may extend.</para>
-      <para>We don’t do this default-to-empty for unsaturated input connections of other step invocations, do we?</para>
-      <para>Likewise, what happens if the <tag>p:run</tag> invocation has a <tag>p:with-option</tag> element (or an option
-        attribute) that does not exist in the pipeline? I suggest that this option be simply ignored, no attempt be made by the
-        processor to pass this option to the pipeline, no error raised.</para>
-    </note>
-
-
-  
-    <note role="editorial" xml:id="ednote-run-always-primary-output">
-      <para>This was Norm’s original draft:</para>
-      <blockquote>
-        <para>The <tag>p:run</tag> step is assumed to have a primary output port. If the pipeline evaluated does not have a
-          primary output port, an empty sequence appears on that port. Alternatively, that could be a dynamic error.</para>
-      </blockquote>
-      <para>I think Norm has proposed both alternatives before he agreed that a <tag>p:run</tag> step needs
-        to declare its outputs. With these output declarations mandatory, can we safely omit the primary port requirement?</para>
-    </note>
-  
+    <para><error code="C0202">It is a <glossterm>dynamic error</glossterm>
+if the dynamically executed pipeline implicitly or explicitly declares a primary output port with 
+a different name than implicitly or explicitly specified in the <tag>p:run</tag> invocation.</error></para>
 
     <section xml:id="example-run">
       <title>Example</title>
       <example xml:id="ex.c.run">
         <title>Dynamic Execution of a Transformation/Validation Pipeline</title>
-        <programlisting language="xml">&lt;p:run name="runme" xslt-parameters="{map{{'foo':'bar'}}}"&gt;
-  &lt;p:with-input port="pipeline"&gt;
-    &lt;p:inline expand-text="true"&gt;
-      &lt;p:declare-step name="transform-n-validate"&gt;
-        &lt;p:input name="source" primary="true" sequence="true"/&gt;
-        &lt;p:input name="stylesheet"/&gt;
-        &lt;p:input name="xsd"/&gt;
-        &lt;p:option name="assert-valid" as="xs:boolean" select="false()"/&gt;
-        &lt;p:option name="xslt-parameters" as="map(xs:QName, item()*)?"/&gt;
-        &lt;p:output port="result" primary="true"/&gt;
-        &lt;p:output port="report" pipe="report@xsdval"/&gt;
-        &lt;p:xslt parameters="{$xslt-parameters}"&gt;
-          &lt;p:with-input port="stylesheet" pipe="stylesheet"/&gt;
-        &lt;/p:xslt&gt;
-        &lt;p:validate-with-xml-schema assert-valid="{$assert-valid}" name="xsdval"&gt;
-          &lt;p:with-input port="schema" pipe="xsd"/&gt;
-        &lt;/p:validate-with-xml-schema&gt;
-      &lt;/p:declare-step&gt;
-    &lt;/p:inline&gt;
-  &lt;/p:with-input&gt;
-  &lt;p:with-input name="source" href="my.xml"/&gt;
-  &lt;p:with-input name="stylesheet" href="my.xsl"/&gt;
-  &lt;p:with-input name="xsd" href="my.xsd"/&gt;
+        <programlisting language="xml">&lt;p:declare-pipeline xmlns:p="http://www.w3.org/ns/xproc"
+  xmlns:c="http://www.w3.org/ns/xproc-step" version="3.1" 
+  name="sample-run-invocation"&gt;
+  &lt;p:variable name="xsl-params" select="map{'foo': 'bar'}" 
+    as="map(xs:QName, item()*)"/&gt;
+  &lt;p:variable name="assert-valid" select="false()" as="xs:boolean"/&gt;
+  &lt;p:variable name="mode" as="xs:QName?"/&gt;
+  &lt;p:variable name="template" as="xs:QName?"/&gt;
+  &lt;p:run name="runme"&gt;
+    &lt;p:with-input href="transform-n-validate.xpl"/&gt;
+    &lt;p:run-option name="mode" select="$mode"/&gt;
+    &lt;p:run-option name="template" select="$template"/&gt;
+    &lt;p:run-option name="xslt-parameters" select="$xsl-params"/&gt;,
+    &lt;p:run-option name="assert-valid" select="$assert-valid"/&gt;
+    &lt;p:run-input port="source" href="my.xml" primary="true"/&gt;
+    &lt;p:run-input port="stylesheet" href="my.xsl"/&gt;
+    &lt;p:run-input port="xsd" href="my.xsd"/&gt;
+    &lt;p:output port="result" primary="true"/&gt;
+    &lt;p:output port="report"/&gt;
+  &lt;/p:run&gt;
+&lt;/p:declare-pipeline&gt;</programlisting>
+        <para>with this pipeline in <filename>transform-n-validate.xpl</filename>:</para>
+        <programlisting language="xml">&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
+  xmlns:c="http://www.w3.org/ns/xproc-step" version="3.0" 
+  name="transform-n-validate"&gt;
+  &lt;p:input port="source" primary="true" sequence="true"/&gt;
+  &lt;p:input port="stylesheet"/&gt;
+  &lt;p:input port="xsd"/&gt;
+  &lt;p:option name="assert-valid" as="xs:boolean" select="false()"/&gt;
+  &lt;p:option name="xslt-parameters" as="map(xs:QName, item()*)?"/&gt;
+  &lt;p:option name="mode" as="xs:QName?"/&gt;
+  &lt;p:option name="template" as="xs:QName?"/&gt;
   &lt;p:output port="result" primary="true"/&gt;
-  &lt;p:output port="report"/&gt;
-&lt;/p:run&gt;</programlisting>
+  &lt;p:output port="report" pipe="report@xsdval"/&gt;
+  &lt;p:xslt&gt;
+    &lt;p:with-option name="initial-mode" select="$mode"/&gt;
+    &lt;p:with-option name="template-name" select="$template"/&gt;
+    &lt;p:with-option name="parameters" select="$xslt-parameters"/&gt;
+    &lt;p:with-input port="stylesheet" pipe="stylesheet"/&gt;
+  &lt;/p:xslt&gt;
+  &lt;p:validate-with-xml-schema name="xsdval"&gt;
+    &lt;p:with-option name="assert-valid" select="$assert-valid"/&gt;
+    &lt;p:with-input port="schema" pipe="xsd@transform-n-validate"/&gt;
+  &lt;/p:validate-with-xml-schema&gt;
+&lt;/p:declare-step&gt;</programlisting>
       </example>
+      
     </section>
   
 <section>
 <title>Document properties</title>
-<para feature="exec-preserves-none">No document properties are preserved.</para>
-      <note role="editorial" xml:id="ednote-run-docprops">
-        <para>Shouldn’t we say, the extent to which document properties are preserved depend on the steps
-        in the dynamically executed pipeline?</para>
-      </note>
+<para feature="exec-preserves-maybe">The extent to which document properties are preserved depends on the steps
+        in the dynamically executed pipeline.</para>
 </section>
 </section>
 
