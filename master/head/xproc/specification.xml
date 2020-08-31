@@ -280,27 +280,31 @@ inputs, from which it receives documents to process, outputs, to which
 it sends result documents, and options which influence its behavior.</para>
 
 <para>There are two kinds of steps: atomic and compound:</para>
-
-<para>An atomic step is a step that performs a unit of processing on
-its input, such as validation or transformation, and has no internal
-subpipeline. Atomic steps carry out fundamental operations and can
-perform arbitrary amounts of computation, but they are
-indivisible.</para>
-
-<para>There are many <emphasis>types</emphasis> of atomic steps. The
-standard library of atomic steps is described in <biblioref linkend="steps30"/>, but implementations <rfc2119>may</rfc2119>
-provide others as well. <impl>It is
-<glossterm>implementation-defined</glossterm> what additional step
-types, if any, are provided. </impl> Each use, or instance, of an
-atomic step invokes the processing defined by that type of step. A
-pipeline may contain instances of many types of steps and many
-instances of the same type of step.</para>
-
-<para>Compound steps, on the other hand, control and organize the flow
-of documents through a pipeline, providing familiar programming
-language functionality such as conditionals, iterators and exception
-handling. They contain other steps, whose evaluation they
-control.</para>
+  
+  <itemizedlist>
+    <listitem>
+      <para>An atomic step is a step that performs a unit of processing on
+        its input, such as validation or transformation, and has no internal
+        subpipeline. Atomic steps carry out fundamental operations and can
+        perform arbitrary amounts of computation, but they are
+        indivisible.</para>
+      <para>There are many <emphasis>types</emphasis> of atomic steps. The
+        standard library of atomic steps is described in <biblioref linkend="steps30"/>, but implementations <rfc2119>may</rfc2119>
+        provide others as well. <impl>It is
+          <glossterm>implementation-defined</glossterm> what additional step
+          types, if any, are provided. </impl> Each use, or instance, of an
+        atomic step invokes the processing defined by that type of step. A
+        pipeline may contain instances of many types of steps and many
+        instances of the same type of step.</para>
+    </listitem>
+    <listitem>
+      <para>Compound steps, on the other hand, control and organize the flow
+        of documents through a pipeline, providing familiar programming
+        language functionality such as conditionals, iterators and exception
+        handling. They contain other steps, whose evaluation they
+        control.</para>
+    </listitem>
+  </itemizedlist>
 
 <para><termdef xml:id="dt-compound-step">A <firstterm>compound
 step</firstterm> is a step that contains one or more
@@ -350,27 +354,82 @@ subpipeline is its last step in document order.</termdef></para>
         input port named “schema” and an output port named “schema”). </para>
       <para>A step may have zero or more <link linkend="options">options</link>, all with unique
         names.</para>
-      <para>All of the different instances of steps (atomic or compound) in a pipeline can be
-        distinguished from one another by name. If the pipeline author does not provide a name for a
-        step, a default name is <link linkend="step-names">manufactured automatically</link>.</para>
+     
+  
       <section xml:id="step-names">
         <title>Step names</title>
-        <para>The <tag class="attribute">name</tag> attribute on any step can be used to give it a
-          name. <assert xml:id="unique-names">The name <rfc2119>must</rfc2119> be unique within its scope, see <xref linkend="scoping"/>.</assert></para>
-        <para>If the pipeline author does not provide an explicit name, the processor manufactures a
-          default name. All default names are of the form
+        <para>All of the different instances of steps (atomic or compound) in a pipeline can be
+          distinguished from one another by <emphasis>name</emphasis>. Names can be specified using
+          the (optional) <tag class="attribute">name</tag> attribute. <assert xml:id="unique-names">A specified step name <rfc2119>must</rfc2119> be unique within its scope, see <xref linkend="scoping"/>.</assert></para>
+
+        <para>The main purpose of step names in a pipeline is to <emphasis>explicitly</emphasis>
+          connect to port(s) of another step. This applies to <tag>p:input</tag>,
+            <tag>p:output</tag>, <tag>p:with-input</tag>, <tag>p:with-option</tag> and
+            <tag>p:variable</tag>, using either a <tag>p:pipe</tag> child element or a <tag class="attribute">pipe</tag> attribute.</para>
+        
+        <para>The following example uses the step names provided by the <tag class="attribute">name</tag> attributes to explicitly connect ports, using <tag>p:pipe</tag> child elements. The
+          document on the <port>extra</port> port of the step gets an additional attribute and is
+          subsequently inserted into the document on the <port>source</port> port.</para>
+        <programlisting language="xml">&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc" version="3.0" 
+    name="main-step"&gt;
+
+  &lt;p:input port="source" primary="true"/&gt;
+  &lt;p:input port="extra"/&gt;
+  &lt;p:output port="result" primary="true"/&gt;
+
+  &lt;p:add-attribute attribute-name="timestamp" attribute-value="{current-dateTime()}" 
+      name="add-timestamp"&gt;
+    &lt;p:with-input port="source"&gt;
+      &lt;p:pipe step="main-step" port="extra"/&gt;
+    &lt;/p:with-input&gt;
+  &lt;/p:add-attribute&gt;
+
+  &lt;p:insert match="/*" position="first-child"&gt;
+    &lt;p:with-input port="source"&gt;
+      &lt;p:pipe step="main-step" port="source"/&gt;
+    &lt;/p:with-input&gt;
+    &lt;p:with-input port="insertion"&gt;
+      &lt;p:pipe step="add-timestamp" port="result"/&gt;
+    &lt;/p:with-input&gt;
+  &lt;/p:insert&gt;
+
+&lt;/p:declare-step&gt;</programlisting>
+        
+        <para>Alternatively, using <tag class="attribute">pipe</tag> attributes to connect the
+          ports, you could write this as:</para>
+        <programlisting language="xml">&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc" version="3.0" 
+    name="main-step"&gt;
+
+  &lt;p:input port="source" primary="true"/&gt;
+  &lt;p:input port="extra"/&gt;
+  &lt;p:output port="result" primary="true"/&gt;
+
+  &lt;p:add-attribute attribute-name="timestamp" attribute-value="{current-dateTime()}" 
+      name="add-timestamp"&gt;
+    &lt;p:with-input port="source" pipe="extra@main-step"/&gt;
+  &lt;/p:add-attribute&gt;
+
+  &lt;p:insert match="/*" position="first-child"&gt;
+    &lt;p:with-input port="source" pipe="source@main-step"/&gt;
+    &lt;p:with-input port="insertion" pipe="result@add-timestamp"/&gt;
+  &lt;/p:insert&gt;
+
+&lt;/p:declare-step&gt;</programlisting>
+        
+        <para>If the pipeline author does not provide an explicit name using the <tag class="attribute">name</tag> attribute, the processor manufactures a default name. All
+          default names are of the form
             “<literal>!1</literal><replaceable>.m</replaceable><replaceable>.n</replaceable>…” where
             “<replaceable>m</replaceable>” is the position (in the sense of counting sibling
-          elements) of the step’s highest ancestor element within the pipeline document or library
-          which contains it, “<replaceable>n</replaceable>” is the position of the next-highest
-          ancestor, and so on, including all of the elements in the pipeline document
-(that were not <glossterm>effectively excluded</glossterm>). For example, consider the
-          pipeline in <xref linkend="ex2"/>. The <tag>p:declare-step</tag> step has no name, so it gets
-          the default name “<literal>!1</literal>”; the <tag>p:choose</tag> gets the name
+          elements) of the step’s highest ancestor element within the pipeline document or
+          library which contains it, “<replaceable>n</replaceable>” is the position of the
+          next-highest ancestor, and so on, including all of the elements in the pipeline document
+          (that were not <glossterm>effectively excluded</glossterm>). For example, consider the
+          pipeline in <xref linkend="ex2"/>. The <tag>p:declare-step</tag> step has no name, so it
+          gets the default name “<literal>!1</literal>”; the <tag>p:choose</tag> gets the name
             “<literal>!1.1</literal>”; the first <tag>p:when</tag> gets the name
             “<literal>!1.1.1</literal>”; the <tag>p:otherwise</tag> gets the name
-            “<literal>!1.1.2</literal>”, etc. If the <tag>p:choose</tag> had a name, it would
-          not have received a default name, but it would still have been counted and its first
+            “<literal>!1.1.2</literal>”, etc. If the <tag>p:choose</tag> had a name, it would not
+          have received a default name, but it would still have been counted and its first
             <tag>p:when</tag> would still have been “<literal>!1.1.1</literal>”.</para>
         <para>Providing every step in the pipeline with an interoperable name has several
           benefits:</para>
@@ -388,18 +447,98 @@ subpipeline is its last step in document order.</termdef></para>
         <para>In a valid pipeline that runs successfully to completion, the manufactured names
           aren't visible (except perhaps in debugging or logging output).</para>
 
-<note xml:id="def-name-ncname">
-<para>The format for defaulted names does not conform to the
-requirements of an
-<link xlink:href="http://www.w3.org/TR/xml-names/#NT-NCName">NCName</link>.
-This is an explicit design decision; it prevents pipelines from using
-the defaulted names on <tag>p:pipe</tag> elements. If an explicit
-connection requires a step name, the pipeline author must name
-the step.
-</para>
-</note>
+        <note xml:id="def-name-ncname">
+          <para>The format for defaulted names does not conform to the requirements of an <link xlink:href="http://www.w3.org/TR/xml-names/#NT-NCName">NCName</link>. This is an
+            explicit design decision; it prevents pipelines from using the defaulted names on
+              <tag>p:pipe</tag> elements. If an explicit connection requires a step name, the
+            pipeline author must name the step. </para>
+        </note>
 
       </section>
+  
+      <section xml:id="step-types">
+        <title>Step types</title>
+
+        <para>A step can have a <emphasis>type</emphasis>. Step types are specified using the <tag class="attribute">type</tag> attribute of the <tag>p:declare-step</tag> element. Step
+          types are used as the name of the element by which the step is invoked. <assert xml:id="unique-types">A specified step type <rfc2119>must</rfc2119> be unique within its
+            scope, see <xref linkend="scoping"/>.</assert></para>
+
+        <para>Step types are QNames and <rfc2119>must</rfc2119> be in namespace with a non-null
+          namespace URI. Steps in the XProc standard and additional step libraries all have types in
+          the XProc namespace: <code>http://www.w3.org/ns/xproc</code>. When providing your own
+          steps with a type, which is necessary to use/invoke them in another step, a different
+          (non-null) namespace must be used.</para>
+
+        <para>Step types play an important role in the modularization of pipelines. They allow steps
+          to be re-used. The following example defines a local step with type
+            <code>mysteps:add-timestamp-attribute</code> and subsequently uses this twice somewhere inside
+          its main step’s pipeline: </para>
+        <programlisting language="xml">&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc" version="3.0"
+  xmlns:mysteps="http://.../ns/mysteps"&gt;
+
+  &lt;p:input port="source"/&gt;
+  &lt;p:output port="result"/&gt;
+
+  &lt;p:declare-step type="mysteps:add-timestamp-attribute"&gt; 
+    &lt;p:input port="source"/&gt;
+    &lt;p:output port="result"/&gt;
+    &lt;p:add-attribute attribute-name="timestamp" attribute-value="{current-dateTime()}"/&gt;
+  &lt;/p:declare-step&gt;
+  
+  ...
+  &lt;mysteps:add-timestamp-attribute/&gt;
+  ...
+  &lt;mysteps:add-timestamp-attribute/&gt;
+  ...
+
+&lt;/p:declare-step&gt;</programlisting>
+
+        <para>Another way of doing this would be to isolate the
+            <code>mysteps:add-timestamp-attribute</code> step as a separate, stand-alone,
+          pipeline:</para>
+        <programlisting language="xml">&lt;p:declare-step type="mysteps:add-timestamp-attribute" version="3.0"
+  xmlns:p="http://www.w3.org/ns/xproc" xmlns:mysteps="http://.../ns/mysteps"&gt;
+  &lt;p:input port="source"/&gt;
+  &lt;p:output port="result"/&gt;
+  &lt;p:add-attribute attribute-name="timestamp" attribute-value="{current-dateTime()}"/&gt;
+&lt;/p:declare-step&gt;</programlisting>
+
+        <para>Assuming this is stored in a file called <code>add-timestamp-attribute.xpl</code>, you
+          can now use the <tag>p:import</tag> element to get it on board:</para>
+        <programlisting language="xml">&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc" version="3.0"
+  xmlns:mysteps="http://.../ns/mysteps"&gt;
+
+  &lt;p:import href="add-timestamp-attribute.xpl"/&gt;
+
+  &lt;p:input port="source"/&gt;
+  &lt;p:output port="result"/&gt;
+
+  ...
+  &lt;mysteps:add-timestamp-attribute/&gt;
+  ...
+
+&lt;/p:declare-step&gt;</programlisting>
+
+        <para>Yet another way of achieving the same result would be to add the
+            <code>mysteps:add-timestamp-attribute</code> step to an XProc
+            <emphasis>library</emphasis>, using the <tag>p:library</tag> root element:</para>
+        <programlisting language="xml">&lt;p:library version="3.0" xmlns:p="http://www.w3.org/ns/xproc" 
+  xmlns:mysteps="http://.../ns/mysteps"&gt;
+
+  &lt;p:declare-step type="mysteps:add-timestamp-attribute"&gt;
+    &lt;p:input port="source"/&gt;
+    &lt;p:output port="result"/&gt;
+    &lt;p:add-attribute attribute-name="timestamp" attribute-value="{current-dateTime()}"/&gt;
+  &lt;/p:declare-step&gt;
+
+  ... more library steps
+
+&lt;/p:library&gt;</programlisting>
+
+        <para>Importing a library is also done with the <tag>p:import</tag> element. </para>
+
+      </section>
+    
     </section>
   </section>
 
@@ -5815,15 +5954,17 @@ in its subpipeline.</para>
 <listitem>
 <para>The <tag class="attribute">name</tag> attribute provides a
 name for the step. This name can be used within the subpipeline to
-refer back to the declaration, for example, to read from its inputs.
+refer back to the declaration, for example, to read from its inputs. See also <xref linkend="step-names"/>.
 </para>
 </listitem>
 </varlistentry>
 <varlistentry><term><tag class="attribute">type</tag></term>
 <listitem>
 <para>The <tag class="attribute">type</tag> attribute provides
-a type for the step. 
-The value of the <tag class="attribute">type</tag> can be from
+  a type for the step. Step
+  types are used as the name of the element by which the step is invoked. 
+  See also <xref linkend="step-types"/>.</para>
+  <para>The value of the <tag class="attribute">type</tag> can be from
 any namespace provided that the expanded-QName of the value has a
 non-null namespace URI. <error code="S0025">It is a <glossterm>static
 error</glossterm> if the expanded-QName value of the <tag class="attribute">type</tag> attribute is in no namespace or in the
