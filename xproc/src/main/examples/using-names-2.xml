@@ -1,0 +1,18 @@
+<p:declare-step xmlns:p="http://www.w3.org/ns/xproc" version="3.0" 
+    name="main-step">
+
+  <p:input port="source" primary="true"/>
+  <p:input port="extra"/>
+  <p:output port="result" primary="true"/>
+
+  <p:add-attribute attribute-name="timestamp" attribute-value="{current-dateTime()}" 
+      name="add-timestamp">
+    <p:with-input port="source" pipe="extra@main-step"/>
+  </p:add-attribute>
+
+  <p:insert match="/*" position="first-child">
+    <p:with-input port="source" pipe="source@main-step"/>
+    <p:with-input port="insertion" pipe="result@add-timestamp"/>
+  </p:insert>
+
+</p:declare-step>
