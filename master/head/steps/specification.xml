@@ -3531,14 +3531,35 @@ matches. A pattern of the form <literal>h:div</literal> will replace
 ones.</para>
 </note>
 
-<para>This step produces a single document; if the document element is
-unwrapped, the result might not be well-formed XML. If the step produces a
-document node with a single text child, the result will have content type 
-“<literal>text/plain</literal>”.</para>
-
+  <para>This step produces a single document. Special cases:</para> 
+  <itemizedlist>
+    <listitem>
+      <para>If the document element is unwrapped, the result might not be well-formed XML.</para>
+      <para>For instance unwrapping the root element of
+          <code>&lt;!-- COMMENT --&gt;&lt;root-element/&gt;</code> will result in a document node
+        with a single comment node child, which is not well-formed.</para>
+    </listitem>
+    <listitem>
+      <para>If a document consisting of only an empty root element is unwrapped, the result will be
+        a document node without children. The result document’s content type will become
+          “<literal>text/plain</literal>”.</para>
+    </listitem>
+    <listitem>
+      <para>If a document consisting of a root element containing only text is unwrapped, the result will be
+        a document node with a single text node child. The result document’s content type will become
+        “<literal>text/plain</literal>”.</para>
+    </listitem>
+  </itemizedlist>
+  
+  <para>As specified in the core language specification: if the content type changes, the
+      <code>serialization</code> document property, if present, will be removed.</para>
+  
 <simplesect>
 <title>Document properties</title>
-<para feature="unwrap-preserves-all">All document properties are preserved.</para>
+    <para feature="unwrap-preserves-all">All document properties are preserved unless the step
+      changes the document’s content type. In that case the <code>content-type</code> document
+      property will reflect the new content type and the (optional) <code>serialization</code> document
+      property will be removed.</para>
 </simplesect>
 </section>
 <section xml:id="c.uuid">
