@@ -1,6 +1,6 @@
 <specification xmlns:cs="http://www.w3.org/XML/XProc/2006/04/components#" xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax" xmlns:p="http://www.w3.org/ns/xproc" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://docbook.org/ns/docbook" xml:id="step-run" class="ed" role="step" version="5.0-extension w3c-xproc">
 <info>
-<title>XProc 3.1: dynamic pipeline execution</title>
+<title>XProc 3.0: dynamic pipeline execution</title>
 <!-- defaults to date formatted <pubdate>2014-12-18</pubdate> -->
 <copyright><year>2018</year><year>2019</year><year>2020</year>
 <holder>the Contributors to the XProc 3.0 Standard Step Library
@@ -29,7 +29,7 @@ specifications</holder>
 <abstract>
 <para>This specification describes the <code>p:run</code>
 step for
-<citetitle>XProc 3.1: An XML Pipeline Language</citetitle>.</para>
+<citetitle>XProc 3.0: An XML Pipeline Language</citetitle>.</para>
 </abstract>
 
 <legalnotice xml:id="sotd" role="status">
@@ -82,13 +82,14 @@ you can define input connections and option values for it, albeit not with the
 usual <tag>p:with-input</tag> and <tag>p:with-option</tag> connections.</para>
 
 <para>The <tag>p:run</tag> step
-expects a single pipeline document on its anonymous input port.
+expects a single pipeline document on its anonymous input port (“pipeline port”).
 <error code="C0200">It is a <glossterm>dynamic error</glossterm>
 if the pipeline input to the <tag>p:run</tag> step is not a
 valid pipeline.</error>
-Whether a processor accepts a pipeline as valid whose version number is not equal 
-to 3.0 or 3.1 is <glossterm>implementation-defined</glossterm>.
-</para>
+The anonymous input port is not primary, although it is the only <tag>p:input</tag>
+port of <tag>p:run</tag>. Therefore it will not automatically connect to the 
+<glossterm>default readable port</glossterm>; it needs to be connected to its pipeline 
+input explicitly.</para>
 
 <para>The pipeline that appears on the pipeline port is evaluated
 using the inputs and options specified on the <tag>p:run</tag> step by means of the 
@@ -106,18 +107,16 @@ Input ports of the dynamically executed pipeline that are not declared with <tag
 the <tag>p:run</tag> invocation will receive a <tag>p:empty</tag> connection.
 Input ports that are declared in <tag>p:run-input</tag> but not in the dynamically
 executed pipeline will be silently ignored.</para>
-<para>The default readable port of the <tag>p:run</tag> step becomes the default readable port 
-of the pipeline.</para>
+<para>The context item used to evaluate expressions on <tag>p:run-option</tag> comes from the 
+<glossterm>default readable port</glossterm> of the <tag>p:run</tag> step. Additionally, if 
+<tag>p:run-input</tag> implicitly or explicitly identifies a primary input port, the default
+readable port will be connected to it if no explicit connection is provided.</para>
   
   <para>Other than <tag>p:with-option</tag>, <tag>p:run-option</tag> accepts a boolean attribute
   <tag class="attribute">static</tag> that defaults to “<literal>false</literal>”. If it is “<literal>true</literal>”,
-  the option value will be computed during static analysis and supplied to the dynamically executed 
-  pipeline’s static option with the same name.</para>
-  <note role="editorial">
-    <para>Will it also supply values for static options declared in libraries that the dynamically executed
-    pipeline imports? Will it overwrite these values?</para>
-    <para>Should there be an error if no such static option exists?</para>
-  </note>
+  the option value will be supplied to static analysis of the executed pipeline as a static option with the
+  same name. If no such static option is declared by the pipeline or its imported libraries, the value passed
+  in <tag>p:run-option</tag> will be silently ignored.</para>
   
     <para>Each output port of the pipeline can appear as a same-named output port of the <tag>p:run</tag> step. In order for
       this to happen, the port needs to be explicitly declared in the <tag>p:run</tag> step. In contrast to output declarations
@@ -136,7 +135,7 @@ a different name than implicitly or explicitly specified in the <tag>p:run</tag>
         <title>Dynamic Execution of a Transformation/Validation Pipeline</title>
         <programlisting language="xml">&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
   xmlns:c="http://www.w3.org/ns/xproc-step"
-  xmlns:xs="http://www.w3.org/2001/XMLSchema" version="3.1" 
+  xmlns:xs="http://www.w3.org/2001/XMLSchema" version="3.0" 
   name="sample-run-invocation"&gt;
   &lt;p:variable name="xsl-params" select="map{'foo': 'bar'}" 
     as="map(xs:QName, item()*)"/&gt;
