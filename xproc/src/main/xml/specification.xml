@@ -343,7 +343,7 @@ subpipeline is its last step in document order.</termdef></para>
           default names are of the form
             “<literal>!1</literal><replaceable>.m</replaceable><replaceable>.n</replaceable>…” where
             “<replaceable>m</replaceable>” is the position (in the sense of counting sibling
-          elements) of the step&#x2019;s highest ancestor element within the pipeline document or
+          elements) of the step’s highest ancestor element within the pipeline document or
           library which contains it, “<replaceable>n</replaceable>” is the position of the
           next-highest ancestor, and so on, including all of the elements in the pipeline document
           (that were not <glossterm>effectively excluded</glossterm>). For example, consider the
@@ -398,7 +398,7 @@ subpipeline is its last step in document order.</termdef></para>
         <para>Step types play an important role in the modularization of pipelines. They allow steps
           to be re-used. The following example defines a local step with type
             <code>mysteps:add-timestamp-attribute</code> and subsequently uses this twice somewhere inside
-          its main step&#x2019;s pipeline: </para>
+          its main step’s pipeline: </para>
         <programlisting language="xml"><xi:include href="../../../build/examples/step-types-1.txt"  parse="text"/></programlisting>
 
         <para>Another way of doing this would be to isolate the
@@ -481,7 +481,7 @@ document has no base URI.</para>
           </term>
           <listitem>
             <para>The value of the (optional) “<code>serialization</code>” property holds serialization
-              properties for the document. If present, it&#x2019;s value <rfc2119>must</rfc2119> be of type
+              properties for the document. If present, it’s value <rfc2119>must</rfc2119> be of type
                 <code>map(xs:QName, item()*)</code>. <error code="D0070">It is a <glossterm>dynamic
                   error</glossterm> if a value is assigned to the <code>serialization</code>
                 document property that cannot be converted into <code>map(xs:QName, item()*)</code> according
@@ -714,11 +714,11 @@ etc.
       <itemizedlist>
         <listitem>
           <para>If the item is a text node, it is wrapped in a document node and the
-            document&#x2019;s content-type is <literal>text/plain</literal>.</para>
+            document’s content-type is <literal>text/plain</literal>.</para>
         </listitem>
         <listitem>
           <para>If the item is an element, comment or processing-instruction node, a document node is
-            wrapped around the node and the document&#x2019;s content-type is set to
+            wrapped around the node and the document’s content-type is set to
               <literal>application/xml</literal>.</para>
         </listitem>
         <listitem>
@@ -908,7 +908,7 @@ connected if no explicit connection is given, see <xref
 linkend="primary-input-output"/>.</para>
 
 <para>Output ports on compound steps have a dual nature: from the
-perspective of the compound step&#x2019;s siblings, its outputs are just
+perspective of the compound step’s siblings, its outputs are just
 ordinary outputs and can be connected the same as other
 <glossterm>declared outputs</glossterm>. From the perspective of the
 subpipeline inside the compound step, they behave like inputs and can
@@ -932,7 +932,7 @@ siblings.</para>
         to a port that is declared to accept a sequence. A single document is the same as a sequence
         of one document.</para>
       <para>An output port may have more than one connection: it may be connected to more than one
-        input port, more than one of its container&#x2019;s output ports, or both. At runtime this will
+        input port, more than one of its container’s output ports, or both. At runtime this will
         result in the outputs being sent to each of those places.</para>
       <para><termdef xml:id="dt-signature">The <firstterm>signature</firstterm> of a step is the set
           of inputs, outputs, and options that it is declared to accept.</termdef> The declaration
@@ -972,11 +972,11 @@ content types, that they accept, see <xref linkend="specified-content-types"/>.<
 
 <section xml:id="external-docs">
         <title>External Documents</title>
-        <para>It&#x2019;s common for some of the documents used in processing a pipeline to be read from
+        <para>It’s common for some of the documents used in processing a pipeline to be read from
           URIs. Sometimes this occurs directly, for example with a <tag>p:document</tag> element.
           Sometimes it occurs indirectly, for example if an implementation allows the URI of a
           pipeline input to be specified on the command line or if an <tag>p:xslt</tag> step
-          encounters an <tag>xsl:import</tag> in the stylesheet that it is processing. It&#x2019;s also
+          encounters an <tag>xsl:import</tag> in the stylesheet that it is processing. It’s also
           common for some of the documents produced in processing a pipeline to be written to
           locations which have, or at least could have, a URI. </para>
         <para>The process of dereferencing a URI to retrieve a document is often more interesting
@@ -1034,7 +1034,7 @@ content types, that they accept, see <xref linkend="specified-content-types"/>.<
 declared outputs, has no declared outputs and the
 <glossterm>last step</glossterm> in its subpipeline has an unconnected
 primary output, then an implicit primary output port will be added to
-the compound step (and consequently the last step&#x2019;s primary output
+the compound step (and consequently the last step’s primary output
 will be connected to it). This implicit output port has no name. It
 inherits the <tag class="attribute">sequence</tag> and the <tag
 class="attribute">content-types</tag> properties of the port connected
@@ -1105,7 +1105,7 @@ transitively connected to all of the other steps.
 
          <para><termdef xml:id="dt-connection">A <firstterm>connection</firstterm> associates an
                input or output port with some data source.</termdef>  Such a connection represents a
-            binding between the port&#x2019;s name and the data source as described by various locations,
+            binding between the port’s name and the data source as described by various locations,
             inline expressions, or readable ports.</para>
          <para>An input port can be connected to:</para>
          <itemizedlist>
@@ -1391,9 +1391,9 @@ default readable port, the context item is undefined.</para>
           <para>In other words, contained steps can see the inputs to their container.</para>
         </listitem>
         <listitem>
-          <para>The union of all the declared outputs of all of the step&#x2019;s sibling steps are added
+          <para>The union of all the declared outputs of all of the step’s sibling steps are added
             to the <glossterm>readable ports</glossterm>.</para>
-          <para>In other words, sibling steps can see each other&#x2019;s outputs in addition to the
+          <para>In other words, sibling steps can see each other’s outputs in addition to the
             outputs visible to their container.</para>
         </listitem>
         <listitem>
@@ -1441,7 +1441,7 @@ are visible.</para>
                   construct the initial <glossterm>in-scope bindings</glossterm>.</termdef> This environment
                is used in place of the <glossterm>empty environment</glossterm> that might have
                otherwise been provided.</para>
-            <para>An invoked pipeline&#x2019;s <glossterm>initial environment</glossterm> is different from
+            <para>An invoked pipeline’s <glossterm>initial environment</glossterm> is different from
                the environment constructed for the sub-pipeline of a declared step.  The initial
                environment is constructed for the initial invocation of the pipeline by the
                processor outside the application.  Steps that are subsequently invoked construct
@@ -1480,7 +1480,7 @@ variables; on atomic steps, to compute the actual values of options.
         the <literal>source</literal> input of the <tag>p:split-sequence</tag> step is also
         evaluated by the XProc processor.) </para>
       <para>The XPath expression “<literal>@role='chapter'</literal>” is passed literally to the
-          <literal>test</literal> option on the <tag>p:split-sequence</tag> step. That&#x2019;s because the
+          <literal>test</literal> option on the <tag>p:split-sequence</tag> step. That’s because the
         nature of the <tag>p:split-sequence</tag> is that <emphasis>it evaluates</emphasis> the
         expression. Only some options on some steps expect XPath expressions. </para>
 
@@ -1585,7 +1585,7 @@ system properties, which are all in the XProc namespace:</para>
             <term><varname>p:vendor-uri</varname></term>
             <listitem>
               <para>Returns a URI which identifies the vendor of the processor. Often, this is the
-                URI of the vendor&#x2019;s web site.</para>
+                URI of the vendor’s web site.</para>
             </listitem>
           </varlistentry>
           <varlistentry>
@@ -2629,21 +2629,21 @@ Variable names are always expressed as
         …)</type> is processed as follows:</para>
       <itemizedlist>
         <listitem>
-          <para>If the entry&#x2019;s key is of type <type>xs:QName</type>, the entry is left unchanged.</para>
+          <para>If the entry’s key is of type <type>xs:QName</type>, the entry is left unchanged.</para>
         </listitem>
         <listitem>
-          <para>If the entry&#x2019;s key is an instance of type <type>xs:string</type> (or a type derived from
+          <para>If the entry’s key is an instance of type <type>xs:string</type> (or a type derived from
             <type>xs:string</type>) it is transformed into an <type>xs:QName</type> using the <link
               xlink:href="https://www.w3.org/TR/xpath-31/#doc-xpath31-EQName">XPath EQName production rules</link>. That
             is, it can be written as a local-name only, as a prefix plus local-name or as a URI plus local-name (using
             the <code>Q{}</code> syntax).</para>
           <para>
-            <error code="D0061">It is a <glossterm>dynamic error</glossterm> if the entry&#x2019;s key is of type
+            <error code="D0061">It is a <glossterm>dynamic error</glossterm> if the entry’s key is of type
               <type>xs:string</type> and cannot be converted into a <type>xs:QName</type>.</error>
           </para>
         </listitem>
         <listitem>
-          <para>If the entry&#x2019;s key is of any other type, the entry is ignored and will be removed from the map.</para>
+          <para>If the entry’s key is of any other type, the entry is ignored and will be removed from the map.</para>
         </listitem>
       </itemizedlist>
     </section>
@@ -2655,7 +2655,7 @@ Variable names are always expressed as
         namespaces. To see why this is necessary, consider the following step:</para>
       <programlisting language="xml"><xi:include href="../../../build/examples/opns-1.txt" parse="text"/></programlisting>
       <para>The <tag>p:delete</tag> step will delete elements that match the expression “<literal>html:div</literal>”,
-        but that expression can only be correctly interpreted if there&#x2019;s a namespace binding for the prefix
+        but that expression can only be correctly interpreted if there’s a namespace binding for the prefix
           “<literal>html</literal>” so that binding has to travel with the option.</para>
 
       <para>The default namespace bindings associated with a variable or option value are computed as follows:</para>
@@ -2668,7 +2668,7 @@ Variable names are always expressed as
         </listitem>
         <listitem>
           <para>If the <tag class="attribute">select</tag> attribute was used to specify the value and it evaluated to a
-            node-set, then the in-scope namespaces from the first node in the selected node-set (or, if it&#x2019;s not an
+            node-set, then the in-scope namespaces from the first node in the selected node-set (or, if it’s not an
             element, its parent) are used.</para>
           <para>The expression is evaluated in the appropriate context, See <xref linkend="xpath-context"/>.</para>
         </listitem>
@@ -2692,7 +2692,7 @@ Variable names are always expressed as
           <emphasis>both</emphasis> the namespace binding of “<literal>h</literal>” specified in the
           <tag>ex:delete-in-div</tag> pipeline definition <emphasis>and</emphasis> the namespace binding of
           “<literal>html</literal>” specified in the <varname>divchild</varname> option on the call of that pipeline.
-        It&#x2019;s not sufficient to provide just one of the sets of bindings.</para>
+        It’s not sufficient to provide just one of the sets of bindings.</para>
 
       <para>If pipeline authors cannot arrange for all of the necessary namespace bindings to be in scope, then EQNames
         can be used to remove the dependency on namespace bindings:</para>
@@ -2884,7 +2884,7 @@ an error.</para>
           </para>
         </listitem>
         <listitem>
-          <para>Any step types that are in scope for the pipeline&#x2019;s parent
+          <para>Any step types that are in scope for the pipeline’s parent
               <tag>p:declare-step</tag>, if it has one. </para>
         </listitem>
         <listitem>
@@ -2920,7 +2920,7 @@ an error.</para>
       
 <section>
   <title>Scoping of step names</title>
-<para>The scope of the names of the steps (the values of the step&#x2019;s <code>name</code> attributes) is determined by
+<para>The scope of the names of the steps (the values of the step’s <code>name</code> attributes) is determined by
 the <glossterm>environment</glossterm> of each step. In general, the
 name of a step, the names of its sibling steps, the names of any steps
 that it contains directly, the names of its ancestors, and the names
@@ -3324,7 +3324,7 @@ if a step runs longer than its timeout value.</error></para>
 
 <para>The precise amount of time a step takes to perform its task
 depends on many factors (the hardware running the processor, the
-processor&#x2019;s execution strategy, the system load etc.) This feature can
+processor’s execution strategy, the system load etc.) This feature can
 not be used as an exact timing tool in XProc. Developers are advised
 to calculate the value for <tag class="attribute">[p:]timeout</tag>
 generously, so the dynamic error is raised only in extreme cases.</para>
@@ -3362,7 +3362,7 @@ begins.</para>
 
 <para>The description of each element in the pipeline namespace is
 accompanied by a syntactic summary that provides a quick overview of
-the element&#x2019;s syntax:</para>
+the element’s syntax:</para>
 
       <e:rng-fragment name="SomeElement" role="nosummary">
         <grammar xmlns="http://relaxng.org/ns/structure/1.0">
@@ -3638,10 +3638,10 @@ in its subpipeline.
 
 <para>Viewed from the outside, a <tag>p:declare-step</tag> is a black
 box which performs some calculation on its inputs and produces its
-outputs. From the pipeline author&#x2019;s perspective, the computation
+outputs. From the pipeline author’s perspective, the computation
 performed by the pipeline is described in terms of
-<glossterm>contained steps</glossterm> which read the pipeline&#x2019;s
-inputs and produce the pipeline&#x2019;s outputs.</para>
+<glossterm>contained steps</glossterm> which read the pipeline’s
+inputs and produce the pipeline’s outputs.</para>
 
 <para>A <tag>p:declare-step</tag> element can also be nested inside
 other <tag>p:declare-step</tag> or <tag>p:library</tag> elements in
@@ -3782,7 +3782,7 @@ an XML document nor an HTML document.</error></para>
 <para>The <tag class="attribute">match</tag> attribute specifies an
 XSLT <glossterm>selection pattern</glossterm>. Each matching node in
 the source document is wrapped in a document node, as necessary, and
-provided, one at a time, to the viewport&#x2019;s
+provided, one at a time, to the viewport’s
 <glossterm>subpipeline</glossterm> on a port named
 <port>current</port>. The base URI of the resulting document that is
 passed to the subpipeline is the base URI of the matched node.
@@ -3991,7 +3991,7 @@ elements and the <tag>p:otherwise</tag> element are not in
         <e:rng-pattern name="When"/>
         <para>Each <tag>p:when</tag> branch of the <tag>p:choose</tag> has a <tag class="attribute"
             >test</tag> attribute which <rfc2119>must</rfc2119> contain an XPath expression. That
-          XPath expression&#x2019;s effective boolean value is the guard for the
+          XPath expression’s effective boolean value is the guard for the
             <glossterm>subpipeline</glossterm> contained within that
           <tag>p:when</tag>.</para>
 
@@ -4036,7 +4036,7 @@ preceding <tag>p:when</tag> evaluates to true.</para>
 
 <para>The <tag>p:if</tag> step has a <tag class="attribute">test</tag>
 attribute which <rfc2119>must</rfc2119> contain an XPath expression.
-That XPath expression&#x2019;s effective boolean value is the guard for the
+That XPath expression’s effective boolean value is the guard for the
 <glossterm>subpipeline</glossterm> contained within it.
 </para>
 
@@ -4144,7 +4144,7 @@ If there is no matching recovery subpipeline, the <tag>p:try</tag> fails.
 
 <note>
 <para>If the initial subpipeline fails, none of its outputs will be
-visible outside of the <tag>p:try</tag>, but it&#x2019;s still possible for
+visible outside of the <tag>p:try</tag>, but it’s still possible for
 steps in the partially evaluated pipeline to have side effects that
 are visible outside the processor. For example, a web server might
 record that some interaction was performed, or a file on the local
@@ -4300,7 +4300,7 @@ is added to the <glossterm>readable ports</glossterm>
 on the <tag>p:catch</tag>.</para>
 </listitem>
   <listitem>
-    <para>Output ports and variables from the <tag>p:try</tag>&#x2019;s subpipeline are not available.</para>
+    <para>Output ports and variables from the <tag>p:try</tag>’s subpipeline are not available.</para>
   </listitem>
 </itemizedlist>
 
@@ -4356,7 +4356,7 @@ is added to the <glossterm>readable ports</glossterm>
 on the <tag>p:finally</tag>.</para>
 </listitem>
   <listitem>
-    <para>Output ports and variables from the <tag>p:try</tag>&#x2019;s subpipeline are not available.</para>
+    <para>Output ports and variables from the <tag>p:try</tag>’s subpipeline are not available.</para>
   </listitem>
 </itemizedlist>
 
@@ -4746,7 +4746,7 @@ is a binding for the specified port. If no port is specified, then:</para>
 <itemizedlist>
 <listitem>
 <para>In a <tag>p:viewport</tag> or <tag>p:for-each</tag>, it is a
-binding for the step&#x2019;s single, <glossterm>anonymous input</glossterm> port.</para>
+binding for the step’s single, <glossterm>anonymous input</glossterm> port.</para>
 </listitem>
 <listitem>
 <para>In a <tag>p:choose</tag>, <tag>p:when</tag> or <tag>p:if</tag>, it is a
@@ -5066,7 +5066,7 @@ document</emphasis> and provide it on the output port. It
     <title>Serialization parameters</title>
     
     <!-- This ID exists so that old links to the p.serialization section
-     will come here. Not that it will matter, but that&#x2019;s why.
+     will come here. Not that it will matter, but that’s why.
 -->
     <para xml:id="p.serialization">The <tag class="attribute">serialization</tag> attribute
       allows the user to request serialization parameters on an output port. These parameters
@@ -5112,7 +5112,7 @@ document</emphasis> and provide it on the output port. It
           <glossterm>implementation-defined</glossterm>.</impl></para>
       
       <para>If the serialization parameter <literal>method</literal> is not specified, the
-        processor <rfc2119>should</rfc2119> select a method based on the document&#x2019;s
+        processor <rfc2119>should</rfc2119> select a method based on the document’s
         <literal>content-type</literal> property:</para>
       
       <itemizedlist>
@@ -5254,7 +5254,7 @@ XProc sequence type, see <xref linkend="varopt-types"/>.
 </varlistentry>
 <varlistentry><term><tag class="attribute">select</tag></term>
 <listitem>
-<para>The variable&#x2019;s value is specified with a
+<para>The variable’s value is specified with a
 <tag class="attribute">select</tag> attribute. The
 <tag class="attribute">select</tag> attribute <rfc2119>must</rfc2119> be
 specified. The content of the <tag class="attribute">select</tag>
@@ -5619,7 +5619,7 @@ See <xref linkend="statics"/>.</para>
       syntax:</para>
     
     <programlisting language="xml"><![CDATA[<ex:stepType>
-  <p:with-option name="option-name" select="&#x2019;some value'"/>
+  <p:with-option name="option-name" select="'some value'"/>
 </ex:stepType>]]></programlisting>
     
     <para>The second step uses the syntactic shortcut:</para>
@@ -5640,22 +5640,22 @@ See <xref linkend="statics"/>.</para>
       </listitem>
     </orderedlist>
     
-    <para>For the value of an option&#x2019;s syntactic shortcut attribute, the following applies:</para>
+    <para>For the value of an option’s syntactic shortcut attribute, the following applies:</para>
     <itemizedlist>
       <listitem>
-              <para><termdef xml:id="dt-map-attribute">A <firstterm>map attribute</firstterm> is an option&#x2019;s syntactic
-                  shortcut attribute for which the option&#x2019;s sequence type is a map or array.</termdef> The attribute&#x2019;s value
+              <para><termdef xml:id="dt-map-attribute">A <firstterm>map attribute</firstterm> is an option’s syntactic
+                  shortcut attribute for which the option’s sequence type is a map or array.</termdef> The attribute’s value
                 is interpreted directly as an XPath expression, which must result in a value of the applicable
                 datatype.</para>
         
       </listitem>
       <listitem>
-        <para>For any other option&#x2019;s sequence type it is considered an <glossterm>attribute value template</glossterm>.
+        <para>For any other option’s sequence type it is considered an <glossterm>attribute value template</glossterm>.
                 The context node for the attribute value template comes from the default readable port for the step on
                 which they occur. If there is no such port, the context node is undefined.</para>
        
-            <para>The attribute&#x2019;s string value, after the attribute value template expansion, is used as
-              the value of the option. It must be possible to convert this string to the option&#x2019;s sequence type.</para>
+            <para>The attribute’s string value, after the attribute value template expansion, is used as
+              the value of the option. It must be possible to convert this string to the option’s sequence type.</para>
       </listitem>
     </itemizedlist>
     
@@ -5746,7 +5746,7 @@ namespace.
 <varlistentry><term><tag class="attribute">psvi-required</tag></term>
 <listitem>
 <para>The <tag class="attribute">psvi-required</tag> attribute allows
-the author to declare that a step relies on the processor&#x2019;s ability to
+the author to declare that a step relies on the processor’s ability to
 pass PSVI annotations between steps,
 see <xref linkend="psvi-support"/>.
 If the attribute is not specified, the value
@@ -5923,7 +5923,7 @@ See <xref linkend="versioning-considerations"/>.</para>
             <glossterm>static error</glossterm> if the requested XPath version is less 
             than “<literal>3.1</literal>”</error>.</para>
         <para>The <tag class="attribute">psvi-required</tag> attribute allows the author to declare
-          that a step relies on the processor&#x2019;s ability to pass PSVI annotations between steps, see
+          that a step relies on the processor’s ability to pass PSVI annotations between steps, see
             <xref linkend="psvi-support"/>. If the attribute is not specified, the value
             “<literal>false</literal>” is assumed. </para>
       <para>For a description of <tag class="attribute">psvi-required</tag>, see <xref
@@ -6089,7 +6089,7 @@ the <tag>p:pipe</tag>.</error></para>
 <para>A <tag>p:pipe</tag> that is a <glossterm>connection</glossterm>
 for an <tag>p:output</tag> of a <glossterm>compound step</glossterm>
 may connect to one of the readable ports of the compound step or to an
-output port on one of the compound step&#x2019;s <glossterm>contained
+output port on one of the compound step’s <glossterm>contained
 steps</glossterm>. In other words, the output of a compound step can
 simply be a copy of one of the available inputs or it can be the
 output of one of its children.</para>
@@ -6117,7 +6117,7 @@ the <tag class="attribute">document-properties</tag> attribute
 can be used to set the <glossterm>document properties</glossterm> of
 the provided document.</para>
 
-<para>The document&#x2019;s content type is determined statically.
+<para>The document’s content type is determined statically.
 If a <tag class="attribute">content-type</tag> is specified, that is the
 content type. Otherwise, the content type is
 “<literal>application/xml</literal>”.
@@ -6137,7 +6137,7 @@ error</glossterm> if the base URI is not both absolute and valid according to <b
 linkend="rfc3986"/>.</error></para>
 
 <para>How the content of a <tag>p:inline</tag>
-element is interpreted depends on the document&#x2019;s content type and the
+element is interpreted depends on the document’s content type and the
 <tag class="attribute">encoding</tag> attribute.
 </para>
 
@@ -6190,7 +6190,7 @@ value templates are never expanded. The value of
 <tag class="attribute">[p:]expand-text</tag> is irrelevant and always ignored.</para>
 
 <para>The interpretation of the (possibly decoded) content
-depends on the document&#x2019;s content type.
+depends on the document’s content type.
 </para>
   <note>
     <para>In the presence of
@@ -6304,7 +6304,7 @@ depends on the document&#x2019;s content type.
 <section xml:id="inline-text">
 <title>Inline text content</title>
 
-<para>If the document&#x2019;s content type is a <glossterm>text media
+<para>If the document’s content type is a <glossterm>text media
   type</glossterm>, then the content is text. A new text document is created by 
   joining the text nodes which appear as children of p:inline together to a single
   text node and wrapping a document node around it. Any preceding or following whitespace-only 
@@ -6315,7 +6315,7 @@ depends on the document&#x2019;s content type.
 <section xml:id="inline-json">
   <title>Inline JSON content</title>
   
-<para>If the document&#x2019;s content type is a <glossterm>JSON media type</glossterm>,
+<para>If the document’s content type is a <glossterm>JSON media type</glossterm>,
 then the context is JSON. A new JSON document is created by joining the 
 text values of children of p:inline together and parse it as JSON.</para>
   
