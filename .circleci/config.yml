@@ -1,0 +1,46 @@
+version: 2
+jobs:
+  build:
+    machine:
+      image: ubuntu-1604:202004-01
+
+    java:
+      version: oraclejdk8
+
+    working_directory: ~/repo
+
+    environment:
+      JVM_OPTS: -Xmx16g
+      TERM: dumb
+
+    steps:
+      - add_ssh_keys:
+          fingerprints:
+            - "86:ac:7c:fd:0c:f9:40:71:20:9f:8f:99:41:7b:d8:5a"
+
+      - checkout
+
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "build.gradle" }}
+            - v1-dependencies-
+
+      - run: ./gradlew dependencies
+
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: v1-dependencies-{{ checksum "build.gradle" }}
+
+      - run: ./gradlew
+
+      - run: ./.circleci/publish.sh
+
+workflows:
+  version: 2
+  publish:
+    jobs:
+      - build:
+          filters:
+            branches:
+              ignore: gh-pages
