@@ -1,0 +1,25 @@
+version: 2
+jobs:
+  build:
+    machine:
+      image: ubuntu-1604:202004-01
+
+    java:
+      version: oraclejdk8
+
+    working_directory: ~/repo
+
+    environment:
+      TERM: dumb
+
+    steps:
+      - run: echo ignore-gh-branch
+
+workflows:
+  version: 2
+  publish:
+    jobs:
+      - build:
+          filters:
+            branches:
+              ignore: gh-pages
