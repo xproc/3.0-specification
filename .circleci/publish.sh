@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -x
-
 if [ "$CIRCLE_BRANCH" = "" ]; then
     # It appears that CircleCI doesn't set CIRCLE_BRANCH for tagged builds.
     # Assume we're doing them on the master branch, I guess.
@@ -42,17 +40,12 @@ tar cf - . | gzip > /tmp/home.$$.tar.gz
 popd > /dev/null
 
 # Switch to the gh-pages branch
-echo "Start"
-ls -l
 git checkout --track origin/gh-pages
-echo "Checkout"
-ls -l
-git fetch origin
-git rebase origin/gh-pages
-echo "Rebase"
-ls -l
 
-rm -rf ./${BRANCH}/${TIP}
+# We have to be very careful about what we delete because
+# this is updated by different repositories. Only delete
+# what *this* repo creates.
+rm -rf ./${BRANCH}/${TIP}/overview ./${BRANCH}/${TIP}/xproc
 mkdir -p ./${BRANCH}/${TIP}
 
 # Unpack the website files
