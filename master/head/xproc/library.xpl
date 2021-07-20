@@ -22,7 +22,7 @@
                primary="true"
                content-types="any"
                sequence="true"/>
-      <p:input port="manifest" content-types="application/xml" sequence="true">
+      <p:input port="manifest" content-types="xml" sequence="true">
          <p:empty/>
       </p:input>
       <p:input port="archive" content-types="any" sequence="true">
@@ -49,18 +49,19 @@
       <p:option name="format" as="xs:QName?"/>
       <p:option name="parameters" as="xs:string"/>
       <p:option name="relative-to" as="xs:anyURI?"/>
+      <p:option name="override-content-types" as="xs:string"/>
    </p:declare-step>
    <p:declare-step type="p:cast-content-type" xml:id="cast-content-type">
-      <p:input port="source" content-types="*/*"/>
-      <p:output port="result" content-types="*/*"/>
+      <p:input port="source" content-types="any"/>
+      <p:output port="result" content-types="any"/>
       <p:option name="content-type" required="true" as="xs:string"/>
       <p:option name="parameters" as="xs:string"/>
    </p:declare-step>
    <p:declare-step type="p:compare" xml:id="compare">
-      <p:input port="source" primary="true" content-types="*/*"/>
-      <p:input port="alternate" content-types="*/*"/>
+      <p:input port="source" primary="true" content-types="any"/>
+      <p:input port="alternate" content-types="any"/>
       <p:output port="result" content-types="application/xml"/>
-      <p:output port="differences" content-types="*/*" sequence="true"/>
+      <p:output port="differences" content-types="any" sequence="true"/>
       <p:option name="parameters" as="xs:string"/>
       <p:option name="method" as="xs:QName?"/>
       <p:option name="fail-if-not-equal" as="xs:boolean" select="false()"/>
@@ -79,13 +80,16 @@
       <p:option name="parameters" as="xs:string"/>
    </p:declare-step>
    <p:declare-step type="p:count" xml:id="count">
-      <p:input port="source" content-types="*/*" sequence="true"/>
+      <p:input port="source" content-types="any" sequence="true"/>
       <p:output port="result" content-types="application/xml"/>
       <p:option name="limit" as="xs:integer" select="0"/>
    </p:declare-step>
    <p:declare-step type="p:css-formatter" xml:id="css-formatter">
-      <p:input port="source" content-types="application/xml text/xml */*+xml"/>
-      <p:output port="result" content-types="*/*"/>
+      <p:input port="source" content-types="xml html"/>
+      <p:input port="stylesheet" content-types="text" sequence="true">
+         <p:empty/>
+      </p:input>
+      <p:output port="result" content-types="any"/>
       <p:option name="parameters" as="xs:string"/>
       <p:option name="content-type" as="xs:string?"/>
    </p:declare-step>
@@ -104,22 +108,19 @@
       <p:option name="max-depth" as="xs:string?" select="'1'"/>
       <p:option name="include-filter" as="xs:string*"/>
       <p:option name="exclude-filter" as="xs:string*"/>
+      <p:option name="override-content-types" as="xs:string"/>
    </p:declare-step>
    <p:declare-step type="p:error" xml:id="error">
       <p:input port="source" sequence="true" content-types="text xml"/>
       <p:output port="result" sequence="true" content-types="any"/>
       <p:option name="code" required="true" as="xs:QName"/>
    </p:declare-step>
-   <p:declare-step type="p:escape-markup" xml:id="escape-markup">
-      <p:input port="source" content-types="xml html"/>
-      <p:output port="result" content-types="xml html"/>
-      <p:option name="serialization" as="xs:string"/>
-   </p:declare-step>
    <p:declare-step type="p:file-copy" xml:id="file-copy">
       <p:output port="result" primary="true" content-types="application/xml"/>
       <p:option name="href" required="true" as="xs:anyURI"/>
       <p:option name="target" required="true" as="xs:anyURI"/>
       <p:option name="fail-on-error" as="xs:boolean" select="true()"/>
+      <p:option name="overwrite" as="xs:boolean" select="true()"/>
    </p:declare-step>
    <p:declare-step type="p:file-create-tempfile" xml:id="file-create-tempfile">
       <p:output port="result" primary="true" content-types="application/xml"/>
@@ -139,6 +140,7 @@
       <p:output port="result" primary="true" content-types="application/xml"/>
       <p:option name="href" required="true" as="xs:anyURI"/>
       <p:option name="fail-on-error" as="xs:boolean" select="true()"/>
+      <p:option name="override-content-types" as="xs:string"/>
    </p:declare-step>
    <p:declare-step type="p:file-mkdir" xml:id="file-mkdir">
       <p:output port="result" primary="true" content-types="application/xml"/>
@@ -178,9 +180,19 @@
       <p:option name="version" as="xs:string?"/>
    </p:declare-step>
    <p:declare-step type="p:http-request" xml:id="http-request">
-      <p:input port="source" content-types="*/*"/>
-      <p:output port="result" sequence="true" content-types="*/*"/>
+      <p:input port="source" content-types="any" sequence="true"/>
+      <p:output port="result"
+                primary="true"
+                content-types="any"
+                sequence="true"/>
+      <p:output port="report" content-types="application/json"/>
+      <p:option name="href" as="xs:anyURI" required="true"/>
+      <p:option name="method" as="xs:string?" select="'GET'"/>
       <p:option name="serialization" as="xs:string"/>
+      <p:option name="headers" as="xs:string"/>
+      <p:option name="auth" as="xs:string"/>
+      <p:option name="parameters" as="xs:string"/>
+      <p:option name="assert" as="xs:string" select="'.?status-code lt 400'"/>
    </p:declare-step>
    <p:declare-step type="p:identity" xml:id="identity">
       <p:input port="source" sequence="true" content-types="any"/>
@@ -231,7 +243,7 @@
       <p:option name="replace" as="xs:boolean" select="true()"/>
    </p:declare-step>
    <p:declare-step type="p:load" xml:id="load">
-      <p:output port="result" sequence="true" content-types="any"/>
+      <p:output port="result" content-types="any"/>
       <p:option name="href" required="true" as="xs:anyURI"/>
       <p:option name="parameters" as="xs:string"/>
       <p:option name="content-type" as="xs:string?"/>
@@ -247,14 +259,8 @@
       <p:option name="base-uri" as="xs:anyURI?"/>
    </p:declare-step>
    <p:declare-step type="p:markdown-to-html" xml:id="markdown-to-html">
-      <p:input port="source"
-               primary="true"
-               sequence="false"
-               content-types="text/*"/>
-      <p:output port="result"
-                primary="true"
-                sequence="false"
-                content-types="application/xhtml+xml"/>
+      <p:input port="source" primary="true" content-types="text"/>
+      <p:output port="result" primary="true" content-types="html"/>
       <p:option name="parameters" as="xs:string"/>
    </p:declare-step>
    <p:declare-step type="p:namespace-delete" xml:id="namespace-delete">
@@ -273,24 +279,17 @@
                 values="('all','elements','attributes')"/>
    </p:declare-step>
    <p:declare-step type="p:os-exec" xml:id="os-exec">
-      <p:input port="source"
-               primary="true"
-               sequence="true"
-               content-types="*/*"/>
-      <p:output port="result" primary="true" content-types="*/*"/>
-      <p:output port="errors"/>
-      <p:output port="exit-status"/>
+      <p:input port="source" sequence="true" content-types="any"/>
+      <p:output port="result" primary="true" content-types="any"/>
+      <p:output port="error" content-types="any"/>
+      <p:output port="exit-status" content-types="application/xml"/>
       <p:option name="command" required="true" as="xs:string"/>
-      <p:option name="args" select="''" as="xs:string"/>
+      <p:option name="args" select="()" as="xs:string*"/>
       <p:option name="cwd" as="xs:string?"/>
-      <p:option name="source-is-xml" select="true()" as="xs:boolean"/>
-      <p:option name="result-is-xml" select="true()" as="xs:boolean"/>
-      <p:option name="wrap-result-lines" select="false()" as="xs:boolean"/>
-      <p:option name="errors-is-xml" select="false()" as="xs:boolean"/>
-      <p:option name="wrap-error-lines" select="false()" as="xs:boolean"/>
+      <p:option name="result-content-type" select="'text/plain'" as="xs:string"/>
+      <p:option name="error-content-type" select="'text/plain'" as="xs:string"/>
       <p:option name="path-separator" as="xs:string?"/>
       <p:option name="failure-threshold" as="xs:integer?"/>
-      <p:option name="arg-separator" select="' '" as="xs:string"/>
       <p:option name="serialization" as="xs:string"/>
    </p:declare-step>
    <p:declare-step type="p:os-info" xml:id="os-info">
@@ -327,8 +326,8 @@
       <p:input port="source"
                primary="true"
                sequence="true"
-               content-types="*/*"/>
-      <p:output port="result" primary="true" content-types="*/*"/>
+               content-types="any"/>
+      <p:output port="result" primary="true" content-types="any"/>
    </p:declare-step>
    <p:declare-step type="p:set-attributes" xml:id="set-attributes">
       <p:input port="source" primary="true" content-types="xml html"/>
@@ -349,12 +348,12 @@
       <p:input port="source" content-types="any" sequence="true"/>
    </p:declare-step>
    <p:declare-step type="p:split-sequence" xml:id="split-sequence">
-      <p:input port="source" content-types="xml html" sequence="true"/>
+      <p:input port="source" content-types="any" sequence="true"/>
       <p:output port="matched"
                 sequence="true"
                 primary="true"
-                content-types="xml html"/>
-      <p:output port="not-matched" sequence="true" content-types="xml html"/>
+                content-types="any"/>
+      <p:output port="not-matched" sequence="true" content-types="any"/>
       <p:option name="initial-only" as="xs:boolean" select="false()"/>
       <p:option name="test"
                 required="true"
@@ -402,14 +401,8 @@
       <p:option name="count" required="true" as="xs:integer"/>
    </p:declare-step>
    <p:declare-step type="p:text-join" xml:id="text-join">
-      <p:output port="source"
-                primary="true"
-                sequence="true"
-                content-types="text"/>
-      <p:output port="result"
-                primary="true"
-                sequence="false"
-                content-types="text"/>
+      <p:input port="source" sequence="true" content-types="text"/>
+      <p:output port="result" content-types="text"/>
       <p:option name="separator" as="xs:string?"/>
       <p:option name="prefix" as="xs:string?"/>
       <p:option name="suffix" as="xs:string?"/>
@@ -479,6 +472,7 @@
       <p:option name="format" as="xs:QName?"/>
       <p:option name="parameters" as="xs:string"/>
       <p:option name="relative-to" as="xs:anyURI?"/>
+      <p:option name="override-content-types" as="xs:string"/>
    </p:declare-step>
    <p:declare-step type="p:uncompress" xml:id="uncompress">
       <p:input port="source"
@@ -491,15 +485,9 @@
                 sequence="false"/>
       <p:option name="format" as="xs:QName?"/>
       <p:option name="parameters" as="xs:string"/>
-      <p:option name="content-type" as="xs:string" select="'application/binary'"/>
-   </p:declare-step>
-   <p:declare-step type="p:unescape-markup" xml:id="unescape-markup">
-      <p:input port="source" content-types="xml html"/>
-      <p:output port="result" content-types="xml html"/>
-      <p:option name="namespace" as="xs:anyURI?"/>
-      <p:option name="content-type" as="xs:string" select="'application/xml'"/>
-      <p:option name="encoding" as="xs:string?"/>
-      <p:option name="charset" as="xs:string?"/>
+      <p:option name="content-type"
+                as="xs:string"
+                select="'application/octet-stream'"/>
    </p:declare-step>
    <p:declare-step type="p:unwrap" xml:id="unwrap">
       <p:input port="source" content-types="xml html"/>
@@ -521,36 +509,41 @@
    <p:declare-step type="p:validate-with-nvdl" xml:id="validate-with-nvdl">
       <p:input port="source" primary="true" content-types="xml html"/>
       <p:input port="nvdl" content-types="xml"/>
-      <p:input port="schemas" sequence="true" content-types="text xml"/>
+      <p:input port="schemas" sequence="true" content-types="text xml">
+         <p:empty/>
+      </p:input>
       <p:output port="result" primary="true" content-types="xml html"/>
-      <p:output port="report" sequence="true" content-types="application/xml json"/>
+      <p:output port="report" sequence="true" content-types="xml json"/>
       <p:option name="assert-valid" select="true()" as="xs:boolean"/>
+      <p:option name="report-format" select="'xvrl'" as="xs:string"/>
       <p:option name="parameters" as="xs:string"/>
    </p:declare-step>
    <p:declare-step type="p:validate-with-relax-ng" xml:id="validate-with-relax-ng">
       <p:input port="source" primary="true" content-types="xml html"/>
       <p:input port="schema" content-types="text xml"/>
       <p:output port="result" primary="true" content-types="xml html"/>
-      <p:output port="report" sequence="true" content-types="application/xml json"/>
+      <p:output port="report" sequence="true" content-types="xml json"/>
       <p:option name="dtd-attribute-values" select="false()" as="xs:boolean"/>
       <p:option name="dtd-id-idref-warnings" select="false()" as="xs:boolean"/>
       <p:option name="assert-valid" select="true()" as="xs:boolean"/>
+      <p:option name="report-format" select="'xvrl'" as="xs:string"/>
       <p:option name="parameters" as="xs:string"/>
    </p:declare-step>
    <p:declare-step type="p:validate-with-schematron" xml:id="validate-with-schematron">
       <p:input port="source" primary="true" content-types="xml html"/>
       <p:input port="schema" content-types="xml"/>
-      <p:output port="result" primary="true" content-types="application/xml"/>
-      <p:output port="report" sequence="true" content-types="application/xml json"/>
+      <p:output port="result" primary="true" content-types="xml html"/>
+      <p:output port="report" sequence="true" content-types="xml json"/>
       <p:option name="parameters" as="xs:string"/>
       <p:option name="phase" select="'#DEFAULT'" as="xs:string"/>
       <p:option name="assert-valid" select="true()" as="xs:boolean"/>
+      <p:option name="report-format" select="'svrl'" as="xs:string"/>
    </p:declare-step>
    <p:declare-step type="p:validate-with-xml-schema" xml:id="validate-with-xml-schema">
       <p:input port="source" primary="true" content-types="xml html"/>
       <p:input port="schema" sequence="true" content-types="xml"/>
       <p:output port="result" primary="true" content-types="xml html"/>
-      <p:output port="report" sequence="true" content-types="application/xml json"/>
+      <p:output port="report" sequence="true" content-types="xml json"/>
       <p:option name="use-location-hints" select="false()" as="xs:boolean"/>
       <p:option name="try-namespaces" select="false()" as="xs:boolean"/>
       <p:option name="assert-valid" select="true()" as="xs:boolean"/>
@@ -560,6 +553,7 @@
                 as="xs:token"
                 values="('strict','lax')"/>
       <p:option name="version" as="xs:string?"/>
+      <p:option name="report-format" select="'xvrl'" as="xs:string"/>
    </p:declare-step>
    <p:declare-step type="p:wrap" xml:id="wrap">
       <p:input port="source" content-types="xml html"/>
@@ -602,8 +596,8 @@
       <p:option name="version" as="xs:string?"/>
    </p:declare-step>
    <p:declare-step type="p:xsl-formatter" xml:id="xsl-formatter">
-      <p:input port="source" content-types="application/xml text/xml */*+xml"/>
-      <p:output port="result" content-types="*/*"/>
+      <p:input port="source" content-types="xml"/>
+      <p:output port="result" content-types="any"/>
       <p:option name="parameters" as="xs:string"/>
       <p:option name="content-type" as="xs:string?"/>
    </p:declare-step>
@@ -619,7 +613,9 @@
                 content-types="any"/>
       <p:output port="secondary" sequence="true" content-types="any"/>
       <p:option name="parameters" as="xs:string"/>
+      <p:option name="static-parameters" as="xs:string"/>
       <p:option name="global-context-item" as="xs:string"/>
+      <p:option name="populate-default-collection" as="xs:boolean?" select="true()"/>
       <p:option name="initial-mode" as="xs:QName?"/>
       <p:option name="template-name" as="xs:QName?"/>
       <p:option name="output-base-uri" as="xs:anyURI?"/>
