@@ -19,7 +19,7 @@ buildscript {
     classpath group: 'com.xmlcalabash', name: 'xmlcalabash1-print', version: '1.1.5'
     classpath group: 'com.xmlcalabash', name: 'xmlcalabash1-gradle', version: '1.4.0'
     classpath group: 'com.xmlcalabash', name: 'xmlcalabash', version: '1.1.30-99'
-    classpath group: 'org.xmlresolver', name: 'xmlresolver', version: '1.0.6'
+    classpath group: 'org.xmlresolver', name: 'xmlresolver', version: '3.0.2'
   }
 }
 
@@ -37,7 +37,7 @@ repositories {
 configurations.all {
   resolutionStrategy {
     force 'xml-apis:xml-apis:1.4.01'
-    force 'org.xmlresolver:xmlresolver:1.0.1'
+    force 'org.xmlresolver:xmlresolver:3.0.2'
   }
 }
 
@@ -144,6 +144,16 @@ schemaList.each { schema ->
   t.onlyIf { ! file("$buildDir/$schema".toString()).exists() }
   spec_schemas.dependsOn t
 }
+
+// This isn't *really* a schema, but it comes from the same repo
+task download_library_xpl(type: Download) {
+  src "$grammarBaseUri/xproc-3.0/library.xpl"
+  dest "$buildDir/"
+  doFirst { mkdir "$buildDir" }
+}
+download_library_xpl.onlyIf { ! file("$buildDir/library.xpl".toString()).exists() }
+spec_schemas.dependsOn download_library_xpl
+
 
 // ======================================================================
 // ToC files for step specifications; again just make sure they're 
@@ -271,10 +281,26 @@ task xproc_pdf(dependsOn: [ "xproc_pdf_xform" ], type: XMLCalabashTask) {
   pipeline "tools/xpl/css-format.xpl"
 }
 
-task xproc_assets(dependsOn: [ "xproc:images", "xproc_web_assets", "xproc_schemas" ],
-                  type: Copy) {
-  from "xproc/build/graphics"
-  into "build/dist/xproc/graphics/"
+task xproc_assets(dependsOn: [ "xproc:images", "xproc_web_assets", "xproc_schemas",
+                               "spec_schemas" ]) {
+  doLast {
+    copy {
+      from "xproc/build/graphics"
+      into "build/dist/xproc/graphics/"
+    }
+  }
+
+  doLast {
+    copy {
+      into "build/dist/xproc"
+      from ("${buildDir}") {
+        include "library.xpl"
+        include "xproc.rn*"
+        include "xproc10.rn*"
+        include "xproc30.rnc*"
+      }
+    }
+  }
 }
 
 task xproc_web_assets(type: Copy) {
