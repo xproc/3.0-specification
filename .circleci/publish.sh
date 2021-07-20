@@ -62,6 +62,6 @@ date +"%d %B %Y" > pubdate
 
 git add --verbose -f pubdate homepage index.html $BRANCH/$TIP
 git commit -m "Successful CircleCI build $CIRCLE_BUILD_NUM"
-#git push -fq origin gh-pages > /dev/null
+git push -fq origin gh-pages > /dev/null
 
 echo "Published specification to gh-pages."
