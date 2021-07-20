@@ -44,9 +44,6 @@ git checkout --track origin/gh-pages
 git fetch origin
 git rebase origin/gh-pages
 
-# Delete any untracked files
-git clean -d -f
-
 rm -rf ./${BRANCH}/${TIP}
 mkdir -p ./${BRANCH}/${TIP}
 
@@ -62,7 +59,7 @@ rm /tmp/home.$$.tar.gz
 
 date +"%d %B %Y" > pubdate
 
-git add --verbose -f .
+git add --verbose -f pubdate homepage index.html $BRANCH/$TIP
 git commit -m "Successful CircleCI build $CIRCLE_BUILD_NUM"
 #git push -fq origin gh-pages > /dev/null
 
