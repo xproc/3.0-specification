@@ -87,6 +87,10 @@
 	<xsl:when test="not($rngpat/rng:element/@name)">
 	  <!-- special case -->
 	  <xsl:choose>
+	    <xsl:when test="ancestor::db:section[@xml:id='p.extension']"
+		      xmlns:db="http://docbook.org/ns/docbook">
+	      <xsl:attribute name="prefix" select="'ext'"/>
+            </xsl:when>
 	    <xsl:when test="ancestor::db:section[@xml:id='p.atomic']"
 		      xmlns:db="http://docbook.org/ns/docbook">
 	      <xsl:attribute name="prefix" select="'p'"/>
