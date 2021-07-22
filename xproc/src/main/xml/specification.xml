@@ -1163,6 +1163,52 @@ value template in a <tag>p:inline</tag>.
             possibilities for this connection is exactly the same set as for any other input port
             within the current <glossterm>environment</glossterm>.</para>
 
+   <section xml:id="connecting-the-drp">
+<title>Connections and the Default Readable Port</title>
+
+<para>The <glossterm>default readable port</glossterm> is a
+convenience for pipeline authors. In the pipeline document which
+describes a pipeline, steps are often represented with sequential
+elements and it is very common for the output of one step to form the
+natural input to the step described by its immediately following
+sibling. Consider the following fragment:</para>
+
+<programlisting language="xml"><![CDATA[<p:add-xml-base/>
+
+<p:add-attribute attribute-name="element-count"
+                 attribute-value="{count(/*/*)}"/>]]></programlisting>
+
+<para>The output from the add XML base step is the natural input to the
+add-attribute step. That’s the source for both the document that will
+be processed by the step and the document that will be used as the
+context item for the expression in the
+<tag class="attribute">attribute-value</tag> attribute.</para>
+
+<para>That establishes a connection between the add XML base step and the
+add-attribute step.</para>
+
+<para>However, unlike an explicit binding which
+<emphasis>always</emphasis> forms a connection, the default readable
+port doesn’t <emphasis>have</emphasis> to form a connection. If the
+processor can determine that the default readable port is not used,
+then it can forgo the connection and the steps can run in parallel.</para>
+
+<para>Consider the following fragment:</para>
+
+<programlisting language="xml"><![CDATA[<p:add-xml-base/>
+
+<p:add-attribute attribute-name="class"
+                 attribute-value="homepage">
+  <p:with-input port="source">
+    <p:document href="http://example.com/"/>
+  </p:with-input>]]></programlisting>
+
+<para>The output of the add XML base step is still the default readable
+port, but it isn’t the source for the add-attribute step nor is the
+context item used in evaluating the
+<tag class="attribute">attribute-value</tag> attribute, so the processor may omit the
+connection.</para>
+   </section>
 
       <section xml:id="namespace-fixup">
         <title>Namespace Fixup on XML Outputs</title>
