@@ -1179,12 +1179,13 @@ sibling. Consider the following fragment:</para>
                  attribute-value="{count(/*/*)}"/>]]></programlisting>
 
 <para>The output from the add XML base step is the natural input to the
-add-attribute step. That’s the source for both the document that will
-be processed by the step and the document that will be used as the
+add-attribute step. The add XML step is the source for both the document that will
+be processed by the add-attribute step and the document that will be used as the
 context item for the expression in the
 <tag class="attribute">attribute-value</tag> attribute.</para>
 
-<para>That establishes a connection between the add XML base step and the
+<para>The fact that the output of the default readable port is used by the following
+step establishes a connection between the add XML base step and the
 add-attribute step.</para>
 
 <para>However, unlike an explicit binding which
@@ -1203,11 +1204,71 @@ then it can forgo the connection and the steps can run in parallel.</para>
     <p:document href="http://example.com/"/>
   </p:with-input>]]></programlisting>
 
-<para>The output of the add XML base step is still the default readable
-port, but it isn’t the source for the add-attribute step nor is the
-context item used in evaluating the
-<tag class="attribute">attribute-value</tag> attribute, so the processor may omit the
-connection.</para>
+<para>The output of the add XML base step is still the default
+readable port, but it isn’t the source for the add-attribute step nor
+is the context item used in evaluating the
+<tag class="attribute">attribute-value</tag> option (or any other option,
+including the default values of unspecified options), so the processor may
+omit the connection. This leads to increased parallelism and possibly
+improved performance.</para>
+
+<para>However, it can cause unexpected results when steps have
+side-effects. Consider this slightly contrived pipeline
+fragment:</para>
+
+<programlisting language="xml"><![CDATA[<p:file-touch href="tempdoc.stamp"/>
+
+<p:file-copy href="tempdoc.stamp" target="time.stamp"/>
+
+<p:file-delete href="tempdoc.stamp"/>]]></programlisting>
+
+<para>Each of the file steps has a primary output port and
+consequently provides a <glossterm>default readable port</glossterm>
+to the following step. Even though the file steps don’t have input
+ports, the document on the default readable port is the context item
+for evaluating the options on each step.</para>
+
+<para>An implementation that did no additional analysis of the options
+would conclude that there are bindings between these steps and run
+them in the order the author expects: touch, followed by copy,
+followed by delete. However, such an implementation would miss many
+opportunities for parallelism in pipelines.</para>
+
+<para>An implementation that did more analysis would observe that none
+of the options use the context item (and there are no inputs, as we
+already observed). Consequently, that implementation could conclude
+that there are no connections between these steps and that they can be
+run in an arbitrary order, or even in parallel. Running delete,
+followed by copy, followed by touch would be perfectly correct but
+would not have the side-effects expected by the pipeline
+author.</para>
+
+<para>There’s a trade-off here between giving implementations the
+freedom to execute pipelines more efficiently and not violating user
+expectations. In practice, this problem only arises when scheduling
+steps that have side effects, steps with side effects are (relatively)
+uncommon, and by their nature are impossible for the processor to
+schedule with complete confidence. XProc is opting to give
+implementors the freedom to deliver better performance in this
+case.</para>
+
+<para>The pipeline author can make the dependencies explicit in the
+pipeline, which will ensure that the processor schedules the steps in
+an order that has the desired the side-effects:
+</para>
+
+<programlisting language="xml"><![CDATA[
+<p:file-touch name="touchstamp" href="tempdoc.stamp"/>
+
+<p:file-copy name="copystamp" depends="touchstamp"
+             href="tempdoc.stamp" target="time.stamp"/>
+
+<p:file-delete depends="copystamp"
+               href="tempdoc.stamp"/>]]></programlisting>
+
+<para>Explicitly marking the dependencies between steps that have side effects
+is good practice.</para>
+
    </section>
 
       <section xml:id="namespace-fixup">
