@@ -3384,7 +3384,9 @@ or validation errors which will be reported in the usual way.</para>
 <title>Additional dependent connections</title>
 
 <para xml:id="p.depends">The <tag class="attribute">[p:]depends</tag>
-attribute can appear on any step invocation. It adds an explicit
+attribute can appear on any step invocation <emphasis>except</emphasis>
+<tag>p:when</tag>, <tag>p:otherwise</tag>, <tag>p:catch</tag>, and
+<tag>p:finally</tag>. It adds an explicit
 dependency between steps. The value of the attribute is a space
 separated list of step names. <error code="S0073">It is a
 <glossterm>static error</glossterm> if any specified name is not the
@@ -3410,6 +3412,11 @@ from the former.</para>
 naturally from connections between steps. Taken together with the
 input and output connections, the graph must not contain any loops.
 </para>
+
+<para>The <tag class="attribute">[p:]depends</tag> attribute is
+forbidden from several elements because they are only conditionally evaluated.
+The semantics of dependency are ambiguous at best in this case. Moving the dependency
+to the parent element resolves this ambiguity.</para>
 </section>
 
 <section xml:id="timeout">
