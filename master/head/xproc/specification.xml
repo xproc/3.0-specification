@@ -563,7 +563,7 @@ subpipeline is its last step in document order.</termdef></para>
 <para>Documents have associated with them a set of properties.
 <termdef xml:id="dt-document-properties">The <firstterm>document
 properties</firstterm> are key/value pairs; they are exposed to the
-XProc pipeline as a map (<code>map(xs:QName, item()*)</code>).</termdef></para>
+XProc pipeline as a map (<type>map(xs:QName, item()*)</type>).</termdef></para>
 
       <para>Several properties are defined by this specification:</para>
 
@@ -601,9 +601,9 @@ document has no base URI.</para>
           <listitem>
             <para>The value of the (optional) “<code>serialization</code>” property holds serialization
               properties for the document. If present, it’s value <rfc2119>must</rfc2119> be of type
-                <code>map(xs:QName, item()*)</code>. <error code="D0070">It is a <glossterm>dynamic
+                <type>map(xs:QName, item()*)</type>. <error code="D0070">It is a <glossterm>dynamic
                   error</glossterm> if a value is assigned to the <code>serialization</code>
-                document property that cannot be converted into <code>map(xs:QName, item()*)</code> according
+                document property that cannot be converted into <type>map(xs:QName, item()*)</type> according
                   to the rules in <link linkend="implicit-casting">Implicit Casting</link>.</error>
               Serialization properties control XML serialization as defined by <biblioref linkend="xml-serialization-31"/>. See also <xref linkend="serialization"/>. </para>
             <para>Some steps, like <code>p:xslt</code> and <code>p:xquery</code>, can specify
@@ -2814,7 +2814,7 @@ Variable names are always expressed as
       from strings to QNames or URIs. (Technically, conversions
       from <type>xs:untypedAtomic</type> or <type>xs:string</type>, or from types
       derived from <type>xs:string</type>, values to
-      <code>xs:QName</code> or <code>xs:anyURI</code> values.) XProc
+      <type>xs:QName</type> or <type>xs:anyURI</type> values.) XProc
       defines additional implicit casting rules for the case where an expression is evaluated
       to provide the value of a variable or option. (These are not extensions to the XPath rules in the
       general case and do not apply in arbitrary expressions.)</para>
@@ -2881,7 +2881,7 @@ Variable names are always expressed as
     <section xml:id="handling-uris">
       <title>Special rules for casting URIs</title>
 
-      <para>Many steps have options whose values are <code>xs:anyURI</code> values,
+      <para>Many steps have options whose values are <type>xs:anyURI</type> values,
       for example “<tag class="attribute">href</tag>”
         on <tag>p:http-request</tag>. If the type <type>xs:anyURI</type> was strictly enforced, they would be tedious to
         specify. As a convenience for pipeline authors, the values of variables or options declared with the type
@@ -2896,15 +2896,15 @@ Variable names are always expressed as
         <listitem>
           <para>If the value supplied for the option is an instance of <type>xs:untypedAtomic</type> or
            <type>xs:string</type> (or a type derived from
-            <type>xs:string</type>), the <code>xs:anyURI</code> is constructed by casting the value
-            to an <code>xs:anyURI</code>.
+            <type>xs:string</type>), the <type>xs:anyURI</type> is constructed by casting the value
+            to an <type>xs:anyURI</type>.
           </para>
         </listitem>
       </orderedlist>
 
       <para>The XPath rules for casting string values to URIs apply:
       <impl>The extent to which an implementation validates the lexical form of the
-      <code>xs:anyURI</code> is <glossterm>implementation-defined</glossterm>.</impl>
+      <type>xs:anyURI</type> is <glossterm>implementation-defined</glossterm>.</impl>
       </para>
     </section>
     </section>
@@ -6050,7 +6050,7 @@ See <xref linkend="statics"/>.</para>
                 which they occur. If there is no such port, the context node is undefined.</para>
        
 <para>As with other attribute value templates, the attribute’s string value,
-as an <code>xs:untypedAtomic</code>, is used as the value of the option. Function
+as an <type>xs:untypedAtomic</type>, is used as the value of the option. Function
 conversion rules apply to convert this untyped atomic value to the
 option’s sequence type.</para>
       </listitem>
@@ -7666,7 +7666,7 @@ several subpipelines.</para></glossdef></glossentry><glossentry><glossterm>decla
           <glossterm>document properties</glossterm>.</para></glossdef></glossentry><glossentry><glossterm>document
 properties</glossterm><glossdef><para>The <firstterm>document
 properties</firstterm> are key/value pairs; they are exposed to the
-XProc pipeline as a map (<code>map(xs:QName, item()*)</code>).</para></glossdef></glossentry><glossentry><glossterm>dynamic
+XProc pipeline as a map (<type>map(xs:QName, item()*)</type>).</para></glossdef></glossentry><glossentry><glossterm>dynamic
       error</glossterm><glossdef><para>A <firstterm>dynamic
       error</firstterm> is one which occurs while a pipeline is being
       evaluated (and cannot be detected before evaluation begins).</para></glossdef></glossentry><glossentry><glossterm>dynamic evaluation</glossterm><glossdef><para><firstterm baseform="dynamic evaluation">Dynamic
