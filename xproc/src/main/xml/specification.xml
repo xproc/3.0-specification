@@ -485,7 +485,7 @@ document has no base URI.</para>
                 <code>map(xs:QName, item()*)</code>. <error code="D0070">It is a <glossterm>dynamic
                   error</glossterm> if a value is assigned to the <code>serialization</code>
                 document property that cannot be converted into <code>map(xs:QName, item()*)</code> according
-                  to the rules in <link linkend="qname-handling">QName handling</link>.</error>
+                  to the rules in <link linkend="implicit-casting">Implicit Casting</link>.</error>
               Serialization properties control XML serialization as defined by <biblioref
                 linkend="xml-serialization-31"/>. See also <xref linkend="serialization"/>. </para>
             <para>Some steps, like <code>p:xslt</code> and <code>p:xquery</code>, can specify
@@ -2692,8 +2692,26 @@ Variable names are always expressed as
       
     </section>
     
-    <section xml:id="qname-handling">
-      <title>QName handling</title>
+    <section xml:id="implicit-casting">
+      <title>Implicit casting</title>
+
+      <para>For the most part, the rules for casting between types in XPath work the way authors expect.
+      You can type “3” for a decimal, you don’t have to type “3.0”, and an untyped atomic value, for example in
+      an attribute such as <code>limit="3"</code>, is implicitly cast to a number if that’s the required type.
+      You don’t have to type <code>limit="{xs:int(3)}"</code>.</para>
+
+      <para>Unfortunately, there are two common cases in XProc
+      that are not handled by the XPath conversion rules: conversions
+      from strings to QNames or URIs. (Technically, conversions
+      from <type>xs:untypedAtomic</type> or <type>xs:string</type> (or from types
+      derived from <type>xs:string</type>) values to
+      <code>xs:QName</code> or <code>xs:anyURI</code> values.) XProc
+      defines additional implicit casting rules for the case where an expression is evaluated
+      to provide the value of a variable or option. (These are not extensions to the XPath rules in the
+      general case and do not apply in arbitrary expressions.)</para>
+
+      <section xml:id="qname-handling">
+        <title>Special rules for casting QNames</title>
       
       <para>Some steps have options whose values are QNames, for example “<tag class="attribute">attribute-name</tag>”
         on <tag>p:add-attribute</tag>. If the type <type>xs:QName</type> was strictly enforced, they would be tedious to
@@ -2708,7 +2726,8 @@ Variable names are always expressed as
           </para>
         </listitem>
         <listitem>
-          <para>If the value supplied for the option is an instance of <type>xs:string</type> (or a type derived from
+          <para>If the value supplied for the option is an instance of <type>xs:untypedAtomic</type> or
+            <type>xs:string</type> (or a type derived from
             <type>xs:string</type>), the QName is constructed by following the <link
               xlink:href="https://www.w3.org/TR/xpath-31/#doc-xpath31-EQName">EQName production rules</link> in
             <biblioref linkend="xpath31"/>. That is, it can be written as a local-name only, as a prefix plus
@@ -2723,8 +2742,9 @@ Variable names are always expressed as
         </listitem>
         <listitem>
           <para>
-            <error code="D0068">It is a <glossterm>dynamic error</glossterm> if the supplied value is neither an
-              instance of <type>xs:QName</type> nor an instance of <type>xs:string</type>.</error>
+            <error code="D0068">It is a <glossterm>dynamic error</glossterm> if the supplied value is not
+              an instance of <type>xs:QName</type>, <type>xs:anyAtomicType</type>,  <type>xs:string</type>
+              or a type derived from <type>xs:string</type>.</error>
           </para>
         </listitem>
       </orderedlist>
@@ -2740,20 +2760,47 @@ Variable names are always expressed as
           <para>If the entry’s key is of type <type>xs:QName</type>, the entry is left unchanged.</para>
         </listitem>
         <listitem>
-          <para>If the entry’s key is an instance of type <type>xs:string</type> (or a type derived from
+          <para>If the entry’s key is an instance of type <type>xs:untypedAtomic</type> or <type>xs:string</type>
+            (or a type derived from
             <type>xs:string</type>) it is transformed into an <type>xs:QName</type> using the <link
-              xlink:href="https://www.w3.org/TR/xpath-31/#doc-xpath31-EQName">XPath EQName production rules</link>. That
-            is, it can be written as a local-name only, as a prefix plus local-name or as a URI plus local-name (using
-            the <code>Q{}</code> syntax).</para>
-          <para>
-            <error code="D0061">It is a <glossterm>dynamic error</glossterm> if the entry’s key is of type
-              <type>xs:string</type> and cannot be converted into a <type>xs:QName</type>.</error>
-          </para>
+              xlink:href="https://www.w3.org/TR/xpath-31/#doc-xpath31-EQName">XPath EQName production rules</link> as
+            described above.</para>
         </listitem>
         <listitem>
           <para>If the entry’s key is of any other type, the entry is ignored and will be removed from the map.</para>
         </listitem>
       </itemizedlist>
+    </section>
+
+    <section xml:id="handling-uris">
+      <title>Special rules for casting URIs</title>
+
+      <para>Many steps have options whose values are <code>xs:anyURI</code> values,
+      for example “<tag class="attribute">href</tag>”
+        on <tag>p:http-request</tag>. If the type <type>xs:anyURI</type> was strictly enforced, they would be tedious to
+        specify. As a convenience for pipeline authors, the values of variables or options declared with the type
+        <type>xs:anyURI</type> are processed specially. The value (or values) are converted to
+        <type>xs:anyURI</type>s:</para>
+
+      <orderedlist>
+        <listitem>
+          <para>If the value supplied for the option is an instance of <type>xs:anyURI</type> then that value is used.
+          </para>
+        </listitem>
+        <listitem>
+          <para>If the value supplied for the option is an instance of <type>xs;untypedAtomic</type> or
+           <type>xs:string</type> (or a type derived from
+            <type>xs:string</type>), the <code>xs:anyURI</code> is constructed by casting the value
+            to an <code>xs:anyURI</code>.
+          </para>
+        </listitem>
+      </orderedlist>
+
+      <para>The XPath rules for casting string values to URIs apply:
+      <impl>The extent to which an implementation validates the lexical form of the
+      <code>xs:anyURI</code> is <glossterm>implementation-defined</glossterm>.</impl>
+      </para>
+    </section>
     </section>
 
     <section xml:id="opt-bindings">
@@ -3528,15 +3575,16 @@ the element’s syntax:</para>
           <para>Required attributes are bold. Optional attributes are followed by a question mark.</para>
         </listitem>
         <listitem>
-          <para>If an attribute value is an attribute value template, its type is shown
+          <para>If an attribute value may contain an attribute value template, its type is shown
           in curly brackets: “<code>{ some-type }</code>”. If <literal>some-type</literal> is 
-          <type>xs:QName</type> or a map type with key type <type>xs:QName</type> the conversion described in
-            <xref linkend="qname-handling"/> applies.</para>
+          <type>xs:anyURI</type>, <type>xs:QName</type>,
+          or a map type with key type of <type>xs:QName</type>, the conversions described in
+            <xref linkend="implicit-casting"/> apply.</para>
         </listitem>
           <listitem>
             <para>An attribute value with a map type marks an <type>XPathExpression</type> expected to
-              deliver a map of the indicated type. If the map type has key type <type>xs:QName</type> 
-              the conversion described in <xref linkend="qname-handling"/> applies.</para>
+              deliver a map of the indicated type. If the map type has a key type of <type>xs:QName</type>,
+              the conversions described in <xref linkend="implicit-casting"/> apply.</para>
           </listitem>
 </itemizedlist>
 </listitem>
