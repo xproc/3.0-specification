@@ -15,27 +15,24 @@ propose changes in the form of pull requests.
 
 ### Continuous integration
 
-The XProc specification is built automatically with Travis CI.
+The XProc specification is built automatically with CircleCI.
 
-To build and publish the spec on your `gh-pages`, setup the `gh-pages` branch,
-configure Travis CI to
-run for your repo, and then create the following
-secure environment variables for your repo in the Travis CI Settings
+To build and publish the spec on your `gh-pages`: setup the `gh-pages` branch,
+configure CircleCI to run for your repo,
+add a token that has read/write access to your repo,
+add the fingerprint for that token to `.circleci/config.yml`.
+Create the following
+secure environment variables for your repo in the CircleCI Settings
 page for your fork:
 
-* GH_TOKEN="your git token"
 * GIT_EMAIL="you@example.com"
-* GIT_NAME="Your Name"
-* GIT_PUB_REPO="you/3.0-specification"
+* GIT_USER="Your Name"
 
-The `GIT_TOKEN` must be a
-[personal access token](https://help.github.com/articles/creating-a-personal-access-token-for-the-command-line/). The `GIT_PUB_REPO` must be the repository where you wish
-to publish the results. The publications scripts will push the published documents
-to the `gh-pages` branch.
+CircleCI will then publish your changes everytime you do a commit
+to your `master` branch.
 
-Travis CI will then publish your changes everytime you do a commit
-to your `master` branch. Travis CI cannot publish `gh-pages` for
-pull requests.
+CircleCI, unfortunately, doesn’t build pull requests, so you have to
+test with your repository.
 
 ## How it works
 

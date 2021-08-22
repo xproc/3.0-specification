@@ -41,24 +41,20 @@
   <p:with-option name="style"
                  select="resolve-uri($style)"/>
 
-  <p:with-param name="travis"
-                select="string(/c:result/c:env[@name='TRAVIS']/@value)"/>
-  <p:with-param name="travis-commit"
-                select="string(/c:result/c:env[@name='TRAVIS_COMMIT']/@value)"/>
-  <p:with-param name="travis-tag"
-                select="string(/c:result/c:env[@name='TRAVIS_TAG']/@value)"/>
-  <p:with-param name="travis-build-number"
-                select="string(/c:result/c:env[@name='TRAVIS_BUILD_NUMBER']/@value)"/>
-  <p:with-param name="travis-branch"
-                select="string(/c:result/c:env[@name='TRAVIS_BRANCH']/@value)"/>
-  <p:with-param name="travis-user"
-                select="substring-before(
-                          /c:result/c:env[@name='TRAVIS_REPO_SLUG']/@value,
-                          '/')"/>
-  <p:with-param name="travis-repo"
-                select="substring-after(
-                          /c:result/c:env[@name='TRAVIS_REPO_SLUG']/@value,
-                          '/')"/>
+  <p:with-param name="circleci"
+                select="string(/c:result/c:env[@name='CIRCLECI']/@value)"/>
+  <p:with-param name="circleci-commit"
+                select="string(/c:result/c:env[@name='CIRCLE_SHA1']/@value)"/>
+  <p:with-param name="circleci-tag"
+                select="string(/c:result/c:env[@name='CIRCLE_TAG']/@value)"/>
+  <p:with-param name="circleci-build-number"
+                select="string(/c:result/c:env[@name='CIRCLE_BUILD_NUM']/@value)"/>
+  <p:with-param name="circleci-branch"
+                select="string(/c:result/c:env[@name='CIRCLE_BRANCH']/@value)"/>
+  <p:with-param name="circleci-user"
+                select="string(/c:result/c:env[@name='CIRCLE_PROJECT_USERNAME']/@value)"/>
+  <p:with-param name="circleci-repo"
+                select="string(/c:result/c:env[@name='CIRCLE_PROJECT_REPONAME']/@value)"/>
   <p:with-param name="auto-diff" select="false()"/>
 </dbp:docbook>
 
