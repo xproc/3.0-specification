@@ -2,7 +2,7 @@
            xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax"
            version="3.0">
    <p:declare-step type="p:directory-list" xml:id="directory-list">
-      <p:output port="result" content-type="application/xml"/>
+      <p:output port="result" content-types="application/xml"/>
       <p:option name="path" required="true" as="xs:anyURI"/>
       <p:option name="detailed" as="xs:boolean" select="false()"/>
       <p:option name="max-depth" as="xs:string?" select="'1'"/>
