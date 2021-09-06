@@ -309,8 +309,7 @@ steps is assumed; for background details, see
     preserving its base name. <error code="C0157">It is a <glossterm>dynamic error</glossterm> if the <option>href</option>
     option names a directory, but the <option>target</option> option names a file.</error></para>
   
-  <para>If the <option>overwrite</option> evaluates to <literal>false</literal>, no existing file is changed, i.e. no
-  copying will take place.</para>
+  <para>If the <option>overwrite</option> evaluates to <literal>false</literal>, no existing file will be changed.</para>
 
     <para><impl>Conformant processors <rfc2119>must</rfc2119> support URIs whose
       scheme is <code>file</code> for the <option>href</option> and <option>target</option> options
@@ -335,7 +334,7 @@ steps is assumed; for background details, see
 
   <para>If an error occurs and <option>fail-on-error</option> is <code>false</code>, the step returns a
       <tag>c:error</tag> element which may contain additional, implementation-defined, information about the nature of
-    the error.</para>
+    the error. In the case of a recursive copy, processing stops at the first error.</para>
 
   <para>If an error occurs and <option>fail-on-error</option> is <code>true</code>, one of the following errors is
     raised:</para>
@@ -350,6 +349,30 @@ steps is assumed; for background details, see
     </listitem>
   </itemizedlist>
 
+  <section xml:id="recursive-copy">
+    <title>Copying directories</title>
+
+  <para>If <option>href</option> identifies a directory and
+  <code>target</code> also identifies a directory, or does not exist,
+  then the <tag>p:file-copy</tag> step attempts to copy the entire
+  directory tree identified by <option>href</option>: the directory and
+  all of its descendants.</para>
+
+  <para>In this case:</para>
+
+  <itemizedlist>
+    <listitem>
+      <para>If <option>fail-on-error</option> is <code>false</code> and an error occurs, no further copying
+      is attempted after the first error is detected.</para>
+    </listitem>
+    <listitem>
+      <para>If <option>overwrite</option> is <code>true</code>, <code>err:XC0157</code> does not apply to
+      descendants. A directory under <option>href</option> may replace a file with the corresponding
+      name under <option>target</option>.
+      </para>
+    </listitem>
+  </itemizedlist>
+  </section>
 
   <simplesect>
     <title>Document properties</title>
