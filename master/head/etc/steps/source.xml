@@ -1509,11 +1509,34 @@ port. Each document in the response will be parsed according to
 its content-type (but see “<literal>override-content-type</literal>”
 in the <option>parameters</option> option).
 Details about the outcome of the request will appear as a map on
-the <port>report</port> port. The map will always contain
-“<literal>status-code</literal>” (an <code>xs:integer</code>) and
-“<literal>headers</literal>” (a <code>map(xs:string,
-xs:string)</code>). The header map may be empty. Header names are
-converted to lowercase.</para>
+the <port>report</port> port. The map will always contain:
+</para>
+
+<variablelist>
+<varlistentry>
+  <term><literal>status-code</literal> (an <code>xs:integer</code>)</term>
+  <listitem>
+    <para>This is the HTTP status code returned for the request.</para>
+  </listitem>
+</varlistentry>
+<varlistentry>
+  <term><literal>base-uri</literal> (an <code>xs:anyURI</code>)</term>
+  <listitem>
+    <para>This is the URI of the last request made and is always
+    available in the report even when the request does not return any
+    documents. In the case of HTTP redirection, the base URI returned
+    may be different from the original request URI.
+    </para>
+  </listitem>
+</varlistentry>
+<varlistentry>
+  <term><literal>headers</literal> (a <code>map(xs:string, xs:string)</code>)</term>
+  <listitem>
+    <para>These are the HTTP headers returned for the request. The map may be
+empty. Header names are converted to lowercase.</para>
+  </listitem>
+</varlistentry>
+</variablelist>
 
 <para>The <tag>p:http-request</tag> step has the following options:</para>
 <variablelist>
