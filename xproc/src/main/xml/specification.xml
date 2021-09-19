@@ -4873,20 +4873,20 @@ author to exclude some namespace declarations in inline content, see <tag>p:inli
 </varlistentry>
 </variablelist>
 
-<para>On a <tag>p:declare-step</tag> for an atomic step, the
-<tag>p:input</tag> can only declare the input port. <error
-code="S0042">It is a <glossterm>static error</glossterm> to attempt to
-provide a connection for an input port on the declaration of an atomic
-step.</error> On <tag>p:declare-step</tag>, any binding provided in
+<para>On <tag>p:declare-step</tag>, any binding provided in
 <tag>p:input</tag> is a default connection for the port, if no other
-connection is provided, see <xref linkend="conn-prec"/>.</para>
+connection is provided, see <xref linkend="conn-prec"/>.
+</para>
 
 <para xml:id="note-pipe-excl">The <tag>p:pipe</tag> element is
 explicitly excluded from a declaration because it would make the
 default value of an input dependent on the execution of some part of
 the pipeline. If a runtime binding is provided for an input port, implementations
 <rfc2119>must not</rfc2119> attempt to dereference the default
-bindings.</para>
+bindings.
+In the case of <tag>p:document</tag> connections, the URI is dereferenced
+only when the default connection is actually used, not during static analysis.
+</para>
 
 </section>
 <section xml:id="p.with-input">
