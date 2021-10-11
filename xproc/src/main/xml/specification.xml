@@ -1921,286 +1921,565 @@ interpreted as follows:</para>
 normally during static analysis.</para>
 </section>
   
-    <section xml:id="f.urify">
-      <title>Transform file system paths into URIs and normalize URIs</title>
-      <para><function>p:urify</function> is a function that attempts to transform file system paths
-        into file URIs (<biblioref linkend="rfc3986"/>). If a presumptive yet not fully compliant
-        URI is given as an argument, <function>p:urify</function> will perform operations such as
-        percent-encoding and path normalizations in order to make it compliant.</para>
+<section xml:id="f.urify">
+<title>Transform file system paths into URIs and normalize URIs</title>
 
-      <methodsynopsis>
-        <type>xs:string</type>
-        <methodname>p:urify</methodname>
-        <methodparam>
-          <type>xs:string</type>
-          <parameter>filepath</parameter>
-        </methodparam>
-        <methodparam>
-          <type>xs:string?</type>
-          <parameter>basedir</parameter>
-        </methodparam>
-      </methodsynopsis>
+<para>The <function>p:urify</function> function attempts to
+transform file system paths into file URIs (<biblioref
+linkend="rfc3986"/>). If a presumptive yet not fully compliant URI is
+given as an argument, <function>p:urify</function> employs a series
+of heuristics to resolve the string into a URI.</para>
 
-      <methodsynopsis>
-        <type>xs:string</type>
-        <methodname>p:urify</methodname>
-        <methodparam>
-          <type>xs:string</type>
-          <parameter>filepath</parameter>
-        </methodparam>
-      </methodsynopsis>
+<methodsynopsis>
+  <type>xs:string</type>
+  <methodname>p:urify</methodname>
+  <methodparam>
+    <type>xs:string</type>
+    <parameter>filepath</parameter>
+  </methodparam>
+  <methodparam>
+    <type>xs:string?</type>
+    <parameter>basedir</parameter>
+  </methodparam>
+</methodsynopsis>
 
-      <para>If the single-argument version of the function is used, the result is the same as
-        calling the two-argument version with <parameter>basedir</parameter> set to the empty
-        sequence.</para>
-      <para>The function may be implemented as an operation on strings; it need not try to determine
-        the existence of a file or directory, and it <rfc2119>should not</rfc2119> follow symbolic
-        links. However, two pieces of information need to be known from the environment: Whether the
-        operating system identifies as “Windows” and the value of the file separator. More precisely,
-        the operating system identifies as Windows if the <literal>os-name</literal> property as returned 
-        by the <tag>p:os-info</tag> steps starts with the string “<literal>Windows</literal>”. The file separator 
-        is what <tag>p:os-info</tag> returns as the <literal>file-separator</literal> property. If either of them are
-      not known, it is assumed that the operating system is not Windows and the file separator is
-      the forward slash, “<literal>/</literal>”.</para>
+<methodsynopsis>
+  <type>xs:string</type>
+  <methodname>p:urify</methodname>
+  <methodparam>
+    <type>xs:string</type>
+    <parameter>filepath</parameter>
+  </methodparam>
+</methodsynopsis>
 
-      <para>The function should support *nix-like (for example, Linux, Solaris, Mac OS X) and
-        Windows file system paths. For Windows paths, the forward slash and the backslash
-          <rfc2119>must</rfc2119> be considered equivalent. Operating systems with other filesystem
-        path addressing schemes (for example, VMS or Mac OS) need not be supported.</para>
+<para>Most web technologies identify resources with URIs, but XProc
+must also operate with resources that are identified with strings
+encoded in other ways, for example, file system paths and the names of
+resources in archive files.</para>
 
-      <para>Each argument may be an operating system path, including paths with drive letters and
-        UNC paths on Windows, or a (presumptive) URI.</para>
+<para>The <function>p:urify</function> function resolves a string into
+a URI by employing a series of heuristics. These have been selected so
+that <tag>p:urify</tag> will not corrupt any actual, valid URIs and
+with the goal that it will return the least surprising result for any
+another string. If a pipeline author has more context to determine how
+a string should be transformed into a URI, writing the conversion
+process “by hand” in the pipeline may achieve better results.</para>
 
-      <para>The function attempts to convert its first argument into an absolute URI that complies
-        with <biblioref linkend="rfc3986"/> by applying the following analysis/decision
-        steps:</para>
+<para>The <function>p:urify</function> function behaves normally during static
+analysis.</para>
 
-      <orderedlist>
-        <listitem>
-          <para>If the argument starts with “<literal>file:</literal>” (independent of case), followed by any other 
-            permitted (after the scheme part of a URI) character than a slash (“<literal>/</literal>”), then it is
-            interpreted as a relative file URI.</para>
-        </listitem>
-        <listitem>
-          <para>Otherwise, if the argument starts with a string that may match a URI scheme as specified in <biblioref linkend="rfc3986"/>,
-            with the exception of single-letter strings followed by a colon on Windows, then it will be treated as a
-              “<glossterm>fixable URI</glossterm>”.</para>
-          <para><termdef xml:id="dt-fixable-URI">A <firstterm>fixable URI</firstterm> is a string that is already an absolute URI
-              that complies with <biblioref linkend="rfc3986"/> or that can be turned into a compliant absolute URI after
-              applying the following corrections as set forth in this list: Percent-encoding, path contraction, and adjusting
-              the number of slashes after the URI scheme.</termdef></para>
-        </listitem>
-        <listitem>
-          <para>Otherwise, if the operating system’s file separator equals the backslash “<literal>\</literal>”, 
-            every backslash in the argument will be replaced with a
-            forward slash.</para>
-        </listitem>
-        <listitem>
-          <para>If the operating system identifies as Windows and the
-            argument starts with a single letter (case is insignificant), followed by a colon, this
-            letter plus colon will be interpreted as a Windows <firstterm>drive letter</firstterm>.
-            For the subsequent decision whether the path is relative, only the part after the drive
-            letter will considered.</para>
-        </listitem>
+<para>If the single-argument version of the function is used, the
+result is the same as calling the two-argument version with
+<parameter>basedir</parameter> set to the empty sequence.</para>
 
-        <listitem>
-          <para>If the operating system identifies as Windows and the
-            argument (after replacing backslashes with forward slashes) starts with exactly two slashes, 
-            it will be interpreted as a Windows UNC path,
-            with the part up to the next slash interpreted as the authority component
-              (“<literal>hostname:port</literal>”).</para>
-          <para>In this case, “<literal>file:</literal>” will be prepended to the (complete) path
-            string.</para>
-        </listitem>
-        <listitem>
-          <para>Otherwise, if the (remaining) string starts with at least one slash and the argument
-            starts with a drive letter, it is interpreted as an absolute path.</para>
-          <para>In this case, “<literal>file:///</literal>” will be prepended to the argument, and
-            multiple slashes immediately after the drive letter will be contracted to a single
-            slash.</para>
-        </listitem>
-        <listitem>
-          <para>Otherwise, if the argument starts with at least one slash, it is interpreted as an
-            absolute path.</para>
-          <para>In this case, “<literal>file://</literal>” will be prepended to the path, and
-            multiple slashes at the beginning of the path will be contracted to a single
-            slash.</para>
-        </listitem>
-        <listitem>
-          <para>Otherwise, it is interpreted as a relative file system path or a relative URI.</para>
-        </listitem>
+<para>The heuristics that <function>p:urify</function> performs occur
+in two stages: first, the input string is analyzed to identify its
+features, then these features are used to construct a final URI
+string. An additional “fixup” process may be performed on the path
+portion of the URI.</para>
 
-        <listitem>
-          <para>If the first argument is identified to be a relative path or URI, the
-              <function>p:urify</function> function is recursively applied to the
-              <emphasis>second</emphasis> argument, or to the current working directory if the
-            second argument is absent or if it is the empty sequence.</para>
-          <para>If the current working directory does not end with the operating system’s file
-            separator character, the processor will append this character before calling
-              <function>p:urify</function> recursively on this path.</para>
-          <para>For this second invocation, the second argument to <function>p:urify</function> is
-            set to the empty <emphasis>string</emphasis> as a fallback non-absolute “URI”. If this
-            second invocation does not return an absolute URI, it is an indication that the
-              <parameter>basedir</parameter> parameter did not correspond to an absolute URI, or
-            that the current working directory is unknown, and the following error will be reported:
-              <error code="D0074">It is a <glossterm>dynamic error</glossterm> if neither an
-              absolute base URI is supplied to <function>p:urify</function> nor can one be inferred
-              from the current working directory.</error></para>
-        </listitem>
-        <listitem>
-          <para>If the first argument of the original invocation is determined to be a relative path
-            or URI, the following criterion will be considered to determine whether it is a relative
-            file system path or a relative URI:</para>
-          <orderedlist>
-            <listitem>
-              <para>If the argument starts with a drive letter, it is a relative file system
-                path.</para>
-              <para>Any directory that is supposed to resolve such a relative path to an absolute
-                URI must satisfy an additional constraint: It must have the same drive letter that
-                the relative path has. <error code="D0075">It is a <glossterm>dynamic
-                    error</glossterm> if a relative path with a drive letter is attempted to be
-                  resolved against a path with a different drive letter or with no drive letter at
-                  all.</error>
-              </para>
-              <para>The drive letter is removed from the relative file system path.</para>
-            </listitem>
-            <listitem>
-              <para>If the argument starts with “<literal>file:</literal>” (independent of case), it is a 
-                relative URI.</para>
-              <para>Any absolute URI that is supposed to resolve such a relative path to an absolute
-                URI must satisfy an additional constraint: It must also be in the <literal>file:</literal>
-                scheme. <error code="D0077">It is a <glossterm>dynamic
-                    error</glossterm> if a relative path in the file scheme is attempted to be
-                  resolved against a path with a different scheme.</error>
-              </para>
-            </listitem>
-            <listitem>
-              <para>If the result of the second invocation is a URI in the <literal>file:</literal>
-                scheme, the first argument is interpreted as a relative file system path.</para>
-              <para>As a consequence, the characters “<literal>?</literal>” and
-                  “<literal>#</literal>” in the relative path will be percent-encoded as
-                  “<literal>%3F</literal>” and “<literal>%23</literal>”, respectively.</para>
-              <para>See the note below for how different interpretations of a relative path or URI
-                influence absolute URI composition.</para>
-            </listitem>
-            <listitem>
-              <para>Otherwise, it is determined as a relative URI.</para>
-            </listitem>
-          </orderedlist>
-        </listitem>
-        <listitem>
-          <para>If the first argument of the original invocation, as amended by prepending
-              <literal>file:</literal> etc., is determined to be a <glossterm>fixable
-              URI</glossterm>, this URI will be subjected to the subsequent normalization
-            steps, described after the next item.</para>
-        </listitem>
-        <listitem>
-          <para>Otherwise, the function <function>fn:resolve-uri</function> is used to resolve the
-            relative path or URI obtained so far against the absolute base URI that is the result of
-            the recursive <function>p:urify</function> invocation on the
-              <parameter>basedir</parameter> argument (or current working directory).</para>
-          <para>Apart from making sure that the current working directory ends with a trailing
-            file separator, no attempt must be made to identify whether a given argument
-            corresponds to a directory. This means that even if the relative path is
-              “<literal>bar.txt</literal>” and <parameter>basedir</parameter> corresponds to an
-            existing directory “<literal>/tmp</literal>”, the result will be
-              “<literal>file:///bar.txt</literal>” unless <parameter>basedir</parameter> is supplied
-            as “<literal>/tmp/</literal>” which will give “<literal>file:///tmp/bar.txt</literal> as
-            the resulting absolute URI.</para>
-        </listitem>
-        <listitem>
-          <para>Finally, the following normalizations as set forth in <biblioref linkend="rfc3986"/>
-            will be applied to the relevant parts of the <glossterm>fixable URI</glossterm> obtained
-            so far:</para>
-          <orderedlist>
-            <listitem>
-              <para>Leading slash normalization: If the fixable URI starts with “<literal>file:/</literal>”
-                (case-independently), then it will be made sure that the number of slashes after “<literal>file:</literal>”
-                amounts to exactly three, unless the number is already exactly two, in which case the two slashes remain in
-                place unchanged.</para>
-              <para>On non-Windows systems, file URIs with an authority component are forbidden. <error
-              code="D0076">It is a <glossterm>dynamic error</glossterm> if the operating system does
-              not identify as “Windows” and if a file system path or a file URI has an authority
-              (host name) component.</error></para>
-            </listitem>
-            <listitem>
-              
-              <para>Path contraction for path segments “<literal>.</literal>” and
-                  “<literal>..</literal>” according to Sect. 3.3 of <biblioref linkend="rfc3986"
-                />;</para>
-            </listitem>
-            <listitem>
-              <para>percent-encoding and decoding according to Sect. 2.4 of <biblioref
-                  linkend="rfc3986"/>.</para>
-            </listitem>
-          </orderedlist>
-        </listitem>
-      </orderedlist>
+<para>To make the operation of the <function>p:urify</function>
+function easier to understand, the description that follows is
+presented as an algorithm with regular expressions. Implementors
+are not required to implement it this way, any implementation that
+achieves the correct results can be used.</para>
 
-      <para>Example:</para>
-      <itemizedlist>
-        <listitem>
-          <para>When <function>p:urify</function> is called to resolve URIs that are to be resolved
-              <emphasis>relative to another document</emphasis>, for example
-            “<literal>#B</literal>”, “<literal>index.html</literal>”,
-              “<literal>/en/index.html</literal>”, or
-            “<literal>//www.acme.com/lib/acme.js</literal>”, the absolute base URI of the document
-            that they should be resolved against must be given in the second argument of
-              <function>p:urify</function>.</para>
-        </listitem>
-        <listitem>
-          <para>Suppose that this document’s base URI is
-              “<literal>https://wiki.acme.com/fr/categories.html</literal>” and it is supplied as
-            the second argument, the relative URIs above resolve to
-              “<literal>https://wiki.acme.com/fr/categories.html#B</literal>”,
-              “<literal>https://wiki.acme.com/fr/index.html</literal>”,
-              “<literal>https://wiki.acme.com/en/index.html</literal>”, and
-              “<literal>https://www.acme.com/lib/acme.js</literal>”, respectively.</para>
-        </listitem>
-        <listitem>
-          <para>If the second argument is absent and supposing that the current working directory is
-              “<literal>C:\Program Files (x86)\acmeXProc\bin</literal>” on a Windows machine, then
-            its absolute base URI computes to
-              “<literal>file:///C:/Program%20Files%20(x86)/acmeXProc/bin/</literal>”, and the
-            examples above resolve to
-              “<literal>file:///C:/Program%20Files%20(x86)/acmeXProc/bin/%23B</literal>” (the number
-            sign, “<literal>#</literal>”, is treated as a path component),
-              “<literal>file:///C:/Program%20Files%20(x86)/acmeXProc/bin/index.html</literal>”,
-              “<literal>file:///C:/en/index.html</literal>”, and
-              “<literal>file://www.acme.com/lib/acme.js</literal>” (a UNC path URI),
-            respectively.</para>
-        </listitem>
-        <listitem>
-          <para>If the current working directory is “<literal>/tmp/foo</literal>” on a Linux
-            machine, the base URI computes to “<literal>file:///tmp/foo/</literal>”, and the
-            relative paths resolve to “<literal>file:///tmp/foo/%23B</literal>”,
-              “<literal>file:///tmp/foo/index.html</literal>”, and
-              “<literal>file:///en/index.html</literal>”. The relative URI
-              “<literal>//www.acme.com/lib/acme.js</literal>” cannot be resolved on non-Windows
-            platforms, and an error is thrown.</para>
-        </listitem>
-      </itemizedlist>
-  
-      <note xml:id="note-urify-encoding">
-        <para>Sometimes file names are created in an encoding that does not match the system’s
-          locale. This function does not aim at solving these issues. Implementations should not try
-          to correct apparent errors that originate from garbled encodings since they will probably
-          not be able to produce file URIs that address the corresponding files correctly.</para>
-        <para>Likewise it is also possible, in particular on Windows, that the encoding gets garbled
-          when command line arguments are passed to the processor. On modern Windows 10 versions
-          (April 2018 or later), this can be addressed by setting the system locale to UTF-8.</para>
-      </note>
-      <note role="editorial" xml:id="ednote-test-p_urify">
-        <title>Testing</title>
-        <para>Depending on the system where the tests run on, the results may vary if file system
-          paths contain colons or backslashes.</para>
-        <para>A test suite may therefore specify system-dependent tests that run only on Windows or
-          Linux and that accept function results with or without a trailing slash.</para>
-      </note>
+<para>The function may be implemented as an operation on strings; it
+need not try to determine the existence of a file or directory, and it
+<rfc2119>should not</rfc2119> follow symbolic links. However, two
+pieces of information need to be known from the environment: Whether
+the operating system identifies as “Windows” and the value of the file
+separator. More precisely, the operating system identifies as Windows
+if the <literal>os-name</literal> property as returned by the
+<tag>p:os-info</tag> steps starts with the string
+“<literal>Windows</literal>”. The file separator is what
+<tag>p:os-info</tag> returns as the <literal>file-separator</literal>
+property. If either of them are not known, it is assumed that the
+operating system is not Windows and the file separator is the forward
+slash, “<literal>/</literal>”.</para>
 
-      <para>The <function>p:urify</function> function behaves normally during static
-        analysis.</para>
-    </section>
+<para>The comparisons and regular expressions that follow are
+presented in lower case, but all of the operations performed are case
+blind: “file”, “FILE”, “File”, and “FiLe” are all identical.
+If the system file separator is not “/”, then all occurrences of the
+file separator are replaced by “/” before beginning the analysis.
+</para>
+
+<section xml:id="urify-analysis">
+<title>Analysis</title>
+
+<para>The <code>filepath</code> presented is analyzed to identify the
+following features:</para>
+
+<itemizedlist>
+<listitem>
+<para>The <emphasis>scheme</emphasis>, which may be absent or
+implicitly known or explicitly known.</para>
+</listitem>
+<listitem>
+<para>Whether or not the string can be interpreted as
+<emphasis>hierarchical</emphasis>.</para>
+</listitem>
+<listitem>
+<para>The <emphasis>authority</emphasis>, which may be absent.</para>
+</listitem>
+<listitem>
+<para>The <emphasis>drive letter</emphasis>, which may be absent.</para>
+</listitem>
+<listitem>
+<para>And the <emphasis>path</emphasis>, which may be <emphasis>absolute</emphasis>
+or <emphasis>relative</emphasis>.</para>
+</listitem>
+</itemizedlist>
+
+<para>The analysis proceeds along the following lines, stopping as
+soon as the features have been identified.</para>
+
+<orderedlist>
+<listitem>
+<para>If the <code>filepath</code> is the empty string, it has no
+scheme, no authority, and no drive letter. Its path is the empty
+string and it is relative and hierarchical.</para>
+</listitem>
+<listitem>
+<para>If the <code>filepath</code> is the string “//”, it has no
+scheme, no authority, and no drive letter. Its path is the
+string “/” and it is absolute and hierarchical.</para>
+</listitem>
+<listitem>
+<para>On a Windows system, if the <code>filepath</code> matches the
+regular expression “<code>^(file:/*)?([a-z]):(.*)</code>”, it is a
+“file” scheme URI. If the first match group begins “file:”, it is an
+explicit file scheme URI, otherwise it is an implicit file scheme URI.
+The drive letter is the second match group.
+If the third match group begins with a “/”, the path is absolute and
+consists of the third match group with all but one leading “/”
+removed. Otherwise, the path is relative and consists of the entire
+third match group, or the empty string if the third match group is empty.
+</para>
+<para>In all cases, the scheme is hierarchical and the authority is absent.</para>
+<para>For example:</para>
+<itemizedlist>
+<listitem><para
+><code>C:Users/Jane/Documents and Files/Thing</code>, an implicit file URI
+on drive C with the relative path “Users/Jane/Documents and Files/Thing”.
+</para>
+</listitem>
+<listitem><para
+><code>C:/Users/Jane/Documents and Files/Thing</code> an implicit file URI
+on drive C with the absolute path “/Users/Jane/Documents and Files/Thing”.
+</para>
+</listitem>
+<listitem><para
+><code>C://Users/Jane/Documents and Files/Thing</code> an implicit file URI
+on drive C with the absolute path “/Users/Jane/Documents and Files/Thing”.
+</para>
+</listitem>
+<listitem><para
+><code>C:///Users/Jane/Documents and Files/Thing</code> an implicit file URI
+on drive C with the absolute path “/Users/Jane/Documents and Files/Thing”.
+</para>
+</listitem>
+<listitem><para
+><code>file:C:Users/Jane/Documents and Files/Thing</code> an explicit file URI
+on drive C with the relative path “Users/Jane/Documents and Files/Thing”.
+</para>
+</listitem>
+<listitem><para
+><code>file:C:/Users/Jane/Documents and Files/Thing</code> an explicit file URI
+on drive C with the absolute path “/Users/Jane/Documents and Files/Thing”.
+</para>
+</listitem>
+<listitem><para
+><code>file:C://Users/Jane/Documents and Files/Thing</code> an explicit file URI
+on drive C with the absolute path “/Users/Jane/Documents and Files/Thing”.
+</para>
+</listitem>
+<listitem><para
+><code>file:C:///Users/Jane/Documents and Files/Thing</code> an explicit file URI
+on drive C with the absolute path “/Users/Jane/Documents and Files/Thing”.
+</para>
+</listitem>
+</itemizedlist>
+</listitem>
+
+<listitem>
+<para>If the <code>filepath</code> matches the regular expression
+“<code>^file://([^/]+)(/.*)?$</code>”, it is an explicit “file” scheme
+URI. The first match group is the authority.
+If the second match group begins with a “/”, the path is absolute and
+consists of the second match group with all but one leading “/”
+removed. Otherwise, the path is the empty string and is relative.
+</para>
+<para>In all cases, the scheme is hierarchical and the drive letter is absent.</para>
+<para>For example:</para>
+<itemizedlist>
+<listitem>
+<para
+><code>file://authority.com</code> an explicit file URI with the authority
+“authority.com” and the relative path “”.
+</para>
+</listitem>
+<listitem>
+<para
+><code>file://authority.com/</code> an explicit file URI with the authority
+“authority.com” and the absolute path “/”.
+</para>
+</listitem>
+<listitem>
+<para
+><code>file://authority.com/path/to/thing</code> an explicit file URI with the authority
+“authority.com” and the absolute path “/path/to/thing”.
+</para>
+</listitem>
+<listitem>
+<para
+><code>file://authority.com//path/to/thing</code> an explicit file URI with the authority
+“authority.com” and the absolute path “/path/to/thing”.
+</para>
+</listitem>
+<listitem>
+<para
+><code>file://authority.com///path/to/thing</code> an explicit file URI with the authority
+“authority.com” and the absolute path “/path/to/thing”.
+</para>
+</listitem>
+<listitem>
+<para
+><code>file://authority.com:8080/path/to/thing</code> an explicit file URI with the authority
+“authority.com:8080” and the absolute path “/path/to/thing”.
+</para>
+</listitem>
+</itemizedlist>
+</listitem>
+
+<listitem>
+<para>If the <code>filepath</code> matches the regular expression
+“<code>^file:(.*)$</code>”, it is an explicit “file” scheme URI.
+If the first match group begins with a “/”, the path is absolute and
+consists of the first match group with all but one leading “/”
+removed. Otherwise, the path is relative and consists of the entire
+first match group, or the empty string if the first match group is empty.
+</para>
+<para>In all cases, the scheme is hierarchical and the drive letter and authority are absent.</para>
+<para>For example:</para>
+<itemizedlist>
+<listitem><para
+><code>file:</code> is an explicit file URI with the relative path “”.
+</para>
+</listitem>
+<listitem><para
+><code>file:path/to/thing</code>  is an explicit file URI with the relative
+path “path/to/thing”.
+</para>
+</listitem>
+<listitem><para
+><code>file:/path/to/thing</code> is an explicit file URI with the absolute
+path “/path/to/thing”.
+</para>
+</listitem>
+<listitem><para
+><code>file://path/to/thing</code> does not apply.
+It matches the preceding case; “path” is the authority.
+</para>
+</listitem>
+<listitem><para
+><code>file:///path/to/thing</code> is an explicit file URI with the absolute
+path “/path/to/thing”.
+</para>
+</listitem>
+</itemizedlist>
+</listitem>
+
+<listitem>
+<para>If the <code>filepath</code> matches the regular expression
+“<code>^([a-z]+):(.*)$</code>”, it is an explicit URI in the scheme identified
+by the first match group. The path is the second match group. (In the terms of <biblioref
+linkend="rfc3986"/>, it may have an authority component, but that’s
+not relevant to <function>p:urify</function>.) If the implementation
+does not know if the scheme is hierarchical, it is considered
+hierarchical if the path contains a “/”, otherwise it is considered
+non-hierarchical.
+(The “http”, “https”, and “ftp” schemes are hierarchical, for
+example; the “mailto”, “urn” and “doi” schemes are not.)</para>
+<para>In all cases, the drive letter and authority are absent.</para>
+<para>For example:</para>
+<itemizedlist>
+<listitem>
+<para
+><code>urn:publicid:ISO+8879%3A1986:ENTITIES+Added+Latin+1:EN</code> is
+a non-hierarchical “urn” URI. By the heuristic applied, the path is
+“publicid:ISO+8879%3A1986:ENTITIES+Added+Latin+1:EN”, but this will never
+be relevant as relative and absolute path resolution is never applied to non-hierarchical
+schemes.
+</para>
+</listitem>
+<listitem>
+<para
+><code>https:</code> is a hierarchical “https” URI with the relative path “”.
+</para>
+</listitem>
+<listitem>
+<para
+><code>https://example.com</code> is a hierarchical “https” URI with the
+absolute path “//example.com”.
+</para>
+</listitem>
+<listitem>
+<para
+><code>https://example.com/</code> is a hierarchical “https” URI with the
+absolute path “//example.com/”.
+</para>
+</listitem>
+<listitem>
+<para
+><code>https://example.com/path/to/thing</code> is a hierarchical “https” URI with the
+absolute path “//example.com/path/to/thing”.
+</para>
+</listitem>
+<listitem>
+<para
+><code>https://example.com//path/to/thing</code> is a hierarchical “https” URI with the
+absolute path “//example.com//path/to/thing”.
+</para>
+</listitem>
+<listitem>
+<para
+><code>https://example.com:9000/path/to/thing</code> is a hierarchical “https” URI with the
+absolute path “//example.com:9000/path/to/thing”.
+</para>
+</listitem>
+</itemizedlist>
+</listitem>
+
+<listitem>
+<para>On a Windows system, if the <code>filepath</code> matches the regular expression
+“<code>^//([^/]+)(/.*)?$</code>”, it has no scheme. The first match
+group is the authority.
+If the second match group begins with a “/”, the path is absolute and
+consists of the second match group with all but one leading “/”
+removed. Otherwise, the path is the empty string and is relative.
+It has no drive letter.
+</para>
+<para>In all cases, the URI is hierarchical and the drive letter is absent.</para>
+<para>For example:</para>
+<itemizedlist>
+<listitem>
+<para
+><code>//authority</code> has the authority “authority” and the relative path “”.
+</para>
+</listitem>
+<listitem>
+<para
+><code>//authority/</code> has the authority “authority” and the absolute path “/”.
+</para>
+</listitem>
+<listitem>
+<para
+><code>//authority/path/to/thing</code> has the authority “authority” and
+the absolute path “/path/to/thing”.
+</para>
+</listitem>
+<listitem>
+<para
+><code>//authority//path/to/thing</code> has the authority “authority” and
+the absolute path “/path/to/thing”.
+</para>
+</listitem>
+<listitem>
+<para
+><code>//authority///path/to/thing</code> has the authority “authority” and
+the absolute path “/path/to/thing”.
+</para>
+</listitem>
+<listitem>
+<para
+><code>//authority:8080/path/to/thing</code> has the authority “authority:8080” and
+the absolute path “/path/to/thing”.
+</para>
+</listitem>
+<listitem>
+<para
+><code>//authority/Documents and Files/thing</code> has the authority “authority” and
+the absolute path “/Documents and Files/thing”.
+</para>
+</listitem>
+</itemizedlist>
+</listitem>
+
+<listitem>
+<para>If the <code>filepath</code> begins with a “/”, the
+path is absolute and consists of <code>filepath</code> with all but
+one leading “/” removed. Otherwise, the path is relative and consists
+of the entire <code>filepath</code>. It is hierarchical and has no scheme, no authority and no drive
+letter. (This condition always applies if no preceding condition does.)</para>
+<para>For example:</para>
+<itemizedlist>
+<listitem>
+<para
+><code>path/to/thing</code> has the relative path “path/to/thing”.
+</para>
+</listitem>
+<listitem>
+<para
+><code>/path/to/thing</code> has the absolute path “/path/to/thing”.
+</para>
+</listitem>
+<listitem>
+<para
+><code>//path/to/thing</code> does not apply.
+It matches the preceding case; “path” is the authority.
+</para>
+</listitem>
+<listitem>
+<para
+><code>///path/to/thing</code> has the absolute path “/path/to/thing”.
+</para>
+</listitem>
+<listitem>
+<para
+><code>Documents and Files/thing</code> has the relative path
+“/Documents and Files/thing”.
+</para>
+</listitem>
+<listitem>
+<para
+><code>/Documents and Files/thing</code> has the absolute path
+“/Documents and Files/thing”.
+</para>
+</listitem>
+</itemizedlist>
+</listitem>
+</orderedlist>
+
+<para>If the analysis determines that the string represents a
+non-hierarchical URI, the <code>filepath</code> is returned
+unchanged.</para>
+
+<para>If the analysis determines that the scheme is known
+and the path is absolute, a URI is constructed from the features,
+see below. Otherwise, the URI must be made absolute with respect to the
+<code>basedir</code> provided.</para>
+
+<para>If the <code>basedir</code> is the empty sequence, construct a
+presumptive URI string from the string that represents the current
+working directory. If this presumptive URI does not end with the file
+separator, append the file separator. If the implementation is running
+in an environment where the concept of “current working directory”
+does not apply, the presumptive URI is the empty string. This
+presumptive URI becomes the <code>basedir</code>.</para>
+
+<para>Analyze the features of the <code>basedir</code>.</para>
+
+<para>If the <code>basedir</code> has no scheme, it’s implicitly a
+“file” URI.</para>
+
+<para>If the <code>basedir</code> path is relative, the
+<code>filepath</code> cannot be made absolute. <error code="D0074">It
+is a <glossterm>dynamic error</glossterm> if no absolute base URI is
+supplied to <function>p:urify</function> and none can be inferred from
+the current working directory.</error></para>
+
+<para>The following additional constraints apply.</para>
+
+<itemizedlist>
+<listitem>
+<para><error code="D0075">It is a <glossterm>dynamic error</glossterm> if
+the relative path has a drive letter and the base URI has a different drive letter
+or does not have a drive letter.</error></para>
+</listitem>
+<listitem>
+<para><error code="D0076">It is a <glossterm>dynamic error</glossterm> if
+the relative path has a drive letter and the base URI has an authority or
+if the relative path has an authority and the base URI has a drive letter.</error>
+</para>
+</listitem>
+<listitem>
+<para><error code="D0077">It is a <glossterm>dynamic error</glossterm> if
+the relative path has a scheme that differs from the scheme of the base URI.</error>
+</para>
+</listitem>
+<listitem>
+<para><error code="D0080">It is a <glossterm>dynamic error</glossterm> if
+the <code>basedir</code> has a non-hierarchical scheme.</error>
+</para>
+</listitem>
+</itemizedlist>
+
+<para>Combine the features of the <code>filepath</code> with the
+features of the <code>basedir</code> to obtain a set of features to
+use to construct the result.</para>
+
+<para>If the <code>filepath</code> has no scheme or an implicit file
+scheme, perform fixup on the path, as described below. If the
+<code>basedir</code> is an implicit file URI, perform fixup on its
+path.</para>
+
+<orderedlist>
+<listitem>
+<para>The scheme is the scheme of the <code>basedir</code>.
+</para>
+</listitem>
+<listitem>
+<para>If the <code>filepath</code> has an authority, use that authority,
+otherwise use the authority of the <code>basedir</code>, if it has one.</para>
+</listitem>
+<listitem>
+<para>The drive letter is the drive letter of the <code>basedir</code>.</para>
+</listitem>
+<listitem>
+<para>If the path of the <code>filepath</code> absolute, that’s the path. Otherwise
+the path is the path of the <code>filepath</code> resolved against the
+<code>basedir</code>.
+</para>
+<para>If the <code>basedir</code> ends in “/”, the resolved path is the concatention
+of the <code>basedir</code> and <code>filepath</code>’s path. Otherwise,
+the resolved path is the concatentation of all the characters in <code>basedir</code>
+up to and including the last “/” it contains with the <code>filepath</code>’s path.
+</para>
+<para>Path contraction for “.” and “..” is performed on the resolved path
+according to Section 3.3 of <biblioref linkend="rfc3986"/>.</para>
+</listitem>
+</orderedlist>
+</section>
+
+<section xml:id="urify-fixup">
+<title>Path fixup</title>
+
+<para>If fixup is performed, the characters “?”, “#”, and  “ ” (space) are
+replaced by their %-encoded forms, %3F, %23, and %20, respectively.</para>
+
+<para>Unreserved characters that are percent encoded in the path are decoded
+per Section 2.4 of <biblioref linkend="rfc3986"/>.</para>
+</section>
+
+<section xml:id="urify-uri-construction">
+<title>URI construction</title>
+
+<para>The <function>p:urify</function> result string is constructed from
+the features of the path (or the features of the path as resolved against the
+<code>basedir</code>, if applicable) in the following way:</para>
+
+<orderedlist>
+<listitem>
+<para>If there is a scheme, the string begins with the scheme followed
+by a “:”.</para>
+</listitem>
+<listitem>
+<para>If there is an authority, the string continues with “//”
+followed by the authority followed by the path.</para>
+</listitem>
+<listitem>
+<para>If there is a drive letter, the string continues with “///”
+followed by the drive letter, a “:”, and the path.</para>
+</listitem>
+<listitem>
+<para>If there is neither an authority nor a drive letter, the string
+continues with “//” followed by the path.</para>
+</listitem>
+</orderedlist>
+</section>
+</section>
 
 <section xml:id="f.function-library-importable">
 <title>Function library importable</title>
