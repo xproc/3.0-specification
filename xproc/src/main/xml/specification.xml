@@ -2462,22 +2462,35 @@ the features of the path (or the features of the path as resolved against the
 
 <orderedlist>
 <listitem>
-<para>If there is a scheme, the string begins with the scheme followed
-by a “:”.</para>
+<para>Begin with an empty string.</para>
 </listitem>
 <listitem>
-<para>If there is an authority, the string continues with “//”
-followed by the authority followed by the path.</para>
+<para>If there is a scheme, append the scheme followed by a “:”.</para>
 </listitem>
 <listitem>
-<para>If there is a drive letter, the string continues with “///”
-followed by the drive letter, a “:”, and the path.</para>
+<para>If there is an authority, append “//” followed by the
+authority.</para>
 </listitem>
 <listitem>
-<para>If there is neither an authority nor a drive letter, the string
-continues with “//” followed by the path.</para>
+<para>If there is <emphasis>not</emphasis> an authority, but the scheme is “file”
+and the path is absolute,</para>
+<itemizedlist>
+<listitem>
+<para>Append “//”.</para>
+</listitem>
+<listitem>
+<para>If there is a drive letter, append another “/”.</para>
+</listitem>
+</itemizedlist>
+</listitem>
+<listitem>
+<para>If there is a drive letter, append the drive letter followed by a “:”.</para>
+</listitem>
+<listitem>
+<para>Append the path.</para>
 </listitem>
 </orderedlist>
+<para>The string constructed is the <function>p:urify</function> result.</para>
 </section>
 </section>
 
