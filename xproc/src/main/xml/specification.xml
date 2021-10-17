@@ -2001,9 +2001,58 @@ slash, “<literal>/</literal>”.</para>
 <para>The comparisons and regular expressions that follow are
 presented in lower case, but all of the operations performed are case
 blind: “file”, “FILE”, “File”, and “FiLe” are all identical.
-If the system file separator is not “/”, then all occurrences of the
-file separator are replaced by “/” before beginning the analysis.
 </para>
+
+<section xml:id="urify-normalize">
+<title>Normalize file separators</title>
+
+<para>Before beginning analysis, if the system file separator is not
+“/”, then all occurrences of the file separator in filenames
+must be replaced by “/”. (If the file separator
+<emphasis>is</emphasis> “/”, this section does not apply.)</para>
+
+<para>Replacing file separators with “/” simplifies the
+analysis that follows and assures that the resulting URI will be
+syntactically correct. However, it must only be done when it
+is determined that the <parameter>filepath</parameter> will become
+part of a file: URI.</para>
+
+<para>To determine if the path will become part of a file: URI,
+consider the following cases in turn, stopping at the first which
+applies:</para>
+
+<itemizedlist>
+<listitem>
+<para>If the <parameter>filepath</parameter> begins with “file:” or,
+on Windows, if it begins with a single letter followed by a colon, it will
+be part of a file: URI.
+</para>
+</listitem>
+<listitem>
+<para>If the <parameter>filepath</parameter> begins with an explicit scheme
+other than “file”, it will not be part of a file: URI.</para>
+</listitem>
+<listitem>
+<para>If the <parameter>basedir</parameter> is absent or the empty
+string, it will be part of a file: URI.</para>
+</listitem>
+<listitem>
+<para>If the
+<parameter>basedir</parameter> begins with an explicit scheme other
+than “file”, it will not be part of a file: URI.
+</para>
+</listitem>
+<listitem>
+<para>If none of the preceding cases applies, it will be part of a file: URI.
+</para>
+</listitem>
+</itemizedlist>
+
+<para>If it has been determined that the path
+will become part of a file: URI, replace each occurrence of the
+file separator character in <parameter>filepath</parameter> with a “/”.
+</para>
+</section>
 
 <section xml:id="urify-analysis">
 <title>Analysis</title>
