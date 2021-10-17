@@ -1924,11 +1924,24 @@ normally during static analysis.</para>
 <section xml:id="f.urify">
 <title>Transform file system paths into URIs and normalize URIs</title>
 
+<para>Most web technologies identify resources with URIs, but XProc
+must also operate with resources that are identified with strings
+encoded in other ways, for example, file system paths and the names of
+resources in archive files.</para>
+
 <para>The <function>p:urify</function> function attempts to
 transform file system paths into file URIs (<biblioref
 linkend="rfc3986"/>). If a presumptive yet not fully compliant URI is
 given as an argument, <function>p:urify</function> employs a series
 of heuristics to resolve the string into a URI.</para>
+
+<para>The <function>p:urify</function> function resolves a string into
+a URI by employing a series of heuristics. These have been selected so
+that <tag>p:urify</tag> will not corrupt any actual, valid URIs and
+with the goal that it will return the least surprising result for any
+other string. If a pipeline author has more context to determine how
+a string should be transformed into a URI, writing the conversion
+process “by hand” in the pipeline may achieve better results.</para>
 
 <methodsynopsis>
   <type>xs:string</type>
@@ -1952,25 +1965,12 @@ of heuristics to resolve the string into a URI.</para>
   </methodparam>
 </methodsynopsis>
 
-<para>Most web technologies identify resources with URIs, but XProc
-must also operate with resources that are identified with strings
-encoded in other ways, for example, file system paths and the names of
-resources in archive files.</para>
-
-<para>The <function>p:urify</function> function resolves a string into
-a URI by employing a series of heuristics. These have been selected so
-that <tag>p:urify</tag> will not corrupt any actual, valid URIs and
-with the goal that it will return the least surprising result for any
-other string. If a pipeline author has more context to determine how
-a string should be transformed into a URI, writing the conversion
-process “by hand” in the pipeline may achieve better results.</para>
-
-<para>The <function>p:urify</function> function behaves normally during static
-analysis.</para>
-
 <para>If the single-argument version of the function is used, the
 result is the same as calling the two-argument version with
 <parameter>basedir</parameter> set to the empty sequence.</para>
+
+<para>The <function>p:urify</function> function behaves normally during static
+analysis.</para>
 
 <para>The heuristics that <function>p:urify</function> performs occur
 in two stages: first, the input string is analyzed to identify its
@@ -2057,7 +2057,7 @@ file separator character in <parameter>filepath</parameter> with a “/”.
 <section xml:id="urify-analysis">
 <title>Analysis</title>
 
-<para>The <code>filepath</code> presented is analyzed to identify the
+<para>The <parameter>filepath</parameter> presented is analyzed to identify the
 following features:</para>
 
 <itemizedlist>
@@ -2086,17 +2086,17 @@ soon as the features have been identified.</para>
 
 <orderedlist>
 <listitem>
-<para>If the <code>filepath</code> is the empty string, it has no
+<para>If the <parameter>filepath</parameter> is the empty string, it has no
 scheme, no authority, and no drive letter. Its path is the empty
 string and it is relative and hierarchical.</para>
 </listitem>
 <listitem>
-<para>If the <code>filepath</code> is the string “//”, it has no
+<para>If the <parameter>filepath</parameter> is the string “//”, it has no
 scheme, no authority, and no drive letter. Its path is the
 string “/” and it is absolute and hierarchical.</para>
 </listitem>
 <listitem>
-<para>On a Windows system, if the <code>filepath</code> matches the
+<para>On a Windows system, if the <parameter>filepath</parameter> matches the
 regular expression “<code>^(file:/*)?([a-z]):(.*)</code>”, it is a
 “file” scheme URI. If the first match group begins with “file:”, it is an
 explicit file scheme URI, otherwise it is an implicit file scheme URI.
@@ -2153,7 +2153,7 @@ on drive C with the absolute path “/Users/Jane/Documents and Files/Thing”.
 </listitem>
 
 <listitem>
-<para>If the <code>filepath</code> matches the regular expression
+<para>If the <parameter>filepath</parameter> matches the regular expression
 “<code>^file://([^/]+)(/.*)?$</code>”, it is an explicit “file” scheme
 URI. The first match group is the authority.
 If the second match group begins with a “/”, the path is absolute and
@@ -2203,7 +2203,7 @@ removed. Otherwise, the path is the empty string and is relative.
 </listitem>
 
 <listitem>
-<para>If the <code>filepath</code> matches the regular expression
+<para>If the <parameter>filepath</parameter> matches the regular expression
 “<code>^file:(.*)$</code>”, it is an explicit “file” scheme URI.
 If the first match group begins with a “/”, the path is absolute and
 consists of the first match group with all but one leading “/”
@@ -2241,7 +2241,7 @@ path “/path/to/thing”.
 </listitem>
 
 <listitem>
-<para>If the <code>filepath</code> matches the regular expression
+<para>If the <parameter>filepath</parameter> matches the regular expression
 “<code>^([a-z]+):(.*)$</code>”, it is an explicit URI in the scheme identified
 by the first match group. The path is the second match group. (In the terms of <biblioref
 linkend="rfc3986"/>, it may have an authority component, but that’s
@@ -2302,7 +2302,7 @@ absolute path “//example.com:9000/path/to/thing”.
 </listitem>
 
 <listitem>
-<para>If the <code>filepath</code> matches the regular expression
+<para>If the <parameter>filepath</parameter> matches the regular expression
 “<code>^//([^/]+)(/.*)?$</code>”, it has no scheme. The first match
 group is the authority.
 If the second match group begins with a “/”, the path is absolute and
@@ -2357,10 +2357,10 @@ the absolute path “/Documents and Files/thing”.
 </listitem>
 
 <listitem>
-<para>If the <code>filepath</code> begins with a “/”, the
-path is absolute and consists of <code>filepath</code> with all but
+<para>If the <parameter>filepath</parameter> begins with a “/”, the
+path is absolute and consists of <parameter>filepath</parameter> with all but
 one leading “/” removed. Otherwise, the path is relative and consists
-of the entire <code>filepath</code>. It is hierarchical and has no scheme, no authority and no drive
+of the entire <parameter>filepath</parameter>. It is hierarchical and has no scheme, no authority and no drive
 letter. (This condition always applies if no preceding condition does.)</para>
 <para>For example:</para>
 <itemizedlist>
@@ -2402,29 +2402,29 @@ It matches the preceding case; “path” is the authority.
 </orderedlist>
 
 <para>If the analysis determines that the string represents a
-non-hierarchical URI, the <code>filepath</code> is returned
+non-hierarchical URI, the <parameter>filepath</parameter> is returned
 unchanged.</para>
 
 <para>If the analysis determines that the scheme is known
 and the path is absolute, a URI is constructed from the features,
 see below. Otherwise, the URI must be made absolute with respect to the
-<code>basedir</code> provided.</para>
+<parameter>basedir</parameter> provided.</para>
 
-<para>If the <code>basedir</code> is the empty sequence, construct a
+<para>If the <parameter>basedir</parameter> is the empty sequence, construct a
 presumptive URI string from the string that represents the current
 working directory. If this presumptive URI does not end with the file
 separator, append the file separator. If the implementation is running
 in an environment where the concept of “current working directory”
 does not apply, the presumptive URI is the empty string. This
-presumptive URI becomes the <code>basedir</code>.</para>
+presumptive URI becomes the <parameter>basedir</parameter>.</para>
 
-<para>Analyze the features of the <code>basedir</code>.</para>
+<para>Analyze the features of the <parameter>basedir</parameter>.</para>
 
-<para>If the <code>basedir</code> has no scheme, it’s implicitly a
+<para>If the <parameter>basedir</parameter> has no scheme, it’s implicitly a
 “file” URI.</para>
 
-<para>If the <code>basedir</code> path is relative, the
-<code>filepath</code> cannot be made absolute. <error code="D0074">It
+<para>If the <parameter>basedir</parameter> path is relative, the
+<parameter>filepath</parameter> cannot be made absolute. <error code="D0074">It
 is a <glossterm>dynamic error</glossterm> if no absolute base URI is
 supplied to <function>p:urify</function> and none can be inferred from
 the current working directory.</error></para>
@@ -2450,41 +2450,41 @@ the relative path has a scheme that differs from the scheme of the base URI.</er
 </listitem>
 <listitem>
 <para><error code="D0080">It is a <glossterm>dynamic error</glossterm> if
-the <code>basedir</code> has a non-hierarchical scheme.</error>
+the <parameter>basedir</parameter> has a non-hierarchical scheme.</error>
 </para>
 </listitem>
 </itemizedlist>
 
-<para>Combine the features of the <code>filepath</code> with the
-features of the <code>basedir</code> to obtain a set of features to
+<para>Combine the features of the <parameter>filepath</parameter> with the
+features of the <parameter>basedir</parameter> to obtain a set of features to
 use to construct the result.</para>
 
-<para>If the <code>filepath</code> has no scheme or an implicit file
+<para>If the <parameter>filepath</parameter> has no scheme or an implicit file
 scheme, perform fixup on the path, as described below. If the
-<code>basedir</code> is an implicit file URI, perform fixup on its
+<parameter>basedir</parameter> is an implicit file URI, perform fixup on its
 path.</para>
 
 <orderedlist>
 <listitem>
-<para>The scheme is the scheme of the <code>basedir</code>.
+<para>The scheme is the scheme of the <parameter>basedir</parameter>.
 </para>
 </listitem>
 <listitem>
-<para>If the <code>filepath</code> has an authority, use that authority,
-otherwise use the authority of the <code>basedir</code>, if it has one.</para>
+<para>If the <parameter>filepath</parameter> has an authority, use that authority,
+otherwise use the authority of the <parameter>basedir</parameter>, if it has one.</para>
 </listitem>
 <listitem>
-<para>The drive letter is the drive letter of the <code>basedir</code>.</para>
+<para>The drive letter is the drive letter of the <parameter>basedir</parameter>.</para>
 </listitem>
 <listitem>
-<para>If the path of the <code>filepath</code> absolute, that’s the path. Otherwise
-the path is the path of the <code>filepath</code> resolved against the
-<code>basedir</code>.
+<para>If the path of the <parameter>filepath</parameter> absolute, that’s the path. Otherwise
+the path is the path of the <parameter>filepath</parameter> resolved against the
+<parameter>basedir</parameter>.
 </para>
-<para>If the <code>basedir</code> ends in “/”, the resolved path is the concatention
-of the <code>basedir</code> and <code>filepath</code>’s path. Otherwise,
-the resolved path is the concatentation of all the characters in <code>basedir</code>
-up to and including the last “/” it contains with the <code>filepath</code>’s path.
+<para>If the <parameter>basedir</parameter> ends in “/”, the resolved path is the concatention
+of the <parameter>basedir</parameter> and <parameter>filepath</parameter>’s path. Otherwise,
+the resolved path is the concatentation of all the characters in <parameter>basedir</parameter>
+up to and including the last “/” it contains with the <parameter>filepath</parameter>’s path.
 </para>
 <para>Path contraction for “.” and “..” is performed on the resolved path
 according to Section 3.3 of <biblioref linkend="rfc3986"/>.</para>
@@ -2507,7 +2507,7 @@ per Section 2.4 of <biblioref linkend="rfc3986"/>.</para>
 
 <para>The <function>p:urify</function> result string is constructed from
 the features of the path (or the features of the path as resolved against the
-<code>basedir</code>, if applicable) in the following way:</para>
+<parameter>basedir</parameter>, if applicable) in the following way:</para>
 
 <orderedlist>
 <listitem>
