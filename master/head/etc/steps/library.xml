@@ -35,7 +35,7 @@
       <p:output port="report" content-types="application/xml" sequence="false"/>
       <p:option name="format" as="xs:QName" select="'zip'"/>
       <p:option name="relative-to" as="xs:anyURI?"/>
-      <p:option name="parameters" as="xs:string"/>
+      <p:option name="parameters" as="map(xs:QName, item()*)?"/>
    </p:declare-step>
    <p:declare-step type="p:archive-manifest" xml:id="archive-manifest">
       <p:input port="source"
@@ -47,22 +47,22 @@
                 content-types="application/xml"
                 sequence="false"/>
       <p:option name="format" as="xs:QName?"/>
-      <p:option name="parameters" as="xs:string"/>
+      <p:option name="parameters" as="map(xs:QName, item()*)?"/>
       <p:option name="relative-to" as="xs:anyURI?"/>
-      <p:option name="override-content-types" as="xs:string"/>
+      <p:option name="override-content-types" as="array(array(xs:string))?"/>
    </p:declare-step>
    <p:declare-step type="p:cast-content-type" xml:id="cast-content-type">
       <p:input port="source" content-types="any"/>
       <p:output port="result" content-types="any"/>
       <p:option name="content-type" required="true" as="xs:string"/>
-      <p:option name="parameters" as="xs:string"/>
+      <p:option name="parameters" as="map(xs:QName,item()*)?"/>
    </p:declare-step>
    <p:declare-step type="p:compare" xml:id="compare">
       <p:input port="source" primary="true" content-types="any"/>
       <p:input port="alternate" content-types="any"/>
       <p:output port="result" content-types="application/xml"/>
       <p:output port="differences" content-types="any" sequence="true"/>
-      <p:option name="parameters" as="xs:string"/>
+      <p:option name="parameters" as="map(xs:QName,item()*)?"/>
       <p:option name="method" as="xs:QName?"/>
       <p:option name="fail-if-not-equal" as="xs:boolean" select="false()"/>
    </p:declare-step>
@@ -76,8 +76,8 @@
                 content-types="any"
                 sequence="false"/>
       <p:option name="format" as="xs:QName" select="'gzip'"/>
-      <p:option name="serialization" as="xs:string"/>
-      <p:option name="parameters" as="xs:string"/>
+      <p:option name="serialization" as="map(xs:QName,item()*)?"/>
+      <p:option name="parameters" as="map(xs:QName, item()*)?"/>
    </p:declare-step>
    <p:declare-step type="p:count" xml:id="count">
       <p:input port="source" content-types="any" sequence="true"/>
@@ -108,7 +108,7 @@
    <p:declare-step type="p:hash" xml:id="hash">
       <p:input port="source" primary="true" content-types="xml html"/>
       <p:output port="result" content-types="text xml html"/>
-      <p:option name="parameters" as="xs:string"/>
+      <p:option name="parameters" as="map(xs:QName,item()*)?"/>
       <p:option name="value" required="true" as="xs:string"/>
       <p:option name="algorithm" required="true" as="xs:QName"/>
       <p:option name="match"
@@ -126,10 +126,10 @@
       <p:output port="report" content-types="application/json"/>
       <p:option name="href" as="xs:anyURI" required="true"/>
       <p:option name="method" as="xs:string?" select="'GET'"/>
-      <p:option name="serialization" as="xs:string"/>
-      <p:option name="headers" as="xs:string"/>
-      <p:option name="auth" as="xs:string"/>
-      <p:option name="parameters" as="xs:string"/>
+      <p:option name="serialization" as="map(xs:QName,item()*)?"/>
+      <p:option name="headers" as="map(xs:string, xs:string)?"/>
+      <p:option name="auth" as="map(xs:string, item()+)?"/>
+      <p:option name="parameters" as="map(xs:QName, item()*)?"/>
       <p:option name="assert" as="xs:string" select="'.?status-code lt 400'"/>
    </p:declare-step>
    <p:declare-step type="p:identity" xml:id="identity">
@@ -183,9 +183,9 @@
    <p:declare-step type="p:load" xml:id="load">
       <p:output port="result" content-types="any"/>
       <p:option name="href" required="true" as="xs:anyURI"/>
-      <p:option name="parameters" as="xs:string"/>
+      <p:option name="parameters" as="map(xs:QName,item()*)?"/>
       <p:option name="content-type" as="xs:string?"/>
-      <p:option name="document-properties" as="xs:string"/>
+      <p:option name="document-properties" as="map(xs:QName, item()*)?"/>
    </p:declare-step>
    <p:declare-step type="p:make-absolute-uris" xml:id="make-absolute-uris">
       <p:input port="source" content-types="xml html"/>
@@ -245,12 +245,14 @@
                 as="xs:string"
                 select="'/*'"
                 e:type="XSLTSelectionPattern"/>
-      <p:option name="attributes" required="true" as="xs:string"/>
+      <p:option name="attributes"
+                required="true"
+                as="map(xs:QName, xs:anyAtomicType)"/>
    </p:declare-step>
    <p:declare-step type="p:set-properties" xml:id="set-properties">
       <p:input port="source" content-types="any"/>
       <p:output port="result" content-types="any"/>
-      <p:option name="properties" required="true" as="xs:string"/>
+      <p:option name="properties" required="true" as="map(xs:QName,item()*)"/>
       <p:option name="merge" select="true()" as="xs:boolean"/>
    </p:declare-step>
    <p:declare-step type="p:sink" xml:id="sink">
@@ -274,7 +276,7 @@
       <p:output port="result" content-types="any" primary="true"/>
       <p:output port="result-uri" content-types="application/xml"/>
       <p:option name="href" required="true" as="xs:anyURI"/>
-      <p:option name="serialization" as="xs:string"/>
+      <p:option name="serialization" as="map(xs:QName,item()*)?"/>
    </p:declare-step>
    <p:declare-step type="p:string-replace" xml:id="string-replace">
       <p:input port="source" content-types="xml html"/>
@@ -379,9 +381,9 @@
       <p:option name="include-filter" as="xs:string*" e:type="RegularExpression"/>
       <p:option name="exclude-filter" as="xs:string*" e:type="RegularExpression"/>
       <p:option name="format" as="xs:QName?"/>
-      <p:option name="parameters" as="xs:string"/>
+      <p:option name="parameters" as="map(xs:QName, item()*)?"/>
       <p:option name="relative-to" as="xs:anyURI?"/>
-      <p:option name="override-content-types" as="xs:string"/>
+      <p:option name="override-content-types" as="array(array(xs:string))?"/>
    </p:declare-step>
    <p:declare-step type="p:uncompress" xml:id="uncompress">
       <p:input port="source"
@@ -393,7 +395,7 @@
                 content-types="any"
                 sequence="false"/>
       <p:option name="format" as="xs:QName?"/>
-      <p:option name="parameters" as="xs:string"/>
+      <p:option name="parameters" as="map(xs:QName,item()*)?"/>
       <p:option name="content-type"
                 as="xs:string"
                 select="'application/octet-stream'"/>
@@ -437,7 +439,9 @@
    </p:declare-step>
    <p:declare-step type="p:www-form-urlencode" xml:id="www-form-urlencode">
       <p:output port="result" content-types="text/plain"/>
-      <p:option name="parameters" required="true" as="xs:string"/>
+      <p:option name="parameters"
+                required="true"
+                as="map(xs:string,xs:untypedAtomic+)"/>
    </p:declare-step>
    <p:declare-step type="p:xinclude" xml:id="xinclude">
       <p:input port="source" content-types="xml html"/>
@@ -452,7 +456,7 @@
                primary="true"/>
       <p:input port="query" content-types="text xml"/>
       <p:output port="result" sequence="true" content-types="any"/>
-      <p:option name="parameters" as="xs:string"/>
+      <p:option name="parameters" as="map(xs:QName,item()*)?"/>
       <p:option name="version" as="xs:string?"/>
    </p:declare-step>
    <p:declare-step type="p:xslt" xml:id="xslt">
@@ -466,9 +470,9 @@
                 sequence="true"
                 content-types="any"/>
       <p:output port="secondary" sequence="true" content-types="any"/>
-      <p:option name="parameters" as="xs:string"/>
-      <p:option name="static-parameters" as="xs:string"/>
-      <p:option name="global-context-item" as="xs:string"/>
+      <p:option name="parameters" as="map(xs:QName,item()*)?"/>
+      <p:option name="static-parameters" as="map(xs:QName,item()*)?"/>
+      <p:option name="global-context-item" as="item()?"/>
       <p:option name="populate-default-collection" as="xs:boolean?" select="true()"/>
       <p:option name="initial-mode" as="xs:QName?"/>
       <p:option name="template-name" as="xs:QName?"/>

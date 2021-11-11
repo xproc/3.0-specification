@@ -16,6 +16,6 @@
       <p:option name="error-content-type" select="'text/plain'" as="xs:string"/>
       <p:option name="path-separator" as="xs:string?"/>
       <p:option name="failure-threshold" as="xs:integer?"/>
-      <p:option name="serialization" as="xs:string"/>
+      <p:option name="serialization" as="map(xs:QName,item()*)?"/>
    </p:declare-step>
 </p:library>

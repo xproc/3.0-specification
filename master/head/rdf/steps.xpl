@@ -10,6 +10,6 @@
                 primary="true"
                 sequence="false"
                 content-types="html"/>
-      <p:option name="parameters" as="xs:string"/>
+      <p:option name="parameters" as="map(xs:QName, item()*)?"/>
    </p:declare-step>
 </p:library>
