@@ -1281,8 +1281,8 @@ value template in a <tag>p:inline</tag>.
 <title>Connections and the Default Readable Port</title>
 
 <para>The <glossterm>default readable port</glossterm> is a
-convenience for pipeline authors. In the pipeline document which
-describes a pipeline, steps are often represented with sequential
+convenience for pipeline authors. In the document which
+describes a pipeline, steps are sequential
 elements and it is very common for the output of one step to form the
 natural input to the step described by its immediately following
 sibling. Consider the following fragment:</para>
@@ -1303,10 +1303,11 @@ step establishes a connection between the add XML base step and the
 add-attribute step.</para>
 
 <para>However, unlike an explicit binding which
-<emphasis>always</emphasis> forms a connection, the default readable
-port doesn’t <emphasis>have</emphasis> to form a connection. If the
-processor can determine that the default readable port is not used,
-then it can forgo the connection and the steps can run in parallel.</para>
+<emphasis>always</emphasis> forms a connection, the default readable port
+<emphasis>only</emphasis> forms a connection if it is used.
+If the
+processor determines that the default readable port is not used,
+then it must forgo the connection and the steps can run in parallel.</para>
 
 <para>Consider the following fragment:</para>
 
@@ -1322,7 +1323,7 @@ then it can forgo the connection and the steps can run in parallel.</para>
 readable port, but it isn’t the source for the add-attribute step nor
 is the context item used in evaluating the
 <tag class="attribute">attribute-value</tag> option (or any other option,
-including the default values of unspecified options), so the processor may
+including the default values of unspecified options), so the processor must
 omit the connection. This leads to increased parallelism and possibly
 improved performance.</para>
 
@@ -1342,16 +1343,9 @@ to the following step. Even though the file steps don’t have input
 ports, the document on the default readable port is the context item
 for evaluating the options on each step.</para>
 
-<para>An implementation that did no additional analysis of the options
-would conclude that there are bindings between these steps and run
-them in the order the author expects: touch, followed by copy,
-followed by delete. However, such an implementation would miss many
-opportunities for parallelism in pipelines.</para>
-
-<para>An implementation that did more analysis would observe that none
-of the options use the context item (and there are no inputs, as we
-already observed). Consequently, that implementation could conclude
-that there are no connections between these steps and that they can be
+<para>However, an implementation will observe that none
+of the options use the context item (and there are no inputs).
+Consequently, there are no connections between these steps and they can be
 run in an arbitrary order, or even in parallel. Running delete,
 followed by copy, followed by touch would be perfectly correct but
 would not have the side-effects expected by the pipeline
@@ -1362,9 +1356,7 @@ freedom to execute pipelines more efficiently and not violating user
 expectations. In practice, this problem only arises when scheduling
 steps that have side effects, steps with side effects are (relatively)
 uncommon, and by their nature are impossible for the processor to
-schedule with complete confidence. XProc is opting to give
-implementors the freedom to deliver better performance in this
-case.</para>
+schedule with complete confidence.</para>
 
 <para>The pipeline author can make the dependencies explicit in the
 pipeline, which will ensure that the processor schedules the steps in
@@ -5426,19 +5418,20 @@ author to exclude some namespace declarations in inline content, see <tag>p:inli
 </varlistentry>
 </variablelist>
 
-<para>On a <tag>p:declare-step</tag> for an atomic step, the
-<tag>p:input</tag> can only declare the input port. <error code="S0042">It is a <glossterm>static error</glossterm> to attempt to
-provide a connection for an input port on the declaration of an atomic
-step.</error> On <tag>p:declare-step</tag>, any binding provided in
+<para>On <tag>p:declare-step</tag>, any binding provided in
 <tag>p:input</tag> is a default connection for the port, if no other
-connection is provided, see <xref linkend="conn-prec"/>.</para>
+connection is provided, see <xref linkend="conn-prec"/>.
+</para>
 
 <para xml:id="note-pipe-excl">The <tag>p:pipe</tag> element is
 explicitly excluded from a declaration because it would make the
 default value of an input dependent on the execution of some part of
 the pipeline. If a runtime binding is provided for an input port, implementations
 <rfc2119>must not</rfc2119> attempt to dereference the default
-bindings.</para>
+bindings.
+In the case of <tag>p:document</tag> connections, the URI is dereferenced
+only when the default connection is actually used, not during static analysis.
+</para>
 
 </section>
 <section xml:id="p.with-input">
