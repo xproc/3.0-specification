@@ -5288,17 +5288,24 @@ undefined.</error></para>
 </varlistentry>
 <varlistentry><term><tag class="attribute">select</tag></term>
 <listitem>
-            <para>A <tag class="attribute">select</tag> expression <rfc2119>may</rfc2119> also be
-              provided with a connection. The <tag class="attribute">select</tag> expression, if
-              specified, applies the specified XPath select expression to the document(s) that are
-              read. </para>
-            <para>The result of this is a sequence of items. The rules as stated in <xref
-                linkend="creating-documents-from-xdm-step-results"/> will be applied to the members
-              of this sequence and will turn these into separate documents. <error code="D0016">It is a
-                <glossterm>dynamic error</glossterm> if the select expression on a <tag>p:input</tag> or
-                <tag>p:with-input</tag> returns attribute nodes or function items.</error></para>
+<para>If a <tag class="attribute">select</tag> expression is
+specified, it is effectively a filter on the input. The expression
+will be evaluated once for each document that appears on the port,
+using that document as the context item. The result of evaluating the
+expression (on each document that appears, in the order they arrive)
+will be the sequence of items that the step receives on the
+port.</para>
 
-  <para>For example:</para>
+<para>The rules as stated in <xref
+linkend="creating-documents-from-xdm-step-results"/> will be applied to the members
+of this sequence and will turn these into separate documents. <error code="D0016">It is a
+<glossterm>dynamic error</glossterm> if the select expression on a <tag>p:input</tag> or
+<tag>p:with-input</tag> returns attribute nodes or function items.</error></para>
+
+<para>If no documents are received, the expression is not evaluated and the
+step receives no input on the port.</para>
+
+<para>For example:</para>
 
 <programlisting language="xml"><xi:include href="../../../build/examples/input-doc.txt" parse="text"/></programlisting>
 
@@ -5313,9 +5320,13 @@ will result in the same content being returned in several
 documents.)</para>
 
 <para>A select expression can equally be applied to input read from
-another step. This input:</para><programlisting
+another step. This input:</para>
+
+<programlisting
 language="xml"><xi:include href="../../../build/examples/input-port.txt"
-parse="text"/></programlisting><para>provides a sequence of zero or
+parse="text"/></programlisting>
+
+<para>provides a sequence of zero or
 more documents, one for each <code>html:div</code> in the document (or
 each of the documents) that is read from the <literal>result</literal>
 port of the step named <literal>origin</literal>.</para>
