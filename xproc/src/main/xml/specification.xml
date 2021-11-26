@@ -5292,25 +5292,22 @@ undefined.</error></para>
 </varlistentry>
 <varlistentry><term><tag class="attribute">select</tag></term>
 <listitem>
-<para>A <tag class="attribute">select</tag> expression
-<rfc2119>may</rfc2119> be provided with a connection.
-If a <tag class="attribute">select</tag> expression is specified,
-it will be applied to each item that appears on the connection. That is,
-for each item received, the
-<tag class="attribute">select</tag> expression will be evaluated with that
-item as the context item.
-If no items are received on the connection, the select
-expression will be evaluated once with an empty sequence as the
-context item.
-The sequence of items returned (the accumulated sequence of items, in the case where
-more than one item appears on the connection)
-by the expression is the input to the step.</para>
+<para>If a <tag class="attribute">select</tag> expression is
+specified, it is effectively a filter on the input. The expression
+will be evaluated once for each document that appears on the port,
+using that document as the context item. The result of evaluating the
+expression (on each document that appears, in the order they arrive)
+will be the sequence of items that the step receives on the
+port.</para>
 
 <para>The rules as stated in <xref
 linkend="creating-documents-from-xdm-step-results"/> will be applied to the members
 of this sequence and will turn these into separate documents. <error code="D0016">It is a
 <glossterm>dynamic error</glossterm> if the select expression on a <tag>p:input</tag> or
 <tag>p:with-input</tag> returns attribute nodes or function items.</error></para>
+
+<para>If no documents are received, the expression is not evaluated and the
+step receives no input on the port.</para>
 
 <para>For example:</para>
 
