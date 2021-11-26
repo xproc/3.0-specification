@@ -5774,10 +5774,9 @@ parameters</link>.
 </varlistentry>
 </variablelist>
 
-
 <para><error code="S0029">It is a <glossterm>static error</glossterm>
 to specify a connection for a <tag>p:output</tag> inside a
-<tag>p:declare-step</tag> for an atomic step.</error></para>
+<tag>p:declare-step</tag> for an <glossterm>external step</glossterm>.</error></para>
 
 <para>If a connection is provided for a <tag>p:output</tag>, documents
 are <emphasis>read from</emphasis> that connection and those documents
@@ -6403,10 +6402,20 @@ specify a value for an option that is declared static.</error>
 
 <para>A <tag>p:declare-step</tag> provides the type and
 <glossterm>signature</glossterm> of a pipeline or
-an <glossterm>atomic step</glossterm>.
+an <glossterm>external step</glossterm>.
 Pipelines contain a subpipeline which defines what the declared
-step does. Atomic steps have an implementation defined elsewhere in some
-other way.</para>
+step does.
+<termdef xml:id="dt-external-step">An <firstterm>external step</firstterm>
+is one supported by the implementation, but which has no exposed description
+of what it does.</termdef> 
+</para>
+
+<para>The standard XProc atomic steps (<tag>p:add-attribute</tag>,
+<tag>p:add-xml-base</tag> …) are all external steps.
+<impl>Whether or not an implementation allows users to provide their own
+external steps is <glossterm>implementation-dependent</glossterm>.</impl>
+A <tag>p:declare-step</tag> must be provided for every pipeline and external step
+that is used in a pipeline.</para>
 
 <para><impl>When a declared step is evaluated directly by the XProc
 processor (as opposed to occurring as an atomic step in some
@@ -6585,16 +6594,16 @@ subpipeline does not have a primary output port.</error></para>
 </section>
 
 <section xml:id="declare-atomic-steps">
-<title>Declaring atomic steps</title>
+<title>Declaring external steps</title>
 
-<para>The distinction between an atomic step declaration and a
-pipeline declaration hinges on the presence or absence of a
-subpipeline. An atomic step declaration does not have a subpipeline.
-</para>
+<para>The distinction between a pipeline declaration and an external
+step declaration hinges on the presence or absence of a subpipeline.
+A step declaration that does not contain a subpipeline is, by definition,
+declaring an <glossterm>external step</glossterm>.</para>
 
-<para>Atomic step declarations may not import other pipelines or
+<para>External step declarations may not import other pipelines or
 functions, may not declare static options, and may not declare
-additional steps. In other words, the content of an atomic step
+additional steps. In other words, the content of an external step
 declaration consists exclusively of <tag>p:input</tag>,
 <tag>p:output</tag>, and <tag>p:option</tag> elements.</para>
 
@@ -6612,6 +6621,11 @@ steps that a particular processor does not know how to implement. It
 is, of course, an error to attempt to evaluate such steps. 
 The function <function>p:step-available</function> will return <literal>false</literal>
 when called with the type name of such a step.</para>
+
+<para><error code="S0115">It is a <glossterm>static error</glossterm>
+to attempt to invoke an external step that is not available.
+</error></para>
+
 </section>
 </section>
 
@@ -8009,7 +8023,9 @@ excluded</firstterm> from the pipeline document.</para></glossdef></glossentry><
           context-dependent collection of information available within subpipelines.</para></glossdef></glossentry><glossentry><glossterm>extension attribute</glossterm><glossdef><para>An element from the XProc namespace
             <rfc2119>may</rfc2119> have any attribute not from the XProc namespace, provided that
           the expanded-QName of the attribute has a non-null namespace URI. Such an attribute is
-          called an <firstterm>extension attribute</firstterm>.</para></glossdef></glossentry><glossentry><glossterm>implementation-defined</glossterm><glossdef><para>An
+          called an <firstterm>extension attribute</firstterm>.</para></glossdef></glossentry><glossentry><glossterm>external step</glossterm><glossdef><para>An <firstterm>external step</firstterm>
+is one supported by the implementation, but which has no exposed description
+of what it does.</para></glossdef></glossentry><glossentry><glossterm>implementation-defined</glossterm><glossdef><para>An
 <firstterm>implementation-defined</firstterm> feature is one where the
 implementation has discretion in how it is performed.
 Conformant implementations <rfc2119>must</rfc2119> document
