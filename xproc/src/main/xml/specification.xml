@@ -5090,14 +5090,16 @@ steps and the terms associated with these types:</para>
     imported by the surrounding pipeline.</para>
   </section>
     <section xml:id="p.extension"><title>Extension Steps</title><para>Pipeline authors may also have
-        access to additional steps not defined or described by this specification. Atomic extension
-        steps are invoked just like standard steps:</para>
+        access to additional steps not defined or described by this specification. Such
+an <glossterm>external step</glossterm>
+        is invoked just like the standard steps:</para>
       <e:rng-pattern name="OtherAtomicStep"/>
       <para>Extension steps <rfc2119>must not</rfc2119> be in the XProc namespace and there
           <rfc2119>must</rfc2119> be a <glossterm>visible</glossterm> step declaration at the point
         of use (see <xref linkend="scoping"/>).</para>
 <para>If the relevant step declaration has no
-          <glossterm>subpipeline</glossterm>, then that step invokes the declared atomic step, which
+          <glossterm>subpipeline</glossterm>, then that step invokes the declared
+<glossterm>external step</glossterm>, which
         the processor must know how to perform. These steps are implementation-defined extensions.
         </para>
 <para>If the relevant step declaration has a <glossterm>subpipeline</glossterm>, then
@@ -5110,7 +5112,8 @@ steps and the terms associated with these types:</para>
             baseform="matches">match</glossterm> the <glossterm>signature</glossterm> for steps of
           that type.</error></para>
 <para><error code="D0017">It is a <glossterm>dynamic
-            error</glossterm> if the running pipeline attempts to invoke a step which the processor
+            error</glossterm> if the running pipeline attempts to invoke an
+<glossterm>external step</glossterm> which the processor
           does not know how to perform.</error></para>
 <para><impl>The presence of other <glossterm
             baseform="compound step">compound steps</glossterm> is
@@ -6209,8 +6212,7 @@ an <glossterm>external step</glossterm>.
 Pipelines contain a subpipeline which defines what the declared
 step does.
 <termdef xml:id="dt-external-step">An <firstterm>external step</firstterm>
-is one supported by the implementation, but which has no exposed description
-of what it does.</termdef> 
+is one supported by the implementation, but which has no exposed subpipeline.</termdef> 
 </para>
 
 <para>The standard XProc atomic steps (<tag>p:add-attribute</tag>,
@@ -6426,9 +6428,10 @@ is, of course, an error to attempt to evaluate such steps.
 The function <function>p:step-available</function> will return <literal>false</literal>
 when called with the type name of such a step.</para>
 
-<para><error code="S0115">It is a <glossterm>static error</glossterm>
-to attempt to invoke an external step that is not available.
-</error></para>
+<para><error code="D0017">It is a <glossterm>dynamic
+            error</glossterm> if the running pipeline attempts to invoke an
+external step which the processor
+          does not know how to perform.</error></para>
 
 </section>
 </section>
