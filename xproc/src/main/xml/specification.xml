@@ -5965,7 +5965,11 @@ Consequently, if it contains option references, these can only be
 references to preceding non-static options on the step or to in-scope static options.
 <error code="D0001">It is a <glossterm>dynamic error</glossterm> if an
 XPath expression makes reference to the context item, size, or position when
-the context item is undefined.</error></para>
+the context item is undefined.</error>
+This error will always arise if the <tag class="attribute">select</tag> expression
+refers to the context item because there can never be a context item for
+<tag>p:option</tag> default values.
+</para>
 
 <para><impl>The precise details about what XPath expressions are allowed
 (for example, can the expression declare a function) is
