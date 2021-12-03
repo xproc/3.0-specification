@@ -4072,11 +4072,6 @@ attribute">extension attributes</glossterm>.</error>
           </para>
         </listitem>
         <listitem>
-          <para><error code="D0019">It is a <glossterm>dynamic error</glossterm> if any option value
-              does not satisfy the type required for that option.</error>
-          </para>
-        </listitem>
-        <listitem>
           <para><error code="S0015">It is a <glossterm>static error</glossterm> if a compound step
               has no <glossterm>contained steps</glossterm>.</error>
           </para>
@@ -5917,8 +5912,13 @@ for example: <code>('one', 'two', 'three')</code>.
 <error code="S0101">It is a <glossterm>static error</glossterm> if the
 values list is not an XPath sequence of atomic values.</error>
 </para>
-<para>The values list is an additional constraint on the acceptable values
-for the option. The option value must satisfy the <tag class="attribute">as</tag>
+<para>The values list is an additional constraint on the acceptable
+values for the option. <error code="D0019">It is a <glossterm>dynamic
+error</glossterm> if an option declares a list of acceptable values
+and an attempt is made to specify a value that is not a member of that
+list.</error>
+</para>
+<para>The option value must satisfy the <tag class="attribute">as</tag>
 type, if one is provided, and must be equal to (XPath “<code>eq</code>”) one of the listed
 <tag class="attribute">values</tag>.
 It is possible to combine <tag class="attribute">as</tag> and
