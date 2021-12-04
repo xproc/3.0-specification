@@ -3877,6 +3877,39 @@ if the element was not present in the document.
 processing occurs after XML parsing and has no effect on well-formedness
 or validation errors which will be reported in the usual way.</para>
 </note>
+
+<para>Deadlock situations can arise if two or more 
+<tag class="attribute">[p:]use-when</tag> expressions depend on each other.
+Consider, for example:</para>
+
+<programlisting language="xml">&lt;p:declare-step type="ex:A" use-when="p:step-available('ex:B')"&gt;
+  …
+&lt;/p:declare-step&gt;
+
+&lt;p:declare-step type="ex:B" use-when="p:step-available('ex:A')"&gt;
+  …
+&lt;/p:declare-step&gt;</programlisting>
+
+<para>It is not possible for the processor to determine if
+<code>ex:A</code> should be declared without first determining if
+<code>ex:B</code> should be declared, and vice versa.</para>
+
+<para><error code="S0115">It is a <glossterm>static error</glossterm>
+if two or more elements are contained within a deadlocked network of
+<tag class="attribute">[p:]use-when</tag> expressions.</error> In
+order to avoid deadlock, there must exist an order in which every
+expression can be resolved without reference to an expression that
+occurs after it in the ordering.</para>
+
+<para>Processors may be required to evaluate expressions in an
+arbitrary order, but they are not required to solve a set of linear
+equations simultaneously. So, while “declare both <code>ex:A</code> and
+<code>ex:B</code>” is a valid solution to the example above,
+conformant processors are not required (or allowed) to find it
+because neither the order “A then B” nor the order “B then A” is
+sufficient to find the solution.
+</para>
+
 </section>
 
 <section xml:id="depends">
