@@ -441,7 +441,7 @@
       <p:output port="result" content-types="text/plain"/>
       <p:option name="parameters"
                 required="true"
-                as="map(xs:string,xs:untypedAtomic+)"/>
+                as="map(xs:string,xs:anyAtomicType+)"/>
    </p:declare-step>
    <p:declare-step type="p:xinclude" xml:id="xinclude">
       <p:input port="source" content-types="xml html"/>
