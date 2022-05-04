@@ -505,6 +505,18 @@ OtherCompoundStep =
   }
 OtherStep = StandardStep | OtherAtomicStep | OtherCompoundStep
 # ============================================================
+# The p:run step is magic.
+Step-run =
+  element run {
+    name.ncname.attr?,
+    attribute p:pipeline { xsd:NCName },
+    common.attributes,
+    global.attributes,
+    step.attributes,
+    ((WithInput | AtomicOutputDeclaration | WithOption)*
+     & (Documentation | PipeInfo)*)
+  }
+# ============================================================
 [ sa:ignore = "yes" sa:class = "language-construct" ]
 Documentation =
   element documentation {
@@ -690,7 +702,6 @@ StandardStep =
   | Step-os-exec
   | Step-css-formatter
   | Step-xsl-formatter
-  | Step-run
   | Step-markdown-to-html
   | Step-validate-with-nvdl
   | Step-validate-with-relax-ng
@@ -880,14 +891,6 @@ Step-xsl-formatter =
     attribute parameters { avt.datatype }?,
     attribute content-type { avt.datatype }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
-  }
-Step-run =
-  element run {
-    name.ncname.attr?,
-    common.attributes,
-    use-when.attr?,
-    step.attributes,
-    (WithInput* & (Documentation | PipeInfo)*)
   }
 Step-markdown-to-html =
   element markdown-to-html {

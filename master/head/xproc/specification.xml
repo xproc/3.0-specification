@@ -1505,9 +1505,7 @@ as they are available statically.</para>
                 xmlns:p="http://www.w3.org/ns/xproc"&gt;
   &lt;p:input port="source"/&gt;
   &lt;p:option name="A" static="true" select="5"/&gt;
-  &lt;p:option name="B" static="true" select="$A + count(//*)"&gt;
-    &lt;p:document href="doc.xml"/&gt;
-  &lt;/p:option&gt;
+  &lt;p:option name="B" static="true" select="$A + count(doc('doc.xml')//*)" /&gt;
   &lt;p:variable name="D" select="count(//*)"/&gt;
 
   …
