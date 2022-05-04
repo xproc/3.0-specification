@@ -145,7 +145,6 @@
                 select="'/*'"
                 e:type="XSLTSelectionPattern"/>
       <p:option name="position"
-                as="xs:token"
                 values="('first-child','last-child','before','after')"
                 select="'after'"/>
    </p:declare-step>
@@ -158,7 +157,6 @@
       <p:input port="source" sequence="true" content-types="any"/>
       <p:output port="result" content-types="application/json"/>
       <p:option name="duplicates"
-                as="xs:token"
                 values="('reject', 'use-first', 'use-last', 'use-any', 'combine')"
                 select="'use-first'"/>
       <p:option name="key"
@@ -207,7 +205,6 @@
       <p:option name="from" as="xs:anyURI?"/>
       <p:option name="to" as="xs:anyURI?"/>
       <p:option name="apply-to"
-                as="xs:token"
                 select="'all'"
                 values="('all','elements','attributes')"/>
    </p:declare-step>
