@@ -4,13 +4,9 @@
 <p:output port="result"/>
 
 <p:try>
-  <p:http-request>
-    <p:with-input port="source">
-      <p:inline>
-	<c:request method="post" href="http://example.com/form-action">
-	  <c:body content-type="application/x-www-form-urlencoded">name=W3C&amp;spec=XProc</c:body>
-	</c:request>
-      </p:inline>
+  <p:http-request method="post" href="http://example.com/form-action">
+    <p:with-input>
+      <p:inline content-type="application/x-www-form-urlencoded">name=W3C&amp;spec=XProc</p:inline>
     </p:with-input>
   </p:http-request>
   <p:catch>
