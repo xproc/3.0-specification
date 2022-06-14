@@ -1745,10 +1745,26 @@ If it is a QName, it is expanded using the namespace declarations in
 scope for the expression. <error code="D0015">It is a
   <glossterm>dynamic error</glossterm> if a QName is specified and it cannot be
   resolved with the in-scope namespace declarations.</error> The
-<function>p:step-available</function> function returns true if and
+<function>p:step-available</function> function returns <code>true</code> if and
 only if the processor knows how to evaluate a step of the specified
 type where the function is called.</para>
 
+      <para>In case the argument of <function>p:step-available</function> refers to a step that is
+        currently being defined, the function returns <code>false</code>. In practice this occurs
+        only if:</para>
+      <itemizedlist>
+        <listitem>
+          <para><function>p:step-available</function> is used in a <code>use-when</code> expression
+            on or within the <tag>p:declare-step</tag> that defines the step to which it
+            refers.</para>
+        </listitem>
+        <listitem>
+          <para><function>p:step-available</function> is used in a <code>use-when</code> expression
+            on a <tag>p:library</tag> that contains the declaration of the step to which it
+            refers.</para>
+        </listitem>
+      </itemizedlist>
+        
 <para>The <function>p:step-available</function> behaves normally during static analysis.</para>
 </section>
 
