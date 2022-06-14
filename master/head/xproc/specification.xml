@@ -5211,13 +5211,9 @@ can provide some sort of default for the rest of the pipeline.</para>
 <example xml:id="ex.p.trycatch">
 <title>An Example Try/Catch</title>
 <programlisting language="xml">&lt;p:try&gt;
-  &lt;p:http-request&gt;
-    &lt;p:with-input port="source"&gt;
-      &lt;p:inline&gt;
-	&lt;c:request method="post" href="http://example.com/form-action"&gt;
-	  &lt;c:body content-type="application/x-www-form-urlencoded"&gt;name=W3C&amp;amp;spec=XProc&lt;/c:body&gt;
-	&lt;/c:request&gt;
-      &lt;/p:inline&gt;
+  &lt;p:http-request method="post" href="http://example.com/form-action"&gt;
+    &lt;p:with-input&gt;
+      &lt;p:inline content-type="application/x-www-form-urlencoded"&gt;name=W3C&amp;amp;spec=XProc&lt;/p:inline&gt;
     &lt;/p:with-input&gt;
   &lt;/p:http-request&gt;
   &lt;p:catch&gt;
