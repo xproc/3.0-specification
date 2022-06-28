@@ -1299,7 +1299,7 @@ of the element on which it occurred.</para>
    <para feature="delete-preserves-partially">If the resulting document contains exactly one text node,
       the <literal>content-type</literal> property is changed to <literal>text/plain</literal> and the 
       <literal>serialization</literal> property is removed, while all other document properties are 
-      preserved. For other document types, all document properties are preserved.</para>
+      preserved. In all other cases, all document properties are preserved.</para>
 </simplesect>
 </section>
 <section xml:id="c.error">
@@ -3536,7 +3536,7 @@ children.</para>
 
 <p:declare-step type="p:unwrap">
    <p:input port="source" content-types="xml html"/>
-   <p:output port="result" content-types="application/xml text/plain"/>
+  <p:output port="result" content-types="text xml html"/>
    <p:option name="match" as="xs:string" select="'/*'" e:type="XSLTSelectionPattern"/>
 </p:declare-step>
 
@@ -3567,8 +3567,7 @@ ones.</para>
     </listitem>
     <listitem>
       <para>If a document consisting of only an empty root element is unwrapped, the result will be
-        a document node without children. The result document’s content type will become
-          “<literal>text/plain</literal>”.</para>
+        a document node without children. The result document’s content type will not change.</para>
     </listitem>
     <listitem>
       <para>If a document consisting of a root element containing only text is unwrapped, the result will be
@@ -3582,10 +3581,10 @@ ones.</para>
   
 <simplesect>
 <title>Document properties</title>
-    <para feature="unwrap-preserves-all">All document properties are preserved unless the step
-      changes the document’s content type. In that case the <code>content-type</code> document
-      property will reflect the new content type and the (optional) <code>serialization</code> document
-      property will be removed.</para>
+  <para feature="unwrap-preserves-partially">If the resulting document contains exactly one text node,
+    the <literal>content-type</literal> property is changed to <literal>text/plain</literal> and the 
+    <literal>serialization</literal> property is removed, while all other document properties are 
+    preserved. In all other cases, all document properties are preserved.</para>
 </simplesect>
 </section>
 <section xml:id="c.uuid">
