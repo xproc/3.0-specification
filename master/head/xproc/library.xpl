@@ -483,7 +483,7 @@
    </p:declare-step>
    <p:declare-step type="p:unwrap" xml:id="unwrap">
       <p:input port="source" content-types="xml html"/>
-      <p:output port="result" content-types="application/xml text/plain"/>
+      <p:output port="result" content-types="text xml html"/>
       <p:option name="match"
                 as="xs:string"
                 select="'/*'"
