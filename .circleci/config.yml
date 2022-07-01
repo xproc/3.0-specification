@@ -33,7 +33,13 @@ jobs:
             - ~/.gradle
           key: v1-dependencies-{{ checksum "build.gradle" }}
 
+      - run: |
+          echo Setup DeltaXML
+          curl -s $DIFFURI | openssl enc -aes-256-cbc -salt -pbkdf2 -d -k $DIFFPW | tar zvtf -
+
       - run: ./gradlew
+
+      - run: rm -rf deltaxml
 
       - run: ./.circleci/publish.sh
 
