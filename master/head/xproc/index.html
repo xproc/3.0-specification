@@ -1,4 +1,4 @@
-<html xmlns="http://www.w3.org/1999/xhtml"><head><title>XProc 3.0: An XML Pipeline Language</title><meta charset="utf-8" /><meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport" /><link class="removeOnSave" crossorigin="anonymous" href="https://www.w3.org" rel="preconnect" /><link as="script" class="removeOnSave" href="js/fixup.js" rel="preload" /><link as="style" class="removeOnSave" href="css/base.css" rel="preload" /><link as="image" class="removeOnSave" href="https://www.w3.org/StyleSheets/TR/2016/logos/W3C" rel="preload" /><link rel="stylesheet" href="css/cg-draft.css" /><link rel="stylesheet" href="css/respec.css" /><link rel="alternate" title="XML" href="specification.xml" /><meta name="generator" content="DocBook XSL 2.0 Stylesheets V2.5.0" /><meta name="description" content="Abstract This specification describes the syntax and semantics of&#xA;XProc 3.0: An XML Pipeline Language, a language for&#xA;describing operations to be performed on documents. An XML Pipeline specifies a sequence of operations to be&#xA;performed on documents. Pipelines generally accept&#xA;documents as input and produce documents as output.&#xA;Pipelines are made up of simple steps which&#xA;perform atomic operations on documents and constructs such as&#xA;conditionals, iterations, and exception handlers which control which&#xA;steps are executed." /><link href="css/default.css" rel="stylesheet" type="text/css" /><link href="css/db-prism.css" rel="stylesheet" type="text/css" /><link rel="stylesheet" type="text/css" href="css/base.css" /><link rel="stylesheet" type="text/css" href="css/xproc.css" /><link rel="stylesheet" type="text/css" href="css/print.css" media="print" /><script type="text/javascript" src="js/dbmodnizr.js"></script></head><body class="h-entry informative toc-sidebar"><div class="head" id="spec.head"><a class="logo" href="https://www.w3.org/"><img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2016/logos/W3C" width="72" /></a><h1 id="title" class="title p-name">XProc 3.0: An XML Pipeline Language</h1><h2>Draft Community Group Report <time class="dt-published" datetime="2022-07-01">1 July 2022</time></h2><div class="editors-draft">Editor's Draft   at <time class="dt-timestamp" datetime="20220701T07:38:08Z">07:38 UTC</time> (<a href="https://github.com/xproc/3.0-specification/commit/a5c30045730ac91d7b16a701410ccfe527b5900c">build 49</a>)</div><dl><dt>Latest editor’s draft:</dt><dd><a href="http://spec.xproc.org/master/head/xproc/">http://spec.xproc.org/master/head/xproc/</a></dd><dt>Editors:</dt><dd><span class="personname">Norman Walsh</span></dd><dd><span class="personname">Achim Berndzen</span></dd><dd><span class="personname">Gerrit Imsieke</span></dd><dd><span class="personname">Erik Siegel</span></dd><dt>Participate:</dt><dd><a href="http://github.com/xproc/3.0-specification">GitHub xproc/3.0-specification</a></dd><dd><a href="http://github.com/xproc/3.0-specification/issues">Report an issue</a></dd><dt>Changes:</dt><dd><a href="lcdiff.html">Diff against the “last call” draft</a></dd><dd><a href="diff.html">Diff against current “status quo” draft</a></dd><dd><a href="http://github.com/xproc/3.0-specification/commits/master">Commits for this specification</a></dd></dl><p>This document is also available in these non-normative formats: <a href="specification.xml">XML</a> and HTML with automatic change markup  courtesy of <a href="http://www.deltaxml.com/">DeltaXML</a>.</p><p class="copyright"><p class="copyright"><a href="https://www.w3.org/Consortium/Legal/ipr-notice#Copyright">Copyright</a> © <span class="years">2018, 2019, 2020</span> the Contributors to the <cite>XProc 3.0: An XML Pipeline Language</cite> specification, published by the <a href="https://www.w3.org/community/xproc-next/">XProc Next Community Group</a> under the <a href="https://www.w3.org/community/about/agreements/cla/">W3C
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>XProc 3.0: An XML Pipeline Language</title><meta charset="utf-8" /><meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport" /><link class="removeOnSave" crossorigin="anonymous" href="https://www.w3.org" rel="preconnect" /><link as="script" class="removeOnSave" href="js/fixup.js" rel="preload" /><link as="style" class="removeOnSave" href="css/base.css" rel="preload" /><link as="image" class="removeOnSave" href="https://www.w3.org/StyleSheets/TR/2016/logos/W3C" rel="preload" /><link rel="stylesheet" href="css/cg-draft.css" /><link rel="stylesheet" href="css/respec.css" /><link rel="alternate" title="XML" href="specification.xml" /><meta name="generator" content="DocBook XSL 2.0 Stylesheets V2.5.0" /><meta name="description" content="Abstract This specification describes the syntax and semantics of&#xA;XProc 3.0: An XML Pipeline Language, a language for&#xA;describing operations to be performed on documents. An XML Pipeline specifies a sequence of operations to be&#xA;performed on documents. Pipelines generally accept&#xA;documents as input and produce documents as output.&#xA;Pipelines are made up of simple steps which&#xA;perform atomic operations on documents and constructs such as&#xA;conditionals, iterations, and exception handlers which control which&#xA;steps are executed." /><link href="css/default.css" rel="stylesheet" type="text/css" /><link href="css/db-prism.css" rel="stylesheet" type="text/css" /><link rel="stylesheet" type="text/css" href="css/base.css" /><link rel="stylesheet" type="text/css" href="css/xproc.css" /><link rel="stylesheet" type="text/css" href="css/print.css" media="print" /><script type="text/javascript" src="js/dbmodnizr.js"></script></head><body class="h-entry informative toc-sidebar"><div class="head" id="spec.head"><a class="logo" href="https://www.w3.org/"><img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2016/logos/W3C" width="72" /></a><h1 id="title" class="title p-name">XProc 3.0: An XML Pipeline Language</h1><h2>Community Group Report <time class="dt-published" datetime="2022-07-01">1 July 2022</time></h2><dl><dt>Latest editor’s draft:</dt><dd><a href="http://spec.xproc.org/master/head/xproc/">http://spec.xproc.org/master/head/xproc/</a></dd><dt>Editors:</dt><dd><span class="personname">Norman Walsh</span></dd><dd><span class="personname">Achim Berndzen</span></dd><dd><span class="personname">Gerrit Imsieke</span></dd><dd><span class="personname">Erik Siegel</span></dd><dt>Participate:</dt><dd><a href="http://github.com/xproc/3.0-specification">GitHub xproc/3.0-specification</a></dd><dd><a href="http://github.com/xproc/3.0-specification/issues">Report an issue</a></dd><dt>Changes:</dt><dd><a href="lcdiff.html">Diff against the “last call” draft</a></dd><dd><a href="diff.html">Diff against current “status quo” draft</a></dd><dd><a href="http://github.com/xproc/3.0-specification/commits/master">Commits for this specification</a></dd></dl><p>This document is also available in these non-normative formats: <a href="specification.xml">XML</a> and HTML with automatic change markup  courtesy of <a href="http://www.deltaxml.com/">DeltaXML</a>.</p><p class="copyright"><p class="copyright"><a href="https://www.w3.org/Consortium/Legal/ipr-notice#Copyright">Copyright</a> © <span class="years">2018, 2019, 2020, 2021, 2022</span> the Contributors to the <cite>XProc 3.0: An XML Pipeline Language</cite> specification, published by the <a href="https://www.w3.org/community/xproc-next/">XProc Next Community Group</a> under the <a href="https://www.w3.org/community/about/agreements/cla/">W3C
     Community Contributor License Agreement (CLA)</a>. A human-readable <a href="https://www.w3.org/community/about/agreements/cla-deed/">summary</a> is available.</p></p><hr title="Separator for header" /><section id="abstract" class="introductory"><h2>Abstract</h2>
 <p>This specification describes the syntax and semantics of
 <em class="citetitle">XProc 3.0: An XML Pipeline Language</em>, a language for
@@ -11,7 +11,7 @@ Pipelines are made up of simple steps which
 perform atomic operations on documents and constructs such as
 conditionals, iterations, and exception handlers which control which
 steps are executed.</p>
-</section><section id="sotd" class="introductory"><h2>Status of this Document</h2><p><strong>This document is an editor's  draft that has no official standing.</strong></p>
+</section><section id="sotd" class="introductory"><h2>Status of this Document</h2>
   <p>This specification was published by the
   <a href="https://www.w3.org/community/xproc-next/">XProc
   Next Community Group</a>. It is not a W3C Standard nor is it on
@@ -30,11 +30,10 @@ steps are executed.</p>
   </p>
 
 <div class="note editorial admonition"><h3>Note</h3><div class="admonition-body">
-<p>This draft is the “editor’s working draft” and may include changes made
-after the “last call” draft. The
-<a href="http://spec.xproc.org/lastcall-2020-08/head/xproc/">last call draft</a>
-is stable and will not change.
-</p>
+<p>This is the final editorial review draft of the XProc 3.0 specification.
+The Community Group intends to publish this as the final, completed specification
+as soon as all of the related specifications are ready and the editorial review is
+completed.</p>
 </div></div>
 
 <p>This document is derived from
@@ -8408,6 +8407,55 @@ who contributed to this document and all of the versions that came before it.</p
 
 <article id="changelog" class="appendix"><header class="appendix-titlepage"><h2><bdi class="secno">M. </bdi>Change Log<a aria-label="§" class="self-link" href="#changelog"></a></h2></header><div class="content">
 
+
+  <p>This list contains the non-editorial changes made after the
+    August 2020
+    “<a href="https://spec.xproc.org/lastcall-2020-08/head/xproc/">last call</a>”
+    draft:</p>
+  
+  <div class="itemizedlist">
+    
+    
+    
+    
+    
+    
+    
+    
+  <ul><li>
+      <p>The <code class="tag-attribute">depends</code> attribute is forbidden on
+      <a href="#p.when"><code class="tag-element">p:when</code></a>, <a href="#p.otherwise"><code class="tag-element">p:otherwise</code></a>, <a href="#p.catch"><code class="tag-element">p:catch</code></a>, and
+      <a href="#p.finally"><code class="tag-element">p:finally</code></a>.</p>
+    </li><li>
+      <p>Processors may remove any implicit connections that they can determine
+      statically will never be used (issue
+      <a href="https://github.com/xproc/3.0-specification/issues/995">995</a>).
+      </p>
+    </li><li>
+      <p>Expanded and clarified the rules for implicit casting (issues
+      <a href="https://github.com/xproc/3.0-specification/issues/1001">1001</a>
+      and
+      <a href="https://github.com/xproc/3.0-specification/issues/1012">1012</a>).
+      </p>
+    </li><li>
+      <p>The semantics of the <a href="#f.urify"><code class="function">p:urify</code></a> function were extensively
+      redrafted and clarified.</p>
+    </li><li>
+      <p>Text value templates are never expanded in the descendants of <a href="#p.inline"><code class="tag-element">p:inline</code></a> 
+      elements that specify an <code class="tag-attribute">encoding</code>.</p>
+    </li><li>
+      <p>Clarified the semantics of <code class="tag-attribute">[p:]use-when</code>
+      to address potential deadlock situations that can arise if
+      two or more expressions depend on each other.</p>
+    </li><li>
+      <p>Clarified that <a href="#f.step-available"><code class="function">p:step-available</code></a> cannot refer
+      to the step currently being declared (issue
+      <a href="https://github.com/xproc/3.0-specification/issues/1057">1057</a>).
+      </p>
+    </li><li>
+      <p>A number of error codes have been clarified and new error codes have been added.</p>
+    </li></ul></div>
+
   <p>This list contains the non-editorial changes made after the
     December 2019
     “<a href="https://spec.xproc.org/lastcall-2019-12/head/xproc/">last call</a>”
@@ -8500,7 +8548,7 @@ draft:</p>
       </li><li>
         <p>Identified the <code class="port">error</code> port as the primary input port in <a href="#p.catch"><code class="tag-element">p:catch</code></a>.</p>
       </li><li>
-        <p>Clarified that <a href="#p.finally"><code class="tag-element">p:finally</code></a> <span class="rfc2119" id="changelog.5.14.1.2">must not</span> declare a primary output port.</p>
+        <p>Clarified that <a href="#p.finally"><code class="tag-element">p:finally</code></a> <span class="rfc2119" id="changelog.7.14.1.2">must not</span> declare a primary output port.</p>
       </li><li>
         <p>Clarified which functions are available during static analysis.</p>
       </li><li>
