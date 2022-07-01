@@ -2526,6 +2526,15 @@ the features of the path (or the features of the path as resolved against the
 <listitem>
 <para>If there is an authority, append “//” followed by the
 authority.</para>
+  <itemizedlist>
+  <listitem>
+  <para>On a Windows system, if the scheme is known to be <code>file</code>
+and the processor determines that the
+authority component is accessible via the universal naming convention (UNC),
+an additional “//” <rfc2119>may</rfc2119> be added before the authority. (In other words,
+<code>file:////uncserver</code> is allowed.)</para>
+  </listitem>
+  </itemizedlist>
 </listitem>
 <listitem>
 <para>If there is <emphasis>not</emphasis> an authority, but the scheme is “file”
