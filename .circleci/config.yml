@@ -33,7 +33,13 @@ jobs:
             - ~/.gradle
           key: v1-dependencies-{{ checksum "build.gradle" }}
 
+      - run: |
+          echo Setup DeltaXML
+          if [[ -z "${DIFFURI}" ]]; then echo "DeltaXML unavailable"; else curl -s $DIFFURI | openssl enc -aes-256-cbc -salt -pbkdf2 -d -k $DIFFPW | tar zxf -; fi
+
       - run: ./gradlew
+
+      - run: rm -rf deltaxml
 
       - run: ./.circleci/publish.sh
 
