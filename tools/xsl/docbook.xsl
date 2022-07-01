@@ -129,7 +129,14 @@
 			 mode="m:titlepage-mode"/>
 
     <h2>
-      <xsl:text>Draft Community Group Report </xsl:text>
+      <xsl:choose>
+        <xsl:when test="$w3c-doctype='ed'">
+          <xsl:text>Draft Community Group Report </xsl:text>
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:text>Community Group Report </xsl:text>
+        </xsl:otherwise>
+      </xsl:choose>
 
       <time class="dt-published">
         <xsl:attribute name="datetime"
