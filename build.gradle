@@ -246,39 +246,65 @@ task xproc(dependsOn: [ "spec_schemas",
 buildspecs.dependsOn "xproc"
 overview.dependsOn "xproc"
 
-task xproc_pdf_xform(dependsOn: [ "xproc" ], type: DocBookTask) {
-  inputs.files fileTree(dir: "tools/xsl/")
-  inputs.files fileTree(dir: "tools/xpl/")
-  input("source", "xproc/build/source.xml")
-  output("result", "build/dist/xproc/pdfhtml.html")
+task xproc_pdf_xform(dependsOn: [ "xproc" ], type: XMLCalabashTask) {
+  inputs.file "${projectDir}/tools/xsl/htmlprint.xsl"
+  inputs.file "${buildDir}/dist/xproc/index.html"
+  outputs.file "${buildDir}/dist/xproc/pdf.html"
 
-  param("schemaext.schema", "../../build/schema/dbspec.rng")
-  param("circleci", getenv("CIRCLECI"))
-  param("circleci-commit", getenv("CIRCLE_SHA1"))
-  param("circleci-build-number", getenv("CIRCLE_BUILD_NUM"))
-  param("circleci-user", getenv("CIRCLE_PROJECT_USERNAME"))
-  param("circleci-repo", getenv("CIRCLE_PROJECT_REPONAME"))
-  param("circleci-branch", getenv("CIRCLE_BRANCH"))
-  param("circleci-tag", getenv("CIRCLE_TAG"))
-
-  option("style", file("tools/xsl/xproc-pdf.xsl"))
-  option("postprocess", file("tools/xsl/post-pdf.xsl"))
+  input("source", "${buildDir}/dist/xproc/index.html")
+  output("result", "${buildDir}/dist/xproc/pdf.html")
 
   pipeline "tools/xpl/pdfspec.xpl"
 }
 
-task xproc_pdf(dependsOn: [ "xproc_pdf_xform" ], type: XMLCalabashTask) {
-  inputs.files fileTree(dir: "tools/xsl/")
-  inputs.files fileTree(dir: "tools/xpl/")
-  inputs.files fileTree(dir: "src/main/css")
+task xproc_pdf(dependsOn: ["xproc_pdf_a4", "xproc_pdf_letter"]) {
+  // nop
+}
 
-  input("source", "build/dist/xproc/pdfhtml.html")
-  outputs.file "build/dist/xproc/xproc.pdf"
+task xproc_pdf_a4(dependsOn: [ "xproc_pdf_xform", "xproc_web_assets"], type: Exec) {
+  inputs.files fileTree(dir: "${projectDir}/tools/xsl/")
+  inputs.file "${buildDir}/dist/xproc/pdf.html"
+  inputs.files fileTree(dir: "${buildDir}/dist/xproc/css")
+  inputs.files fileTree(dir: "${projectDir}/tools/xpl/")
+  inputs.files fileTree(dir: "${projectDir}/xproc/src/")
+  outputs.file "${buildDir}/dist/xproc/xproc_a4.pdf" 
 
-  option("css", "src/main/css/print.css")
-  option("pdf", file("build/dist/xproc/xproc.pdf"))
+  doFirst {
+    copy {
+      from("${projectDir}/src/main/resources/css") {
+        include "print-a4.css"
+      }
+      into "${buildDir}/dist/xproc/css"
+      rename ("print-a4.css", "print.css")
+    }
+  }
 
-  pipeline "tools/xpl/css-format.xpl"
+  commandLine "/usr/local/AHFormatterV72/bin/AHFCmd",
+    "-f", "xhtml", "-d", "${buildDir}/dist/xproc/pdf.html",
+    "-o", "${buildDir}/dist/xproc/xproc_a4.pdf"
+}
+
+task xproc_pdf_letter(dependsOn: [ "xproc_pdf_xform", "xproc_web_assets"], type: Exec) {
+  inputs.files fileTree(dir: "${projectDir}/tools/xsl/")
+  inputs.file "${buildDir}/dist/xproc/pdf.html"
+  inputs.files fileTree(dir: "${buildDir}/dist/xproc/css")
+  inputs.files fileTree(dir: "${projectDir}/tools/xpl/")
+  inputs.files fileTree(dir: "${projectDir}/xproc/src/")
+  outputs.file "${buildDir}/dist/xproc/xproc_letter.pdf" 
+
+  doFirst {
+    copy {
+      from("${projectDir}/src/main/resources/css") {
+        include "print-letter.css"
+      }
+      into "${buildDir}/dist/xproc/css"
+      rename ("print-letter.css", "print.css")
+    }
+  }
+
+  commandLine "/usr/local/AHFormatterV72/bin/AHFCmd",
+    "-f", "xhtml", "-d", "${buildDir}/dist/xproc/pdf.html",
+    "-o", "${buildDir}/dist/xproc/xproc_letter.pdf"
 }
 
 task xproc_assets(dependsOn: [ "xproc:images", "xproc_web_assets", "xproc_schemas",
@@ -304,7 +330,10 @@ task xproc_assets(dependsOn: [ "xproc:images", "xproc_web_assets", "xproc_schema
 }
 
 task xproc_web_assets(type: Copy) {
-  from "src/main/resources"
+  from ("${projectDir}/src/main/resources") {
+    exclude "css/print-a4.css"
+    exclude "css/print-letter.css"
+  }
   into "build/dist/xproc/"
 }
 
