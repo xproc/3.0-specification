@@ -1248,8 +1248,7 @@ pipeline, which will ensure that the processor schedules the steps in
 an order that has the desired the side-effects:
 </para>
 
-<programlisting language="xml"><![CDATA[
-<p:file-touch name="touchstamp" href="tempdoc.stamp"/>
+<programlisting language="xml"><![CDATA[<p:file-touch name="touchstamp" href="tempdoc.stamp"/>
 
 <p:file-copy name="copystamp" depends="touchstamp"
              href="tempdoc.stamp" target="time.stamp"/>
@@ -1396,8 +1395,10 @@ as they are available statically.</para>
 <programlisting language="xml"><![CDATA[<p:declare-step version="3.0"
                 xmlns:p="http://www.w3.org/ns/xproc">
   <p:input port="source"/>
-  <p:option name="A" static="true" select="5"/>
-  <p:option name="B" static="true" select="$A + count(doc('doc.xml')//*)" />
+  <p:option name="A" static="true"
+            select="5"/>
+  <p:option name="B" static="true"
+            select="$A + count(doc('doc.xml')//*)" />
   <p:variable name="D" select="count(//*)"/>
 
   …
@@ -5030,7 +5031,8 @@ the following error document might be produced:</para>
 
 <programlisting language="xml"><![CDATA[<c:errors xmlns:c="http://www.w3.org/ns/xproc-step">
   <c:error name="xform" type="p:xslt"
-             href="style.xsl" line="6">This stylesheet is <emph>pointless</emph>.</c:error>
+             href="style.xsl" line="6">This stylesheet is
+<emph>pointless</emph>.</c:error>
 </c:errors>]]></programlisting>
 
 <para>It is not an error for steps to generate non-standard error
@@ -6953,8 +6955,8 @@ ignored.
 
 <programlisting language="xml"><![CDATA[<p:identity name="identity" code="my:implicitinline1">
     <p:with-input port="source">
-        <para xmlns="http://docbook.org/ns/docbook">Some text</para>
-        <para xmlns="http://docbook.org/ns/docbook">Some other text</para>
+        <p xmlns="http://example.org/ns">Text</p>
+        <p xmlns="http://example.org/ns">Other text</p>
     </p:with-input>
 </p:identity>]]></programlisting>
 
@@ -6962,8 +6964,8 @@ ignored.
 
 <programlisting language="xml"><![CDATA[<p:identity name="identity" code="my:implicitinline2">
     <p:with-input port="source">
-        <p:inline><para xmlns="http://docbook.org/ns/docbook">Some text</para></p:inline>
-        <p:inline><para xmlns="http://docbook.org/ns/docbook">Some other text</para></p:inline>
+        <p:inline><p xmlns="http://example.org/ns">Text</p></p:inline>
+        <p:inline><p xmlns="http://example.org/ns">Other text</p></p:inline>
     </p:with-input>
 </p:identity>]]></programlisting>
 

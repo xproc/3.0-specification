@@ -312,9 +312,7 @@
 
     <xsl:choose>
       <xsl:when test="db:info/db:copyright">
-        <p class="copyright">
-          <xsl:apply-templates select="db:info/db:copyright"/>
-        </p>
+        <xsl:apply-templates select="db:info/db:copyright"/>
       </xsl:when>
       <xsl:otherwise>
         <p class="copyright">Copyright © 2018 FIXME: NO COPYRIGHT ELEMENT?</p>
