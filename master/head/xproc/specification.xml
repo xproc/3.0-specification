@@ -376,7 +376,8 @@ subpipeline is its last step in document order.</termdef></para>
   &lt;p:input port="extra"/&gt;
   &lt;p:output port="result" primary="true"/&gt;
 
-  &lt;p:add-attribute attribute-name="timestamp" attribute-value="{current-dateTime()}" 
+  &lt;p:add-attribute attribute-name="timestamp"
+                   attribute-value="{current-dateTime()}" 
       name="add-timestamp"&gt;
     &lt;p:with-input port="source"&gt;
       &lt;p:pipe step="main-step" port="extra"/&gt;
@@ -403,7 +404,8 @@ subpipeline is its last step in document order.</termdef></para>
   &lt;p:input port="extra"/&gt;
   &lt;p:output port="result" primary="true"/&gt;
 
-  &lt;p:add-attribute attribute-name="timestamp" attribute-value="{current-dateTime()}" 
+  &lt;p:add-attribute attribute-name="timestamp"
+                   attribute-value="{current-dateTime()}" 
       name="add-timestamp"&gt;
     &lt;p:with-input port="source" pipe="extra@main-step"/&gt;
   &lt;/p:add-attribute&gt;
@@ -481,7 +483,8 @@ subpipeline is its last step in document order.</termdef></para>
   &lt;p:declare-step type="mysteps:add-timestamp-attribute"&gt; 
     &lt;p:input port="source"/&gt;
     &lt;p:output port="result"/&gt;
-    &lt;p:add-attribute attribute-name="timestamp" attribute-value="{current-dateTime()}"/&gt;
+    &lt;p:add-attribute attribute-name="timestamp"
+                     attribute-value="{current-dateTime()}"/&gt;
   &lt;/p:declare-step&gt;
   
   ...
@@ -496,10 +499,12 @@ subpipeline is its last step in document order.</termdef></para>
             <code>mysteps:add-timestamp-attribute</code> step as a separate, stand-alone,
           pipeline:</para>
         <programlisting language="xml">&lt;p:declare-step type="mysteps:add-timestamp-attribute" version="3.0"
-  xmlns:p="http://www.w3.org/ns/xproc" xmlns:mysteps="http://.../ns/mysteps"&gt;
+                xmlns:p="http://www.w3.org/ns/xproc"
+                xmlns:mysteps="http://.../ns/mysteps"&gt;
   &lt;p:input port="source"/&gt;
   &lt;p:output port="result"/&gt;
-  &lt;p:add-attribute attribute-name="timestamp" attribute-value="{current-dateTime()}"/&gt;
+  &lt;p:add-attribute attribute-name="timestamp"
+                   attribute-value="{current-dateTime()}"/&gt;
 &lt;/p:declare-step&gt;</programlisting>
 
         <para>Assuming this is stored in a file called <code>add-timestamp-attribute.xpl</code>, you
@@ -527,7 +532,8 @@ subpipeline is its last step in document order.</termdef></para>
   &lt;p:declare-step type="mysteps:add-timestamp-attribute"&gt;
     &lt;p:input port="source"/&gt;
     &lt;p:output port="result"/&gt;
-    &lt;p:add-attribute attribute-name="timestamp" attribute-value="{current-dateTime()}"/&gt;
+    &lt;p:add-attribute attribute-name="timestamp"
+                     attribute-value="{current-dateTime()}"/&gt;
   &lt;/p:declare-step&gt;
 
   ... more library steps
@@ -1362,8 +1368,7 @@ pipeline, which will ensure that the processor schedules the steps in
 an order that has the desired the side-effects:
 </para>
 
-<programlisting language="xml">
-&lt;p:file-touch name="touchstamp" href="tempdoc.stamp"/&gt;
+<programlisting language="xml">&lt;p:file-touch name="touchstamp" href="tempdoc.stamp"/&gt;
 
 &lt;p:file-copy name="copystamp" depends="touchstamp"
              href="tempdoc.stamp" target="time.stamp"/&gt;
@@ -1503,8 +1508,10 @@ as they are available statically.</para>
 <programlisting language="xml">&lt;p:declare-step version="3.0"
                 xmlns:p="http://www.w3.org/ns/xproc"&gt;
   &lt;p:input port="source"/&gt;
-  &lt;p:option name="A" static="true" select="5"/&gt;
-  &lt;p:option name="B" static="true" select="$A + count(doc('doc.xml')//*)" /&gt;
+  &lt;p:option name="A" static="true"
+            select="5"/&gt;
+  &lt;p:option name="B" static="true"
+            select="$A + count(doc('doc.xml')//*)" /&gt;
   &lt;p:variable name="D" select="count(//*)"/&gt;
 
   …
@@ -4433,12 +4440,14 @@ port</glossterm>.</para>
   &lt;/p:output&gt;
 
   &lt;p:xslt name="make-html"&gt;
-    &lt;p:with-input port="stylesheet" href="http://example.com/xsl/html.xsl"/&gt;
+    &lt;p:with-input port="stylesheet"
+                  href="http://example.com/xsl/html.xsl"/&gt;
   &lt;/p:xslt&gt;
 
   &lt;p:xslt name="make-fo"&gt;
     &lt;p:with-input port="source" pipe="current@chapters"/&gt;
-    &lt;p:with-input port="stylesheet" href="http://example.com/xsl/fo.xsl"/&gt;
+    &lt;p:with-input port="stylesheet"
+                  href="http://example.com/xsl/fo.xsl"/&gt;
   &lt;/p:xslt&gt;
 &lt;/p:for-each&gt;</programlisting>
         </example>
@@ -5216,7 +5225,8 @@ the following error document might be produced:</para>
 
 <programlisting language="xml">&lt;c:errors xmlns:c="http://www.w3.org/ns/xproc-step"&gt;
   &lt;c:error name="xform" type="p:xslt"
-             href="style.xsl" line="6"&gt;This stylesheet is &lt;emph&gt;pointless&lt;/emph&gt;.&lt;/c:error&gt;
+             href="style.xsl" line="6"&gt;This stylesheet is
+&lt;emph&gt;pointless&lt;/emph&gt;.&lt;/c:error&gt;
 &lt;/c:errors&gt;</programlisting>
 
 <para>It is not an error for steps to generate non-standard error
@@ -5237,7 +5247,8 @@ can provide some sort of default for the rest of the pipeline.</para>
 <programlisting language="xml">&lt;p:try&gt;
   &lt;p:http-request method="post" href="http://example.com/form-action"&gt;
     &lt;p:with-input&gt;
-      &lt;p:inline content-type="application/x-www-form-urlencoded"&gt;name=W3C&amp;amp;spec=XProc&lt;/p:inline&gt;
+      &lt;p:inline content-type="application/x-www-form-urlencoded"
+                &gt;name=W3C&amp;amp;spec=XProc&lt;/p:inline&gt;
     &lt;/p:with-input&gt;
   &lt;/p:http-request&gt;
   &lt;p:catch&gt;
@@ -7144,8 +7155,8 @@ ignored.
 
 <programlisting language="xml">&lt;p:identity name="identity" code="my:implicitinline1"&gt;
     &lt;p:with-input port="source"&gt;
-        &lt;para xmlns="http://docbook.org/ns/docbook"&gt;Some text&lt;/para&gt;
-        &lt;para xmlns="http://docbook.org/ns/docbook"&gt;Some other text&lt;/para&gt;
+        &lt;p xmlns="http://example.org/ns"&gt;Text&lt;/p&gt;
+        &lt;p xmlns="http://example.org/ns"&gt;Other text&lt;/p&gt;
     &lt;/p:with-input&gt;
 &lt;/p:identity&gt;</programlisting>
 
@@ -7153,8 +7164,8 @@ ignored.
 
 <programlisting language="xml">&lt;p:identity name="identity" code="my:implicitinline2"&gt;
     &lt;p:with-input port="source"&gt;
-        &lt;p:inline&gt;&lt;para xmlns="http://docbook.org/ns/docbook"&gt;Some text&lt;/para&gt;&lt;/p:inline&gt;
-        &lt;p:inline&gt;&lt;para xmlns="http://docbook.org/ns/docbook"&gt;Some other text&lt;/para&gt;&lt;/p:inline&gt;
+        &lt;p:inline&gt;&lt;p xmlns="http://example.org/ns"&gt;Text&lt;/p&gt;&lt;/p:inline&gt;
+        &lt;p:inline&gt;&lt;p xmlns="http://example.org/ns"&gt;Other text&lt;/p&gt;&lt;/p:inline&gt;
     &lt;/p:with-input&gt;
 &lt;/p:identity&gt;</programlisting>
 
