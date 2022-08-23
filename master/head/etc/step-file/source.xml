@@ -279,7 +279,7 @@ steps is assumed; for background details, see
       
       <para><impl>Any other attributes on
         <tag>c:file</tag>, <tag>c:directory</tag>, or <tag>c:other</tag>
-        are <glossterm>implementation-defined</glossterm>.</impl></para>
+        are <glossterm>implementation-defined</glossterm>.</impl>, but they must be in a namespace.</para>
     </section>
     
     <simplesect>
@@ -503,6 +503,11 @@ steps is assumed; for background details, see
         <tag>p:unarchive</tag> (see <xspecref spec="steps" xref="override-content-type"/>), except
       that the regular expression matching is done against the absolute URI of the file.</para>
 
+  <para>Each of the elements <tag>c:file</tag>, <tag>c:directory</tag>,
+    and <tag>c:other</tag> has a <code>name</code> attribute, whose
+    value is a relative IRI reference, giving the (local) file or
+    directory name.</para>
+  
   <para>The following attributes are standard on a returned <tag>c:file</tag> or <tag>c:directory</tag> element. All
     attributes are optional and must be absent if not applicable. Additional implementation-defined attributes may be
     present, but they must be in a namespace.</para>
