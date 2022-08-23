@@ -3,7 +3,7 @@ namespace local = ""
 
 # This schema could be made more constrained.
 
-Step = Step-validate-with-nvdl | Step-validate-with-relax-ng | Step-validate-with-schematron | Step-validate-with-xml-schema
+Step = Step-validate-with-nvdl | Step-validate-with-relax-ng | Step-validate-with-schematron | Step-validate-with-xml-schema | Step-validate-with-json-schema
 
 Step-validate-with-nvdl =
   element validate-with-nvdl {
@@ -56,6 +56,19 @@ Step-validate-with-xml-schema =
     attribute parameters { avt.datatype }?,
     attribute mode { avt.datatype }?,
     attribute version { avt.datatype }?,
+    attribute report-format { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-validate-with-json-schema =
+  element validate-with-json-schema {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute assert-valid { avt.datatype }?,
+    attribute default-version { avt.datatype }?,
+    attribute parameters { avt.datatype }?,
     attribute report-format { avt.datatype }?,
     (WithInput* & WithOption* & (Documentation|PipeInfo)*)
   }

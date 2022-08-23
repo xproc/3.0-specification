@@ -62,13 +62,11 @@ step for
 
 <para>This specification describes the <code>p:validate-with-relax-ng</code>,
 <code>p:validate-with-schematron</code>, <code>p:validate-with-xml-schema</code>,
-and <code>p:validate-with-nvdl</code> steps. Each is independently optional.
-A machine-readable description of
+<code>p:validate-with-nvdl</code>, and <code>p:validate-with-json-schema</code>
+steps. Each is independently optional. A machine-readable description of
 these steps may be found in
 <link xlink:href="steps.xpl">steps.xpl</link>.
 </para>
-  <para>Steps for validating non-XML documents, such as JSON, might be added in a future revision
-  of this specification.</para>
   
 <para>Familiarity with the
 general nature of <biblioref linkend="xproc30"/>
@@ -332,7 +330,7 @@ validity assessment to the <port>source</port> input.</para>
   <p:option name="try-namespaces" select="false()" as="xs:boolean"/>
   <p:option name="assert-valid" select="true()" as="xs:boolean"/>
   <p:option name="parameters" as="map(xs:QName,item()*)?"/>
-  <p:option name="mode" select="'strict'" as="xs:token" values="('strict','lax')"/>
+  <p:option name="mode" select="'strict'" values="('strict','lax')"/>
   <p:option name="version" as="xs:string?"/>
   <p:option name="report-format" select="'xvrl'" as="xs:string"/>
 </p:declare-step>
@@ -440,6 +438,48 @@ No document properties on the <port>schemas</port> port are preserved.</para>
 </simplesect>
 </section>
 
+<section xml:id="c.validate-with-json-schema">
+  <title>Validate with JSON schema</title>
+  <para>The <tag>p:validate-with-json-schema</tag> step applies
+    a JSON schema validation (as defined in <biblioref linkend="jsonschema2020-12"/> and
+    other publications) to the <port>source</port> input.</para>
+  
+  <p:declare-step type="p:validate-with-json-schema">
+    <p:input port="source" primary="true" content-types="json"/>
+    <p:input port="schema" sequence="false" content-types="json"/>
+    <p:output port="result" primary="true" content-types="json"/>
+    <p:output port="report" sequence="true" content-types="xml json"/>
+    <p:option name="assert-valid" select="true()" as="xs:boolean"/>
+    <p:option name="default-version" as="xs:string"/>
+    <p:option name="parameters" as="map(xs:QName,item()*)?"/>
+    <p:option name="report-format" select="'xvrl'" as="xs:string"/>
+  </p:declare-step>
+
+  <para>The option <option>default-version</option> can be used to
+  control the schema's version in case it does not specify one itself. If
+  the schema does not specify a version and option <option>default-version</option>
+  is empty, the version used is <glossterm>implementation-defined</glossterm>.</para>
+
+  <para><error code="C0163">It is a <glossterm>dynamic error</glossterm> 
+    if the selected version is not supported.</error></para>
+  
+  <para><error code="C0164">It is a <glossterm>dynamic error</glossterm> 
+    if the document supplied on <port>schema</port> port is not a valid JSON schema 
+    document in the selected version.</error></para>
+  
+  <para><error code="C0165">It is a <glossterm>dynamic error</glossterm>
+    if the <option>assert-valid</option> option on <tag>p:validate-with-json-schema</tag> 
+    is <literal>true</literal>
+    and the input document is not valid.</error></para>
+  
+  <simplesect>
+    <title>Document properties</title>
+    <para feature="validate-with-json-preserves-all">All document properties on the <port>source</port> port are preserved
+      on the <port>result</port> port. No document properties on the <port>schemas</port> are preserved. 
+      No document properties are preserved on the <port>report</port> port.</para>
+  </simplesect>
+</section>  
+  
 <section xml:id="errors">
 <title>Step Errors</title>
 
@@ -566,6 +606,11 @@ Structures Second Edition</citetitle>.
 Henry S. Thompson, David Beech, Murray Maloney, et. al., editors.
 World Wide Web Consortium, 28 October 2004.
 </bibliomixed>
+<bibliomixed xml:id="jsonschema2020-12"><abbrev>JSON schema</abbrev>
+  <citetitle xlink:href="https://json-schema.org/draft/2020-12/json-schema-validation.html">JSON Schema Validation: A Vocabulary for 
+    Structural Validation of JSON</citetitle>.
+A.Wright, H. Andrews and B. Hutton, editors.
+Internet Engineering Task Force. June, 2022.</bibliomixed>
 </bibliolist>
 </appendix>
 
