@@ -59,10 +59,6 @@ step for
 A machine-readable description of this step may be found in
 <link xlink:href="steps.xpl">steps.xpl</link>.
 </para>
-  
-  <note role="editorial">
-    <para>It will most probably end up in an XProc document of its own.</para>
-  </note>
 
 <para>Familarity with the general nature of <biblioref linkend="xproc30"/>
 steps is assumed; for background details, see
@@ -88,12 +84,27 @@ if the pipeline input to the <tag>p:run</tag> step is not a
 valid pipeline.</error>
 The anonymous input port is not primary, although it is the only <tag>p:input</tag>
 port of <tag>p:run</tag>. Therefore it will not automatically connect to the 
-<glossterm>default readable port</glossterm>; it needs to be connected to its pipeline 
+<emphasis>default readable port</emphasis> (see 
+<xspecref spec="xproc" xref="connections"/>);
+it needs to be connected to its pipeline 
 input explicitly.</para>
 
 <para>The pipeline that appears on the pipeline port is evaluated
 using the inputs and options specified on the <tag>p:run</tag> step by means of the 
-<tag>p:run-input</tag> and <tag>p:run-option</tag> elements, respectively. In terms of binding
+<tag>p:run-input</tag> and <tag>p:run-option</tag> elements, respectively.</para>
+
+<para>The <tag>p:run-input</tag> element is a special case of the <tag>p:with-input</tag>
+element for passing inputs to the pipeline being run.</para>
+
+<e:rng-pattern name="RunInput"/>
+
+<para>Similarly, the <tag>p:run-option</tag> element is a special case
+of the <tag>p:with-option</tag> element for passing options to the
+pipeline being run.</para>
+
+<e:rng-pattern name="RunOption"/>
+
+<para>In terms of binding
 inputs and options, these elements have the same syntax and semantics as <tag>p:with-input</tag> 
 and <tag>p:with-option</tag>. In addition, the boolean attribute <tag class="attribute">primary</tag>
 can be used on <tag>p:run-input</tag> to declare whether the respective port of the dynamically 
@@ -108,7 +119,7 @@ the <tag>p:run</tag> invocation will receive a <tag>p:empty</tag> connection.
 Input ports that are declared in <tag>p:run-input</tag> but not in the dynamically
 executed pipeline will be silently ignored.</para>
 <para>The context item used to evaluate expressions on <tag>p:run-option</tag> comes from the 
-<glossterm>default readable port</glossterm> of the <tag>p:run</tag> step. Additionally, if 
+<emphasis>default readable port</emphasis> of the <tag>p:run</tag> step. Additionally, if 
 <tag>p:run-input</tag> implicitly or explicitly identifies a primary input port, the default
 readable port will be connected to it if no explicit connection is provided.</para>
   
