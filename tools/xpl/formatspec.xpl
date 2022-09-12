@@ -110,7 +110,7 @@
     -->
     <p:load>
       <p:with-option name="href"
-                     select="concat('https://spec.xproc.org/lastcall-2020-08/head/', $specid)"/>
+                     select="'https://spec.xproc.org/3.0/xproc/index.html'"/>
     </p:load>
     <p:delete match="html:p[//html:code]/@id"/>
     <p:store name="fix1">
