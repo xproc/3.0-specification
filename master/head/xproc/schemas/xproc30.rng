@@ -1331,27 +1331,121 @@
       <optional>
         <ref name="name.ncname.attr"/>
       </optional>
-      <attribute name="p:pipeline">
-        <data type="NCName"/>
-      </attribute>
       <ref name="common.attributes"/>
       <ref name="global.attributes"/>
       <ref name="step.attributes"/>
       <interleave>
+        <optional>
+          <ref name="WithInput"/>
+        </optional>
         <zeroOrMore>
-          <choice>
-            <ref name="WithInput"/>
-            <ref name="AtomicOutputDeclaration"/>
-            <ref name="WithOption"/>
-          </choice>
+          <ref name="RunInput"/>
         </zeroOrMore>
         <zeroOrMore>
-          <choice>
-            <ref name="Documentation"/>
-            <ref name="PipeInfo"/>
-          </choice>
+          <ref name="RunOption"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="Output"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="Documentation"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="PipeInfo"/>
         </zeroOrMore>
       </interleave>
+    </element>
+  </define>
+  <define name="RunInput" sa:class="language-construct" sa:element="run-input">
+    <element name="run-input">
+      <optional>
+        <ref name="port.attr"/>
+      </optional>
+      <optional>
+        <ref name="select.attr"/>
+      </optional>
+      <optional>
+        <ref name="href.attr" sa:avt="true"/>
+      </optional>
+      <optional>
+        <ref name="pipe.attr"/>
+      </optional>
+      <optional>
+        <ref name="primary.attr"/>
+      </optional>
+      <ref name="common.attributes"/>
+      <ref name="global.attributes"/>
+      <ref name="inline.attributes"/>
+      <choice>
+        <interleave>
+          <choice>
+            <ref name="Empty"/>
+            <zeroOrMore>
+              <choice>
+                <ref name="Document"/>
+                <ref name="Pipe"/>
+                <ref name="Inline"/>
+              </choice>
+            </zeroOrMore>
+          </choice>
+          <zeroOrMore>
+            <choice>
+              <ref name="Documentation"/>
+              <ref name="PipeInfo"/>
+            </choice>
+          </zeroOrMore>
+        </interleave>
+        <zeroOrMore>
+          <ref name="AnyElement"/>
+        </zeroOrMore>
+      </choice>
+    </element>
+  </define>
+  <define name="RunOption" sa:class="language-construct">
+    <element name="run-option">
+      <ref name="name.qname.attr"/>
+      <optional>
+        <ref name="as.attr"/>
+      </optional>
+      <ref name="select.attr"/>
+      <optional>
+        <ref name="collection.attr"/>
+      </optional>
+      <optional>
+        <ref name="href.attr" sa:avt="true"/>
+      </optional>
+      <optional>
+        <ref name="pipe.attr"/>
+      </optional>
+      <optional>
+        <ref name="static.attr"/>
+      </optional>
+      <ref name="common.attributes"/>
+      <ref name="global.attributes"/>
+      <ref name="inline.attributes"/>
+      <choice>
+        <interleave>
+          <choice>
+            <ref name="Empty"/>
+            <zeroOrMore>
+              <choice>
+                <ref name="Document"/>
+                <ref name="Pipe"/>
+                <ref name="Inline"/>
+              </choice>
+            </zeroOrMore>
+          </choice>
+          <zeroOrMore>
+            <choice>
+              <ref name="Documentation"/>
+              <ref name="PipeInfo"/>
+            </choice>
+          </zeroOrMore>
+        </interleave>
+        <zeroOrMore>
+          <ref name="AnyElement"/>
+        </zeroOrMore>
+      </choice>
     </element>
   </define>
   <!-- ============================================================ -->
@@ -1842,6 +1936,7 @@
       <ref name="Step-validate-with-relax-ng"/>
       <ref name="Step-validate-with-schematron"/>
       <ref name="Step-validate-with-xml-schema"/>
+      <ref name="Step-validate-with-json-schema"/>
       <ref name="Step-add-attribute"/>
       <ref name="Step-add-xml-base"/>
       <ref name="Step-archive"/>
@@ -2583,6 +2678,52 @@
       </optional>
       <optional>
         <attribute name="version">
+          <ref name="avt.datatype"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="report-format">
+          <ref name="avt.datatype"/>
+        </attribute>
+      </optional>
+      <interleave>
+        <zeroOrMore>
+          <ref name="WithInput"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="WithOption"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <choice>
+            <ref name="Documentation"/>
+            <ref name="PipeInfo"/>
+          </choice>
+        </zeroOrMore>
+      </interleave>
+    </element>
+  </define>
+  <define name="Step-validate-with-json-schema">
+    <element name="validate-with-json-schema">
+      <optional>
+        <ref name="name.ncname.attr"/>
+      </optional>
+      <ref name="common.attributes"/>
+      <optional>
+        <ref name="use-when.attr"/>
+      </optional>
+      <ref name="step.attributes"/>
+      <optional>
+        <attribute name="assert-valid">
+          <ref name="avt.datatype"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="default-version">
+          <ref name="avt.datatype"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="parameters">
           <ref name="avt.datatype"/>
         </attribute>
       </optional>

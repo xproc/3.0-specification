@@ -509,12 +509,47 @@ OtherStep = StandardStep | OtherAtomicStep | OtherCompoundStep
 Step-run =
   element run {
     name.ncname.attr?,
-    attribute p:pipeline { xsd:NCName },
     common.attributes,
     global.attributes,
     step.attributes,
-    ((WithInput | AtomicOutputDeclaration | WithOption)*
-     & (Documentation | PipeInfo)*)
+    (WithInput?
+     & RunInput*
+     & RunOption*
+     & Output*
+     & Documentation*
+     & PipeInfo*)
+  }
+[ sa:class = "language-construct" sa:element = "run-input" ]
+RunInput =
+  element run-input {
+    port.attr?,
+    select.attr?,
+    [ sa:avt = "true" ] href.attr?,
+    pipe.attr?,
+    primary.attr?,
+    common.attributes,
+    global.attributes,
+    inline.attributes,
+    (((Empty | (Document | Pipe | Inline)*)
+      & (Documentation | PipeInfo)*)
+     | AnyElement*)
+  }
+[ sa:class = "language-construct" ]
+RunOption =
+  element run-option {
+    name.qname.attr,
+    as.attr?,
+    select.attr,
+    collection.attr?,
+    [ sa:avt = "true" ] href.attr?,
+    pipe.attr?,
+    static.attr?,
+    common.attributes,
+    global.attributes,
+    inline.attributes,
+    (((Empty | (Document | Pipe | Inline)*)
+      & (Documentation | PipeInfo)*)
+     | AnyElement*)
   }
 # ============================================================
 [ sa:ignore = "yes" sa:class = "language-construct" ]
@@ -707,6 +742,7 @@ StandardStep =
   | Step-validate-with-relax-ng
   | Step-validate-with-schematron
   | Step-validate-with-xml-schema
+  | Step-validate-with-json-schema
   | Step-add-attribute
   | Step-add-xml-base
   | Step-archive
@@ -949,6 +985,18 @@ Step-validate-with-xml-schema =
     attribute parameters { avt.datatype }?,
     attribute mode { avt.datatype }?,
     attribute version { avt.datatype }?,
+    attribute report-format { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-validate-with-json-schema =
+  element validate-with-json-schema {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute assert-valid { avt.datatype }?,
+    attribute default-version { avt.datatype }?,
+    attribute parameters { avt.datatype }?,
     attribute report-format { avt.datatype }?,
     (WithInput* & WithOption* & (Documentation | PipeInfo)*)
   }

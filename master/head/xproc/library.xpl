@@ -498,6 +498,16 @@
                 e:type="XSLTSelectionPattern"/>
       <p:option name="version" as="xs:integer?"/>
    </p:declare-step>
+   <p:declare-step type="p:validate-with-json-schema" xml:id="validate-with-json-schema">
+      <p:input port="source" primary="true" content-types="json"/>
+      <p:input port="schema" sequence="false" content-types="json"/>
+      <p:output port="result" primary="true" content-types="json"/>
+      <p:output port="report" sequence="true" content-types="xml json"/>
+      <p:option name="assert-valid" select="true()" as="xs:boolean"/>
+      <p:option name="default-version" as="xs:string"/>
+      <p:option name="parameters" as="map(xs:QName,item()*)?"/>
+      <p:option name="report-format" select="'xvrl'" as="xs:string"/>
+   </p:declare-step>
    <p:declare-step type="p:validate-with-nvdl" xml:id="validate-with-nvdl">
       <p:input port="source" primary="true" content-types="xml html"/>
       <p:input port="nvdl" content-types="xml"/>
@@ -540,10 +550,7 @@
       <p:option name="try-namespaces" select="false()" as="xs:boolean"/>
       <p:option name="assert-valid" select="true()" as="xs:boolean"/>
       <p:option name="parameters" as="map(xs:QName,item()*)?"/>
-      <p:option name="mode"
-                select="'strict'"
-                as="xs:token"
-                values="('strict','lax')"/>
+      <p:option name="mode" select="'strict'" values="('strict','lax')"/>
       <p:option name="version" as="xs:string?"/>
       <p:option name="report-format" select="'xvrl'" as="xs:string"/>
    </p:declare-step>
