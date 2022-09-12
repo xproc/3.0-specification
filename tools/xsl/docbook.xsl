@@ -187,7 +187,7 @@
         <xsl:when test="contains-token(@version, 'final')">
           <dt>Specification:</dt>
           <dd>
-            <a href="db:info/db:bibliomisc[@role='final-uri']">
+            <a href="{db:info/db:bibliomisc[@role='final-uri']}">
               <xsl:sequence select="db:info/db:bibliomisc[@role='final-uri']"/>
             </a>
           </dd>
@@ -291,6 +291,15 @@
             </a>
           </dd>
         </xsl:if>
+      </xsl:if>
+
+      <xsl:if test="contains-token(@version, 'final')">
+        <dt>Errata:</dt>
+        <dd>
+          <a href="{db:info/db:bibliomisc[@role='final-uri']}errata.html">
+            <xsl:sequence select="db:info/db:bibliomisc[@role='final-uri'] || 'errata.html'"/>
+          </a>
+        </dd>
       </xsl:if>
     </dl>
 
