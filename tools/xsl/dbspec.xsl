@@ -136,7 +136,9 @@
 	<xsl:message>
 	  <xsl:text>No definition for glossterm: "</xsl:text>
 	  <xsl:value-of select="$anchor"/>
-	  <xsl:text>"</xsl:text>
+	  <xsl:text>" (ID: </xsl:text>
+          <xsl:value-of select="concat('dt-', $anchor)"/>
+          <xsl:text>)</xsl:text>
 	</xsl:message>
 	<xsl:apply-templates/>
       </xsl:otherwise>
