@@ -188,7 +188,7 @@
           <dt>Specification:</dt>
           <dd>
             <a href="{db:info/db:bibliomisc[@role='final-uri']}">
-              <xsl:sequence select="db:info/db:bibliomisc[@role='final-uri']"/>
+              <xsl:sequence select="string(db:info/db:bibliomisc[@role='final-uri'])"/>
             </a>
           </dd>
         </xsl:when>
