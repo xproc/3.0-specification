@@ -183,12 +183,24 @@
     </xsl:if>
 
     <dl>
-      <dt>Latest editor’s draft:</dt>
-      <dd>
-        <a href="http://spec.xproc.org/master/head/{$spec}">
-          <xsl:value-of select="concat('http://spec.xproc.org/master/head/', $spec)" />
-        </a>
-      </dd>
+      <xsl:choose>
+        <xsl:when test="contains-token(@version, 'final')">
+          <dt>Specification:</dt>
+          <dd>
+            <a href="db:info/db:bibliomisc[@role='final-uri']">
+              <xsl:sequence select="db:info/db:bibliomisc[@role='final-uri']"/>
+            </a>
+          </dd>
+        </xsl:when>
+        <xsl:otherwise>
+          <dt>Latest editor’s draft:</dt>
+          <dd>
+            <a href="https://spec.xproc.org/master/head/{$spec}">
+              <xsl:value-of select="concat('https://spec.xproc.org/master/head/', $spec)" />
+            </a>
+          </dd>
+        </xsl:otherwise>
+      </xsl:choose>
 
       <xsl:if test="db:info/db:bibliorelation[@type='replaces']">
 	<xsl:variable name="vers"
@@ -259,7 +271,8 @@
         </a>
       </dd>
 
-      <xsl:if test="$circleci-build-number != '' or $auto-diff">
+      <xsl:if test="($circleci-build-number != '' or $auto-diff)
+                    and not(db:info/db:bibliomisc[@role='final-uri'])">
         <dt>Changes:</dt>
         <xsl:if test="/*/@xml:id = 'xproc'">
           <dd>
@@ -300,7 +313,8 @@
 	  <xsl:if test="position() &lt; last()">, </xsl:if>
 	</xsl:for-each>
 
-        <xsl:if test="$auto-diff">
+        <xsl:if test="$auto-diff
+                      and not(db:info/db:bibliomisc[@role='final-uri'])">
           <xsl:text> and HTML with automatic change markup </xsl:text>
           <xsl:text> courtesy of </xsl:text>
           <a href="http://www.deltaxml.com/">DeltaXML</a>
