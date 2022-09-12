@@ -34,7 +34,7 @@ steps. A machine-readable description of these steps may be found in
 <a href="steps.xpl">steps.xpl</a>.
 </p>
 
-<p>Many atomic steps are available for [<a href="#xproc30"></a>]. They are described in several specifications.
+<p>Many atomic steps are available for [<a href="#xproc30"><span class="abbrev">XProc 3.0</span></a>]. They are described in several specifications.
 This specification describes the general background common to all
 steps. A conformant processor <span class="rfc2119" id="introduction.3.2">must</span> implement all of
 the steps in this specification. Additional steps may also be
@@ -58,13 +58,13 @@ implemented.
     is allowed.</p>
   </li><li>
     <p><code class="type">XPathExpression</code>:
-    As a string per [<a href="#xmlschema-2"></a>], including
+    As a string per [<a href="#xmlschema-2"><span class="abbrev">W3C XML Schema: Part 2</span></a>], including
     whitespace normalization, and the further requirement to be a
-    conformant Expression per [<a href="#xpath31"></a>].
+    conformant Expression per [<a href="#xpath31"><span class="abbrev">XPath 3.1</span></a>].
     </p>
   </li><li id="dt-selection-pattern">
     <p><code class="type">XSLTSelectionPattern</code>:
-    As a string per [<a href="#xslt30"></a>] conforming to an XSLT
+    As a string per [<a href="#xslt30"><span class="abbrev">XSLT 3.0</span></a>] conforming to an XSLT
     <em>selection pattern</em>.</p>
   </li><li>
     <p><code class="type">XPathSequenceType</code>: An XPath
@@ -72,12 +72,12 @@ implemented.
     </p>
   </li><li>
     <p><code class="type">ContentType</code>: A media type as defined in
-    [<a href="#rfc2046"></a>].
+    [<a href="#rfc2046"><span class="abbrev">RFC 2046</span></a>].
     </p>
   </li><li>
     <p><code class="type">ContentTypes</code>:
     As a whitespace separated list of media types as defined in
-    [<a href="#rfc2046"></a>].
+    [<a href="#rfc2046"><span class="abbrev">RFC 2046</span></a>].
     </p>
   </li></ul></div>
 
@@ -122,10 +122,10 @@ remove the <code class="code">serialization</code> property
 <p id="cv.result">Also, in this specification, several steps use this
 element for result information:</p>
 
-<p id="d298e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:result&gt;<br />    <var>string</var><br />&lt;/c:result&gt;</code></p>
+<p id="d304e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:result&gt;<br />    <var>string</var><br />&lt;/c:result&gt;</code></p>
 
 <p>When a step uses an XPath to compute an option value, the XPath
-context is as defined in [<a href="#xproc30"></a>].</p>
+context is as defined in [<a href="#xproc30"><span class="abbrev">XProc 3.0</span></a>].</p>
 
 <p>When a step specifies a particular version of a technology,
 implementations <span class="rfc2119" id="introduction.12.1">must</span> implement that
@@ -135,7 +135,7 @@ compatible versions.</p>
   
 <p>In this specification the words <span class="rfc2119" id="introduction.13.1">must</span>, <span class="rfc2119" id="introduction.13.2">must not</span>,
         <span class="rfc2119" id="introduction.13.3">should</span>, <span class="rfc2119" id="introduction.13.4">should not</span>, <span class="rfc2119" id="introduction.13.5">may</span> and
-        <span class="rfc2119" id="introduction.13.6">recommended</span> are to be interpreted as described in [<a href="#rfc2119"></a>].</p>
+        <span class="rfc2119" id="introduction.13.6">recommended</span> are to be interpreted as described in [<a href="#rfc2119"><span class="abbrev">RFC 2119</span></a>].</p>
 
 <p>As described in <cite><a href="https://spec.xproc.org/3.0/xproc/#psvi-support">PSVIs in XProc</a></cite> in <cite><a href="https://spec.xproc.org/3.0/xproc/">XProc 3.0: An XML Pipeline Language</a></cite>,
 steps may not produce PSVI output unless that behavior is explicitly
@@ -288,7 +288,7 @@ element's [base URI].</p>
   <p>The <code class="code">p:archive</code> step can perform several different operations on archives. The
     most common one will likely be creating an archive, but it could also, depending on the archive
     format, provide services like update, freshen or even merge. The only format implementations
-      <span class="rfc2119" id="c.archive.4.2">must</span> support is [<a href="#zip"></a>]. <span id="impl-1">The list of formats
+      <span class="rfc2119" id="c.archive.4.2">must</span> support is [<a href="#zip"><span class="abbrev">ZIP</span></a>]. <span id="impl-1">The list of formats
       supported by the <code class="tag-element">p:archive</code> step is
       <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em>.</span></p>
 
@@ -347,7 +347,7 @@ element's [base URI].</p>
     
   <dl><dt><span class="term"><code class="option">format</code></span></dt><dd>
         <p>The format of the archive can be specified using the <code class="option">format</code> option.
-          Implementations <span class="rfc2119" id="c.archive.10.1.2.1.2">must</span> support the [<a href="#zip"></a>] format,
+          Implementations <span class="rfc2119" id="c.archive.10.1.2.1.2">must</span> support the [<a href="#zip"><span class="abbrev">ZIP</span></a>] format,
           specified with the value <code class="code">zip</code>. <span id="impl-4">It is
               <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em> what other formats are
           supported.</span></p>
@@ -365,7 +365,7 @@ element's [base URI].</p>
           base URI of the element on which it is specified (<code class="tag-element">p:with-option</code> or the step in
           case of a syntactic shortcut value). <a id="err.inline.D0064"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic
               error</a></em> (<a href="#err.D0064"><code class="errqname">err:XD0064</code></a>) if the base URI is not both absolute and valid according to
-              [<a href="#rfc3986"></a>].</p>
+              [<a href="#rfc3986"><span class="abbrev">RFC 3986</span></a>].</p>
       </dd></dl></div>
 
   <p>The format of the archive is determined as follows:</p>
@@ -374,7 +374,7 @@ element's [base URI].</p>
     
   <ul><li>
       <p>If the <code class="option">format</code> option is specified, this determines the format of the
-        archive. Implementations <span class="rfc2119" id="c.archive.12.1.1.2">must</span> support the [<a href="#zip"></a>]
+        archive. Implementations <span class="rfc2119" id="c.archive.12.1.1.2">must</span> support the [<a href="#zip"><span class="abbrev">ZIP</span></a>]
         format, specified with the value <code class="code">zip</code>. <span id="impl-6">It is
             <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em> what other formats are supported.</span>
         <a id="err.inline.C0081"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic error</a></em> (<a href="#err.C0081"><code class="errqname">err:XC0081</code></a>) if the format of the
@@ -386,7 +386,7 @@ element's [base URI].</p>
         document-property of the document on the <code class="port">archive</code> port and/or by inspecting its
         contents. <span id="impl-7">It is <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em> how the step determines
           the archive's format.</span> Implementations <span class="rfc2119" id="c.archive.12.2.1.5">should</span> recognize archives
-        in [<a href="#zip"></a>] format. </p>
+        in [<a href="#zip"><span class="abbrev">ZIP</span></a>] format. </p>
     </li></ul></div>
 
   <p><a id="err.inline.C0085"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic error</a></em> (<a href="#err.C0085"><code class="errqname">err:XC0085</code></a>) if the format of the archive 
@@ -424,7 +424,7 @@ element's [base URI].</p>
         <p>The <code class="code">name</code> attribute specifies the name of the entry in the archive.</p>
       </li><li>
         <p>The <code class="code">href</code> attribute must be a valid URI according to
-          [<a href="#rfc3986"></a>]. If its value is relative, it is made absolute
+          [<a href="#rfc3986"><span class="abbrev">RFC 3986</span></a>]. If its value is relative, it is made absolute
           against the base URI of the manifest. There are two possible cases:</p>
 
         <div class="itemizedlist">
@@ -497,7 +497,7 @@ element's [base URI].</p>
     </li><li>
     <p>If there is no <code class="option">relative-to</code> option or if its value is not the initial
     substring of the base URI of the document, the name is the <em>path</em> portion of
-    the URI (per [<a href="#rfc3986"></a>]). If the path portion begins with an initial slash,
+    the URI (per [<a href="#rfc3986"><span class="abbrev">RFC 3986</span></a>]). If the path portion begins with an initial slash,
     that slash is removed.
     </p>
     </li></ul></div>
@@ -514,7 +514,7 @@ element's [base URI].</p>
     
 
     <p>The format of the archive can be specified using the <code class="option">format</code> option.
-      Implementations <span class="rfc2119" id="cv.archive-zips.2.2">must</span> support the [<a href="#zip"></a>] format,
+      Implementations <span class="rfc2119" id="cv.archive-zips.2.2">must</span> support the [<a href="#zip"><span class="abbrev">ZIP</span></a>] format,
       specified with the value <code class="code">zip</code>. </p>
 
    <p>When ZIP archives are processed, every <code class="tag-attribute">name</code> in the
@@ -664,7 +664,7 @@ The archive has no <code class="property">base-uri</code>.</p>
     
   <ul><li>
       <p>If the <code class="option">format</code> option is specified, this determines the format of the
-        archive. Implementations <span class="rfc2119" id="c.archive-manifest.6.1.1.2">must</span> support the [<a href="#zip"></a>]
+        archive. Implementations <span class="rfc2119" id="c.archive-manifest.6.1.1.2">must</span> support the [<a href="#zip"><span class="abbrev">ZIP</span></a>]
         format, specified with the value <code class="code">zip</code>. <span id="impl-16">It is
             <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em> what other formats are supported.</span>
       </p>
@@ -674,7 +674,7 @@ The archive has no <code class="property">base-uri</code>.</p>
         document-property of the document on the <code class="port">source</code> port and/or by inspecting its
         contents. <span id="impl-17">It is <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em> how the step determines
           the archive's format.</span> Implementations <span class="rfc2119" id="c.archive-manifest.6.2.1.5">should</span> recognize archives
-        in [<a href="#zip"></a>] format. </p>
+        in [<a href="#zip"><span class="abbrev">ZIP</span></a>] format. </p>
     </li></ul></div>
 
   <p><a id="err.inline.C0085.1"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic error</a></em> (<a href="#err.C0085"><code class="errqname">err:XC0085</code></a>) if the format of the
@@ -692,7 +692,7 @@ The archive has no <code class="property">base-uri</code>.</p>
     manifest's <code class="code">c:entry/@href</code> attribute. If the option is relative, it is made absolute
     against the base URI of the element on which it is specified (<code class="tag-element">p:with-option</code> or the
     step in case of a syntactic shortcut value). <a id="err.inline.D0064.1"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic
-        error</a></em> (<a href="#err.D0064"><code class="errqname">err:XD0064</code></a>) if the base URI is not both absolute and valid according to [<a href="#rfc3986"></a>].</p>
+        error</a></em> (<a href="#err.D0064"><code class="errqname">err:XD0064</code></a>) if the base URI is not both absolute and valid according to [<a href="#rfc3986"><span class="abbrev">RFC 3986</span></a>].</p>
 
   <p>The generated manifest has the format as described in <a href="#cv.archive-manifest" title="The archive manifest">Section 2.3.1, “The archive manifest”</a>.
     Implementations <span class="rfc2119" id="c.archive-manifest.10.2">must</span> supply an <a href="#cv.entry"><code class="tag-element">c:entry</code></a> element and its
@@ -717,7 +717,7 @@ The archive has no <code class="property">base-uri</code>.</p>
       
     <ul><li>
         <p>The first member in an inner array <span class="rfc2119" id="override-content-type.3.1.1.1">must</span> be a regular expression as
-          specified in [<a href="#xpath31-functions"></a>], section 7.61 “<code class="literal">Regular
+          specified in [<a href="#xpath31-functions"><span class="abbrev">XPath and XQuery Functions and Operators 3.1</span></a>], section 7.61 “<code class="literal">Regular
             Expression Syntax</code>”. <a id="err.inline.C0147"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic
               error</a></em> (<a href="#err.C0147"><code class="errqname">err:XC0147</code></a>) if the specified value is not a valid XPath regular
             expression.</p>
@@ -825,7 +825,7 @@ The archive has no <code class="property">base-uri</code>.</p>
                XML into JSON. <span id="impl-21">The precise nature of the conversion from XML to JSON
                   is <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em>.</span>
                If the input document is an XML representation of JSON as defined in
-               [<a href="#xpath31-functions"></a>],
+               [<a href="#xpath31-functions"><span class="abbrev">XPath and XQuery Functions and Operators 3.1</span></a>],
                implementations <span class="rfc2119" id="casting-from-xml.2.3.1.3">must</span> produce the same result as 
                <code class="literal">fn:parse-json(fn:xml-to-json())</code>
                by default. If the input document has a <code class="tag-element">c:param-set</code> document element,
@@ -902,7 +902,7 @@ The archive has no <code class="property">base-uri</code>.</p>
       <ul><li>
             <p>Casting from a JSON media type to an XML media type converts the
                JSON into XML. An implementation <span class="rfc2119" id="casting-from-json.2.1.1.1">must</span> support the format
-               specified in section “XML Representation of JSON” of [<a href="#xpath31-functions"></a>]
+               specified in section “XML Representation of JSON” of [<a href="#xpath31-functions"><span class="abbrev">XPath and XQuery Functions and Operators 3.1</span></a>]
                as default for the resulting XML. <span id="impl-25">It is <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em> whether
                   other result formats are supported.</span> The serialization property is removed.</p>
          </li><li>
@@ -979,7 +979,7 @@ The archive has no <code class="property">base-uri</code>.</p>
                <code class="tag-attribute">content-type</code> attribute on the
                <a href="#c.data"><code class="tag-element">c:data</code></a> element.</p>
             
-            <p id="d790e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:data<br />  <strong>content-type</strong> = <var>ContentType</var><br />  charset? = <var>string</var><br />  encoding? = <var>string</var>&gt;<br />    <var>string</var><br />&lt;/c:data&gt;</code></p>
+            <p id="d812e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:data<br />  <strong>content-type</strong> = <var>ContentType</var><br />  charset? = <var>string</var><br />  encoding? = <var>string</var>&gt;<br />    <var>string</var><br />&lt;/c:data&gt;</code></p>
             
             <p>The content of the <a href="#c.data"><code class="tag-element">c:data</code></a> element is the base64 encoded
                representation of the non-XML content. The serialization property is removed.</p>
@@ -1011,7 +1011,7 @@ equality.</p>
 compares them. If <code class="option">method</code> is not specified, or if
 <code class="code">deep-equal</code> is specified, the comparison
 uses <code class="function">fn:deep-equal</code>
-(as defined in [<a href="#xpath31-functions"></a>]). <span id="impl-32">Implementations of <code class="tag-element">p:compare</code>
+(as defined in [<a href="#xpath31-functions"><span class="abbrev">XPath and XQuery Functions and Operators 3.1</span></a>]). <span id="impl-32">Implementations of <code class="tag-element">p:compare</code>
 <span class="rfc2119" id="c.compare.4.5.2">must</span> support the <code class="code">deep-equal</code> <code class="option">method</code>;
 other supported methods are <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em>.</span>
 <a id="err.inline.C0076"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic error</a></em> (<a href="#err.C0076"><code class="errqname">err:XC0076</code></a>) if
@@ -1064,7 +1064,7 @@ The comparison document has no <code class="property">base-uri</code>.</p>
     
   <dl><dt><span class="term"><code class="option">format</code></span></dt><dd>
         <p>The format of the compression can be specified using the <code class="option">format</code>
-          option. Implementations <span class="rfc2119" id="c.compress.6.1.2.1.2">must</span> support the [<a href="#gzip"></a>]
+          option. Implementations <span class="rfc2119" id="c.compress.6.1.2.1.2">must</span> support the [<a href="#gzip"><span class="abbrev">GZIP</span></a>]
           format, specified with the value <code class="code">gzip</code>. <span id="impl-34">It is
               <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em> what other formats are supported.</span>
           <a id="err.inline.C0202"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic error</a></em> (<a href="#err.C0202"><code class="errqname">err:XC0202</code></a>) if the compression
@@ -1082,7 +1082,7 @@ The comparison document has no <code class="property">base-uri</code>.</p>
           content before compression takes place. If the document to be stored has a
             <code class="code">serialization</code> property, the serialization is controlled by the merger of
           the two maps where the entries in the <code class="code">serialization</code> property take precedence.
-          Serialization is described in [<a href="#xproc30"></a>].</p>
+          Serialization is described in [<a href="#xproc30"><span class="abbrev">XProc 3.0</span></a>].</p>
       </dd></dl></div>
 
   
@@ -1245,8 +1245,8 @@ it is 1.</p>
 <p>A hash is constructed from the string specified in the
 <code class="option">value</code> option using the specified algorithm and version.
 Implementations <span class="rfc2119" id="c.hash.6.2">must</span> support
-[<a href="#bib.crc"></a>],
-[<a href="#rfc1321"></a>], and [<a href="#bib.sha"></a>]
+[<a href="#bib.crc"><span class="abbrev">CRC32</span></a>],
+[<a href="#rfc1321"><span class="abbrev">RFC 1321</span></a>], and [<a href="#bib.sha"><span class="abbrev">SHA1</span></a>]
 hashes. <span id="impl-36">It is
 <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em> what other algorithms are
 supported.</span>
@@ -1482,7 +1482,7 @@ empty. Header names are converted to lowercase.</p>
   or “<code class="literal">Digest</code>” but other values are allowed. If the
   authentication method is “<code class="literal">Basic</code>” or
   “<code class="literal">Digest</code>”, authentication is handled as per
-  [<a href="#rfc2617"></a>]. <span id="impl-38">The interpretation of values
+  [<a href="#rfc2617"><span class="abbrev">RFC 2617</span></a>]. <span id="impl-38">The interpretation of values
   associated with the “<code class="literal">auth-method</code>” key other than
   “<code class="literal">Basic</code>” or “<code class="literal">Digest</code>” is
   <em class="glossterm"><a href="#dt-implementation-defined">implementation defined</a></em>.</span></p>
@@ -1519,7 +1519,7 @@ empty. Header names are converted to lowercase.</p>
   <code class="literal">auth-method</code> isn't supported, or the
   authentication challenge contains an authentication method that
   isn't supported. All implementations <span class="rfc2119" id="c.http-request.10.5.2.6.2">must</span>
-  support “Basic” and “Digest” authentication per [<a href="#rfc2617"></a>].</p>
+  support “Basic” and “Digest” authentication per [<a href="#rfc2617"><span class="abbrev">RFC 2617</span></a>].</p>
 
 </dd><dt><span class="term">parameters</span></dt><dd>
     <p>The <code class="option">parameter</code> option can be used to provide
@@ -1678,7 +1678,7 @@ empty. Header names are converted to lowercase.</p>
 <p>If more than one document appears on the <code class="port">source</code>
 port, or if the specified “<code class="literal">content-type</code>” header
 begins “<code class="literal">multipart/</code>”, a multipart request will be
-constructed, per [<a href="#rfc1521"></a>]. The content type of
+constructed, per [<a href="#rfc1521"><span class="abbrev">RFC 1521</span></a>]. The content type of
 the request is derived from the “<code class="literal">content-type</code>”
 header:</p>
 
@@ -1895,7 +1895,7 @@ port <code class="port">result</code>.</p>
     all key-value pairs are copied into the result map unless this map already contains
     an entry with the given key. In this case the value of option <code class="option">duplicates</code>
     determines the policy for handling duplicate keys as specified for function <code class="code">map:merge</code>
-      in [<a href="#xpath31-functions"></a>].  
+      in [<a href="#xpath31-functions"><span class="abbrev">XPath and XQuery Functions and Operators 3.1</span></a>].  
       <a id="err.inline.C0106"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic error</a></em> (<a href="#err.C0106"><code class="errqname">err:XC0106</code></a>) if duplicate keys are encountered and 
       option <code class="option">duplicates</code> has value “<code class="literal">reject</code>”.</p>
   </li><li>
@@ -1992,7 +1992,7 @@ result a document specified by an IRI.</p>
       <code class="option">href</code> is relative, it is made absolute against the base URI of the element on
     which it is specified (<code class="tag-element">p:with-option</code> or <code class="tag-element">p:load</code> in the case of a syntactic
     shortcut value). <a id="err.inline.D0064.2"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic 
-      error</a></em> (<a href="#err.D0064"><code class="errqname">err:XD0064</code></a>) if the base URI is not both absolute and valid according to [<a href="#rfc3986"></a>].</p>
+      error</a></em> (<a href="#err.D0064"><code class="errqname">err:XD0064</code></a>) if the base URI is not both absolute and valid according to [<a href="#rfc3986"><span class="abbrev">RFC 3986</span></a>].</p>
 
 <p>The document identified by the
 <code class="option">href</code> URI is loaded and returned. If the URI protocol
@@ -2089,7 +2089,7 @@ by the processor.</p>
 <p>For a JSON media type, the content is loaded and parsed as JSON.</p>
 
 <p>The parameters specified for the <code class="code">fn:parse-json</code> function
-in [<a href="#xpath31-functions"></a>]
+in [<a href="#xpath31-functions"><span class="abbrev">XPath and XQuery Functions and Operators 3.1</span></a>]
 <span class="rfc2119" id="c.load.json.3.3">must</span> be supported.
 <span id="impl-48">Additional JSON parameters are <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em>.
 </span></p>
@@ -2169,7 +2169,7 @@ as an IRI reference. If it is relative, it is made absolute against
 the base URI of the element on which it is specified
 (<code class="tag-element">p:with-option</code> or <code class="tag-element">p:make-absolute-uris</code> in the case of
   a syntactic shortcut value). <a id="err.inline.D0064.3"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic 
-    error</a></em> (<a href="#err.D0064"><code class="errqname">err:XD0064</code></a>) if the base URI is not both absolute and valid according to [<a href="#rfc3986"></a>].</p>
+    error</a></em> (<a href="#err.D0064"><code class="errqname">err:XD0064</code></a>) if the base URI is not both absolute and valid according to [<a href="#rfc3986"><span class="abbrev">RFC 3986</span></a>].</p>
 
 <p>For every element or attribute in the input document which
 matches the specified pattern, its XPath string-value is resolved
@@ -2508,7 +2508,7 @@ the new set.</p>
 <p><a id="err.inline.D0070"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic error</a></em> (<a href="#err.D0070"><code class="errqname">err:XD0070</code></a>) if a value is 
 assigned to the <code class="code">serialization</code> document property that cannot be converted 
 into <code class="code">map(xs:QName, item()*)</code> according
-to the rules in section “QName handling” of [<a href="#xproc30"></a>].</p>
+to the rules in section “QName handling” of [<a href="#xproc30"><span class="abbrev">XProc 3.0</span></a>].</p>
 
 <p><a id="err.inline.C0069"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic
 error</a></em> (<a href="#err.C0069"><code class="errqname">err:XC0069</code></a>) if the <code class="option">properties</code> map contains
@@ -2519,7 +2519,7 @@ a key equal to the string “<code class="literal">content-type</code>”.
 “<code class="literal">base-uri</code>” the associated value is taken as the new base URI of
    the resulting document. <a id="err.inline.D0064.4"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic 
    error</a></em> (<a href="#err.D0064"><code class="errqname">err:XD0064</code></a>) if the base URI is not both absolute and valid according 
-      to [<a href="#rfc3986"></a>].</p>
+      to [<a href="#rfc3986"><span class="abbrev">RFC 3986</span></a>].</p>
 
 <section id="c.set-properties.9" class="simplesect"><div class="section-titlepage"><h4>Document properties</h4></div><div class="content">
 
@@ -2633,7 +2633,7 @@ serialization of content when it is stored. If the document to be stored
 has a “serialization” property, the serialization is controlled by the
 merger of the two maps where the entries in the “serialization” property
 take precedence. Serialization is described in
-[<a href="#xproc30"></a>].</p>
+[<a href="#xproc30"><span class="abbrev">XProc 3.0</span></a>].</p>
 
 <section id="c.store.8" class="simplesect"><div class="section-titlepage"><h4>Document properties</h4></div><div class="content">
 
@@ -2805,7 +2805,7 @@ The joined document has no <code class="property">base-uri</code> property.
 
   <p>The <code class="option">pattern</code>, <code class="option">replacement</code> and <code class="option">flags</code>
     options are specified the same as the parameters with the same names of the <a href="https://www.w3.org/TR/xpath-functions-31/#func-replace"><code class="function">fn:replace</code></a> function. The <code class="option">pattern</code> option
-      <span class="rfc2119" id="c.text-replace.6.6">must</span> be a regular expression as specified in [<a href="#xpath31-functions"></a>], section 7.61 “<code class="literal">Regular Expression Syntax</code>”.
+      <span class="rfc2119" id="c.text-replace.6.6">must</span> be a regular expression as specified in [<a href="#xpath31-functions"><span class="abbrev">XPath and XQuery Functions and Operators 3.1</span></a>], section 7.61 “<code class="literal">Regular Expression Syntax</code>”.
       <a id="err.inline.C0147.1"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic error</a></em> (<a href="#err.C0147"><code class="errqname">err:XC0147</code></a>) if the specified value is not
       a valid XPath regular expression.</p>
 
@@ -2942,7 +2942,7 @@ newline (&amp;#10;).</p>
         
       <ul><li>
           <p>If the <code class="option">format</code> option is specified, this determines the format of
-            the archive. Implementations <span class="rfc2119" id="c.unarchive.5.1.2.1.1.2">must</span> support the [<a href="#zip"></a>] format, specified with the value <code class="code">zip</code>. <span id="impl-55">It is
+            the archive. Implementations <span class="rfc2119" id="c.unarchive.5.1.2.1.1.2">must</span> support the [<a href="#zip"><span class="abbrev">ZIP</span></a>] format, specified with the value <code class="code">zip</code>. <span id="impl-55">It is
                 <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em> what other formats are
               supported.</span></p>
         </li><li>
@@ -2952,7 +2952,7 @@ newline (&amp;#10;).</p>
             port and/or by inspecting its contents. <span id="impl-56">It is
                 <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em> how the step determines the archive's
               format.</span> Implementations <span class="rfc2119" id="c.unarchive.5.1.2.2.1.5">should</span> recognize archives in
-              [<a href="#zip"></a>] format. </p>
+              [<a href="#zip"><span class="abbrev">ZIP</span></a>] format. </p>
         </li><li><p><a id="err.inline.C0085.2"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic error</a></em> (<a href="#err.C0085"><code class="errqname">err:XC0085</code></a>) if the format of the archive 
           does not match the specified format, cannot be understood, determined and/or processed.</p>
         </li></ul></div>
@@ -2966,7 +2966,7 @@ newline (&amp;#10;).</p>
     </li><li>
       <p>If present, the value of the <code class="option">include-filter</code> or
           <code class="option">exclude-filter</code> option <span class="rfc2119" id="c.unarchive.5.3.1.3">must</span> be a sequence of strings,
-        each one representing a regular expressions as specified in [<a href="#xpath31-functions"></a>], section 7.61 “<code class="literal">Regular Expression
+        each one representing a regular expressions as specified in [<a href="#xpath31-functions"><span class="abbrev">XPath and XQuery Functions and Operators 3.1</span></a>], section 7.61 “<code class="literal">Regular Expression
             Syntax</code>”. <a id="err.inline.C0147.2"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic
               error</a></em> (<a href="#err.C0147"><code class="errqname">err:XC0147</code></a>) if a specified value is not a valid XPath regular
               expression.</p>
@@ -3041,7 +3041,7 @@ newline (&amp;#10;).</p>
     <code class="option">relative-to</code> option is not present and the document on the 
     <code class="port">source</code> port does not have a base URI.
     <a id="err.inline.D0064.5"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic
-    error</a></em> (<a href="#err.D0064"><code class="errqname">err:XD0064</code></a>) if the option is not a valid URI according to [<a href="#rfc3986"></a>].</p>
+    error</a></em> (<a href="#err.D0064"><code class="errqname">err:XD0064</code></a>) if the option is not a valid URI according to [<a href="#rfc3986"><span class="abbrev">RFC 3986</span></a>].</p>
   
   <p>For instance, the base URI of an unarchived file called <code class="code">xyz.xml</code> that resided in
     the <code class="code">specs</code> subdirectory in an archive with base URI <code class="code">file:///a/b/c.zip</code>
@@ -3081,7 +3081,7 @@ the base URI of the document.
     
   <ul><li>
       <p>If the <code class="option">format</code> option is specified, this determines the compression
-        format. Implementations <span class="rfc2119" id="c.uncompress.5.1.1.2">must</span> support the [<a href="#gzip"></a>]
+        format. Implementations <span class="rfc2119" id="c.uncompress.5.1.1.2">must</span> support the [<a href="#gzip"><span class="abbrev">GZIP</span></a>]
         format, specified with the value <code class="code">gzip</code>. <span id="impl-58">It is
             <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em> what other formats are supported.</span>
          <a id="err.inline.C0202.1"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic error</a></em> (<a href="#err.C0202"><code class="errqname">err:XC0202</code></a>) if the compression
@@ -3092,7 +3092,7 @@ the base URI of the document.
         document-property of the document on the <code class="port">source</code> port and/or by inspecting its
         contents. <span id="impl-59">It is <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em> how the step determines
           the compression format.</span> Implementations <span class="rfc2119" id="c.uncompress.5.2.1.5">should</span> recognize
-        archives in [<a href="#gzip"></a>] format. </p>
+        archives in [<a href="#gzip"><span class="abbrev">GZIP</span></a>] format. </p>
     </li></ul></div>
   
   <p>The <code class="option">parameters</code> option can be used to supply parameters to control the
@@ -3189,7 +3189,7 @@ ones.</p>
 
 
 <p>The <code class="tag-element">p:uuid</code> step generates a
-[<a href="#bib.uuid"></a>] and injects it into
+[<a href="#bib.uuid"><span class="abbrev">UUID</span></a>] and injects it into
 the <code class="port">source</code> document.</p>
 
 <p class="element-syntax element-syntax-declare-step"><span class="decl"><code>&lt;p:declare-step</code> <code class="attr type-attr">type</code><code>="</code><code class="value type-value">p:uuid</code><code>"</code><code>&gt;</code></span><br />     <span class="input"><code>&lt;p:input</code> <code class="attr port-attr">port</code><code>="</code><code class="value port-value">source</code><code>"</code> <code class="attr primary-attr">primary</code><code>="</code><code class="value primary-value">true</code><code>"</code> <code class="attr content-types-attr">content-types</code><code>="</code><code class="value content-types-value">xml html</code><code>"</code><code>/&gt;</code></span><br />     <span class="input"><code>&lt;p:output</code> <code class="attr port-attr">port</code><code>="</code><code class="value port-value">result</code><code>"</code> <code class="attr content-types-attr">content-types</code><code>="</code><code class="value content-types-value">text xml html</code><code>"</code><code>/&gt;</code></span><br />     <span class="opt-opt"><code>&lt;p:option</code> <code class="attr name-attr">name</code><code>="</code><code class="value name-value">match</code><code>"</code> <code class="attr as-attr">as</code><code>="</code><code class="value as-value">xs:string</code><code>"</code> <code class="attr select-attr">select</code><code>="</code><code class="value select-value">'/*'</code><code>"</code><code>/&gt;</code><code>         </code><code class="comment">&lt;!-- </code><span class="opt-type">XSLTSelectionPattern</span><code class="comment"> --&gt;</code></span><br />     <span class="opt-opt"><code>&lt;p:option</code> <code class="attr name-attr">name</code><code>="</code><code class="value name-value">version</code><code>"</code> <code class="attr as-attr">as</code><code>="</code><code class="value as-value">xs:integer?</code><code>"</code><code>/&gt;</code><code>                   </code></span><br /><code>&lt;/p:declare-step&gt;</code></p>
@@ -3390,17 +3390,17 @@ option, a name/value pair is created for each value.</p>
 <section id="c.xinclude" class="section"><div class="section-titlepage"><h3><bdi class="secno">2.46. </bdi>p:xinclude<a aria-label="§" class="self-link" href="#c.xinclude"></a></h3></div><div class="content">
 
 
-<p>The <code class="tag-element">p:xinclude</code> step applies [<a href="#xinclude"></a>] processing to the <code class="port">source</code> document.</p>
+<p>The <code class="tag-element">p:xinclude</code> step applies [<a href="#xinclude"><span class="abbrev">XInclude</span></a>] processing to the <code class="port">source</code> document.</p>
 
 <p class="element-syntax element-syntax-declare-step"><span class="decl"><code>&lt;p:declare-step</code> <code class="attr type-attr">type</code><code>="</code><code class="value type-value">p:xinclude</code><code>"</code><code>&gt;</code></span><br />     <span class="input"><code>&lt;p:input</code> <code class="attr port-attr">port</code><code>="</code><code class="value port-value">source</code><code>"</code> <code class="attr content-types-attr">content-types</code><code>="</code><code class="value content-types-value">xml html</code><code>"</code><code>/&gt;</code></span><br />     <span class="input"><code>&lt;p:output</code> <code class="attr port-attr">port</code><code>="</code><code class="value port-value">result</code><code>"</code> <code class="attr content-types-attr">content-types</code><code>="</code><code class="value content-types-value">xml html</code><code>"</code><code>/&gt;</code></span><br />     <span class="opt-opt"><code>&lt;p:option</code> <code class="attr name-attr">name</code><code>="</code><code class="value name-value">fixup-xml-base</code><code>"</code> <code class="attr as-attr">as</code><code>="</code><code class="value as-value">xs:boolean</code><code>"</code> <code class="attr select-attr">select</code><code>="</code><code class="value select-value">false()</code><code>"</code><code>/&gt;</code><code></code></span><br />     <span class="opt-opt"><code>&lt;p:option</code> <code class="attr name-attr">name</code><code>="</code><code class="value name-value">fixup-xml-lang</code><code>"</code> <code class="attr as-attr">as</code><code>="</code><code class="value as-value">xs:boolean</code><code>"</code> <code class="attr select-attr">select</code><code>="</code><code class="value select-value">false()</code><code>"</code><code>/&gt;</code><code></code></span><br /><code>&lt;/p:declare-step&gt;</code></p>
 
 <p>The value of the <code class="option">fixup-xml-base</code> option <span class="rfc2119" id="c.xinclude.4.2">must</span> be a
 boolean. If it is true, base URI fixup will be performed as per
-[<a href="#xinclude"></a>].</p>
+[<a href="#xinclude"><span class="abbrev">XInclude</span></a>].</p>
 
 <p>The value of the <code class="option">fixup-xml-lang</code> option <span class="rfc2119" id="c.xinclude.5.2">must</span> be a
 boolean. If it is true, language fixup will be performed as per
-[<a href="#xinclude"></a>].</p>
+[<a href="#xinclude"><span class="abbrev">XInclude</span></a>].</p>
 
 <p>The included documents are located with the base URI of the
 input document and are not provided as input to the step.</p>
@@ -3440,7 +3440,7 @@ is empty.</p>
 <ul><li>
     <p>If the document root element is <a href="#cv.query"><code id="cv.query" class="tag-element">c:query</code></a>, the text
       descendants of this element are considered the query.</p>
-    <p id="d2297e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:query&gt;<br />    <var>string</var><br />&lt;/c:query&gt;</code></p>
+    <p id="d2346e0" class="element-syntax element-syntax-step-vocabulary"><code>&lt;c:query&gt;<br />    <var>string</var><br />&lt;/c:query&gt;</code></p>
   </li><li>
       <p>If the document root element is in the XQueryX namespace, the
         document is treated as an XQueryX-encoded query. <span id="impl-64">Support for
@@ -3668,7 +3668,7 @@ establish a base URI, the document will not have one.
       supplied on port <code class="port">source</code> the base URI of the document on port <code class="port">stylesheet</code>
       is used. <a id="err.inline.C0121"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic error</a></em> (<a href="#err.C0121"><code class="errqname">err:XC0121</code></a>) if a document appearing
         on the <code class="port">secondary</code> port has a base URI that is not both absolute and 
-        valid according to [<a href="#rfc3986"></a>].</p>
+        valid according to [<a href="#rfc3986"><span class="abbrev">RFC 3986</span></a>].</p>
     <div class="note admonition"><h3>Note</h3><div class="admonition-body">
       <p>If no result tree is constructed for one of secondary results, a sequence of documents
         sharing the same value for attribute <code class="literal">href</code> may appear on output port
@@ -3709,7 +3709,7 @@ establish a base URI, the document will not have one.
       supplied on port <code class="port">source</code> the base URI of the document on port <code class="port">stylesheet</code>
       is used. <a id="err.inline.C0121.1"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic error</a></em> (<a href="#err.C0121"><code class="errqname">err:XC0121</code></a>) if a document appearing
         on the <code class="port">secondary</code> port has a base URI that is not both absolute and 
-        valid according to [<a href="#rfc3986"></a>].</p>
+        valid according to [<a href="#rfc3986"><span class="abbrev">RFC 3986</span></a>].</p>
   </div></section>
   
   <section id="c.xslt.13" class="section"><div class="section-titlepage"><h4><bdi class="secno">2.48.3. </bdi>Invoking an XSLT 1.0 stylesheet<a aria-label="§" class="self-link" href="#"></a></h4></div><div class="content">
@@ -4083,28 +4083,87 @@ is implementation-dependent. See <a href="#c.xquery" title="p:xquery">Section 2
 <section id="normative-references" class="section"><div class="section-titlepage"><h2><bdi class="secno">B.1. </bdi>Normative References<a aria-label="§" class="self-link" href="#normative-references"></a></h2></div><div class="content">
   
   <div id="normative-references.2" class="bibliolist">
-    <div id="xproc30" class="bibliomixed error"><p>[xproc30] @@FIXME:MISSING </p></div>
-    <div id="xmlschema-2" class="bibliomixed error"><p>[xmlschema-2] @@FIXME:MISSING </p></div>
-    <div id="xpath31" class="bibliomixed error"><p>[xpath31] @@FIXME:MISSING </p></div>
-    <div id="xpath31-functions" class="bibliomixed error"><p>[xpath31-functions] @@FIXME:MISSING </p></div>
-    <div id="xslt30" class="bibliomixed error"><p>[xslt30] @@FIXME:MISSING </p></div>
-    <div id="xinclude" class="bibliomixed error"><p>[xinclude] @@FIXME:MISSING </p></div>
-    <div id="rfc1321" class="bibliomixed error"><p>[rfc1321] @@FIXME:MISSING </p></div>
-    <div id="rfc1521" class="bibliomixed error"><p>[rfc1521] @@FIXME:MISSING </p></div>
-    <div id="rfc2046" class="bibliomixed error"><p>[rfc2046] @@FIXME:MISSING </p></div>
-    <div id="rfc2119" class="bibliomixed error"><p>[rfc2119] @@FIXME:MISSING </p></div>
-    <div id="rfc2617" class="bibliomixed error"><p>[rfc2617] @@FIXME:MISSING </p></div>
-    <div id="rfc3986" class="bibliomixed error"><p>[rfc3986] @@FIXME:MISSING </p></div>
-    <div id="bib.uuid" class="bibliomixed error"><p>[bib.uuid] @@FIXME:MISSING </p></div>
-    <div id="bib.sha" class="bibliomixed error"><p>[bib.sha] @@FIXME:MISSING </p></div>
-    <div id="zip" class="bibliomixed error"><p>[zip] @@FIXME:MISSING </p></div>
-    <div id="gzip" class="bibliomixed error"><p>[gzip] @@FIXME:MISSING </p></div>
+    <div id="xproc30" class="bibliomixed"><p>[<span class="abbrev">XProc 3.0</span>] 
+<a href="https://spec.xproc.org/3.0/xproc/"><span class="citetitle"><cite>XProc 3.0:
+An XML Pipeline Language</cite></span></a>.
+Norman Walsh, Achim Berndzen, Gerrit Imsieke and Erik Siegel, editors.
+</p></div>
+    <div id="xmlschema-2" class="bibliomixed"><p>[<span class="abbrev">W3C XML Schema: Part 2</span>] 
+<a href="https://www.w3.org/TR/xmlschema-2/"><span class="citetitle"><cite>XML Schema Part 2:
+Datatypes Second Edition</cite></span></a>.
+Paul V. Biron and Ashok Malhotra, editors.
+World Wide Web Consortium, 28 October 2004.
+</p></div>
+    <div id="xpath31" class="bibliomixed"><p>[<span class="abbrev">XPath 3.1</span>] 
+<a href="https://www.w3.org/TR/xpath31/"><span class="citetitle"><cite>XML Path Language (XPath)
+	3.1</cite></span></a>. Jonathan Robie, Michael Dyck, Josh Spiegel, editors.
+W3C Recommendation. 21 March 2017.</p></div>
+    <div id="xpath31-functions" class="bibliomixed"><p>[<span class="abbrev">XPath and XQuery Functions and Operators 3.1</span>] 
+<a href="https://www.w3.org/TR/xpath-functions-31/"><span class="citetitle"><cite>XPath and XQuery Functions and  Operators 3.1</cite></span></a>. Michael Kay, editor.
+W3C Recommendation. 21 March 2017</p></div>
+    <div id="xslt30" class="bibliomixed"><p>[<span class="abbrev">XSLT 3.0</span>] 
+<a href="https://www.w3.org/TR/xslt-30/"><span class="citetitle"><cite>XSL Transformations (XSLT)
+Version 3.0</cite></span></a>. Michael Kay, editor.
+W3C Recommendation. 8 June 2017.</p></div>
+    <div id="xinclude" class="bibliomixed"><p>[<span class="abbrev">XInclude</span>] 
+<a href="https://www.w3.org/TR/xinclude/"><span class="citetitle"><cite>XML Inclusions
+(XInclude) Version 1.0 (Second Edition)</cite></span></a>. Jonathan Marsh,
+David Orchard, and Daniel Veillard, editors.
+W3C Recommendation. 15 November 2006.</p></div>
+    <div id="rfc1321" class="bibliomixed"><p>[<span class="abbrev">RFC 1321</span>] 
+<a href="https://doi.org/10.17487/RFC1321"><span class="citetitle"><cite>RFC 1321:
+The MD5 Message-Digest Algorithm</cite></span></a>.
+R. Rivest. Network Working Group, IETF, April 1992.</p></div>
+    <div id="rfc1521" class="bibliomixed"><p>[<span class="abbrev">RFC 1521</span>]  <a href="https://doi.org/10.17487/RFC1521"><span class="citetitle"><cite>RFC 1521: MIME
+(Multipurpose Internet Mail Extensions) Part One: Mechanisms for
+Specifying and Describing the Format of Internet Message Bodies</cite></span></a>.
+N. Borenstein. Network Working Group, IETF, September 1993.</p></div>
+    <div id="rfc2046" class="bibliomixed"><p>[<span class="abbrev">RFC 2046</span>] 
+<a href="https://doi.org/10.17487/RFC2046"><span class="citetitle"><cite>RFC 2046:
+Multipurpose Internet Mail Extensions (MIME) Part Two: Media
+Types</cite></span></a>. N. Freed, N. Borenstein, editors. Internet
+Engineering Task Force. November, 1996.</p></div>
+    <div id="rfc2119" class="bibliomixed"><p>[<span class="abbrev">RFC 2119</span>] 
+<a href="https://doi.org/10.17487/RFC2119"><span class="citetitle"><cite>Key words for use in RFCs to Indicate Requirement Levels</cite></span></a>.
+S. Bradner.
+Network Working Group, IETF,
+Mar 1997.
+</p></div>
+    <div id="rfc2617" class="bibliomixed"><p>[<span class="abbrev">RFC 2617</span>] 
+<a href="https://doi.org/10.17487/RFC2617"><span class="citetitle"><cite>RFC 2617:
+HTTP Authentication: Basic and Digest Access Authentication</cite></span></a>.
+J. Franks, P. Hallam-Baker, J. Hostetler, S. Lawrence, P. Leach, A. Luotonen, L. Stewart. June, 1999
+.</p></div>
+    <div id="rfc3986" class="bibliomixed"><p>[<span class="abbrev">RFC 3986</span>] 
+<a href="https://doi.org/10.17487/RFC3986"><span class="citetitle"><cite>RFC 3986:
+Uniform Resource Identifier (URI): General Syntax</cite></span></a>.
+T. Berners-Lee, R. Fielding, and L. Masinter, editors.
+Internet Engineering Task Force. January, 2005.</p></div>
+    <div id="bib.uuid" class="bibliomixed"><p>[<span class="abbrev">UUID</span>] 
+<a href="https://www.itu.int/ITU-T/studygroups/com17/oid.html"><span class="citetitle"><cite>ITU
+X.667: Information technology - Open Systems Interconnection -
+Procedures for the operation of OSI Registration Authorities:
+Generation and registration of Universally Unique Identifiers (UUIDs)
+and their use as ASN.1 Object Identifier components</cite></span></a>.
+2004.</p></div>
+    <div id="bib.sha" class="bibliomixed"><p>[<span class="abbrev">SHA1</span>] 
+<a href="https://csrc.nist.gov/publications/detail/fips/180/1/archive/1995-04-17"><span class="citetitle"><cite>Federal Information Processing Standards Publication 180-1: Secure Hash Standard</cite></span></a>.
+1995.</p></div>
+    <div id="zip" class="bibliomixed"><p>[<span class="abbrev">ZIP</span>] 
+    <a href="https://pkware.cachefly.net/webdocs/casestudies/APPNOTE.TXT"><span class="citetitle"><cite>.ZIP File Format Specification</cite></span></a>.</p></div>
+    <div id="gzip" class="bibliomixed"><p>[<span class="abbrev">GZIP</span>] 
+    <a href="https://tools.ietf.org/html/rfc1952"><span class="citetitle"><cite>GZIP file format specification version 4.3</cite></span></a>.</p></div>
   </div>
 </div></section>
 <section id="informative-references" class="section"><div class="section-titlepage"><h2><bdi class="secno">B.2. </bdi>Informative References<a aria-label="§" class="self-link" href="#informative-references"></a></h2></div><div class="content">
   
   <div id="informative-references.2" class="bibliolist">
-    <div id="bib.crc" class="bibliomixed error"><p>[bib.crc] @@FIXME:MISSING </p></div>
+    <div id="bib.crc" class="bibliomixed"><p>[<span class="abbrev">CRC32</span>] 
+“32-Bit Cyclic Redundancy Codes for Internet Applications”,
+<span class="citetitle"><cite>The International Conference on Dependable Systems and Networks:
+459</cite></span>. <span class="biblioid">10.1109/DSN.2002.1028931</span>.
+P. Koopman. June 2002.
+</p></div>
   </div>
 </div></section>
 </div></article>
