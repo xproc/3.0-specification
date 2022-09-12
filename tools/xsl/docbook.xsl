@@ -276,7 +276,7 @@
         <dt>Changes:</dt>
         <xsl:if test="/*/@xml:id = 'xproc'">
           <dd>
-            <a href="lcdiff.html">Diff against the “last call” draft</a>
+            <a href="lcdiff.html">Diff against the 3.0 specification</a>
           </dd>
         </xsl:if>
         <xsl:if test="$auto-diff">
