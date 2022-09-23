@@ -81,9 +81,11 @@ steps is assumed; for background details, see
   </p:declare-step>
 
   <para>The step returns a <tag>c:result</tag> element with attributes
-  describing properties of the system. It <rfc2119>should</rfc2119>
-  include the following properties:</para>
-
+  describing properties of the system. It <rfc2119>must</rfc2119>
+  include the following properties. The attribute can be an empty string if they do not
+  apply to the runtime environment. For example <code>cwd</code> will be an empty string
+    on systems which have no concept of a working directory the value of the
+    attribute will be empty.</para>
   <variablelist>
     <varlistentry>
       <term><tag class="attribute">file-separator</tag></term>
@@ -118,8 +120,7 @@ steps is assumed; for background details, see
     <varlistentry>
       <term><tag class="attribute">cwd</tag></term>
       <listitem>
-        <para>The current working directory. On systems which have no concept of a working directory the value of the
-          attribute will be empty.</para>
+        <para>The current working directory.</para>
       </listitem>
     </varlistentry>
     <varlistentry>
@@ -142,7 +143,8 @@ steps is assumed; for background details, see
       environment variable. Implementations <rfc2119>should</rfc2119> include all available
       operating system environment variables.</para>
 
-  <para><impl>The exact set of properties returned is <glossterm>implementation-defined</glossterm>.</impl></para>
+  <para><impl>The exact set of properties returned is <glossterm>implementation-defined</glossterm>.</impl>
+    Additional attributes <rfc2119>must</rfc2119> be in a namespace.</para>
 
   <simplesect>
     <title>Document properties</title>
