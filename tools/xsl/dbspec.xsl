@@ -26,13 +26,13 @@
 
 <xsl:output name="library" method="xml" indent="yes"/>
 
-<xsl:param name="circleci" select="''" as="xs:string"/>
-<xsl:param name="circleci-commit" select="''" as="xs:string"/>
-<xsl:param name="circleci-build-number" select="''" as="xs:string"/>
-<xsl:param name="circleci-user" select="''" as="xs:string"/>
-<xsl:param name="circleci-repo" select="''" as="xs:string"/>
-<xsl:param name="circleci-branch" select="''" as="xs:string"/>
-<xsl:param name="circleci-tag" select="''" as="xs:string"/>
+<xsl:param name="ci" select="''" as="xs:string"/>
+<xsl:param name="ci-commit" select="''" as="xs:string"/>
+<xsl:param name="ci-build-number" select="''" as="xs:string"/>
+<xsl:param name="ci-user" select="''" as="xs:string"/>
+<xsl:param name="ci-repo" select="''" as="xs:string"/>
+<xsl:param name="ci-branch" select="''" as="xs:string"/>
+<xsl:param name="ci-tag" select="''" as="xs:string"/>
 <xsl:param name="auto-diff" select="false()" as="xs:boolean"/>
 
 <xsl:param name="syntax.highlight.map" as="element()*">

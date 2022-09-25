@@ -39,20 +39,20 @@
   <p:with-option name="style"
                  select="resolve-uri($style)"/>
 
-  <p:with-param name="circleci"
-                select="string(/c:result/c:env[@name='CIRCLECI']/@value)"/>
-  <p:with-param name="circleci-commit"
-                select="string(/c:result/c:env[@name='CIRCLE_SHA1']/@value)"/>
-  <p:with-param name="circleci-tag"
-                select="string(/c:result/c:env[@name='CIRCLE_TAG']/@value)"/>
-  <p:with-param name="circleci-build-number"
-                select="string(/c:result/c:env[@name='CIRCLE_BUILD_NUM']/@value)"/>
-  <p:with-param name="circleci-branch"
-                select="string(/c:result/c:env[@name='CIRCLE_BRANCH']/@value)"/>
-  <p:with-param name="circleci-user"
-                select="string(/c:result/c:env[@name='CIRCLE_PROJECT_USERNAME']/@value)"/>
-  <p:with-param name="circleci-repo"
-                select="string(/c:result/c:env[@name='CIRCLE_PROJECT_REPONAME']/@value)"/>
+  <p:with-param name="ci"
+                select="string(/c:result/c:env[@name='CIWORKFLOW']/@value)"/>
+  <p:with-param name="ci-commit"
+                select="string(/c:result/c:env[@name='CI_SHA1']/@value)"/>
+  <p:with-param name="ci-tag"
+                select="string(/c:result/c:env[@name='CI_TAG']/@value)"/>
+  <p:with-param name="ci-build-number"
+                select="string(/c:result/c:env[@name='CI_BUILD_NUM']/@value)"/>
+  <p:with-param name="ci-branch"
+                select="string(/c:result/c:env[@name='CI_BRANCH']/@value)"/>
+  <p:with-param name="ci-user"
+                select="string(/c:result/c:env[@name='CI_PROJECT_USERNAME']/@value)"/>
+  <p:with-param name="ci-repo"
+                select="string(/c:result/c:env[@name='CI_PROJECT_REPONAME']/@value)"/>
   <p:with-param name="auto-diff" select="$diff != '' and $specid != ''"/>
 </dbp:docbook>
 

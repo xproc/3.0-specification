@@ -15,24 +15,13 @@ propose changes in the form of pull requests.
 
 ### Continuous integration
 
-The XProc specification is built automatically with CircleCI.
+The XProc specification is built automatically with GitHub workflows.
 
-To build and publish the spec on your `gh-pages`: setup the `gh-pages` branch,
-configure CircleCI to run for your repo,
-add a token that has read/write access to your repo,
-add the fingerprint for that token to `.circleci/config.yml`.
-Create the following
-secure environment variables for your repo in the CircleCI Settings
-page for your fork:
+To build and publish the spec on your `gh-pages`, create the
+`gh-pages` branch.
 
-* GIT_EMAIL="you@example.com"
-* GIT_USER="Your Name"
-
-CircleCI will then publish your changes everytime you do a commit
-to your `master` branch.
-
-CircleCI, unfortunately, doesn’t build pull requests, so you have to
-test with your repository.
+GitHub will then publish your changes everytime you do a commit to
+your `master` branch or any other branch.
 
 ## How it works
 

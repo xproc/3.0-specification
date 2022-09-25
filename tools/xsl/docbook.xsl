@@ -170,11 +170,11 @@
                                       '[Y0001][M01][D01]T[H01]:[m01]:[s01]Z')"/>
             <xsl:value-of select="format-dateTime($dtz, '[H01]:[m01]&#160;UTC')"/>
           </time>
-          <xsl:if test="$circleci-build-number != ''">
+          <xsl:if test="$ci-build-number != ''">
             <xsl:text> (</xsl:text>
-            <a href="https://github.com/{$circleci-user}/{$circleci-repo}/commit/{$circleci-commit}">
+            <a href="https://github.com/{$ci-user}/{$ci-repo}/commit/{$ci-commit}">
               <xsl:text>build </xsl:text>
-              <xsl:value-of select="$circleci-build-number"/>
+              <xsl:value-of select="$ci-build-number"/>
             </a>
             <xsl:text>)</xsl:text>
           </xsl:if>
@@ -271,7 +271,7 @@
         </a>
       </dd>
 
-      <xsl:if test="($circleci-build-number != '' or $auto-diff)
+      <xsl:if test="($ci-build-number != '' or $auto-diff)
                     and not(db:info/db:bibliomisc[@role='final-uri'])">
         <dt>Changes:</dt>
         <xsl:if test="/*/@xml:id = 'xproc'">
@@ -284,9 +284,9 @@
             <a href="diff.html">Diff against current “status quo” draft</a>
           </dd>
         </xsl:if>
-        <xsl:if test="$circleci-build-number != ''">
+        <xsl:if test="$ci-build-number != ''">
           <dd>
-            <a href="http://github.com/{$circleci-user}/{$circleci-repo}/commits/{$circleci-branch}">
+            <a href="http://github.com/{$ci-user}/{$ci-repo}/commits/{$ci-branch}">
               <xsl:text>Commits for this specification</xsl:text>
             </a>
           </dd>
