@@ -20,7 +20,7 @@ jobs:
         run: |
           mkdir /tmp/save-gh-pages
           if [ -d build/dist/${{ github.ref_name }}/head ]; then
-             rsync -var build/dist/${{ github.ref_name }}/head/ /tmp/save-gh-pages/
+             rsync -ar build/dist/${{ github.ref_name }}/head/ /tmp/save-gh-pages/
           fi
 
       - name: Checkout this repository
@@ -29,7 +29,7 @@ jobs:
       - name: Restore the relevant gh-pages
         run: |
           mkdir -p build/dist
-          rsync -var /tmp/save-gh-pages/ build/dist/
+          rsync -ar /tmp/save-gh-pages/ build/dist/
           rm -rf /tmp/save-gh-pages
 
       - name: Build the specifications
