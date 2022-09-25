@@ -37,14 +37,11 @@ jobs:
         run: |
           ./gradlew
 
-      - name: Check
-        run: ls -la build/dist
-
-#      - name: Deploy
-#        if: ${{ env.HAVE_ACCESS_TOKEN == 'true' }}
-#        uses: JamesIves/github-pages-deploy-action@v4
-#        with:
-#          folder: build/dist
-#          token: ${{ secrets.ACCESS_TOKEN }}
-#          branch: gh-pages
-#          target-folder: /pr/${{ github.event.number }}
+      - name: Deploy
+        if: ${{ env.HAVE_ACCESS_TOKEN == 'true' }}
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          folder: build/dist
+          token: ${{ secrets.ACCESS_TOKEN }}
+          branch: gh-pages
+          target-folder: /pr/${{ github.event.number }}
