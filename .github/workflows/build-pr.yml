@@ -9,17 +9,20 @@ jobs:
     runs-on: ubuntu-latest
     env:
       HAVE_ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN != '' }}
+      DIFFURI: ${{ secrets.DIFFURI }}
+      DIFFPW: ${{ secrets.DIFFPW }}
       PR_NUMBER: ${{ github.event.number }}
     steps:
-      - name: Install dependencies
-        run: sudo apt-get install -y rsync
+      # We don’t have to preserve anything here because a PR
+      # should always replace what it previously published
+      # (if it previously published anything)
 
-      - name: Get the pull request
+      - name: Checkout the pull request
         uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.sha }}
 
-      - name: Save XML
+      - name: Save the XML
         run: |
           mkdir /tmp/pr-sources
           for f in src overview schema xproc; do
@@ -27,17 +30,29 @@ jobs:
             rsync -ar $f/ /tmp/pr-sources/$f/
           done
 
-      - name: Checkout
+      - name: Checkout the repository base
         uses: actions/checkout@v3
 
-      - name: Update XML
+      - name: Update the XML
         run: rsync -var /tmp/pr-sources/ ./
+
+      - name: Setup DeltaXML
+        run: |
+          echo Setup DeltaXML
+          if [[ -z "${DIFFURI}" ]]; then
+            echo "DeltaXML unavailable"
+          else
+            curl -s $DIFFURI | openssl enc -aes-256-cbc -salt -pbkdf2 -d -k $DIFFPW | tar zxf -
+          fi
 
       - name: Build specifications
         run: |
           ./gradlew
 
-      - name: Deploy
+      - name: Cleanup DeltaXML
+        run: rm -rf deltaxml
+
+      - name: Publish the PR
         if: ${{ env.HAVE_ACCESS_TOKEN == 'true' }}
         uses: JamesIves/github-pages-deploy-action@v4
         with:
