@@ -1,0 +1,49 @@
+name: build-specs
+on: push
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    env:
+      HAVE_ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN != '' }}
+      BRANCH_NAME: ${{ github.ref_name }}
+    steps:
+      # We’re going to be updating the gh-pages branch, but that
+      # happens from two repositories. We must preserve what we
+      # don’t change by getting the current version
+      - name: Checkout current gh-pages
+        uses: actions/checkout@v3
+        with:
+          ref: gh-pages
+          path: build/dist
+
+      - name: Preserve the relevant current gh-pages
+        run: |
+          mkdir /tmp/save-gh-pages
+          if [ -d build/dist/${{ github.ref_name }}/head ]; then
+             rsync -var build/dist/${{ github.ref_name }}/head/ /tmp/save-gh-pages/
+          fi
+
+      - name: Checkout this repository
+        uses: actions/checkout@v3
+
+      - name: Restore the relevant gh-pages
+        run: |
+          mkdir -p build/dist
+          rsync -var /tmp/save-gh-pages/ build/dist/
+          rm -rf /tmp/save-gh-pages
+
+      - name: Build the specifications
+        run: |
+          ./gradlew
+
+      - name: Check
+        run: ls -la build/dist
+
+#      - name: Deploy to gh-pages
+#        if: ${{ env.HAVE_ACCESS_TOKEN == 'true' }}
+#        uses: JamesIves/github-pages-deploy-action@v4
+#        with:
+#          folder: build/dist
+#          token: ${{ secrets.ACCESS_TOKEN }}
+#          branch: gh-pages
+#          target-folder: /${{ github.ref_name }}/head
