@@ -126,8 +126,11 @@ readable port will be connected to it if no explicit connection is provided.</pa
   <para>Other than <tag>p:with-option</tag>, <tag>p:run-option</tag> accepts a boolean attribute
   <tag class="attribute">static</tag> that defaults to “<literal>false</literal>”. If it is “<literal>true</literal>”,
   the option value will be supplied to static analysis of the executed pipeline as a static option with the
-  same name. If no such static option is declared by the pipeline or its imported libraries, the value passed
-  in <tag>p:run-option</tag> will be silently ignored.</para>
+  same name.</para>
+  
+  <para>Options of the dynamically executed pipeline that are not declared with <tag>p:run-option</tag> on the <tag>p:run</tag>
+    invocation will receive an empty sequence as their value. Options that are declared on <tag>p:run-option</tag> but not in the dynamically 
+    executed pipeline will be silently ignored.</para>
   
     <para>Each output port of the pipeline can appear as a same-named output port of the <tag>p:run</tag> step. In order for
       this to happen, the port needs to be explicitly declared in the <tag>p:run</tag> step. In contrast to output declarations
