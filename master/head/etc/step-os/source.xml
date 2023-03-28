@@ -164,8 +164,8 @@ from standard error.</para>
 
 <p:declare-step type="p:os-exec">
   <p:input port="source" sequence="true" content-types="any"/>
-  <p:output port="result" primary="true" content-types="any"/>
-  <p:output port="error" content-types="any"/>
+  <p:output port="result" primary="true" sequence="true" content-types="any"/>
+  <p:output port="error" sequence="true" content-types="any"/>
   <p:output port="exit-status" content-types="application/xml"/>
   <p:option name="command" required="true" as="xs:string"/>
   <p:option name="args" select="()" as="xs:string*"/>
@@ -219,15 +219,17 @@ The <option>serialization</option> option is used to control the serialization
   the “<literal>serialization</literal>” document property take precedence.
   Serialization is described in <biblioref linkend="xproc30"/>.</para>
 
-<para>The content of standard output is read and processed as described
+<para>If there is content on standard output, it is read and processed as described
 in <tag>p:load</tag> with <option>result-content-type</option> taken as
 value for <tag>p:load</tag>'s <option>content-type</option> option. The
-created document is returned on <port>result</port>.</para> 
+created document is returned on <port>result</port>. Otherwise <port>result</port>
+will be empty.</para> 
 
-<para>The content of standard error is read and processed as described
+<para>If there is content on standard error, it is read and processed as described
 in <tag>p:load</tag> with <option>error-content-type</option> taken as
 value for <tag>p:load</tag>'s <option>content-type</option> option. The
-created document is returned on <port>error</port>.</para> 
+created document is returned on <port>error</port>. Otherwise <port>error</port>
+will be empty.</para> 
   
 <para>The <port>exit-status</port> port always returns a single
 <tag>c:result</tag> element which contains the system exit status that

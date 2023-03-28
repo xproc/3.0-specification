@@ -6,8 +6,11 @@
    </p:declare-step>
    <p:declare-step type="p:os-exec" xml:id="os-exec">
       <p:input port="source" sequence="true" content-types="any"/>
-      <p:output port="result" primary="true" content-types="any"/>
-      <p:output port="error" content-types="any"/>
+      <p:output port="result"
+                primary="true"
+                sequence="true"
+                content-types="any"/>
+      <p:output port="error" sequence="true" content-types="any"/>
       <p:output port="exit-status" content-types="application/xml"/>
       <p:option name="command" required="true" as="xs:string"/>
       <p:option name="args" select="()" as="xs:string*"/>
