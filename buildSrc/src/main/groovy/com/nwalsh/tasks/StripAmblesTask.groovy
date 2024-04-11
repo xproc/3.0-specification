@@ -4,7 +4,6 @@ import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.tasks.InputFile
 import org.gradle.api.tasks.OutputFile
-import org.gradle.api.tasks.incremental.IncrementalTaskInputs
 
 // ================================================================================
 // Strip pre-amble and post-amble from examples so that the example on disk
@@ -20,7 +19,7 @@ class StripAmblesTask extends DefaultTask {
     def File output
 
     @TaskAction
-    void execute(IncrementalTaskInputs inputs) {
+    void execute() {
       def lines = input.readLines()
       def firstBlank = -1;
       def lastBlank = -1;
