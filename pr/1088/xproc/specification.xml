@@ -6242,17 +6242,18 @@ refers to the context item because there can never be a context item for
 </listitem>
 </varlistentry>
 
-<varlistentry><term><tag class="attribute">visibility</tag></term>
+<varlistentry xml:id="step-visibility"><term><tag class="attribute">visibility</tag></term>
 <listitem>
-<para>If the <tag>p:option</tag> is a child of a <tag>p:library</tag>,
-the <tag class="attribute">visibility</tag> attribute controls whether
-the option is visible to an importing pipeline. If
-<tag class="attribute">visibility</tag> is set to “<literal>private</literal>”,
-the option is visible inside the <tag>p:library</tag> but not visible to
-any pipeline importing the <tag>p:library</tag>. If the visibility attribute is
-  missing, “<literal>public</literal>” is assumed. If the <tag>p:option</tag> is not a child 
-  of <tag>a p:library</tag> the attribute has no effect and is ignored.
+<para>If the <tag>p:option</tag> is a child of a <tag>p:library</tag>, the
+<tag class="attribute">visibility</tag> attribute controls whether the option is
+visible to an importing pipeline. If <tag class="attribute">visibility</tag> is
+set to “<literal>private</literal>”, the option is visible inside the
+<tag>p:library</tag> but not visible to any pipeline importing the
+<tag>p:library</tag>. If the visibility attribute is missing,
+“<literal>public</literal>” is assumed. If the <tag>p:option</tag> is not a
+child of <tag>a p:library</tag> the attribute has no effect and is ignored.
 </para>
+
 </listitem>
 </varlistentry>
 </variablelist>
@@ -6755,10 +6756,7 @@ See also <xref linkend="handling-imports"/>.</para></section>
 <para><error code="S0052">It is a
             <glossterm>static error</glossterm> if the URI of a <tag>p:import</tag> cannot be
           retrieved or if, once retrieved, it does not point to a <tag>p:library</tag> or
-            <tag>p:declare-step</tag>.</error>
-        <error code="S0053">It is a <glossterm>static error</glossterm> to import a single pipeline
-          if that pipeline does not have a <tag class="attribute">type</tag> or has a
-<tag class="attribute">visibility</tag> attribute with the value “<code>private</code>”.</error></para>
+            <tag>p:declare-step</tag>.</error></para>
 <para>Attempts to retrieve the library identified by the URI value may be redirected at
         the parser level (for example, in an entity resolver) or below (at the protocol level, for
         example, via an HTTP Location: header). In the absence of additional information outside the
@@ -6819,6 +6817,20 @@ L2 contains a step C, then:</para>
 </itemizedlist>
 
 </section>
+
+<simplesect>
+<title>Errata, April 2024</title>
+<para>Editorial clarifications. The static error <code>err:XS0053</code> has been removed, importing
+a <tag>p:declare-step</tag> that doesn’t specify a <tag class="attribute">type</tag> attribute is no longer an error.
+The step won’t be usable, as it has no type, but this is consistent with importing such a step in
+a <tag>p:library</tag> which has never been an error.</para>
+<para>An inconsistency remains with respect to the visibility of a step. When a <tag>p:declare-step</tag>
+is directly imported, the visibility attribute <link linkend="step-visibility">is ignored</link>. It might
+be more consistent to ignore the step under those conditions, but that change would introduce a backwards
+incompatibility with no clear benefit.
+</para>
+</simplesect>
+
 </section>
 
 <section xml:id="p.import-functions"><title>p:import-functions</title>
