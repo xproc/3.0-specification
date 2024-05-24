@@ -1,0 +1,607 @@
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>XProc 3.0: validation steps</title><meta charset="utf-8" /><meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport" /><link class="removeOnSave" crossorigin="anonymous" href="https://www.w3.org" rel="preconnect" /><link as="script" class="removeOnSave" href="js/fixup.js" rel="preload" /><link as="style" class="removeOnSave" href="css/base.css" rel="preload" /><link as="image" class="removeOnSave" href="https://www.w3.org/StyleSheets/TR/2016/logos/W3C" rel="preload" /><link rel="stylesheet" href="css/cg-draft.css" /><link rel="stylesheet" href="css/respec.css" /><link rel="alternate" title="XML" href="specification.xml" /><meta name="generator" content="DocBook XSL 2.0 Stylesheets V2.5.0" /><meta name="description" content="Abstract This specification describes the p:validate-with-nvdl, p:validate-with-relax-ng,&#xA;p:validate-with-schematron, p:validate-with-xml-schema, an p:validate-with-json-schema&#xA;step for&#xA;XProc 3.0: An XML Pipeline Language." /><link href="css/default.css" rel="stylesheet" type="text/css" /><link href="css/db-prism.css" rel="stylesheet" type="text/css" /><link rel="stylesheet" type="text/css" href="css/base.css" /><link rel="stylesheet" type="text/css" href="css/xproc.css" /><link rel="stylesheet" type="text/css" href="css/print.css" media="print" /><script type="text/javascript" src="js/dbmodnizr.js"></script></head><body class="h-entry informative toc-sidebar"><div class="head" id="spec.head"><a class="logo" href="https://www.w3.org/"><img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2016/logos/W3C" width="72" /></a><h1 id="title" class="title p-name">XProc 3.0: validation steps</h1><h2>Draft Community Group Report <time class="dt-published" datetime="2024-05-24">24 May 2024</time></h2><div class="editors-draft">Editor's Draft   at <time class="dt-timestamp" datetime="20240524T10:01:26Z">10:01 UTC</time> (<a href="https://github.com/xproc//commit/289696b79c93abd1bebce15ffd1a7fdb1fc5f7cb">build 23</a>)</div><dl><dt>Latest editor’s draft:</dt><dd><a href="https://spec.xproc.org/master/head/validation/">https://spec.xproc.org/master/head/validation/</a></dd><dt>Editors:</dt><dd><span class="personname">Norman Walsh</span></dd><dd><span class="personname">Achim Berndzen</span></dd><dd><span class="personname">Gerrit Imsieke</span></dd><dd><span class="personname">Erik Siegel</span></dd><dt>Participate:</dt><dd><a href="http://github.com/xproc/3.0-steps">GitHub xproc/3.0-steps</a></dd><dd><a href="http://github.com/xproc/3.0-steps/issues">Report an issue</a></dd><dt>Changes:</dt><dd><a href="diff.html">Diff against current “status quo” draft</a></dd><dd><a href="http://github.com/xproc//commits/">Commits for this specification</a></dd></dl><p>This document is also available in these non-normative formats: <a href="specification.xml">XML</a> and HTML with automatic change markup  courtesy of <a href="http://www.deltaxml.com/">DeltaXML</a>.</p><p class="copyright"><a href="https://www.w3.org/Consortium/Legal/ipr-notice#Copyright">Copyright</a> © <span class="years">2018, 2019, 2020</span> the Contributors to the <cite>XProc 3.0: validation steps</cite> specification, published by the <a href="https://www.w3.org/community/xproc-next/">XProc Next Community Group</a> under the <a href="https://www.w3.org/community/about/agreements/cla/">W3C
+    Community Contributor License Agreement (CLA)</a>. A human-readable <a href="https://www.w3.org/community/about/agreements/cla-deed/">summary</a> is available.</p><hr title="Separator for header" /><section id="abstract" class="introductory"><h2>Abstract</h2>
+<p>This specification describes the <code class="code">p:validate-with-nvdl</code>, <code class="code">p:validate-with-relax-ng</code>,
+<code class="code">p:validate-with-schematron</code>, <code class="code">p:validate-with-xml-schema</code>, an <code class="code">p:validate-with-json-schema</code>
+step for
+<em class="citetitle">XProc 3.0: An XML Pipeline Language</em>.</p>
+</section><section id="sotd" class="introductory"><h2>Status of this Document</h2><p><strong>This document is an editor's  draft that has no official standing.</strong></p>
+  <p>This specification was published by the
+  <a href="https://www.w3.org/community/xproc-next/">XProc
+  Next Community Group</a>. It is not a W3C Standard nor is it on
+  the W3C Standards Track. Please note that under the
+  <a href="https://www.w3.org/community/about/agreements/cla/">W3C
+  Community Contributor License Agreement (CLA)</a> there is a limited
+  opt-out and other conditions apply. Learn more about <a href="https://www.w3.org/community/">W3C Community and Business
+  Groups</a>.
+  </p>
+  
+  <p>If you wish to make comments regarding this document, please
+  send them to
+  <a href="mailto:xproc-dev@w3.org">xproc-dev@w3.org</a>.
+  (<a href="mailto:xproc-dev-request@w3.org?subject=subscribe">subscribe</a>,
+  <a href="https://lists.w3.org/Archives/Public/xproc-dev/">archives</a>).
+  </p>
+
+  <p>This document is derived from
+  <a href="https://www.w3.org/TR/2010/REC-xproc-20100511/">XProc:
+  An XML Pipeline Language</a> published by the W3C.</p>
+</section></div><div class="lists-of-titles"><nav id="toc"><h2 id="TableOfContents">Table of Contents</h2><ol class="toc"><li class="tocline"><a class="tocxref" href="#introduction"><bdi class="secno">1. </bdi>Introduction</a></li><li class="tocline"><a class="tocxref" href="#validation-common"><bdi class="secno">2. </bdi>Common Options and Outputs</a></li><li class="tocline"><a class="tocxref" href="#c.validate-with-nvdl"><bdi class="secno">3. </bdi>Validate with NVDL</a></li><li class="tocline"><a class="tocxref" href="#c.validate-with-relax-ng"><bdi class="secno">4. </bdi>Validate with RELAX NG</a></li><li class="tocline"><a class="tocxref" href="#c.validate-with-schematron"><bdi class="secno">5. </bdi>Validate with Schematron</a></li><li class="tocline"><a class="tocxref" href="#c.validate-with-xml-schema"><bdi class="secno">6. </bdi>Validate with XML Schema</a></li><li class="tocline"><a class="tocxref" href="#c.validate-with-json-schema"><bdi class="secno">7. </bdi>Validate with JSON schema</a></li><li class="tocline"><a class="tocxref" href="#errors"><bdi class="secno">8. </bdi>Step Errors</a></li><li class="tocline"><a class="tocxref" href="#conformance"><bdi class="secno">A. </bdi>Conformance</a><ul class="toc"><li class="tocline"><a class="tocxref" href="#implementation-defined"><bdi class="secno">A.1. </bdi>Implementation-defined features</a></li><li class="tocline"><a class="tocxref" href="#implementation-dependent"><bdi class="secno">A.2. </bdi>Implementation-dependent features</a></li></ul></li><li class="tocline"><a class="tocxref" href="#references"><bdi class="secno">B. </bdi>References</a></li><li class="tocline"><a class="tocxref" href="#glossary"><bdi class="secno">C. </bdi>Glossary</a></li><li class="tocline"><a class="tocxref" href="#ancillary-files"><bdi class="secno">D. </bdi>Ancillary files</a></li></ol></nav></div><article class="specification">
+
+
+<section id="introduction" class="section"><div class="section-titlepage"><h2><bdi class="secno">1. </bdi>Introduction<a aria-label="§" class="self-link" href="#introduction"></a></h2></div><div class="content">
+
+
+<p>This specification describes the <code class="code">p:validate-with-relax-ng</code>,
+<code class="code">p:validate-with-schematron</code>, <code class="code">p:validate-with-xml-schema</code>,
+<code class="code">p:validate-with-nvdl</code>, and <code class="code">p:validate-with-json-schema</code>
+steps. Each is independently optional. A machine-readable description of
+these steps may be found in
+<a href="steps.xpl">steps.xpl</a>.
+</p>
+  
+<p>Familiarity with the
+general nature of [<a href="#xproc30"><span class="abbrev">XProc 3.0</span></a>]
+steps is assumed; for background details, see
+[<a href="#xproc30-steps"><span class="abbrev">XProc 3.0 Steps</span></a>].</p>
+
+<p>As described in <cite><a href="../xproc/#psvi-support">PSVIs in XProc</a></cite> in <cite><a href="../xproc/">XProc 3.0: An XML Pipeline Language</a></cite>,
+steps may not produce PSVI output unless that behavior is explicitly
+described. In this specification, the steps that may produce PSVI
+output are <a href="#c.validate-with-nvdl"><code class="tag-element">p:validate-with-nvdl</code></a>, <a href="#c.validate-with-schematron"><code class="tag-element">p:validate-with-schematron</code></a>
+and <a href="#c.validate-with-xml-schema"><code class="tag-element">p:validate-with-xml-schema</code></a>.</p>
+
+</div></section>
+  
+  <section id="validation-common" class="section"><div class="section-titlepage"><h2><bdi class="secno">2. </bdi>Common Options and Outputs<a aria-label="§" class="self-link" href="#validation-common"></a></h2></div><div class="content">
+    
+    <p>All steps in this specification provide a boolean option <code class="option">assert-valid</code>. If any of the validated
+      documents is found to be invalid according to the respective schema, and possibly other parameters that influence
+      determination of validity, a dynamic error is raised.</p>
+    <div id="note-assert-valid" class="note admonition"><h3>Note</h3><div class="admonition-body">
+      <p>Historically, the validation steps (apart from <a href="#c.validate-with-schematron"><code class="tag-element">p:validate-with-schematron</code></a>) could only report errors
+      by setting <code class="option">assert-valid</code> to <code class="literal">true</code> and catching the errors. A <code class="tag-element">c:errors</code> 
+        document on the <code class="port">error</code> port of the corresponding <code class="tag-element">p:catch</code> recovery pipeline had to be sent to an 
+        output, either verbatim or after postprocessing. Now, if <code class="option">assert-valid</code> is <code class="literal">false</code>, 
+        an XVRL document will be available on the <code class="port">report</code> port of the validation step. It uses the XVRL severity 
+        vocabulary to indicate whether the validation failed, and to which degree. This allows more nuance in reporting
+      errors. Previously, <code class="literal">assert-valid="true"</code> on <a href="#c.validate-with-schematron"><code class="tag-element">p:validate-with-schematron</code></a> would always
+      throw an error even if the reported findings were only intended as less severe, for example if the schema author used 
+        <code class="literal">info</code> or <code class="literal">warning</code> in <code class="code">sch:report/@role</code>.</p>
+    </div></div>
+    <p>If no such error is raised, each step generates at least one validation report document on its
+        <code class="port">report</code> port. Unless another format is requested, the mandatory report document for all steps
+      except <a href="#c.validate-with-schematron"><code class="tag-element">p:validate-with-schematron</code></a>
+        <span class="rfc2119" id="validation-common.4.3">should</span> be an [<a href="#xvrl"><span class="abbrev">XVRL</span></a>] document. A report format may be requested
+    by the <code class="option">report-format</code> option. <span id="impl-1">The supported values for the <code class="option">report-format</code>
+    option are <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em>. A processor <span class="rfc2119" id="validation-common.4.6.3">should</span> at least support
+    the value “<code class="literal">xvrl</code>” for the XML validation steps and “<code class="literal">svrl</code>” for
+      <a href="#c.validate-with-schematron"><code class="tag-element">p:validate-with-schematron</code></a>.</span>
+    </p>
+    <p><a id="err.inline.C0117"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic error</a></em> (<a href="#err.C0117"><code class="errqname">err:XC0117</code></a>) if a <code class="option">report-format</code> option 
+      was specified that the processor does not support.</p>
+    <p>If a step performs multiple validations on a single document (for example, embedded Schematron validations 
+      in a Relax NG schema), all individual XVRL reports need to be consolidated into a single XVRL report by the step.</p>
+    <p>Each of the validation steps has a <code class="option">parameters</code> option. <span id="impl-2">The parameters supported by the
+validation steps and their semantics are
+        <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em>, and they can be different for each validation step.</span> A special key in the
+        <code class="literal">c</code> namespace, <code class="uri">http://www.w3.org/ns/xproc-step</code>, called
+        <code class="literal">c:compile</code>, can hold a map itself that controls schema compilation. 
+      Schema compilation is, for example, the process of converting a Schematron schema into an XSLT
+      stylesheet. The <code class="literal">c:compile</code> map will be used as parameters for the compilation process.</p>
+    <p>Map entries in the <code class="literal">xvrl</code> namespace, <code class="uri">http://www.xproc.org/ns/xvrl</code> 
+      will be passed as parameters to the XVRL generation process. XProc implementations that implement any of the XML validation steps
+        <span class="rfc2119" id="validation-common.8.3">should</span> support the basic parameters that are defined in the [<a href="#xvrl"><span class="abbrev">XVRL</span></a>]
+      specification, <code class="literal">xvrl:default-severity</code>, <code class="literal">xvrl:language</code>, 
+      <code class="literal">xvrl:map-to-severity</code>, and <code class="literal">xvrl:xpath-notation</code>.</p>
+  </div></section>
+
+  <section id="c.validate-with-nvdl" class="section"><div class="section-titlepage"><h2><bdi class="secno">3. </bdi>Validate with NVDL<a aria-label="§" class="self-link" href="#c.validate-with-nvdl"></a></h2></div><div class="content">
+    
+
+    <p>The <code class="tag-element">p:validate-with-nvdl</code> step applies [<a href="#iso19757-4"><span class="abbrev">NVDL</span></a>] validation to the
+        <code class="port">source</code> document.</p>
+
+    <p class="element-syntax element-syntax-declare-step"><span class="decl"><code>&lt;p:declare-step</code> <code class="attr type-attr">type</code><code>="</code><code class="value type-value">p:validate-with-nvdl</code><code>"</code><code>&gt;</code></span><br />     <span class="input"><code>&lt;p:input</code> <code class="attr port-attr">port</code><code>="</code><code class="value port-value">source</code><code>"</code> <code class="attr primary-attr">primary</code><code>="</code><code class="value primary-value">true</code><code>"</code> <code class="attr content-types-attr">content-types</code><code>="</code><code class="value content-types-value">xml html</code><code>"</code><code>/&gt;</code></span><br />     <span class="input"><code>&lt;p:input</code> <code class="attr port-attr">port</code><code>="</code><code class="value port-value">nvdl</code><code>"</code> <code class="attr content-types-attr">content-types</code><code>="</code><code class="value content-types-value">xml</code><code>"</code><code>/&gt;</code></span><br />     <span class="input"><code>&lt;p:input</code> <code class="attr port-attr">port</code><code>="</code><code class="value port-value">schemas</code><code>"</code> <code class="attr sequence-attr">sequence</code><code>="</code><code class="value sequence-value">true</code><code>"</code> <code class="attr content-types-attr">content-types</code><code>="</code><code class="value content-types-value">text xml</code><code>"</code><code>&gt;</code><br />          <code>&lt;p:empty/&gt;</code><br />     <code>&lt;/p:input&gt;</code></span><br />     <span class="input"><code>&lt;p:output</code> <code class="attr port-attr">port</code><code>="</code><code class="value port-value">result</code><code>"</code> <code class="attr primary-attr">primary</code><code>="</code><code class="value primary-value">true</code><code>"</code> <code class="attr content-types-attr">content-types</code><code>="</code><code class="value content-types-value">xml html</code><code>"</code><code>/&gt;</code></span><br />     <span class="input"><code>&lt;p:output</code> <code class="attr port-attr">port</code><code>="</code><code class="value port-value">report</code><code>"</code> <code class="attr sequence-attr">sequence</code><code>="</code><code class="value sequence-value">true</code><code>"</code> <code class="attr content-types-attr">content-types</code><code>="</code><code class="value content-types-value">xml json</code><code>"</code><code>/&gt;</code></span><br />     <span class="opt-opt"><code>&lt;p:option</code> <code class="attr name-attr">name</code><code>="</code><code class="value name-value">assert-valid</code><code>"</code> <code class="attr select-attr">select</code><code>="</code><code class="value select-value">true()</code><code>"</code> <code class="attr as-attr">as</code><code>="</code><code class="value as-value">xs:boolean</code><code>"</code><code>/&gt;</code><code></code></span><br />     <span class="opt-opt"><code>&lt;p:option</code> <code class="attr name-attr">name</code><code>="</code><code class="value name-value">report-format</code><code>"</code> <code class="attr select-attr">select</code><code>="</code><code class="value select-value">'xvrl'</code><code>"</code> <code class="attr as-attr">as</code><code>="</code><code class="value as-value">xs:string</code><code>"</code><code>/&gt;</code><code></code></span><br />     <span class="opt-opt"><code>&lt;p:option</code> <code class="attr name-attr">name</code><code>="</code><code class="value name-value">parameters</code><code>"</code> <code class="attr as-attr">as</code><code>="</code><code class="value as-value">map(xs:QName,item()*)?</code><code>"</code><code>/&gt;</code><code>     </code></span><br /><code>&lt;/p:declare-step&gt;</code></p>
+
+    <p>The <code class="port">source</code> document is validated using the namespace dispatching rules contained in the 
+      <code class="port">nvdl</code> document. <a id="err.inline.C0154"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic error</a></em> (<a href="#err.C0154"><code class="errqname">err:XC0154</code></a>) 
+        if the document supplied on <code class="port">nvdl</code> port is not a valid NVDL document.</p>
+
+    <p>The dispatching rules may contain URI references that point to the actual schemas to be
+      used. As long as these schemas are accessible, it is not necessary to pass anything on the
+      schemas port. However, if one or more schemas are provided on the <code class="port">schemas</code> port,
+      then these schemas should be used in validation. </p>
+
+    <p><a id="err.inline.C0053"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic error</a></em> (<a href="#err.C0053"><code class="errqname">err:XC0053</code></a>) if the <code class="option">assert-valid</code> option on
+      <code class="tag-element">p:validate-with-nvdl</code> is
+          <code class="literal">true</code> and the input document is not valid.</p>
+
+    <p>The output from this step is a copy of the input. The output of this step <span class="rfc2119" id="c.validate-with-nvdl.7.1">may</span> include PSVI
+      annotations.</p>
+    
+    <div id="ednote-nvdl" class="note editorial admonition"><h3>Note</h3><div class="admonition-body">
+      <p>Should the step also provide the <code class="option">dtd-attribute-values</code> and <code class="option">dtd-id-idref-warnings</code>
+      options for Relax NG validations? Is there a way to instruct <a href="https://github.com/relaxng/jing-trang">Jing</a> 
+        to use these options, maybe in NVDL extension attributes? Probably not in the foreseeable future.</p>
+    </div></div>
+
+    <section id="c.validate-with-nvdl.9" class="simplesect"><div class="section-titlepage"><h3>Document properties</h3></div><div class="content">
+      
+      <p>All document properties on the <code class="port">source</code> port are preserved
+        on the <code class="port">result</code> port. No document properties on the <code class="port">schemas</code> and <code class="port">nvdl</code> ports 
+        are preserved. No document properties are preserved on the <code class="port">report</code> port.</p>
+    </div></section>
+  </div></section>
+  
+  <section id="c.validate-with-relax-ng" class="section"><div class="section-titlepage"><h2><bdi class="secno">4. </bdi>Validate with RELAX NG<a aria-label="§" class="self-link" href="#c.validate-with-relax-ng"></a></h2></div><div class="content">
+
+
+<p>The <code class="tag-element">p:validate-with-relax-ng</code> step applies [<a href="#iso19757-2"><span class="abbrev">RELAX NG</span></a>] validation 
+  to the <code class="port">source</code> document.</p>
+
+<p class="element-syntax element-syntax-declare-step"><span class="decl"><code>&lt;p:declare-step</code> <code class="attr type-attr">type</code><code>="</code><code class="value type-value">p:validate-with-relax-ng</code><code>"</code><code>&gt;</code></span><br />     <span class="input"><code>&lt;p:input</code> <code class="attr port-attr">port</code><code>="</code><code class="value port-value">source</code><code>"</code> <code class="attr primary-attr">primary</code><code>="</code><code class="value primary-value">true</code><code>"</code> <code class="attr content-types-attr">content-types</code><code>="</code><code class="value content-types-value">xml html</code><code>"</code><code>/&gt;</code></span><br />     <span class="input"><code>&lt;p:input</code> <code class="attr port-attr">port</code><code>="</code><code class="value port-value">schema</code><code>"</code> <code class="attr content-types-attr">content-types</code><code>="</code><code class="value content-types-value">text xml</code><code>"</code><code>/&gt;</code></span><br />     <span class="input"><code>&lt;p:output</code> <code class="attr port-attr">port</code><code>="</code><code class="value port-value">result</code><code>"</code> <code class="attr primary-attr">primary</code><code>="</code><code class="value primary-value">true</code><code>"</code> <code class="attr content-types-attr">content-types</code><code>="</code><code class="value content-types-value">xml html</code><code>"</code><code>/&gt;</code></span><br />     <span class="input"><code>&lt;p:output</code> <code class="attr port-attr">port</code><code>="</code><code class="value port-value">report</code><code>"</code> <code class="attr sequence-attr">sequence</code><code>="</code><code class="value sequence-value">true</code><code>"</code> <code class="attr content-types-attr">content-types</code><code>="</code><code class="value content-types-value">xml json</code><code>"</code><code>/&gt;</code></span><br />     <span class="opt-opt"><code>&lt;p:option</code> <code class="attr name-attr">name</code><code>="</code><code class="value name-value">dtd-attribute-values</code><code>"</code> <code class="attr select-attr">select</code><code>="</code><code class="value select-value">false()</code><code>"</code> <code class="attr as-attr">as</code><code>="</code><code class="value as-value">xs:boolean</code><code>"</code><code>/&gt;</code><code></code></span><br />     <span class="opt-opt"><code>&lt;p:option</code> <code class="attr name-attr">name</code><code>="</code><code class="value name-value">dtd-id-idref-warnings</code><code>"</code> <code class="attr select-attr">select</code><code>="</code><code class="value select-value">false()</code><code>"</code> <code class="attr as-attr">as</code><code>="</code><code class="value as-value">xs:boolean</code><code>"</code><code>/&gt;</code><code></code></span><br />     <span class="opt-opt"><code>&lt;p:option</code> <code class="attr name-attr">name</code><code>="</code><code class="value name-value">assert-valid</code><code>"</code> <code class="attr select-attr">select</code><code>="</code><code class="value select-value">true()</code><code>"</code> <code class="attr as-attr">as</code><code>="</code><code class="value as-value">xs:boolean</code><code>"</code><code>/&gt;</code><code></code></span><br />     <span class="opt-opt"><code>&lt;p:option</code> <code class="attr name-attr">name</code><code>="</code><code class="value name-value">report-format</code><code>"</code> <code class="attr select-attr">select</code><code>="</code><code class="value select-value">'xvrl'</code><code>"</code> <code class="attr as-attr">as</code><code>="</code><code class="value as-value">xs:string</code><code>"</code><code>/&gt;</code><code></code></span><br />     <span class="opt-opt"><code>&lt;p:option</code> <code class="attr name-attr">name</code><code>="</code><code class="value name-value">parameters</code><code>"</code> <code class="attr as-attr">as</code><code>="</code><code class="value as-value">map(xs:QName,item()*)?</code><code>"</code><code>/&gt;</code><code>     </code></span><br /><code>&lt;/p:declare-step&gt;</code></p>
+
+<p>The values of the <code class="option">dtd-attribute-values</code> and <code class="option">dtd-id-idref-warnings</code> options
+<span class="rfc2119" id="c.validate-with-relax-ng.4.3">must</span> be booleans.</p>
+
+<p>If the <code class="port">schema</code> document has an XML media type, then
+it <span class="rfc2119" id="c.validate-with-relax-ng.5.2">must</span> be interpreted as a RELAX NG Grammar. If
+the <code class="port">schema</code> document has a text media type, then it
+<span class="rfc2119" id="c.validate-with-relax-ng.5.4">must</span> be interpreted as a 
+[<a href="#relaxng-compact-syntax"><span class="abbrev">RELAX NG
+Compact Syntax</span></a>] document for validation.
+<a id="err.inline.C0153"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic error</a></em> (<a href="#err.C0153"><code class="errqname">err:XC0153</code></a>) 
+if the document supplied on <code class="port">schema</code> port cannot be interpreted
+ as an RELAX NG Grammar. </p>
+
+<p>If the <code class="option">dtd-attribute-values</code> option is
+<code class="literal">true</code>, then the attribute value defaulting conventions of
+[<a href="#relaxng-dtd-compat"><span class="abbrev">RELAX NG DTD Compatibility</span></a>] are also applied.</p>
+
+<p>If the <code class="option">dtd-id-idref-warnings</code> option is
+<code class="literal">true</code>, then the validator <span class="rfc2119" id="c.validate-with-relax-ng.7.3">should</span>
+treat a schema that is incompatible with the ID/IDREF/IDREFs feature
+of [<a href="#relaxng-dtd-compat"><span class="abbrev">RELAX NG DTD Compatibility</span></a>] as if the document
+was invalid.
+</p>
+
+<p><a id="err.inline.C0155"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic error</a></em> (<a href="#err.C0155"><code class="errqname">err:XC0155</code></a>)
+if the <code class="option">assert-valid</code> option on <code class="tag-element">p:validate-with-relax-ng</code>
+is <code class="literal">true</code>
+and the input document is not valid.</p>
+
+<p>The output from this step is a copy of the input, possibly
+augmented by application of the
+[<a href="#relaxng-dtd-compat"><span class="abbrev">RELAX NG DTD Compatibility</span></a>]. The output of this step
+<span class="rfc2119" id="c.validate-with-relax-ng.9.2">may</span> include PSVI annotations.</p>
+
+<p><span id="impl-3">Support for [<a href="#relaxng-dtd-compat"><span class="abbrev">RELAX NG DTD Compatibility</span></a>] is
+<em class="glossterm"><a href="#dt-implementation-defined">implementation defined</a></em>.</span></p>
+
+<section id="c.validate-with-relax-ng.11" class="simplesect"><div class="section-titlepage"><h3>Document properties</h3></div><div class="content">
+
+<p>All document properties on
+the <code class="port">source</code> port are preserved on the <code class="port">result</code> port.
+No document properties on the <code class="port">schema</code> port are preserved. No document
+properties are preserved on the <code class="port">report</code> port.</p>
+</div></section>
+</div></section>
+
+  <section id="c.validate-with-schematron" class="section"><div class="section-titlepage"><h2><bdi class="secno">5. </bdi>Validate with Schematron<a aria-label="§" class="self-link" href="#c.validate-with-schematron"></a></h2></div><div class="content">
+
+
+<p>The <code class="tag-element">p:validate-with-schematron</code> step applies
+[<a href="#iso19757-3"><span class="abbrev">Schematron</span></a>]
+processing to the <code class="port">source</code> document.</p>
+
+<p class="element-syntax element-syntax-declare-step"><span class="decl"><code>&lt;p:declare-step</code> <code class="attr type-attr">type</code><code>="</code><code class="value type-value">p:validate-with-schematron</code><code>"</code><code>&gt;</code></span><br />     <span class="input"><code>&lt;p:input</code> <code class="attr port-attr">port</code><code>="</code><code class="value port-value">source</code><code>"</code> <code class="attr primary-attr">primary</code><code>="</code><code class="value primary-value">true</code><code>"</code> <code class="attr content-types-attr">content-types</code><code>="</code><code class="value content-types-value">xml html</code><code>"</code><code>/&gt;</code></span><br />     <span class="input"><code>&lt;p:input</code> <code class="attr port-attr">port</code><code>="</code><code class="value port-value">schema</code><code>"</code> <code class="attr content-types-attr">content-types</code><code>="</code><code class="value content-types-value">xml</code><code>"</code><code>/&gt;</code></span><br />     <span class="input"><code>&lt;p:output</code> <code class="attr port-attr">port</code><code>="</code><code class="value port-value">result</code><code>"</code> <code class="attr primary-attr">primary</code><code>="</code><code class="value primary-value">true</code><code>"</code> <code class="attr content-types-attr">content-types</code><code>="</code><code class="value content-types-value">xml html</code><code>"</code><code>/&gt;</code></span><br />     <span class="input"><code>&lt;p:output</code> <code class="attr port-attr">port</code><code>="</code><code class="value port-value">report</code><code>"</code> <code class="attr sequence-attr">sequence</code><code>="</code><code class="value sequence-value">true</code><code>"</code> <code class="attr content-types-attr">content-types</code><code>="</code><code class="value content-types-value">xml json</code><code>"</code><code>/&gt;</code></span><br />     <span class="opt-opt"><code>&lt;p:option</code> <code class="attr name-attr">name</code><code>="</code><code class="value name-value">parameters</code><code>"</code> <code class="attr as-attr">as</code><code>="</code><code class="value as-value">map(xs:QName,item()*)?</code><code>"</code><code>/&gt;</code><code>     </code></span><br />     <span class="opt-opt"><code>&lt;p:option</code> <code class="attr name-attr">name</code><code>="</code><code class="value name-value">phase</code><code>"</code> <code class="attr select-attr">select</code><code>="</code><code class="value select-value">'#DEFAULT'</code><code>"</code> <code class="attr as-attr">as</code><code>="</code><code class="value as-value">xs:string</code><code>"</code><code>/&gt;</code><code>   </code></span><br />     <span class="opt-opt"><code>&lt;p:option</code> <code class="attr name-attr">name</code><code>="</code><code class="value name-value">assert-valid</code><code>"</code> <code class="attr select-attr">select</code><code>="</code><code class="value select-value">true()</code><code>"</code> <code class="attr as-attr">as</code><code>="</code><code class="value as-value">xs:boolean</code><code>"</code><code>/&gt;</code><code></code></span><br />     <span class="opt-opt"><code>&lt;p:option</code> <code class="attr name-attr">name</code><code>="</code><code class="value name-value">report-format</code><code>"</code> <code class="attr select-attr">select</code><code>="</code><code class="value select-value">'svrl'</code><code>"</code> <code class="attr as-attr">as</code><code>="</code><code class="value as-value">xs:string</code><code>"</code><code>/&gt;</code><code></code></span><br /><code>&lt;/p:declare-step&gt;</code></p>
+
+<p><a id="err.inline.C0151"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic error</a></em> (<a href="#err.C0151"><code class="errqname">err:XC0151</code></a>) 
+  if the document supplied on <code class="port">schema</code> port is not a valid Schematron 
+  document.</p>
+
+    <p><a id="err.inline.C0054"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic error</a></em> (<a href="#err.C0054"><code class="errqname">err:XC0054</code></a>)
+if the <code class="option">assert-valid</code> option is <code class="literal">true</code>
+and any Schematron assertions fail.</p>
+
+    <div id="note-assert-valid_schematron" class="note admonition"><h3>Note</h3><div class="admonition-body">
+      <p>A Schematron validation with <code class="literal">assert-valid="true"</code> will fail if any validation message is
+        produced by <code class="tag-element">sch:assert</code> or <code class="tag-element">sch:report</code>, even if the severity level of the failed assertion or
+        the successful report is below a certain threshold, for example if there is only an <code class="literal">info</code>
+        message. (The severity is conventionally conveyed by the <code class="literal">@role</code> attribute on <code class="tag-element">sch:assert</code> or 
+        <code class="tag-element">sch:report</code>.) </p>
+    </div></div>
+    
+<p>The value of the <code class="option">phase</code> option identifies the
+Schematron validation phase with which validation begins.</p>
+
+<p>The <code class="option">parameters</code> option provides name/value pairs which
+correspond to Schematron external variables, to parameters that influence
+code generation, or to parameters that influence SVRL to XVRL conversion.</p>
+
+    <p>There are multiple Schematron implementations. <span id="impl-4">How the Schematron implementation is selected is
+          <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em>.</span> A processor might select an implementation based on the
+      schema’s <code class="code attribute">queryBinding</code> attribute and/or provide configuration options. In addition,
+      the special parameter map entry <code class="literal">c:implementation</code> (value: QName) may be used to select a
+      Schematron implementation that the processor supports. <span id="impl-5">The list of supported Schematron implementations and
+        their associated values is <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em>.</span> If a requested implementation
+      is not available, the processor may throw an error or select another implementation.</p>
+    
+    <p>The <code class="option">parameters</code> map may contain two special entries, <code class="literal">c:compile</code> and
+        <code class="literal">c:xvrl</code>, both are maps. If a code-generating implementation such as [<a href="#schematron-skeleton"><span class="abbrev">Schematron Skeleton</span></a>] is used, the entries of the <code class="literal">c:compile</code> map, for example
+        <code class="literal">allow-foreign</code>, will be passed to the code generator. 
+      <span id="impl-6">Which parameters the 
+        <code class="literal">c:compile</code> map supports for a given Schematron implementation is
+          <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em>.</span></p>
+    <p>If the Schematron implementation produces SVRL by default, the SVRL to XVRL conversion can be influenced by the
+      entries of the <code class="literal">c:xvrl</code> map. The same map, with potentially another set of allowed keys and
+      values, can be used to influence XVRL generation from another reporting language. 
+      <span id="impl-7">Which parameters this conversion from native reporting format to XVRL supports is
+          <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em>.</span></p>
+    <p>All other parameters of the <code class="option">parameters</code> option will be passed to the generated code if applicable,
+      or to a hypothetical native Schematron validator that does without code generation.</p>
+
+<p>The <code class="port">result</code> output from this step is a copy of the
+input.</p>
+
+<p>The output of this step
+<span class="rfc2119" id="c.validate-with-schematron.14.1">may</span> include PSVI annotations.</p>
+
+<section id="c.validate-with-schematron.15" class="simplesect"><div class="section-titlepage"><h3>Document properties</h3></div><div class="content">
+
+<p>All document properties
+on the <code class="port">source</code> port are preserved on the <code class="port">result</code> port.
+No document properties on the <code class="port">schema</code> port are preserved. No document
+properties are preserved on the <code class="port">report</code> port.</p>
+</div></section>
+</div></section>
+
+  <section id="c.validate-with-xml-schema" class="section"><div class="section-titlepage"><h2><bdi class="secno">6. </bdi>Validate with XML Schema<a aria-label="§" class="self-link" href="#c.validate-with-xml-schema"></a></h2></div><div class="content">
+
+
+<p>The <code class="tag-element">p:validate-with-xml-schema</code> step applies
+[<a href="#xmlschema-1"><span class="abbrev">W3C XML Schema: Part 1</span></a>]
+validity assessment to the <code class="port">source</code> input.</p>
+
+<p class="element-syntax element-syntax-declare-step"><span class="decl"><code>&lt;p:declare-step</code> <code class="attr type-attr">type</code><code>="</code><code class="value type-value">p:validate-with-xml-schema</code><code>"</code><code>&gt;</code></span><br />     <span class="input"><code>&lt;p:input</code> <code class="attr port-attr">port</code><code>="</code><code class="value port-value">source</code><code>"</code> <code class="attr primary-attr">primary</code><code>="</code><code class="value primary-value">true</code><code>"</code> <code class="attr content-types-attr">content-types</code><code>="</code><code class="value content-types-value">xml html</code><code>"</code><code>/&gt;</code></span><br />     <span class="input"><code>&lt;p:input</code> <code class="attr port-attr">port</code><code>="</code><code class="value port-value">schema</code><code>"</code> <code class="attr sequence-attr">sequence</code><code>="</code><code class="value sequence-value">true</code><code>"</code> <code class="attr content-types-attr">content-types</code><code>="</code><code class="value content-types-value">xml</code><code>"</code><code>/&gt;</code></span><br />     <span class="input"><code>&lt;p:output</code> <code class="attr port-attr">port</code><code>="</code><code class="value port-value">result</code><code>"</code> <code class="attr primary-attr">primary</code><code>="</code><code class="value primary-value">true</code><code>"</code> <code class="attr content-types-attr">content-types</code><code>="</code><code class="value content-types-value">xml html</code><code>"</code><code>/&gt;</code></span><br />     <span class="input"><code>&lt;p:output</code> <code class="attr port-attr">port</code><code>="</code><code class="value port-value">report</code><code>"</code> <code class="attr sequence-attr">sequence</code><code>="</code><code class="value sequence-value">true</code><code>"</code> <code class="attr content-types-attr">content-types</code><code>="</code><code class="value content-types-value">xml json</code><code>"</code><code>/&gt;</code></span><br />     <span class="opt-opt"><code>&lt;p:option</code> <code class="attr name-attr">name</code><code>="</code><code class="value name-value">use-location-hints</code><code>"</code> <code class="attr select-attr">select</code><code>="</code><code class="value select-value">false()</code><code>"</code> <code class="attr as-attr">as</code><code>="</code><code class="value as-value">xs:boolean</code><code>"</code><code>/&gt;</code><code></code></span><br />     <span class="opt-opt"><code>&lt;p:option</code> <code class="attr name-attr">name</code><code>="</code><code class="value name-value">try-namespaces</code><code>"</code> <code class="attr select-attr">select</code><code>="</code><code class="value select-value">false()</code><code>"</code> <code class="attr as-attr">as</code><code>="</code><code class="value as-value">xs:boolean</code><code>"</code><code>/&gt;</code><code></code></span><br />     <span class="opt-opt"><code>&lt;p:option</code> <code class="attr name-attr">name</code><code>="</code><code class="value name-value">assert-valid</code><code>"</code> <code class="attr select-attr">select</code><code>="</code><code class="value select-value">true()</code><code>"</code> <code class="attr as-attr">as</code><code>="</code><code class="value as-value">xs:boolean</code><code>"</code><code>/&gt;</code><code></code></span><br />     <span class="opt-opt"><code>&lt;p:option</code> <code class="attr name-attr">name</code><code>="</code><code class="value name-value">parameters</code><code>"</code> <code class="attr as-attr">as</code><code>="</code><code class="value as-value">map(xs:QName,item()*)?</code><code>"</code><code>/&gt;</code><code>     </code></span><br />     <span class="opt-opt"><code>&lt;p:option</code> <code class="attr name-attr">name</code><code>="</code><code class="value name-value">mode</code><code>"</code> <code class="attr select-attr">select</code><code>="</code><code class="value select-value">'strict'</code><code>"</code> <code class="attr values-attr">values</code><code>="</code><code class="value values-value">('strict','lax')</code><code>"</code><code>/&gt;</code><code></code><code class="comment">&lt;!-- </code><span class="opt-type">string</span><code class="comment"> --&gt;</code></span><br />     <span class="opt-opt"><code>&lt;p:option</code> <code class="attr name-attr">name</code><code>="</code><code class="value name-value">version</code><code>"</code> <code class="attr as-attr">as</code><code>="</code><code class="value as-value">xs:string?</code><code>"</code><code>/&gt;</code><code>                    </code></span><br />     <span class="opt-opt"><code>&lt;p:option</code> <code class="attr name-attr">name</code><code>="</code><code class="value name-value">report-format</code><code>"</code> <code class="attr select-attr">select</code><code>="</code><code class="value select-value">'xvrl'</code><code>"</code> <code class="attr as-attr">as</code><code>="</code><code class="value as-value">xs:string</code><code>"</code><code>/&gt;</code><code></code></span><br /><code>&lt;/p:declare-step&gt;</code></p>
+
+<p><a id="err.inline.C0152"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic error</a></em> (<a href="#err.C0152"><code class="errqname">err:XC0152</code></a>) 
+if the document supplied on <code class="port">schema</code> port is not a valid XML schema 
+document.</p>
+    
+
+<p>The values of the <code class="option">use-location-hints</code>,
+<code class="option">try-namespaces</code>, and
+<code class="option">assert-valid</code>
+options
+ <span class="rfc2119" id="c.validate-with-xml-schema.5.4">must</span> be boolean.</p>
+
+<p>The value of the <code class="option">mode</code> option
+<span class="rfc2119" id="c.validate-with-xml-schema.6.2">must</span> be an NMTOKEN whose value is either
+“<code class="literal">strict</code>” or “<code class="literal">lax</code>”.</p>
+
+<p>Validation is performed against the set of schemas represented
+by the documents on the <code class="port">schema</code> port. These schemas must
+be used in preference to any schema locations provided by schema
+location hints encountered during schema validation, that is, schema
+locations supplied for <code class="code">xs:import</code> or
+<code class="code">xsi:schema-location</code>, or determined by
+schema-processor-defined namespace-based strategies, for the
+namespaces covered by the documents available on the schemas port.</p>
+
+<p>If <code class="code">xs:include</code> elements occur within the supplied
+schema documents, they are treated like any other
+external documents (see [<a href="#xproc30"><span class="abbrev">XProc 3.0</span></a>]).
+<span id="impl-8">It is
+<em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em> if the documents supplied
+on the <code class="port">schemas</code> port are considered when resolving
+<code class="code">xs:include</code> elements in the schema documents provided.</span>
+</p>
+
+<p>The <code class="option">use-location-hints</code> and
+<code class="option">try-namespaces</code> options allow the pipeline author to
+control how the schema processor should attempt to locate schema
+documents necessary but not provided on the <code class="port">schema</code>
+port. Any schema documents provided on the <code class="port">schema</code> port
+<span class="rfc2119" id="c.validate-with-xml-schema.9.5">must</span> be used in preference to schema documents
+located by other means.</p>
+
+<p>If the <code class="option">use-location-hints</code> option is
+“<code class="literal">true</code>”, the processor <span class="rfc2119" id="c.validate-with-xml-schema.10.3">should</span>
+make use of schema location hints to locate schema documents. If the
+option is “<code class="literal">false</code>”, the processor
+<span class="rfc2119" id="c.validate-with-xml-schema.10.5">should</span> ignore any such hints.</p>
+
+<p>If the <code class="option">try-namespaces</code> option is
+“<code class="literal">true</code>”, the processor <span class="rfc2119" id="c.validate-with-xml-schema.11.3">should</span>
+attempt to dereference the namespace URI to locate schema documents.
+If the
+option is “<code class="literal">false</code>”, the processor
+<span class="rfc2119" id="c.validate-with-xml-schema.11.5">should not</span> dereference namespace URIs.</p>
+
+<p>The <code class="option">mode</code> option allow the pipeline author to
+control how schema validation begins. The “<code class="literal">strict</code>”
+mode means that the document element must be declared and
+schema-valid, otherwise it will be treated as invalid. The
+“<code class="literal">lax</code>” mode means that the
+absence of a declaration for the document element does not itself
+count as an unsuccessful outcome of validation.</p>
+
+<p>If the step specifies a <code class="option">version</code>, then that version
+of XML Schema <span class="rfc2119" id="c.validate-with-xml-schema.13.2">must</span> be used to process the validation.
+<a id="err.inline.C0011"></a>It is a
+<em class="glossterm"><a href="#dt-dynamic-error">dynamic error</a></em> (<a href="#err.C0011"><code class="errqname">err:XC0011</code></a>) if the specified schema version
+is not available. If the step does not specify a version, the
+implementation may use any version it has available and may use any means
+to determine what version to use, including, but not limited to,
+examining the version of the schema(s).</p>
+
+<p><a id="err.inline.C0156"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic error</a></em> (<a href="#err.C0156"><code class="errqname">err:XC0156</code></a>)
+if the <code class="option">assert-valid</code> option on <code class="tag-element">p:validate-with-xml-schema</code> 
+is <code class="literal">true</code>
+and the input document is not valid. If the <code class="option">assert-valid</code>
+option is <code class="literal">false</code>, it is not an error for the document
+to be invalid. In this case, if the implementation does not
+support the PSVI, <code class="tag-element">p:validate-with-xml-schema</code> is essentially
+just an “identity” step, but if the implementation <em>does</em>
+support the PSVI, then the resulting document will have additional type
+information (at least for the subtrees that are valid).</p>
+
+<p>When XML Schema validation assessment
+is performed, the processor is invoked in the mode specified by the
+<code class="option">mode</code> option.
+<a id="err.inline.C0055"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic error</a></em> (<a href="#err.C0055"><code class="errqname">err:XC0055</code></a>)
+if the implementation does not support the specified mode.
+</p>
+
+<p>The <code class="port">result</code> of the assessment is a document with the
+Post-Schema-Validation-Infoset (PSVI) ([<a href="#xmlschema-1"><span class="abbrev">W3C XML Schema: Part 1</span></a>]) annotations, if the pipeline implementation
+supports such annotations. If not, the input document is reproduced
+with any defaulting of attributes and elements performed as specified
+by the XML Schema recommendation.</p>
+
+<section id="c.validate-with-xml-schema.17" class="simplesect"><div class="section-titlepage"><h3>Document properties</h3></div><div class="content">
+
+<p>All document properties
+on the <code class="port">source</code> port are preserved on the <code class="port">result</code> port.
+No document properties on the <code class="port">schemas</code> port are preserved.</p>
+</div></section>
+</div></section>
+
+<section id="c.validate-with-json-schema" class="section"><div class="section-titlepage"><h2><bdi class="secno">7. </bdi>Validate with JSON schema<a aria-label="§" class="self-link" href="#c.validate-with-json-schema"></a></h2></div><div class="content">
+  
+  <p>The <code class="tag-element">p:validate-with-json-schema</code> step applies
+    a JSON schema validation (as defined in [<a href="#jsonschema2020-12"><span class="abbrev">JSON schema</span></a>] and
+    other publications) to the <code class="port">source</code> input.</p>
+  
+  <p class="element-syntax element-syntax-declare-step"><span class="decl"><code>&lt;p:declare-step</code> <code class="attr type-attr">type</code><code>="</code><code class="value type-value">p:validate-with-json-schema</code><code>"</code><code>&gt;</code></span><br />     <span class="input"><code>&lt;p:input</code> <code class="attr port-attr">port</code><code>="</code><code class="value port-value">source</code><code>"</code> <code class="attr primary-attr">primary</code><code>="</code><code class="value primary-value">true</code><code>"</code> <code class="attr content-types-attr">content-types</code><code>="</code><code class="value content-types-value">json</code><code>"</code><code>/&gt;</code></span><br />     <span class="input"><code>&lt;p:input</code> <code class="attr port-attr">port</code><code>="</code><code class="value port-value">schema</code><code>"</code> <code class="attr sequence-attr">sequence</code><code>="</code><code class="value sequence-value">false</code><code>"</code> <code class="attr content-types-attr">content-types</code><code>="</code><code class="value content-types-value">json</code><code>"</code><code>/&gt;</code></span><br />     <span class="input"><code>&lt;p:output</code> <code class="attr port-attr">port</code><code>="</code><code class="value port-value">result</code><code>"</code> <code class="attr primary-attr">primary</code><code>="</code><code class="value primary-value">true</code><code>"</code> <code class="attr content-types-attr">content-types</code><code>="</code><code class="value content-types-value">json</code><code>"</code><code>/&gt;</code></span><br />     <span class="input"><code>&lt;p:output</code> <code class="attr port-attr">port</code><code>="</code><code class="value port-value">report</code><code>"</code> <code class="attr sequence-attr">sequence</code><code>="</code><code class="value sequence-value">true</code><code>"</code> <code class="attr content-types-attr">content-types</code><code>="</code><code class="value content-types-value">xml json</code><code>"</code><code>/&gt;</code></span><br />     <span class="opt-opt"><code>&lt;p:option</code> <code class="attr name-attr">name</code><code>="</code><code class="value name-value">assert-valid</code><code>"</code> <code class="attr select-attr">select</code><code>="</code><code class="value select-value">true()</code><code>"</code> <code class="attr as-attr">as</code><code>="</code><code class="value as-value">xs:boolean</code><code>"</code><code>/&gt;</code><code></code></span><br />     <span class="opt-opt"><code>&lt;p:option</code> <code class="attr name-attr">name</code><code>="</code><code class="value name-value">default-version</code><code>"</code> <code class="attr as-attr">as</code><code>="</code><code class="value as-value">xs:string</code><code>"</code><code>/&gt;</code><code>             </code></span><br />     <span class="opt-opt"><code>&lt;p:option</code> <code class="attr name-attr">name</code><code>="</code><code class="value name-value">parameters</code><code>"</code> <code class="attr as-attr">as</code><code>="</code><code class="value as-value">map(xs:QName,item()*)?</code><code>"</code><code>/&gt;</code><code>     </code></span><br />     <span class="opt-opt"><code>&lt;p:option</code> <code class="attr name-attr">name</code><code>="</code><code class="value name-value">report-format</code><code>"</code> <code class="attr select-attr">select</code><code>="</code><code class="value select-value">'xvrl'</code><code>"</code> <code class="attr as-attr">as</code><code>="</code><code class="value as-value">xs:string</code><code>"</code><code>/&gt;</code><code></code></span><br /><code>&lt;/p:declare-step&gt;</code></p>
+
+  <p>The option <code class="option">default-version</code> can be used to
+  control the schema's version in case it does not specify one itself. If
+  the schema does not specify a version and option <code class="option">default-version</code>
+  is empty, the version used is <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em>.</p>
+
+  <p><a id="err.inline.C0163"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic error</a></em> (<a href="#err.C0163"><code class="errqname">err:XC0163</code></a>) 
+    if the selected version is not supported.</p>
+  
+  <p><a id="err.inline.C0164"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic error</a></em> (<a href="#err.C0164"><code class="errqname">err:XC0164</code></a>) 
+    if the document supplied on <code class="port">schema</code> port is not a valid JSON schema 
+    document in the selected version.</p>
+  
+  <p><a id="err.inline.C0165"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic error</a></em> (<a href="#err.C0165"><code class="errqname">err:XC0165</code></a>)
+    if the <code class="option">assert-valid</code> option on <code class="tag-element">p:validate-with-json-schema</code> 
+    is <code class="literal">true</code>
+    and the input document is not valid.</p>
+  
+  <section id="c.validate-with-json-schema.8" class="simplesect"><div class="section-titlepage"><h3>Document properties</h3></div><div class="content">
+    
+    <p>All document properties on the <code class="port">source</code> port are preserved
+      on the <code class="port">result</code> port. No document properties on the <code class="port">schemas</code> are preserved. 
+      No document properties are preserved on the <code class="port">report</code> port.</p>
+  </div></section>
+</div></section>  
+  
+<section id="errors" class="section"><div class="section-titlepage"><h2><bdi class="secno">8. </bdi>Step Errors<a aria-label="§" class="self-link" href="#errors"></a></h2></div><div class="content">
+
+
+<p>This step can raise
+<em class="glossterm"><a href="#dt-dynamic-error">dynamic errors</a></em>.
+</p>
+
+<p><span id="dt-dynamic-error" class="termdef">[Definition: A <em class="glossterm">dynamic
+error</em> is one which occurs while a pipeline is being
+evaluated.]</span> Examples of dynamic errors include references to
+URIs that cannot be resolved, steps which fail, and pipelines that
+exhaust the capacity of an implementation (such as memory or disk
+space). For a more complete discussion of dynamic errors, see
+<cite><a href="../xproc/#dynamic-errors">Dynamic Errors</a></cite> in <cite><a href="../xproc/">XProc 3.0: An XML Pipeline Language</a></cite>.
+</p>
+
+<p>If a step fails due to a dynamic error, failure propagates
+upwards until either a <code class="tag-element">p:try</code> is encountered or the entire
+pipeline fails. In other words, outside of a <code class="tag-element">p:try</code>, step
+failure causes the entire pipeline to fail.</p>
+
+<p>The following errors can be raised by this step:</p>
+
+<div id="step-error-summary"><dl class="errs"><dt id="err.C0011"><code class="errqname">err:XC0011</code></dt><dd><p>It is a
+dynamic error if the specified schema version
+is not available.</p><p>See: <a href="#err.inline.C0011">Validate with XML Schema</a></p></dd><dt id="err.C0053"><code class="errqname">err:XC0053</code></dt><dd><p>It is a dynamic error if the assert-valid option on
+      p:validate-with-nvdl is
+          true and the input document is not valid.</p><p>See: <a href="#err.inline.C0053">Validate with NVDL</a></p></dd><dt id="err.C0054"><code class="errqname">err:XC0054</code></dt><dd><p>It is a dynamic error
+if the assert-valid option is true
+and any Schematron assertions fail.</p><p>See: <a href="#err.inline.C0054">Validate with Schematron</a></p></dd><dt id="err.C0055"><code class="errqname">err:XC0055</code></dt><dd><p>It is a dynamic error
+if the implementation does not support the specified mode.</p><p>See: <a href="#err.inline.C0055">Validate with XML Schema</a></p></dd><dt id="err.C0117"><code class="errqname">err:XC0117</code></dt><dd><p>It is a dynamic error if a report-format option 
+      was specified that the processor does not support.</p><p>See: <a href="#err.inline.C0117">Common Options and Outputs</a></p></dd><dt id="err.C0151"><code class="errqname">err:XC0151</code></dt><dd><p>It is a dynamic error 
+  if the document supplied on schema port is not a valid Schematron 
+  document.</p><p>See: <a href="#err.inline.C0151">Validate with Schematron</a></p></dd><dt id="err.C0152"><code class="errqname">err:XC0152</code></dt><dd><p>It is a dynamic error 
+if the document supplied on schema port is not a valid XML schema 
+document.</p><p>See: <a href="#err.inline.C0152">Validate with XML Schema</a></p></dd><dt id="err.C0153"><code class="errqname">err:XC0153</code></dt><dd><p>It is a dynamic error 
+if the document supplied on schema port cannot be interpreted
+ as an RELAX NG Grammar. </p><p>See: <a href="#err.inline.C0153">Validate with RELAX NG</a></p></dd><dt id="err.C0154"><code class="errqname">err:XC0154</code></dt><dd><p>It is a dynamic error 
+        if the document supplied on nvdl port is not a valid NVDL document.</p><p>See: <a href="#err.inline.C0154">Validate with NVDL</a></p></dd><dt id="err.C0155"><code class="errqname">err:XC0155</code></dt><dd><p>It is a dynamic error
+if the assert-valid option on p:validate-with-relax-ng
+is true
+and the input document is not valid.</p><p>See: <a href="#err.inline.C0155">Validate with RELAX NG</a></p></dd><dt id="err.C0156"><code class="errqname">err:XC0156</code></dt><dd><p>It is a dynamic error
+if the assert-valid option on p:validate-with-xml-schema 
+is true
+and the input document is not valid.</p><p>See: <a href="#err.inline.C0156">Validate with XML Schema</a></p></dd><dt id="err.C0163"><code class="errqname">err:XC0163</code></dt><dd><p>It is a dynamic error 
+    if the selected version is not supported.</p><p>See: <a href="#err.inline.C0163">Validate with JSON schema</a></p></dd><dt id="err.C0164"><code class="errqname">err:XC0164</code></dt><dd><p>It is a dynamic error 
+    if the document supplied on schema port is not a valid JSON schema 
+    document in the selected version.</p><p>See: <a href="#err.inline.C0164">Validate with JSON schema</a></p></dd><dt id="err.C0165"><code class="errqname">err:XC0165</code></dt><dd><p>It is a dynamic error
+    if the assert-valid option on p:validate-with-json-schema 
+    is true
+    and the input document is not valid.</p><p>See: <a href="#err.inline.C0165">Validate with JSON schema</a></p></dd></dl></div>
+
+</div></section>
+
+<article id="conformance" class="appendix"><header class="appendix-titlepage"><h2><bdi class="secno">A. </bdi>Conformance<a aria-label="§" class="self-link" href="#conformance"></a></h2></header><div class="content">
+
+
+<p>Conformant processors <span class="rfc2119" id="conformance.2.1">must</span> implement all of the features
+described in this specification except those that are explicitly identified
+as optional.</p>
+
+<p>Some aspects of processor behavior are not completely specified; those
+features are either <em class="glossterm"><a href="#dt-implementation-dependent">implementation-dependent</a></em> or
+<em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em>.</p>
+
+<p><span id="dt-implementation-dependent" class="termdef">[Definition: An
+<em class="glossterm">implementation-dependent</em> feature is one where the
+implementation has discretion in how it is performed.
+Implementations are not required to document or explain
+how <em class="glossterm"><a href="#dt-implementation-dependent">implementation-dependent</a></em> features are performed.]</span>
+</p>
+
+<p><span id="dt-implementation-defined" class="termdef">[Definition: An
+<em class="glossterm">implementation-defined</em> feature is one where the
+implementation has discretion in how it is performed.
+Conformant implementations <span class="rfc2119" id="dt-implementation-defined.2">must</span> document
+how <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em> features are performed.]</span>
+</p>
+
+<section id="implementation-defined" class="section"><div class="section-titlepage"><h2><bdi class="secno">A.1. </bdi>Implementation-defined features<a aria-label="§" class="self-link" href="#implementation-defined"></a></h2></div><div class="content">
+
+
+<p>The following features are implementation-defined:</p>
+
+<ol class="features"><li>The supported values for the report-format
+    option are implementation-defined. A processor should at least support
+    the value “xvrl” for the XML validation steps and “svrl” for
+      p:validate-with-schematron. See <a href="#validation-common" title="Common Options and Outputs">Section 2, “Common Options and Outputs”</a>.</li><li>The parameters supported by the
+validation steps and their semantics are
+        implementation-defined, and they can be different for each validation step. See <a href="#validation-common" title="Common Options and Outputs">Section 2, “Common Options and Outputs”</a>.</li><li>How the Schematron implementation is selected is
+          implementation-defined. See <a href="#c.validate-with-schematron" title="Validate with Schematron">Section 5, “Validate with Schematron”</a>.</li><li>The list of supported Schematron implementations and
+        their associated values is implementation-defined. See <a href="#c.validate-with-schematron" title="Validate with Schematron">Section 5, “Validate with Schematron”</a>.</li><li>Which parameters the 
+        c:compile map supports for a given Schematron implementation is
+          implementation-defined. See <a href="#c.validate-with-schematron" title="Validate with Schematron">Section 5, “Validate with Schematron”</a>.</li><li>Which parameters this conversion from native reporting format to XVRL supports is
+          implementation-defined. See <a href="#c.validate-with-schematron" title="Validate with Schematron">Section 5, “Validate with Schematron”</a>.</li><li>It is
+implementation-defined if the documents supplied
+on the schemas port are considered when resolving
+xs:include elements in the schema documents provided. See <a href="#c.validate-with-xml-schema" title="Validate with XML Schema">Section 6, “Validate with XML Schema”</a>.</li></ol>
+</div></section>
+
+<section id="implementation-dependent" class="section"><div class="section-titlepage"><h2><bdi class="secno">A.2. </bdi>Implementation-dependent features<a aria-label="§" class="self-link" href="#implementation-dependent"></a></h2></div><div class="content">
+
+
+<p>The following features are implementation-dependent:</p>
+
+<ol class="features"></ol>
+</div></section>
+</div></article>
+
+<article id="references" class="appendix"><header class="appendix-titlepage"><h2><bdi class="secno">B. </bdi>References<a aria-label="§" class="self-link" href="#references"></a></h2></header><div class="content">
+
+<div id="references.2" class="bibliolist">
+<div id="xproc30" class="bibliomixed"><p>[<span class="abbrev">XProc 3.0</span>] 
+<a href="https://spec.xproc.org/3.0/xproc/"><span class="citetitle"><cite>XProc 3.0:
+An XML Pipeline Language</cite></span></a>.
+Norman Walsh, Achim Berndzen, Gerrit Imsieke and Erik Siegel, editors.
+</p></div>
+<div id="xproc30-steps" class="bibliomixed"><p>[<span class="abbrev">XProc 3.0 Steps</span>] 
+<a href="https://spec.xproc.org/"><span class="citetitle"><cite>XProc 3.0 Steps:
+An Introduction</cite></span></a>.
+Norman Walsh, Achim Berndzen, Gerrit Imsieke and Erik Siegel, editors.
+</p></div>
+<div id="xvrl" class="bibliomixed"><p>[<span class="abbrev">XVRL</span>] <a href="https://spec.xproc.org/master/head/xvrl/"><span class="citetitle"><cite>Extensible 
+  Validation Reporting Language</cite></span></a>
+2019.
+</p></div>
+<div id="iso19757-2" class="bibliomixed"><p>[<span class="abbrev">RELAX NG</span>] ISO/IEC JTC 1/SC 34.
+<a href="https://www.iso.org/iso/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=52348"><span class="citetitle"><cite>ISO/IEC 19757-2:2008(E)
+Document Schema Definition Language (DSDL) -- Part 2:
+Regular-grammar-based
+validation -- RELAX NG</cite></span></a>
+2008.
+</p></div>
+<div id="iso19757-3" class="bibliomixed"><p>[<span class="abbrev">Schematron</span>] ISO/IEC JTC 1/SC 34.
+<span class="citetitle"><cite>ISO/IEC 19757-3:2016(E) Document Schema Definition
+Languages (DSDL) — Part 3: Rule-based validation — Schematron</cite></span>
+2016.
+</p></div>
+<div id="iso19757-4" class="bibliomixed"><p>[<span class="abbrev">NVDL</span>] ISO/IEC JTC 1/SC 34.
+<span class="citetitle"><cite>ISO/IEC 19757-4:2006(E) Document Schema Definition
+Languages (DSDL) — Part 4: Namespace-based Validation Dispatching Language (NVDL)</cite></span>
+2006.
+</p></div>
+<div id="schematron-skeleton" class="bibliomixed"><p>[<span class="abbrev">Schematron Skeleton</span>] 
+  <a href="https://schematron.com/front-page/the-schematron-skeleton-implementation/"><span class="citetitle"><cite>Schematron 
+  “Skeleton” Implementation</cite></span></a>
+  2017.
+  </p></div>
+<div id="relaxng-compact-syntax" class="bibliomixed"><p>[<span class="abbrev">RELAX NG
+Compact Syntax</span>] ISO/IEC JTC 1/SC 34.
+<span class="citetitle"><cite>ISO/IEC 19757-2:2003/Amd 1:2006 Document Schema Definition
+Languages (DSDL) — Part 2: Grammar-based validation — RELAX NG AMENDMENT 1
+Compact Syntax</cite></span>
+2006.
+</p></div>
+<div id="relaxng-dtd-compat" class="bibliomixed"><p>[<span class="abbrev">RELAX NG DTD Compatibility</span>] 
+<span class="citetitle"><cite>RELAX NG DTD Compatibility</cite></span>.
+OASIS Committee Specification.
+3 December 2001.
+</p></div>
+<div id="xmlschema-1" class="bibliomixed"><p>[<span class="abbrev">W3C XML Schema: Part 1</span>] 
+<a href="https://www.w3.org/TR/xmlschema-1/"><span class="citetitle"><cite>XML Schema Part 1:
+Structures Second Edition</cite></span></a>.
+Henry S. Thompson, David Beech, Murray Maloney, et. al., editors.
+World Wide Web Consortium, 28 October 2004.
+</p></div>
+<div id="jsonschema2020-12" class="bibliomixed"><p>[<span class="abbrev">JSON schema</span>] 
+  <a href="https://json-schema.org/draft/2020-12/json-schema-validation.html"><span class="citetitle"><cite>JSON Schema Validation: A Vocabulary for 
+    Structural Validation of JSON</cite></span></a>.
+A.Wright, H. Andrews and B. Hutton, editors.
+Internet Engineering Task Force. June, 2022.</p></div>
+</div>
+</div></article>
+
+
+<article id="glossary" class="appendix"><header class="appendix-titlepage"><h2><bdi class="secno">C. </bdi>Glossary<a aria-label="§" class="self-link" href="#glossary"></a></h2></header><div class="content"><div class="glosslist"><dl><dt id="glossary.2.1" class="glossentry"><em class="glossterm"><a href="#dt-dynamic-error">dynamic
+error</a></em></dt><dd class="glossdef"><p>A <em class="firstterm">dynamic
+error</em> is one which occurs while a pipeline is being
+evaluated.</p></dd><dt id="glossary.2.2" class="glossentry"><em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em></dt><dd class="glossdef"><p>An
+<em class="firstterm">implementation-defined</em> feature is one where the
+implementation has discretion in how it is performed.
+Conformant implementations <span class="rfc2119" id="glossary.2.2.2.1.2">must</span> document
+how <em class="glossterm"><a href="#dt-implementation-defined">implementation-defined</a></em> features are performed.</p></dd><dt id="glossary.2.3" class="glossentry"><em class="glossterm"><a href="#dt-implementation-dependent">implementation-dependent</a></em></dt><dd class="glossdef"><p>An
+<em class="firstterm">implementation-dependent</em> feature is one where the
+implementation has discretion in how it is performed.
+Implementations are not required to document or explain
+how <em class="glossterm"><a href="#dt-implementation-dependent">implementation-dependent</a></em> features are performed.</p></dd></dl></div></div></article>
+
+<article id="ancillary-files" class="appendix"><header class="appendix-titlepage"><h2><bdi class="secno">D. </bdi>Ancillary files<a aria-label="§" class="self-link" href="#ancillary-files"></a></h2></header><div class="content">
+
+
+<p>This specification includes by reference a number of
+ancillary files.</p>
+
+<div class="variablelist">
+
+<dl><dt><span class="term"><a href="steps.xpl">steps.xpl</a></span></dt><dd>
+<p>An XProc step library for the declared steps.
+</p>
+</dd></dl></div>
+
+</div></article>
+
+</article><script src="js/prism.js"></script><script src="js/fixup.js"></script></body></html>
