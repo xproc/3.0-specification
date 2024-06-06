@@ -65,6 +65,19 @@ these steps may be found in
 general nature of <biblioref linkend="xproc30"/>
 steps is assumed; for background details, see
 <biblioref linkend="xproc30-steps"/>.</para>
+
+<para>Some filesystems and some operating systems support “special” files. These
+may be interfaces to underlying block or character devices, or represent file
+system features such as linking two filenames so that they point to the same
+data. On many filesystems on Unix(-derived) operating systems, the
+files <code>/dev/null</code>, <code>/dev/urandom</code>, and
+<code>/dev/zero</code> are special, as are hard and soft symbolic links. Windows
+and Mac filesystems also support special files and other linking
+mechanisms.</para>
+
+<para><impl>How the file steps behave with respect to special files is
+<glossterm>implementation-defined</glossterm>.</impl> It may be an error to attempt to
+access them, or they may be ignored by some or all steps.</para>
 </section>
 
   <section xml:id="c.directory-list">
