@@ -60,7 +60,7 @@
    <p:declare-step type="p:compare" xml:id="compare">
       <p:input port="source" primary="true" content-types="any"/>
       <p:input port="alternate" content-types="any"/>
-      <p:output port="result" content-types="application/xml"/>
+      <p:output port="result" primary="true" content-types="application/xml"/>
       <p:output port="differences" content-types="any" sequence="true"/>
       <p:option name="parameters" as="map(xs:QName,item()*)?"/>
       <p:option name="method" as="xs:QName?"/>
@@ -138,7 +138,7 @@
    </p:declare-step>
    <p:declare-step type="p:insert" xml:id="insert">
       <p:input port="source" primary="true" content-types="xml html"/>
-      <p:input port="insertion" sequence="true" content-types="xml html"/>
+      <p:input port="insertion" sequence="true" content-types="xml html text"/>
       <p:output port="result" content-types="xml html"/>
       <p:option name="match"
                 as="xs:string"
@@ -352,7 +352,7 @@
       <p:option name="lang" as="xs:language?"/>
       <p:option name="collation"
                 as="xs:string"
-                select="'https://www.w3.org/2005/xpath-functions/collation/codepoint'"/>
+                select="'http://www.w3.org/2005/xpath-functions/collation/codepoint'"/>
       <p:option name="stable" as="xs:boolean" select="true()"/>
    </p:declare-step>
    <p:declare-step type="p:text-tail" xml:id="text-tail">
