@@ -1,0 +1,554 @@
+default namespace p = "http://www.w3.org/ns/xproc"
+namespace local = ""
+
+# This schema could be made more constrained.
+
+Step = Step-add-attribute | Step-add-xml-base | Step-archive | Step-archive-manifest | Step-cast-content-type | Step-compare | Step-compress | Step-count | Step-delete | Step-error | Step-filter | Step-hash | Step-http-request | Step-identity | Step-insert | Step-json-join | Step-json-merge | Step-label-elements | Step-load | Step-make-absolute-uris | Step-namespace-delete | Step-namespace-rename | Step-pack | Step-rename | Step-replace | Step-set-attributes | Step-set-properties | Step-sink | Step-split-sequence | Step-store | Step-string-replace | Step-text-count | Step-text-head | Step-text-join | Step-text-replace | Step-text-sort | Step-text-tail | Step-unarchive | Step-uncompress | Step-unwrap | Step-uuid | Step-wrap-sequence | Step-wrap | Step-www-form-urldecode | Step-www-form-urlencode | Step-xinclude | Step-xquery | Step-xslt
+
+Step-add-attribute =
+  element add-attribute {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute match { avt.datatype }?,
+    attribute attribute-name { avt.datatype }?,
+    attribute attribute-value { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-add-xml-base =
+  element add-xml-base {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute all { avt.datatype }?,
+    attribute relative { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-archive =
+  element archive {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute format { avt.datatype }?,
+    attribute relative-to { avt.datatype }?,
+    attribute parameters { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-archive-manifest =
+  element archive-manifest {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute format { avt.datatype }?,
+    attribute parameters { avt.datatype }?,
+    attribute relative-to { avt.datatype }?,
+    attribute override-content-types { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-cast-content-type =
+  element cast-content-type {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute content-type { avt.datatype }?,
+    attribute parameters { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-compare =
+  element compare {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute parameters { avt.datatype }?,
+    attribute method { avt.datatype }?,
+    attribute fail-if-not-equal { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-compress =
+  element compress {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute format { avt.datatype }?,
+    attribute serialization { avt.datatype }?,
+    attribute parameters { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-count =
+  element count {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute limit { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-delete =
+  element delete {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute match { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-error =
+  element error {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute code { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-filter =
+  element filter {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute select { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-hash =
+  element hash {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute parameters { avt.datatype }?,
+    attribute value { avt.datatype }?,
+    attribute algorithm { avt.datatype }?,
+    attribute match { avt.datatype }?,
+    attribute version { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-http-request =
+  element http-request {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute href { avt.datatype }?,
+    attribute method { avt.datatype }?,
+    attribute serialization { avt.datatype }?,
+    attribute headers { avt.datatype }?,
+    attribute auth { avt.datatype }?,
+    attribute parameters { avt.datatype }?,
+    attribute assert { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-identity =
+  element identity {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    (WithInput* & (Documentation|PipeInfo)*)
+  }
+
+Step-insert =
+  element insert {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute match { avt.datatype }?,
+    attribute position { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-json-join =
+  element json-join {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute flatten-to-depth { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-json-merge =
+  element json-merge {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute duplicates { avt.datatype }?,
+    attribute key { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-label-elements =
+  element label-elements {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute attribute { avt.datatype }?,
+    attribute label { avt.datatype }?,
+    attribute match { avt.datatype }?,
+    attribute replace { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-load =
+  element load {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute href { avt.datatype }?,
+    attribute parameters { avt.datatype }?,
+    attribute content-type { avt.datatype }?,
+    attribute document-properties { avt.datatype }?,
+    (WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-make-absolute-uris =
+  element make-absolute-uris {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute match { avt.datatype }?,
+    attribute base-uri { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-namespace-delete =
+  element namespace-delete {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute prefixes { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-namespace-rename =
+  element namespace-rename {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute from { avt.datatype }?,
+    attribute to { avt.datatype }?,
+    attribute apply-to { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-pack =
+  element pack {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute wrapper { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-rename =
+  element rename {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute match { avt.datatype }?,
+    attribute new-name { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-replace =
+  element replace {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute match { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-set-attributes =
+  element set-attributes {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute match { avt.datatype }?,
+    attribute attributes { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-set-properties =
+  element set-properties {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute properties { avt.datatype }?,
+    attribute merge { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-sink =
+  element sink {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    (WithInput* & (Documentation|PipeInfo)*)
+  }
+
+Step-split-sequence =
+  element split-sequence {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute initial-only { avt.datatype }?,
+    attribute test { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-store =
+  element store {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute href { avt.datatype }?,
+    attribute serialization { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-string-replace =
+  element string-replace {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute match { avt.datatype }?,
+    attribute replace { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-text-count =
+  element text-count {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    (WithInput* & (Documentation|PipeInfo)*)
+  }
+
+Step-text-head =
+  element text-head {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute count { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-text-join =
+  element text-join {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute separator { avt.datatype }?,
+    attribute prefix { avt.datatype }?,
+    attribute suffix { avt.datatype }?,
+    attribute override-content-type { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-text-replace =
+  element text-replace {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute pattern { avt.datatype }?,
+    attribute replacement { avt.datatype }?,
+    attribute flags { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-text-sort =
+  element text-sort {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute sort-key { avt.datatype }?,
+    attribute order { avt.datatype }?,
+    attribute case-order { avt.datatype }?,
+    attribute lang { avt.datatype }?,
+    attribute collation { avt.datatype }?,
+    attribute stable { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-text-tail =
+  element text-tail {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute count { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-unarchive =
+  element unarchive {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute include-filter { avt.datatype }?,
+    attribute exclude-filter { avt.datatype }?,
+    attribute format { avt.datatype }?,
+    attribute parameters { avt.datatype }?,
+    attribute relative-to { avt.datatype }?,
+    attribute override-content-types { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-uncompress =
+  element uncompress {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute format { avt.datatype }?,
+    attribute parameters { avt.datatype }?,
+    attribute content-type { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-unwrap =
+  element unwrap {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute match { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-uuid =
+  element uuid {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute match { avt.datatype }?,
+    attribute version { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-wrap-sequence =
+  element wrap-sequence {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute wrapper { avt.datatype }?,
+    attribute group-adjacent { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-wrap =
+  element wrap {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute wrapper { avt.datatype }?,
+    attribute match { avt.datatype }?,
+    attribute group-adjacent { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-www-form-urldecode =
+  element www-form-urldecode {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute value { avt.datatype }?,
+    (WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-www-form-urlencode =
+  element www-form-urlencode {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute parameters { avt.datatype }?,
+    (WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-xinclude =
+  element xinclude {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute fixup-xml-base { avt.datatype }?,
+    attribute fixup-xml-lang { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-xquery =
+  element xquery {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute parameters { avt.datatype }?,
+    attribute version { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
+Step-xslt =
+  element xslt {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute parameters { avt.datatype }?,
+    attribute static-parameters { avt.datatype }?,
+    attribute global-context-item { avt.datatype }?,
+    attribute populate-default-collection { avt.datatype }?,
+    attribute initial-mode { avt.datatype }?,
+    attribute template-name { avt.datatype }?,
+    attribute output-base-uri { avt.datatype }?,
+    attribute version { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
