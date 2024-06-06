@@ -3102,15 +3102,34 @@ Variable names are always expressed as
     <section xml:id="statics">
       <title>Static Options</title>
 
-      <para>A <tag>p:option</tag> may be declared “static”; options declared within a <tag>p:library</tag> <rfc2119>must</rfc2119>
-      be static.</para>
-      <para><error code="S0109">It is a <glossterm>static error</glossterm> if options that are the direct children of 
-        <tag>p:library</tag> are not declared “static”</error>.</para>
-      <para>The values of static options are computed during <link linkend="initiating">static
-          analysis</link>.</para>
+      <para>A <tag>p:option</tag> may be declared “static”; options declared
+      within a <tag>p:library</tag> <rfc2119>must</rfc2119> be static.
+      <error code="S0109">It is a <glossterm>static error</glossterm> if
+      options that are the direct children of <tag>p:library</tag> are not
+      declared “static”</error>.</para>
 
-      <para>XProc defines a single, global scope for static options. Every static option must have exactly one
-      in-scope declaration.</para>
+      <para>The values of static options are computed during
+      <link linkend="initiating">static analysis</link>. Consequently, expressions which
+      initialize static options may not refer to the context item, variables, or
+      other options that are not static.</para>
+
+      <para>Every static option must have exactly one in-scope declaration.
+      <error code="S0088">It is
+      a <glossterm>static error</glossterm> if the qualified name of a static option
+      <glossterm baseform="shadow">shadows</glossterm>
+      the name of another static option or a variable.</error></para>
+
+      <para>It is not an error if two static options with the same name appear
+      in different scopes, but it is not good practice. Bear in mind, for
+      example, that if the implementation provides a mechanism for specifying
+      default values for static options at compile time, the value provided for
+      any option must satisfy the type specified on every static option declaration
+      with that name. Any mechanism for specifying default values for static options
+      applies equally to options whether they are public or private.</para>
+
+      <para>Libraries that define static options, especially private ones, are
+      encouraged to use namespaces so that collision with the names of options in
+      the calling pipeline, or other imported libraries are unlikely.</para>
     </section>
 
     <section xml:id="varopt-types">
