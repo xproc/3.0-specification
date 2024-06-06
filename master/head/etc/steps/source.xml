@@ -243,8 +243,9 @@ element(s), the <tag>p:set-attributes</tag> step can be used to set them
 all at once.</para>
 </note>
 
-<para>This step cannot be used to add namespace declarations. <error code="C0059">It is a <glossterm>dynamic error</glossterm> if the QName
-value in the <option>attribute-name</option> option uses the prefix
+<para>This step cannot be used to add namespace declarations.
+<error code="C0059">It is a <glossterm>dynamic error</glossterm> if the QName
+value in the <option>attribute-name</option> option is “<code>xmlns</code>” or uses the prefix
 “<literal>xmlns</literal>”
 or any other prefix that resolves to the namespace name
 <uri>http://www.w3.org/2000/xmlns/</uri>.
@@ -2803,7 +2804,13 @@ with the matching elements' attributes modified.</para>
 <option>match</option> option. All matching elements are processed.
 If no elements match, the step will not change any elements.</para>
 
-<para>If the attributes taken from the <option>attributes</option> use namespaces, 
+<para>This step cannot be used to add namespace declarations.
+<error code="C0059">It is a <glossterm>dynamic error</glossterm> if the name
+of any attribute is “<code>xmlns</code>” or uses the prefix
+“<literal>xmlns</literal>”
+or any other prefix that resolves to the namespace name
+<uri>http://www.w3.org/2000/xmlns/</uri>.</error> However,
+if the attributes taken from the <option>attributes</option> use namespaces, 
 prefixes, or prefixes bound to different namespaces, the document produced on the
 <port>result</port> output port will require namespace fixup.</para>
 
