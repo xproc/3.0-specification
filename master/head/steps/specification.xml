@@ -3221,7 +3221,7 @@ performed.</para>
     <p:option name="order" as="xs:string" select="'ascending'" values="('ascending', 'descending')"/>
     <p:option name="case-order" as="xs:string?" values="('upper-first', 'lower-first')"/>
     <p:option name="lang" as="xs:language?"/>
-    <p:option name="collation" as="xs:string" select="'https://www.w3.org/2005/xpath-functions/collation/codepoint'"/>
+    <p:option name="collation" as="xs:string" select="'http://www.w3.org/2005/xpath-functions/collation/codepoint'"/>
     <p:option name="stable" as="xs:boolean" select="true()"/>
   </p:declare-step>
 
@@ -3257,7 +3257,7 @@ performed.</para>
      <listitem>
       <para>The <option>collation</option> option identifies how strings are to be compared with each other. Its value
         must be a valid collation URI. The only collation XProc processors <rfc2119>must</rfc2119> support is the
-        Unicode Codepoint Collation <link xlink:href="https://www.w3.org/2005/xpath-functions/collation/codepoint/"><code>http://www.w3.org/2005/xpath-functions/collation/codepoint</code></link>. This is also its default.
+        Unicode Codepoint Collation <link xlink:href="http://www.w3.org/2005/xpath-functions/collation/codepoint/"><code>http://www.w3.org/2005/xpath-functions/collation/codepoint</code></link>. This is also its default.
         <impl>Support for other collations is <glossterm>implementation-defined</glossterm>.</impl></para>
     </listitem>
     <listitem>
@@ -3282,6 +3282,15 @@ newline (&amp;#10;).</para>
     <title>Document properties</title>
     <para feature="text-sort-preserves-all">All document properties are preserved.</para>
   </simplesect>
+
+<simplesect>
+<title>Erratum, April 2024</title>
+<para>The URI for the Unicode Codepoint Collation has been corrected to an <code>http:</code> URI rather than
+an <code>https:</code> one. The URI is an identifier and the correct identifier uses an <code>http:</code> URI.
+Implementations are encouraged to recognized collation URIs that begin with “<code>https://www.w3.org/</code>”
+and treat them as if they began “<code>http://www.w3.org/</code>”, with a warning, if practical.</para>
+</simplesect>
+
 </section>
 <section xml:id="c.text-tail">
   <title>p:text-tail</title>
