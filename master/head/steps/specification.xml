@@ -1134,7 +1134,7 @@ equality.</para>
 <p:declare-step type="p:compare">
    <p:input port="source" primary="true" content-types="any"/>
    <p:input port="alternate" content-types="any"/>
-   <p:output port="result" content-types="application/xml"/>
+   <p:output port="result" primary="true" content-types="application/xml"/>
    <p:output port="differences" content-types="any" sequence="true"/>
    <p:option name="parameters" as="map(xs:QName,item()*)?"/>
    <p:option name="method" as="xs:QName?"/>
@@ -1177,6 +1177,13 @@ summary of the differences between the two documents may appear on the
 <para feature="compare-preserves-none">No document properties are preserved.
 The comparison document has no <property>base-uri</property>.</para>
 </simplesect>
+
+<simplesect>
+<title>Erratum, April 2024</title>
+<para>The <port>result</port> output port has been made primary. This
+is consistent with the behavior of all known implementations.</para>
+</simplesect>
+
 </section>
 <section xml:id="c.compress">
 

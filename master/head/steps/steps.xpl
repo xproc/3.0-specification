@@ -60,7 +60,7 @@
    <p:declare-step type="p:compare" xml:id="compare">
       <p:input port="source" primary="true" content-types="any"/>
       <p:input port="alternate" content-types="any"/>
-      <p:output port="result" content-types="application/xml"/>
+      <p:output port="result" primary="true" content-types="application/xml"/>
       <p:output port="differences" content-types="any" sequence="true"/>
       <p:option name="parameters" as="map(xs:QName,item()*)?"/>
       <p:option name="method" as="xs:QName?"/>
