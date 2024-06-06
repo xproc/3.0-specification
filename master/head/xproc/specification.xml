@@ -6242,17 +6242,18 @@ refers to the context item because there can never be a context item for
 </listitem>
 </varlistentry>
 
-<varlistentry><term><tag class="attribute">visibility</tag></term>
+<varlistentry xml:id="step-visibility"><term><tag class="attribute">visibility</tag></term>
 <listitem>
-<para>If the <tag>p:option</tag> is a child of a <tag>p:library</tag>,
-the <tag class="attribute">visibility</tag> attribute controls whether
-the option is visible to an importing pipeline. If
-<tag class="attribute">visibility</tag> is set to “<literal>private</literal>”,
-the option is visible inside the <tag>p:library</tag> but not visible to
-any pipeline importing the <tag>p:library</tag>. If the visibility attribute is
-  missing, “<literal>public</literal>” is assumed. If the <tag>p:option</tag> is not a child 
-  of <tag>a p:library</tag> the attribute has no effect and is ignored.
+<para>If the <tag>p:option</tag> is a child of a <tag>p:library</tag>, the
+<tag class="attribute">visibility</tag> attribute controls whether the option is
+visible to an importing pipeline. If <tag class="attribute">visibility</tag> is
+set to “<literal>private</literal>”, the option is visible inside the
+<tag>p:library</tag> but not visible to any pipeline importing the
+<tag>p:library</tag>. If the visibility attribute is missing,
+“<literal>public</literal>” is assumed. If the <tag>p:option</tag> is not a
+child of <tag>a p:library</tag> the attribute has no effect and is ignored.
 </para>
+
 </listitem>
 </varlistentry>
 </variablelist>
@@ -6746,39 +6747,76 @@ See also <xref linkend="handling-imports"/>.</para></section>
 
 <!-- ============================================================ -->
 
-<section xml:id="p.import"><title>p:import</title><para>An <tag>p:import</tag> loads a pipeline
+<section xml:id="p.import"><title>p:import</title><para>A <tag>p:import</tag> loads a pipeline
         or pipeline library, making it available in the pipeline or library which contains the
           <tag>p:import</tag>.</para>
       <e:rng-pattern name="Import"/>
-      <para>An import statement loads the specified IRI and makes any pipelines declared within it
-        available to the current pipeline. </para>
+      <para>An import statement loads the specified IRI and makes any public options or 
+      pipelines declared within it available to the current pipeline. </para>
 <para><error code="S0052">It is a
             <glossterm>static error</glossterm> if the URI of a <tag>p:import</tag> cannot be
           retrieved or if, once retrieved, it does not point to a <tag>p:library</tag> or
-            <tag>p:declare-step</tag>.</error>
-        <error code="S0053">It is a <glossterm>static error</glossterm> to import a single pipeline
-          if that pipeline does not have a <tag class="attribute">type</tag>.</error>
-      </para>
+            <tag>p:declare-step</tag>.</error></para>
 <para>Attempts to retrieve the library identified by the URI value may be redirected at
         the parser level (for example, in an entity resolver) or below (at the protocol level, for
         example, via an HTTP Location: header). In the absence of additional information outside the
-        scope of this specification within the resource, the base URI of the library is always the
+        scope of this specification, the base URI of the library is always the
         URI of the actual resource returned. In other words, it is the URI of the resource retrieved
         after all redirection has occurred.</para>
-<para>As imports are processed, a processor may
-        encounter new <tag>p:import</tag> elements whose library URI is the same as one it has
-        already processed in some other context. This may happen as a consequence of resolving the
-        URI. If the actual base URI is the same as one that has already been processed, the
-        implementation must recognize it as the same library and should not need to process the
-        resource. Also, a duplicate, circular chain of imports, or a re-entrant import is not an
-        error and implementations must take the necessary steps to avoid infinite loops and/or
-        incorrect notification of duplicate step definitions. It is not an error for a library to
-        import itself. An example of such steps is listed in <xref linkend="handling-imports"/>.</para>
-      <para>A library is considered the same library if the base URI of the resource retrieved is
-        the same. If different base URIs resolve to the same library (for instance when a web server
-        returns the same document on different URLs), they must <emphasis>not</emphasis> be
-        considered the same imported library.</para>
 
+<para>Library imports can nest. An imported pipeline or library may contain
+additional <tag>p:import</tag>s which must be processed. Two imported pipelines
+or libraries are considered the same if the base URI of the resource retrieved
+is the same. If otherwise identical resources are retrieved with different base
+URIs (for instance when a web server returns the same document for different
+request URIs), they must <emphasis>not</emphasis> be considered the same imported
+library.</para>
+
+<para>When resolving <tag>p:import</tag>s, a processor may encounter multiple
+imports of the same pipeline or library. A duplicate import, circular chain of
+imports (even a library that imports itself), or a re-entrant import is not an
+error and implementations must take the necessary steps to avoid infinite loops
+and/or incorrect notification of duplicate step definitions. An example of such
+steps is listed in <xref linkend="handling-imports"/>.</para>
+
+<section xml:id="import-visibility">
+<title>Import visibility</title>
+
+<para>A <tag>p:import</tag> statement makes new options and steps visible at the
+point where it occurs. There are two cases to consider:</para>
+
+<itemizedlist>
+<listitem>
+<para>When a pipeline is imported (when the document element of the imported resource is
+<tag>p:declare-step</tag>), the step type of the declared step becomes visible.</para>
+</listitem>
+<listitem>
+<para>When a library is imported (when the document element of the imported resource is
+<tag>p:library</tag>), all of the options and declared steps in that library become visible
+unless they have a <tag class="attribute">visibility</tag> attribute that 
+is explicitly set to “<code>private</code>”.</para>
+<para>Visibility through libraries is transitive. Any option or step that is visible when
+imported into a library is also visible where the containing library is imported.</para>
+</listitem>
+</itemizedlist>
+
+<para>Suppose that pipeline P imports library L1 that imports library L2. If
+library L1 contains two steps, A and B, where B is marked private, and library
+L2 contains a step C, then:</para>
+
+<itemizedlist>
+<listitem>
+<para>Steps A and C become visible in P where L1 is imported.</para>
+</listitem>
+<listitem>
+<para>Steps A, B, and C are visible in library L1.</para>
+</listitem>
+<listitem>
+<para>Only step C is visible in library L2.</para>
+</listitem>
+</itemizedlist>
+
+</section>
 </section>
 
 <section xml:id="p.import-functions"><title>p:import-functions</title>
