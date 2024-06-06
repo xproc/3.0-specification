@@ -53,7 +53,7 @@
       <p:output port="result" primary="true" content-types="json"/>
       <p:output port="report" sequence="true" content-types="xml json"/>
       <p:option name="assert-valid" select="true()" as="xs:boolean"/>
-      <p:option name="default-version" as="xs:string"/>
+      <p:option name="default-version" as="xs:string?"/>
       <p:option name="parameters" as="map(xs:QName,item()*)?"/>
       <p:option name="report-format" select="'xvrl'" as="xs:string"/>
    </p:declare-step>
