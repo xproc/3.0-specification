@@ -6609,6 +6609,15 @@ error and implementations must take the necessary steps to avoid infinite loops
 and/or incorrect notification of duplicate step definitions. An example of such
 steps is listed in <xref linkend="handling-imports"/>.</para>
 
+<para>In some URI schemes, it is possible for different URIs to identify “the
+same” resource. Consider, for example, <code>file:/path/file</code> and
+<code>file:/path/to/../file</code>. To the extent practical, implementations
+<rfc2119>should</rfc2119> attempt to resolve these differences before deciding
+if a particular library URI has already been imported. Note that this is distinct
+from the case where two genuinely different URIs happen to resolve to the same
+document. The processor isn’t expected to detect that case and errors are likely.
+</para>
+
 <section xml:id="import-visibility">
 <title>Import visibility</title>
 
