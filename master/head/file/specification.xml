@@ -136,13 +136,20 @@ steps is assumed; for background details, see
     <para>Regular expressions that match <literal>a/a/b/file.txt</literal> are, for example,
       <literal>^(\w+/){2,3}.+\.txt$</literal>, <literal>a/a/b/</literal>, or <literal>/file\.[^/]+$</literal>.</para>
     
-    <para>If any <option>include-filter</option> pattern matches the slash-augmented relative path, the entry is included in the output. 
-      If a directory’s path matches the inclusion regex, the directory’s content will not automatically be included, too.
-      They need to match, the regular expression, too. So the filter regex <literal>^dir/</literal> will match the directory
-      content but <literal>^dir/$</literal> won’t, and as a consequence the directory’s content will not be included in the result.</para>
-    <para>If a relative path is matched by an include filter,
-      all its ancestor directories starting from the initial directory (but not their content if not included explicitly) 
-      will be included, too.</para>
+    <para>If any <option>include-filter</option> pattern matches the
+    slash-augmented relative path, the entry is included in the output. Matching a directory
+    doesn’t automatically include the contents of the directory or its descendants; to be included,
+    each individual entry must match an include filter.
+    For example, the filter regex <literal>^dir/</literal> will match a
+    directory and its content, but <literal>^dir/$</literal> won’t.</para>
+
+    <para>Although matching a directory doesn’t automatically include its
+    entries, matching an entry <emphasis>does</emphasis> automatically include
+    all of its ancestors (back to the initial directory). This assures that the hierarchy
+    of the XML elements matches the hierarchy of the filesystem. When ancestors are
+    included this way, none of their other entires are included unless they match
+    an include filter.</para>
+
     <example xml:id="ex.c.directory-list">
       <title>Sample Directory List Output for a Single File</title>
       <para>For a file <literal>a/a/b/file.txt</literal> below the initial directory 
@@ -288,6 +295,13 @@ steps is assumed; for background details, see
         the resulting document has a <property>base-uri</property>. Its value is identical to the top-level
         element’s <tag class="attribute">xml:base</tag> attribute, that is, to the directory’s URI.</para>
     </simplesect>
+
+<simplesect>
+<title>Errata, April 2024</title>
+<para>Editorial clarifications. Fixed a grammatical error in the description of
+include filters. Improved the description of include filter processing.</para>
+</simplesect>
+
   </section>
   
   <section xml:id="c.file-copy">
