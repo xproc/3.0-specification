@@ -31,6 +31,7 @@
       <ref name="Step-set-attributes"/>
       <ref name="Step-set-properties"/>
       <ref name="Step-sink"/>
+      <ref name="Step-sleep"/>
       <ref name="Step-split-sequence"/>
       <ref name="Step-store"/>
       <ref name="Step-string-replace"/>
@@ -1077,6 +1078,37 @@
       <interleave>
         <zeroOrMore>
           <ref name="WithInput"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <choice>
+            <ref name="Documentation"/>
+            <ref name="PipeInfo"/>
+          </choice>
+        </zeroOrMore>
+      </interleave>
+    </element>
+  </define>
+  <define name="Step-sleep">
+    <element name="sleep">
+      <optional>
+        <ref name="name.ncname.attr"/>
+      </optional>
+      <ref name="common.attributes"/>
+      <optional>
+        <ref name="use-when.attr"/>
+      </optional>
+      <ref name="step.attributes"/>
+      <optional>
+        <attribute name="duration">
+          <ref name="avt.datatype"/>
+        </attribute>
+      </optional>
+      <interleave>
+        <zeroOrMore>
+          <ref name="WithInput"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="WithOption"/>
         </zeroOrMore>
         <zeroOrMore>
           <choice>

@@ -2904,6 +2904,33 @@ discards them. It has no output.</para>
 <para feature="sing-preserves-na">Not applicable.</para>
 </simplesect>
 </section>
+<section xml:id="c.sleep">
+<title>p:sleep</title>
+
+<para>The <tag>p:sleep</tag> step introduces a delay.</para>
+
+<p:declare-step type="p:sleep">
+  <p:input port="source" sequence="true" content-types="any"/>
+  <p:output port="result" sequence="true" content-types="any"/>
+  <p:option name="duration" as="xs:nonNegativeInteger" required="true"/>
+</p:declare-step>
+
+<para>The <tag>p:sleep</tag> step copies each of the documents on the
+<port>source</port> port to the <port>result</port> port without changing them.
+Before copying the documents, it pauses for a period of time not less
+than <code>duration</code> milliseconds.</para>
+
+<note>
+<para>In multi-threaded implementations, there is no guarantee that this
+will pause the execution of more than one thread. However, any steps that
+depend on the output of this step will wait for this step to complete.</para>
+</note>
+
+<simplesect>
+<title>Document properties</title>
+<para feature="identity-preserves-all">All document properties are preserved.</para>
+</simplesect>
+</section>
 <section xml:id="c.split-sequence">
 <title>p:split-sequence</title>
 
