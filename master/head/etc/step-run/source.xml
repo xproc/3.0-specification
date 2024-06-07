@@ -130,9 +130,10 @@ readable port will be connected to it if no explicit connection is provided.</pa
   the option value will be supplied to static analysis of the executed pipeline as a static option with the
   same name.</para>
   
-  <para>Options of the dynamically executed pipeline that are not declared with <tag>p:run-option</tag> on the <tag>p:run</tag>
-    invocation will receive an empty sequence as their value. Options that are declared on <tag>p:run-option</tag> but not in the dynamically 
-    executed pipeline will be silently ignored.</para>
+  <para>Options of the dynamically executed pipeline that are not provided by a <tag>p:run-option</tag> on the <tag>p:run</tag>
+    invocation will be defaulted in the normal way (if the option is required, the
+invocation will fail, for example). Options that are provided by <tag>p:run-option</tag> but not declared in the dynamically 
+    executed pipeline are silently ignored.</para>
   
     <para>Each output port of the pipeline can appear as a same-named output port of the <tag>p:run</tag> step. In order for
       this to happen, the port needs to be explicitly declared in the <tag>p:run</tag> step. In contrast to output declarations
