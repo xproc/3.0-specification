@@ -2660,6 +2660,49 @@ how to load function libraries of that type, this function returns
 normally during static analysis.</para>
 </section>
 
+<section xml:id="f.lookup-uri">
+<title>Lookup URI</title>
+
+<para>The <function>p:lookup-uri</function> function
+attempts to determine what URI would be dereferenced if an attempt was made
+to retrieve a resource.
+</para>
+
+<methodsynopsis>
+<type>xs:anyURI</type>
+<methodname>p:lookup-uri</methodname>
+<methodparam><type>xs:anyURI</type><parameter>href</parameter></methodparam>
+</methodsynopsis>
+
+<para>Many systems employ some form of URI resolver. A URI resolver allows one
+resource to be substituted for another, perhaps loading
+<uri>file:/system/xml/doc.rng</uri> when
+<uri>https://example.com/schemas/doc.rng</uri> is requested. <impl>It is
+<glossterm>implementation-defined</glossterm> which kinds of URI resolvers a
+processor supports, if any, and how they are configured.</impl></para>
+
+<para>If the processor has a URI resolver, the <function>p:lookup-uri</function>
+function allows the pipeline to “peek” at what URI will be used in the request
+if an attempt is made to retrieve <code>$href</code>. If the URI resolver
+maps <code>A.xml</code> to <code>B.xml</code>, then
+<code>p:lookup-uri('A.xml')</code> <rfc2119>should</rfc2119> return <code>B.xml</code>.</para>
+
+<para>If the processor can’t determine what the mapping is (because the resolver
+being used doesn’t provide an API to do so, for example), or doesn’t support a resolver,
+the function
+<rfc2119>should</rfc2119> return the original URI.</para>
+
+<para>The implementation <rfc2119>must not</rfc2119> attempt to dereference the
+resource in order to identify the mapping. Consequently, this function cannot
+determine if one or more server side redirects may occur and it has no
+insight into what caching proxies may be involved if the request accesses the
+network.</para>
+
+<para>The <function>p:lookup-uri</function> function behaves
+normally during static analysis but note that it is possible that a processor
+might use different resolvers at compile-time and run-time.</para>
+</section>
+
 <section xml:id="other-xpath-extension-functions">
   <title>Other XPath Extension Functions</title>
   <para><impl>It is <glossterm>implementation-defined</glossterm> if the processor supports
