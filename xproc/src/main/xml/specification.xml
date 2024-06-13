@@ -9,11 +9,12 @@
                class="ed"
                version="5.0-extension w3c-xproc">
 <info>
-<title>XProc 3.0+: An XML Pipeline Language</title>
+<title>XProc 3.1: An XML Pipeline Language</title>
 <!--<pubdate>2022-09-12</pubdate>-->
 <!--<bibliomisc role="final-uri">https://spec.xproc.org/3.0/xproc/</bibliomisc>-->
 <copyright><year>2018</year><year>2019</year><year>2020</year><year>2021</year><year>2022</year>
-<holder>the Contributors to the XProc 3.0 Specification</holder> 
+<year>2023</year><year>2024</year>
+<holder>the Contributors to the XProc 3.1 Specification</holder> 
 </copyright>
 
 <bibliomisc role="github-repo">xproc/3.0-specification</bibliomisc>
@@ -41,7 +42,7 @@
 </authorgroup>
 <abstract>
 <para>This specification describes the syntax and semantics of
-<citetitle>XProc 3.0: An XML Pipeline Language</citetitle>, a language for
+<citetitle>XProc 3.1: An XML Pipeline Language</citetitle>, a language for
 describing operations to be performed on documents.</para>
 
 <para>An XML Pipeline specifies a sequence of operations to be
@@ -73,8 +74,8 @@ steps are executed.</para>
   </para>
 
 <note role="editorial">
-<para>This draft is the “editor’s working draft” and includes changes made
-after the XProc 3.0 specification was released.
+<para>This draft is the “editor’s working draft” and may continue to evolve.
+A “last call” working draft is anticipated shortly.
 </para>
 </note>
 
@@ -6413,7 +6414,7 @@ If the attribute is not specified, the value
 “<literal>false</literal>” is assumed. </para>
 </listitem>
 </varlistentry>
-<varlistentry><term><tag class="attribute">xpath-version</tag></term>
+<varlistentry xml:id="xpath-version-attribute"><term><tag class="attribute">xpath-version</tag></term>
 <listitem>
 <para>The requested <tag class="attribute">xpath-version</tag>
 <rfc2119>must</rfc2119> be used to evaluate XPath expressions subject
@@ -6654,7 +6655,7 @@ error and implementations must take the necessary steps to avoid infinite loops
 and/or incorrect notification of duplicate step definitions. An example of such
 steps is listed in <xref linkend="handling-imports"/>.</para>
 
-<para>In some URI schemes, it is possible for different URIs to identify “the
+<para xml:id="canon-import-uris">In some URI schemes, it is possible for different URIs to identify “the
 same” resource. Consider, for example, <code>file:/path/file</code> and
 <code>file:/path/to/../file</code>. To the extent practical, implementations
 <rfc2119>should</rfc2119> attempt to resolve these differences before deciding
@@ -7260,175 +7261,49 @@ possible set of parameter values.</para>
 <appendix xml:id="changelog">
 <title>Change Log</title>
 
-  <para>This list contains the non-editorial changes made after the
-    August 2020
-    “<link xlink:href="https://spec.xproc.org/lastcall-2020-08/head/xproc/">last call</link>”
-    draft:</para>
-  
-  <itemizedlist>
-    <listitem>
-      <para>The <tag class="attribute">depends</tag> attribute is forbidden on
-      <tag>p:when</tag>, <tag>p:otherwise</tag>, <tag>p:catch</tag>, and
-      <tag>p:finally</tag>.</para>
-    </listitem>
-    <listitem>
-      <para>Processors may remove any implicit connections that they can determine
-      statically will never be used (issue
-      <link xlink:href="https://github.com/xproc/3.0-specification/issues/995">995</link>).
-      </para>
-    </listitem>
-    <listitem>
-      <para>Expanded and clarified the rules for implicit casting (issues
-      <link xlink:href="https://github.com/xproc/3.0-specification/issues/1001">1001</link>
-      and
-      <link xlink:href="https://github.com/xproc/3.0-specification/issues/1012">1012</link>).
-      </para>
-    </listitem>
-    <listitem>
-      <para>The semantics of the <function>p:urify</function> function were extensively
-      redrafted and clarified.</para>
-    </listitem>
-    <listitem>
-      <para>Text value templates are never expanded in the descendants of <tag>p:inline</tag> 
-      elements that specify an <tag class="attribute">encoding</tag>.</para>
-    </listitem>
-    <listitem>
-      <para>Clarified the semantics of <tag class="attribute">[p:]use-when</tag>
-      to address potential deadlock situations that can arise if
-      two or more expressions depend on each other.</para>
-    </listitem>
-    <listitem>
-      <para>Clarified that <function>p:step-available</function> cannot refer
-      to the step currently being declared (issue
-      <link xlink:href="https://github.com/xproc/3.0-specification/issues/1057">1057</link>).
-      </para>
-    </listitem>
-    <listitem>
-      <para>A number of error codes have been clarified and new error codes have been added.</para>
-    </listitem>
-  </itemizedlist>
+<para>This appendix summarizes the changes introduced in XProc 3.1.</para>
 
-  <para>This list contains the non-editorial changes made after the
-    December 2019
-    “<link xlink:href="https://spec.xproc.org/lastcall-2019-12/head/xproc/">last call</link>”
-    draft:</para>
-  
-  <itemizedlist>
-    <listitem>
-      <para>The <code>visibility</code> attribute of <tag>p:variable</tag> was removed.</para>
-    </listitem>
-    <listitem>
-        <para>The description of the <code>select</code> attribute of <tag>p:option</tag> no longer
-          mentions static variables.</para>
-    </listitem>
-    <listitem>
-      <para>Error XD0079 added for defective content-types. (Was XS0070 or XS00130).</para>
-    </listitem>
-  </itemizedlist>
-  
-<para>This list contains the non-editorial changes made after the
-February 2019
-“<link xlink:href="http://spec.xproc.org/lastcall-2019-02/head/xproc/">last call</link>”
-draft:</para>
+<section>
+<title>Backwards incompatible changes</title>
 
-    <itemizedlist>
-      <listitem>
-        <para>The <code>p:document-properties-document()</code> function was removed</para>
-      </listitem>
-      <listitem>
-        <para>The semantics of <tag>p:if</tag> have been changed. If the test expression is false, <tag>p:if</tag>
-          behaves roughly like an identity step. Previously it produced no outputs.</para>
-      </listitem>
-      <listitem>
-        <para>It is no longer a static error (XS0093), if <tag>p:option</tag> or <tag>p:variable</tag> have an attribute
-            <literal>visibility</literal> and are not children of a <tag>p:library</tag>.</para>
-      </listitem>
-      <listitem>
-        <para>The semantics of <tag>p:choose</tag> have been changed. The default sub-pipeline for a missing
-            <tag>p:otherwise</tag> is a <tag>p:identity</tag> step (with the additional feature that it isn’t an error
-          if there’s no default readable port). A primary output port on the <tag>p:when</tag> branches for this is
-          required.</para>
-      </listitem>
-      <listitem>
-        <para>The way the context item for XPath expressions is provided has been changed. It is now provided if and only 
-        if the connection delivers exactly one document, otherwise the context item is undefined. A new error (XD0001) is
-        introduced. It is raised if an XPath expression makes use of the context item, but the context item is undefined.
-        Two dynamic errors (XD0005 and XD0008) were removed.</para>
-      </listitem>
-      <listitem>
-        <para>Content type shortcuts and the notion of forbidden content types have been added.
-        See <xref linkend="specified-content-types"/>.
-        </para>
-      </listitem>
-      <listitem>
-        <para>Introduction of the <code>serialization</code> document property. See <xref
-            linkend="document-properties"/>.</para>
-      </listitem>
-      <listitem>
-        <para>The semantics pf <tag>p:viewport</tag> have been changed. HTML documents are now allowed as input and
-        <option>match</option> may now match every node type except attributes and namespace nodes.</para>
-      </listitem>
+<para>None.</para>
 
-      <listitem>
-        <para>Static <tag>p:variable</tag>s have been removed; the
-        semantics of static <tag>p:option</tag>s have been updated and
-        clarified.</para>
-      </listitem>
-      <listitem>
-        <para>Clarified that the <literal>base-uri</literal> property
-        must always be a legal URI per <biblioref
-        linkend="rfc3986"/>.</para>
-      </listitem>
-      <listitem>
-        <para>Expanded the range of media types that may be considered
-        “text” documents; opened the possibility for implementations
-        to extend the list.</para>
-      </listitem>
-      <listitem>
-        <para>Clarified that leading and trailing whitespace within a
-        <tag>p:inline</tag> is not discarded.</para>
-      </listitem>
-      <listitem>
-        <para>Identified the <port>error</port> port as the primary input port in <tag>p:catch</tag>.</para>
-      </listitem>
-      <listitem>
-        <para>Clarified that <tag>p:finally</tag> <rfc2119>must not</rfc2119> declare a primary output port.</para>
-      </listitem>
-      <listitem>
-        <para>Clarified which functions are available during static analysis.</para>
-      </listitem>
-      <listitem>
-        <para>Clarified that atomic values are considered JSON documents.</para>
-      </listitem>
-      <listitem>
-        <para>Made <tag class="attribute">href</tag> required on <tag>c:entry</tag>.</para>
-      </listitem>
-      <listitem>
-        <para>Clarified how sequences of XDM values (for
-        example, from a <tag>p:xslt</tag> step) are converted into
-        documents.</para>
-      </listitem>
-      <listitem>
-        <para>Updated the description of the <tag class="attribute">select</tag> attribute for <tag>p:input</tag>
-        so that it is in line with the more recent changes that have been applied to <tag>p:with-input</tag>.</para>
-      </listitem>
-      <listitem>
-        <para>Changed description of <tag>p:viewport</tag> stating that the base URI of every matched node is the
-        document's base URI, not just for document and element nodes.</para>
-      </listitem>
-      <listitem>
-        <para>Changed the default value for serialization property <literal>omit-xml-declaration</literal>
-          from <literal>true</literal> to <literal>false</literal> in section “Serialization method” . Removed
-          remark about default settings for this parameter from section “Minimal conformance”.</para>
-      </listitem>
-      <listitem>
-        <para>Clarified the conditions under which steps may produce PSVI annotations.</para>
-      </listitem>
-      <listitem>
-        <para>Added a <tag class="attribute">cause</tag> attribute to the error vocabulary 
-         for recording the error codes of underlying errors.</para>
-      </listitem>
-    </itemizedlist>
+<section>
+<title>Substantive changes</title>
+  
+<itemizedlist>
+<listitem>
+<para>Resolved <link xlink:href="https://github.com/xproc/3.0-specification/issues/1096">issue 1096</link>
+by adding a <function>p:lookup-uri</function> function.</para>
+</listitem>
+<listitem>
+<para>Resolved <link xlink:href="https://github.com/xproc/Vnext/issues/39">V.next issue 39</link> by
+allowing the <link linkend="xpath-version-attribute"><tag class="attribute">xpath-version</tag></link>
+to be implementation defined.</para>
+</listitem>
+</itemizedlist>
+</section>
+
+<section>
+<title>Editorial changes</title>
+  
+<itemizedlist>
+<listitem>
+<para>Resolved <link xlink:href="https://github.com/xproc/3.0-specification/issues/1085">issue 1085</link>
+by <link linkend="statics">clarifying</link>
+how the scope of static options interacts with their initialized values.</para>
+</listitem>
+<listitem>
+<para>Resolved <link xlink:href="https://github.com/xproc/3.0-specification/issues/1083">issue 1083</link>
+by <link linkend="p.import">clarifying</link> the semantics of <tag>p:import</tag>.</para>
+</listitem>
+<listitem>
+<para>Resolved <link xlink:href="https://github.com/xproc/3.0-specification/issues/1083">issue 1095</link>
+by <link linkend="canon-import-uris">suggesting</link> that implementations should make library URIs canonical when comparing them.</para>
+</listitem>
+</itemizedlist>
+</section>
+</section>
 </appendix>
 
 </specification>
