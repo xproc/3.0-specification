@@ -3666,6 +3666,7 @@ the <port>source</port> document.</para>
   <p:output port="result" content-types="text xml html"/>
   <p:option name="match" as="xs:string" select="'/*'" e:type="XSLTSelectionPattern"/>
   <p:option name="version" as="xs:integer?"/>
+  <p:option name="parameters" as="map(xs:QName, item()*)?"/>
 </p:declare-step>
 
 <para>The value of the <option>match</option> option must be an
@@ -3681,9 +3682,12 @@ computed is
 <glossterm>implementation-defined</glossterm>.</impl></para>
 
 <para>Implementations <rfc2119>must</rfc2119> support version 4 UUIDs.
-<impl>Support for other versions of UUID, and the mechanism by which
-the necessary inputs are made available for computing other versions,
+<impl>Support for other versions of UUID
 is <glossterm>implementation-defined</glossterm>.</impl>
+Some UUID schemes require additional parameters which may be provided
+in the <option>parameters</option> option.
+<impl>The names and values of <option>parameters</option> to <tag>p:uuid</tag>
+are <glossterm>implementation-defined</glossterm>.</impl>
 </para>
 
 <para>The matched nodes are specified with the <glossterm>selection pattern</glossterm> in the
