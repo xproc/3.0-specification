@@ -497,118 +497,51 @@ to allow it to be optional.</para>
 
 <p:declare-step type="p:validate-with-dtd">
   <p:input port="source" primary="true" content-types="xml html text"/>
-  <p:input port="doctype" content-types="text" sequence="true"/>
+  <p:input port="doctype" content-types="text" sequence="true">
+    <p:empty/>
+  </p:input>
   <p:output port="result" primary="true" content-types="xml"/>
   <p:output port="report" sequence="true" content-types="xml json"/>
-  <p:option name="general-entities" as="map(xs:string,item())?"/>     
-  <p:option name="external-entities" as="map(xs:string,map(xs:string,xs:string))?"/>     
   <p:option name="report-format" select="'xvrl'" as="xs:string"/>
   <p:option name="serialization" as="map(xs:QName,item()*)?"/>
+  <p:option name="assert-valid" select="true()" as="xs:boolean"/>
 </p:declare-step>
 
 <para>DTD validation differs from the other XML validation technologies in that
 it is applied during parsing. It isn’t possible to validate an XML data model with
 a DTD. This step necessarily serializes the source document and then parses it
-back into a new data model. The options on this step tailor the serialization.
+back into a new data model.
 </para>
 
-<para>The <tag>p:validate-with-dtd</tag> step does not have an
-<option>assert-valid</option> option. If validation fails, a new data model will
-not have been constructed. Consequently the step always fails if validation
-fails.
-<error code="C0210">It is a <glossterm>dynamic error</glossterm>
-if validation fails.</error>
+<para>There are several possible approaches, with varying degrees of complexity.
+The general model is that the contents of the <port>doctype</port> port and
+the result of serializing the <port>source</port> are concatenated together.
 </para>
-
-<para>The general form of the serialized result that will be DTD validated
-looks something like this:</para>
-
-<programlisting language="xml">&lt;!DOCTYPE root PUBLIC "-//Public//Identifier" "system-identifier.dtd" [
-&lt;!ENTITY general "This is some text defined by a general entity"&gt;
-&lt;!ENTITY external SYSTEM "chapter1.xml"&gt;
-]&gt;
-&lt;root&gt;
-&lt;p&gt;Test: &amp;general;.&lt;/p&gt;
-&amp;external;
-&lt;/root&gt;</programlisting>
-
-<para>The first four lines are the document type declaration. What follows
-the declaration is the serialization of the source document. The declaration
-can be provided explicitly or generated.
-</para>
-
-<section>
-<title>Providing an explicit declaration</title>
-
-<para>Provide the entire declaration as a single text document on the
-<port>doctype</port> port.</para>
 
 <itemizedlist>
 <listitem>
-<para>The <option>general-entities</option> and
-<option>external-entities</option> options are ignored.
-</para>
+<para>In the simple case, the <port>doctype</port> is empty and <port>source</port>
+document is simply serialized. In order to have any chance of being DTD-valid,
+the serialization properties must include at least a <code>doctype-system</code>
+property.</para>
 </listitem>
 <listitem>
-<para>The serialization
-properties <code>doctype-system</code>, <code>doctype-public</code>, and
-<code>omit-xml-declaration</code> are ignored.
-</para>
+<para>If an internal subset is required, it is provided on the <port>doctype</port> port.
+In this case, the <code>source</code> document must be serialized <emphasis>without</emphasis>
+a <code>doctype-system</code> property; both the internal and external declarations must appear
+on the <port>doctype</port> port.</para>
 </listitem>
 <listitem>
-<para>The caller must assure that the root element listed in the
-<code>!DOCTYPE</code> declaration matches the root element of the source
-document.</para>
+<para>Finally, if a text document is provided on the <port>source</port> port,
+it is simply concatenated with the <port>doctype</port> port.</para>
 </listitem>
 </itemizedlist>
-</section>
 
-<section>
-<title>Generating a declaration</title>
-<para>Provide an empty binding on the <port>doctype</port> port. The
-serialization parameters and options are used to construct the declaration.
-</para>
-<para>The serialization parameters must include <code>doctype-system</code> and
-may include <code>doctype-public</code>. Those will be used to generate the
-<code>!DOCTYPE</code> declaration.
-<error code="C0208">It is a <glossterm>dynamic error</glossterm> if the
-serialization parameters do not include a <code>doctype-system</code> parameter.</error>
-</para>
-<para>If <option>general-entities</option> are provided, they are a map
-from entity names to the content. For example,</para>
-
-<programlisting>map { 'text-entity-name': "some text",
-      'node-entity-name': &lt;p&gt;Some text&lt;/p&gt; }</programlisting>
-
-<para>will serialize in the declaration as entity declarations:</para>
-
-<programlisting>&lt;!ENTITY text-entity-name "some text"&gt;
-&lt;!ENTITY node-entity-name "&lt;p&gt;Some text&lt;/p&gt;"&gt;</programlisting>
-
-<para>If <option>external-entities</option> are provided, they must be
-a map from entity names to a map that identifies the system identifier and
-may identify a public identifier. For example,</para>
-
-<programlisting>map { 'chapter1': map { "system-identfier": "chap1.xml" },
-      'biblio': map { "public-identifier": "-//Bibliograph//EN",
-                      "system-identifier": "bib.xml" }}</programlisting>
-
-<para>The <code>system-identifier</code> property must be provided. The
-<code>public-identifier</code> property will be used if it is provided, but it isn’t
-required. Any other properties will be ignored.
-<error code="C0209">It is a <glossterm>dynamic error</glossterm> if the
-<code>system-identifier</code> property is not provided.</error></para>
-</section>
-<section>
-<title>Validation</title>
-<para>After the doctype declaration has been constructed, the source document
-is appended to it. If the source is XML or HTML, it will be serialized. Text
-documents are just appended to the declaration.</para>
 <para>The resulting text is parsed using a validating XML parser.</para>
 
-<para>Any warning messages produced by the parser will appear on the
-<port>report</port> port.</para>
-</section>
+<para>Any warning or error messages produced by the parser will appear on the
+<port>report</port> port. If validation succeeds, the validated document will appear on the
+result port.</para>
 
 </section>  
   

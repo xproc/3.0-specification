@@ -255,6 +255,11 @@
    <p:declare-step type="p:sink" xml:id="sink">
       <p:input port="source" content-types="any" sequence="true"/>
    </p:declare-step>
+   <p:declare-step type="p:sleep" xml:id="sleep">
+      <p:input port="source" sequence="true" content-types="any"/>
+      <p:output port="result" sequence="true" content-types="any"/>
+      <p:option name="duration" as="xs:nonNegativeInteger" required="true"/>
+   </p:declare-step>
    <p:declare-step type="p:split-sequence" xml:id="split-sequence">
       <p:input port="source" content-types="any" sequence="true"/>
       <p:output port="matched"
