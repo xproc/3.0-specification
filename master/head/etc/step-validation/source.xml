@@ -27,8 +27,13 @@ specifications</holder>
 </authorgroup>
 
 <abstract>
-<para>This specification describes the <code>p:validate-with-nvdl</code>, <code>p:validate-with-relax-ng</code>,
-<code>p:validate-with-schematron</code>, <code>p:validate-with-xml-schema</code>, an <code>p:validate-with-json-schema</code>
+<para>This specification describes the
+<code>p:validate-with-nvdl</code>,
+<code>p:validate-with-relax-ng</code>,
+<code>p:validate-with-schematron</code>,
+<code>p:validate-with-xml-schema</code>,
+<code>p:validate-with-json-schema</code>, and
+<code>p:validate-with-dtd</code>
 step for
 <citetitle>XProc 3.0: An XML Pipeline Language</citetitle>.</para>
 </abstract>
@@ -484,6 +489,60 @@ No document properties on the <port>schemas</port> port are preserved.</para>
 <para>Corrected an error in the sequence type for the <code>default-version</code> option
 to allow it to be optional.</para>
 </simplesect>
+</section>  
+
+<section xml:id="c.validate-with-dtd">
+  <title>Validate with a DTD</title>
+  <para>The <tag>p:validate-with-dtd</tag> step validates XML with a DTD.</para>
+
+<p:declare-step type="p:validate-with-dtd">
+  <p:input port="source" primary="true" content-types="xml html text"/>
+  <p:input port="doctype" content-types="text" sequence="true">
+    <p:empty/>
+  </p:input>
+  <p:output port="result" primary="true" content-types="xml"/>
+  <p:output port="report" sequence="true" content-types="xml json"/>
+  <p:option name="report-format" select="'xvrl'" as="xs:string"/>
+  <p:option name="serialization" as="map(xs:QName,item()*)?"/>
+  <p:option name="assert-valid" select="true()" as="xs:boolean"/>
+</p:declare-step>
+
+<para>DTD validation differs from the other XML validation technologies in that
+it is applied during parsing. It isn’t possible to validate an XML data model with
+a DTD. This step necessarily serializes the source document and then parses it
+back into a new data model.
+</para>
+
+<para>There are several possible approaches, with varying degrees of complexity.
+The general model is that the contents of the <port>doctype</port> port and
+the result of serializing the <port>source</port> are concatenated together.
+</para>
+
+<itemizedlist>
+<listitem>
+<para>In the simple case, the <port>doctype</port> is empty and <port>source</port>
+document is simply serialized. In order to have any chance of being DTD-valid,
+the serialization properties must include at least a <code>doctype-system</code>
+property.</para>
+</listitem>
+<listitem>
+<para>If an internal subset is required, it is provided on the <port>doctype</port> port.
+In this case, the <code>source</code> document must be serialized <emphasis>without</emphasis>
+a <code>doctype-system</code> property; both the internal and external declarations must appear
+on the <port>doctype</port> port.</para>
+</listitem>
+<listitem>
+<para>Finally, if a text document is provided on the <port>source</port> port,
+it is simply concatenated with the <port>doctype</port> port.</para>
+</listitem>
+</itemizedlist>
+
+<para>The resulting text is parsed using a validating XML parser.</para>
+
+<para>Any warning or error messages produced by the parser will appear on the
+<port>report</port> port. If validation succeeds, the validated document will appear on the
+result port.</para>
+
 </section>  
   
 <section xml:id="errors">
