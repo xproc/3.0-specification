@@ -418,6 +418,7 @@
                 select="'/*'"
                 e:type="XSLTSelectionPattern"/>
       <p:option name="version" as="xs:integer?"/>
+      <p:option name="parameters" as="map(xs:QName, item()*)?"/>
    </p:declare-step>
    <p:declare-step type="p:wrap-sequence" xml:id="wrap-sequence">
       <p:input port="source" content-types="text xml html" sequence="true"/>

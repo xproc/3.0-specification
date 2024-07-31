@@ -57,4 +57,15 @@
       <p:option name="parameters" as="map(xs:QName,item()*)?"/>
       <p:option name="report-format" select="'xvrl'" as="xs:string"/>
    </p:declare-step>
+   <p:declare-step type="p:validate-with-dtd" xml:id="validate-with-dtd">
+      <p:input port="source" primary="true" content-types="xml html text"/>
+      <p:input port="doctype" content-types="text" sequence="true">
+         <p:empty/>
+      </p:input>
+      <p:output port="result" primary="true" content-types="xml"/>
+      <p:output port="report" sequence="true" content-types="xml json"/>
+      <p:option name="report-format" select="'xvrl'" as="xs:string"/>
+      <p:option name="serialization" as="map(xs:QName,item()*)?"/>
+      <p:option name="assert-valid" select="true()" as="xs:boolean"/>
+   </p:declare-step>
 </p:library>
