@@ -1,0 +1,337 @@
+<specification xmlns:cs="http://www.w3.org/XML/XProc/2006/04/components#" xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax" xmlns:p="http://www.w3.org/ns/xproc" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://docbook.org/ns/docbook" xml:id="step-run" class="ed" role="step" version="5.0-extension w3c-xproc">
+<info>
+<title>XProc 3.0: dynamic pipeline execution</title>
+<!-- defaults to date formatted <pubdate>2014-12-18</pubdate> -->
+<copyright><year>2018</year><year>2019</year><year>2020</year><year>2024</year>
+<holder>the Contributors to the XProc 3.x Standard Step Library
+specifications</holder>
+</copyright>
+
+<bibliomisc role="github-repo">xproc/3.0-steps</bibliomisc>
+<bibliomisc role="w3c-cg" xlink:href="https://www.w3.org/community/xproc-next/">XProc Next</bibliomisc>
+
+<bibliorelation type="isformatof" xlink:href="specification.xml">XML</bibliorelation>
+<authorgroup>
+  <author>
+    <personname>Norman Walsh</personname>
+  </author>
+  <author>
+    <personname>Achim Berndzen</personname>
+  </author>
+  <author>
+    <personname>Gerrit Imsieke</personname>
+  </author>
+  <author>
+    <personname>Erik Siegel</personname>
+  </author>
+</authorgroup>
+
+<abstract>
+<para>This specification describes the <code>p:run</code>
+step for
+<citetitle>XProc 3.0: An XML Pipeline Language</citetitle>.</para>
+</abstract>
+
+<legalnotice xml:id="sotd" role="status">
+  <para>This specification was published by the
+  <link xlink:href="https://www.w3.org/community/xproc-next/">XProc
+  Next Community Group</link>. It is not a W3C Standard nor is it on
+  the W3C Standards Track. Please note that under the
+  <link xlink:href="https://www.w3.org/community/about/agreements/cla/">W3C
+  Community Contributor License Agreement (CLA)</link> there is a limited
+  opt-out and other conditions apply. Learn more about <link xlink:href="https://www.w3.org/community/">W3C Community and Business
+  Groups</link>.
+  </para>
+  
+  <para>If you wish to make comments regarding this document, please
+  send them to
+  <link xlink:href="mailto:xproc-dev@w3.org">xproc-dev@w3.org</link>.
+  (<link xlink:href="mailto:xproc-dev-request@w3.org?subject=subscribe">subscribe</link>,
+  <link xlink:href="https://lists.w3.org/Archives/Public/xproc-dev/">archives</link>).
+  </para>
+</legalnotice>
+</info>
+
+<section xml:id="introduction">
+<title>Introduction</title>
+
+<para>This specification describes the <code>p:run</code> XProc step.
+A machine-readable description of this step may be found in
+<link xlink:href="steps.xpl">steps.xpl</link>.
+</para>
+
+<para>Familarity with the general nature of <biblioref linkend="xproc30"/>
+steps is assumed; for background details, see
+<biblioref linkend="xproc30-steps"/>.</para>
+</section>
+
+<section xml:id="c.run">
+<title>p:run</title>
+
+<para>The <tag>p:run</tag> step runs a dynamically loaded pipeline.</para>
+
+<e:rng-pattern name="Step-run"/>
+
+<para>The <tag>p:run</tag> step has a single, anonymous input that accepts the 
+pipeline to be run. Otherwise, it functions similar to an atomic step in that
+you can define input connections and option values for it, albeit not with the
+usual <tag>p:with-input</tag> and <tag>p:with-option</tag> connections.</para>
+
+<para>The <tag>p:run</tag> step
+expects a single pipeline document on its anonymous input port (“pipeline port”).
+Independent of how the pipeline is provided, it <rfc2119>must</rfc2119>
+  have a <tag class="attribute">version</tag> attribute on its root element.
+<error code="C0200">It is a <glossterm>dynamic error</glossterm>
+if the pipeline input to the <tag>p:run</tag> step is not a
+valid pipeline.</error>
+The anonymous input port is not primary, although it is the only <tag>p:input</tag>
+port of <tag>p:run</tag>. Therefore it will not automatically connect to the 
+<emphasis>default readable port</emphasis> (see 
+<xspecref spec="xproc" xref="connections"/>);
+it needs to be connected to its pipeline 
+input explicitly.</para>
+
+<para>The pipeline that appears on the pipeline port is evaluated
+using the inputs and options specified on the <tag>p:run</tag> step by means of the 
+<tag>p:run-input</tag> and <tag>p:run-option</tag> elements, respectively.</para>
+
+<para>The <tag>p:run-input</tag> element is a special case of the <tag>p:with-input</tag>
+element for passing inputs to the pipeline being run.</para>
+
+<e:rng-pattern name="RunInput"/>
+
+<para>Similarly, the <tag>p:run-option</tag> element is a special case
+of the <tag>p:with-option</tag> element for passing options to the
+pipeline being run.</para>
+
+<e:rng-pattern name="RunOption"/>
+
+<para>In terms of binding
+inputs and options, these elements have the same syntax and semantics as <tag>p:with-input</tag> 
+and <tag>p:with-option</tag>. In addition, the boolean attribute <tag class="attribute">primary</tag>
+can be used on <tag>p:run-input</tag> to declare whether the respective port of the dynamically 
+executed pipeline is expected to be the primary input port. If the attribute is omitted, it
+is assumed to be “<literal>false</literal>” if there are multiple <tag>p:run-input</tag> connections
+and “<literal>true</literal>” if there is exactly one <tag>p:run-input</tag> connection. 
+<error code="C0206">It is a <glossterm>dynamic error</glossterm>
+if the dynamically executed pipeline implicitly or explicitly declares a primary input port with 
+a different name than implicitly or explicitly specified in the <tag>p:run</tag> invocation.</error>
+Input ports of the dynamically executed pipeline that are not declared with <tag>p:run-input</tag> on
+the <tag>p:run</tag> invocation will receive a <tag>p:empty</tag> connection.
+Input ports that are declared in <tag>p:run-input</tag> but not in the dynamically
+executed pipeline will be silently ignored.</para>
+<para>The context item used to evaluate expressions on <tag>p:run-option</tag> comes from the 
+<emphasis>default readable port</emphasis> of the <tag>p:run</tag> step. Additionally, if 
+<tag>p:run-input</tag> implicitly or explicitly identifies a primary input port, the default
+readable port will be connected to it if no explicit connection is provided.</para>
+  
+  <para>Other than <tag>p:with-option</tag>, <tag>p:run-option</tag> accepts a boolean attribute
+  <tag class="attribute">static</tag> that defaults to “<literal>false</literal>”. If it is “<literal>true</literal>”,
+  the option value will be supplied to static analysis of the executed pipeline as a static option with the
+  same name.</para>
+  
+  <para>Options of the dynamically executed pipeline that are not provided by a <tag>p:run-option</tag> on the <tag>p:run</tag>
+    invocation will be defaulted in the normal way (if the option is required, the
+invocation will fail, for example). Options that are provided by <tag>p:run-option</tag> but not declared in the dynamically 
+    executed pipeline are silently ignored.</para>
+  
+    <para>Each output port of the pipeline can appear as a same-named output port of the <tag>p:run</tag> step. In order for
+      this to happen, the port needs to be explicitly declared in the <tag>p:run</tag> step. In contrast to output declarations
+      of compound steps or of <tag>p:declare-pipeline</tag> with a subpipeline, such an output declaration may not establish a
+      connection to any port of another step or of the pipeline to be run.</para>
+    <para>If the pipeline has an output that is not declared on the <tag>p:run</tag> step, that output is discarded, and the
+      corresponding port on the <tag>p:run</tag> step does not exist. If the <tag>p:run</tag> step declares an output port that
+      is not provided by the pipeline, an empty sequence appears on that port.</para>
+    <para><error code="C0207">It is a <glossterm>dynamic error</glossterm>
+if the dynamically executed pipeline implicitly or explicitly declares a primary output port with 
+a different name than implicitly or explicitly specified in the <tag>p:run</tag> invocation.</error></para>
+
+<section xml:id="example-run">
+<title>Example</title>
+
+<para>The following pipeline shows how <tag>p:run</tag> might be used.</para>
+
+<programlisting language="xml">&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                version="3.0" 
+                name="sample-run-invocation"&gt;
+  &lt;p:variable name="xsl-params" select="map{'foo': 'bar'}" 
+              as="map(xs:QName, item()*)"/&gt;
+  &lt;p:variable name="assert-valid" select="false()" as="xs:boolean"/&gt;
+  &lt;p:variable name="mode" as="xs:QName?" select="()"/&gt;
+  &lt;p:variable name="template" as="xs:QName?" select="()"/&gt;
+
+  &lt;p:run name="runme"&gt;
+    &lt;p:with-input href="transform-n-validate.xpl"/&gt;
+    &lt;p:run-option name="mode" select="$mode"/&gt;
+    &lt;p:run-option name="template" select="$template"/&gt;
+    &lt;p:run-option name="xslt-parameters" select="$xsl-params"/&gt;
+    &lt;p:run-option name="assert-valid" select="$assert-valid"/&gt;
+    &lt;p:run-input port="source" href="my.xml" primary="true"/&gt;
+    &lt;p:run-input port="stylesheet" href="my.xsl"/&gt;
+    &lt;p:run-input port="xsd" href="my.xsd"/&gt;
+    &lt;p:output port="result" primary="true"/&gt;
+    &lt;p:output port="report"/&gt;
+  &lt;/p:run&gt;
+&lt;/p:declare-step&gt;</programlisting>
+
+<para>With this pipeline in <filename>transform-n-validate.xpl</filename>, the preceding
+step has the effect of running the pipeline with the dynamically constructed options.</para>
+
+<programlisting language="xml">&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                version="3.0" 
+                name="transform-n-validate"&gt;
+  &lt;p:input port="source" primary="true" sequence="true"/&gt;
+  &lt;p:input port="stylesheet"/&gt;
+  &lt;p:input port="xsd"/&gt;
+  &lt;p:option name="assert-valid" as="xs:boolean" select="false()"/&gt;
+  &lt;p:option name="xslt-parameters" as="map(xs:QName, item()*)?"/&gt;
+  &lt;p:option name="mode" as="xs:QName?"/&gt;
+  &lt;p:option name="template" as="xs:QName?"/&gt;
+  &lt;p:output port="result" primary="true"/&gt;
+  &lt;p:output port="report" pipe="report@xsdval"/&gt;
+
+  &lt;p:xslt&gt;
+    &lt;p:with-option name="initial-mode" select="$mode"/&gt;
+    &lt;p:with-option name="template-name" select="$template"/&gt;
+    &lt;p:with-option name="parameters" select="$xslt-parameters"/&gt;
+    &lt;p:with-input port="stylesheet" pipe="stylesheet"/&gt;
+  &lt;/p:xslt&gt;
+
+  &lt;p:validate-with-xml-schema name="xsdval"&gt;
+    &lt;p:with-option name="assert-valid" select="$assert-valid"/&gt;
+    &lt;p:with-input port="schema" pipe="xsd@transform-n-validate"/&gt;
+  &lt;/p:validate-with-xml-schema&gt;
+&lt;/p:declare-step&gt;</programlisting>
+
+<para>In practice, <tag>p:run</tag> might be more often used with dynamically constructed
+pipelines.</para>
+</section>
+  
+<section>
+<title>Document properties</title>
+<para feature="exec-preserves-maybe">The extent to which document properties are preserved depends on the steps
+        in the dynamically executed pipeline.</para>
+</section>
+</section>
+
+<section xml:id="errors">
+<title>Step Errors</title>
+
+<para>This step can raise
+<glossterm baseform="dynamic-error">dynamic errors</glossterm>.
+</para>
+
+<para><termdef xml:id="dt-dynamic-error">A <firstterm>dynamic
+error</firstterm> is one which occurs while a pipeline is being
+evaluated.</termdef> Examples of dynamic errors include references to
+URIs that cannot be resolved, steps which fail, and pipelines that
+exhaust the capacity of an implementation (such as memory or disk
+space). For a more complete discussion of dynamic errors, see
+<xspecref spec="xproc" xref="dynamic-errors"/>.
+</para>
+
+<para>If a step fails due to a dynamic error, failure propagates
+upwards until either a <tag>p:try</tag> is encountered or the entire
+pipeline fails. In other words, outside of a <tag>p:try</tag>, step
+failure causes the entire pipeline to fail.</para>
+
+<para>The following errors can be raised by this step:</para>
+
+<?step-error-list level="none"?>
+
+</section>
+
+<appendix xml:id="conformance">
+<title>Conformance</title>
+
+<para>Conformant processors <rfc2119>must</rfc2119> implement all of the features
+described in this specification except those that are explicitly identified
+as optional.</para>
+
+<para>Some aspects of processor behavior are not completely specified; those
+features are either <glossterm role="unwrapped">implementation-dependent</glossterm> or
+<glossterm role="unwrapped">implementation-defined</glossterm>.</para>
+
+<para><termdef xml:id="dt-implementation-dependent">An
+<firstterm>implementation-dependent</firstterm> feature is one where the
+implementation has discretion in how it is performed.
+Implementations are not required to document or explain
+how <glossterm role="unwrapped">implementation-dependent</glossterm> features are performed.</termdef>
+</para>
+
+<para><termdef xml:id="dt-implementation-defined">An
+<firstterm>implementation-defined</firstterm> feature is one where the
+implementation has discretion in how it is performed.
+Conformant implementations <rfc2119>must</rfc2119> document
+how <glossterm role="unwrapped">implementation-defined</glossterm> features are performed.</termdef>
+</para>
+
+<section xml:id="implementation-defined">
+<title>Implementation-defined features</title>
+
+<para>The following features are implementation-defined:</para>
+
+<?implementation-defined-features?>
+</section>
+
+<section xml:id="implementation-dependent">
+<title>Implementation-dependent features</title>
+
+<para>The following features are implementation-dependent:</para>
+
+<?implementation-dependent-features?>
+</section>
+</appendix>
+
+<appendix xml:id="references">
+<title>References</title>
+<bibliolist>
+<bibliomixed xml:id="xproc30"><abbrev>XProc 3.0</abbrev>
+<citetitle xlink:href="https://spec.xproc.org/3.0/xproc/">XProc 3.0:
+An XML Pipeline Language</citetitle>.
+Norman Walsh, Achim Berndzen, Gerrit Imsieke and Erik Siegel, editors.
+</bibliomixed>
+<bibliomixed xml:id="xproc30-steps"><abbrev>XProc 3.0 Steps</abbrev>
+<citetitle xlink:href="https://spec.xproc.org/">XProc 3.0 Steps:
+An Introduction</citetitle>.
+Norman Walsh, Achim Berndzen, Gerrit Imsieke and Erik Siegel, editors.
+</bibliomixed>
+</bibliolist>
+</appendix>
+
+<!-- This glossary will automatically be elided if there are no
+     terms marked up as 'firstterm's in this specification. -->
+<appendix xmlns:db="http://docbook.org/ns/docbook" xml:id="glossary"><title>Glossary</title><glosslist><glossentry><glossterm>dynamic
+error</glossterm><glossdef><para>A <firstterm>dynamic
+error</firstterm> is one which occurs while a pipeline is being
+evaluated.</para></glossdef></glossentry><glossentry><glossterm>implementation-defined</glossterm><glossdef><para>An
+<firstterm>implementation-defined</firstterm> feature is one where the
+implementation has discretion in how it is performed.
+Conformant implementations <rfc2119>must</rfc2119> document
+how <glossterm role="unwrapped">implementation-defined</glossterm> features are performed.</para></glossdef></glossentry><glossentry><glossterm>implementation-dependent</glossterm><glossdef><para>An
+<firstterm>implementation-dependent</firstterm> feature is one where the
+implementation has discretion in how it is performed.
+Implementations are not required to document or explain
+how <glossterm role="unwrapped">implementation-dependent</glossterm> features are performed.</para></glossdef></glossentry></glosslist></appendix>
+
+<appendix version="5.0-extension w3c-xproc" xml:id="ancillary-files">
+<title>Ancillary files</title>
+
+<para>This specification includes by reference a number of
+ancillary files.</para>
+
+<variablelist>
+<varlistentry>
+<term><link xlink:href="steps.xpl"/></term>
+<listitem>
+<para>An XProc step library for the declared steps.
+</para>
+</listitem>
+</varlistentry>
+</variablelist>
+
+</appendix>
+
+</specification>
