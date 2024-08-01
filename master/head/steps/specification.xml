@@ -1578,7 +1578,7 @@ empty. Header names are converted to lowercase.</para>
 <listitem>
   <para>The <option>method</option> specifies the HTTP request method.
   The value is implicitly turned into an uppercase string if
-  necessary. <impl>It is <glossterm>implementation defined</glossterm>
+  necessary. <impl>It is <glossterm>implementation-defined</glossterm>
   which HTTP methods are supported.</impl> An implementation
   <rfc2119>should</rfc2119> implement at least the methods
   <literal>GET</literal>, <literal>POST</literal>,
@@ -1708,7 +1708,7 @@ empty. Header names are converted to lowercase.</para>
   <biblioref linkend="rfc2617"/>. <impl>The interpretation of values
   associated with the “<literal>auth-method</literal>” key other than
   “<literal>Basic</literal>” or “<literal>Digest</literal>” is
-  <glossterm>implementation defined</glossterm>.</impl></para>
+  <glossterm>implementation-defined</glossterm>.</impl></para>
   </listitem>
   </varlistentry>
   <varlistentry><term><literal>send-authorization</literal> (<code>xs:boolean</code>)</term>
@@ -1729,7 +1729,7 @@ empty. Header names are converted to lowercase.</para>
   </variablelist>
 
   <para><impl>Other key value pairs in map “<literal>auth</literal>”
-  are <glossterm>implementation defined</glossterm>.</impl> <error code="C0123">It is a <glossterm>dynamic error</glossterm> if any key
+  are <glossterm>implementation-defined</glossterm>.</impl> <error code="C0123">It is a <glossterm>dynamic error</glossterm> if any key
   in the “<literal>auth</literal>” map is associated with a value that
   is not an instance of the required type.</error></para>
 
@@ -1758,7 +1758,7 @@ empty. Header names are converted to lowercase.</para>
     values for fine tuning the construction of the request and/or
     handling of the server response. A number of parameters are
     defined in this specification. <impl>It is
-    <glossterm>implementation defined</glossterm> which other
+    <glossterm>implementation-defined</glossterm> which other
     key/value pairs in the <option>parameters</option> option are
     supported.</impl></para>
 
@@ -1842,7 +1842,7 @@ empty. Header names are converted to lowercase.</para>
           response. A value of <literal>0</literal> indicates that redirects are not to be followed, 
           <literal>-1</literal> indicates that redirects are to be followed indefinitely, and a
           specific number indicates the maximum number of redirects to follow. <impl>The default
-          behaviour in case of a redirect response is <glossterm>implementation defined</glossterm>.</impl>
+          behaviour in case of a redirect response is <glossterm>implementation-defined</glossterm>.</impl>
           </para>
         </listitem>
       </varlistentry>
@@ -2130,7 +2130,7 @@ port <code>result</code>.</para>
     documents, their XDM representation is appended to the resulting array.</para>
   </listitem>
   <listitem>
-    <para><impl>It is <glossterm>implementation defined</glossterm> if <code>p:json-join</code> is
+    <para><impl>It is <glossterm>implementation-defined</glossterm> if <code>p:json-join</code> is
       able to process document types not mentioned yet, i.e. types of binary documents.</impl> If a processor
       supports a given type of documents, an entry is created as described above. <error code="C0111">
         It is a <glossterm>dynamic error</glossterm> if a document of an unsupported document type appears on 
@@ -2200,7 +2200,7 @@ port <port>result</port>.</para>
     the key-value pair.</para>
   </listitem>
   <listitem>
-    <para><impl>It is <glossterm>implementation defined</glossterm> if <code>p:json-merge</code> is
+    <para><impl>It is <glossterm>implementation-defined</glossterm> if <code>p:json-merge</code> is
     able to process document types not mentioned yet, i.e. types of binary documents.</impl> If a processor
     supports a given type of documents, the key-value pair is created as described above. <error code="C0107">
     It is a <glossterm>dynamic error</glossterm> if a document of a not supported document type appears on 
@@ -2912,7 +2912,7 @@ discards them. It has no output.</para>
 <para>The <tag>p:sleep</tag> step copies each of the documents on the
 <port>source</port> port to the <port>result</port> port without changing them.
 Before copying the documents, it pauses for a period of time not less
-than <code>duration</code> milliseconds.</para>
+than <option>duration</option> milliseconds.</para>
 
 <note>
 <para>In multi-threaded implementations, there is no guarantee that this
@@ -3575,8 +3575,8 @@ the base URI of the document.
       </para>
     </listitem>
     <listitem>
-      <para><impl>In the absence of an explicit type, the content will be interpreted as content
-          type <code>application/octet-stream</code></impl>.</para>
+      <para>In the absence of an explicit type, the content will be interpreted as content
+          type <code>application/octet-stream</code>.</para>
     </listitem>
   </orderedlist>
 
@@ -3956,7 +3956,7 @@ of XQuery <rfc2119>must</rfc2119> be used to process the transformation.
 is not available.</error> If the step does not specify a version, the
 implementation may use any version it has available and may use any means
 to determine what version to use, including, but not limited to,
-examining the version of the query.<impl>It is <glossterm>implementation defined</glossterm>
+examining the version of the query.<impl>It is <glossterm>implementation-defined</glossterm>
 which XQuery version(s) is/are supported.</impl></para>
 
 <para>The name/value pairs in option <option>parameters</option> are used to set the query’s
@@ -4121,6 +4121,7 @@ establish a base URI, the document will not have one.
 </section>
 <section xml:id="c.xslt">
   <title>p:xslt</title>
+
   <para>The <tag>p:xslt</tag> step invokes an XSLT stylesheet.</para>
   <p:declare-step type="p:xslt">
     <p:input port="source" content-types="any" sequence="true" primary="true"/>
@@ -4201,7 +4202,7 @@ establish a base URI, the document will not have one.
       output port <port>result</port> while secondary result(s) will appear on output port
       <port>secondary</port>. <impl>The order in which 
         result documents appear on the <port>secondary</port> port is
-        <glossterm>implementation dependent</glossterm>.</impl> 
+        <glossterm>implementation-dependent</glossterm>.</impl> 
       Whether the raw results are delivered or a result tree is
       constructed, depends on the (explicit or implicit) setting for attribute
       <literal>build-tree</literal> of in the output-definition for the respective result. If a
@@ -4251,7 +4252,7 @@ establish a base URI, the document will not have one.
       <port>result</port> port. At most one document can appear on the <port>result</port> port.
       All other result documents appear on the <port>secondary</port> port. <impl>The order in which 
         result documents appear on the <port>secondary</port> port is
-        <glossterm>implementation dependent</glossterm>.</impl>
+        <glossterm>implementation-dependent</glossterm>.</impl>
     </para>
     <para>The <option>output-base-uri</option> option sets the context's output base URI per the
       XSLT 2.0 specification, otherwise the base URI of the <port>result</port> document is the base
