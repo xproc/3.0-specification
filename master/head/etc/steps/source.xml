@@ -191,7 +191,7 @@ PSVI annotations.</para>
 </section>
 
 <section xml:id="req-steps">
-<title>The required steps</title>
+<title>Step library</title>
 
 <para>A conformant processor must support all of these steps.</para>
 
@@ -2050,7 +2050,7 @@ port's document relative to the matching elements in the
 <p:declare-step type="p:insert">
    <p:input port="source" primary="true" content-types="xml html"/>
    <p:input port="insertion" sequence="true" content-types="xml html text"/>
-   <p:output port="result" content-types="xml html"/>
+   <p:output port="result" content-types="xml html text"/>
    <p:option name="match" as="xs:string" select="'/*'" e:type="XSLTSelectionPattern"/>
    <p:option name="position" values="('first-child','last-child','before','after')" select="'after'"/>
 </p:declare-step>
@@ -2102,12 +2102,6 @@ as the source.</para>
 <para feature="insert-preserves-all">All document properties on the
 <port>source</port> port are preserved. The document properties on the
 <port>insertion</port> port are not preserved or present in the result document.</para>
-</simplesect>
-
-<simplesect>
-<title>Erratum, April 2024</title>
-<para>The content type of the <port>insertion</port> port has been expanded to allow
-text documents to be inserted.</para>
 </simplesect>
 </section>
 <section xml:id="c.json-join" version="5.0-extension w3c-xproc">
@@ -4523,6 +4517,12 @@ who contributed to this document and all of the versions that came before it.</p
 draft:</para>
 
 <orderedlist>
+<listitem>
+<para>Allow the output of the <tag>p:insert</tag> step to be <literal>text</literal>.
+(issue
+<link xlink:href="https://github.com/xproc/3.0-steps/issues/583">583</link>.)
+</para>
+</listitem>
 <listitem>
 <para>Clarified that the manifest has precedence in the <tag>p:archive</tag> step.
 (issue
