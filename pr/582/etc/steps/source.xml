@@ -196,7 +196,7 @@ PSVI annotations.</para>
 </section>
 
 <section xml:id="req-steps">
-<title>The required steps</title>
+<title>Step library</title>
 
 <para>A conformant processor must support all of these steps.</para>
 
@@ -2048,7 +2048,7 @@ port's document relative to the matching elements in the
 <p:declare-step type="p:insert">
    <p:input port="source" primary="true" content-types="xml html"/>
    <p:input port="insertion" sequence="true" content-types="xml html text"/>
-   <p:output port="result" content-types="xml html"/>
+   <p:output port="result" content-types="xml html text"/>
    <p:option name="match" as="xs:string" select="'/*'" e:type="XSLTSelectionPattern"/>
    <p:option name="position" values="('first-child','last-child','before','after')" select="'after'"/>
 </p:declare-step>
@@ -4541,6 +4541,8 @@ by adding a <tag>p:sleep</tag> step.
 <listitem>
 <para>Resolved <link xlink:href="https://github.com/xproc/Vnext/issues/39">V.next issue 29</link> by
 allowing the text documents on the <port>insertion</port> port of the <tag>p:insert</tag> step.
+Resolved <link xlink:href="https://github.com/xproc/3.0-steps/issues/583">issue 583</link> by
+allowing text documents on the <port>result</port> port.
 </para>
 </listitem>
 </itemizedlist>
