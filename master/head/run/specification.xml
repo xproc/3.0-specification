@@ -2,8 +2,8 @@
 <info>
 <title>XProc 3.0: dynamic pipeline execution</title>
 <!-- defaults to date formatted <pubdate>2014-12-18</pubdate> -->
-<copyright><year>2018</year><year>2019</year><year>2020</year>
-<holder>the Contributors to the XProc 3.0 Standard Step Library
+<copyright><year>2018</year><year>2019</year><year>2020</year><year>2024</year>
+<holder>the Contributors to the XProc 3.x Standard Step Library
 specifications</holder>
 </copyright>
 
@@ -146,19 +146,21 @@ invocation will fail, for example). Options that are provided by <tag>p:run-opti
 if the dynamically executed pipeline implicitly or explicitly declares a primary output port with 
 a different name than implicitly or explicitly specified in the <tag>p:run</tag> invocation.</error></para>
 
-    <section xml:id="example-run">
-      <title>Example</title>
-      <example xml:id="ex.c.run">
-        <title>Dynamic Execution of a Transformation/Validation Pipeline</title>
-        <programlisting language="xml">&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
-  xmlns:c="http://www.w3.org/ns/xproc-step"
-  xmlns:xs="http://www.w3.org/2001/XMLSchema" version="3.0" 
-  name="sample-run-invocation"&gt;
+<section xml:id="example-run">
+<title>Example</title>
+
+<para>The following pipeline shows how <tag>p:run</tag> might be used.</para>
+
+<programlisting language="xml">&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                version="3.0" 
+                name="sample-run-invocation"&gt;
   &lt;p:variable name="xsl-params" select="map{'foo': 'bar'}" 
-    as="map(xs:QName, item()*)"/&gt;
+              as="map(xs:QName, item()*)"/&gt;
   &lt;p:variable name="assert-valid" select="false()" as="xs:boolean"/&gt;
   &lt;p:variable name="mode" as="xs:QName?" select="()"/&gt;
   &lt;p:variable name="template" as="xs:QName?" select="()"/&gt;
+
   &lt;p:run name="runme"&gt;
     &lt;p:with-input href="transform-n-validate.xpl"/&gt;
     &lt;p:run-option name="mode" select="$mode"/&gt;
@@ -172,11 +174,14 @@ a different name than implicitly or explicitly specified in the <tag>p:run</tag>
     &lt;p:output port="report"/&gt;
   &lt;/p:run&gt;
 &lt;/p:declare-step&gt;</programlisting>
-        <para>with this pipeline in <filename>transform-n-validate.xpl</filename>:</para>
-        <programlisting language="xml">&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
-  xmlns:c="http://www.w3.org/ns/xproc-step"
-  xmlns:xs="http://www.w3.org/2001/XMLSchema" version="3.0" 
-  name="transform-n-validate"&gt;
+
+<para>With this pipeline in <filename>transform-n-validate.xpl</filename>, the preceding
+step has the effect of running the pipeline with the dynamically constructed options.</para>
+
+<programlisting language="xml">&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                version="3.0" 
+                name="transform-n-validate"&gt;
   &lt;p:input port="source" primary="true" sequence="true"/&gt;
   &lt;p:input port="stylesheet"/&gt;
   &lt;p:input port="xsd"/&gt;
@@ -186,20 +191,23 @@ a different name than implicitly or explicitly specified in the <tag>p:run</tag>
   &lt;p:option name="template" as="xs:QName?"/&gt;
   &lt;p:output port="result" primary="true"/&gt;
   &lt;p:output port="report" pipe="report@xsdval"/&gt;
+
   &lt;p:xslt&gt;
     &lt;p:with-option name="initial-mode" select="$mode"/&gt;
     &lt;p:with-option name="template-name" select="$template"/&gt;
     &lt;p:with-option name="parameters" select="$xslt-parameters"/&gt;
     &lt;p:with-input port="stylesheet" pipe="stylesheet"/&gt;
   &lt;/p:xslt&gt;
+
   &lt;p:validate-with-xml-schema name="xsdval"&gt;
     &lt;p:with-option name="assert-valid" select="$assert-valid"/&gt;
     &lt;p:with-input port="schema" pipe="xsd@transform-n-validate"/&gt;
   &lt;/p:validate-with-xml-schema&gt;
 &lt;/p:declare-step&gt;</programlisting>
-      </example>
-      
-    </section>
+
+<para>In practice, <tag>p:run</tag> might be more often used with dynamically constructed
+pipelines.</para>
+</section>
   
 <section>
 <title>Document properties</title>
@@ -268,13 +276,6 @@ how <glossterm role="unwrapped">implementation-defined</glossterm> features are 
 <?implementation-defined-features?>
 </section>
 
-<section xml:id="implementation-dependent">
-<title>Implementation-dependent features</title>
-
-<para>The following features are implementation-dependent:</para>
-
-<?implementation-dependent-features?>
-</section>
 </appendix>
 
 <appendix xml:id="references">

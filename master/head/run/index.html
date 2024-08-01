@@ -1,4 +1,4 @@
-<html xmlns="http://www.w3.org/1999/xhtml"><head><title>XProc 3.0: dynamic pipeline execution</title><meta charset="utf-8" /><meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport" /><link class="removeOnSave" crossorigin="anonymous" href="https://www.w3.org" rel="preconnect" /><link as="script" class="removeOnSave" href="js/fixup.js" rel="preload" /><link as="style" class="removeOnSave" href="css/base.css" rel="preload" /><link as="image" class="removeOnSave" href="https://www.w3.org/StyleSheets/TR/2016/logos/W3C" rel="preload" /><link rel="stylesheet" href="css/cg-draft.css" /><link rel="stylesheet" href="css/respec.css" /><link rel="alternate" title="XML" href="specification.xml" /><meta name="generator" content="DocBook XSL 2.0 Stylesheets V2.5.0" /><meta name="description" content="Abstract This specification describes the p:run&#xA;step for&#xA;XProc 3.0: An XML Pipeline Language." /><link href="css/default.css" rel="stylesheet" type="text/css" /><link href="css/db-prism.css" rel="stylesheet" type="text/css" /><link rel="stylesheet" type="text/css" href="css/base.css" /><link rel="stylesheet" type="text/css" href="css/xproc.css" /><link rel="stylesheet" type="text/css" href="css/print.css" media="print" /><script type="text/javascript" src="js/dbmodnizr.js"></script></head><body class="h-entry informative toc-sidebar"><div class="head" id="spec.head"><a class="logo" href="https://www.w3.org/"><img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2016/logos/W3C" width="72" /></a><h1 id="title" class="title p-name">XProc 3.0: dynamic pipeline execution</h1><h2>Draft Community Group Report <time class="dt-published" datetime="2024-08-01">1 August 2024</time></h2><div class="editors-draft">Editor's Draft   at <time class="dt-timestamp" datetime="20240801T09:18:43Z">09:18 UTC</time> (<a href="https://github.com/xproc//commit/673c261f274c4566a5e3417c51a89fc4068feed5">build 35</a>)</div><dl><dt>Latest editor’s draft:</dt><dd><a href="https://spec.xproc.org/master/head/run/">https://spec.xproc.org/master/head/run/</a></dd><dt>Editors:</dt><dd><span class="personname">Norman Walsh</span></dd><dd><span class="personname">Achim Berndzen</span></dd><dd><span class="personname">Gerrit Imsieke</span></dd><dd><span class="personname">Erik Siegel</span></dd><dt>Participate:</dt><dd><a href="http://github.com/xproc/3.0-steps">GitHub xproc/3.0-steps</a></dd><dd><a href="http://github.com/xproc/3.0-steps/issues">Report an issue</a></dd><dt>Changes:</dt><dd><a href="diff.html">Diff against current “status quo” draft</a></dd><dd><a href="http://github.com/xproc//commits/">Commits for this specification</a></dd></dl><p>This document is also available in these non-normative formats: <a href="specification.xml">XML</a> and HTML with automatic change markup  courtesy of <a href="http://www.deltaxml.com/">DeltaXML</a>.</p><p class="copyright"><a href="https://www.w3.org/Consortium/Legal/ipr-notice#Copyright">Copyright</a> © <span class="years">2018, 2019, 2020</span> the Contributors to the <cite>XProc 3.0: dynamic pipeline execution</cite> specification, published by the <a href="https://www.w3.org/community/xproc-next/">XProc Next Community Group</a> under the <a href="https://www.w3.org/community/about/agreements/cla/">W3C
+<html xmlns="http://www.w3.org/1999/xhtml"><head><title>XProc 3.0: dynamic pipeline execution</title><meta charset="utf-8" /><meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport" /><link class="removeOnSave" crossorigin="anonymous" href="https://www.w3.org" rel="preconnect" /><link as="script" class="removeOnSave" href="js/fixup.js" rel="preload" /><link as="style" class="removeOnSave" href="css/base.css" rel="preload" /><link as="image" class="removeOnSave" href="https://www.w3.org/StyleSheets/TR/2016/logos/W3C" rel="preload" /><link rel="stylesheet" href="css/cg-draft.css" /><link rel="stylesheet" href="css/respec.css" /><link rel="alternate" title="XML" href="specification.xml" /><meta name="generator" content="DocBook XSL 2.0 Stylesheets V2.5.0" /><meta name="description" content="Abstract This specification describes the p:run&#xA;step for&#xA;XProc 3.0: An XML Pipeline Language." /><link href="css/default.css" rel="stylesheet" type="text/css" /><link href="css/db-prism.css" rel="stylesheet" type="text/css" /><link rel="stylesheet" type="text/css" href="css/base.css" /><link rel="stylesheet" type="text/css" href="css/xproc.css" /><link rel="stylesheet" type="text/css" href="css/print.css" media="print" /><script type="text/javascript" src="js/dbmodnizr.js"></script></head><body class="h-entry informative toc-sidebar"><div class="head" id="spec.head"><a class="logo" href="https://www.w3.org/"><img alt="W3C" height="48" src="https://www.w3.org/StyleSheets/TR/2016/logos/W3C" width="72" /></a><h1 id="title" class="title p-name">XProc 3.0: dynamic pipeline execution</h1><h2>Draft Community Group Report <time class="dt-published" datetime="2024-08-01">1 August 2024</time></h2><div class="editors-draft">Editor's Draft   at <time class="dt-timestamp" datetime="20240801T09:27:00Z">09:27 UTC</time> (<a href="https://github.com/xproc//commit/f0c14114ef579e23132a451a561dcb39179bcdf6">build 38</a>)</div><dl><dt>Latest editor’s draft:</dt><dd><a href="https://spec.xproc.org/master/head/run/">https://spec.xproc.org/master/head/run/</a></dd><dt>Editors:</dt><dd><span class="personname">Norman Walsh</span></dd><dd><span class="personname">Achim Berndzen</span></dd><dd><span class="personname">Gerrit Imsieke</span></dd><dd><span class="personname">Erik Siegel</span></dd><dt>Participate:</dt><dd><a href="http://github.com/xproc/3.0-steps">GitHub xproc/3.0-steps</a></dd><dd><a href="http://github.com/xproc/3.0-steps/issues">Report an issue</a></dd><dt>Changes:</dt><dd><a href="diff.html">Diff against current “status quo” draft</a></dd><dd><a href="http://github.com/xproc//commits/">Commits for this specification</a></dd></dl><p>This document is also available in these non-normative formats: <a href="specification.xml">XML</a> and HTML with automatic change markup  courtesy of <a href="http://www.deltaxml.com/">DeltaXML</a>.</p><p class="copyright"><a href="https://www.w3.org/Consortium/Legal/ipr-notice#Copyright">Copyright</a> © <span class="years">2018, 2019, 2020, 2024</span> the Contributors to the <cite>XProc 3.0: dynamic pipeline execution</cite> specification, published by the <a href="https://www.w3.org/community/xproc-next/">XProc Next Community Group</a> under the <a href="https://www.w3.org/community/about/agreements/cla/">W3C
     Community Contributor License Agreement (CLA)</a>. A human-readable <a href="https://www.w3.org/community/about/agreements/cla-deed/">summary</a> is available.</p><hr title="Separator for header" /><section id="abstract" class="introductory"><h2>Abstract</h2>
 <p>This specification describes the <code class="code">p:run</code>
 step for
@@ -20,7 +20,7 @@ step for
   (<a href="mailto:xproc-dev-request@w3.org?subject=subscribe">subscribe</a>,
   <a href="https://lists.w3.org/Archives/Public/xproc-dev/">archives</a>).
   </p>
-</section></div><div class="lists-of-titles"><nav id="toc"><h2 id="TableOfContents">Table of Contents</h2><ol class="toc"><li class="tocline"><a class="tocxref" href="#introduction"><bdi class="secno">1. </bdi>Introduction</a></li><li class="tocline"><a class="tocxref" href="#c.run"><bdi class="secno">2. </bdi>p:run</a><ul class="toc"><li class="tocline"><a class="tocxref" href="#example-run"><bdi class="secno">2.1. </bdi>Example</a></li><li class="tocline"><a class="tocxref" href="#c.run.19"><bdi class="secno">2.2. </bdi>Document properties</a></li></ul></li><li class="tocline"><a class="tocxref" href="#errors"><bdi class="secno">3. </bdi>Step Errors</a></li><li class="tocline"><a class="tocxref" href="#conformance"><bdi class="secno">A. </bdi>Conformance</a><ul class="toc"><li class="tocline"><a class="tocxref" href="#implementation-defined"><bdi class="secno">A.1. </bdi>Implementation-defined features</a></li><li class="tocline"><a class="tocxref" href="#implementation-dependent"><bdi class="secno">A.2. </bdi>Implementation-dependent features</a></li></ul></li><li class="tocline"><a class="tocxref" href="#references"><bdi class="secno">B. </bdi>References</a></li><li class="tocline"><a class="tocxref" href="#glossary"><bdi class="secno">C. </bdi>Glossary</a></li><li class="tocline"><a class="tocxref" href="#ancillary-files"><bdi class="secno">D. </bdi>Ancillary files</a></li></ol></nav></div><article class="specification">
+</section></div><div class="lists-of-titles"><nav id="toc"><h2 id="TableOfContents">Table of Contents</h2><ol class="toc"><li class="tocline"><a class="tocxref" href="#introduction"><bdi class="secno">1. </bdi>Introduction</a></li><li class="tocline"><a class="tocxref" href="#c.run"><bdi class="secno">2. </bdi>p:run</a><ul class="toc"><li class="tocline"><a class="tocxref" href="#example-run"><bdi class="secno">2.1. </bdi>Example</a></li><li class="tocline"><a class="tocxref" href="#c.run.19"><bdi class="secno">2.2. </bdi>Document properties</a></li></ul></li><li class="tocline"><a class="tocxref" href="#errors"><bdi class="secno">3. </bdi>Step Errors</a></li><li class="tocline"><a class="tocxref" href="#conformance"><bdi class="secno">A. </bdi>Conformance</a><ul class="toc"><li class="tocline"><a class="tocxref" href="#implementation-defined"><bdi class="secno">A.1. </bdi>Implementation-defined features</a></li></ul></li><li class="tocline"><a class="tocxref" href="#references"><bdi class="secno">B. </bdi>References</a></li><li class="tocline"><a class="tocxref" href="#glossary"><bdi class="secno">C. </bdi>Glossary</a></li><li class="tocline"><a class="tocxref" href="#ancillary-files"><bdi class="secno">D. </bdi>Ancillary files</a></li></ol></nav></div><article class="specification">
 
 
 <section id="introduction" class="section"><div class="section-titlepage"><h2><bdi class="secno">1. </bdi>Introduction<a aria-label="§" class="self-link" href="#introduction"></a></h2></div><div class="content">
@@ -41,7 +41,7 @@ steps is assumed; for background details, see
 
 <p>The <code class="tag-element">p:run</code> step runs a dynamically loaded pipeline.</p>
 
-<p id="d198e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:run<br />  name? = <var>NCName</var>&gt;<br />    (<a href="#p.with-input">p:with-input</a>? &amp; <br />     <a href="#p.run-input">p:run-input</a>* &amp; <br />     <a href="#p.run-option">p:run-option</a>* &amp; <br />     <a href="#p.output">p:output</a>*)<br />&lt;/p:run&gt;</code></p>
+<p id="d197e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:run<br />  name? = <var>NCName</var>&gt;<br />    (<a href="#p.with-input">p:with-input</a>? &amp; <br />     <a href="#p.run-input">p:run-input</a>* &amp; <br />     <a href="#p.run-option">p:run-option</a>* &amp; <br />     <a href="#p.output">p:output</a>*)<br />&lt;/p:run&gt;</code></p>
 
 <p>The <code class="tag-element">p:run</code> step has a single, anonymous input that accepts the 
 pipeline to be run. Otherwise, it functions similar to an atomic step in that
@@ -52,7 +52,7 @@ usual <code class="tag-element">p:with-input</code> and <code class="tag-element
 expects a single pipeline document on its anonymous input port (“pipeline port”).
 Independent of how the pipeline is provided, it <span class="rfc2119" id="c.run.5.2">must</span>
   have a <code class="tag-attribute">version</code> attribute on its root element.
-<a id="err.inline.C0200"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic error</a></em> (<a href="#err.C0200"><code class="errqname">err:XC0200</code></a>)
+<a id="err.inline.C0200&#34;"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic error</a></em> (<a href="#err.C0200"><code class="errqname">err:XC0200</code></a>)
 if the pipeline input to the <code class="tag-element">p:run</code> step is not a
 valid pipeline.
 The anonymous input port is not primary, although it is the only <code class="tag-element">p:input</code>
@@ -69,13 +69,13 @@ using the inputs and options specified on the <code class="tag-element">p:run</c
 <p>The <code class="tag-element">p:run-input</code> element is a special case of the <code class="tag-element">p:with-input</code>
 element for passing inputs to the pipeline being run.</p>
 
-<p id="d228e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:run-input<br />  <strong>port</strong> = <var>NCName</var><br />  select? = <var>XPathExpression</var><br />  href? = { <var>anyURI</var> }<br />  pipe? = <var>string</var><br />  primary? = <var>boolean</var><br />  exclude-inline-prefixes? = <var>ExcludeInlinePrefixes</var>&gt;<br />    ((<a href="#p.empty">p:empty</a> | <br />       (<a href="#p.document">p:document</a> | <br />        <a href="#p.pipe">p:pipe</a> | <br />        <a href="#p.inline">p:inline</a>)*) | <br />     <var>anyElement</var>*)<br />&lt;/p:run-input&gt;</code></p>
+<p id="d227e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:run-input<br />  <strong>port</strong> = <var>NCName</var><br />  select? = <var>XPathExpression</var><br />  href? = { <var>anyURI</var> }<br />  pipe? = <var>string</var><br />  primary? = <var>boolean</var><br />  exclude-inline-prefixes? = <var>ExcludeInlinePrefixes</var>&gt;<br />    ((<a href="#p.empty">p:empty</a> | <br />       (<a href="#p.document">p:document</a> | <br />        <a href="#p.pipe">p:pipe</a> | <br />        <a href="#p.inline">p:inline</a>)*) | <br />     <var>anyElement</var>*)<br />&lt;/p:run-input&gt;</code></p>
 
 <p>Similarly, the <code class="tag-element">p:run-option</code> element is a special case
 of the <code class="tag-element">p:with-option</code> element for passing options to the
 pipeline being run.</p>
 
-<p id="d248e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:run-option<br />  <strong>name</strong> = <var>EQName</var><br />  as? = <var>XPathSequenceType</var><br />  <strong>select</strong> = <var>XPathExpression</var><br />  collection? = <var>boolean</var><br />  href? = { <var>anyURI</var> }<br />  pipe? = <var>string</var><br />  static? = <var>boolean</var><br />  exclude-inline-prefixes? = <var>ExcludeInlinePrefixes</var>&gt;<br />    ((<a href="#p.empty">p:empty</a> | <br />       (<a href="#p.document">p:document</a> | <br />        <a href="#p.pipe">p:pipe</a> | <br />        <a href="#p.inline">p:inline</a>)*) | <br />     <var>anyElement</var>*)<br />&lt;/p:run-option&gt;</code></p>
+<p id="d247e0" class="element-syntax element-syntax-language-construct"><code>&lt;p:run-option<br />  <strong>name</strong> = <var>EQName</var><br />  as? = <var>XPathSequenceType</var><br />  <strong>select</strong> = <var>XPathExpression</var><br />  collection? = <var>boolean</var><br />  href? = { <var>anyURI</var> }<br />  pipe? = <var>string</var><br />  static? = <var>boolean</var><br />  exclude-inline-prefixes? = <var>ExcludeInlinePrefixes</var>&gt;<br />    ((<a href="#p.empty">p:empty</a> | <br />       (<a href="#p.document">p:document</a> | <br />        <a href="#p.pipe">p:pipe</a> | <br />        <a href="#p.inline">p:inline</a>)*) | <br />     <var>anyElement</var>*)<br />&lt;/p:run-option&gt;</code></p>
 
 <p>In terms of binding
 inputs and options, these elements have the same syntax and semantics as <code class="tag-element">p:with-input</code> 
@@ -84,7 +84,7 @@ can be used on <code class="tag-element">p:run-input</code> to declare whether t
 executed pipeline is expected to be the primary input port. If the attribute is omitted, it
 is assumed to be “<code class="literal">false</code>” if there are multiple <code class="tag-element">p:run-input</code> connections
 and “<code class="literal">true</code>” if there is exactly one <code class="tag-element">p:run-input</code> connection. 
-<a id="err.inline.C0206"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic error</a></em> (<a href="#err.C0206"><code class="errqname">err:XC0206</code></a>)
+<a id="err.inline.C0206&#34;"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic error</a></em> (<a href="#err.C0206"><code class="errqname">err:XC0206</code></a>)
 if the dynamically executed pipeline implicitly or explicitly declares a primary input port with 
 a different name than implicitly or explicitly specified in the <code class="tag-element">p:run</code> invocation.
 Input ports of the dynamically executed pipeline that are not declared with <code class="tag-element">p:run-input</code> on
@@ -113,21 +113,25 @@ invocation will fail, for example). Options that are provided by <code class="ta
     <p>If the pipeline has an output that is not declared on the <code class="tag-element">p:run</code> step, that output is discarded, and the
       corresponding port on the <code class="tag-element">p:run</code> step does not exist. If the <code class="tag-element">p:run</code> step declares an output port that
       is not provided by the pipeline, an empty sequence appears on that port.</p>
-    <p><a id="err.inline.C0207"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic error</a></em> (<a href="#err.C0207"><code class="errqname">err:XC0207</code></a>)
+    <p><a id="err.inline.C0207&#34;"></a>It is a <em class="glossterm"><a href="#dt-dynamic-error">dynamic error</a></em> (<a href="#err.C0207"><code class="errqname">err:XC0207</code></a>)
 if the dynamically executed pipeline implicitly or explicitly declares a primary output port with 
 a different name than implicitly or explicitly specified in the <code class="tag-element">p:run</code> invocation.</p>
 
-    <section id="example-run" class="section"><div class="section-titlepage"><h3><bdi class="secno">2.1. </bdi>Example<a aria-label="§" class="self-link" href="#example-run"></a></h3></div><div class="content">
-      
-      <figure id="ex.c.run" class="example-wrapper"><div class="title">Example 1. Dynamic Execution of a Transformation/Validation Pipeline</div><div class="example"><pre class="programlisting language-markup xml"><code>&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
-  xmlns:c="http://www.w3.org/ns/xproc-step"
-  xmlns:xs="http://www.w3.org/2001/XMLSchema" version="3.0" 
-  name="sample-run-invocation"&gt;
+<section id="example-run" class="section"><div class="section-titlepage"><h3><bdi class="secno">2.1. </bdi>Example<a aria-label="§" class="self-link" href="#example-run"></a></h3></div><div class="content">
+
+
+<p>The following pipeline shows how <a href="#c.run"><code class="tag-element">p:run</code></a> might be used.</p>
+
+<pre class="programlisting language-markup xml"><code>&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                version="3.0" 
+                name="sample-run-invocation"&gt;
   &lt;p:variable name="xsl-params" select="map{'foo': 'bar'}" 
-    as="map(xs:QName, item()*)"/&gt;
+              as="map(xs:QName, item()*)"/&gt;
   &lt;p:variable name="assert-valid" select="false()" as="xs:boolean"/&gt;
   &lt;p:variable name="mode" as="xs:QName?" select="()"/&gt;
   &lt;p:variable name="template" as="xs:QName?" select="()"/&gt;
+
   &lt;p:run name="runme"&gt;
     &lt;p:with-input href="transform-n-validate.xpl"/&gt;
     &lt;p:run-option name="mode" select="$mode"/&gt;
@@ -140,10 +144,15 @@ a different name than implicitly or explicitly specified in the <code class="tag
     &lt;p:output port="result" primary="true"/&gt;
     &lt;p:output port="report"/&gt;
   &lt;/p:run&gt;
-&lt;/p:declare-step&gt;</code></pre><p>with this pipeline in <code class="filename">transform-n-validate.xpl</code>:</p><pre class="programlisting language-markup xml"><code>&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
-  xmlns:c="http://www.w3.org/ns/xproc-step"
-  xmlns:xs="http://www.w3.org/2001/XMLSchema" version="3.0" 
-  name="transform-n-validate"&gt;
+&lt;/p:declare-step&gt;</code></pre>
+
+<p>With this pipeline in <code class="filename">transform-n-validate.xpl</code>, the preceding
+step has the effect of running the pipeline with the dynamically constructed options.</p>
+
+<pre class="programlisting language-markup xml"><code>&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
+                xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                version="3.0" 
+                name="transform-n-validate"&gt;
   &lt;p:input port="source" primary="true" sequence="true"/&gt;
   &lt;p:input port="stylesheet"/&gt;
   &lt;p:input port="xsd"/&gt;
@@ -153,19 +162,23 @@ a different name than implicitly or explicitly specified in the <code class="tag
   &lt;p:option name="template" as="xs:QName?"/&gt;
   &lt;p:output port="result" primary="true"/&gt;
   &lt;p:output port="report" pipe="report@xsdval"/&gt;
+
   &lt;p:xslt&gt;
     &lt;p:with-option name="initial-mode" select="$mode"/&gt;
     &lt;p:with-option name="template-name" select="$template"/&gt;
     &lt;p:with-option name="parameters" select="$xslt-parameters"/&gt;
     &lt;p:with-input port="stylesheet" pipe="stylesheet"/&gt;
   &lt;/p:xslt&gt;
+
   &lt;p:validate-with-xml-schema name="xsdval"&gt;
     &lt;p:with-option name="assert-valid" select="$assert-valid"/&gt;
     &lt;p:with-input port="schema" pipe="xsd@transform-n-validate"/&gt;
   &lt;/p:validate-with-xml-schema&gt;
-&lt;/p:declare-step&gt;</code></pre></div></figure>
-      
-    </div></section>
+&lt;/p:declare-step&gt;</code></pre>
+
+<p>In practice, <a href="#c.run"><code class="tag-element">p:run</code></a> might be more often used with dynamically constructed
+pipelines.</p>
+</div></section>
   
 <section id="c.run.19" class="section"><div class="section-titlepage"><h3><bdi class="secno">2.2. </bdi>Document properties<a aria-label="§" class="self-link" href="#"></a></h3></div><div class="content">
 
@@ -240,13 +253,6 @@ how <em class="glossterm"><a href="#dt-implementation-defined">implementation-de
 <ol class="features"></ol>
 </div></section>
 
-<section id="implementation-dependent" class="section"><div class="section-titlepage"><h2><bdi class="secno">A.2. </bdi>Implementation-dependent features<a aria-label="§" class="self-link" href="#implementation-dependent"></a></h2></div><div class="content">
-
-
-<p>The following features are implementation-dependent:</p>
-
-<ol class="features"></ol>
-</div></section>
 </div></article>
 
 <article id="references" class="appendix"><header class="appendix-titlepage"><h2><bdi class="secno">B. </bdi>References<a aria-label="§" class="self-link" href="#references"></a></h2></header><div class="content">

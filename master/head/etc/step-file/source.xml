@@ -80,6 +80,9 @@ mechanisms.</para>
 access them, or they may be ignored by some or all steps.</para>
 </section>
 
+<section xml:id="library">
+<title>Step library</title>
+
   <section xml:id="c.directory-list">
     <title>p:directory-list</title>
     
@@ -163,12 +166,12 @@ access them, or they may be ignored by some or all steps.</para>
     included this way, none of their other entires are included unless they match
     an include filter.</para>
 
-    <example xml:id="ex.c.directory-list">
-      <title>Sample Directory List Output for a Single File</title>
-      <para>For a file <literal>a/a/b/file.txt</literal> below the initial directory 
-        <literal>/home/jane</literal>, this output will be produced, omitting content that might be present in the 
-        intermediate directories:</para>
-      <literallayout>&lt;c:directory xml:base="file:///home/jane/" name="jane"&gt;
+    <para>For a file <literal>a/a/b/file.txt</literal> below the initial
+    directory <literal>/home/jane</literal>, this output will be produced,
+    omitting content that might be present in the intermediate
+    directories:</para>
+
+      <programlisting language="xml">&lt;c:directory xml:base="file:///home/jane/" name="jane"&gt;
   &lt;c:directory xml:base="a/" name="a"&gt;
     &lt;c:directory xml:base="a/" name="a"&gt;
       &lt;c:directory xml:base="b/" name="b"&gt;
@@ -176,8 +179,8 @@ access them, or they may be ignored by some or all steps.</para>
       &lt;/c:directory&gt;
     &lt;/c:directory&gt;
   &lt;/c:directory&gt;
-&lt;/c:directory&gt;</literallayout>
-    </example>
+&lt;/c:directory&gt;</programlisting>
+
     <para>If the <option>exclude-filter</option> pattern matches the slash-augmented relative path, the entry (and all of
       its content in case of a directory) is excluded in the output.</para>
     <para>If both options are
@@ -248,7 +251,7 @@ access them, or they may be ignored by some or all steps.</para>
       <tag>c:directory</tag>, it must end in a trailing slash. This way, users will always be able to compute the
       absolute URI for any of these elements by applying <code>fn:base-uri()</code> to it.</para>
     
-    <section xml:id="dir-list-details">
+    <simplesect xml:id="dir-list-details">
       <title>Directory list details</title>
       
       <para>If <option>detailed</option> is false, then only the
@@ -291,7 +294,7 @@ access them, or they may be ignored by some or all steps.</para>
         </varlistentry>
       </variablelist>
       
-      <para><impl>The precise meaning of these properties are
+      <para><impl>The precise meaning of the detailed properties are
         <glossterm>implementation-defined</glossterm> and may vary according
         to the URI scheme of the <option>path</option>.</impl>
         If the value of an attribute is “<code>false</code>” or if it has no
@@ -300,7 +303,7 @@ access them, or they may be ignored by some or all steps.</para>
       <para><impl>Any other attributes on
         <tag>c:file</tag>, <tag>c:directory</tag>, or <tag>c:other</tag>
         are <glossterm>implementation-defined</glossterm></impl>, but they <rfc2119>must</rfc2119> be in a namespace.</para>
-    </section>
+    </simplesect>
     
     <simplesect>
       <title>Document properties</title>
@@ -308,13 +311,6 @@ access them, or they may be ignored by some or all steps.</para>
         the resulting document has a <property>base-uri</property>. Its value is identical to the top-level
         element’s <tag class="attribute">xml:base</tag> attribute, that is, to the directory’s URI.</para>
     </simplesect>
-
-<simplesect>
-<title>Errata, April 2024</title>
-<para>Editorial clarifications. Fixed a grammatical error in the description of
-include filters. Improved the description of include filter processing.</para>
-</simplesect>
-
   </section>
   
   <section xml:id="c.file-copy">
@@ -376,7 +372,7 @@ include filters. Improved the description of include filter processing.</para>
     </listitem>
   </itemizedlist>
 
-  <section xml:id="recursive-copy">
+  <simplesect xml:id="recursive-copy">
     <title>Copying directories</title>
 
   <para>If <option>href</option> identifies a directory and
@@ -399,7 +395,7 @@ include filters. Improved the description of include filter processing.</para>
       </para>
     </listitem>
   </itemizedlist>
-  </section>
+  </simplesect>
 
   <simplesect>
     <title>Document properties</title>
@@ -538,8 +534,10 @@ include filters. Improved the description of include filter processing.</para>
   <para>The following attributes are standard on a returned <tag>c:file</tag> or <tag>c:directory</tag> element. All
     attributes are optional and must be absent if not applicable. Additional implementation-defined attributes may be
     present, but they must be in a namespace.</para>
-  <informaltable>
+  <informaltable pgwide="1">
     <tgroup cols="3">
+      <colspec colwidth="1in"/>
+      <colspec colwidth="1in"/>
       <thead>
         <row>
           <entry>Attribute</entry>
@@ -871,6 +869,7 @@ or exists and cannot be accessed.</error></para>
   apart from <property>content-type</property>. In particular, it has no <property>base-uri</property>.</para>
   </simplesect>
 </section>
+</section>
 
 <section xml:id="errors">
 <title>Step Errors</title>
@@ -932,13 +931,6 @@ how <glossterm role="unwrapped">implementation-defined</glossterm> features are 
 <?implementation-defined-features?>
 </section>
 
-<section xml:id="implementation-dependent">
-<title>Implementation-dependent features</title>
-
-<para>The following features are implementation-dependent:</para>
-
-<?implementation-dependent-features?>
-</section>
 </appendix>
 
 <appendix xml:id="references">
@@ -979,6 +971,18 @@ how <glossterm role="unwrapped">implementation-defined</glossterm> features are 
 implementation has discretion in how it is performed.
 Implementations are not required to document or explain
 how <glossterm role="unwrapped">implementation-dependent</glossterm> features are performed.</para></glossdef></glossentry></glosslist></appendix>
+
+<appendix xml:id="changelog">
+<title>Change log</title>
+
+<para>This appendix catalogs recent non-editorial changes.</para>
+
+<orderedlist>
+<listitem>
+<para>Improved the description of include filter processing in <tag>p:directory-list</tag>.</para>
+</listitem>
+</orderedlist>
+</appendix>
 
 <appendix version="5.0-extension w3c-xproc" xml:id="ancillary-files">
 <title>Ancillary files</title>
