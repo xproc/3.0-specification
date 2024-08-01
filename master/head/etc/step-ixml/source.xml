@@ -64,18 +64,20 @@ steps is assumed; for background details, see
 the specified Invisible XML grammar.</para>
 
 <p:declare-step type="p:ixml">
-  <p:input port="grammar" sequence="true" content-types="any"/>
+  <p:input port="grammar" sequence="true" content-types="text xml"/>
   <p:input port="source" primary="true" content-types="any -xml -html"/>
-  <p:output port="result" content-types="any"/>
+  <p:output port="result" sequence="true" content-types="any"/>
   <p:option name="parameters" as="map(xs:QName, item()*)?"/>    
   <p:option name="fail-on-error" as="xs:boolean" select="true()"/>
 </p:declare-step>
 
 <para>If no grammar is provided on the <port>grammar</port> port, the grammar for
 Invisible XML is assumed. If an XML or text grammar is provided it
-<rfc2119>should</rfc2119> be an Invisible XML grammar. 
-<impl>If any other grammar format is provided, its interpretation is
-<glossterm>implementation-defined</glossterm>.</impl></para>
+<rfc2119>must</rfc2119> be an Invisible XML grammar. 
+<error code="C0212">It is a <glossterm>dynamic error</glossterm> if the grammar
+provided is not a valid Invisible XML grammar.</error>
+<error code="C0211">It is a <glossterm>dynamic error</glossterm> if more than one
+document appears on the <port>grammar</port> port.</error></para>
 
 <para>The <port>source</port> to be processed is usually text, but
 there’s nothing in principle that prevents an Invisible XML grammar
@@ -107,20 +109,25 @@ in the output.</para>
 </itemizedlist>
 
 <section xml:id="example-ixml">
-<title>Example</title>
+<title>Examples</title>
 
-<para>The following pipeline parses an Invisible XML grammar and returns
-its XML representation:</para>
+<para>Several examples demonstrate features of the step.</para>
 
-<example xml:id="addr-1">
-<title>Parsing an ixml grammar</title>
+<section xml:id="example-parse-ixml">
+<title>Parsing an Invisible XML grammar</title>
+
+<para>In this first example, no grammar is provided, so the pipeline parses the
+Invisible XML grammar on the <port>source</port> port and returns its XML
+representation:</para>
+
 <programlisting language="xml">&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
                 version="3.0"&gt;
 &lt;p:output port="result"/&gt;
 
 &lt;p:ixml&gt;
+  &lt;p:with-input port="grammar"&gt;&lt;p:empty /&gt;&lt;/p:with-input&gt;
   &lt;p:with-input port="source"&gt;
-    &lt;p:inline&gt;
+    &lt;p:inline content-type="text/plain"&gt;
 date: s?, day, s, month, (s, year)? .
 -s: -" "+ .
 day: digit, digit? .
@@ -134,7 +141,6 @@ year: (digit, digit)?, digit, digit .
 &lt;/p:ixml&gt;
 
 &lt;/p:declare-step&gt;</programlisting>
-</example>
 
 <para>This would produce an XML version of the grammar:</para>
 
@@ -160,17 +166,20 @@ year: (digit, digit)?, digit, digit .
    &lt;!-- … remaining rules elided for brevity … --&gt;
 &lt;/ixml&gt;</programlisting>
 
-<para>Providing the “date” grammar allows the step to parse dates:</para>
+</section>
+<section xml:id="example-parse-date">
+<title>Parsing a date</title>
 
-<example xml:id="addr-2">
-<title>Parsing a date with ixml</title>
+<para>If the grammar is provided on the <port>grammar</port> port, it can be
+used to parse input, the string “31 December 2021” in this case:</para>
+
 <programlisting language="xml">&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
                 version="3.0"&gt;
 &lt;p:output port="result"/&gt;
 
 &lt;p:ixml&gt;
   &lt;p:with-input port="grammar"&gt;
-    &lt;p:inline&gt;
+    &lt;p:inline content-type="text/plain"&gt;
 date: s?, day, s, month, (s, year)? .
 -s: -" "+ .
 day: digit, digit? .
@@ -182,29 +191,30 @@ year: (digit, digit)?, digit, digit .
     &lt;/p:inline&gt;
   &lt;/p:with-input&gt;
   &lt;p:with-input port="source"&gt;
-    &lt;p:inline&gt;31 December 2021&lt;/p:inline&gt;
+    &lt;p:inline content-type="text/plain"&gt;31 December 2021&lt;/p:inline&gt;
   &lt;/p:with-input&gt;
 &lt;/p:ixml&gt;
 
 &lt;/p:declare-step&gt;</programlisting>
-</example>
 
 <para>This would produce an XML version of the date:</para>
 
 <programlisting language="xml">&lt;date&gt;&lt;day&gt;31&lt;/day&gt;&lt;month&gt;December&lt;/month&gt;&lt;year&gt;2021&lt;/year&gt;&lt;/date&gt;</programlisting>
 
+</section>
+<section xml:id="example-parse-fail">
+<title>Failed parses</title>
+
 <para>If a parse fails, the implementation <rfc2119>must</rfc2119> indicate
 this, but it may also provide information about where the processing failed.</para>
 
-<example xml:id="addr-3">
-<title>Failing to parse a date with ixml</title>
 <programlisting language="xml">&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
                 version="3.0"&gt;
 &lt;p:output port="result"/&gt;
 
 &lt;p:ixml fail-on-error="false"&gt;
   &lt;p:with-input port="grammar"&gt;
-    &lt;p:inline&gt;
+    &lt;p:inline content-type="text/plain"&gt;
 date: s?, day, s, month, (s, year)? .
 -s: -" "+ .
 day: digit, digit? .
@@ -216,18 +226,17 @@ year: (digit, digit)?, digit, digit .
     &lt;/p:inline&gt;
   &lt;/p:with-input&gt;
   &lt;p:with-input port="source"&gt;
-    &lt;p:inline&gt;31 Mumble 2021&lt;/p:inline&gt;
+    &lt;p:inline content-type="text/plain"&gt;31 Mumble 2021&lt;/p:inline&gt;
   &lt;/p:with-input&gt;
 &lt;/p:ixml&gt;
 
 &lt;/p:declare-step&gt;</programlisting>
-</example>
 
 <para>Here the output might be something like this:</para>
 
-<programlisting language="xml">&lt;ixml xmlns:ixml="http://invisiblexml.org/NS"
-      xmlns:ex="http://example.com/NS"
-      ixml:state="failed" ex:lastChar="4"&gt;
+<programlisting language="xml">&lt;error xmlns:ixml="http://invisiblexml.org/NS"
+       xmlns:ex="http://example.com/NS"
+       ixml:state="failed" ex:lastChar="4"&gt;
 &lt;parse&gt;
 month -&gt;  •  M  a  r  c  h
 month -&gt;  M  •  a  r  c  h
@@ -236,25 +245,28 @@ month -&gt;  M  •  a  r  c  h
 month -&gt;  •  M  a  y
 month -&gt;  M  •  a  y
 &lt;/parse&gt;
-&lt;/ixml&gt;</programlisting>
+&lt;/error&gt;</programlisting>
 
-<para>There is <emphasis>nothing</emphasis> standard about this markup
-except the <tag class="attribute">ixml:state</tag> attribute with the
-value “<code>failed</code>”.</para>
+<para>In the case of failure, Invisible XML requires that the <tag class="attribute">ixml:state</tag> attribute appear on the root element
+containing the token “<code>failed</code>”. It doesn’t constrain the implementation’s
+choice of the root element or the content of the document.
+</para>
+
+</section>
+<section xml:id="example-parse-ambiguous-1">
+<title>Ambiguous parses</title>
 
 <para>An ixml grammar may be ambiguous. In the grammar below, there are three
 different possible ways to parse the input. By default, one of them is returned.
 </para>
 
-<example xml:id="ambig-1">
-<title>Parsing an ambiguous grammar</title>
 <programlisting language="xml">&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
                 version="3.0"&gt;
 &lt;p:output port="result"/&gt;
 
 &lt;p:ixml&gt;
   &lt;p:with-input port="grammar"&gt;
-    &lt;p:inline&gt;
+    &lt;p:inline content-type="text/plain"&gt;
 letters: X, (A; B; C) .
 A: digits .
 B: digits .
@@ -264,12 +276,11 @@ digits: ["0"-"9"]+ .
     &lt;/p:inline&gt;
   &lt;/p:with-input&gt;
   &lt;p:with-input port="source"&gt;
-    &lt;p:inline&gt;a123&lt;/p:inline&gt;
+    &lt;p:inline content-type="text/plain"&gt;a123&lt;/p:inline&gt;
   &lt;/p:with-input&gt;
 &lt;/p:ixml&gt;
 
 &lt;/p:declare-step&gt;</programlisting>
-</example>
 
 <para>This might return any one of these parses:</para>
 
@@ -284,13 +295,15 @@ digits: ["0"-"9"]+ .
 <programlisting language="xml">&lt;letters ixml:state="ambiguous" xmlns:ixml="http://invisiblexml.org/NS"&gt;&lt;X&gt;a&lt;/X&gt;&lt;B&gt;&lt;digits&gt;123&lt;/digits&gt;&lt;/B&gt;&lt;/letters&gt;</programlisting>
 
 <para>All are equally correct.</para>
+</section>
+
+<section xml:id="example-parse-ambiguous-2">
+<title>Ambiguous parse selection</title>
 
 <para>An implementation might provide a parameter to allow the author to
 select a particular parse:
 </para>
 
-<example xml:id="ambig-2">
-<title>Selecting a particular parse</title>
 <programlisting language="xml">&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
                 xmlns:ex="http://example.com/"
                 version="3.0"&gt;
@@ -298,7 +311,7 @@ select a particular parse:
 
 &lt;p:ixml parameters="map{'ex:select':2}"&gt;
   &lt;p:with-input port="grammar"&gt;
-    &lt;p:inline&gt;
+    &lt;p:inline content-type="text/plain"&gt;
 letters: X, (A; B; C) .
 A: digits .
 B: digits .
@@ -308,21 +321,22 @@ digits: ["0"-"9"]+ .
     &lt;/p:inline&gt;
   &lt;/p:with-input&gt;
   &lt;p:with-input port="source"&gt;
-    &lt;p:inline&gt;a123&lt;/p:inline&gt;
+    &lt;p:inline content-type="text/plain"&gt;a123&lt;/p:inline&gt;
   &lt;/p:with-input&gt;
 &lt;/p:ixml&gt;
 
 &lt;/p:declare-step&gt;</programlisting>
-</example>
 
 <para>This might return:</para>
 
-<programlisting language="xml">&lt;letters&gt;&lt;X&gt;a&lt;/X&gt;&lt;A&gt;&lt;digits&gt;123&lt;/digits&gt;&lt;/A&gt;&lt;/letters&gt;</programlisting>
+<programlisting language="xml">&lt;letters ixml:state="ambiguous"&gt;&lt;X&gt;a&lt;/X&gt;&lt;A&gt;&lt;digits&gt;123&lt;/digits&gt;&lt;/A&gt;&lt;/letters&gt;</programlisting>
+</section>
+
+<section xml:id="example-parse-ambiguous-3">
+<title>Multiple ambiguous outputs</title>
 
 <para>Or a processor might provide a parameter to return all of the parses.</para>
 
-<example xml:id="ambig-3">
-<title>Selecting a particular parse</title>
 <programlisting language="xml">&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
                 xmlns:ex="http://example.com/"
                 version="3.0"&gt;
@@ -330,7 +344,7 @@ digits: ["0"-"9"]+ .
 
 &lt;p:ixml parameters="map{'ex:select':'all'}"&gt;
   &lt;p:with-input port="grammar"&gt;
-    &lt;p:inline&gt;
+    &lt;p:inline content-type="text/plain"&gt;
 letters: X, (A; B; C) .
 A: digits .
 B: digits .
@@ -340,23 +354,20 @@ digits: ["0"-"9"]+ .
     &lt;/p:inline&gt;
   &lt;/p:with-input&gt;
   &lt;p:with-input port="source"&gt;
-    &lt;p:inline&gt;a123&lt;/p:inline&gt;
+    &lt;p:inline content-type="text/plain"&gt;a123&lt;/p:inline&gt;
   &lt;/p:with-input&gt;
 &lt;/p:ixml&gt;
 
 &lt;/p:declare-step&gt;</programlisting>
-</example>
 
-<para>This might return:</para>
+<para>This might return three documents:</para>
 
-<programlisting language="xml">&lt;ixml parseCount='3'&gt;
-&lt;letters&gt;&lt;X&gt;a&lt;/X&gt;&lt;C&gt;&lt;digits&gt;123&lt;/digits&gt;&lt;/C&gt;&lt;/letters&gt;
-&lt;letters&gt;&lt;X&gt;a&lt;/X&gt;&lt;B&gt;&lt;digits&gt;123&lt;/digits&gt;&lt;/B&gt;&lt;/letters&gt;
-&lt;letters&gt;&lt;X&gt;a&lt;/X&gt;&lt;A&gt;&lt;digits&gt;123&lt;/digits&gt;&lt;/A&gt;&lt;/letters&gt;
-&lt;/ixml&gt;</programlisting>
+<programlisting language="xml">&lt;letters ixml:state="ambiguous"&gt;&lt;X&gt;a&lt;/X&gt;&lt;C&gt;&lt;digits&gt;123&lt;/digits&gt;&lt;/C&gt;&lt;/letters&gt;
+&lt;letters ixml:state="ambiguous"&gt;&lt;X&gt;a&lt;/X&gt;&lt;B&gt;&lt;digits&gt;123&lt;/digits&gt;&lt;/B&gt;&lt;/letters&gt;
+&lt;letters ixml:state="ambiguous"&gt;&lt;X&gt;a&lt;/X&gt;&lt;A&gt;&lt;digits&gt;123&lt;/digits&gt;&lt;/A&gt;&lt;/letters&gt;</programlisting>
 
 <para>As before, there is nothing standardized about the results in this case.</para>
-
+</section>
 </section>
   
 <section>
