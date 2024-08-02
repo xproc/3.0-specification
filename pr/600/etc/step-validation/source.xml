@@ -493,10 +493,7 @@ properties are preserved on the <port>report</port> port.</para>
   <para>The <tag>p:validate-with-dtd</tag> step validates XML with a DTD.</para>
 
 <p:declare-step type="p:validate-with-dtd">
-  <p:input port="source" primary="true" content-types="xml html text"/>
-  <p:input port="doctype" content-types="text" sequence="true">
-    <p:empty/>
-  </p:input>
+  <p:input port="source" primary="true" content-types="xml html"/>
   <p:output port="result" primary="true" content-types="xml"/>
   <p:output port="report" sequence="true" content-types="xml json"/>
   <p:option name="report-format" select="'xvrl'" as="xs:string"/>
@@ -506,53 +503,43 @@ properties are preserved on the <port>report</port> port.</para>
 
 <para>DTD validation differs from the other XML validation technologies in that
 it is applied during parsing. It isn’t possible to validate an XML data model with
-a DTD. This step necessarily serializes the source document and then parses it
-back into a new data model.
-</para>
+a DTD. This step necessarily serializes and reparses.</para>
 
-<para>There are several possible approaches, with varying degrees of complexity.
-The general model is that the contents of the <port>doctype</port> port and
-the result of serializing the <port>source</port> are concatenated together.
-</para>
+<para>The <tag>p:validate-with-dtd</tag> step serializes the document on the <port>source</port>
+port and parses the serialization with a
+validating XML parser. Any warning or error messages produced by the parser will
+appear on the <port>report</port> port.</para>
 
-<itemizedlist>
-<listitem>
-<para>In the simple case, the <port>doctype</port> is empty and <port>source</port>
-document is simply serialized. In order to have any chance of being DTD-valid,
-the serialization properties must include at least a <code>doctype-system</code>
-property.</para>
-</listitem>
-<listitem>
-<para>If an internal subset is required, it is provided on the <port>doctype</port> port.
-In this case, the <code>source</code> document must be serialized <emphasis>without</emphasis>
-a <code>doctype-system</code> property; both the internal and external declarations must appear
-on the <port>doctype</port> port.</para>
-</listitem>
-<listitem>
-<para>Finally, if a text document is provided on the <port>source</port> port,
-it is simply concatenated with the <port>doctype</port> port.</para>
-</listitem>
-</itemizedlist>
-
-<para>The resulting text is parsed using a validating XML parser. Any warning or
-error messages produced by the parser will appear on the <port>report</port>
-port.
-</para>
+<note>
+<para>The serialization options must include at least the
+<literal>doctype-system</literal> property (without a system identifier, the
+document cannot be successfully parsed with a validating parser).</para>
+</note>
 
 <para><error code="C0210">It is a <glossterm>dynamic error</glossterm>
 if the <option>assert-valid</option> option on <tag>p:validate-with-dtd</tag>
 is <literal>true</literal>
 and the input document is not valid.</error></para>
 
-<para>The output from this step is a copy of the input. If validation was successful,
-the output may have been augmented by the DTD.</para>
+<para>The output from this step is a copy of the input. If validation was
+successful, the output may have been augmented by the DTD. (For example, default
+attributes may have been added.)</para>
 
 <simplesect>
-  <title>Document properties</title>
-  <para feature="validate-with-dtd-preserves-all">All document properties
-  on the <port>source</port> port are preserved on the <port>result</port>
-  port. No document properties are
-  preserved on the <port>report</port> port.</para>
+<title>Using an internal subset</title>
+
+<para>To validate a document with an internal subset, construct a text document
+that is a syntactically valid XML document with the internal
+subset, use <tag>p:cast-content-type</tag> to create an XML document,
+and then validate the resulting document with this step.</para>
+</simplesect>
+
+<simplesect>
+<title>Document properties</title>
+<para feature="validate-with-dtd-preserves-all">All document properties
+on the <port>source</port> port are preserved on the <port>result</port>
+port. No document properties are
+preserved on the <port>report</port> port.</para>
 </simplesect>
 </section>  
 </section>
@@ -560,7 +547,7 @@ the output may have been augmented by the DTD.</para>
 <section xml:id="errors">
 <title>Step Errors</title>
 
-<para>This step can raise
+<para>These steps can raise
 <glossterm baseform="dynamic-error">dynamic errors</glossterm>.
 </para>
 
