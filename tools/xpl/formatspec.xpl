@@ -88,7 +88,7 @@
     <p:exec command="java" result-is-xml="false" cx:depends-on="fix2">
       <p:input port="source"><p:empty/></p:input>
       <p:with-option name="args"
-                     select="concat('-jar deltaxml/command-12.0.1.jar compare xhtml-patch ',
+                     select="concat('-jar deltaxml/command-15.0.2.jar compare xhtml-patch ',
                                     'build/', $specid, '-current.html build/', $specid, '-updated.html ', $diffloc)">
         <p:empty/>
       </p:with-option>
@@ -132,7 +132,7 @@
     <p:exec command="java" result-is-xml="false" cx:depends-on="fix2">
       <p:input port="source"><p:empty/></p:input>
       <p:with-option name="args"
-                     select="concat('-jar deltaxml/command-12.0.1.jar compare xhtml-patch ',
+                     select="concat('-jar deltaxml/command-15.0.2.jar compare xhtml-patch ',
                                     'build/', $specid, '-lc.html build/', $specid, '-updated.html ', $lcdiffloc)">
         <p:empty/>
       </p:with-option>
