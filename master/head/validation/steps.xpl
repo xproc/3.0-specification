@@ -58,10 +58,7 @@
       <p:option name="report-format" select="'xvrl'" as="xs:string"/>
    </p:declare-step>
    <p:declare-step type="p:validate-with-dtd" xml:id="validate-with-dtd">
-      <p:input port="source" primary="true" content-types="xml html text"/>
-      <p:input port="doctype" content-types="text" sequence="true">
-         <p:empty/>
-      </p:input>
+      <p:input port="source" primary="true" content-types="xml html"/>
       <p:output port="result" primary="true" content-types="xml"/>
       <p:output port="report" sequence="true" content-types="xml json"/>
       <p:option name="report-format" select="'xvrl'" as="xs:string"/>
