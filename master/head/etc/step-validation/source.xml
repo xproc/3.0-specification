@@ -67,7 +67,8 @@ step for
 
 <para>This specification describes the <code>p:validate-with-relax-ng</code>,
 <code>p:validate-with-schematron</code>, <code>p:validate-with-xml-schema</code>,
-<code>p:validate-with-nvdl</code>, and <code>p:validate-with-json-schema</code>
+<code>p:validate-with-nvdl</code>, <code>p:validate-with-json-schema</code>,
+and <code>p:validate-with-dtd</code>
 steps. Each is independently optional. A machine-readable description of
 these steps may be found in
 <link xlink:href="steps.xpl">steps.xpl</link>.
@@ -129,6 +130,9 @@ validation steps and their semantics are
       <literal>xvrl:map-to-severity</literal>, and <literal>xvrl:xpath-notation</literal>.</para>
   </section>
 
+<section xml:id="library">
+<title>Step library</title>
+
   <section xml:id="c.validate-with-nvdl">
     <title>Validate with NVDL</title>
 
@@ -161,20 +165,15 @@ validation steps and their semantics are
       <tag>p:validate-with-nvdl</tag> is
           <literal>true</literal> and the input document is not valid.</error></para>
 
-    <para>The output from this step is a copy of the input. The output of this step <rfc2119>may</rfc2119> include PSVI
-      annotations.</para>
+    <para>The output from this step is a copy of the input. The output of this
+    step <rfc2119>may</rfc2119> include PSVI annotations.</para>
     
-    <note role="editorial" xml:id="ednote-nvdl">
-      <para>Should the step also provide the <option>dtd-attribute-values</option> and <option>dtd-id-idref-warnings</option>
-      options for Relax NG validations? Is there a way to instruct <link xlink:href="https://github.com/relaxng/jing-trang">Jing</link> 
-        to use these options, maybe in NVDL extension attributes? Probably not in the foreseeable future.</para>
-    </note>
-
     <simplesect>
       <title>Document properties</title>
-      <para feature="validate-with-nvdl-preserves-all">All document properties on the <port>source</port> port are preserved
-        on the <port>result</port> port. No document properties on the <port>schemas</port> and <port>nvdl</port> ports 
-        are preserved. No document properties are preserved on the <port>report</port> port.</para>
+      <para feature="validate-with-nvdl-preserves-all">All document properties
+      on the <port>source</port> port are preserved on the <port>result</port>
+      port. No document properties are
+      preserved on the <port>report</port> port.</para>
     </simplesect>
   </section>
   
@@ -236,7 +235,7 @@ augmented by application of the
 <title>Document properties</title>
 <para feature="validate-with-relax-ng-preserves-all">All document properties on
 the <port>source</port> port are preserved on the <port>result</port> port.
-No document properties on the <port>schema</port> port are preserved. No document
+No document
 properties are preserved on the <port>report</port> port.</para>
 </simplesect>
 </section>
@@ -314,7 +313,7 @@ input.</para>
 <title>Document properties</title>
 <para feature="validate-with-schematron-preserves-all">All document properties
 on the <port>source</port> port are preserved on the <port>result</port> port.
-No document properties on the <port>schema</port> port are preserved. No document
+No document
 properties are preserved on the <port>report</port> port.</para>
 </simplesect>
 </section>
@@ -439,7 +438,8 @@ by the XML Schema recommendation.</para>
 <title>Document properties</title>
 <para feature="validate-with-xml-schema-preserves-all">All document properties
 on the <port>source</port> port are preserved on the <port>result</port> port.
-No document properties on the <port>schemas</port> port are preserved.</para>
+No document
+properties are preserved on the <port>report</port> port.</para>
 </simplesect>
 </section>
 
@@ -476,30 +476,24 @@ No document properties on the <port>schemas</port> port are preserved.</para>
     if the <option>assert-valid</option> option on <tag>p:validate-with-json-schema</tag> 
     is <literal>true</literal>
     and the input document is not valid.</error></para>
+
+    <para>The output from this step is a copy of the input.</para>
   
   <simplesect>
     <title>Document properties</title>
-    <para feature="validate-with-json-preserves-all">All document properties on the <port>source</port> port are preserved
-      on the <port>result</port> port. No document properties on the <port>schemas</port> are preserved. 
-      No document properties are preserved on the <port>report</port> port.</para>
+    <para feature="validate-with-json-preserves-all">All document properties on
+    the <port>source</port> port are preserved on the <port>result</port> port.
+    No document properties are preserved on the <port>report</port> port.</para>
   </simplesect>
 
-<simplesect>
-<title>Errata, April 2024</title>
-<para>Corrected an error in the sequence type for the <code>default-version</code> option
-to allow it to be optional.</para>
-</simplesect>
 </section>  
 
 <section xml:id="c.validate-with-dtd">
-  <title>Validate with a DTD</title>
+  <title>Validate with DTD</title>
   <para>The <tag>p:validate-with-dtd</tag> step validates XML with a DTD.</para>
 
 <p:declare-step type="p:validate-with-dtd">
-  <p:input port="source" primary="true" content-types="xml html text"/>
-  <p:input port="doctype" content-types="text" sequence="true">
-    <p:empty/>
-  </p:input>
+  <p:input port="source" primary="true" content-types="xml html"/>
   <p:output port="result" primary="true" content-types="xml"/>
   <p:output port="report" sequence="true" content-types="xml json"/>
   <p:option name="report-format" select="'xvrl'" as="xs:string"/>
@@ -509,46 +503,51 @@ to allow it to be optional.</para>
 
 <para>DTD validation differs from the other XML validation technologies in that
 it is applied during parsing. It isn’t possible to validate an XML data model with
-a DTD. This step necessarily serializes the source document and then parses it
-back into a new data model.
-</para>
+a DTD. This step necessarily serializes and reparses.</para>
 
-<para>There are several possible approaches, with varying degrees of complexity.
-The general model is that the contents of the <port>doctype</port> port and
-the result of serializing the <port>source</port> are concatenated together.
-</para>
+<para>The <tag>p:validate-with-dtd</tag> step serializes the document on the <port>source</port>
+port and parses the serialization with a
+validating XML parser. Any warning or error messages produced by the parser will
+appear on the <port>report</port> port.</para>
 
-<itemizedlist>
-<listitem>
-<para>In the simple case, the <port>doctype</port> is empty and <port>source</port>
-document is simply serialized. In order to have any chance of being DTD-valid,
-the serialization properties must include at least a <code>doctype-system</code>
-property.</para>
-</listitem>
-<listitem>
-<para>If an internal subset is required, it is provided on the <port>doctype</port> port.
-In this case, the <code>source</code> document must be serialized <emphasis>without</emphasis>
-a <code>doctype-system</code> property; both the internal and external declarations must appear
-on the <port>doctype</port> port.</para>
-</listitem>
-<listitem>
-<para>Finally, if a text document is provided on the <port>source</port> port,
-it is simply concatenated with the <port>doctype</port> port.</para>
-</listitem>
-</itemizedlist>
+<note>
+<para>The serialization options must include at least the
+<literal>doctype-system</literal> property (without a system identifier, the
+document cannot be successfully parsed with a validating parser).</para>
+</note>
 
-<para>The resulting text is parsed using a validating XML parser.</para>
+<para><error code="C0210">It is a <glossterm>dynamic error</glossterm>
+if the <option>assert-valid</option> option on <tag>p:validate-with-dtd</tag>
+is <literal>true</literal>
+and the input document is not valid.</error></para>
 
-<para>Any warning or error messages produced by the parser will appear on the
-<port>report</port> port. If validation succeeds, the validated document will appear on the
-result port.</para>
+<para>The output from this step is a copy of the input. If validation was
+successful, the output may have been augmented by the DTD. (For example, default
+attributes may have been added.)</para>
 
+<simplesect>
+<title>Using an internal subset</title>
+
+<para>To validate a document with an internal subset, construct a text document
+that is a syntactically valid XML document with the internal
+subset, use <tag>p:cast-content-type</tag> to create an XML document,
+and then validate the resulting document with this step.</para>
+</simplesect>
+
+<simplesect>
+<title>Document properties</title>
+<para feature="validate-with-dtd-preserves-all">All document properties
+on the <port>source</port> port are preserved on the <port>result</port>
+port. No document properties are
+preserved on the <port>report</port> port.</para>
+</simplesect>
 </section>  
+</section>
   
 <section xml:id="errors">
 <title>Step Errors</title>
 
-<para>This step can raise
+<para>These steps can raise
 <glossterm baseform="dynamic-error">dynamic errors</glossterm>.
 </para>
 
@@ -603,14 +602,6 @@ how <glossterm role="unwrapped">implementation-defined</glossterm> features are 
 <para>The following features are implementation-defined:</para>
 
 <?implementation-defined-features?>
-</section>
-
-<section xml:id="implementation-dependent">
-<title>Implementation-dependent features</title>
-
-<para>The following features are implementation-dependent:</para>
-
-<?implementation-dependent-features?>
 </section>
 </appendix>
 
@@ -693,6 +684,22 @@ how <glossterm role="unwrapped">implementation-defined</glossterm> features are 
 implementation has discretion in how it is performed.
 Implementations are not required to document or explain
 how <glossterm role="unwrapped">implementation-dependent</glossterm> features are performed.</para></glossdef></glossentry></glosslist></appendix>
+
+<appendix xml:id="changelog">
+<title>Change log</title>
+
+<para>This appendix catalogs recent non-editorial changes.</para>
+
+<orderedlist>
+<listitem>
+<para>Corrected an error in the sequence type for the <code>default-version</code> option
+on <tag>p:validate-with-json-schema</tag> to allow it to be optional.</para>
+</listitem>
+<listitem>
+<para>Added the <tag>p:validate-with-dtd</tag> step.</para>
+</listitem>
+</orderedlist>
+</appendix>
 
 <appendix version="5.0-extension w3c-xproc" xml:id="ancillary-files">
 <title>Ancillary files</title>
