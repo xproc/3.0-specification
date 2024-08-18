@@ -494,7 +494,7 @@ properties are preserved on the <port>report</port> port.</para>
 
 <p:declare-step type="p:validate-with-dtd">
   <p:input port="source" primary="true" content-types="xml html"/>
-  <p:output port="result" primary="true" content-types="xml"/>
+  <p:output port="result" primary="true" content-types="xml html"/>
   <p:output port="report" sequence="true" content-types="xml json"/>
   <p:option name="report-format" select="'xvrl'" as="xs:string"/>
   <p:option name="serialization" as="map(xs:QName,item()*)?"/>
@@ -546,7 +546,8 @@ and then validate the resulting document with this step.</para>
 <option>assert-valid</option> is <code>false</code>), all document properties on
 the <port>source</port> port are preserved on the <port>result</port> port.
 If validation succeeds, only the <code>base-uri</code> and
-<code>serialization</code> properties are preserved.</para>
+<code>serialization</code> properties are preserved, the content-type
+will be <code>application/xml</code>.</para>
 <para>No document properties are
 preserved on the <port>report</port> port.</para>
 </simplesect>

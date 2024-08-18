@@ -59,7 +59,7 @@
    </p:declare-step>
    <p:declare-step type="p:validate-with-dtd" xml:id="validate-with-dtd">
       <p:input port="source" primary="true" content-types="xml html"/>
-      <p:output port="result" primary="true" content-types="xml"/>
+      <p:output port="result" primary="true" content-types="xml html"/>
       <p:output port="report" sequence="true" content-types="xml json"/>
       <p:option name="report-format" select="'xvrl'" as="xs:string"/>
       <p:option name="serialization" as="map(xs:QName,item()*)?"/>
