@@ -494,7 +494,7 @@ properties are preserved on the <port>report</port> port.</para>
 
 <p:declare-step type="p:validate-with-dtd">
   <p:input port="source" primary="true" content-types="xml html"/>
-  <p:output port="result" primary="true" content-types="xml"/>
+  <p:output port="result" primary="true" content-types="xml html"/>
   <p:output port="report" sequence="true" content-types="xml json"/>
   <p:option name="report-format" select="'xvrl'" as="xs:string"/>
   <p:option name="serialization" as="map(xs:QName,item()*)?"/>
@@ -505,9 +505,16 @@ properties are preserved on the <port>report</port> port.</para>
 it is applied during parsing. It isn’t possible to validate an XML data model with
 a DTD. This step necessarily serializes and reparses.</para>
 
-<para>The <tag>p:validate-with-dtd</tag> step serializes the document on the <port>source</port>
-port and parses the serialization with a
-validating XML parser. Any warning or error messages produced by the parser will
+<para>The <tag>p:validate-with-dtd</tag> step serializes the document on the
+<port>source</port> port and parses the serialization with a validating XML
+parser.
+The <option>serialization</option> option can be used to control the
+serialization. If the document to be stored has a “serialization” property, the
+serialization is controlled by the merger of the two maps where the entries in
+the “serialization” property take precedence. Serialization is described in
+<biblioref linkend="xproc30"/>.</para>
+
+<para>Any warning or error messages produced by the parser will
 appear on the <port>report</port> port.</para>
 
 <note>
@@ -527,18 +534,21 @@ attributes may have been added.)</para>
 
 <simplesect>
 <title>Using an internal subset</title>
-
 <para>To validate a document with an internal subset, construct a text document
-that is a syntactically valid XML document with the internal
+that is a syntactically valid XML serialization with the internal
 subset, use <tag>p:cast-content-type</tag> to create an XML document,
 and then validate the resulting document with this step.</para>
 </simplesect>
 
 <simplesect>
 <title>Document properties</title>
-<para feature="validate-with-dtd-preserves-all">All document properties
-on the <port>source</port> port are preserved on the <port>result</port>
-port. No document properties are
+<para feature="validate-with-dtd-preserves-some">If validation fails (and
+<option>assert-valid</option> is <code>false</code>), all document properties on
+the <port>source</port> port are preserved on the <port>result</port> port.
+If validation succeeds, only the <code>base-uri</code> and
+<code>serialization</code> properties are preserved, the content-type
+will be <code>application/xml</code>.</para>
+<para>No document properties are
 preserved on the <port>report</port> port.</para>
 </simplesect>
 </section>  
