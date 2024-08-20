@@ -1,6 +1,6 @@
-<specification xmlns:cs="http://www.w3.org/XML/XProc/2006/04/components#" xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax" xmlns:p="http://www.w3.org/ns/xproc" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://docbook.org/ns/docbook" xml:id="step-run" class="ed" role="step" version="5.0-extension w3c-xproc">
+<specification xmlns:cs="http://www.w3.org/XML/XProc/2006/04/components#" xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax" xmlns:p="http://www.w3.org/ns/xproc" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://docbook.org/ns/docbook" xml:id="step-run" class="wd" role="step" version="5.0-extension w3c-xproc">
 <info>
-<title>XProc 3.0: dynamic pipeline execution</title>
+<title>XProc 3.1: dynamic pipeline execution</title>
 <!-- defaults to date formatted <pubdate>2014-12-18</pubdate> -->
 <copyright><year>2018</year><year>2019</year><year>2020</year><year>2024</year>
 <holder>the Contributors to the XProc 3.x Standard Step Library
@@ -29,7 +29,7 @@ specifications</holder>
 <abstract>
 <para>This specification describes the <code>p:run</code>
 step for
-<citetitle>XProc 3.0: An XML Pipeline Language</citetitle>.</para>
+<citetitle>XProc 3.1: An XML Pipeline Language</citetitle>.</para>
 </abstract>
 
 <legalnotice xml:id="sotd" role="status">
@@ -49,6 +49,11 @@ step for
   (<link xlink:href="mailto:xproc-dev-request@w3.org?subject=subscribe">subscribe</link>,
   <link xlink:href="https://lists.w3.org/Archives/Public/xproc-dev/">archives</link>).
   </para>
+
+<note role="editorial">
+<para>This draft is a “last call” draft. This version is stable and will not be updated.
+</para>
+</note>
 </legalnotice>
 </info>
 
@@ -60,11 +65,12 @@ A machine-readable description of this step may be found in
 <link xlink:href="steps.xpl">steps.xpl</link>.
 </para>
 
-<para>Familarity with the general nature of <biblioref linkend="xproc30"/>
-steps is assumed; for background details, see
-<biblioref linkend="xproc30-steps"/>.</para>
+<para>Familarity with the general nature of <biblioref linkend="xproc31"/>
+steps is assumed.</para>
 </section>
 
+<section xml:id="library">
+<title>Step library</title>
 <section xml:id="c.run">
 <title>p:run</title>
 
@@ -153,7 +159,7 @@ a different name than implicitly or explicitly specified in the <tag>p:run</tag>
 
 <programlisting language="xml">&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
-                version="3.0" 
+                version="3.1" 
                 name="sample-run-invocation"&gt;
   &lt;p:variable name="xsl-params" select="map{'foo': 'bar'}" 
               as="map(xs:QName, item()*)"/&gt;
@@ -180,7 +186,7 @@ step has the effect of running the pipeline with the dynamically constructed opt
 
 <programlisting language="xml">&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
                 xmlns:xs="http://www.w3.org/2001/XMLSchema"
-                version="3.0" 
+                version="3.1" 
                 name="transform-n-validate"&gt;
   &lt;p:input port="source" primary="true" sequence="true"/&gt;
   &lt;p:input port="stylesheet"/&gt;
@@ -213,6 +219,7 @@ pipelines.</para>
 <title>Document properties</title>
 <para feature="exec-preserves-maybe">The extent to which document properties are preserved depends on the steps
         in the dynamically executed pipeline.</para>
+</section>
 </section>
 </section>
 
@@ -281,14 +288,9 @@ how <glossterm role="unwrapped">implementation-defined</glossterm> features are 
 <appendix xml:id="references">
 <title>References</title>
 <bibliolist>
-<bibliomixed xml:id="xproc30"><abbrev>XProc 3.0</abbrev>
-<citetitle xlink:href="https://spec.xproc.org/3.0/xproc/">XProc 3.0:
+<bibliomixed xml:id="xproc31"><abbrev>XProc 3.1</abbrev>
+<citetitle xlink:href="https://spec.xproc.org/lastcall-2024-08/head/xproc/">XProc 3.1:
 An XML Pipeline Language</citetitle>.
-Norman Walsh, Achim Berndzen, Gerrit Imsieke and Erik Siegel, editors.
-</bibliomixed>
-<bibliomixed xml:id="xproc30-steps"><abbrev>XProc 3.0 Steps</abbrev>
-<citetitle xlink:href="https://spec.xproc.org/">XProc 3.0 Steps:
-An Introduction</citetitle>.
 Norman Walsh, Achim Berndzen, Gerrit Imsieke and Erik Siegel, editors.
 </bibliomixed>
 </bibliolist>
