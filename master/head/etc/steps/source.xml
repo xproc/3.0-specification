@@ -1,13 +1,12 @@
-<specification xmlns:cs="http://www.w3.org/XML/XProc/2006/04/components#" xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax" xmlns:p="http://www.w3.org/ns/xproc" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://docbook.org/ns/docbook" xml:id="steps" class="wd" version="5.0-extension w3c-xproc">
+<specification xmlns:cs="http://www.w3.org/XML/XProc/2006/04/components#" xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax" xmlns:p="http://www.w3.org/ns/xproc" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://docbook.org/ns/docbook" xml:id="steps" class="ed" version="5.0-extension w3c-xproc">
 <info>
-<title>XProc 3.1: Standard Step Library</title>
+<title>XProc 3.0+: Standard Step Library</title>
 <!--
 <pubdate>2022-09-12</pubdate>
 <bibliomisc role="final-uri">https://spec.xproc.org/3.0/steps/</bibliomisc>
 -->
 <copyright><year>2018</year><year>2019</year><year>2020</year><year>2021</year><year>2022</year>
-<year>2023</year><year>2024</year>
-<holder>the Contributors to the XProc 3.1 Standard Step Library
+<holder>the Contributors to the XProc 3.0 Standard Step Library
 specifications</holder>
 </copyright>
 
@@ -36,7 +35,7 @@ specifications</holder>
 
 <abstract>
   <para>This specification describes the standard step vocabulary of
-  <citetitle>XProc 3.1: An XML Pipeline Language</citetitle>.</para>
+  <citetitle>XProc 3.0: An XML Pipeline Language</citetitle>.</para>
 </abstract>
 
 <legalnotice xml:id="sotd" role="status">
@@ -58,16 +57,14 @@ specifications</holder>
   </para>
 
 <note role="editorial">
-<para>This draft is a “last call” draft. This version is stable and will not be updated.
+<para>This draft is the “editor’s working draft” and includes changes made
+after the XProc 3.0 standard step specification was released.
 </para>
 </note>
 
 <para>This document is derived from
 <link xlink:href="https://www.w3.org/TR/2010/REC-xproc-20100511/">XProc:
 An XML Pipeline Language</link> published by the W3C.</para>
-
-<para>Changes made since the 3.0 specification was published are listed in
-<xref linkend="changelog"/>.</para>
 </legalnotice>
 </info>
 
@@ -75,12 +72,11 @@ An XML Pipeline Language</link> published by the W3C.</para>
   <title>Introduction</title>
 
 <para>This specification describes the standard, required atomic XProc
-steps.
-A machine-readable description of these steps may be found in
+steps. A machine-readable description of these steps may be found in
 <link xlink:href="steps.xpl">steps.xpl</link>.
 </para>
 
-<para>Many atomic steps are available for <biblioref linkend="xproc31"/>. They are described in several specifications.
+<para>Many atomic steps are available for <biblioref linkend="xproc30"/>. They are described in several specifications.
 This specification describes the general background common to all
 steps. A conformant processor <rfc2119>must</rfc2119> implement all of
 the steps in this specification. Additional steps may also be
@@ -171,7 +167,7 @@ element for result information:</para>
 <e:rng-pattern name="VocabResult"/>
 
 <para>When a step uses an XPath to compute an option value, the XPath
-context is as defined in <biblioref linkend="xproc31"/>.</para>
+context is as defined in <biblioref linkend="xproc30"/>.</para>
 
 <para>When a step specifies a particular version of a technology,
 implementations <rfc2119>must</rfc2119> implement that
@@ -438,7 +434,7 @@ element's [base URI].</para>
           supported.</impl></para>
       </listitem>
     </varlistentry>
-    <varlistentry xml:id="archive-parameters">
+    <varlistentry>
       <term><option>parameters</option></term>
       <listitem>
         <para>The <option>parameters</option> option can be used to supply parameters to control the
@@ -1183,6 +1179,13 @@ summary of the differences between the two documents may appear on the
 <para feature="compare-preserves-none">No document properties are preserved.
 The comparison document has no <property>base-uri</property>.</para>
 </simplesect>
+
+<simplesect>
+<title>Erratum, April 2024</title>
+<para>The <port>result</port> output port has been made primary. This
+is consistent with the behavior of all known implementations.</para>
+</simplesect>
+
 </section>
 <section xml:id="c.compress">
 
@@ -1235,7 +1238,7 @@ The comparison document has no <property>base-uri</property>.</para>
           content before compression takes place. If the document to be stored has a
             <code>serialization</code> property, the serialization is controlled by the merger of
           the two maps where the entries in the <code>serialization</code> property take precedence.
-          Serialization is described in <biblioref linkend="xproc31"/>.</para>
+          Serialization is described in <biblioref linkend="xproc30"/>.</para>
       </listitem>
     </varlistentry>
   </variablelist>
@@ -2854,7 +2857,7 @@ the new set.</para>
 <para><error code="D0070">It is a <glossterm>dynamic error</glossterm> if a value is 
 assigned to the <code>serialization</code> document property that cannot be converted 
 into <code>map(xs:QName, item()*)</code> according
-to the rules in section “QName handling” of <biblioref linkend="xproc31"/>.</error></para>
+to the rules in section “QName handling” of <biblioref linkend="xproc30"/>.</error></para>
 
 <para><error code="C0069">It is a <glossterm>dynamic
 error</glossterm> if the <option>properties</option> map contains
@@ -3020,7 +3023,7 @@ serialization of content when it is stored. If the document to be stored
 has a “serialization” property, the serialization is controlled by the
 merger of the two maps where the entries in the “serialization” property
 take precedence. Serialization is described in
-<biblioref linkend="xproc31"/>.</para>
+<biblioref linkend="xproc30"/>.</para>
 
 <simplesect>
 <title>Document properties</title>
@@ -3309,6 +3312,15 @@ newline (&amp;#10;).</para>
     <title>Document properties</title>
     <para feature="text-sort-preserves-all">All document properties are preserved.</para>
   </simplesect>
+
+<simplesect>
+<title>Erratum, April 2024</title>
+<para>The URI for the Unicode Codepoint Collation has been corrected to an <code>http:</code> URI rather than
+an <code>https:</code> one. The URI is an identifier and the correct identifier uses an <code>http:</code> URI.
+Implementations are encouraged to recognized collation URIs that begin with “<code>https://www.w3.org/</code>”
+and treat them as if they began “<code>http://www.w3.org/</code>”, with a warning, if practical.</para>
+</simplesect>
+
 </section>
 <section xml:id="c.text-tail">
   <title>p:text-tail</title>
@@ -4073,7 +4085,7 @@ validation before using XQuery:</para>
 <example xml:id="ex.c.xquery">
 <title>A Sample Pipeline Document</title>
 <programlisting language="xml">&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
-                version="3.1"&gt;
+                version="3.0"&gt;
 &lt;p:input port="source"/&gt;
 &lt;p:output port="result"/&gt;
 
@@ -4357,8 +4369,8 @@ how <glossterm role="unwrapped">implementation-defined</glossterm> features are 
 <section xml:id="normative-references">
   <title>Normative References</title>
   <bibliolist>
-    <bibliomixed xml:id="xproc31"><abbrev>XProc 3.1</abbrev>
-<citetitle xlink:href="https://spec.xproc.org/lastcall-2024-08/head/xproc/">XProc 3.1:
+    <bibliomixed xml:id="xproc30"><abbrev>XProc 3.0</abbrev>
+<citetitle xlink:href="https://spec.xproc.org/3.0/xproc/">XProc 3.0:
 An XML Pipeline Language</citetitle>.
 Norman Walsh, Achim Berndzen, Gerrit Imsieke and Erik Siegel, editors.
 </bibliomixed>
@@ -4500,100 +4512,102 @@ who contributed to this document and all of the versions that came before it.</p
 <appendix xml:id="changelog">
 <title>Change Log</title>
 
-<para>This appendix summarizes the changes introduced in XProc 3.1.</para>
+<para>This appendix catalogs non-editorial changes made after the August 2020
+“<link xlink:href="https://spec.xproc.org/lastcall-2020-08/head/steps/">last call</link>”
+draft:</para>
 
-<section>
-<title>Backwards incompatible changes</title>
+<orderedlist>
+<listitem>
+<para>Allow the output of the <tag>p:insert</tag> step to be <literal>text</literal>.
+(issue
+<link xlink:href="https://github.com/xproc/3.0-steps/issues/583">583</link>.)
+</para>
+</listitem>
+<listitem>
+<para>Clarified that the manifest has precedence in the <tag>p:archive</tag> step.
+(issue
+<link xlink:href="https://github.com/xproc/3.0-steps/issues/462">462</link>.)
+</para>
+</listitem>
+<listitem>
+<para>Changed the type of several options from <tag>xs:token</tag> to
+<tag>xs:string</tag>
+(issue
+<link xlink:href="https://github.com/xproc/3.0-steps/issues/490">490</link>.)
+</para>
+</listitem>
+<listitem>
+<para>Changed the type of the <option>parameters</option> option from
+<code>map(xs:string,xs:untypedAtomic+)</code> to
+<code>map(xs:string,xs:anyAtomicType+)</code>.
+(issue
+<link xlink:href="https://github.com/xproc/3.0-steps/issues/491">491</link>.)
+</para>
+</listitem>
+</orderedlist>
 
-<itemizedlist>
-<listitem>
-<para>Resolved <link xlink:href="https://github.com/xproc/3.0-steps/issues/549">issue 549</link>
-by making the <port>result</port> output port on <tag>p:compare</tag> primary.</para>
-<para>Although this change is technically backwards incompatible, all known implementations of
-XProc 3.0 implemented it this way, so it is unlikely that it will have any significant
-consequences.</para>
-</listitem>
-<listitem>
-<para>Resolved <link xlink:href="https://github.com/xproc/3.0-steps/issues/548">issue 548</link>
-by correcting the Unicode collation URI in <tag>p:text-sort</tag>.</para>
-<para>The value given in XProc 3.0 is incorrect and must be updated. To mitigate
-any consequences of this correction, implementations are encouraged to continue
-to recognize the incorrect value, perhaps with a warning.
-</para>
-</listitem>
-</itemizedlist>
+<para>These are the non-editorial changes made after the February 2020
+“<link xlink:href="https://spec.xproc.org/lastcall-2020-02/head/steps/">last call</link>”
+draft:</para>
 
-<section>
-<title>Substantive changes</title>
-  
-<itemizedlist>
-<listitem>
-<para>Resolved <link xlink:href="https://github.com/xproc/3.0-steps/issues/587">issue 587</link>
-by adding a <option>parameters</option> option to the <tag>p:uuid</tag> step.
-</para>
-</listitem>
-<listitem>
-<para>Resolved <link xlink:href="https://github.com/xproc/3.0-steps/issues/574">issue 574</link>
-by adding a <tag>p:sleep</tag> step.
-</para>
-</listitem>
-<listitem>
-<para>Resolved <link xlink:href="https://github.com/xproc/Vnext/issues/39">V.next issue 29</link> by
-allowing the text documents on the <port>insertion</port> port of the <tag>p:insert</tag> step.
-Resolved <link xlink:href="https://github.com/xproc/3.0-steps/issues/583">issue 583</link> by
-allowing text documents on the <port>result</port> port.
-</para>
-</listitem>
-</itemizedlist>
-</section>
-
-<section>
-<title>Editorial changes</title>
-  
-<itemizedlist>
-<listitem>
-<para>Resolved <link xlink:href="https://github.com/xproc/3.0-steps/issues/580">issue 580</link>
-by clarifying what standards apply to the <option>lang</option> option on <tag>p:text-sort</tag>.
-</para>
-</listitem>
-<listitem>
-<para>Resolved <link xlink:href="https://github.com/xproc/3.0-steps/issues/566">issue 566</link>
-by clarifying when a text document is produced from the
-<tag>p:hash</tag>, <tag>p:replace</tag>, <tag>p:string-replace</tag>, and
-<tag>p:uuid</tag> steps.</para>
-</listitem>
-<listitem>
-<para>Resolved <link xlink:href="https://github.com/xproc/3.0-steps/issues/563">issue 563</link>
-by clarifying that <code>p:set-attributes</code> cannot add “namespace attributes” to an element.
-</para>
-</listitem>
-<listitem>
-<para>Resolved <link xlink:href="https://github.com/xproc/3.0-steps/issues/562">issue 562</link>
-by <link linkend="archive-parameters">clarifying</link> that some parameters are defined for
-ZIP archives.</para>
-</listitem>
-<listitem>
-<para>Resolved <link xlink:href="https://github.com/xproc/3.0-steps/issues/561">issue 561</link>
-and <link xlink:href="https://github.com/xproc/3.0-steps/issues/564">issue 564</link>
-by clarifying in the <tag>p:archive</tag> and <tag>p:archive-manifest</tag> steps
-that <code>err:XC0081</code> should be raised when the
-archive format specified differs from the format of the actual archive and
-<code>err:XC0085</code> should be raised when the format of the
-archive cannot be determined or processed.</para>
-</listitem>
-<listitem>
-<para>Resolved <link xlink:href="https://github.com/xproc/3.0-steps/issues/560">issue 560</link>
-by removing <code>err:XC0118</code> in the <tag>p:archive</tag> step. (It was a duplicate
-of <code>err:XC0100</code>.)</para>
-</listitem>
-<listitem>
-<para>Resolved <link xlink:href="https://github.com/xproc/3.0-steps/issues/559">issue 559</link>
-by clarifying that <code>err:XC0023</code> in <tag>p:rename</tag> applies
-if the match pattern matches more than attribute on a single element.</para>
-</listitem>
-</itemizedlist>
-</section>
-</section>
+ <orderedlist>
+   <listitem>
+    <para>For <tag>p:cast-content-type</tag> the expected result type for casting a 
+    <literal>c:param-set</literal> document to “<literal>application/json</literal>” was
+    specified as <literal>map(xs:QName, xs:string)</literal>. (2020-03-15)</para>
+  </listitem>
+  <listitem>
+    <para>In <tag>p:http-request</tag>, instead of using all document properties (with a few
+      explicit exceptions) as headers, only document properties in the
+      <code>http://www.w3.org/ns/xproc-http</code> namespace will be used. (2020-03-18)</para>
+  </listitem>
+   <listitem>
+     <para><xref linkend="cv.archive-manifest"/>: An attribute
+       <code>c:entry/@content-type</code> was added to the archive manifest, to be filled by the
+       <tag>p:archive-manifest</tag> step. (2020-03-20)</para>
+   </listitem>
+   <listitem>
+     <para>A <option>static-parameters</option> was added to <tag>p:xslt</tag>. (2020-03-23)</para>
+   </listitem>
+   <listitem>
+     <para>The <option>override-content-types</option> option was added to <tag>p:archive-manifest</tag> and <tag>p:unarchive</tag>. (2020-03-30)</para>
+   </listitem>
+   <listitem>
+        <para>Clarified the regular expression matching for <tag>p:text-replace</tag> and
+            <tag>p:unarchive</tag>. Added an error code for invalid regular expressions. (2020-04-02)</para>
+   </listitem>
+   <listitem>
+     <para>Replaced errors XC0070 and XC0130 with XD0079. (2020-04-09)</para>
+   </listitem>
+   <listitem>
+     <para>Changed signature of <tag>p:split-sequence</tag> so that any document can appear one port 
+       source. (2020-05-22)</para>
+   </listitem>
+   <listitem>
+     <para>Change the behavior of the <option>global-context-item</option> option of <tag>p:xslt</tag>. (2020-06-10)</para>
+   </listitem>
+   <listitem>
+     <para>Clarified which steps may produce PSVI annotations. (2020-06-09)</para>
+   </listitem>
+   <listitem>
+     <para>Clarified the behaviour in <tag>p:archive</tag>: A missing resource referenced by
+     c:archive/c:entry/@href is only an error for command = 'create'. (2020-06-11)</para>
+   </listitem>
+   <listitem>
+     <para>Option <option>populate-default-collection</option> is added to the signature of <tag>p:xslt</tag>. (2020-06-20)</para>
+   </listitem>
+   <listitem>
+     <para>Clarified how the default <literal>content-type</literal> header of <tag>p:http-request</tag> is 
+     constructed if a single document appears on <port>source</port> port. (2020-06-20)</para>
+   </listitem>
+   <listitem>
+     <para>Added error (XD0079) to <tag>p:http-request</tag> and <tag>p:load</tag> for invalid content-types. (2020-06-23)</para>
+   </listitem>
+   <listitem>
+     <para>Changed signature of the <port>result</port> port of <tag>p:load</tag> to <literal>sequence="false"</literal> and
+       adapted the prose accordingly. (2020-06-24)</para>
+   </listitem>
+ </orderedlist>
 </appendix>
 
 </specification>
