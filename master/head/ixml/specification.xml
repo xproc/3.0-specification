@@ -1,9 +1,9 @@
-<specification xmlns:cs="http://www.w3.org/XML/XProc/2006/04/components#" xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax" xmlns:p="http://www.w3.org/ns/xproc" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://docbook.org/ns/docbook" xml:id="step-ixml" class="ed" role="step" version="5.0-extension w3c-xproc">
+<specification xmlns:cs="http://www.w3.org/XML/XProc/2006/04/components#" xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax" xmlns:p="http://www.w3.org/ns/xproc" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://docbook.org/ns/docbook" xml:id="step-ixml" class="wd" role="step" version="5.0-extension w3c-xproc">
 <info>
-<title>XProc 3.0: Invisible XML</title>
+<title>XProc 3.1: Invisible XML</title>
 <!-- defaults to date formatted <pubdate>2014-12-18</pubdate> -->
 <copyright><year>2021</year>
-<holder>the Contributors to the XProc 3.0 Standard Step Library
+<holder>the Contributors to the XProc 3.1 Standard Step Library
 specifications</holder>
 </copyright>
 
@@ -20,7 +20,7 @@ specifications</holder>
 <abstract>
 <para>This specification describes the <code>p:ixml</code>
 step for
-<citetitle>XProc 3.0: An XML Pipeline Language</citetitle>.</para>
+<citetitle>XProc 3.1: An XML Pipeline Language</citetitle>.</para>
 </abstract>
 
 <legalnotice xml:id="sotd" role="status">
@@ -40,6 +40,11 @@ step for
   (<link xlink:href="mailto:xproc-dev-request@w3.org?subject=subscribe">subscribe</link>,
   <link xlink:href="https://lists.w3.org/Archives/Public/xproc-dev/">archives</link>).
   </para>
+
+<note role="editorial">
+<para>This draft is a “last call” draft. This version is stable and will not be updated.
+</para>
+</note>
 </legalnotice>
 </info>
 
@@ -51,10 +56,12 @@ A machine-readable description of this step may be found in
 <link xlink:href="steps.xpl">steps.xpl</link>.
 </para>
   
-<para>Familarity with the general nature of <biblioref linkend="xproc30"/>
-steps is assumed; for background details, see
-<biblioref linkend="xproc30-steps"/>.</para>
+<para>Familarity with the general nature of <biblioref linkend="xproc31"/>
+steps is assumed.</para>
 </section>
+
+<section xml:id="library">
+<title>Step library</title>
 
 <section xml:id="c.ixml">
 <title>p:ixml</title>
@@ -121,7 +128,7 @@ Invisible XML grammar on the <port>source</port> port and returns its XML
 representation:</para>
 
 <programlisting language="xml">&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
-                version="3.0"&gt;
+                version="3.1"&gt;
 &lt;p:output port="result"/&gt;
 
 &lt;p:ixml&gt;
@@ -174,7 +181,7 @@ year: (digit, digit)?, digit, digit .
 used to parse input, the string “31 December 2021” in this case:</para>
 
 <programlisting language="xml">&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
-                version="3.0"&gt;
+                version="3.1"&gt;
 &lt;p:output port="result"/&gt;
 
 &lt;p:ixml&gt;
@@ -209,7 +216,7 @@ year: (digit, digit)?, digit, digit .
 this, but it may also provide information about where the processing failed.</para>
 
 <programlisting language="xml">&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
-                version="3.0"&gt;
+                version="3.1"&gt;
 &lt;p:output port="result"/&gt;
 
 &lt;p:ixml fail-on-error="false"&gt;
@@ -261,7 +268,7 @@ different possible ways to parse the input. By default, one of them is returned.
 </para>
 
 <programlisting language="xml">&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
-                version="3.0"&gt;
+                version="3.1"&gt;
 &lt;p:output port="result"/&gt;
 
 &lt;p:ixml&gt;
@@ -306,7 +313,7 @@ select a particular parse:
 
 <programlisting language="xml">&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
                 xmlns:ex="http://example.com/"
-                version="3.0"&gt;
+                version="3.1"&gt;
 &lt;p:output port="result"/&gt;
 
 &lt;p:ixml parameters="map{'ex:select':2}"&gt;
@@ -339,7 +346,7 @@ digits: ["0"-"9"]+ .
 
 <programlisting language="xml">&lt;p:declare-step xmlns:p="http://www.w3.org/ns/xproc"
                 xmlns:ex="http://example.com/"
-                version="3.0"&gt;
+                version="3.1"&gt;
 &lt;p:output port="result"/&gt;
 
 &lt;p:ixml parameters="map{'ex:select':'all'}"&gt;
@@ -370,9 +377,10 @@ digits: ["0"-"9"]+ .
 </section>
 </section>
   
-<section>
+<simplesect>
 <title>Document properties</title>
 <para feature="exec-preserves-none">No document properties are preserved.</para>
+</simplesect>
 </section>
 </section>
 
@@ -448,14 +456,9 @@ how <glossterm role="unwrapped">implementation-defined</glossterm> features are 
 <appendix xml:id="references">
 <title>References</title>
 <bibliolist>
-<bibliomixed xml:id="xproc30"><abbrev>XProc 3.0</abbrev>
-<citetitle xlink:href="https://spec.xproc.org/3.0/xproc/">XProc 3.0:
+<bibliomixed xml:id="xproc31"><abbrev>XProc 3.1</abbrev>
+<citetitle xlink:href="https://spec.xproc.org/lastcall-2024-08/head/xproc/">XProc 3.1:
 An XML Pipeline Language</citetitle>.
-Norman Walsh, Achim Berndzen, Gerrit Imsieke and Erik Siegel, editors.
-</bibliomixed>
-<bibliomixed xml:id="xproc30-steps"><abbrev>XProc 3.0 Steps</abbrev>
-<citetitle xlink:href="https://spec.xproc.org/">XProc 3.0 Steps:
-An Introduction</citetitle>.
 Norman Walsh, Achim Berndzen, Gerrit Imsieke and Erik Siegel, editors.
 </bibliomixed>
 <bibliomixed xml:id="invisible-xml"><abbrev>Invisible XML</abbrev>
