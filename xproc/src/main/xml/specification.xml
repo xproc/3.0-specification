@@ -3578,10 +3578,22 @@ library <rfc2119>must</rfc2119> have unique names: it is a
 <glossterm>static error</glossterm> if any static option name is
 declared more than once in the same scope.</error></para>
 </section>
-      
+
+<section>
+<title>Scoping of imported function names</title>
+
+<para>If functions can be imported with <tag>p:import-functions</tag>, the scope
+of the imported functions is to expressions that appear in elements and
+attributes that follow the <tag>p:import-functions</tag> element, in document
+order, in the pipeline document.</para>
+
+<para>If functions are imported in a <tag>p:library</tag>, they are also
+available in pipelines that import that library. The scope of the imported
+functions in the importing pipeline is the expressions that follow the
+<tag>p:import</tag> element that imports the library, in document order,
+in the importing pipeline document.</para>
 </section>
-    
-  
+</section>
   
     <section xml:id="xml-base-attribute">
       <title>Base URIs and xml:base</title>
@@ -6706,11 +6718,13 @@ L2 contains a step C, then:</para>
 </section>
 </section>
 
-<section xml:id="p.import-functions"><title>p:import-functions</title>
+<section xml:id="p.import-functions">
+<title>p:import-functions</title>
 
 <para>An <tag>p:import-functions</tag> element identifies a library of externally
 defined functions to be imported into the pipeline. After the functions have been
-imported, they are available in the processor XPath context.</para>
+imported, they are available in the
+<link linkend="xproc-xpath-context-31">processor XPath context</link>.</para>
 
 <e:rng-pattern name="ImportFunctions"/>
 
@@ -6744,6 +6758,10 @@ in those namespaces will be loaded.
 </varlistentry>
 </variablelist>
 
+<para>Imported functions are loaded during static analysis. In particular,
+they can be used in <tag class="attribute">[p:]use-when</tag> expressions and in
+expressions that initialize static options.</para>
+
 <para>The ability to import functions is optional. <impl>Whether or not a processor
 can import functions, and if it can, what kinds of function libraries it can import
 from is <glossterm>implementation-defined</glossterm>.</impl> Pipeline authors can
@@ -6770,7 +6788,6 @@ imports, etc.).
 arity). <error code="S0105">It is a <glossterm>static error</glossterm> if a function
 imported from a library has the same name and arity as a function already imported.</error>
 </para>
-
 
 </section>
 
