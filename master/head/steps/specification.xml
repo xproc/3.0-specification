@@ -950,17 +950,18 @@ The archive has no <property>base-uri</property>.</para>
             </para>
          </listitem>
          <listitem>
-            <para>Casting from an XML media type to a JSON media type converts the
-               XML into JSON. <impl>The precise nature of the conversion from XML to JSON
-                  is <glossterm>implementation-defined</glossterm>.</impl>
-               If the input document is an XML representation of JSON as defined in
-               <biblioref linkend="xpath31-functions"/>,
-               implementations <rfc2119>must</rfc2119> produce the same result as 
-               <literal>fn:parse-json(fn:xml-to-json())</literal>
-               by default. If the input document has a <tag>c:param-set</tag> document element,
-               an instance of <literal>map(xs:QName, xs:string)</literal> 
-               <rfc2119>must</rfc2119> be returned that represents the document's 
-               <tag>c:param</tag> elements. The serialization property is removed.
+            <para>Casting from an XML media type to a JSON media type converts
+            the XML into JSON. If the input document is an XML representation of
+            JSON as defined in <biblioref linkend="xpath31-functions"/>,
+            implementations <rfc2119>must</rfc2119> produce the same result as
+            <literal>fn:parse-json(fn:xml-to-json())</literal> by default. If
+            the input document has a <tag>c:param-set</tag> document element, an
+            instance of <literal>map(xs:QName, xs:string)</literal>
+            <rfc2119>must</rfc2119> be returned that represents the document's
+            <tag>c:param</tag> elements. <impl>It is
+            <glossterm>implementation-defined</glossterm> if any additional
+            conversions are supported.</impl> The serialization property is
+            removed.
             </para>
          </listitem>
          <listitem>
@@ -993,6 +994,67 @@ The archive has no <property>base-uri</property>.</para>
                <glossterm>implementation-defined</glossterm>.</impl></para>
          </listitem>
       </itemizedlist>
+
+   <simplesect xml:id="c.param-set">
+     <title>Parameter sets</title>
+
+     <para>In XProc 3.1, maps are used for parameters. In XProc 1.0, no maps were
+     available, so an XML vocabulary was defined. It is sometimes convenient to generate
+     a map this way, so the vocabulary is retained.</para>
+
+     <para>A <tag>c:parameter-set</tag> is a wrapper around zero or more <tag>c:param</tag>
+     elements.</para>
+
+     <e:rng-pattern name="VocabParamSet"/>
+
+     <para><error code="D0018">It is a <glossterm>dynamic error</glossterm> if
+     the parameter list contains any elements other than <tag>c:param</tag>.</error></para>
+
+     <para>Any namespace-qualified attribute names that appear on the
+     <tag>c:param-set</tag> element are ignored. <error code="D0014">It is a
+     <glossterm>dynamic error</glossterm> for any unqualified
+     attribute names to appear on a <tag>c:param-set</tag> element.</error></para>
+     
+     <para xml:id="c.param">A <tag>c:param</tag> is a name/value pair with an optional namespace.</para>
+
+     <e:rng-pattern name="VocabParam"/>
+
+     <para>The <tag class="attribute">name</tag> attribute of the
+     <tag>c:param</tag> must have the lexical form of a QName.</para>
+
+     <para>If the <tag class="attribute">namespace</tag> attribute is specified,
+     then the expanded name of the parameter is constructed from the specified
+     namespace and the name value. <error code="D0025">It is a
+     <glossterm>dynamic error</glossterm> if the <tag class="attribute">namespace</tag> attribute is
+     specified, the <tag class="attribute">name</tag> contains a colon, and the specified namespace is not
+     the same as the in-scope namespace binding for the specified prefix.</error></para>
+
+     <para>If the <tag class="attribute">namespace</tag> attribute is not
+     specified, and the <tag class="attribute">name</tag> contains a colon, then
+     the expanded name of the parameter is constructed using the name value and
+     the namespace declarations in-scope on the <tag>c:param</tag> element.</para>
+
+     <para>If the <tag class="attribute">namespace</tag> attribute is not
+     specified, and the <tag class="attribute">name</tag> does not contain a
+     colon, then the expanded name of the parameter is in no namespace.</para>
+
+     <para>If the <tag>c:param</tag> element has a <tag class="attribute">value</tag>
+     attribute, the element <rfc2119>must</rfc2119> be empty. If it does not have a
+     <tag class="attribute">value</tag> attribute, the content of the element is
+     the value. In either case, the type of the value may be specified with a
+     sequence type in the
+     <tag class="attribute">as</tag> attribute. <error code="D0081">It is a
+     <glossterm>dynamic error</glossterm> if the <tag>c:param</tag> element has a
+     <tag class="attribute">value</tag> attribute and is not empty.</error>
+     <error code="D0082">It is a <glossterm>dynamic error</glossterm> if the
+     <tag>c:param</tag> specifies a sequence type and the value does not
+     satisfy that type.</error></para>
+
+     <para>Any namespace-qualified attribute names that appear on the
+     <tag>c:param</tag> element are ignored. <error code="D0014">It is a
+     <glossterm>dynamic error</glossterm> for any unqualified attribute names
+     other than those specified here to appear on a <tag>c:param</tag> element.</error></para>
+   </simplesect>
    </section>
    <section xml:id="casting-from-html">
       <title>Casting from an HTML media type</title>
