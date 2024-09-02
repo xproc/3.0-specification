@@ -1,6 +1,6 @@
 <p:library xmlns:p="http://www.w3.org/ns/xproc"
            xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax"
-           version="3.0">
+           version="3.1">
    <p:declare-step type="p:validate-with-nvdl" xml:id="validate-with-nvdl">
       <p:input port="source" primary="true" content-types="xml html"/>
       <p:input port="nvdl" content-types="xml"/>

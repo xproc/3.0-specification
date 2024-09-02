@@ -1,6 +1,6 @@
 <p:library xmlns:p="http://www.w3.org/ns/xproc"
            xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax"
-           version="3.0">
+           version="3.1">
    <p:declare-step type="p:directory-list" xml:id="directory-list">
       <p:output port="result" content-types="application/xml"/>
       <p:option name="path" required="true" as="xs:anyURI"/>

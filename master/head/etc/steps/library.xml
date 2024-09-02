@@ -1,6 +1,6 @@
 <p:library xmlns:p="http://www.w3.org/ns/xproc"
            xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax"
-           version="3.0">
+           version="3.1">
    <p:declare-step type="p:add-attribute" xml:id="add-attribute">
       <p:input port="source" content-types="xml html"/>
       <p:output port="result" content-types="xml html"/>
