@@ -1399,16 +1399,18 @@ step.</para>
     <p:option name="code" required="true" as="xs:QName"/>
 </p:declare-step>
 
-<para>The <tag>p:error</tag> step always fails. It generates the error specified
-in the <option>code</option> option. It also produces a <tag>c:errors</tag> document that
+<para>The <tag>p:error</tag> step always fails. It generates a single error with the
+error code specified in the 
+<option>code</option> option. It also produces a <tag>c:errors</tag> document that
 will be visible on the error port inside a <tag>p:catch</tag>.
 (The error vocabulary is described in <biblioref linkend="xproc31"/>.)
 </para>
 
 <para>This step <rfc2119>should</rfc2119> include the content of the document
-that appears on the <port>source</port> port in the error. <impl>If more than one
-document appears on the <port>source</port> port of the <tag>p:error</tag> step, what
-is produced in the error document is <glossterm>implementation-defined</glossterm>.</impl></para>
+that appears on the <port>source</port> port in the error. If more than one
+document appears on the <port>source</port> port of the <tag>p:error</tag> step, all
+of the documents <rfc2119>must</rfc2119> be added to a single <tag>c:error</tag>
+element.</para>
 
 <para>For authoring convenience, the <tag>p:error</tag> step is declared with a
 single, primary output port. With respect to connections, this port behaves like
