@@ -1389,8 +1389,9 @@ of the element on which it occurred.</para>
 <section xml:id="c.error">
 <title>p:error</title>
 
-<para>The <code>p:error</code> step generates a <glossterm role="unwrapped">dynamic error</glossterm> using the input provided
-to the step.</para>
+<para>The <code>p:error</code> step generates a
+<glossterm role="unwrapped">dynamic error</glossterm> using the input provided to the
+step.</para>
 
 <p:declare-step type="p:error">
     <p:input port="source" sequence="true" content-types="text xml"/>
@@ -1398,18 +1399,23 @@ to the step.</para>
     <p:option name="code" required="true" as="xs:QName"/>
 </p:declare-step>
 
-<para>This step uses the document provided on its input as the content
-of the error raised. An instance of the
-<tag>c:errors</tag> element will be produced on the error output port, as is
-always the case for <glossterm baseform="dynamic error" role="unwrapped">dynamic errors</glossterm>.
-The error generated can be caught by a <tag>p:try</tag> just like any
-other dynamic error.</para>
+<para>The <tag>p:error</tag> step always fails. It generates a single error with the
+error code specified in the 
+<option>code</option> option. It also produces a <tag>c:errors</tag> document that
+will be visible on the error port inside a <tag>p:catch</tag>.
+(The error vocabulary is described in <biblioref linkend="xproc31"/>.)
+</para>
 
-<para>For authoring convenience, the <tag>p:error</tag> step is
-declared with a single, primary output port. With respect to connections,
-this port behaves like
-any other output port even though nothing can ever
-appear on it since the step always fails.</para>
+<para>This step <rfc2119>should</rfc2119> include the content of the document
+that appears on the <port>source</port> port in the error. If more than one
+document appears on the <port>source</port> port of the <tag>p:error</tag> step, all
+of the documents <rfc2119>must</rfc2119> be added to a single <tag>c:error</tag>
+element.</para>
+
+<para>For authoring convenience, the <tag>p:error</tag> step is declared with a
+single, primary output port. With respect to connections, this port behaves like
+any other output port even though nothing can ever appear on it since the step
+always fails.</para>
 
 <para>For example, given the following invocation:</para>
 <programlisting language="xml">&lt;p:error xmlns:my="http://www.example.org/error"
@@ -1419,8 +1425,8 @@ appear on it since the step always fails.</para>
    &lt;/p:with-input&gt;
 &lt;/p:error&gt;</programlisting>
 
-<para>The error vocabulary element (and document) generated on the
-error output port would be:</para>
+<para>The errors document generated on the error output port might be:</para>
+
 <programlisting language="xml">&lt;c:errors xmlns:c="http://www.w3.org/ns/xproc-step"
           xmlns:p="http://www.w3.org/ns/xproc"
           xmlns:my="http://www.example.org/error"&gt;
