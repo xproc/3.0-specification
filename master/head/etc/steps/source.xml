@@ -1552,10 +1552,7 @@ other kind of node, the entire node (and <emphasis>not</emphasis> just
 with resources over HTTP or related protocols. Implementations
 <rfc2119>must</rfc2119> support the <literal>http</literal> and
 <literal>https</literal> protocols.
-(Implementors are encouraged to support as many protocols as
-practical. In particular, pipeline authors may attempt to use
-<tag>p:http-request</tag> to load documents with computed URIs using
-the <literal>file:</literal> scheme.)</para>
+</para>
 
 <p:declare-step type="p:http-request">
   <p:input port="source" content-types="any" sequence="true"/>
@@ -1570,11 +1567,14 @@ the <literal>file:</literal> scheme.)</para>
   <p:option name="assert" as="xs:string" select="'.?status-code lt 400'"/>
 </p:declare-step>
 
-<para>The <tag>p:http-request</tag> step performs the HTTP request
-specified by the <option>method</option> option against the URI specified in
-the <option>href</option> option. In simple cases, for example, a GET
-request on an unauthenticated URI, nothing else is necessary to form a
-complete request.</para>
+<para>The <tag>p:http-request</tag> step performs the HTTP request specified by
+the <option>method</option> option against the URI specified in the
+<option>href</option> option. In simple cases, for example, a GET request on an
+unauthenticated URI, nothing else is necessary to form a complete request.
+(Implementors are encouraged to support as many protocols as practical. In
+particular, pipeline authors may attempt to use <tag>p:http-request</tag> to
+load documents with computed URIs using the <literal>file:</literal> scheme.)
+</para>
 
 <para>If the method, for example, POST, supports a body, the request
 body is constructed using the document(s) appearing on the
