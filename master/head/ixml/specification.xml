@@ -18,7 +18,7 @@ specifications</holder>
 </authorgroup>
 
 <abstract>
-<para>This specification describes the <code>p:ixml</code>
+<para>This specification describes the <code>p:invisible-xml</code>
 step for
 <citetitle>XProc 3.1: An XML Pipeline Language</citetitle>.</para>
 </abstract>
@@ -51,7 +51,7 @@ step for
 <section xml:id="introduction">
 <title>Introduction</title>
 
-<para>This specification describes the <code>p:ixml</code> XProc step.
+<para>This specification describes the <code>p:invisible-xml</code> XProc step.
 A machine-readable description of this step may be found in
 <link xlink:href="steps.xpl">steps.xpl</link>.
 </para>
@@ -64,13 +64,13 @@ steps is assumed.</para>
 <title>Step library</title>
 
 <section xml:id="c.ixml">
-<title>p:ixml</title>
+<title>p:invisible-xml</title>
 
-<para>The <tag>p:ixml</tag> step performs Invisible XML processing per
+<para>The <tag>p:invisible-xml</tag> step performs Invisible XML processing per
 <biblioref linkend="invisible-xml"/>. It transforms a non-XML input into XML by applying
 the specified Invisible XML grammar.</para>
 
-<p:declare-step type="p:ixml">
+<p:declare-step type="p:invisible-xml">
   <p:input port="grammar" sequence="true" content-types="text xml"/>
   <p:input port="source" primary="true" content-types="any -xml -html"/>
   <p:output port="result" sequence="true" content-types="any"/>
@@ -93,7 +93,7 @@ from applying to an arbitrary sequence of characters.</para>
 <para>The <port>result</port> <rfc2119>should</rfc2119> be XML. 
 <impl>It is <glossterm>implementation-defined</glossterm> if other result
 formats are possible.</impl> (An implementation might, for example, provide a
-way for the <tag>p:ixml</tag> step to compile an Invisible XML grammar into some
+way for the <tag>p:invisible-xml</tag> step to compile an Invisible XML grammar into some
 format that can be processed more efficiently.)</para>
 
 <itemizedlist>
@@ -375,6 +375,20 @@ digits: ["0"-"9"]+ .
 
 <para>As before, there is nothing standardized about the results in this case.</para>
 </section>
+</section>
+
+<section>
+<title>Formerly the <code>p:ixml</code> step</title>
+
+<para>In earlier drafts of this specification, the <tag>p:invisible-xml</tag> step
+was named <code>p:ixml</code>. Changing the name of the step to <tag>p:invisible-xml</tag>
+brings the name into better alignment with the naming conventions used for most other
+XProc steps and aligns its name with the <code>fn:invisible-xml()</code> function
+in XPath 4.0.</para>
+
+<para>Implementors may wish to support both names for some period of time in order
+to avoid breaking changes in existing pipelines. <impl>Support for the alternative name <code>p:ixml</code>
+is <glossterm>implementation-defined</glossterm>.</impl></para>
 </section>
   
 <simplesect>

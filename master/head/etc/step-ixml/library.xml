@@ -1,7 +1,7 @@
 <p:library xmlns:p="http://www.w3.org/ns/xproc"
            xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax"
            version="3.1">
-   <p:declare-step type="p:ixml" xml:id="ixml">
+   <p:declare-step type="p:invisible-xml" xml:id="invisible-xml">
       <p:input port="grammar" sequence="true" content-types="text xml"/>
       <p:input port="source" primary="true" content-types="any -xml -html"/>
       <p:output port="result" sequence="true" content-types="any"/>
