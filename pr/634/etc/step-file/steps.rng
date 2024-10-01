@@ -1,0 +1,345 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar ns="http://www.w3.org/ns/xproc" xmlns="http://relaxng.org/ns/structure/1.0">
+  <!-- This schema could be made more constrained. -->
+  <define name="Step">
+    <choice>
+      <ref name="Step-directory-list"/>
+      <ref name="Step-file-copy"/>
+      <ref name="Step-file-delete"/>
+      <ref name="Step-file-info"/>
+      <ref name="Step-file-mkdir"/>
+      <ref name="Step-file-move"/>
+      <ref name="Step-file-create-tempfile"/>
+      <ref name="Step-file-touch"/>
+    </choice>
+  </define>
+  <define name="Step-directory-list">
+    <element name="directory-list">
+      <optional>
+        <ref name="name.ncname.attr"/>
+      </optional>
+      <ref name="common.attributes"/>
+      <optional>
+        <ref name="use-when.attr"/>
+      </optional>
+      <ref name="step.attributes"/>
+      <optional>
+        <attribute name="path">
+          <ref name="avt.datatype"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="detailed">
+          <ref name="avt.datatype"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="max-depth">
+          <ref name="avt.datatype"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="include-filter">
+          <ref name="avt.datatype"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="exclude-filter">
+          <ref name="avt.datatype"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="override-content-types">
+          <ref name="avt.datatype"/>
+        </attribute>
+      </optional>
+      <interleave>
+        <zeroOrMore>
+          <ref name="WithOption"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <choice>
+            <ref name="Documentation"/>
+            <ref name="PipeInfo"/>
+          </choice>
+        </zeroOrMore>
+      </interleave>
+    </element>
+  </define>
+  <define name="Step-file-copy">
+    <element name="file-copy">
+      <optional>
+        <ref name="name.ncname.attr"/>
+      </optional>
+      <ref name="common.attributes"/>
+      <optional>
+        <ref name="use-when.attr"/>
+      </optional>
+      <ref name="step.attributes"/>
+      <optional>
+        <attribute name="href">
+          <ref name="avt.datatype"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="target">
+          <ref name="avt.datatype"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="fail-on-error">
+          <ref name="avt.datatype"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="overwrite">
+          <ref name="avt.datatype"/>
+        </attribute>
+      </optional>
+      <interleave>
+        <zeroOrMore>
+          <ref name="WithOption"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <choice>
+            <ref name="Documentation"/>
+            <ref name="PipeInfo"/>
+          </choice>
+        </zeroOrMore>
+      </interleave>
+    </element>
+  </define>
+  <define name="Step-file-delete">
+    <element name="file-delete">
+      <optional>
+        <ref name="name.ncname.attr"/>
+      </optional>
+      <ref name="common.attributes"/>
+      <optional>
+        <ref name="use-when.attr"/>
+      </optional>
+      <ref name="step.attributes"/>
+      <optional>
+        <attribute name="href">
+          <ref name="avt.datatype"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="recursive">
+          <ref name="avt.datatype"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="fail-on-error">
+          <ref name="avt.datatype"/>
+        </attribute>
+      </optional>
+      <interleave>
+        <zeroOrMore>
+          <ref name="WithOption"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <choice>
+            <ref name="Documentation"/>
+            <ref name="PipeInfo"/>
+          </choice>
+        </zeroOrMore>
+      </interleave>
+    </element>
+  </define>
+  <define name="Step-file-info">
+    <element name="file-info">
+      <optional>
+        <ref name="name.ncname.attr"/>
+      </optional>
+      <ref name="common.attributes"/>
+      <optional>
+        <ref name="use-when.attr"/>
+      </optional>
+      <ref name="step.attributes"/>
+      <optional>
+        <attribute name="href">
+          <ref name="avt.datatype"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="fail-on-error">
+          <ref name="avt.datatype"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="override-content-types">
+          <ref name="avt.datatype"/>
+        </attribute>
+      </optional>
+      <interleave>
+        <zeroOrMore>
+          <ref name="WithOption"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <choice>
+            <ref name="Documentation"/>
+            <ref name="PipeInfo"/>
+          </choice>
+        </zeroOrMore>
+      </interleave>
+    </element>
+  </define>
+  <define name="Step-file-mkdir">
+    <element name="file-mkdir">
+      <optional>
+        <ref name="name.ncname.attr"/>
+      </optional>
+      <ref name="common.attributes"/>
+      <optional>
+        <ref name="use-when.attr"/>
+      </optional>
+      <ref name="step.attributes"/>
+      <optional>
+        <attribute name="href">
+          <ref name="avt.datatype"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="fail-on-error">
+          <ref name="avt.datatype"/>
+        </attribute>
+      </optional>
+      <interleave>
+        <zeroOrMore>
+          <ref name="WithOption"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <choice>
+            <ref name="Documentation"/>
+            <ref name="PipeInfo"/>
+          </choice>
+        </zeroOrMore>
+      </interleave>
+    </element>
+  </define>
+  <define name="Step-file-move">
+    <element name="file-move">
+      <optional>
+        <ref name="name.ncname.attr"/>
+      </optional>
+      <ref name="common.attributes"/>
+      <optional>
+        <ref name="use-when.attr"/>
+      </optional>
+      <ref name="step.attributes"/>
+      <optional>
+        <attribute name="href">
+          <ref name="avt.datatype"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="target">
+          <ref name="avt.datatype"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="fail-on-error">
+          <ref name="avt.datatype"/>
+        </attribute>
+      </optional>
+      <interleave>
+        <zeroOrMore>
+          <ref name="WithOption"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <choice>
+            <ref name="Documentation"/>
+            <ref name="PipeInfo"/>
+          </choice>
+        </zeroOrMore>
+      </interleave>
+    </element>
+  </define>
+  <define name="Step-file-create-tempfile">
+    <element name="file-create-tempfile">
+      <optional>
+        <ref name="name.ncname.attr"/>
+      </optional>
+      <ref name="common.attributes"/>
+      <optional>
+        <ref name="use-when.attr"/>
+      </optional>
+      <ref name="step.attributes"/>
+      <optional>
+        <attribute name="href">
+          <ref name="avt.datatype"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="suffix">
+          <ref name="avt.datatype"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="prefix">
+          <ref name="avt.datatype"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="delete-on-exit">
+          <ref name="avt.datatype"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="fail-on-error">
+          <ref name="avt.datatype"/>
+        </attribute>
+      </optional>
+      <interleave>
+        <zeroOrMore>
+          <ref name="WithOption"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <choice>
+            <ref name="Documentation"/>
+            <ref name="PipeInfo"/>
+          </choice>
+        </zeroOrMore>
+      </interleave>
+    </element>
+  </define>
+  <define name="Step-file-touch">
+    <element name="file-touch">
+      <optional>
+        <ref name="name.ncname.attr"/>
+      </optional>
+      <ref name="common.attributes"/>
+      <optional>
+        <ref name="use-when.attr"/>
+      </optional>
+      <ref name="step.attributes"/>
+      <optional>
+        <attribute name="href">
+          <ref name="avt.datatype"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="timestamp">
+          <ref name="avt.datatype"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="fail-on-error">
+          <ref name="avt.datatype"/>
+        </attribute>
+      </optional>
+      <interleave>
+        <zeroOrMore>
+          <ref name="WithOption"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <choice>
+            <ref name="Documentation"/>
+            <ref name="PipeInfo"/>
+          </choice>
+        </zeroOrMore>
+      </interleave>
+    </element>
+  </define>
+</grammar>
