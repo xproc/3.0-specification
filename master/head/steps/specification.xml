@@ -2815,9 +2815,9 @@ a processing instruction and the new name has a non-null namespace.</error>
 <section xml:id="c.replace">
 <title>p:replace</title>
 
-<para>The <code>p:replace</code> step replaces matching nodes in
-its primary input with the top-level node(s) of the
-<code>replacement</code> port's document.</para>
+<para>The <code>p:replace</code> step replaces matching nodes in its primary
+input with the content of the document that appears on the
+<port>replacement</port> port.</para>
 
 <p:declare-step type="p:replace">
    <p:input port="source" primary="true" content-types="xml html"/>
@@ -2833,12 +2833,13 @@ an attribute or a namespace nodes. </error> Multiple matches are allowed, in whi
 copies of the <port>replacement</port> document will occur.</para>
 
 <para>Every node in the primary input matching the specified
-pattern is replaced in the output by the top-level node(s)
+pattern is replaced in the output by the content
 of the <port>replacement</port> document. Only non-nested matches are
 replaced. That is, once a node is replaced, its descendants cannot
 be matched.</para>
 
-<para>If the document node is matched, the result is a text document.</para>
+<para>If the document node is matched, and the <port>replacement</port> document is a text document,
+the <port>result</port> is a text document.</para>
 
 <simplesect>
 <title>Document properties</title>
