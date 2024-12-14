@@ -530,7 +530,7 @@ remove the <code>serialization</code> property.</para>
 <section xml:id="document-types">
 <title>Document Types</title>
 
-<para>XProc 3.0 has been designed to make it possible to process any kind of
+<para>XProc 3.1 has been designed to make it possible to process any kind of
 document. Each document has a representation in the <biblioref linkend="xpath-datamodel"/>.
 This is necessary so that any kind of document can be passed as an argument to XPath functions,
 such as <function>p:document-properties</function>.
@@ -950,7 +950,7 @@ step signatures are fixed and shared by all instances. There is no
 mechanism for a pipeline author to declare that an atomic step has a
 signature that varies. However, implementors may provide such
 mechanisms and other specifications may depend upon them.
-Such steps are “magic” and XProc 3.0 makes no effort to provide
+Such steps are “magic” and XProc 3.1 makes no effort to provide
 a mechanism to define them.</para>
 </note>
 
@@ -994,11 +994,11 @@ content types, that they accept, see <xref linkend="specified-content-types"/>.<
           intermediate results produced by steps in the pipeline have base URIs. <impl>Whether (and
             when and how) or not the intermediate results that pass between steps are ever written
             to a filesystem is <glossterm>implementation-dependent</glossterm>.</impl></para>
-        <para><impl>In Version 3.0 of XProc, how (or if) implementers provide local resolution
+        <para><impl>In Version 3.1 of XProc, how (or if) implementers provide local resolution
             mechanisms and how (or if) they provide access to intermediate results by URI is
               <glossterm>implementation-defined</glossterm>.</impl>
         </para>
-        <para>Version 3.0 of XProc does not require implementations to guarantee that multiple
+        <para>Version 3.1 of XProc does not require implementations to guarantee that multiple
           attempts to dereference the same URI always produce the same results.</para>
         <note xml:id="note-unsatisfying">
           <para>On the one hand, this is a somewhat unsatisfying state of affairs because it leaves
@@ -1398,7 +1398,7 @@ as they are available statically.</para>
 
 <para>Consider:</para>
 
-<programlisting language="xml"><![CDATA[<p:declare-step version="3.0"
+<programlisting language="xml"><![CDATA[<p:declare-step version="3.1"
                 xmlns:p="http://www.w3.org/ns/xproc">
   <p:input port="source"/>
   <p:option name="A" static="true"
@@ -3329,7 +3329,7 @@ the <tag class="attribute">version</tag> attribute <rfc2119>must</rfc2119> be a
 <type>xs:decimal</type>.</error></para>
 
 <para>The version of XProc defined
-by this specification is “<literal>3.0</literal>”.</para>
+by this specification is “<literal>3.1</literal>”.</para>
 
 <para>A pipeline author <rfc2119>must</rfc2119> identify the version of XProc
 on the document element of a pipeline document.
@@ -3338,16 +3338,47 @@ required
 <tag class="attribute">version</tag> attribute
 is not present.</error></para>
 
-<para>The version identified applies
-to the element on which the
-<tag class="attribute">version</tag> attribute appears and all of its descendants,
-unless or until another version is explicitly identified.</para>
+<para>The version identified applies to the element on which the <tag
+class="attribute">version</tag> attribute appears and all of its
+descendants, unless or until another version is explicitly
+identified.</para>
 
-<para>XProc 3.0 takes a draconian approach to versioning.
-<error code="S0060">It
-is a <glossterm>static error</glossterm> if the processor encounters
-an explicit request for a version of the language other than “3.0”.</error>
+<para>An XProc 3.1 processor <rfc2119>must</rfc2119> accept pipelines
+labeled with version “3.1”. It <rfc2119>may</rfc2119> also accept
+pipelines labeled with version “3.0”.</para>
+
+<itemizedlist>
+<listitem>
+<para>An XProc 3.1 processor <rfc2119>may</rfc2119> accept pipelines
+labeled with version “3.0”. If it does, it <rfc2119>must</rfc2119>
+process them as if they were labeled “3.1”. In this case, the
+acceptable versions are “3.0” and “3.1”.
 </para>
+</listitem>
+<listitem>
+<para>Alternatively, an XProc 3.1 processor <rfc2119>may</rfc2119> reject
+pipelines labeled with version “3.0”. In this case, the only acceptable version
+is “3.1”.</para>
+</listitem>
+</itemizedlist>
+
+<para><error code="S0060">It is a <glossterm>static error</glossterm>
+if the processor encounters an explicit request for a version of the
+language not acceptable to the processor.</error></para>
+
+<note>
+<title>A pragmatic approach to 3.0 and 3.1</title>
+<para>In practice, implementations are expected to treat version “3.0”
+as a synonym for version “3.1”. Although there are technically a few
+backwards incompatiblities between 3.1 and 3.0, all known processors
+<emphasis>have always</emphasis> implemented the behavior now defined
+in 3.1, so it is of no consequence.</para>
+<para>Requiring processors to reject pipelines labeled “3.0” would be
+hostile to users with existing pipelines. Requiring implementors to
+strictly support the 3.0 behavior on pipelines labeled “3.0”
+would, from the user’s perspective, actually introduce errors in existing pipelines.</para>
+</note>
+
       </section>
 
 
