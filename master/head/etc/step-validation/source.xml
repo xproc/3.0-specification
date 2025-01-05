@@ -511,13 +511,12 @@ a DTD. This step necessarily serializes and reparses.</para>
 
 <para>The <tag>p:validate-with-dtd</tag> step serializes the document on the
 <port>source</port> port and parses the serialization with a validating XML
-parser.
-The <option>serialization</option> option can be used to control the
-serialization. If the document to be stored has a “serialization” property, the
-serialization is controlled by the merger of the two maps where the entries in
-the “serialization” property take precedence. Serialization is described in
-<biblioref linkend="xproc31"/>.</para>
-
+parser. The <option>serialization</option> option is used to control the
+serialization of the document. If a document has a
+“<literal>serialization</literal>” document property, the effective value of the
+serialization options is the union of the two maps, where the entries in the
+“<literal>serialization</literal>” document property take precedence.</para>
+ 
 <para>Any warning or error messages produced by the parser will
 appear on the <port>report</port> port.</para>
 

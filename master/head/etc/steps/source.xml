@@ -1012,7 +1012,7 @@ The archive has no <property>base-uri</property>.</para>
      <para>A <tag>c:parameter-set</tag> is a wrapper around zero or more <tag>c:param</tag>
      elements.</para>
 
-     <e:rng-pattern name="VocabParamSet"/>
+     <e:rng-pattern name="VocabParamSet" xml:id="cv.param-set"/>
 
      <para><error code="D0018">It is a <glossterm>dynamic error</glossterm> if
      the parameter list contains any elements other than <tag>c:param</tag>.</error></para>
@@ -1024,7 +1024,7 @@ The archive has no <property>base-uri</property>.</para>
      
      <para xml:id="c.param">A <tag>c:param</tag> is a name/value pair with an optional namespace.</para>
 
-     <e:rng-pattern name="VocabParam"/>
+     <e:rng-pattern name="VocabParam" xml:id="cv.param"/>
 
      <para>The <tag class="attribute">name</tag> attribute of the
      <tag>c:param</tag> must have the lexical form of a QName.</para>
@@ -2378,8 +2378,8 @@ supports redirection, then redirects <rfc2119>must</rfc2119> be
 followed.</para>
 
 <para><error code="D0011">It is a <glossterm>dynamic error</glossterm>
-if the resource referenced by a <code>p:load</code> element does not exist
-or cannot be accessed.</error></para>
+if the resource referenced by a <code>p:load</code> element does not exist,
+cannot be accessed, or if the access reports error (for example, an HTTP 404 error).</error></para>
 
 <para>The behavior of this step depends on the content type of the
 document loaded. The content type of a document is
@@ -2980,19 +2980,77 @@ discards them. It has no output.</para>
 <p:declare-step type="p:sleep">
   <p:input port="source" sequence="true" content-types="any"/>
   <p:output port="result" sequence="true" content-types="any"/>
-  <p:option name="duration" as="xs:nonNegativeInteger" required="true"/>
+  <p:option name="duration" as="xs:string" required="true"/>
 </p:declare-step>
 
 <para>The <tag>p:sleep</tag> step copies each of the documents on the
 <port>source</port> port to the <port>result</port> port without changing them.
 Before copying the documents, it pauses for a period of time not less
-than <option>duration</option> milliseconds.</para>
+than the specified <option>duration</option>.</para>
+
+<para>The duration may be specified as an <code>xs:double</code>, indicating a number of seconds,
+or as a duration using a string that satisfies the constraints of an
+<code>xs:dayTimeDuration</code>. The duration <rfc2119>must not</rfc2119> be
+negative. 
+<error code="D0036">It is a <glossterm>dynamic error</glossterm> if the
+specified duration is not a positive number or a valid 
+<code>xs:dayTimeDuration</code>.</error> The following table summarizes
+some example durations:
+</para>
+
+<informaltable>
+<tgroup cols="3">
+<thead>
+<row>
+  <entry><code>duration</code></entry>
+  <entry>Delay</entry>
+  <entry>Notes</entry>
+</row>
+</thead>
+<tbody>
+<row>
+  <entry><code>10</code></entry>
+  <entry>10 seconds</entry>
+  <entry/>
+</row>
+<row>
+  <entry><code>3.5</code></entry>
+  <entry>3.5 seconds</entry>
+  <entry/>
+</row>
+<row>
+  <entry><code>0.271</code></entry>
+  <entry>271 milliseconds</entry>
+  <entry/>
+</row>
+<row>
+  <entry><code>PT3H1M41S</code></entry>
+  <entry>3 hours, 1 minute, and 41 seconds</entry>
+  <entry/>
+</row>
+<row>
+  <entry><code>-7</code></entry>
+  <entry>—</entry>
+  <entry>Raises <code>err:XD0036</code></entry>
+</row>
+<row>
+  <entry><code>3H</code></entry>
+  <entry>—</entry>
+  <entry>Raises <code>err:XD0036</code></entry>
+</row>
+</tbody>
+</tgroup>
+</informaltable>
 
 <note>
 <para>In multi-threaded implementations, there is no guarantee that this
 will pause the execution of more than one thread. However, any steps that
 depend on the output of this step will wait for this step to complete.</para>
 </note>
+
+<para>Implementations are expected to make a reasonable effort to delay for the
+specified duration, but XProc imposes no specific constraints on the precision of
+the timer.</para>
 
 <simplesect>
 <title>Document properties</title>

@@ -258,7 +258,7 @@
    <p:declare-step type="p:sleep" xml:id="sleep">
       <p:input port="source" sequence="true" content-types="any"/>
       <p:output port="result" sequence="true" content-types="any"/>
-      <p:option name="duration" as="xs:nonNegativeInteger" required="true"/>
+      <p:option name="duration" as="xs:string" required="true"/>
    </p:declare-step>
    <p:declare-step type="p:split-sequence" xml:id="split-sequence">
       <p:input port="source" content-types="any" sequence="true"/>
