@@ -3437,10 +3437,13 @@ between that line and a following line that contains no characters.)
 All lines returned by <tag>p:text-sort</tag> are terminated with a single
 newline (&amp;#10;).</para>
 
-  <para>The sort process performed by this step is the same as described in 
-    <link xlink:href="https://www.w3.org/TR/xslt-30/#xsl-sort">The xsl:sort Element</link>. Options <option>lang</option>
-    and <option>case-order</option> are only taken into consideration if no value is selected for option
-    <option>collation</option>.</para>
+  <para>The sort process performed by this step is the same as the process described in
+  <biblioref linkend="xslt30"/> for the
+  <link xlink:href="https://www.w3.org/TR/xslt-30/#xsl-sort">xsl:sort</link> element.
+  The options <option>lang</option>
+  and <option>case-order</option> are considered only if the value
+  of the <option>collation</option> option is the empty sequence.</para>
+
   <simplesect>
     <title>Document properties</title>
     <para feature="text-sort-preserves-all">All document properties are preserved.</para>
@@ -4293,8 +4296,8 @@ establish a base URI, the document will not have one.
   
   <section>
     <title>Invoking an XSLT 3.0 stylesheet</title>
-    <para>The value of <option>global-context-item</option> is used as global context item for the
-      stylesheet invocation. If no value is supplied, the following applies:</para>
+    <para>The value of <option>global-context-item</option> is used as the global context item for the
+      stylesheet invocation. If its value is the empty sequence, the following applies:</para>
     <itemizedlist>
       <listitem>
         <para>If there is a single document on the <port>source</port> port, this document will
@@ -4305,18 +4308,28 @@ establish a base URI, the document will not have one.
           global context item is absent.</para>
       </listitem>
     </itemizedlist>
+
+    <note>
+      <para>As a consequence of these rules, it is not possible for XProc to invoke an XSLT 3.0 stylesheet
+      with an <emphasis>empty</emphasis> global context item <emphasis>and simultaneously</emphasis>
+      process a single input document.</para>
+    </note>
+
     <para>The <option>populate-default-collection</option> option is used to control whether all
     the documents appearing on <port>source</port> port form the default collection for the XSLT
     transformation.</para>
-    <para>If no value is supplied for <option>template-name</option> option an “Apply-template
+    <para>If the value of the <option>template-name</option> option is the empty sequence, an “Apply-template
       invocation” is performed. The documents that appear on <port>source</port> are taken to be the
       initial match selection. if <option>populate-default-collection</option> is true, they
-      are also the default collection. If a value is supplied for 
-      the <option>initial-mode</option> option,
-      this value is used as the initial-mode for the invocation. <error code="C0008">It is a
-        <glossterm>dynamic error</glossterm> if the stylesheet does not support a given mode.</error> 
-      If no value is supplied, nothing is supplied to the invocation,
-      so the default behaviour defined for XSLT 3.0 could be applied.</para>
+      are also the default collection.</para>
+
+    <para>If the value of the <option>initial-mode</option> option is not the
+    empty sequence, the option value is used as the initial-mode for the
+    invocation. <error code="C0008">It is a <glossterm>dynamic error</glossterm>
+    if the stylesheet does not support a given mode.</error> If the value is 
+    the empty sequence, no initial-mode is specified and default XSLT 3.0 behavior
+    applies.</para>
+
     <para>If a value is supplied for option <option>template-name</option> a “Call template
       invocation” is performed. The documents on port <port>source</port> are taken as the default
       collection in this case. Option <option>initial-mode</option> is ignored. <error code="C0056">It is a <glossterm>dynamic error</glossterm> if the stylesheet does not provide a given
@@ -4337,7 +4350,7 @@ establish a base URI, the document will not have one.
       sequence a JSON document will be constructed and appear on the steps output port.</para>
     <para>Option <option>output-base-uri</option> sets the base output URI per XSLT 3.0
       specification. If a final result tree is constructed, this URI is used to resolve a relative
-      URI reference. If no value is supplied for <option>output-base-uri</option>, the base URI of
+      URI reference. If the value of <option>output-base-uri</option> is the empty sequence, the base URI of
       the first document in the <port>source</port> port's sequence is used. If no document is
       supplied on port <port>source</port> the base URI of the document on port <port>stylesheet</port>
       is used. <error code="C0121">It is a <glossterm>dynamic error</glossterm> if a document appearing
