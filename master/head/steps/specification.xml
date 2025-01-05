@@ -1449,24 +1449,29 @@ that’s irrelevant as no document is ever produced.</para>
 <section xml:id="c.filter">
 <title>p:filter</title>
 
-<para>The <code>p:filter</code> step selects portions of the source document
-based on a (possibly dynamically constructed) XPath select expression.</para>
+<para>The <code>p:filter</code> step evaluates an XPath expression
+against the input document.</para>
 
 <p:declare-step type="p:filter">
   <p:input port="source" content-types="xml html"/>
-  <p:output port="result" sequence="true" content-types="text xml html"/>
+  <p:output port="result" sequence="true" content-types="text xml html json"/>
   <p:option name="select" required="true" as="xs:string" e:type="XPathExpression"/>
 </p:declare-step>
 
-<para>This step behaves just like a <tag>p:with-input</tag> with
+<para>This step evaluates the <tag class="attribute">select</tag> expression
+against the input document. The result of that evaluation appears on the
+<port>result</port> port.</para>
+
+<para>This step is very similar to a <tag>p:with-input</tag> with
 a <tag class="attribute">select</tag> expression except that the select
-expression is computed dynamically.</para>
+expression is computed dynamically (because it’s a step option in this case).</para>
 
 <simplesect>
 <title>Document properties</title>
-<para feature="filter-preserves-none">No document properties are preserved.
-The <property>base-uri</property> property of each document will reflect the
-base URI of the selected node(s).
+<para feature="filter-preserves-none">No document properties are preserved. When
+portions of the input are selected, the <property>base-uri</property> property
+of each document constructed from a selected portion will reflect the base URI
+of the selected node(s).
 </para>
 </simplesect>
 </section>

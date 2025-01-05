@@ -99,7 +99,7 @@
    </p:declare-step>
    <p:declare-step type="p:filter" xml:id="filter">
       <p:input port="source" content-types="xml html"/>
-      <p:output port="result" sequence="true" content-types="text xml html"/>
+      <p:output port="result" sequence="true" content-types="text xml html json"/>
       <p:option name="select"
                 required="true"
                 as="xs:string"
