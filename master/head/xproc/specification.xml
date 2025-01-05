@@ -934,6 +934,12 @@ The following shortcuts <rfc2119>must</rfc2119> be supported by the processor:</
 </varlistentry>
 </variablelist>
 </listitem>
+<listitem>
+<para>A shortcut form preceded by a minus sign (“-”) indicates that the specified types are forbidden.
+When expanding a negated shortcut, any forbidden types in the expansion are ignored. In other
+words, <literal>-xml</literal> expands to “<literal>-application/xml -text/xml -*/*+xml</literal>”,
+the exclusion on HTML documents is ignored.</para>
+</listitem>
 </itemizedlist>
 
   <para><error code="D0079">It is a <glossterm>dynamic error</glossterm> if a supplied content-type is not 
