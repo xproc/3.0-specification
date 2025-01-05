@@ -501,10 +501,10 @@ document has no base URI.</para>
             <para>If a step serializes a document whose document properties contain a
                 <code>serialization</code> property, it <rfc2119>must</rfc2119> use these
               serialization properties. If the step itself allows specification of serialization properties
-              (usually by a <option>serialization</option> option), both sets of serialization
-              properties are merged. Serialization properties specified on the step itself have
-              precedence over serialization properties specified with the <code>serialization</code>
-              document property.</para>
+              (usually by a <option>serialization</option> option), the serialization
+              properties are merged. Serialization properties specified on the document have
+              precedence over serialization properties specified on the step.
+              See <xref linkend="managing-properties"/>.</para>
           </listitem>
         </varlistentry>
       </variablelist>
@@ -525,7 +525,36 @@ processor must assure that the <code>content-type</code> property is appropriate
 If a step changes the <code>content-type</code> in this way, it <rfc2119>must</rfc2119> also
 remove the <code>serialization</code> property.</para>
 
-    </section>
+<section xml:id="managing-properties">
+<title>Managing properties</title>
+
+<para>In XProc 3.0, the rules for merging serialization properties stated that
+the properties on the step took precedence. In practice, all of the steps with a
+<option>serialization</option> option explicitly stated the opposite. This
+inconsistency was confusing. Changing the behavior of the steps would
+likely break many existing pipelines, so the merging behavior has been changed
+in this specification instead.</para>
+
+<para>A pipeline author who wants to explicitly override all the serialization
+properites for a document can easily do so with <tag>p:set-properties</tag>
+before the step where they want the override to apply.</para>
+
+<para>Explicitly overriding only <emphasis>some</emphasis> properties is also
+possible, but somewhat more complicated. The following <tag>p:set-attributes</tag>
+example removes only the <code>indent</code> property from a document’s serialization properties,
+leaving all other properties intact:</para>
+
+<programlisting language="xml"><![CDATA[<p:set-properties xmlns:map="http://www.w3.org/2005/xpath-functions/map"
+                  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+                  properties="
+map{'serialization':
+   map:remove(map:get(p:document-properties(.), xs:QName('serialization')),
+              xs:QName('indent'))}"/>]]></programlisting>
+
+<para>Any property or set of properties can be removed or updated in this way.</para>
+
+</section>
+</section>
 
 <section xml:id="document-types">
 <title>Document Types</title>
