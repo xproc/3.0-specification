@@ -4101,9 +4101,14 @@ attribute allows a pipeline author to suggest a length of time beyond
 which the pipeline processor should consider that a step has taken
 an excessive amount of time.</para>
 
-<para>The value of the <option>[p:]timeout</option> option must be a
-<type>xs:nonNegativeInteger</type>. It is interpreted as a number of
-seconds. The value zero may be used to indicate that no limit is
+<para>The duration may be specified as a number, indicating a number of seconds,
+or as a duration using a string that satisfies the constraints of an
+<code>xs:dayTimeDuration</code>. The duration <rfc2119>must not</rfc2119> be
+negative. 
+<error code="D0036">It is a <glossterm>dynamic error</glossterm> if the
+specified duration is not a positive number or a valid 
+<code>xs:dayTimeDuration</code>.</error>
+A duration of zero may be used to indicate that no limit is
 expressed (this is the same as omitting the attribute, but may
 sometimes be more convenient for pipeline authors).
 </para>
