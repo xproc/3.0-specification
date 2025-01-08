@@ -507,20 +507,21 @@ access them, or they may be ignored by some or all steps.</para>
           <glossterm>dynamic error</glossterm> if <tag>p:file-info</tag> is not available to the step due to access restrictions 
           in the environment in which the pipeline is run.</error></para>
   
-  <para>If the <option>href</option> option is a <code>file:</code> URI, the step returns:</para>
+  <para>If the <option>href</option> option is a <code>file:</code> URI, the step returns a single element with 
+    information about the referenced file system object. These elements an their attributes are the same as returned 
+    by <tag>p:directory-list</tag> for this file system object (with the <option>detailed</option> set to <code>true</code>):</para>
   <itemizedlist>
     <listitem>
-      <para>If <option>href</option> option references a file: A <tag>c:file</tag> element with standard attributes (see
-        below).</para>
+      <para>If <option>href</option> option references a file: A <tag>c:file</tag> element with standard attributes.</para>
     </listitem>
     <listitem>
       <para>If <option>href</option> option references a directory: A <tag>c:directory</tag> element with standard
-        attributes (see below).</para>
+        attributes.</para>
     </listitem>
     <listitem>
       <para>If <option>href</option> option references any other file system object: Implementation defined (for example
-        an <tag>c:other</tag> or <tag>c:device</tag> element). It is advised to use the standard attributes (see below)
-        if applicable.</para>
+        an <tag>c:other</tag> or <tag>c:device</tag> element). The advice is to use the standard attributes of <tag>c:file</tag> 
+        and/or <tag>c:directory</tag> if applicable.</para>
     </listitem>
   </itemizedlist>
   
@@ -529,61 +530,7 @@ access them, or they may be ignored by some or all steps.</para>
         <option>override-content-types</option> option of <tag>p:archive-manifest</tag> and
         <tag>p:unarchive</tag> (see <xspecref spec="steps" xref="override-content-type"/>), except
       that the regular expression matching is done against the absolute URI of the file.</para>
-
-  <para>Each of the elements <tag>c:file</tag>, <tag>c:directory</tag>,
-    and <tag>c:other</tag> has a <code>name</code> attribute, whose
-    value is a relative IRI reference, giving the (local) file or
-    directory name.</para>
   
-  <para>The following attributes are standard on a returned <tag>c:file</tag> or <tag>c:directory</tag> element. All
-    attributes are optional and must be absent if not applicable. Additional implementation-defined attributes may be
-    present, but they must be in a namespace.</para>
-  <informaltable pgwide="1">
-    <tgroup cols="3">
-      <colspec colwidth="1in"/>
-      <colspec colwidth="1in"/>
-      <thead>
-        <row>
-          <entry>Attribute</entry>
-          <entry>Type</entry>
-          <entry>Description</entry>
-        </row>
-      </thead>
-      <tbody>
-        <row>
-          <entry><tag class="attribute">readable</tag></entry>
-          <entry><type>xs:boolean</type></entry>
-          <entry><literal>true</literal> if the object is readable.</entry>
-        </row>
-        <row>
-          <entry><tag class="attribute">writable</tag></entry>
-          <entry><type>xs:boolean</type></entry>
-          <entry><literal>true</literal> if the object file is writable.</entry>
-        </row>
-        <row>
-          <entry><tag class="attribute">hidden</tag></entry>
-          <entry><type>xs:boolean</type></entry>
-          <entry><literal>true</literal> if the object is hidden.</entry>
-        </row>
-        <row>
-          <entry><tag class="attribute">last-modified</tag></entry>
-          <entry><type>xs:dateTime</type></entry>
-          <entry>The last modification time of the object expressed in UTC.</entry>
-        </row>
-        <row>
-          <entry><tag class="attribute">size</tag></entry>
-          <entry><type>xs:integer</type></entry>
-          <entry>The size of the object in bytes.</entry>
-        </row>
-        <row>
-          <entry><tag class="attribute">content-type</tag></entry>
-          <entry><type>xs:string</type></entry>
-          <entry>The content type, if the object is a file.</entry>
-        </row>
-      </tbody>
-    </tgroup>
-  </informaltable>
-
   <para>If an error occurs and <option>fail-on-error</option> is <code>false</code>, the step returns a
       <tag>c:error</tag> element which may contain additional, implementation-defined, information about the nature of
     the error.</para>
