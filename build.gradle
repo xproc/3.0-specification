@@ -132,7 +132,8 @@ spec_schemas.dependsOn download_core30_rng
 
 def schemaList = ["xproc.rnc", "xproc.rng",
                   "xproc10.rnc", "xproc10.rng",
-                  "xproc30.rnc", "xproc30.rng"]
+                  "xproc30.rnc", "xproc30.rng",
+                  "xproc31.rnc", "xproc31.rng"]
 
 schemaList.each { schema ->
   def taskname = "download_" + schema.replace(".", "_")
@@ -324,6 +325,7 @@ task xproc_assets(dependsOn: [ "xproc:images", "xproc_web_assets", "xproc_schema
         include "xproc.rn*"
         include "xproc10.rn*"
         include "xproc30.rn*"
+        include "xproc31.rn*"
       }
     }
   }

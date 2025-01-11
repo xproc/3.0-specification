@@ -111,7 +111,7 @@ far as the pipeline is concerned. Compound steps control the execution
 of other steps, which they include in the form of one or more
 subpipelines.</para>
 
-<para><biblioref linkend="steps30"/>
+<para><biblioref linkend="steps31"/>
 defines a standard library of steps. Pipeline implementations
 <rfc2119>may</rfc2119> support additional types of steps as well.
 </para>
@@ -248,7 +248,7 @@ it sends result documents, and options which influence its behavior.</para>
         indivisible.</para>
       <para>There are many <emphasis>types</emphasis> of atomic steps. The
         standard library of atomic steps is described in <biblioref
-          linkend="steps30"/>, but implementations <rfc2119>may</rfc2119>
+          linkend="steps31"/>, but implementations <rfc2119>may</rfc2119>
         provide others as well. <impl>It is
           <glossterm>implementation-defined</glossterm> what additional step
           types, if any, are provided. </impl> Each use, or instance, of an
@@ -559,7 +559,7 @@ map{'serialization':
 <section xml:id="document-types">
 <title>Document Types</title>
 
-<para>XProc 3.0 has been designed to make it possible to process any kind of
+<para>XProc 3.1 has been designed to make it possible to process any kind of
 document. Each document has a representation in the <biblioref linkend="xpath-datamodel"/>.
 This is necessary so that any kind of document can be passed as an argument to XPath functions,
 such as <function>p:document-properties</function>.
@@ -985,7 +985,7 @@ step signatures are fixed and shared by all instances. There is no
 mechanism for a pipeline author to declare that an atomic step has a
 signature that varies. However, implementors may provide such
 mechanisms and other specifications may depend upon them.
-Such steps are “magic” and XProc 3.0 makes no effort to provide
+Such steps are “magic” and XProc 3.1 makes no effort to provide
 a mechanism to define them.</para>
 </note>
 
@@ -1029,11 +1029,11 @@ content types, that they accept, see <xref linkend="specified-content-types"/>.<
           intermediate results produced by steps in the pipeline have base URIs. <impl>Whether (and
             when and how) or not the intermediate results that pass between steps are ever written
             to a filesystem is <glossterm>implementation-dependent</glossterm>.</impl></para>
-        <para><impl>In Version 3.0 of XProc, how (or if) implementers provide local resolution
+        <para><impl>In Version 3.1 of XProc, how (or if) implementers provide local resolution
             mechanisms and how (or if) they provide access to intermediate results by URI is
               <glossterm>implementation-defined</glossterm>.</impl>
         </para>
-        <para>Version 3.0 of XProc does not require implementations to guarantee that multiple
+        <para>Version 3.1 of XProc does not require implementations to guarantee that multiple
           attempts to dereference the same URI always produce the same results.</para>
         <note xml:id="note-unsatisfying">
           <para>On the one hand, this is a somewhat unsatisfying state of affairs because it leaves
@@ -1350,7 +1350,7 @@ is good practice.</para>
           take account of prefix information in creating new namespace bindings, to minimize
           negative impact on prefixed names in content.</para>
         <para><impl>Except for cases which are specifically called out in <biblioref
-              linkend="steps30"/>, the extent to which namespace fixup, and other checks for
+              linkend="steps31"/>, the extent to which namespace fixup, and other checks for
             outputs which cannot be serialized, are performed on intermediate outputs is
               <glossterm>implementation-defined</glossterm>.</impl></para>
         <para>Whenever an implementation serializes XML, for example for pipeline
@@ -1433,7 +1433,7 @@ as they are available statically.</para>
 
 <para>Consider:</para>
 
-<programlisting language="xml"><![CDATA[<p:declare-step version="3.0"
+<programlisting language="xml"><![CDATA[<p:declare-step version="3.1"
                 xmlns:p="http://www.w3.org/ns/xproc">
   <p:input port="source"/>
   <p:option name="A" static="true"
@@ -1869,8 +1869,8 @@ specified.</para>
 <methodparam><type>xs:string</type><parameter>version</parameter></methodparam>
 </methodsynopsis>
 
-<para>A version 3.0 processor will return <literal>true()</literal> when
-<code>p:version-available('3.0')</code> is evaluated.</para>
+<para>A version 3.1 processor will return <literal>true()</literal> when
+<code>p:version-available('3.1')</code> is evaluated.</para>
 
 <para>The <function>p:version-available</function> function behaves
 normally during static analysis.</para>
@@ -3351,8 +3351,8 @@ Variable names are always expressed as
 <section xml:id="versioning-considerations">
 <title>Versioning Considerations</title>
 
-<para>A pipeline author <rfc2119>may</rfc2119> identify the version of XProc
-for which a particular pipeline was authored by setting the
+<para>Pipelines identify the version of XProc they are authored against
+with the
 <tag class="attribute">version</tag> attribute. The
 <tag class="attribute">version</tag> attribute can be specified on
 <tag>p:declare-step</tag> or <tag>p:library</tag>.
@@ -3364,7 +3364,7 @@ the <tag class="attribute">version</tag> attribute <rfc2119>must</rfc2119> be a
 <type>xs:decimal</type>.</error></para>
 
 <para>The version of XProc defined
-by this specification is “<literal>3.0</literal>”.</para>
+by this specification is “<literal>3.1</literal>”.</para>
 
 <para>A pipeline author <rfc2119>must</rfc2119> identify the version of XProc
 on the document element of a pipeline document.
@@ -3373,16 +3373,47 @@ required
 <tag class="attribute">version</tag> attribute
 is not present.</error></para>
 
-<para>The version identified applies
-to the element on which the
-<tag class="attribute">version</tag> attribute appears and all of its descendants,
-unless or until another version is explicitly identified.</para>
+<para>The version identified applies to the element on which the <tag
+class="attribute">version</tag> attribute appears and all of its
+descendants, unless or until another version is explicitly
+identified.</para>
 
-<para>XProc 3.0 takes a draconian approach to versioning.
-<error code="S0060">It
-is a <glossterm>static error</glossterm> if the processor encounters
-an explicit request for a version of the language other than “3.0”.</error>
+<para>An XProc 3.1 processor <rfc2119>must</rfc2119> accept pipelines
+labeled with version “3.1”. It <rfc2119>should</rfc2119> also accept
+pipelines labeled with version “3.0”.</para>
+
+<itemizedlist>
+<listitem>
+<para>If a 3.1 processor accepts pipelines
+labeled with version “3.0”, it <rfc2119>must</rfc2119>
+process them as if they were labeled “3.1”. In this case, the
+acceptable versions are “3.0” and “3.1”.
 </para>
+</listitem>
+<listitem>
+<para>Alternatively, an XProc 3.1 processor <rfc2119>may</rfc2119> reject
+pipelines labeled with version “3.0”. In this case, the only acceptable version
+is “3.1”.</para>
+</listitem>
+</itemizedlist>
+
+<note>
+<title>A pragmatic approach to 3.0 and 3.1</title>
+<para>In practice, implementations are expected to treat version “3.0”
+as a synonym for version “3.1”. Although there are technically a few
+backwards incompatiblities between 3.1 and 3.0, all known processors
+<emphasis>have always</emphasis> implemented the behavior now defined
+in 3.1, so it is of no consequence.</para>
+<para>Requiring processors to reject pipelines labeled “3.0” would be
+hostile to users with existing pipelines. Requiring implementors to
+strictly support the 3.0 behavior on pipelines labeled “3.0”
+would, from the user’s perspective, actually introduce errors in existing pipelines.</para>
+</note>
+
+<para><error code="S0060">It is a <glossterm>static error</glossterm>
+if the processor encounters an explicit request for a version of the
+language not acceptable to the processor.</error></para>
+
       </section>
 
 
@@ -4303,7 +4334,7 @@ attribute">extension attributes</glossterm>.</error>
     <title>Steps</title>
     <para>This section describes the core language steps of XProc; the full
 vocabulary of standard, atomic steps is described in
-<biblioref linkend="steps30"/>.</para>
+<biblioref linkend="steps31"/>.</para>
 
 <section xml:id="pipelines">
 <title>Pipelines</title>
@@ -5186,7 +5217,7 @@ can provide some sort of default for the rest of the pipeline.</para>
 <para><termdef xml:id="dt-atomic-step">An <firstterm>atomic
 step</firstterm> is a step that does not contain a subpipline when it
 is invoked.</termdef> The built-in steps described in <biblioref
-linkend="steps30"/> are atomic. Steps like <tag>p:for-each</tag> and
+linkend="steps31"/> are atomic. Steps like <tag>p:for-each</tag> and
 <tag>p:try</tag> that always have a subpipline are
 <emphasis>not</emphasis> atomic.
 </para>
@@ -5248,7 +5279,7 @@ steps and the terms associated with these types:</para>
     <title>Processor-provided standard atomic steps</title>
   <para>In addition to the six step types
         described in the preceding sections, XProc provides a standard library of atomic step types.
-        The full vocabulary of standards steps is described in <biblioref linkend="steps30"/>.</para>
+        The full vocabulary of standards steps is described in <biblioref linkend="steps31"/>.</para>
     <para>In addition to these standard atomic steps, other specifications by the same standardization 
       body may define other optional steps in the XProc namespace, for example, validation or file system
     related steps.</para>
@@ -5581,7 +5612,7 @@ they are <link linkend="implicit-inlines">implicit inlines</link>.</para>
 <section xml:id="conn-prec">
 <title>Connection precedence</title>
 
-<para>XProc 3.0 introduces a number of new connection defaulting
+<para>XProc has a number of new connection defaulting
 mechanisms to make pipeline authoring easier. Defaults only apply
 if there’s no explicit connection, and they apply differently to
 primary and secondary inputs.</para>

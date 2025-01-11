@@ -251,10 +251,10 @@
   <xsl:param name="avt" select="()"/>
 
   <!-- A totally special case: allow the version attribute to be of type xs:decimal,
-       but display its fixed value as "3.0" without the quotation marks that make
+       but display its fixed value as "3.1" without the quotation marks that make
        it look like a string. -->
 
-  <ss:attribute name="{@name}" optional="{$repeat}" avt="false" type="3.0"/>
+  <ss:attribute name="{@name}" optional="{$repeat}" avt="false" type="3.1"/>
 </xsl:template>
 
 <xsl:template match="rng:attribute[@name]" priority="10">
