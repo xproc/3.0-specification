@@ -129,15 +129,15 @@ access them, or they may be ignored by some or all steps.</para>
     
     <para>The <option>max-depth</option> option may contain either the string “<literal>unbounded</literal>” or a string
       that may be cast to a non-negative integer. An integer value of <literal>0</literal> means that only information
-      about the directory that is given in the <option>path</option> option is returned. A <option>max-depth</option> of
-      <literal>1</literal>, which is the default, will effect that also information about the top-level directory’s
-      immediate children will be included. For larger values of <option>max-depth</option>, also the content of
+      about the directory that is given in the <option>path</option> option is returned. If <option>max-depth</option> is
+      <literal>1</literal>, which is the default, information about the top-level directory’s
+      immediate children will also be included. For larger values of <option>max-depth</option>, also the content of
       directories will be considered recursively up to the maximum depth, and it will be included as children of the
       corresponding <tag>c:directory</tag> elements.</para>
     
     <para>If present, the value of the <option>include-filter</option> or
       <option>exclude-filter</option> option <rfc2119>must</rfc2119> be a sequence of strings, each
-      one representing a regular expressions as specified in <biblioref linkend="xpath31-functions"/>,
+      one representing a regular expression as specified in <biblioref linkend="xpath31-functions"/>,
       section 7.61 “<literal>Regular Expression Syntax</literal>”. <error code="C0147">It is a <glossterm>dynamic
         error</glossterm> if a specified value is not a valid XPath regular
         expression.</error></para>
@@ -167,7 +167,7 @@ access them, or they may be ignored by some or all steps.</para>
     entries, matching an entry <emphasis>does</emphasis> automatically include
     all of its ancestors (back to the initial directory). This assures that the hierarchy
     of the XML elements matches the hierarchy of the filesystem. When ancestors are
-    included this way, none of their other entires are included unless they match
+    included this way, none of their other entries are included unless they match
     an include filter.</para>
 
     <para>For a file <literal>a/a/b/file.txt</literal> below the initial
@@ -250,7 +250,7 @@ access them, or they may be ignored by some or all steps.</para>
       value is a relative IRI reference, giving the (local) file or
       directory name.</para>
     
-    <para>Each of these element also contains the corresponding resource’s URI in an <tag role="attribute">xml:base</tag>
+    <para>Each of these elements also contains the corresponding resource’s URI in an <tag role="attribute">xml:base</tag>
       attribute, which may be a relative URI for any but the top-level <tag>c:directory</tag> element. In the case of
       <tag>c:directory</tag>, it must end in a trailing slash. This way, users will always be able to compute the
       absolute URI for any of these elements by applying <code>fn:base-uri()</code> to it.</para>
