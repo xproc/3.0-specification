@@ -2747,11 +2747,6 @@ wraps them with a new element node whose QName is the value specified
 in the <option>wrapper</option> option, and writes that element to the
 <port>result</port> port as a document.</para>
 
-<para>If the <option>attributes</option> option is used, a new attribute is
-created on the wrapper element for each entry in the map. The attribute name is
-taken from the entry's key while the attribute value is taken from the string
-value of the entry's value.</para>
-
 <para>If the step reaches the end of one input sequence before the
 other, then it simply wraps each of the remaining documents in the
 longer sequence.</para>
@@ -2764,10 +2759,31 @@ occur between them may have come from either of the input documents;
 this step does not attempt to distinguish which one.</para>
 </note>
 
+<para>If the <option>attributes</option> option is used, a new attribute is
+created on the wrapper element for each entry in the map. The attribute name is
+taken from the entry's key while the attribute value is taken from the string
+value of the entry's value.</para>
+
+<para>Namespace declarations cannot be added
+with the <option>attributes</option> option.
+<error code="C0059">It is a <glossterm>dynamic error</glossterm> if the name
+of any attribute is “<code>xmlns</code>” or uses the prefix
+“<literal>xmlns</literal>”
+or any other prefix that resolves to the namespace name
+<uri>http://www.w3.org/2000/xmlns/</uri>.</error> However,
+if the attributes taken from the <option>attributes</option> use namespaces,
+prefixes, or prefixes bound to different namespaces, the document produced on the
+<port>result</port> output port will require namespace fixup.</para>
+
+<para>If an attribute named <tag class="attribute">xml:base</tag> is added, the
+base URI of the element <rfc2119>must</rfc2119> also be amended
+accordingly.</para>
+
 <simplesect>
 <title>Document properties</title>
 <para feature="pack-preserves-none">No document properties are preserved.
-The result documents do not have a <property>base-uri</property> property.
+The result documents do not have a <property>base-uri</property> property unless
+one is specified with the <option>attributes</option> option.
 </para>
 </simplesect>
 </section>
@@ -3868,11 +3884,6 @@ element node whose QName is the value specified in the
 <option>wrapper</option> option. That new element contains copies of
 all of the children of the original document node.</para>
 
-<para>If the <option>attributes</option> option is used, a new attribute is
-created on the wrapper element for each entry in the map. The attribute name is
-taken from the entry's key while the attribute value is taken from the string
-value of the entry's value.</para>
-
 <para>When the <glossterm>selection pattern</glossterm> does not match the document node,
 every node that matches the specified <option>match</option>
 pattern is replaced with a new element node whose QName is the value
@@ -3895,6 +3906,26 @@ standard XPath function <code>deep-equal()</code> returns true for them.</para>
 are siblings and either there are no nodes between them or all
 intervening, non-matching nodes are whitespace text, comment, or processing
 instruction nodes.</para>
+
+<para>If the <option>attributes</option> option is used, a new attribute is
+created on the wrapper element for each entry in the map. The attribute name is
+taken from the entry's key while the attribute value is taken from the string
+value of the entry's value.</para>
+
+<para>Namespace declarations cannot be added
+with the <option>attributes</option> option.
+<error code="C0059">It is a <glossterm>dynamic error</glossterm> if the name
+of any attribute is “<code>xmlns</code>” or uses the prefix
+“<literal>xmlns</literal>”
+or any other prefix that resolves to the namespace name
+<uri>http://www.w3.org/2000/xmlns/</uri>.</error> However,
+if the attributes taken from the <option>attributes</option> use namespaces,
+prefixes, or prefixes bound to different namespaces, the document produced on the
+<port>result</port> output port will require namespace fixup.</para>
+
+<para>If an attribute named <tag class="attribute">xml:base</tag> is added, the
+base URI of the element <rfc2119>must</rfc2119> also be amended
+accordingly.</para>
 
 <simplesect>
 <title>Document properties</title>
@@ -3926,11 +3957,6 @@ document element as sequential siblings. The name of the document
 element is the value specified in the <option>wrapper</option>
 option.</para>
 
-<para>If the <option>attributes</option> option is used, a new attribute is
-created on the wrapper element for each entry in the map. The attribute name is
-taken from the entry's key while the attribute value is taken from the string
-value of the entry's value.</para>
-
 <para>The <option>group-adjacent</option> option can be used to group
 adjacent documents.
 The XPath context
@@ -3947,6 +3973,26 @@ adjacent” value, they are wrapped together in a single wrapper
 element.
 Two “group adjacent” values are the same if the
 standard XPath function <code>deep-equal()</code> returns true for them.</para>
+
+<para>If the <option>attributes</option> option is used, a new attribute is
+created on the wrapper element for each entry in the map. The attribute name is
+taken from the entry's key while the attribute value is taken from the string
+value of the entry's value.</para>
+
+<para>Namespace declarations cannot be added
+with the <option>attributes</option> option.
+<error code="C0059">It is a <glossterm>dynamic error</glossterm> if the name
+of any attribute is “<code>xmlns</code>” or uses the prefix
+“<literal>xmlns</literal>”
+or any other prefix that resolves to the namespace name
+<uri>http://www.w3.org/2000/xmlns/</uri>.</error> However,
+if the attributes taken from the <option>attributes</option> use namespaces,
+prefixes, or prefixes bound to different namespaces, the document produced on the
+<port>result</port> output port will require namespace fixup.</para>
+
+<para>If an attribute named <tag class="attribute">xml:base</tag> is added, the
+base URI of the element <rfc2119>must</rfc2119> also be amended
+accordingly.</para>
 
 <simplesect>
 <title>Document properties</title>
