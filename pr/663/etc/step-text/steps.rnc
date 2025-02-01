@@ -1,0 +1,17 @@
+default namespace p = "http://www.w3.org/ns/xproc"
+namespace local = ""
+
+# This schema could be made more constrained.
+
+Step = Step-markdown-to-html
+
+Step-markdown-to-html =
+  element markdown-to-html {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute parameters { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation|PipeInfo)*)
+  }
+
