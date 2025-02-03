@@ -158,7 +158,8 @@ validation steps and their semantics are
 
     <para>The <port>source</port> document is validated using the namespace dispatching rules contained in the 
       <port>nvdl</port> document. <error code="C0154">It is a <glossterm>dynamic error</glossterm> 
-        if the document supplied on <port>nvdl</port> port is not a valid NVDL document.</error></para>
+        if the document supplied on <port>nvdl</port> port is not a valid NVDL document.</error>
+    </para>
 
     <para>The dispatching rules may contain URI references that point to the actual schemas to be
       used. As long as these schemas are accessible, it is not necessary to pass anything on the
@@ -171,7 +172,9 @@ validation steps and their semantics are
 
     <para>The output from this step is a copy of the input. The output of this
     step <rfc2119>may</rfc2119> include PSVI annotations.</para>
-    
+
+    <para>The <link linkend="validation-common">common options and outputs</link> apply to this step.</para>
+
     <simplesect>
       <title>Document properties</title>
       <para feature="validate-with-nvdl-preserves-all">All document properties
@@ -234,6 +237,8 @@ augmented by application of the
 
 <para><impl>Support for <biblioref linkend="relaxng-dtd-compat"/> is
 <glossterm>implementation-defined</glossterm>.</impl></para>
+
+<para>The <link linkend="validation-common">common options and outputs</link> apply to this step.</para>
 
 <simplesect>
 <title>Document properties</title>
@@ -313,6 +318,8 @@ input.</para>
 <para>The output of this step
 <rfc2119>may</rfc2119> include PSVI annotations.</para>
 
+<para>The <link linkend="validation-common">common options and outputs</link> apply to this step.</para>
+
 <simplesect>
 <title>Document properties</title>
 <para feature="validate-with-schematron-preserves-all">All document properties
@@ -363,7 +370,7 @@ by the documents on the <port>schema</port> port. These schemas must
 be used in preference to any schema locations provided by schema
 location hints encountered during schema validation, that is, schema
 locations supplied for <code>xs:import</code> or
-<code>xsi:schema-location</code>, or determined by
+<code>xsi:schemaLocation</code>, or determined by
 schema-processor-defined namespace-based strategies, for the
 namespaces covered by the documents available on the schemas port.</para>
 
@@ -438,6 +445,8 @@ supports such annotations. If not, the input document is reproduced
 with any defaulting of attributes and elements performed as specified
 by the XML Schema recommendation.</para>
 
+<para>The <link linkend="validation-common">common options and outputs</link> apply to this step.</para>
+
 <simplesect>
 <title>Document properties</title>
 <para feature="validate-with-xml-schema-preserves-all">All document properties
@@ -482,6 +491,8 @@ properties are preserved on the <port>report</port> port.</para>
     and the input document is not valid.</error></para>
 
     <para>The output from this step is a copy of the input.</para>
+
+<para>The <link linkend="validation-common">common options and outputs</link> apply to this step.</para>
   
   <simplesect>
     <title>Document properties</title>
@@ -534,6 +545,8 @@ and the input document is not valid.</error></para>
 <para>The output from this step is a copy of the input. If validation was
 successful, the output may have been augmented by the DTD. (For example, default
 attributes may have been added.)</para>
+
+<para>The <link linkend="validation-common">common options and outputs</link> apply to this step.</para>
 
 <simplesect>
 <title>Using an internal subset</title>
