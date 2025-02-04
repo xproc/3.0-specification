@@ -945,8 +945,29 @@ The archive has no <property>base-uri</property>.</para>
    <section xml:id="casting-from-xml">
       <title>Casting from an XML media type</title> 
       <itemizedlist>
+        <listitem>
+          <para>If the input document is a <tag>c:data</tag> document, casting
+          decodes the text content of the <tag>c:data</tag> element according to the
+          <tag class="attribute">encoding</tag> and processes it according to its content type.
+          The resulting document will have the specified content type.
+          The serialization property is removed.</para>
+          <para><error code="C0052">It is a <glossterm>dynamic error</glossterm> if
+          the encoding specified is not supported by the implementation.</error></para>
+          <para><error code="C0072">It is a <glossterm>dynamic
+          error</glossterm> if the <tag>c:data</tag> contains content is not
+          a valid string according to the encoding.</error></para>
+          <para><error code="C0073">It is a <glossterm>dynamic
+          error</glossterm> if the <tag>c:data</tag> element does not have
+          a <tag class="attribute">content-type</tag> attribute.</error></para>
+          <para><error code="C0074">It is a <glossterm>dynamic
+          error</glossterm> if the <option>content-type</option> is supplied and is
+          not the same as the <tag class="attribute">content-type</tag> specified on
+          the <tag>c:data</tag> element.</error>
+          </para>
+        </listitem>
          <listitem>
-            <para>Casting from one XML media type to another simply changes the
+            <para>If the input document is not a <tag>c:data</tag> document,
+            casting from one XML media type to another simply changes the
                “<literal>content-type</literal>” document property.
             </para>
          </listitem>
@@ -979,23 +1000,6 @@ The archive has no <property>base-uri</property>.</para>
                on the <port>result</port> port. The serialization property is removed.</para>
          </listitem>
          <listitem>
-            <para>Casting from an XML media type to any other media type
-               <rfc2119>must</rfc2119> support the case where the input document is
-               a <tag>c:data</tag> document. The resulting document will
-               have the specified media type and a representation that
-               is the content of the <tag>c:data</tag> element after decoding the base64
-               encoded content The serialization property is removed.</para>
-            <para><error code="C0072">It is a <glossterm>dynamic
-               error</glossterm> if the <tag>c:data</tag> contains content is not
-               a valid base64 string.</error></para>
-            <para><error code="C0073">It is a <glossterm>dynamic
-               error</glossterm> if the <tag>c:data</tag> element does not have
-               a <tag class="attribute">content-type</tag> attribute.</error></para>
-            <para><error code="C0074">It is a <glossterm>dynamic
-               error</glossterm> if the <option>content-type</option> is supplied and is
-               not the same as the <tag class="attribute">content-type</tag> specified on
-               the <tag>c:data</tag> element.</error>
-            </para>
             <para><impl>Casting from an XML media type to any other media type when
                the input document is not a <tag>c:data</tag> document is
                <glossterm>implementation-defined</glossterm>.</impl></para>
@@ -1382,6 +1386,54 @@ of the element on which it occurred.</para>
       the <literal>content-type</literal> property is changed to <literal>text/plain</literal> and the 
       <literal>serialization</literal> property is removed, while all other document properties are 
       preserved. In all other cases, all document properties are preserved.</para>
+</simplesect>
+</section>
+<section xml:id="c.encode">
+<title>p:encode</title>
+
+<para>The <code>p:encode</code> step encodes an input document, for example with base64 encoding.
+</para>
+
+<p:declare-step type="p:encode">
+  <p:input port="source"/>
+  <p:output port="result" content-types="application/xml"/>
+  <p:option name="encoding" as="xs:string" select="'base64'"/>
+  <p:option name="serialization" as="map(xs:QName,item()*)?"/>
+</p:declare-step>
+
+<para>The encode step produces an XML document by encoding its input. The
+encoding value “<literal>base64</literal>” <rfc2119>must</rfc2119> be supported.
+<impl>An implementation may support encodings other than
+<literal>base64</literal>, but these encodings and their names are
+<glossterm>implementation-defined</glossterm>.</impl> <error code="C0052">It is
+a <glossterm>dynamic error</glossterm> if the encoding specified is not supported
+by the implementation.</error>
+</para>
+
+<para>If the input document is a binary document, its content is encoded
+directly, otherwise the content is first serialized and the serialized
+representation is encoded. The <option>serialization</option> option is provided
+to control the serialization of content when it is stored. If the document to be
+stored has a “serialization” property, the serialization is controlled by the
+merger of the two maps where the entries in the “serialization” property take
+precedence. Serialization is described in <biblioref linkend="xproc31"/>.</para>
+
+<para>The result of encoding is a <tag>c:data</tag> element.</para>
+
+<e:rng-pattern name="VocabData"/>
+            
+<para>The content of the <tag>c:data</tag> element is the encoded representation
+of the content.</para>
+
+<note>
+<para>There is no <code>p:decode</code> step. Decoding is performed by the
+<tag>p:cast-content-type</tag> step if the input is a <tag>c:data</tag>
+document.</para>
+</note>
+
+<simplesect>
+<title>Document properties</title>
+<para feature="encode-preserves-none">No document properties are preserved.</para>
 </simplesect>
 </section>
 <section xml:id="c.error">

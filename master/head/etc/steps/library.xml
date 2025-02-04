@@ -92,6 +92,12 @@
                 as="xs:string"
                 e:type="XSLTSelectionPattern"/>
    </p:declare-step>
+   <p:declare-step type="p:encode" xml:id="encode">
+      <p:input port="source"/>
+      <p:output port="result" content-types="application/xml"/>
+      <p:option name="encoding" as="xs:string" select="'base64'"/>
+      <p:option name="serialization" as="map(xs:QName,item()*)?"/>
+   </p:declare-step>
    <p:declare-step type="p:error" xml:id="error">
       <p:input port="source" sequence="true" content-types="text xml"/>
       <p:output port="result" sequence="true" content-types="any"/>
