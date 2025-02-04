@@ -3739,7 +3739,11 @@ declared more than once in the same scope.</error></para>
 <para>The scope of function names imported with <tag>p:import-functions</tag> is
 limited to expressions that appear in elements and attributes that follow the
 <tag>p:import-function</tag> element, in document order, in the pipeline
-document.</para>
+document where the import occurs.</para>
+
+<para>Function imports are not transitive. If a pipeline imports a library that
+imports functions, those functions are not available in the pipeline that
+imported the library, unless they’re also imported directly by the pipeline.</para>
 
 </section>
 </section>
@@ -6995,7 +6999,8 @@ L2 contains a step C, then:</para>
 <para>An <tag>p:import-functions</tag> element identifies a library of externally
 defined functions to be imported into the pipeline. After the functions have been
 imported, they are available in the
-<link linkend="xproc-xpath-context-31">processor XPath context</link>.</para>
+<link linkend="xproc-xpath-context-31">processor XPath context</link> of
+the pipeline or library that they are imported into.</para>
 
 <e:rng-pattern name="ImportFunctions"/>
 
@@ -7060,6 +7065,9 @@ arity). <error code="S0105">It is a <glossterm>static error</glossterm> if a fun
 imported from a library has the same name and arity as a function already imported.</error>
 </para>
 
+<para>Function imports are not transitive. If a pipeline imports a library that
+imports functions, those functions are not available in the pipeline that
+imported the library, unless they’re also imported directly by the pipeline.</para>
 </section>
 
 <!-- ============================================================ -->
