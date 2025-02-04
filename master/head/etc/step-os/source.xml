@@ -193,9 +193,12 @@ expanding references to environment variables).
 error</glossterm> if the command cannot be run.</error>
 </para>
 
-<para>If <option>cwd</option> is specified, then the current working
-directory is changed to the value of that option before execution
-begins. <error code="C0034">It is a <glossterm>dynamic
+<para>If the <option>cwd</option> option is specified, it identifies the directory
+that will be the current working directory when execution begins.
+To resolve variations in the syntax of directory specifications (“<literal>/tmp</literal>”
+vs. “<literal>C:\tmp</literal>” vs “<literal>file:///c:/tmp</literal>”, for example), the value will be 
+normalized with the <function>p:urify</function> function.
+<error code="C0034">It is a <glossterm>dynamic
 error</glossterm> if the current working directory cannot be changed
 to the value of the <option>cwd</option> option.</error>
 <impl>If <option>cwd</option> is not
