@@ -46,8 +46,8 @@
       <ref name="Step-uncompress"/>
       <ref name="Step-unwrap"/>
       <ref name="Step-uuid"/>
-      <ref name="Step-wrap-sequence"/>
       <ref name="Step-wrap"/>
+      <ref name="Step-wrap-sequence"/>
       <ref name="Step-www-form-urldecode"/>
       <ref name="Step-www-form-urlencode"/>
       <ref name="Step-xinclude"/>
@@ -947,6 +947,11 @@
           <ref name="avt.datatype"/>
         </attribute>
       </optional>
+      <optional>
+        <attribute name="attributes">
+          <ref name="avt.datatype"/>
+        </attribute>
+      </optional>
       <interleave>
         <zeroOrMore>
           <ref name="WithInput"/>
@@ -1661,42 +1666,6 @@
       </interleave>
     </element>
   </define>
-  <define name="Step-wrap-sequence">
-    <element name="wrap-sequence">
-      <optional>
-        <ref name="name.ncname.attr"/>
-      </optional>
-      <ref name="common.attributes"/>
-      <optional>
-        <ref name="use-when.attr"/>
-      </optional>
-      <ref name="step.attributes"/>
-      <optional>
-        <attribute name="wrapper">
-          <ref name="avt.datatype"/>
-        </attribute>
-      </optional>
-      <optional>
-        <attribute name="group-adjacent">
-          <ref name="avt.datatype"/>
-        </attribute>
-      </optional>
-      <interleave>
-        <zeroOrMore>
-          <ref name="WithInput"/>
-        </zeroOrMore>
-        <zeroOrMore>
-          <ref name="WithOption"/>
-        </zeroOrMore>
-        <zeroOrMore>
-          <choice>
-            <ref name="Documentation"/>
-            <ref name="PipeInfo"/>
-          </choice>
-        </zeroOrMore>
-      </interleave>
-    </element>
-  </define>
   <define name="Step-wrap">
     <element name="wrap">
       <optional>
@@ -1719,6 +1688,52 @@
       </optional>
       <optional>
         <attribute name="group-adjacent">
+          <ref name="avt.datatype"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="attributes">
+          <ref name="avt.datatype"/>
+        </attribute>
+      </optional>
+      <interleave>
+        <zeroOrMore>
+          <ref name="WithInput"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <ref name="WithOption"/>
+        </zeroOrMore>
+        <zeroOrMore>
+          <choice>
+            <ref name="Documentation"/>
+            <ref name="PipeInfo"/>
+          </choice>
+        </zeroOrMore>
+      </interleave>
+    </element>
+  </define>
+  <define name="Step-wrap-sequence">
+    <element name="wrap-sequence">
+      <optional>
+        <ref name="name.ncname.attr"/>
+      </optional>
+      <ref name="common.attributes"/>
+      <optional>
+        <ref name="use-when.attr"/>
+      </optional>
+      <ref name="step.attributes"/>
+      <optional>
+        <attribute name="wrapper">
+          <ref name="avt.datatype"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="group-adjacent">
+          <ref name="avt.datatype"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="attributes">
           <ref name="avt.datatype"/>
         </attribute>
       </optional>

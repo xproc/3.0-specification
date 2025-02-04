@@ -2790,6 +2790,7 @@ fashion.</para>
    <p:input port="alternate" sequence="true" content-types="text xml html"/>
    <p:output port="result" sequence="true" content-types="application/xml"/>
    <p:option name="wrapper" required="true" as="xs:QName"/>
+   <p:option name="attributes" as="map(xs:QName, xs:anyAtomicType)?"/>
 </p:declare-step>
 
 <para>The step takes each pair of documents, in order, one from the
@@ -2810,10 +2811,31 @@ occur between them may have come from either of the input documents;
 this step does not attempt to distinguish which one.</para>
 </note>
 
+<para>If the <option>attributes</option> option is used, a new attribute is
+created on the wrapper element for each entry in the map. The attribute name is
+taken from the entry's key while the attribute value is taken from the string
+value of the entry's value.</para>
+
+<para>Namespace declarations cannot be added
+with the <option>attributes</option> option.
+<error code="C0059">It is a <glossterm>dynamic error</glossterm> if the name
+of any attribute is “<code>xmlns</code>” or uses the prefix
+“<literal>xmlns</literal>”
+or any other prefix that resolves to the namespace name
+<uri>http://www.w3.org/2000/xmlns/</uri>.</error> However,
+if the attributes taken from the <option>attributes</option> use namespaces,
+prefixes, or prefixes bound to different namespaces, the document produced on the
+<port>result</port> output port will require namespace fixup.</para>
+
+<para>If an attribute named <tag class="attribute">xml:base</tag> is added, the
+base URI of the element <rfc2119>must</rfc2119> also be amended
+accordingly.</para>
+
 <simplesect>
 <title>Document properties</title>
 <para feature="pack-preserves-none">No document properties are preserved.
-The result documents do not have a <property>base-uri</property> property.
+The result documents do not have a <property>base-uri</property> property unless
+one is specified with the <option>attributes</option> option.
 </para>
 </simplesect>
 </section>
@@ -3883,54 +3905,6 @@ its contents) is replaced by the UUID.</para>
     preserved. For other document types, all document properties are preserved.</para>
 </simplesect>
 </section>
-<section xml:id="c.wrap-sequence">
-<title>p:wrap-sequence</title>
-
-<para>The <tag>p:wrap-sequence</tag> step accepts a sequence of
-documents and produces either a single document or a new sequence of
-documents.</para>
-
-<p:declare-step type="p:wrap-sequence">
-   <p:input port="source" content-types="text xml html" sequence="true"/>
-   <p:output port="result" sequence="true" content-types="application/xml"/>
-   <p:option name="wrapper" required="true" as="xs:QName"/>
-   <p:option name="group-adjacent" as="xs:string?" e:type="XPathExpression"/>
-</p:declare-step>
-
-<para>The value of the <option>group-adjacent</option> option
-<rfc2119>must</rfc2119> be an XPathExpression.</para>
-
-<para>In its simplest form, <tag>p:wrap-sequence</tag> takes a
-sequence of documents and produces a single, new document by placing
-each document in the <port>source</port> sequence inside a new
-document element as sequential siblings. The name of the document
-element is the value specified in the <option>wrapper</option>
-option.</para>
-
-<para>The <option>group-adjacent</option> option can be used to group
-adjacent documents.
-The XPath context
-for the
-<option>group-adjacent</option> option changes over time. For each document that
-appears on the <code>source</code> port, the expression is evaluated
-with that document as the context document. The context position
-(<code>position()</code>) is the position of that document within the
-sequence and the context size (<code>last()</code>) is the total
-number of documents in the sequence.
-Whenever
-two or more sequentially adjacent documents have the same “group
-adjacent” value, they are wrapped together in a single wrapper
-element.
-Two “group adjacent” values are the same if the
-standard XPath function <code>deep-equal()</code> returns true for them.</para>
-
-<simplesect>
-<title>Document properties</title>
-<para feature="wrap-sequence-preserves-none">No document properties are preserved.
-The document produced has no <property>base-uri</property> property.
-</para>
-</simplesect>
-</section>
 <section xml:id="c.wrap">
 <title>p:wrap</title>
 
@@ -3943,6 +3917,7 @@ The document produced has no <property>base-uri</property> property.
    <p:option name="wrapper" required="true" as="xs:QName"/>
    <p:option name="match" required="true" as="xs:string" e:type="XSLTSelectionPattern"/>
    <p:option name="group-adjacent" as="xs:string?" e:type="XPathExpression"/>
+   <p:option name="attributes" as="map(xs:QName, xs:anyAtomicType)?"/>
 </p:declare-step>
 
 <para>The value of the <option>match</option> option
@@ -3984,9 +3959,99 @@ are siblings and either there are no nodes between them or all
 intervening, non-matching nodes are whitespace text, comment, or processing
 instruction nodes.</para>
 
+<para>If the <option>attributes</option> option is used, a new attribute is
+created on the wrapper element for each entry in the map. The attribute name is
+taken from the entry's key while the attribute value is taken from the string
+value of the entry's value.</para>
+
+<para>Namespace declarations cannot be added
+with the <option>attributes</option> option.
+<error code="C0059">It is a <glossterm>dynamic error</glossterm> if the name
+of any attribute is “<code>xmlns</code>” or uses the prefix
+“<literal>xmlns</literal>”
+or any other prefix that resolves to the namespace name
+<uri>http://www.w3.org/2000/xmlns/</uri>.</error> However,
+if the attributes taken from the <option>attributes</option> use namespaces,
+prefixes, or prefixes bound to different namespaces, the document produced on the
+<port>result</port> output port will require namespace fixup.</para>
+
+<para>If an attribute named <tag class="attribute">xml:base</tag> is added, the
+base URI of the element <rfc2119>must</rfc2119> also be amended
+accordingly.</para>
+
 <simplesect>
 <title>Document properties</title>
 <para feature="wrap-preserves-all">All document properties are preserved.</para>
+</simplesect>
+</section>
+<section xml:id="c.wrap-sequence">
+<title>p:wrap-sequence</title>
+
+<para>The <tag>p:wrap-sequence</tag> step accepts a sequence of
+documents and produces either a single document or a new sequence of
+documents.</para>
+
+<p:declare-step type="p:wrap-sequence">
+   <p:input port="source" content-types="text xml html" sequence="true"/>
+   <p:output port="result" sequence="true" content-types="application/xml"/>
+   <p:option name="wrapper" required="true" as="xs:QName"/>
+   <p:option name="group-adjacent" as="xs:string?" e:type="XPathExpression"/>
+   <p:option name="attributes" as="map(xs:QName, xs:anyAtomicType)?"/>
+</p:declare-step>
+
+<para>The value of the <option>group-adjacent</option> option
+<rfc2119>must</rfc2119> be an XPathExpression.</para>
+
+<para>In its simplest form, <tag>p:wrap-sequence</tag> takes a
+sequence of documents and produces a single, new document by placing
+each document in the <port>source</port> sequence inside a new
+document element as sequential siblings. The name of the document
+element is the value specified in the <option>wrapper</option>
+option.</para>
+
+<para>The <option>group-adjacent</option> option can be used to group
+adjacent documents.
+The XPath context
+for the
+<option>group-adjacent</option> option changes over time. For each document that
+appears on the <code>source</code> port, the expression is evaluated
+with that document as the context document. The context position
+(<code>position()</code>) is the position of that document within the
+sequence and the context size (<code>last()</code>) is the total
+number of documents in the sequence.
+Whenever
+two or more sequentially adjacent documents have the same “group
+adjacent” value, they are wrapped together in a single wrapper
+element.
+Two “group adjacent” values are the same if the
+standard XPath function <code>deep-equal()</code> returns true for them.</para>
+
+<para>If the <option>attributes</option> option is used, a new attribute is
+created on the wrapper element for each entry in the map. The attribute name is
+taken from the entry's key while the attribute value is taken from the string
+value of the entry's value.</para>
+
+<para>Namespace declarations cannot be added
+with the <option>attributes</option> option.
+<error code="C0059">It is a <glossterm>dynamic error</glossterm> if the name
+of any attribute is “<code>xmlns</code>” or uses the prefix
+“<literal>xmlns</literal>”
+or any other prefix that resolves to the namespace name
+<uri>http://www.w3.org/2000/xmlns/</uri>.</error> However,
+if the attributes taken from the <option>attributes</option> use namespaces,
+prefixes, or prefixes bound to different namespaces, the document produced on the
+<port>result</port> output port will require namespace fixup.</para>
+
+<para>If an attribute named <tag class="attribute">xml:base</tag> is added, the
+base URI of the element <rfc2119>must</rfc2119> also be amended
+accordingly.</para>
+
+<simplesect>
+<title>Document properties</title>
+<para feature="wrap-sequence-preserves-none">No document properties are preserved.
+The result documents do not have a <property>base-uri</property> property unless
+one is specified with the <option>attributes</option> option.
+</para>
 </simplesect>
 </section>
 <section xml:id="c.www-form-urldecode">

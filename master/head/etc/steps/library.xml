@@ -222,6 +222,7 @@
       <p:input port="alternate" sequence="true" content-types="text xml html"/>
       <p:output port="result" sequence="true" content-types="application/xml"/>
       <p:option name="wrapper" required="true" as="xs:QName"/>
+      <p:option name="attributes" as="map(xs:QName, xs:anyAtomicType)?"/>
    </p:declare-step>
    <p:declare-step type="p:rename" xml:id="rename">
       <p:input port="source" content-types="xml html"/>
@@ -426,12 +427,6 @@
       <p:option name="version" as="xs:integer?"/>
       <p:option name="parameters" as="map(xs:QName, item()*)?"/>
    </p:declare-step>
-   <p:declare-step type="p:wrap-sequence" xml:id="wrap-sequence">
-      <p:input port="source" content-types="text xml html" sequence="true"/>
-      <p:output port="result" sequence="true" content-types="application/xml"/>
-      <p:option name="wrapper" required="true" as="xs:QName"/>
-      <p:option name="group-adjacent" as="xs:string?" e:type="XPathExpression"/>
-   </p:declare-step>
    <p:declare-step type="p:wrap" xml:id="wrap">
       <p:input port="source" content-types="xml html"/>
       <p:output port="result" content-types="application/xml"/>
@@ -441,6 +436,14 @@
                 as="xs:string"
                 e:type="XSLTSelectionPattern"/>
       <p:option name="group-adjacent" as="xs:string?" e:type="XPathExpression"/>
+      <p:option name="attributes" as="map(xs:QName, xs:anyAtomicType)?"/>
+   </p:declare-step>
+   <p:declare-step type="p:wrap-sequence" xml:id="wrap-sequence">
+      <p:input port="source" content-types="text xml html" sequence="true"/>
+      <p:output port="result" sequence="true" content-types="application/xml"/>
+      <p:option name="wrapper" required="true" as="xs:QName"/>
+      <p:option name="group-adjacent" as="xs:string?" e:type="XPathExpression"/>
+      <p:option name="attributes" as="map(xs:QName, xs:anyAtomicType)?"/>
    </p:declare-step>
    <p:declare-step type="p:www-form-urldecode" xml:id="www-form-urldecode">
       <p:output port="result" content-types="application/json"/>
