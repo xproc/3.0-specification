@@ -3001,6 +3001,18 @@ element or the attribute has a preceding node that it not an attribute.</error>
 <para>If the content type is not an <glossterm>XML media type</glossterm> or an 
   <glossterm>HTML media type</glossterm>, each text value template is replaced by the
             concatenation of the serialization of the nodes that result from evaluating the template.</para>
+
+<important>
+<para>This is a <emphasis>backwards incompatible</emphasis> change from XProc
+3.0 where the “<literal>xml</literal>” serialization method was specified. Using
+the XML serialization, it was very difficult to get un-escaped markup into text
+content. Although, as the examples showed, it could be useful for JSON content,
+even that was unlikely to work in the general case because of problems with
+attribute value quotation.</para>
+</important>
+</listitem>
+</orderedlist>
+
 <para>This serialization is performed with the following serialization parameters:</para>
 
 <informaltable>
@@ -3015,41 +3027,24 @@ element or the attribute has a preceding node that it not an attribute.</error>
 <row>
   <entry><option>byte-order-mark</option></entry><entry>false</entry></row>
 <row>
-  <entry><option>cdata-section-elements</option></entry><entry>()</entry></row>
-<row>
-  <entry><option>doctype-public</option></entry><entry>()</entry></row>
-<row>
-  <entry><option>doctype-system</option></entry><entry>()</entry></row>
-<row>
   <entry><option>encoding</option></entry><entry>“utf-8”</entry></row>
 <row>
-  <entry><option>escape-uri-attributes</option></entry><entry>false</entry></row>
+  <entry><option>media-type</option></entry><entry>“text/plain”</entry></row>
 <row>
-  <entry><option>include-content-type</option></entry><entry>false</entry></row>
+  <entry><option>method</option></entry><entry>“text”</entry></row>
 <row>
-  <entry><option>indent</option></entry><entry>false</entry></row>
-<row>
-  <entry><option>media-type</option></entry><entry>“application/xml”</entry></row>
-<row>
-  <entry><option>method</option></entry><entry>“xml”</entry></row>
-<row>
-  <entry><option>normalization-form</option></entry><entry>()</entry></row>
-<row>
-  <entry><option>omit-xml-declaration</option></entry><entry>true</entry></row>
-<row>
-  <entry><option>standalone</option></entry><entry>false</entry></row>
-<row>
-  <entry><option>undeclare-prefixes</option></entry><entry>false</entry></row>
-<row>
-  <entry><option>use-character-maps</option></entry><entry>()</entry></row>
-<row>
-  <entry><option>version</option></entry><entry>1.0</entry></row>
+  <entry><option>item-separator</option></entry><entry>“ ” (a single space)</entry></row>
 </tbody>
 </tgroup>
 </informaltable>
 
-</listitem>
-</orderedlist>
+<para><impl>Any other text output parameters used when serializing a text value template
+are <glossterm>implementation-defined</glossterm>.</impl>
+<error code="D0052">It is a <glossterm>dynamic error</glossterm> if the XPath
+expression in a TVT evaluates to an attribute node when the content type is not
+an <glossterm>XML media type</glossterm> or an <glossterm>HTML media
+type</glossterm>.</error>
+</para>
 
 <para>Interpretation of the character content of the <tag>p:inline</tag>
 according to the media type occurs after text value templates have been
@@ -3065,7 +3060,8 @@ replaced.</para>
 <para>The variable <code>$name</code>
 is bound to the following XML element:</para>
 
-<programlisting language="xml">  &lt;name&gt;&lt;given&gt;Mary&lt;/given&gt; &lt;surname&gt;Smith&lt;/surname&gt;&lt;/name&gt;</programlisting>
+<programlisting language="xml">&lt;name&gt;&lt;given&gt;Mary&lt;/given&gt; &lt;surname&gt;Smith&lt;/surname&gt;&lt;/name&gt;</programlisting>
+
 </listitem>
 <listitem>
 <para>The result of evaluating the text value template
@@ -3077,35 +3073,43 @@ element.</para>
 
 <para>If the media type is an XML media type:</para>
 
-<programlisting language="xml">  &lt;p:inline content-type="application/xml"&gt;
-    &lt;attribution&gt;{$name/node()}&lt;/attribution&gt;
-  &lt;/p:inline&gt;</programlisting>
+<programlisting language="xml">&lt;p:inline content-type="application/xml"&gt;
+  &lt;attribution&gt;{$name/node()}&lt;/attribution&gt;
+&lt;/p:inline&gt;</programlisting>
 
 <para>the result is that sequence of nodes:</para>
 
-<programlisting language="xml">  &lt;attribution&gt;&lt;given&gt;Mary&lt;/given&gt; &lt;surname&gt;Smith&lt;/surname&gt;&lt;/attribution&gt;</programlisting>
+<programlisting language="xml">&lt;attribution&gt;&lt;given&gt;Mary&lt;/given&gt; &lt;surname&gt;Smith&lt;/surname&gt;&lt;/attribution&gt;</programlisting>
 
 <para>If the media type is not an XML media type:</para>
 
-<programlisting language="xml">  &lt;p:inline content-type="application/json"&gt;
-    {{ "name": "{$name/node()}" }}
-  &lt;/p:inline&gt;</programlisting>
+<programlisting language="xml">&lt;p:inline content-type="application/json"&gt;
+  {{ "name": "{$name/node()}" }}
+&lt;/p:inline&gt;</programlisting>
 
-<para>the result is the concatenation of the serialization of the nodes:</para>
+<para>the result is the concatenation of the text serialization of the nodes:</para>
 
-<programlisting language="javascript">  { "name": "&lt;given&gt;Mary&lt;/given&gt; &lt;surname&gt;Smith&lt;/surname&gt;" }</programlisting>
+<programlisting language="javascript">{ "name": "Mary Smith" }</programlisting>
 
-<para>If the string value is desired, instead of escaped markup, write the
-expression such that it returns the string values:</para>
+<para>If the XML value with escaped markup is desired, use explicit
+serialization:</para>
 
-<programlisting language="xml">  &lt;p:inline content-type="application/json"&gt;
-    {{ "name": "{$name/node()/string()}" }}
-  &lt;/p:inline&gt;</programlisting>
+<programlisting language="xml">&lt;p:inline content-type="application/json"&gt;
+  {{ "name": "{
+     replace(
+       serialize($name/node(), map{'method':'xml'}),
+       '&amp;quot;', '\\&amp;quot;')}" }}
+&lt;/p:inline&gt;</programlisting>
 
 <para>To produce:</para>
 
-<programlisting language="javascript">  { "name": "Mary Smith" }</programlisting>
+<programlisting language="javascript">{"name":"&lt;given&gt;Mary&lt;\/given&gt; &lt;surname&gt;Smith&lt;\/surname&gt;"}</programlisting>
 
+<para>Although it isn’t necessary in this example, note the special care being
+take to make sure that an unescaped literal “<code>"</code>” does not appear in the serialization.
+Interpretation of the content as JSON occurs after the value template has been expanded.
+If the serialization contains an unescaped double quote character, the result will be invalid
+JSON: <code>{"name": " … " … "}</code>.</para>
 </simplesect>
 </section>
 </section>
