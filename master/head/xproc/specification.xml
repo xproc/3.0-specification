@@ -3766,18 +3766,65 @@ attribute. The <tag class="attribute">xml:base</tag> attribute
 <rfc2119>may</rfc2119> appear on any element in a pipeline and has the
 semantics outlined in <biblioref linkend="xml-base"/>.</para>
 
+<para>As a consequence of the fact that XProc uses the semantics of <biblioref linkend="xml-base"/> for all <tag class="attribute">xml:base</tag> attributes that
+appear in an XProc pipeline, a pipeline author <emphasis>cannot</emphasis> set
+the literal <tag class="attribute">xml:base</tag> attribute on an inline element
+with an attribute value template. This is an error:</para>
+
+<programlisting language="xml">&lt;p:identity&gt;
+  &lt;p:with-input&gt;
+    &lt;p:inline&gt;
+      &lt;doc&gt;
+        &lt;page xml:base="{$someExpression}"&gt;somefile.xml&lt;/page&gt;
+      &lt;/doc&gt;
+    &lt;/p:inline&gt;
+  &lt;/p:with-input&gt;
+&lt;/p:identity&gt;</programlisting>
+<para>The XML base value “<code>{$someExpression}</code>” is not a valid URI.
+Instead, you must use <tag>p:add-attribute</tag> or <tag>p:set-attributes</tag>.
+For example:</para>
+<programlisting language="xml">&lt;p:identity&gt;
+  &lt;p:with-input&gt;
+    &lt;p:inline&gt;
+      &lt;doc&gt;
+        &lt;page&gt;somefile.xml&lt;/page&gt;
+      &lt;/doc&gt;
+    &lt;/p:inline&gt;
+  &lt;/p:with-input&gt;
+&lt;/p:identity&gt;
+
+&lt;p:add-attribute match="/doc/page"
+                 attribute-name="xml:base"
+                 attribute-value="{$someExpression}"/&gt;</programlisting>
+
 <para>For XML documents, HTML documents, and text documents, the pipeline author 
 can control the base URI of the document node by manipulating the document property 
 “<code>base-uri</code>”.</para>
 
 </section>
-    <section xml:id="xml-id-attribute">
-      <title>Unique identifiers</title>
-      <para>A pipeline author can provide a globally unique identifier for any element in a pipeline
-        with the <tag class="attribute">xml:id</tag> attribute.</para>
-      <para>The <tag class="attribute">xml:id</tag> attribute <rfc2119>may</rfc2119> appear on any
-        element in a pipeline and has the semantics outlined in <biblioref linkend="xml-id"/>.</para>
-    </section>
+
+<section xml:id="xml-id-attribute">
+<title>Unique identifiers</title>
+
+<para>A pipeline author can provide a globally unique identifier for any element
+in a pipeline with the <tag class="attribute">xml:id</tag> attribute.</para>
+
+<para>The <tag class="attribute">xml:id</tag> attribute <rfc2119>may</rfc2119>
+appear on any element in a pipeline and has the semantics outlined in <biblioref linkend="xml-id"/>.</para>
+
+<para>The semantics of an <tag class="attribute">xml:id</tag> attribute are that
+<emphasis>it is</emphasis> an ID. An XProc processor does not directly use the
+ID values, so it is not explicitly required to validate that the values of attributes named
+<tag class="attribute">xml:id</tag> conform to the constraints of XML ID values.
+It may be possible to set the literal <tag class="attribute">xml:id</tag>
+attribute on an inline element with an attribute value template, but it is not
+best practice. <impl>It is <glossterm>implementation-dependent</glossterm> if a
+processor validates <tag class="attribute">xml:id</tag> attribute values.</impl>
+(The same observations apply to <tag class="attribute">xml:lang</tag> and
+<tag class="attribute">xml:space</tag> attributes.)
+</para>
+
+</section>
 
 <section xml:id="syntax-docs-ports">
 <title>Associating Documents with Ports</title>
