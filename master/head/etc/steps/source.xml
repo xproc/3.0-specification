@@ -2505,18 +2505,86 @@ the processor does not support DTD validation.</error></para>
 document is an XPath data model document consisting of a single text node.)</para>
 
 <para><error code="D0060">It is a <glossterm>dynamic error</glossterm> if the
-<option>content-type</option> specifies an encoding, which is not supported
-by the processor.</error></para>
+<option>content-type</option> specifies a charset (sometimes called the
+character encoding) that is not supported by the processor.</error></para>
 
 <para><impl>Text parameters are <glossterm>implementation-defined</glossterm>.
 </impl></para>
 
+<section xml:id="text-bom">
+<title>Byte order marks</title>
+
+<para>UTF-8 and UTF-16 inputs can begin with a byte order mark. The byte order
+mark is not considered part of the text and is not included in the text
+document.</para>
+
+<para>In order to identify the byte order mark, it is first necessary to
+identify the charset that is being
+used. The charset of an external resource is determined as follows:</para>
+
+<orderedlist>
+<listitem>
+<para>external charset information is used if available (for example, if the
+resource is loaded with HTTP or HTTPS and the server provided a charset), otherwise
+</para>
+</listitem>
+<listitem>
+<para>the charset from the content type if specified, otherwise
+</para>
+</listitem>
+<listitem>
+<para>the processor may use implementation-defined heuristics to determine the
+likely charset, otherwise
+</para>
+</listitem>
+<listitem>
+<para>UTF-8 is assumed.</para>
+</listitem>
+</orderedlist>
+
+<para>Processors <rfc2119>must</rfc2119> support UTF-8 and UTF-16. <impl>Support
+for other charsets is <glossterm>implementation-defined</glossterm>.</impl></para>
+
+<para>If the encoding is UTF-8, UTF-16, UTF-16LE, or UTF-16BE, a byte order mark
+may be present. (For any other encoding, there is no byte order mark and all of the text
+is returned.)</para>
+
+<itemizedlist>
+<listitem>
+<para>If the encoding is UTF-8 and the document begins with the bytes 
+EF BB BF, those bytes are the byte order mark. They are discarded.</para>
+</listitem>
+<listitem>
+<para>If the encoding is UTF-16 and the document begins with the bytes 
+FE FF or FF FE, those bytes are the byte order mark. They are discarded.</para>
+</listitem>
+<listitem>
+<para>If the encoding is UTF-16LE and the document begins with the bytes 
+FF FE, those bytes are the byte order mark. They are discarded.</para>
+</listitem>
+<listitem>
+<para>If the encoding is UTF-16BE and the document begins with the bytes 
+FE FF, those bytes are the byte order mark. They are discarded.</para>
+</listitem>
+<listitem>
+<para>If the encoding isn’t specified, but the file begins with a byte
+order mark (FE FF or FF FE), treat the charset as UTF-16 and
+discard the byte order mark.</para>
+</listitem>
+<listitem>
+<para>Otherwise, there is no byte order mark, nothing is discarded.
+</para>
+</listitem>
+</itemizedlist>
+
+</section>
 </section>
 
 <section xml:id="c.load.json">
 <title>Loading JSON data</title>
 
-<para>For a JSON media type, the content is loaded and parsed as JSON.</para>
+<para>For a JSON media type, the content is loaded and parsed as JSON
+<biblioref linkend="rfc8259"/>.</para>
 
 <para>The parameters specified for the <code>fn:parse-json</code> function
 in <biblioref linkend="xpath31-functions"/>
@@ -2536,6 +2604,15 @@ map contains an entry whose key is defined in the specification of
 <code>fn:parse-json</code> and whose value is not valid for that key, or if it contains
 an entry with the key fallback when the parameter <option>escape</option> with
 <literal>true()</literal> is also present.</error></para>
+
+<section xml:id="json-bom">
+<title>Byte order mark</title>
+
+<para>JSON data transmitted with the UTF-8 encoding may begin with a byte order
+mark. If it does, the byte order mark is discarded before parsing the
+input.</para>
+</section>
+
 </section>
 
 <section xml:id="c.load.html">
@@ -4685,6 +4762,11 @@ Internet Engineering Task Force. September, 2006.</bibliomixed>
 Matching of Language Tags</citetitle>.
 A. Phillips and M. Davis, editors.
 Internet Engineering Task Force. September, 2006.</bibliomixed>
+    <bibliomixed xml:id="rfc8259"><abbrev>RFC 8259</abbrev>
+<citetitle xlink:href="https://doi.org/10.17487/RFC8259">RFC 8259:
+The JavaScript Object Notation (JSON) Data Interchange Format.</citetitle>
+T. Bray, editor.
+Internet Engineering Task Force. December, 2017.</bibliomixed>
     <bibliomixed xml:id="bcp47"><abbrev>BCP 47</abbrev>
 Best Current Practices 47. Concatenation of RFC 4646: Tags for Identifying
 Languages, ed. A. Phillips and M. Davis, September 2006,
