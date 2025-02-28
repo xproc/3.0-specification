@@ -5,6 +5,6 @@
       <p:input port="source" sequence="true"/>
       <p:output port="result" sequence="true"/>
       <p:option name="test" as="xs:boolean" select="true()"/>
-      <p:option name="select" as="xs:string"/>
+      <p:option name="select" as="xs:string" required="true"/>
    </p:declare-step>
 </p:library>
