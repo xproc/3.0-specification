@@ -79,7 +79,7 @@ A machine-readable description of this step may be found in
   <p:input port="source" sequence="true"/>
   <p:output port="result" sequence="true"/>
   <p:option name="test" as="xs:boolean" select="true()"/>
-  <p:option name="select" as="xs:string" required="true"/>
+  <p:option name="select" as="item()*" required="true"/>
 </p:declare-step>
 
 <para>Steps that produce messages offer one way for an author to keep track of
@@ -98,8 +98,8 @@ harder to read and understand.</para>
 and is considerably less verbose.</para>
 
 <para>If the <tag class="attribute">test</tag> attribute is
-“<literal>true</literal>”, the <tag class="attribute">select</tag> expression is
-evaluated and made available. (As with the <link xlink:href="https://spec.xproc.org/master/head/xproc/#messages">message
+  “<literal>true</literal>”, the result of evaluating the <tag class="attribute">select</tag> option is
+serialized and made available. (As with the <link xlink:href="https://spec.xproc.org/master/head/xproc/#messages">message
 attribute</link>, this is intentionally vague. <impl>Precisely what “made
 available” means is <glossterm>implementation-defined</glossterm>.</impl>
 Often it means “printed on the console”.)</para>
