@@ -2706,6 +2706,61 @@ the results are <glossterm>implementation-dependent</glossterm>.</impl>
 <para feature="make-absolute-uris-preserves-all">All document properties are preserved.</para>
 </simplesect>
 </section>
+<section xml:id="c.message">
+<title>p:message</title>
+
+<para>The <code>p:message</code> step conditionally produces a message.</para>
+
+<p:declare-step type="p:message">
+  <p:input port="source" sequence="true"/>
+  <p:output port="result" sequence="true"/>
+  <p:option name="test" as="xs:boolean" select="true()"/>
+  <p:option name="select" as="item()*" required="true"/>
+</p:declare-step>
+
+<para>Steps that produce messages offer one way for an author to keep track of
+the progress of a pipeline. The <tag class="attribute">[p:]message</tag>
+attribute can be added to any step to display a message when it runs.</para>
+
+<para>Status and debugging messages that are appropriate during pipeline
+development may be distracting when the pipeline is running “in production”.
+Existing mechanisms for conditional compilation can be used to mediate between
+“development” and “production” runs, but they are a bit heavyweight. Adding many
+steps with <tag class="attribute">[p:]use-when</tag> attributes and managing the
+connections between steps that may be conditionally removed can make pipelines
+harder to read and understand.</para>
+
+<para>The <tag>p:message</tag> step can be used to achieve much the same effect
+and is considerably less verbose.</para>
+
+<para>If the <tag class="attribute">test</tag> attribute is
+  “<literal>true</literal>”, the result of evaluating the <tag class="attribute">select</tag> option is
+serialized and made available. (As with the <link xlink:href="https://spec.xproc.org/master/head/xproc/#messages">message
+attribute</link>, this is intentionally vague. <impl>Precisely what “made
+available” means is <glossterm>implementation-defined</glossterm>.</impl>
+Often it means “printed on the console”.)</para>
+
+<para>Irrespective of the value of the <tag class="attribute">test</tag>
+attribute, the <tag>p:message</tag> passes all of the documents that appear on
+its <port>source</port> port through to the <port>result</port> port,
+unchanged and in the same order.</para>
+
+<para>If exactly one document appears on the <port>source</port> port, it is the
+context item when the <tag class="attribute">test</tag> and <tag class="attribute">select</tag> expressions are evaluated. In all other cases,
+the context item is undefined.</para>
+
+<note>
+<para>If it can be determined statically that <tag class="attribute">test</tag> expression is
+<emphasis>always</emphasis> “<literal>false</literal>”, the processor may remove the 
+step from the pipeline entirely, although it must guarantee that all of the connections
+are preserved.</para>
+</note>
+
+<simplesect>
+  <title>Document properties</title>
+  <para feature="message-preserves-all">All document properties are preserved.</para>
+</simplesect>
+</section>
 <section xml:id="c.namespace-delete">
 <title>p:namespace-delete</title>
 

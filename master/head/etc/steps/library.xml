@@ -200,6 +200,12 @@
                 e:type="XSLTSelectionPattern"/>
       <p:option name="base-uri" as="xs:anyURI?"/>
    </p:declare-step>
+   <p:declare-step type="p:message" xml:id="message">
+      <p:input port="source" sequence="true"/>
+      <p:output port="result" sequence="true"/>
+      <p:option name="test" as="xs:boolean" select="true()"/>
+      <p:option name="select" as="item()*" required="true"/>
+   </p:declare-step>
    <p:declare-step type="p:namespace-delete" xml:id="namespace-delete">
       <p:input port="source" content-types="xml html"/>
       <p:output port="result" content-types="xml html"/>
