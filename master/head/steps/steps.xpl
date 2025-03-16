@@ -1,5 +1,5 @@
-<p:library xmlns:p="http://www.w3.org/ns/xproc"
-           xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax"
+<p:library xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax"
+           xmlns:p="http://www.w3.org/ns/xproc"
            version="3.1">
    <p:declare-step type="p:add-attribute" xml:id="add-attribute">
       <p:input port="source" content-types="xml html"/>

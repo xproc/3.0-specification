@@ -1,5 +1,5 @@
-<p:library xmlns:p="http://www.w3.org/ns/xproc"
-           xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax"
+<p:library xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax"
+           xmlns:p="http://www.w3.org/ns/xproc"
            version="3.1">
    <p:declare-step type="p:invisible-xml" xml:id="invisible-xml">
       <p:input port="grammar" sequence="true" content-types="text xml"/>

@@ -1,4 +1,4 @@
-<specification xmlns:cs="http://www.w3.org/XML/XProc/2006/04/components#" xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax" xmlns:p="http://www.w3.org/ns/xproc" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://docbook.org/ns/docbook" xml:id="steps" class="ed" version="5.0-extension w3c-xproc">
+<specification xmlns="http://docbook.org/ns/docbook" xmlns:cs="http://www.w3.org/XML/XProc/2006/04/components#" xmlns:e="http://www.w3.org/1999/XSL/Spec/ElementSyntax" xmlns:p="http://www.w3.org/ns/xproc" xmlns:xi="http://www.w3.org/2001/XInclude" xmlns:xlink="http://www.w3.org/1999/xlink" xml:id="steps" class="wd" version="5.0-extension w3c-xproc">
 <info>
 <title>XProc 3.1: Standard Step Library</title>
 <!--
@@ -6,7 +6,7 @@
 <bibliomisc role="final-uri">https://spec.xproc.org/3.0/steps/</bibliomisc>
 -->
 <copyright><year>2018</year><year>2019</year><year>2020</year><year>2021</year><year>2022</year>
-<year>2023</year><year>2024</year>
+<year>2023</year><year>2024</year><year>2025</year>
 <holder>the Contributors to the XProc 3.1 Standard Step Library
 specifications</holder>
 </copyright>
@@ -58,8 +58,11 @@ specifications</holder>
   </para>
 
 <note role="editorial">
+<para>This draft is a “last call” draft. This version is stable and will not be updated.</para>
+<!--
 <para>This draft is the “editor’s working draft” and may continue to evolve.
 </para>
+-->
 </note>
 
 <para>This document is derived from
@@ -4906,6 +4909,21 @@ who contributed to this document and all of the versions that came before it.</p
 
 <itemizedlist>
 <listitem>
+<para>Resolved <link xlink:href="https://github.com/xproc/3.0-steps/issues/659">issue 659</link>
+by updating the <tag>p:cast-content-type</tag> step. Added the <tag>p:encode</tag> step.
+This is a small backwards incompatibility because it means that you cannot use
+<tag>p:cast-content</tag> type to change the content type of a <tag>c:data</tag> element from
+<code>application/xml</code> to, for example, <code>application/foo+xml</code>. That seems
+like an unlikely scenario because XProc controls the semantics of <tag>c:data</tag>
+documents.</para>
+</listitem>
+<listitem>
+<para>Resolved <link xlink:href="https://github.com/xproc/3.0-steps/issues/642">issue 642</link>
+by removing the distinction between “has no value” and “the empty sequence” in the
+<tag>p:xslt</tag> step. This means it is no longer possible to specify a single document
+on the <port>source</port> port and have the global context item be the empty sequence.</para>
+</listitem>
+<listitem>
 <para>Resolved <link xlink:href="https://github.com/xproc/3.0-steps/issues/549">issue 549</link>
 by making the <port>result</port> output port on <tag>p:compare</tag> primary.</para>
 <para>Although this change is technically backwards incompatible, all known implementations of
@@ -4926,6 +4944,48 @@ to recognize the incorrect value, perhaps with a warning.
 <title>Substantive changes</title>
   
 <itemizedlist>
+<listitem>
+<para>Resolved <link xlink:href="https://github.com/xproc/3.0-steps/issues/668">issue 668</link>
+by clarifying explicitly how the Unicode byte order mark is processed.
+</para>
+</listitem>
+<listitem>
+<para>Resolved <link xlink:href="https://github.com/xproc/3.0-steps/issues/656">issue 656</link>
+by adding an <option>attributes</option> option to <tag>p:pack</tag>, <tag>p:wrap</tag>, and
+<tag>p:wrap-sequence</tag>.
+</para>
+</listitem>
+<listitem>
+<para>Resolved <link xlink:href="https://github.com/xproc/3.0-steps/issues/647">issue 647</link>
+by allowing the value of the <option>duration</option> option on <tag>p:sleep</tag> to be 
+either a number of seconds or an <type>xs:dayTimeDuration</type>.
+</para>
+</listitem>
+<listitem>
+<para>Resolved <link xlink:href="https://github.com/xproc/3.0-steps/issues/644">issue 644</link>
+by allowing <tag>p:filter</tag> to return non-node results.
+</para>
+</listitem>
+<listitem>
+<para>Resolved <link xlink:href="https://github.com/xproc/3.0-steps/issues/635">issue 635</link>
+by clarifying how a text document can be produced from the <tag>p:filter</tag> step.
+</para>
+</listitem>
+<listitem>
+<para>Resolved <link xlink:href="https://github.com/xproc/3.0-steps/issues/623">issue 623</link>
+by clarifying the semantics of <tag>p:error</tag>.
+</para>
+</listitem>
+<listitem>
+<para>Added a description of <tag>c:parameter-set</tag> documents.</para>
+</listitem>
+<listitem>
+<para>Added the <tag>p:message</tag> step.
+</para>
+</listitem>
+<listitem>
+<para>Several error codes were added.</para>
+</listitem>
 <listitem>
 <para>Resolved <link xlink:href="https://github.com/xproc/3.0-steps/issues/587">issue 587</link>
 by adding a <option>parameters</option> option to the <tag>p:uuid</tag> step.
@@ -4950,6 +5010,28 @@ allowing text documents on the <port>result</port> port.
 <title>Editorial changes</title>
   
 <itemizedlist>
+<listitem>
+<para>Added a normative reference to RFC 8259 for the JSON format.</para>
+</listitem>
+<listitem>
+<para>Clarified the relationship between the <tag>p:text-sort</tag> step and the
+<tag>xsl:sort</tag> element.</para>
+</listitem>
+<listitem>
+<para>Made editorial improvements to the description of <tag>p:http-request</tag> and
+<tag>p:load</tag>.
+</para>
+</listitem>
+<listitem>
+<para>Resolved <link xlink:href="https://github.com/xproc/3.0-steps/issues/678">issue 678</link>
+by describing the <tag class="attribute">comment</tag> attribue in the archive manifest.
+</para>
+</listitem>
+<listitem>
+<para>Resolved <link xlink:href="https://github.com/xproc/3.0-steps/issues/639">issue 639</link>
+by removing the superflous mention of PSVI annotations in the <tag>p:split-sequence</tag> step.
+</para>
+</listitem>
 <listitem>
 <para>Resolved <link xlink:href="https://github.com/xproc/3.0-steps/issues/580">issue 580</link>
 by clarifying what standards apply to the <option>lang</option> option on <tag>p:text-sort</tag>.
