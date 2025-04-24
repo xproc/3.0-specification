@@ -1,0 +1,1524 @@
+namespace c = "http://www.w3.org/ns/xproc-step"
+namespace local = ""
+default namespace p = "http://www.w3.org/ns/xproc"
+namespace s = "http://www.ascc.net/xml/schematron"
+namespace sa = "http://xproc.org/ns/syntax-annotations"
+namespace xs = "http://www.w3.org/2001/XMLSchema"
+
+# This schema neither supports nor requires the use of RELAX NG DTD Compatibility
+[ sa:model = "XPathExpression" ] XPathExpression = text
+[ sa:model = "XSLTSelectionPattern" ] XSLTSelectionPattern = text
+[ sa:model = "XPathSequenceType" ] XPathSequenceType = text
+[ sa:model = "ContentType" ] ContentType = text
+[ sa:model = "ContentTypes" ] ContentTypes = text
+[ sa:model = "map(xs:QName,item()*)" ] PropertyMap = text
+[ sa:model = "map(xs:QName,item()*)" ] SerializationMap = text
+[ sa:model = "EQName*" ] ListOfEQName = text
+[ sa:model = "char" ] Char = text
+# Copied from the grammar for xslt30.
+# It is possible to construct attribute values that are valid
+# but fail to pass this regexp. But this catches most of them.
+avt.datatype =
+  xsd:string {
+    pattern =
+      """([^\{\}]|\{\{|\}\}|\{([^"'\{\}]|"[^"]*"|'[^']*')+\})*"""
+  }
+name.ncname.attr = attribute name { xsd:NCName }
+name.qname.attr = attribute name { xsd:QName }
+as.attr = attribute as { XPathSequenceType }
+port.attr = attribute port { xsd:NCName }
+required.attr = attribute required { xsd:boolean }
+sequence.attr = attribute sequence { xsd:boolean }
+primary.attr = attribute primary { xsd:boolean }
+select.attr = attribute select { XPathExpression }
+xpath-version.attr = attribute xpath-version { xsd:decimal }
+psvi-required.attr = attribute psvi-required { xsd:boolean }
+document-properties.attr = attribute document-properties { PropertyMap }
+serialization.attr = attribute serialization { SerializationMap }
+content-type.attr = attribute content-type { ContentType }
+content-types.attr = attribute content-types { ContentTypes }
+collection.attr = attribute collection { xsd:boolean }
+pipe.attr = attribute pipe { text }
+static.attr = attribute static { xsd:boolean }
+visibility.attr = attribute visibility { "private" | "public" }
+exclude-inline-prefixes.attr =
+  attribute exclude-inline-prefixes { ExcludeInlinePrefixes }
+# Bah, humbug. The ExcludeInlinePrefixes pattern should
+# really be ("#all" | (PrefixList & "#default"?)) or
+# maybe ("#all" | (PrefixList | "#default")+), but neither
+# one of those is allowed by RELAX NG.
+[ sa:model = "ExcludeInlinePrefixes" ] ExcludeInlinePrefixes = text
+[ sa:model = "PrefixList" ] PrefixList = xsd:NMTOKENS
+[ sa:model = "EQNameList" ] EQNameList = xsd:NMTOKENS
+[ sa:ignore = "yes" ] xmllang.attr = attribute xml:lang { text }
+[ sa:ignore = "yes" ]
+xmlspace.attr = attribute xml:space { "default" | "preserve" }
+[ sa:ignore = "yes" ] xmlid.attr = attribute xml:id { xsd:ID }
+[ sa:ignore = "yes" ] xmlbase.attr = attribute xml:base { xsd:anyURI }
+href.attr = attribute href { xsd:anyURI }
+[ sa:ignore = "yes" ]
+use-when.attr = attribute use-when { XPathExpression }
+[ sa:ignore = "yes" ]
+p_use-when.attr = attribute p:use-when { XPathExpression }
+[ sa:ignore = "yes" ]
+expand-text.attr = attribute expand-text { xsd:boolean }
+[ sa:ignore = "yes" ]
+p_expand-text.attr = attribute p:expand-text { xsd:boolean }
+[ sa:ignore = "yes" ]
+inline-expand-text.attr = attribute inline-expand-text { xsd:boolean }
+[ sa:ignore = "yes" ]
+p_inline-expand-text.attr =
+  attribute p:inline-expand-text { xsd:boolean }
+[ sa:ignore = "yes" ] depends.attr = attribute depends { xsd:NMTOKENS }
+[ sa:ignore = "yes" ]
+p_depends.attr = attribute p:depends { xsd:NMTOKENS }
+[ sa:ignore = "yes" ]
+timeout.attr = attribute timeout { xsd:nonNegativeInteger }
+[ sa:ignore = "yes" ]
+p_timeout.attr = attribute p:timeout { xsd:nonNegativeInteger }
+[ sa:ignore = "yes" ] message.attr = attribute message { text }
+[ sa:ignore = "yes" ] p_message.attr = attribute p:message { text }
+version.attr = attribute version { xsd:decimal }
+common.attributes =
+  xmllang.attr?
+  & xmlspace.attr?
+  & xmlid.attr?
+  & xmlbase.attr?
+  & extension.attr*
+global.attributes = use-when.attr?, expand-text.attr?
+p_global.attributes = p_use-when.attr?, p_expand-text.attr?
+step.attributes = depends.attr?, timeout.attr?, message.attr?
+p_step.attributes = p_depends.attr?, p_timeout.attr?, p_message.attr?
+inline.attributes = exclude-inline-prefixes.attr?
+decl.attributes =
+  psvi-required.attr?,
+  xpath-version.attr?,
+  exclude-inline-prefixes.attr?,
+  version.attr?
+# ============================================================
+start =
+  Library
+  | DeclareStep
+  | VocabParam
+  | VocabParamSet
+  | VocabResult
+  | VocabHttpRequest
+  | VocabHeader
+  | VocabMultipart
+  | VocabBody
+  | VocabHttpResponse
+  | VocabQuery
+  | VocabLine
+  | VocabData
+  | VocabDirectory
+  | VocabArchive
+  | Errors
+  | StandardStep
+  | ExtraStep
+# StandardStep is explicitly unspecified because this is not a complete schema
+ExtraStep = notAllowed
+# ============================================================
+[ sa:class = "language-construct" ]
+Library =
+  element library {
+    decl.attributes,
+    common.attributes,
+    global.attributes,
+    (Import | ImportFunctions | Documentation | PipeInfo)*,
+    (StaticOption | Documentation | PipeInfo)*,
+    (DeclareStep | Documentation | PipeInfo)*
+  }
+[ sa:class = "language-construct" ]
+Import =
+  element import {
+    common.attributes,
+    global.attributes,
+    href.attr,
+    (Documentation | PipeInfo)*
+  }
+[ sa:class = "language-construct" ]
+ImportFunctions =
+  element import-functions {
+    common.attributes,
+    global.attributes,
+    href.attr,
+    content-type.attr?,
+    attribute namespace { text }?,
+    (Documentation | PipeInfo)*
+  }
+[ sa:model = "subpipeline" ]
+Subpipeline =
+  (Variable
+   | ForEach
+   | Viewport
+   | Choose
+   | If
+   | Group
+   | Try
+   | OtherStep
+   | Documentation
+   | PipeInfo)+
+# ============================================================
+[ sa:class = "language-construct" sa:element = "input" ]
+Input =
+  element input {
+    port.attr,
+    sequence.attr?,
+    primary.attr?,
+    select.attr?,
+    content-types.attr?,
+    [ sa:avt = "true" ] href.attr?,
+    common.attributes,
+    global.attributes,
+    inline.attributes,
+    (((Empty | (Document | Inline)*)
+      & (Documentation | PipeInfo)*)
+     | AnyElement*)
+  }
+[ sa:class = "language-construct" sa:element = "with-input" ]
+WithInput =
+  element with-input {
+    port.attr?,
+    select.attr?,
+    [ sa:avt = "true" ] href.attr?,
+    pipe.attr?,
+    common.attributes,
+    global.attributes,
+    inline.attributes,
+    (((Empty | (Document | Pipe | Inline)*)
+      & (Documentation | PipeInfo)*)
+     | AnyElement*)
+  }
+# ============================================================
+[ sa:class = "language-construct" ]
+AtomicOutputDeclaration =
+  element output {
+    port.attr?,
+    sequence.attr?,
+    primary.attr?,
+    content-types.attr?,
+    common.attributes,
+    global.attributes,
+    (Documentation | PipeInfo)*
+  }
+[ sa:class = "language-construct" ]
+CompoundOutputDeclaration =
+  element output {
+    port.attr?,
+    sequence.attr?,
+    primary.attr?,
+    content-types.attr?,
+    [ sa:avt = "true" ] href.attr?,
+    pipe.attr?,
+    common.attributes,
+    global.attributes,
+    inline.attributes,
+    (((Empty | (Document | Pipe | Inline)*)
+      & (Documentation | PipeInfo)*)
+     | AnyElement*)
+  }
+[ sa:class = "language-construct" ]
+PipelineOutputDeclaration =
+  element output {
+    port.attr?,
+    sequence.attr?,
+    primary.attr?,
+    content-types.attr?,
+    [ sa:avt = "true" ] href.attr?,
+    pipe.attr?,
+    common.attributes,
+    global.attributes,
+    inline.attributes,
+    serialization.attr?,
+    (((Empty | (Document | Pipe | Inline)*)
+      & (Documentation | PipeInfo)*)
+     | AnyElement*)
+  }
+[ sa:element = "output" ]
+Output =
+  CompoundOutputDeclaration
+  | AtomicOutputDeclaration
+  | PipelineOutputDeclaration
+[ sa:class = "language-construct" ]
+Pipe =
+  element pipe {
+    attribute step { xsd:NCName }?,
+    port.attr?,
+    common.attributes,
+    global.attributes,
+    (Documentation | PipeInfo)*
+  }
+[ sa:class = "language-construct" ]
+Document =
+  element document {
+    [ sa:avt = "true" ] href.attr,
+    attribute content-type { text }?,
+    document-properties.attr?,
+    attribute parameters { PropertyMap }?,
+    common.attributes,
+    global.attributes,
+    (Documentation | PipeInfo)*
+  }
+[ sa:class = "language-construct" ]
+Inline =
+  element inline {
+    common.attributes,
+    global.attributes,
+    inline.attributes,
+    attribute content-type { text }?,
+    document-properties.attr?,
+    attribute encoding { text }?,
+    Any*
+  }
+[ sa:class = "language-construct" ]
+Empty =
+  element empty {
+    common.attributes, global.attributes, (Documentation | PipeInfo)*
+  }
+# ============================================================
+[ sa:class = "language-construct" ]
+Option =
+  element option {
+    name.qname.attr,
+    as.attr?,
+    attribute values { text }?,
+    static.attr?,
+    required.attr?,
+    select.attr?,
+    common.attributes,
+    global.attributes,
+    visibility.attr?,
+    (Documentation | PipeInfo)*
+  }
+[ sa:class = "language-construct" ]
+StaticOption =
+  element option {
+    name.qname.attr,
+    as.attr?,
+    attribute values { text }?,
+    attribute static { "true" },
+    select.attr,
+    common.attributes,
+    global.attributes,
+    visibility.attr?,
+    (Documentation | PipeInfo)*
+  }
+# ============================================================
+[ sa:class = "language-construct" ]
+WithOption =
+  element with-option {
+    name.qname.attr,
+    as.attr?,
+    select.attr,
+    collection.attr?,
+    [ sa:avt = "true" ] href.attr?,
+    pipe.attr?,
+    common.attributes,
+    global.attributes,
+    inline.attributes,
+    (((Empty | (Document | Pipe | Inline)*)
+      & (Documentation | PipeInfo)*)
+     | AnyElement*)
+  }
+# ============================================================
+[ sa:class = "language-construct" ]
+Variable =
+  element variable {
+    name.qname.attr,
+    as.attr?,
+    select.attr,
+    collection.attr?,
+    [ sa:avt = "true" ] href.attr?,
+    pipe.attr?,
+    common.attributes,
+    global.attributes,
+    inline.attributes,
+    (((Empty | (Document | Pipe | Inline)*)
+      & (Documentation | PipeInfo)*)
+     | AnyElement*)
+  }
+# ============================================================
+[ sa:class = "language-construct" ]
+DeclarePipelineStep =
+  element declare-step {
+    name.ncname.attr?,
+    attribute type { xsd:QName }?,
+    decl.attributes,
+    visibility.attr?,
+    common.attributes,
+    global.attributes,
+    (Import | ImportFunctions | Documentation | PipeInfo)*,
+    (Input | Output | Option | Documentation | PipeInfo)*,
+    (DeclareStep | Documentation | PipeInfo)*,
+    Subpipeline?
+  }
+[ sa:class = "language-construct" ]
+DeclareAtomicStep =
+  element declare-step {
+    name.ncname.attr?,
+    attribute type { xsd:QName }?,
+    decl.attributes,
+    visibility.attr?,
+    common.attributes,
+    global.attributes,
+    (Input
+     | AtomicOutputDeclaration
+     | Option
+     | Documentation
+     | PipeInfo)*
+  }
+[ sa:element = "declare-step" ]
+DeclareStep = DeclarePipelineStep | DeclareAtomicStep
+# ============================================================
+[ sa:class = "language-construct" ]
+ForEach =
+  element for-each {
+    name.ncname.attr?,
+    common.attributes,
+    global.attributes,
+    step.attributes,
+    ((WithInput? & (Output | Documentation | PipeInfo)*),
+     Subpipeline)
+  }
+# ============================================================
+[ sa:class = "language-construct" ]
+Viewport =
+  element viewport {
+    name.ncname.attr?,
+    attribute match { XSLTSelectionPattern },
+    common.attributes,
+    global.attributes,
+    step.attributes,
+    ((WithInput? & Output? & Documentation* & PipeInfo*), Subpipeline)
+  }
+# ============================================================
+[ sa:class = "language-construct" ]
+Choose =
+  element choose {
+    name.ncname.attr?,
+    common.attributes,
+    global.attributes,
+    step.attributes,
+    ((Documentation | PipeInfo)*,
+     WithInput?,
+     ((((Documentation | PipeInfo)*, When)+,
+       ((Documentation | PipeInfo)*, Otherwise)?)
+      | (((Documentation | PipeInfo)*, When)*,
+         ((Documentation | PipeInfo)*, Otherwise))),
+     (Documentation | PipeInfo)*)
+  }
+[ sa:class = "language-construct" ]
+When =
+  element when {
+    name.ncname.attr?,
+    attribute test { XPathExpression },
+    collection.attr?,
+    common.attributes,
+    global.attributes,
+    ((Documentation | PipeInfo)*,
+     WithInput?,
+     (Output | Documentation | PipeInfo)*,
+     Subpipeline)
+  }
+[ sa:class = "language-construct" ]
+Otherwise =
+  element otherwise {
+    name.ncname.attr?,
+    common.attributes,
+    global.attributes,
+    ((Output | Documentation | PipeInfo)*, Subpipeline)
+  }
+# ============================================================
+[ sa:class = "language-construct" ]
+If =
+  element if {
+    name.ncname.attr?,
+    attribute test { XPathExpression },
+    collection.attr?,
+    common.attributes,
+    global.attributes,
+    step.attributes,
+    ((Documentation | PipeInfo)*,
+     WithInput?,
+     (Output | Documentation | PipeInfo)*,
+     Subpipeline)
+  }
+# ============================================================
+[ sa:class = "language-construct" ]
+Group =
+  element group {
+    name.ncname.attr?,
+    common.attributes,
+    global.attributes,
+    step.attributes,
+    ((Output | Documentation | PipeInfo)*, Subpipeline)
+  }
+# ============================================================
+[ sa:class = "language-construct" ]
+Try =
+  element try {
+    name.ncname.attr?,
+    common.attributes,
+    global.attributes,
+    step.attributes,
+    ((Output | Documentation | PipeInfo)*,
+     Subpipeline,
+     (((Catch+, Finally?) | (Catch*, Finally))
+      & (Documentation | PipeInfo)*))
+  }
+[ sa:class = "language-construct" ]
+Catch =
+  element catch {
+    name.ncname.attr?,
+    attribute code { EQNameList }?,
+    common.attributes,
+    global.attributes,
+    ((Output | Documentation | PipeInfo)*, Subpipeline)
+  }
+[ sa:class = "language-construct" ]
+Finally =
+  element finally {
+    name.ncname.attr?,
+    common.attributes,
+    global.attributes,
+    ((Output | Documentation | PipeInfo)*, Subpipeline)
+  }
+# ============================================================
+[ sa:class = "language-construct" ]
+OtherAtomicStep =
+  element * - p:* {
+    name.ncname.attr?,
+    option.attr*,
+    common.attributes,
+    p_global.attributes,
+    p_step.attributes,
+    (WithInput | WithOption | Documentation | PipeInfo)*
+  }
+[ sa:class = "language-construct" ]
+OtherCompoundStep =
+  element * - p:* {
+    name.ncname.attr?,
+    common.attributes,
+    p_global.attributes,
+    p_step.attributes,
+    ((Output | Documentation | PipeInfo)*, Subpipeline)
+  }
+OtherStep = StandardStep | OtherAtomicStep | OtherCompoundStep
+# ============================================================
+# The p:run step is magic.
+Step-run =
+  element run {
+    name.ncname.attr?,
+    common.attributes,
+    global.attributes,
+    step.attributes,
+    (WithInput
+     & RunInput*
+     & RunOption*
+     & Output*
+     & Documentation*
+     & PipeInfo*)
+  }
+[ sa:class = "language-construct" sa:element = "run-input" ]
+RunInput =
+  element run-input {
+    port.attr,
+    select.attr?,
+    [ sa:avt = "true" ] href.attr?,
+    pipe.attr?,
+    primary.attr?,
+    common.attributes,
+    global.attributes,
+    inline.attributes,
+    (((Empty | (Document | Pipe | Inline)*)
+      & (Documentation | PipeInfo)*)
+     | AnyElement*)
+  }
+[ sa:class = "language-construct" ]
+RunOption =
+  element run-option {
+    name.qname.attr,
+    as.attr?,
+    select.attr,
+    collection.attr?,
+    [ sa:avt = "true" ] href.attr?,
+    pipe.attr?,
+    static.attr?,
+    common.attributes,
+    global.attributes,
+    inline.attributes,
+    (((Empty | (Document | Pipe | Inline)*)
+      & (Documentation | PipeInfo)*)
+     | AnyElement*)
+  }
+# ============================================================
+[ sa:ignore = "yes" sa:class = "language-construct" ]
+Documentation =
+  element documentation {
+    common.attributes, global.attributes, DocContent*
+  }
+[ sa:model = "any-well-formed-content" ] DocContent = Any
+# ============================================================
+[ sa:ignore = "yes" sa:class = "language-construct" ]
+PipeInfo =
+  element pipeinfo { common.attributes, global.attributes, DocContent* }
+# ============================================================
+_any.attr = attribute * { text }
+option.attr =
+  attribute local:* - (name | expand-text | use-when) { text }
+extension.attr = attribute * - (local:* | xml:* | p:*) { text }
+[ sa:model = "anyElement" ]
+AnyElement = element * { (_any.attr | text | AnyElement)* }
+[ sa:model = "anyNonXProcElement" ]
+AnyNonXProcElement =
+  element * - (c:* | p:*) { (_any.attr | text | AnyElement)* }
+[ sa:model = "anyNode" ]
+Any =
+  element * { (_any.attr | Any)* }
+  | text
+# ============================================================
+[ sa:class = "step-vocabulary" ]
+VocabParam =
+  element c:param {
+    name.qname.attr,
+    attribute namespace { xsd:anyURI }?,
+    attribute value { text }?,
+    as.attr?,
+    AnyElement*
+  }
+[ sa:class = "step-vocabulary" ]
+VocabParamSet = element c:param-set { VocabParam* }
+[ sa:class = "step-vocabulary" ]
+VocabDirectory =
+  element c:directory {
+    attribute name { text },
+    xmlbase.attr,
+    file-info.attributes,
+    (VocabFile | VocabDirectory | VocabOther)*
+  }
+[ sa:class = "step-vocabulary" ]
+VocabFile =
+  element c:file {
+    attribute name { text },
+    xmlbase.attr,
+    file-info.attributes,
+    content-type.attr?,
+    empty
+  }
+[ sa:class = "step-vocabulary" ]
+VocabOther =
+  element c:other {
+    attribute name { text },
+    xmlbase.attr,
+    file-info.attributes,
+    empty
+  }
+file-info.attributes =
+  size.attr?,
+  readable.attr?,
+  writable.attr?,
+  last-modified.attr?,
+  hidden.attr?
+size.attr = attribute size { xsd:integer }
+readable.attr = attribute readable { xsd:boolean }
+writable.attr = attribute writable { xsd:boolean }
+hidden.attr = attribute hidden { xsd:boolean }
+last-modified.attr = attribute last-modified { xsd:dateTime }
+[ sa:class = "step-vocabulary" ] VocabResult = element c:result { text }
+[ sa:class = "step-vocabulary" ]
+VocabHttpRequest =
+  element c:request {
+    attribute method { xsd:NCName },
+    attribute href { xsd:anyURI }?,
+    attribute detailed { xsd:boolean }?,
+    attribute status-only { xsd:boolean }?,
+    attribute username { text }?,
+    attribute password { text }?,
+    attribute auth-method { text }?,
+    attribute send-authorization { xsd:boolean }?,
+    attribute override-content-type { ContentType }?,
+    attribute timeout { xsd:positiveInteger }?,
+    attribute fail-on-timeout { xsd:boolean }?,
+    (VocabHeader*, (VocabMultipart | VocabBody)?)
+  }
+[ sa:class = "step-vocabulary" ]
+VocabHeader =
+  element c:header {
+    attribute name { text },
+    attribute value { text },
+    empty
+  }
+[ sa:class = "step-vocabulary" ]
+VocabMultipart =
+  element c:multipart {
+    content-type.attr,
+    attribute boundary { text },
+    VocabBody+
+  }
+[ sa:class = "step-vocabulary" ]
+VocabBody =
+  element c:body {
+    content-type.attr,
+    attribute encoding { text }?,
+    attribute id { text }?,
+    attribute description { text }?,
+    attribute disposition { text }?,
+    Any*
+  }
+[ sa:class = "step-vocabulary" ]
+VocabHttpResponse =
+  element c:response {
+    attribute status { xsd:integer }?,
+    (VocabHeader*, (VocabMultipart | VocabBody)?)
+  }
+[ sa:class = "step-vocabulary" ] VocabQuery = element c:query { text }
+[ sa:class = "step-vocabulary" ] VocabLine = element c:line { text }
+[ sa:class = "step-vocabulary" ]
+VocabData =
+  element c:data {
+    content-type.attr,
+    attribute charset { text }?,
+    attribute encoding { text }?,
+    text
+  }
+[ sa:class = "step-vocabulary" ]
+VocabArchive = element c:archive { VocabEntry* & AnyNonXProcElement* }
+[ sa:class = "step-vocabulary" ]
+VocabEntry =
+  element c:entry {
+    attribute name { text },
+    attribute href { xsd:anyURI },
+    attribute comment { text }?,
+    attribute method { text }?,
+    attribute level { text }?,
+    content-type.attr?,
+    attribute * - (local:* | p:* | c:*) { text }*,
+    AnyElement*
+  }
+# ============================================================
+[ sa:class = "error-vocabulary" ] Errors = element c:errors { Error* }
+[ sa:class = "error-vocabulary" ]
+Error =
+  element c:error {
+    name.ncname.attr?,
+    attribute type { xsd:QName }?,
+    attribute code { xsd:QName }?,
+    attribute cause { xsd:QName }?,
+    attribute href { xsd:anyURI }?,
+    attribute line { xsd:integer }?,
+    attribute column { xsd:integer }?,
+    attribute offset { xsd:integer }?,
+    Any*
+  }
+Charset = text
+Encoding = text
+MIMEContentType = text
+MIMEMediaType = text
+RegularExpression = text
+NormalizationForm =
+  "NFC"
+  | "NFD"
+  | "NFKC"
+  | "NFKD"
+  | "fully-normalized"
+  | "none"
+  | xsd:NMTOKEN
+ListOfQNames = text
+StandardStep =
+  Step-directory-list
+  | Step-file-copy
+  | Step-file-delete
+  | Step-file-info
+  | Step-file-mkdir
+  | Step-file-move
+  | Step-file-create-tempfile
+  | Step-file-touch
+  | Step-os-info
+  | Step-os-exec
+  | Step-css-formatter
+  | Step-xsl-formatter
+  | Step-markdown-to-html
+  | Step-validate-with-nvdl
+  | Step-validate-with-relax-ng
+  | Step-validate-with-schematron
+  | Step-validate-with-xml-schema
+  | Step-validate-with-json-schema
+  | Step-validate-with-dtd
+  | Step-add-attribute
+  | Step-add-xml-base
+  | Step-archive
+  | Step-archive-manifest
+  | Step-cast-content-type
+  | Step-compare
+  | Step-compress
+  | Step-count
+  | Step-delete
+  | Step-error
+  | Step-filter
+  | Step-hash
+  | Step-http-request
+  | Step-identity
+  | Step-insert
+  | Step-json-join
+  | Step-json-merge
+  | Step-label-elements
+  | Step-load
+  | Step-make-absolute-uris
+  | Step-namespace-delete
+  | Step-namespace-rename
+  | Step-pack
+  | Step-rename
+  | Step-replace
+  | Step-set-attributes
+  | Step-set-properties
+  | Step-sink
+  | Step-sleep
+  | Step-split-sequence
+  | Step-store
+  | Step-string-replace
+  | Step-text-count
+  | Step-text-head
+  | Step-text-join
+  | Step-text-replace
+  | Step-text-sort
+  | Step-text-tail
+  | Step-unarchive
+  | Step-uncompress
+  | Step-unwrap
+  | Step-uuid
+  | Step-wrap-sequence
+  | Step-wrap
+  | Step-www-form-urldecode
+  | Step-www-form-urlencode
+  | Step-xinclude
+  | Step-xquery
+  | Step-xslt
+Step-directory-list =
+  element directory-list {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute path { avt.datatype }?,
+    attribute detailed { avt.datatype }?,
+    attribute max-depth { avt.datatype }?,
+    attribute include-filter { avt.datatype }?,
+    attribute exclude-filter { avt.datatype }?,
+    attribute override-content-types { avt.datatype }?,
+    (WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-file-copy =
+  element file-copy {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute href { avt.datatype }?,
+    attribute target { avt.datatype }?,
+    attribute fail-on-error { avt.datatype }?,
+    attribute overwrite { avt.datatype }?,
+    (WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-file-delete =
+  element file-delete {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute href { avt.datatype }?,
+    attribute recursive { avt.datatype }?,
+    attribute fail-on-error { avt.datatype }?,
+    (WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-file-info =
+  element file-info {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute href { avt.datatype }?,
+    attribute fail-on-error { avt.datatype }?,
+    attribute override-content-types { avt.datatype }?,
+    (WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-file-mkdir =
+  element file-mkdir {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute href { avt.datatype }?,
+    attribute fail-on-error { avt.datatype }?,
+    (WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-file-move =
+  element file-move {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute href { avt.datatype }?,
+    attribute target { avt.datatype }?,
+    attribute fail-on-error { avt.datatype }?,
+    (WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-file-create-tempfile =
+  element file-create-tempfile {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute href { avt.datatype }?,
+    attribute suffix { avt.datatype }?,
+    attribute prefix { avt.datatype }?,
+    attribute delete-on-exit { avt.datatype }?,
+    attribute fail-on-error { avt.datatype }?,
+    (WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-file-touch =
+  element file-touch {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute href { avt.datatype }?,
+    attribute timestamp { avt.datatype }?,
+    attribute fail-on-error { avt.datatype }?,
+    (WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-os-info =
+  element os-info {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    (Documentation | PipeInfo)*
+  }
+Step-os-exec =
+  element os-exec {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute command { avt.datatype }?,
+    attribute args { avt.datatype }?,
+    attribute cwd { avt.datatype }?,
+    attribute result-content-type { avt.datatype }?,
+    attribute error-content-type { avt.datatype }?,
+    attribute path-separator { avt.datatype }?,
+    attribute failure-threshold { avt.datatype }?,
+    attribute serialization { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-css-formatter =
+  element css-formatter {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute parameters { avt.datatype }?,
+    attribute content-type { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-xsl-formatter =
+  element xsl-formatter {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute parameters { avt.datatype }?,
+    attribute content-type { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-markdown-to-html =
+  element markdown-to-html {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute parameters { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-validate-with-nvdl =
+  element validate-with-nvdl {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute assert-valid { avt.datatype }?,
+    attribute report-format { avt.datatype }?,
+    attribute parameters { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-validate-with-relax-ng =
+  element validate-with-relax-ng {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute dtd-attribute-values { avt.datatype }?,
+    attribute dtd-id-idref-warnings { avt.datatype }?,
+    attribute assert-valid { avt.datatype }?,
+    attribute report-format { avt.datatype }?,
+    attribute parameters { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-validate-with-schematron =
+  element validate-with-schematron {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute parameters { avt.datatype }?,
+    attribute phase { avt.datatype }?,
+    attribute assert-valid { avt.datatype }?,
+    attribute report-format { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-validate-with-xml-schema =
+  element validate-with-xml-schema {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute use-location-hints { avt.datatype }?,
+    attribute try-namespaces { avt.datatype }?,
+    attribute assert-valid { avt.datatype }?,
+    attribute parameters { avt.datatype }?,
+    attribute mode { avt.datatype }?,
+    attribute version { avt.datatype }?,
+    attribute report-format { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-validate-with-json-schema =
+  element validate-with-json-schema {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute assert-valid { avt.datatype }?,
+    attribute default-version { avt.datatype }?,
+    attribute parameters { avt.datatype }?,
+    attribute report-format { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-validate-with-dtd =
+  element validate-with-dtd {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute report-format { avt.datatype }?,
+    attribute serialization { avt.datatype }?,
+    attribute assert-valid { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-add-attribute =
+  element add-attribute {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute match { avt.datatype }?,
+    attribute attribute-name { avt.datatype }?,
+    attribute attribute-value { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-add-xml-base =
+  element add-xml-base {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute all { avt.datatype }?,
+    attribute relative { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-archive =
+  element archive {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute format { avt.datatype }?,
+    attribute relative-to { avt.datatype }?,
+    attribute parameters { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-archive-manifest =
+  element archive-manifest {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute format { avt.datatype }?,
+    attribute parameters { avt.datatype }?,
+    attribute relative-to { avt.datatype }?,
+    attribute override-content-types { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-cast-content-type =
+  element cast-content-type {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute content-type { avt.datatype }?,
+    attribute parameters { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-compare =
+  element compare {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute parameters { avt.datatype }?,
+    attribute method { avt.datatype }?,
+    attribute fail-if-not-equal { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-compress =
+  element compress {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute format { avt.datatype }?,
+    attribute serialization { avt.datatype }?,
+    attribute parameters { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-count =
+  element count {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute limit { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-delete =
+  element delete {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute match { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-error =
+  element error {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute code { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-filter =
+  element filter {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute select { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-hash =
+  element hash {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute parameters { avt.datatype }?,
+    attribute value { avt.datatype }?,
+    attribute algorithm { avt.datatype }?,
+    attribute match { avt.datatype }?,
+    attribute version { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-http-request =
+  element http-request {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute href { avt.datatype }?,
+    attribute method { avt.datatype }?,
+    attribute serialization { avt.datatype }?,
+    attribute headers { avt.datatype }?,
+    attribute auth { avt.datatype }?,
+    attribute parameters { avt.datatype }?,
+    attribute assert { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-identity =
+  element identity {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    (WithInput* & (Documentation | PipeInfo)*)
+  }
+Step-insert =
+  element insert {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute match { avt.datatype }?,
+    attribute position { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-json-join =
+  element json-join {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute flatten-to-depth { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-json-merge =
+  element json-merge {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute duplicates { avt.datatype }?,
+    attribute key { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-label-elements =
+  element label-elements {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute attribute { avt.datatype }?,
+    attribute label { avt.datatype }?,
+    attribute match { avt.datatype }?,
+    attribute replace { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-load =
+  element load {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute href { avt.datatype }?,
+    attribute parameters { avt.datatype }?,
+    attribute content-type { avt.datatype }?,
+    attribute document-properties { avt.datatype }?,
+    (WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-make-absolute-uris =
+  element make-absolute-uris {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute match { avt.datatype }?,
+    attribute base-uri { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-namespace-delete =
+  element namespace-delete {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute prefixes { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-namespace-rename =
+  element namespace-rename {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute from { avt.datatype }?,
+    attribute to { avt.datatype }?,
+    attribute apply-to { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-pack =
+  element pack {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute wrapper { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-rename =
+  element rename {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute match { avt.datatype }?,
+    attribute new-name { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-replace =
+  element replace {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute match { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-set-attributes =
+  element set-attributes {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute match { avt.datatype }?,
+    attribute attributes { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-set-properties =
+  element set-properties {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute properties { avt.datatype }?,
+    attribute merge { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-sink =
+  element sink {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    (WithInput* & (Documentation | PipeInfo)*)
+  }
+Step-sleep =
+  element sleep {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute duration { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-split-sequence =
+  element split-sequence {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute initial-only { avt.datatype }?,
+    attribute test { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-store =
+  element store {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute href { avt.datatype }?,
+    attribute serialization { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-string-replace =
+  element string-replace {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute match { avt.datatype }?,
+    attribute replace { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-text-count =
+  element text-count {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    (WithInput* & (Documentation | PipeInfo)*)
+  }
+Step-text-head =
+  element text-head {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute count { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-text-join =
+  element text-join {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute separator { avt.datatype }?,
+    attribute prefix { avt.datatype }?,
+    attribute suffix { avt.datatype }?,
+    attribute override-content-type { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-text-replace =
+  element text-replace {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute pattern { avt.datatype }?,
+    attribute replacement { avt.datatype }?,
+    attribute flags { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-text-sort =
+  element text-sort {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute sort-key { avt.datatype }?,
+    attribute order { avt.datatype }?,
+    attribute case-order { avt.datatype }?,
+    attribute lang { avt.datatype }?,
+    attribute collation { avt.datatype }?,
+    attribute stable { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-text-tail =
+  element text-tail {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute count { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-unarchive =
+  element unarchive {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute include-filter { avt.datatype }?,
+    attribute exclude-filter { avt.datatype }?,
+    attribute format { avt.datatype }?,
+    attribute parameters { avt.datatype }?,
+    attribute relative-to { avt.datatype }?,
+    attribute override-content-types { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-uncompress =
+  element uncompress {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute format { avt.datatype }?,
+    attribute parameters { avt.datatype }?,
+    attribute content-type { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-unwrap =
+  element unwrap {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute match { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-uuid =
+  element uuid {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute match { avt.datatype }?,
+    attribute version { avt.datatype }?,
+    attribute parameters { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-wrap-sequence =
+  element wrap-sequence {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute wrapper { avt.datatype }?,
+    attribute group-adjacent { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-wrap =
+  element wrap {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute wrapper { avt.datatype }?,
+    attribute match { avt.datatype }?,
+    attribute group-adjacent { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-www-form-urldecode =
+  element www-form-urldecode {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute value { avt.datatype }?,
+    (WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-www-form-urlencode =
+  element www-form-urlencode {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute parameters { avt.datatype }?,
+    (WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-xinclude =
+  element xinclude {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute fixup-xml-base { avt.datatype }?,
+    attribute fixup-xml-lang { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-xquery =
+  element xquery {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute parameters { avt.datatype }?,
+    attribute version { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
+Step-xslt =
+  element xslt {
+    name.ncname.attr?,
+    common.attributes,
+    use-when.attr?,
+    step.attributes,
+    attribute parameters { avt.datatype }?,
+    attribute static-parameters { avt.datatype }?,
+    attribute global-context-item { avt.datatype }?,
+    attribute populate-default-collection { avt.datatype }?,
+    attribute initial-mode { avt.datatype }?,
+    attribute template-name { avt.datatype }?,
+    attribute output-base-uri { avt.datatype }?,
+    attribute version { avt.datatype }?,
+    (WithInput* & WithOption* & (Documentation | PipeInfo)*)
+  }
