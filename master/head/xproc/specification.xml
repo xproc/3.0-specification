@@ -2137,8 +2137,8 @@ analysis.</para>
 <para>The heuristics that <function>p:urify</function> performs occur
 in two stages: first, the input string is analyzed to identify its
 features, then these features are used to construct a final URI
-string. An additional “fixup” process may be performed on the path
-portion of the URI.</para>
+string. An additional “fixup” process may be performed on
+portions of the URI.</para>
 
 <para>To make the operation of the <function>p:urify</function>
 function easier to understand, the description that follows is
@@ -2238,8 +2238,12 @@ implicitly known or explicitly known.</para>
 <para>The <emphasis>drive letter</emphasis>, which may be absent.</para>
 </listitem>
 <listitem>
-<para>And the <emphasis>path</emphasis>, which may be <emphasis>absolute</emphasis>
-or <emphasis>relative</emphasis>.</para>
+<para>the <emphasis>path</emphasis>, which may be <emphasis>absolute</emphasis>
+or <emphasis>relative</emphasis>,</para>
+</listitem>
+<listitem>
+<para>And a <emphasis>suffix</emphasis> which is initially empty.
+</para>
 </listitem>
 </itemizedlist>
 
@@ -2527,6 +2531,15 @@ It matches the preceding case; “path” is the authority.
 non-hierarchical URI, the <parameter>filepath</parameter> is returned
 unchanged.</para>
 
+<para>If the <parameter>filepath</parameter> contains a “<code>?</code>”, the
+“<code>?</code>” and everything after it is removed from the
+<parameter>filepath</parameter> and saved as the <emphasis>suffix</emphasis>. If
+the <parameter>filepath</parameter> does not contain a “<code>?</code>”, but
+does contain a “<code>#</code>”, the “<code>#</code>” and everything after it is
+removed from the <parameter>filepath</parameter> and saved as the
+<emphasis>suffix</emphasis>. The <emphasis>suffix</emphasis> is URI encoded
+as with <function>fn:escape-html-uri</function>.</para>
+
 <para>If the analysis determines that the scheme is known
 and the path is absolute, a URI is constructed from the features,
 see below. Otherwise, the URI must be made absolute with respect to the
@@ -2603,7 +2616,8 @@ otherwise use the authority of the <parameter>basedir</parameter>, if it has one
 the path is the path of the <parameter>filepath</parameter> resolved against the
 <parameter>basedir</parameter>.
 </para>
-<para>If the <parameter>basedir</parameter> ends in “/”, the resolved path is the concatention
+<para>If the <parameter>basedir</parameter> ends in “/” or if the <parameter>filepath</parameter>
+was the empty string after removing the <emphasis>suffix</emphasis>, the resolved path is the concatention
 of the <parameter>basedir</parameter> and <parameter>filepath</parameter>’s path. Otherwise,
 the resolved path is the concatentation of all the characters in <parameter>basedir</parameter>
 up to and including the last “/” it contains with the <parameter>filepath</parameter>’s path.
@@ -2669,6 +2683,9 @@ and the path is absolute,</para>
 </listitem>
 <listitem>
 <para>Append the path.</para>
+</listitem>
+<listitem>
+<para>Append the suffix.</para>
 </listitem>
 </orderedlist>
 <para>The string constructed is the <function>p:urify</function> result.</para>
