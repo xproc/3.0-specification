@@ -2457,14 +2457,17 @@ It matches the preceding case; “path” is the authority.
 non-hierarchical URI, the <parameter>filepath</parameter> is returned
 unchanged.</para>
 
-<para>If the <parameter>filepath</parameter> contains a “<code>?</code>”, the
-“<code>?</code>” and everything after it is removed from the
-<parameter>filepath</parameter> and saved as the <emphasis>suffix</emphasis>. If
-the <parameter>filepath</parameter> does not contain a “<code>?</code>”, but
-does contain a “<code>#</code>”, the “<code>#</code>” and everything after it is
-removed from the <parameter>filepath</parameter> and saved as the
-<emphasis>suffix</emphasis>. The <emphasis>suffix</emphasis> is URI encoded
-as with <function>fn:escape-html-uri</function>.</para>
+<para>If the <parameter>filepath</parameter> contains either a “<code>?</code>”
+or a “<code>#</code>”, that character and everything after it is removed from
+the <parameter>filepath</parameter> and saved as the
+<emphasis>suffix</emphasis>. If it contains both
+“<code>?</code>” and “<code>#</code>”,
+the suffix begins at whichever character occurs earliest in the path. (If 
+“<code>#</code>” occurs first, it’s a fragment identifier that contains
+a question mark; if “<code>?</code>” occurs first, it’s a query followed
+by a fragment identifier, but that distinction isn't signficant to the <function>p:urify</function>
+function.) The <emphasis>suffix</emphasis> is URI encoded as with <function>fn:escape-html-uri</function>.
+</para>
 
 <para>If the analysis determines that the scheme is known
 and the path is absolute, a URI is constructed from the features,
